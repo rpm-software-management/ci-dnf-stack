@@ -1,0 +1,67 @@
+.. -*- coding: utf-8 -*-
+
+   Copyright 2015 dnf-stack-ci Authors. See the AUTHORS file
+   found in the top-level directory of this distribution and
+   at https://github.com/rholy/dnf-stack-ci/.
+
+   Licensed under the GNU General Public License; either version 2,
+   or (at your option) any later version. See the LICENSE file found
+   in the top-level directory of this distribution and at
+   https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
+   including this file, may be copied, modified, propagated, or
+   distributed except according to the terms contained in the LICENSE
+   file.
+
+
+dnf-stack-ci
+============
+
+dnf-stack-ci is a set of scripts that allow continuous testing of the
+`DNF <https://github.com/rpm-software-management/dnf>`_ stack.
+
+This serves as an ad hoc solution to where to store routines that belong
+to all the components of the stack. Once they are in the final shape, it
+would be nice to merge them into the respective components.
+
+These scripts are free and open-source software; see the section License
+to understand the terms and conditions under which you can use, study,
+modify and distribute dnf-stack-ci.
+
+
+Features
+--------
+
+The routines are not in the final shape yet. Further features are added
+on demand if they fit the purpose of the repository.
+
+
+License
+-------
+
+The project is licensed under the copyleft GNU General Public License;
+either version 2, or (at your option) any later version. See the
+LICENSE file found in the top-level directory of this distribution and
+at https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
+including this file, may be copied, modified, propagated, or distributed
+except according to the terms contained in the LICENSE file.
+
+
+Support
+-------
+
+If you are having issues, please report them via the issue tracking
+system. Any feedback is more than welcome.
+
+- issue tracker: https://github.com/rholy/dnf-stack-ci/issues
+
+
+Contributions
+-------------
+
+Since I am a bit demanding person and I want to avoid any unnecessary
+conflicts, I don't accept any contributions. On the other hand, once
+it turns out that there is a potential contributor, I'll move the
+repository under https://github.com/rpm-software-management/ where the
+contributions can be accepted.
+
+- version control system: https://github.com/rholy/dnf-stack-ci
