@@ -18,18 +18,20 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] DESTINATION
+    usage: prog [-h] ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
     the current working directory. The RPMs will be stored in
     a subdirectory "packages" of the destination directory.
 
     positional arguments:
-      DESTINATION  the name of a destination directory (the directory
-                   will be overwritten)
+      ARCHITECTURE  the value of the Mock's "config_opts['target_arch']"
+                    option
+      DESTINATION   the name of a destination directory (the directory
+                    will be overwritten)
 
     optional arguments:
-      -h, --help   show this help message and exit
+      -h, --help    show this help message and exit
 
     The "tito" and "mock" executables must be available. If an error
     occurs the exit status is non-zero.
@@ -75,7 +77,7 @@ def _indent(text):
     return re.sub(r'^', '    ', text, flags=re.MULTILINE)
 
 
-def _decode_path(path):
+def decode_path(path):
     """Decode a filesystem path string.
 
     :param path: the filesystem path
@@ -106,12 +108,15 @@ def _remkdir(name, notexists_ok=False):
     os.mkdir(name)
 
 
-def _build_rpms(destdn, last_tag=True):
+def _build_rpms(arch, destdn, last_tag=True):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
     directory will be overwritten.
 
+    :param arch: the value of the Mock's "config_opts['target_arch']"
+       option
+    :type arch: unicode
     :param destdn: the name of a destination directory
     :type destdn: unicode
     :param last_tag: build from the latest tag instead of the current HEAD
@@ -124,7 +129,7 @@ def _build_rpms(destdn, last_tag=True):
     """
     LOGGER.info('Building RPMs from %s...', os.getcwdu())
     _remkdir(destdn, notexists_ok=True)
-    with _MockConfig() as mockcfg:
+    with _MockConfig(arch) as mockcfg:
         # FIXME: https://github.com/dgoodwin/tito/issues/171
         command = [
             'tito', 'build', '--rpm',
@@ -149,7 +154,7 @@ def _build_rpms(destdn, last_tag=True):
             # Mock could fail, a new mock version could have changed the path
             # or a new tito version could have changed its output structure.
             if isinstance(err.filename, str):
-                filename = _decode_path(err.filename)
+                filename = decode_path(err.filename)
             else:
                 filename = err.filename
             LOGGER.warning("Mock's path %s is not accessible.", filename)
@@ -171,18 +176,20 @@ def _start_commandline():
 
     The interface usage is::
 
-        usage: prog [-h] DESTINATION
+        usage: prog [-h] ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
         the current working directory. The RPMs will be stored in
         a subdirectory "packages" of the destination directory.
 
         positional arguments:
-          DESTINATION  the name of a destination directory (the
-                       directory will be overwritten)
+          ARCHITECTURE  the value of the Mock's
+                        "config_opts['target_arch']" option
+          DESTINATION   the name of a destination directory (the
+                        directory will be overwritten)
 
         optional arguments:
-          -h, --help   show this help message and exit
+          -h, --help    show this help message and exit
 
         The "tito" and "mock" executables must be available. If an error
         occurs the exit status is non-zero.
@@ -199,6 +206,10 @@ def _start_commandline():
                     ''.format(pkgsreldn),
         epilog='The "tito" and "mock" executables must be available. If an '
                'error occurs the exit status is non-zero.')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
+    argparser.add_argument(
+        'arch', type=unicode, metavar='ARCHITECTURE',
+        help="the value of the Mock's \"config_opts['target_arch']\" option")
     argparser.add_argument(
         'destdn', type=unicode, metavar='DESTINATION',
         help='the name of a destination directory (the directory will be '
@@ -223,7 +234,9 @@ def _start_commandline():
     handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
     LOGGER.addHandler(handler)
     try:
-        _build_rpms(os.path.join(options.destdn, pkgsreldn), last_tag=False)
+        _build_rpms(
+            options.arch, os.path.join(options.destdn, pkgsreldn),
+            last_tag=False)
     except ValueError:
         sys.exit(
             'The build have failed. Hopefully the executables have created an '
@@ -244,15 +257,23 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
     :type basedir: unicode | None
     :ivar root: the value set as "config_opts['root']"
     :type root: unicode
+    :ivar arch: the value set as "config_opts['target_arch']"
+    :type arch: unicode
     :ivar cfgfn: a name of the file where the configuration is stored
     :type cfgfn: unicode | None
 
     """
 
-    def __init__(self):
-        """Initialize the configuration."""
+    def __init__(self, arch):
+        """Initialize the configuration.
+
+        :param arch: a value set as "config_opts['target_arch']"
+        :type arch: unicode
+
+        """
         self.basedir = None
-        self.root = NAME
+        self.root = '{}-{}'.format(NAME, arch)
+        self.arch = arch
         self.cfgfn = None
 
     def __enter__(self):
@@ -264,14 +285,15 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         :rtype: ._MockConfig
 
         """
-        self.basedir = _decode_path(tempfile.mkdtemp())
+        self.basedir = decode_path(tempfile.mkdtemp())
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
-        template = template.decode('utf-8')
+        config = template.decode('utf-8').format(
+            basedir=self.basedir, root=self.root, arch=self.arch)
         file_ = tempfile.NamedTemporaryFile('wb', suffix='.cfg', delete=False)
         with file_:
-            file_.write(template.format(basedir=self.basedir, root=self.root))
-        self.cfgfn = _decode_path(file_.name)
+            file_.write(config)
+        self.cfgfn = decode_path(file_.name)
         return self
 
     @property
