@@ -32,10 +32,11 @@ Features
 --------
 
 Refer to the test suite for the complete list of all the features. I
-have, nevertheless, mentioned one of them below in hope of gaining your
+have, nevertheless, mentioned few of them below in hope of gaining your
 attention:
 
 - build RPMs of tito-enabled projects
+- configure Mock's "config_opts['target_arch']" option
 
 The routines are not in the final shape yet. Further features are added
 on demand if they fit the purpose of the repository.

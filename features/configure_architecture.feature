@@ -12,16 +12,13 @@
 # distributed except according to the terms contained in the LICENSE
 # file.
 
-# FIXME: https://github.com/dgoodwin/tito/issues/178
-config_opts['basedir'] = '{basedir}'
-config_opts['root'] = '{root}'
-config_opts['target_arch'] = '{arch}'
-config_opts['chroot_setup_cmd'] = 'install @buildsys-build'
-config_opts['yum.conf'] = """
-[main]
-# see also https://bugzilla.redhat.com/show_bug.cgi?id=1225004
-assumeyes=1
+Feature: Configure config_opts['target_arch']
+  In order to test a project on various systems, I want to configure the
+  value of the Mock's "config_opts['target_arch']" option.
 
-[rawhide]
-metalink=https://mirrors.fedoraproject.org/metalink?repo=rawhide&arch=$basearch
-"""
+  Scenario: Configure i686
+    Given following options are configured as follows:
+       | Option       | Value |
+       | ARCHITECTURE | i686  |
+     When I execute this program
+     Then I should have the result that is produced if config_opts['target_arch'] == 'i686'

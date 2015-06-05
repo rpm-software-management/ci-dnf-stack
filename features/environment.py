@@ -24,8 +24,13 @@ attributes:
 
 :attr:`!titodn` : :class:`str`
     A name of the directory with the tito-enabled project.
-:attr:`!workdn` : :class:`str`
+:attr:`!workdn` : :data:`types.UnicodeType`
     A name of the working directory.
+:attr:`!arch_option` : :data:`types.UnicodeType`
+    A value of the Mock's "config_opts['target_arch']" option used by
+    dnf-stack-ci.
+:attr:`!dest_option` : :data:`types.UnicodeType`
+    A name of the destination directory of dnf-stack-ci.
 
 """
 
@@ -93,7 +98,9 @@ def before_feature(context, feature):  # pylint: disable=unused-argument
     :type feature: behave.model.Feature
 
     """
-    context.workdn = tempfile.mkdtemp()
+    context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
+    context.arch_option = 'x86_64'
+    context.dest_option = context.workdn
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
