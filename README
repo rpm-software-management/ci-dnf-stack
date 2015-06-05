@@ -31,6 +31,12 @@ modify and distribute dnf-stack-ci.
 Features
 --------
 
+Refer to the test suite for the complete list of all the features. I
+have, nevertheless, mentioned one of them below in hope of gaining your
+attention:
+
+- build RPMs of tito-enabled projects
+
 The routines are not in the final shape yet. Further features are added
 on demand if they fit the purpose of the repository.
 
@@ -44,6 +50,35 @@ LICENSE file found in the top-level directory of this distribution and
 at https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
 including this file, may be copied, modified, propagated, or distributed
 except according to the terms contained in the LICENSE file.
+
+
+Requirements
+------------
+
+dnf-stack-ci works on Python 2.7.
+
+Following executables and Python modules are required to run
+dnf-stack-ci:
+
+- `mock executable <http://fedoraproject.org/wiki/Projects/Mock>`_
+- `tito executable <http://rm-rf.ca/tito>`_
+- `pkg_resources Python module
+  <https://bitbucket.org/pypa/setuptools/>`_
+
+Following additional executables and Python modules are required to run
+a test suite:
+
+- `python executable <http://www.python.org/>`_
+- `behave Python module <http://github.com/behave/behave/>`_
+- `pygit2 Python module <http://www.pygit2.org/>`_
+- `rpm Python module <http://www.rpm.org/>`_
+
+
+Installation
+------------
+
+Install the requirements mentioned above and copy the distribution into
+any directory you like.
 
 
 Support
