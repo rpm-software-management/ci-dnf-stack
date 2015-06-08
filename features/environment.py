@@ -16,7 +16,11 @@
 
 Among other things, the fixture contains a tito-enabled project
 directory and an empty working directory which is created before
-every feature.
+every feature. The only RPM of the project owns two files that
+indicates for which system it was built. Both of them matches the
+regular expression "/usr/share/foo/(.*)". In the first case, the
+subgroup of the match represents the ID of the target system. In
+the second case, it is the release version of the target system.
 
 The :class:`behave.runner.Context` instance passed to the environmental
 controls and to the step implementations is expected to have following
@@ -29,6 +33,8 @@ attributes:
 :attr:`!arch_option` : :data:`types.UnicodeType`
     A value of the Mock's "config_opts['target_arch']" option used by
     dnf-stack-ci.
+:attr:`!fedora_option` : :data:`types.UnicodeType` | :data:`None`
+    A value of the target Fedora release version option.
 :attr:`!dest_option` : :data:`types.UnicodeType`
     A name of the destination directory of dnf-stack-ci.
 
@@ -100,6 +106,7 @@ def before_feature(context, feature):  # pylint: disable=unused-argument
     """
     context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
     context.arch_option = 'x86_64'
+    context.fedora_option = None
     context.dest_option = context.workdn
 
 
