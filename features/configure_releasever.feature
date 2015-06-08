@@ -12,20 +12,13 @@
 # distributed except according to the terms contained in the LICENSE
 # file.
 
-# FIXME: https://github.com/dgoodwin/tito/issues/178
-config_opts['basedir'] = '{basedir}'
-config_opts['root'] = '{root}'
-config_opts['target_arch'] = '{arch}'
-config_opts['chroot_setup_cmd'] = 'install @buildsys-build'
-config_opts['yum.conf'] = """
-[main]
-# see also https://bugzilla.redhat.com/show_bug.cgi?id=1225004
-assumeyes=1
+Feature: Configure target system release version
+  In order to test a project on various systems, I want to configure the
+  release version of the target system.
 
-[fedora]
-metalink=https://mirrors.fedoraproject.org/metalink?repo={fedora_repo}&arch=$basearch
-
-[updates]
-metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{releasever}&arch=$basearch
-enabled={updates}
-"""
+  Scenario: Configure Fedora 22
+    Given following options are configured as follows:
+       | Option   | Value |
+       | --fedora | 22    |
+     When I execute this program
+     Then I should have the result for Fedora 22

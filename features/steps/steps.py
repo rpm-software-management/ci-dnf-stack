@@ -26,6 +26,30 @@ import behave
 import rpm
 
 
+def _rpm_header(dirname):
+    """Get the header of the RPM of the testing project in a directory.
+
+    :param dirname: a name of the directory
+    :type dirname: unicode
+    :return: the header of the RPM file
+    :rtype: rpm.hdr | None
+
+    """
+    # There is no reliable way how to test whether given RPMs were build
+    # from given sources. Thus we just find an RPM.
+    filenames = glob.iglob(os.path.join(dirname, '*.rpm'))
+    transaction = rpm.TransactionSet()
+    for filename in filenames:
+        try:
+            with open(filename) as file_:
+                header = transaction.hdrFromFdno(file_.fileno())
+        except (IOError, rpm.error):
+            continue
+        if not header.isSource():
+            return header
+    return None
+
+
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.given(  # pylint: disable=no-member
     'following options are configured as follows')
@@ -44,6 +68,8 @@ def _configure_options(context):
     for option, value in context.table:
         if option == 'ARCHITECTURE':
             context.arch_option = value
+        elif option == '--fedora':
+            context.fedora_option = value
         else:
             raise NotImplementedError('option not supported')
 
@@ -79,6 +105,9 @@ def _build_tito_rpms(context):
     cmdline = [
         'python', os.path.abspath('dnfstackci.py'), context.arch_option,
         context.dest_option]
+    if context.fedora_option is not None:
+        cmdline.insert(2, context.fedora_option)
+        cmdline.insert(2, '--fedora')
     subprocess.check_call(cmdline, cwd=context.titodn)
 
 
@@ -93,19 +122,8 @@ def _test_rpms(context):
     :raises exceptions.AssertionError: if the test fails
 
     """
-    # There is no reliable way how to test whether given RPMs were build
-    # from given sources. Thus we test just whether there are some RPMs.
-    filenames = glob.iglob(os.path.join(context.workdn, 'packages', '*.rpm'))
-    transaction = rpm.TransactionSet()
-    for filename in filenames:
-        try:
-            with open(filename) as file_:
-                header = transaction.hdrFromFdno(file_.fileno())
-        except (IOError, rpm.error):
-            continue
-        if not header.isSource():
-            return
-    assert False, 'no readable binary RPM found'
+    dirname = os.path.join(context.workdn, 'packages')
+    assert _rpm_header(dirname), 'no readable binary RPM found'
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -131,3 +149,24 @@ def _test_architecture(context):
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     # There is no way how to test whether the RPMs were built using the
     # given option since it's not specified what the option does.
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then('I should have the result for Fedora 22')  # pylint: disable=E1101
+def _test_releasever(context):
+    """Test whether the result is for Fedora 22.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :raises exceptions.AssertionError: if the test fails
+
+    """
+    try:
+        context.execute_steps('When I build RPMs of the tito-enabled project')
+    # FIXME: https://github.com/behave/behave/issues/308
+    except Exception:
+        raise ValueError('execution failed')
+    header = _rpm_header(os.path.join(context.workdn, 'packages'))
+    assert header, 'no readable binary RPM found'
+    expected = {b'/usr/share/foo/fedora', b'/usr/share/foo/22'}
+    assert set(header[rpm.RPMTAG_FILENAMES]) >= expected, 'RPM not for F22'

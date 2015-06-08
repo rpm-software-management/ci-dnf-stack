@@ -18,20 +18,21 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] ARCHITECTURE DESTINATION
+    usage: prog [-h] [--fedora VERSION] ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
     the current working directory. The RPMs will be stored in
     a subdirectory "packages" of the destination directory.
 
     positional arguments:
-      ARCHITECTURE  the value of the Mock's "config_opts['target_arch']"
-                    option
-      DESTINATION   the name of a destination directory (the directory
-                    will be overwritten)
+      ARCHITECTURE      the value of the Mock's
+                        "config_opts['target_arch']" option
+      DESTINATION       the name of a destination directory
+                        (the directory will be overwritten)
 
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help        show this help message and exit
+      --fedora VERSION  the target Fedora release version
 
     The "tito" and "mock" executables must be available. If an error
     occurs the exit status is non-zero.
@@ -108,7 +109,7 @@ def _remkdir(name, notexists_ok=False):
     os.mkdir(name)
 
 
-def _build_rpms(arch, destdn, last_tag=True):
+def _build_rpms(arch, destdn, last_tag=True, fedora='rawhide'):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
@@ -121,6 +122,8 @@ def _build_rpms(arch, destdn, last_tag=True):
     :type destdn: unicode
     :param last_tag: build from the latest tag instead of the current HEAD
     :type last_tag: bool
+    :param fedora: the target Fedora release version
+    :type fedora: unicode
     :raises exceptions.OSError: if the destination directory cannot be
        created or overwritten or if some of the executables cannot be
        executed
@@ -129,7 +132,7 @@ def _build_rpms(arch, destdn, last_tag=True):
     """
     LOGGER.info('Building RPMs from %s...', os.getcwdu())
     _remkdir(destdn, notexists_ok=True)
-    with _MockConfig(arch) as mockcfg:
+    with _MockConfig(arch, fedora) as mockcfg:
         # FIXME: https://github.com/dgoodwin/tito/issues/171
         command = [
             'tito', 'build', '--rpm',
@@ -176,20 +179,21 @@ def _start_commandline():
 
     The interface usage is::
 
-        usage: prog [-h] ARCHITECTURE DESTINATION
+        usage: prog [-h] [--fedora VERSION] ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
         the current working directory. The RPMs will be stored in
         a subdirectory "packages" of the destination directory.
 
         positional arguments:
-          ARCHITECTURE  the value of the Mock's
-                        "config_opts['target_arch']" option
-          DESTINATION   the name of a destination directory (the
-                        directory will be overwritten)
+          ARCHITECTURE      the value of the Mock's
+                            "config_opts['target_arch']" option
+          DESTINATION       the name of a destination directory
+                            (the directory will be overwritten)
 
         optional arguments:
-          -h, --help    show this help message and exit
+          -h, --help        show this help message and exit
+          --fedora VERSION  the target Fedora release version
 
         The "tito" and "mock" executables must be available. If an error
         occurs the exit status is non-zero.
@@ -206,6 +210,9 @@ def _start_commandline():
                     ''.format(pkgsreldn),
         epilog='The "tito" and "mock" executables must be available. If an '
                'error occurs the exit status is non-zero.')
+    argparser.add_argument(
+        '--fedora', default='rawhide', type=unicode, metavar='VERSION',
+        help='the target Fedora release version')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         'arch', type=unicode, metavar='ARCHITECTURE',
@@ -236,7 +243,7 @@ def _start_commandline():
     try:
         _build_rpms(
             options.arch, os.path.join(options.destdn, pkgsreldn),
-            last_tag=False)
+            last_tag=False, fedora=options.fedora)
     except ValueError:
         sys.exit(
             'The build have failed. Hopefully the executables have created an '
@@ -257,6 +264,8 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
     :type basedir: unicode | None
     :ivar root: the value set as "config_opts['root']"
     :type root: unicode
+    :ivar fedora: the target Fedora release version
+    :type fedora: unicode
     :ivar arch: the value set as "config_opts['target_arch']"
     :type arch: unicode
     :ivar cfgfn: a name of the file where the configuration is stored
@@ -264,15 +273,18 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, arch):
+    def __init__(self, arch, fedora='rawhide'):
         """Initialize the configuration.
 
         :param arch: a value set as "config_opts['target_arch']"
         :type arch: unicode
+        :param fedora: a target Fedora release version
+        :type fedora: unicode
 
         """
         self.basedir = None
-        self.root = '{}-{}'.format(NAME, arch)
+        self.root = '{}-{}-{}'.format(NAME, fedora, arch)
+        self.fedora = fedora
         self.arch = arch
         self.cfgfn = None
 
@@ -286,10 +298,14 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
         """
         self.basedir = decode_path(tempfile.mkdtemp())
+        fedora_repo = '{}{}'.format(
+            '' if self.fedora == 'rawhide' else 'fedora-', self.fedora)
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
         config = template.decode('utf-8').format(
-            basedir=self.basedir, root=self.root, arch=self.arch)
+            basedir=self.basedir, root=self.root, arch=self.arch,
+            fedora_repo=fedora_repo, releasever=self.fedora,
+            updates={'rawhide': '0'}.get(self.fedora, '1'))
         file_ = tempfile.NamedTemporaryFile('wb', suffix='.cfg', delete=False)
         with file_:
             file_.write(config)
