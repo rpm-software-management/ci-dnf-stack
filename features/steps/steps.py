@@ -165,6 +165,7 @@ def _test_releasever(context):
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
+    :raises exceptions.ValueError: if the result cannot be obtained
     :raises exceptions.AssertionError: if the test fails
 
     """
