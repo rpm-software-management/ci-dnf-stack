@@ -18,21 +18,23 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] [--fedora VERSION] ARCHITECTURE DESTINATION
+    usage: prog [-h] [--fedora VERSION] [--define MACRO EXPR]
+                ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
     the current working directory. The RPMs will be stored in
     a subdirectory "packages" of the destination directory.
 
     positional arguments:
-      ARCHITECTURE      the value of the Mock's
-                        "config_opts['target_arch']" option
-      DESTINATION       the name of a destination directory
-                        (the directory will be overwritten)
+      ARCHITECTURE         the value of the Mock's
+                           "config_opts['target_arch']" option
+      DESTINATION          the name of a destination directory
+                           (the directory will be overwritten)
 
     optional arguments:
-      -h, --help        show this help message and exit
-      --fedora VERSION  the target Fedora release version
+      -h, --help           show this help message and exit
+      --fedora VERSION     the target Fedora release version
+      --define MACRO EXPR  define an RPM MACRO with the value EXPR
 
     The "tito" and "mock" executables must be available. If an error
     occurs the exit status is non-zero.
@@ -109,7 +111,8 @@ def _remkdir(name, notexists_ok=False):
     os.mkdir(name)
 
 
-def _build_rpms(arch, destdn, last_tag=True, fedora='rawhide'):
+def _build_rpms(  # pylint: disable=too-many-locals
+        arch, destdn, last_tag=True, fedora='rawhide', macros=()):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
@@ -124,6 +127,9 @@ def _build_rpms(arch, destdn, last_tag=True, fedora='rawhide'):
     :type last_tag: bool
     :param fedora: the target Fedora release version
     :type fedora: unicode
+    :param macros: the name and the value of each RPM macro to be
+       defined
+    :type macros: collections.Sequence[tuple[unicode, unicode]]
     :raises exceptions.OSError: if the destination directory cannot be
        created or overwritten or if some of the executables cannot be
        executed
@@ -139,6 +145,13 @@ def _build_rpms(arch, destdn, last_tag=True, fedora='rawhide'):
             '--output={}'.format(destdn),
             '--builder=mock',
             '--arg=mock={}'.format(mockcfg.cfgfn)]
+        if macros:
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205823
+            arg = ' '.join(
+                "--define '{0[0]} {0[1]}'".format(pair) for pair in macros)
+            command.append('--arg=mock_args={}'.format(arg))
+            # FIXME: https://github.com/dgoodwin/tito/issues/149
+            command.insert(4, '--rpmbuild-options={}'.format(arg))
         if not last_tag:
             command.insert(3, '--test')
         # FIXME: https://github.com/dgoodwin/tito/issues/165
@@ -179,21 +192,23 @@ def _start_commandline():
 
     The interface usage is::
 
-        usage: prog [-h] [--fedora VERSION] ARCHITECTURE DESTINATION
+        usage: prog [-h] [--fedora VERSION] [--define MACRO EXPR]
+                    ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
         the current working directory. The RPMs will be stored in
         a subdirectory "packages" of the destination directory.
 
         positional arguments:
-          ARCHITECTURE      the value of the Mock's
-                            "config_opts['target_arch']" option
-          DESTINATION       the name of a destination directory
-                            (the directory will be overwritten)
+          ARCHITECTURE         the value of the Mock's
+                               "config_opts['target_arch']" option
+          DESTINATION          the name of a destination directory
+                               (the directory will be overwritten)
 
         optional arguments:
-          -h, --help        show this help message and exit
-          --fedora VERSION  the target Fedora release version
+          -h, --help           show this help message and exit
+          --fedora VERSION     the target Fedora release version
+          --define MACRO EXPR  define an RPM MACRO with the value EXPR
 
         The "tito" and "mock" executables must be available. If an error
         occurs the exit status is non-zero.
@@ -213,6 +228,10 @@ def _start_commandline():
     argparser.add_argument(
         '--fedora', default='rawhide', type=unicode, metavar='VERSION',
         help='the target Fedora release version')
+    argparser.add_argument(
+        '--define', action='append', nargs=2, default=[], type=unicode,
+        help='define an RPM MACRO with the value EXPR',
+        metavar=('MACRO', 'EXPR'), dest='macros')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         'arch', type=unicode, metavar='ARCHITECTURE',
@@ -243,7 +262,7 @@ def _start_commandline():
     try:
         _build_rpms(
             options.arch, os.path.join(options.destdn, pkgsreldn),
-            last_tag=False, fedora=options.fedora)
+            last_tag=False, fedora=options.fedora, macros=options.macros)
     except ValueError:
         sys.exit(
             'The build have failed. Hopefully the executables have created an '
