@@ -38,6 +38,7 @@ attention:
 - build RPMs of tito-enabled projects
 - configure Mock's "config_opts['target_arch']" option
 - configure target system release version
+- define RPM macros
 
 The routines are not in the final shape yet. Further features are added
 on demand if they fit the purpose of the repository.

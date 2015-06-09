@@ -63,15 +63,18 @@ def _configure_options(context):
     """
     if not context.table:
         raise ValueError('table not found')
-    if context.table.headings != ['Option', 'Value']:
+    expected = [['Option', 'Value'], ['Option', 'Value #1', 'Value #2']]
+    if context.table.headings not in expected:
         raise NotImplementedError('configuration format not supported')
-    for option, value in context.table:
-        if option == 'ARCHITECTURE':
-            context.arch_option = value
-        elif option == '--fedora':
-            context.fedora_option = value
+    for row in context.table:
+        if row[0] == 'ARCHITECTURE' and len(row) == 2:
+            context.arch_option = row[1]
+        elif row[0] == '--fedora' and len(row) == 2:
+            context.fedora_option = row[1]
+        elif row[0] == '--define' and len(row) == 3:
+            context.def_option.append((row[1], row[2]))
         else:
-            raise NotImplementedError('option not supported')
+            raise NotImplementedError('configuration not supported')
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -105,6 +108,10 @@ def _build_tito_rpms(context):
     cmdline = [
         'python', os.path.abspath('dnfstackci.py'), context.arch_option,
         context.dest_option]
+    for name, value in reversed(context.def_option):
+        cmdline.insert(2, value)
+        cmdline.insert(2, name)
+        cmdline.insert(2, '--define')
     if context.fedora_option is not None:
         cmdline.insert(2, context.fedora_option)
         cmdline.insert(2, '--fedora')
@@ -170,3 +177,28 @@ def _test_releasever(context):
     assert header, 'no readable binary RPM found'
     expected = {b'/usr/share/foo/fedora', b'/usr/share/foo/22'}
     assert set(header[rpm.RPMTAG_FILENAMES]) >= expected, 'RPM not for F22'
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    'I should have the result that is produced if %{{snapshot}} == '
+    "'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'")
+def _test_rpmmacros(context):
+    """Test whether the result is affected by RPM macro definitions.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :raises exceptions.ValueError: if the result cannot be obtained
+    :raises exceptions.AssertionError: if the test fails
+
+    """
+    release = b'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
+    try:
+        context.execute_steps('When I build RPMs of the tito-enabled project')
+    # FIXME: https://github.com/behave/behave/issues/308
+    except Exception:
+        raise ValueError('execution failed')
+    header = _rpm_header(os.path.join(context.workdn, 'packages'))
+    assert header, 'no readable binary RPM found'
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
+    assert release in header[rpm.RPMTAG_RELEASE], 'macro not defined'
