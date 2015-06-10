@@ -65,6 +65,7 @@ dnf-stack-ci:
 
 - `mock executable <http://fedoraproject.org/wiki/Projects/Mock>`_
 - `tito executable <http://rm-rf.ca/tito>`_
+- `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
 - `pkg_resources Python module
   <https://bitbucket.org/pypa/setuptools/>`_
 
