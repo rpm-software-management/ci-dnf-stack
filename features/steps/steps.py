@@ -23,6 +23,7 @@ import os
 import subprocess
 
 import behave
+import createrepo_c
 import rpm
 
 
@@ -130,7 +131,22 @@ def _test_rpms(context):
 
     """
     dirname = os.path.join(context.workdn, 'packages')
-    assert _rpm_header(dirname), 'no readable binary RPM found'
+    header = _rpm_header(dirname)
+    assert header, 'no readable binary RPM found'
+    rpmnevra = (
+        header[rpm.RPMTAG_N], str(header[rpm.RPMTAG_EPOCHNUM]),
+        header[rpm.RPMTAG_V], header[rpm.RPMTAG_R], header[rpm.RPMTAG_ARCH])
+    repository = createrepo_c.Metadata()
+    # FIXME: https://github.com/Tojaj/createrepo_c/issues/29
+    # noinspection PyBroadException
+    try:
+        repository.locate_and_load_xml(dirname)
+    except Exception:  # pylint: disable=broad-except
+        assert False, 'no readable repository found'
+    reponevras = (
+        (pkg.name, pkg.epoch, pkg.version, pkg.release, pkg.arch)
+        for pkg in (repository.get(key) for key in repository.keys()))
+    assert rpmnevra in reponevras, 'repository not correct'
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535

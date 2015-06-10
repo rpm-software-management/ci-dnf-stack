@@ -22,8 +22,10 @@ program is started. The interface usage is::
                 ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
-    the current working directory. The RPMs will be stored in
-    a subdirectory "packages" of the destination directory.
+    the current working directory. The RPMs will be stored in a
+    subdirectory "packages" of the destination directory. Also
+    corresponding metadata will be added so that the subdirectory
+    will work as an RPM repository.
 
     positional arguments:
       ARCHITECTURE         the value of the Mock's
@@ -60,6 +62,7 @@ import subprocess
 import sys
 import tempfile
 
+import createrepo_c
 import pkg_resources
 
 
@@ -111,12 +114,79 @@ def _remkdir(name, notexists_ok=False):
     os.mkdir(name)
 
 
+def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
+    """Create a repository from a directory of RPMs.
+
+    Some files in a subdirectory "repodata" may be overwritten.
+
+    :param dirname: a name of the directory
+    :type dirname: unicode
+    :param suffix: a suffix of all the RPM files
+    :type suffix: unicode
+    :raises exceptions.OSError: if the directory cannot be read or
+       modified
+    :raises exceptions.ValueError: if an RPM cannot be read or if the
+       subdirectory cannot be modified
+    :raises exceptions.IOError: if the subdirectory cannot be modified
+
+    """
+    # FIXME: https://github.com/Tojaj/createrepo_c/issues/25
+    # FIXME: https://github.com/Tojaj/createrepo_c/issues/19
+    name2type = {
+        'primary': createrepo_c.XMLFILE_PRIMARY,
+        'filelists': createrepo_c.XMLFILE_FILELISTS,
+        'other': createrepo_c.XMLFILE_OTHER}
+    repodatadn = os.path.join(dirname, 'repodata')
+    filesuffix = createrepo_c.compression_suffix(createrepo_c.GZ_COMPRESSION)
+    try:
+        os.mkdir(repodatadn)
+    except OSError as err:
+        if err.errno != errno.EEXIST:
+            raise
+    packages = []
+    for pkgbn in [nam for nam in os.listdir(dirname) if nam.endswith(suffix)]:
+        pkgfn = os.path.join(dirname, pkgbn)
+        try:
+            package = createrepo_c.package_from_rpm(pkgfn, location_href=pkgbn)
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/17
+        except Exception:
+            raise ValueError('RPM not accessible')
+        packages.append(package)
+    repomd = createrepo_c.Repomd()
+    for typename, typeconst in name2type.items():
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/22
+        filename = os.path.join(
+            repodatadn, '{}.xml{}'.format(typename, filesuffix))
+        try:
+            # FIXME: https://github.com/Tojaj/createrepo_c/issues/27
+            file_ = createrepo_c.XmlFile(
+                filename, typeconst, createrepo_c.GZ_COMPRESSION, None)
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/26
+        except Exception:
+            raise ValueError('path not accessible')
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/20
+        file_.set_num_of_pkgs(len(packages))
+        for package in packages:
+            file_.add_pkg(package)
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/21
+        file_.close()
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/28
+        record = createrepo_c.RepomdRecord(typename, filename)
+        # FIXME: https://github.com/Tojaj/createrepo_c/issues/18
+        # noinspection PyArgumentList
+        record.fill(createrepo_c.SHA256)
+        repomd.set_record(record)
+    with open(os.path.join(repodatadn, 'repomd.xml'), 'w') as file_:
+        file_.write(repomd.xml_dump())
+
+
 def _build_rpms(  # pylint: disable=too-many-locals
         arch, destdn, last_tag=True, fedora='rawhide', macros=()):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
-    directory will be overwritten.
+    directory will be overwritten. Corresponding metadata will be added
+    so that the directory could work as an RPM repository.
 
     :param arch: the value of the Mock's "config_opts['target_arch']"
        option
@@ -180,6 +250,10 @@ def _build_rpms(  # pylint: disable=too-many-locals
         'error:\n%s', status, _indent(stdout), _indent(stderr))
     if status:
         raise ValueError('"tito" failed')
+    try:
+        _create_rpmrepo(destdn, '.rpm')
+    except (OSError, ValueError, IOError):
+        raise ValueError('repository creation failed')
 
 
 def _start_commandline():
@@ -196,8 +270,10 @@ def _start_commandline():
                     ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
-        the current working directory. The RPMs will be stored in
-        a subdirectory "packages" of the destination directory.
+        the current working directory. The RPMs will be stored in a
+        subdirectory "packages" of the destination directory. Also
+        corresponding metadata will be added so that the subdirectory
+        could work as an RPM repository.
 
         positional arguments:
           ARCHITECTURE         the value of the Mock's
@@ -221,7 +297,9 @@ def _start_commandline():
     argparser = argparse.ArgumentParser(
         description='Build RPMs of a tito-enabled project from the checkout in'
                     ' the current working directory. The RPMs will be stored '
-                    'in a subdirectory "{}" of the destination directory.'
+                    'in a subdirectory "{}" of the destination directory. Also'
+                    ' corresponding metadata will be added so that the '
+                    'subdirectory could work as an RPM repository.'
                     ''.format(pkgsreldn),
         epilog='The "tito" and "mock" executables must be available. If an '
                'error occurs the exit status is non-zero.')
