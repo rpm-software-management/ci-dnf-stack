@@ -64,7 +64,8 @@ def _configure_options(context):
     """
     if not context.table:
         raise ValueError('table not found')
-    expected = [['Option', 'Value'], ['Option', 'Value #1', 'Value #2']]
+    expected = [
+        ['Option'], ['Option', 'Value'], ['Option', 'Value #1', 'Value #2']]
     if context.table.headings not in expected:
         raise NotImplementedError('configuration format not supported')
     for row in context.table:
@@ -72,6 +73,8 @@ def _configure_options(context):
             context.arch_option = row[1]
         elif row[0] == '--fedora' and len(row) == 2:
             context.fedora_option = row[1]
+        elif row[0] == '--add-rawhide' and len(row) == 1:
+            context.rawhide_option = True
         elif row[0] == '--define' and len(row) == 3:
             context.def_option.append((row[1], row[2]))
         else:
@@ -113,6 +116,8 @@ def _build_tito_rpms(context):
         cmdline.insert(2, value)
         cmdline.insert(2, name)
         cmdline.insert(2, '--define')
+    if context.rawhide_option:
+        cmdline.insert(2, '--add-rawhide')
     if context.fedora_option is not None:
         cmdline.insert(2, context.fedora_option)
         cmdline.insert(2, '--fedora')
@@ -194,6 +199,31 @@ def _test_releasever(context):
     assert header, 'no readable binary RPM found'
     expected = {b'/usr/share/foo/fedora', b'/usr/share/foo/22'}
     assert set(header[rpm.RPMTAG_FILENAMES]) >= expected, 'RPM not for F22'
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    "I should have the result that is produced if config_opts['yum.conf'] "
+    'contains the Rawhide repository')
+def _test_repository(context):
+    """Test whether the result is affected by a repo. in "yum.conf".
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :raises exceptions.ValueError: if the result cannot be obtained or
+       if the test fails
+
+    """
+    try:
+        context.execute_steps("""
+            When I build RPMs of the tito-enabled project
+            Then I should have RPMs of the tito-enabled project""")
+    # FIXME: https://github.com/behave/behave/issues/308
+    except Exception:
+        raise ValueError('execution failed')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # There is no way how to test whether the RPMs were built using the
+    # given option since it's not specified what the option does.
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535

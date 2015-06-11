@@ -37,6 +37,9 @@ attributes:
     dnf-stack-ci.
 :attr:`!fedora_option` : :data:`types.UnicodeType` | :data:`None`
     A value of the target Fedora release version option.
+:attr:`!rawhide_option` : :class:`bool`
+    ``True`` if the Fedora Rawhide repository should be added to the
+    Mock's "config_opts['yum.conf']" option, ``False`` otherwise.
 :attr:`!def_option` : :class:`list[types.TupleType[types.UnicodeType, types.UnicodeType]]`
     A name and a value of each RPM macro to be defined.
 :attr:`!dest_option` : :data:`types.UnicodeType`
@@ -111,6 +114,7 @@ def before_feature(context, feature):  # pylint: disable=unused-argument
     context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
     context.arch_option = 'x86_64'
     context.fedora_option = None
+    context.rawhide_option = False
     context.def_option = []
     context.dest_option = context.workdn
 
