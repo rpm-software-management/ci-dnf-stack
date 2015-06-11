@@ -12,22 +12,13 @@
 # distributed except according to the terms contained in the LICENSE
 # file.
 
-# FIXME: https://github.com/dgoodwin/tito/issues/178
-config_opts['basedir'] = '{basedir}'
-config_opts['root'] = '{root}'
-config_opts['target_arch'] = '{arch}'
-config_opts['chroot_setup_cmd'] = 'install @buildsys-build'
-config_opts['yum.conf'] = """
-[main]
-# see also https://bugzilla.redhat.com/show_bug.cgi?id=1225004
-assumeyes=1
+Feature: Add repositories to config_opts['yum.conf']
+  In order to test a project with various dependencies, I want to add
+  repositories to the Mock's "config_opts['yum.conf']" option.
 
-[fedora]
-metalink=https://mirrors.fedoraproject.org/metalink?repo={fedora_repo}&arch=$basearch
-
-[updates]
-metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{releasever}&arch=$basearch
-enabled={updates}
-
-{repos}
-"""
+  Scenario: Add Fedora Rawhide
+    Given following options are configured as follows:
+       | Option        |
+       | --add-rawhide |
+     When I execute this program
+     Then I should have the result that is produced if config_opts['yum.conf'] contains the Rawhide repository
