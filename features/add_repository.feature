@@ -16,6 +16,13 @@ Feature: Add repositories to config_opts['yum.conf']
   In order to test a project with various dependencies, I want to add
   repositories to the Mock's "config_opts['yum.conf']" option.
 
+  Scenario: Add Fedora 22
+    Given following options are configured as follows:
+       | Option            | Value |
+       | --add-non-rawhide | 22    |
+     When I execute this program
+     Then I should have the result that is produced if config_opts['yum.conf'] contains the Fedora 22 repository
+
   Scenario: Add Fedora Rawhide
     Given following options are configured as follows:
        | Option        |
