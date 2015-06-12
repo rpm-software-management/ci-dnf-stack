@@ -16,6 +16,11 @@ Feature: Build tito-enabled project
   In order to test a tito-enabled project, I want to build its software
   packages.
 
+  Background: Fedora Rawhide is added
+    Given following options are configured as follows:
+       | Option        |
+       | --add-rawhide |
+
   Scenario: Build RPMs
      When I build RPMs of the tito-enabled project
      Then I should have RPMs of the tito-enabled project

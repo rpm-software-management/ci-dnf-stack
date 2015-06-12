@@ -16,9 +16,14 @@ Feature: Configure config_opts['target_arch']
   In order to test a project on various systems, I want to configure the
   value of the Mock's "config_opts['target_arch']" option.
 
+  Background: Fedora Rawhide is added
+    Given following options are configured as follows:
+       | Option        |
+       | --add-rawhide |
+
   Scenario: Configure i686
     Given following options are configured as follows:
        | Option       | Value |
        | ARCHITECTURE | i686  |
-     When I execute this program
+     When I build RPMs of the tito-enabled project
      Then I should have the result that is produced if config_opts['target_arch'] == 'i686'

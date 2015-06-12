@@ -18,8 +18,8 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] [--fedora VERSION] [--add-non-rawhide VERSION]
-                [--add-rawhide] [--define MACRO EXPR]
+    usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
+                [--define MACRO EXPR]
                 ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
@@ -36,7 +36,6 @@ program is started. The interface usage is::
 
     optional arguments:
       -h, --help            show this help message and exit
-      --fedora VERSION      the target Fedora release version
       --add-non-rawhide VERSION
                             add a Fedora non-Rawhide release repository
                             to the Mock's "config_opts['yum.conf']"
@@ -187,8 +186,8 @@ def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
         file_.write(repomd.xml_dump())
 
 
-def _build_rpms(  # pylint: disable=too-many-locals,too-many-arguments
-        arch, destdn, last_tag=True, fedora='rawhide', repos=(), macros=()):
+def _build_rpms(  # pylint: disable=too-many-locals
+        arch, destdn, last_tag=True, repos=(), macros=()):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
@@ -202,8 +201,6 @@ def _build_rpms(  # pylint: disable=too-many-locals,too-many-arguments
     :type destdn: unicode
     :param last_tag: build from the latest tag instead of the current HEAD
     :type last_tag: bool
-    :param fedora: the target Fedora release version
-    :type fedora: unicode
     :param repos: the matalink URL of each repository added to the
        Mock's config_opts['yum.conf']
     :type repos: collections.Sequence[unicode]
@@ -218,7 +215,7 @@ def _build_rpms(  # pylint: disable=too-many-locals,too-many-arguments
     """
     LOGGER.info('Building RPMs from %s...', os.getcwdu())
     _remkdir(destdn, notexists_ok=True)
-    with _MockConfig(arch, fedora, repos) as mockcfg:
+    with _MockConfig(arch, repos) as mockcfg:
         # FIXME: https://github.com/dgoodwin/tito/issues/171
         command = [
             'tito', 'build', '--rpm',
@@ -276,8 +273,8 @@ def _start_commandline():
 
     The interface usage is::
 
-        usage: prog [-h] [--fedora VERSION] [--add-non-rawhide VERSION]
-                    [--add-rawhide] [--define MACRO EXPR]
+        usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
+                    [--define MACRO EXPR]
                     ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
@@ -294,7 +291,6 @@ def _start_commandline():
 
         optional arguments:
           -h, --help            show this help message and exit
-          --fedora VERSION      the target Fedora release version
           --add-non-rawhide VERSION
                                 add a Fedora non-Rawhide release
                                 repository to the Mock's
@@ -320,9 +316,6 @@ def _start_commandline():
                     ''.format(pkgsreldn),
         epilog='The "tito" and "mock" executables must be available. If an '
                'error occurs the exit status is non-zero.')
-    argparser.add_argument(
-        '--fedora', default='rawhide', type=unicode, metavar='VERSION',
-        help='the target Fedora release version')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
     argparser.add_argument(
         '--add-non-rawhide', action='append', default=[], type=unicode,
@@ -376,8 +369,7 @@ def _start_commandline():
     try:
         _build_rpms(
             options.arch, os.path.join(options.destdn, pkgsreldn),
-            last_tag=False, fedora=options.fedora, repos=repos,
-            macros=options.macros)
+            last_tag=False, repos=repos, macros=options.macros)
     except ValueError:
         sys.exit(
             'The build have failed. Hopefully the executables have created an '
@@ -398,8 +390,6 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
     :type basedir: unicode | None
     :ivar root: the value set as "config_opts['root']"
     :type root: unicode
-    :ivar fedora: the target Fedora release version
-    :type fedora: unicode
     :ivar arch: the value set as "config_opts['target_arch']"
     :type arch: unicode
     :ivar repos: the matalink URL of each repository added to
@@ -410,21 +400,18 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, arch, fedora='rawhide', repos=()):
+    def __init__(self, arch, repos=()):
         """Initialize the configuration.
 
         :param arch: a value set as "config_opts['target_arch']"
         :type arch: unicode
-        :param fedora: a target Fedora release version
-        :type fedora: unicode
         :param repos: the matalink URL of each repository added to
             config_opts['yum.conf']
         :type repos: collections.Sequence[unicode]
 
         """
         self.basedir = None
-        self.root = '{}-{}-{}'.format(NAME, fedora, arch)
-        self.fedora = fedora
+        self.root = '{}-{}'.format(NAME, arch)
         self.arch = arch
         self.repos = repos
         self.cfgfn = None
@@ -439,17 +426,13 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
         """
         self.basedir = decode_path(tempfile.mkdtemp())
-        fedora_repo = '{}{}'.format(
-            '' if self.fedora == 'rawhide' else 'fedora-', self.fedora)
         repos = '\n'.join(
             '[user-{}]\nmetalink={}\n'.format(index, url)
             for index, url in enumerate(self.repos))
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
         config = template.decode('utf-8').format(
-            basedir=self.basedir, root=self.root, arch=self.arch,
-            fedora_repo=fedora_repo, releasever=self.fedora,
-            updates={'rawhide': '0'}.get(self.fedora, '1'), repos=repos)
+            basedir=self.basedir, root=self.root, arch=self.arch, repos=repos)
         file_ = tempfile.NamedTemporaryFile('wb', suffix='.cfg', delete=False)
         with file_:
             file_.write(config)

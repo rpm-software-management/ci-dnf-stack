@@ -20,12 +20,12 @@ Feature: Add repositories to config_opts['yum.conf']
     Given following options are configured as follows:
        | Option            | Value |
        | --add-non-rawhide | 22    |
-     When I execute this program
+     When I build RPMs of the tito-enabled project
      Then I should have the result that is produced if config_opts['yum.conf'] contains the Fedora 22 repository
 
   Scenario: Add Fedora Rawhide
     Given following options are configured as follows:
        | Option        |
        | --add-rawhide |
-     When I execute this program
+     When I build RPMs of the tito-enabled project
      Then I should have the result that is produced if config_opts['yum.conf'] contains the Rawhide repository
