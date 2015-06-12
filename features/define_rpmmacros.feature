@@ -16,9 +16,14 @@ Feature: Define RPM macros
   In order to test a project with a particular RPM macro, I want to
   define it.
 
+  Background: Fedora Rawhide is added
+    Given following options are configured as follows:
+       | Option        |
+       | --add-rawhide |
+
   Scenario: Define one macro
     Given following options are configured as follows:
        | Option   | Value #1 | Value #2                                               |
        | --define | snapshot | .2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm |
-     When I execute this program
+     When I build RPMs of the tito-enabled project
      Then I should have the result that is produced if %{snapshot} == '.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'

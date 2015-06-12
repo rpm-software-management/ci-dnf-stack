@@ -71,8 +71,6 @@ def _configure_options(context):
     for row in context.table:
         if row[0] == 'ARCHITECTURE' and len(row) == 2:
             context.arch_option = row[1]
-        elif row[0] == '--fedora' and len(row) == 2:
-            context.fedora_option = row[1]
         elif row[0] == '--add-non-rawhide' and len(row) == 2:
             context.nonrawhide_option.append(row[1])
         elif row[0] == '--add-rawhide' and len(row) == 1:
@@ -81,20 +79,6 @@ def _configure_options(context):
             context.def_option.append((row[1], row[2]))
         else:
             raise NotImplementedError('configuration not supported')
-
-
-# FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.when('I execute this program')  # pylint: disable=no-member
-# FIXME: https://bitbucket.org/logilab/pylint/issue/535
-def _execute(context):  # pylint: disable=unused-argument
-    """Execute this program.
-
-    :param context: the context as described in the environment file
-    :type context: behave.runner.Context
-
-    """
-    # So far, it's easier to execute the program in the "then" clause.
-    pass
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -123,9 +107,6 @@ def _build_tito_rpms(context):
     for version in reversed(context.nonrawhide_option):
         cmdline.insert(2, version)
         cmdline.insert(2, '--add-non-rawhide')
-    if context.fedora_option is not None:
-        cmdline.insert(2, context.fedora_option)
-        cmdline.insert(2, '--fedora')
     subprocess.check_call(cmdline, cwd=context.titodn)
 
 
@@ -163,47 +144,17 @@ def _test_rpms(context):
 @behave.then(  # pylint: disable=no-member
     "I should have the result that is produced if config_opts['target_arch'] "
     "== 'i686'")
-def _test_architecture(context):
+def _test_architecture(context):  # pylint: disable=unused-argument
     """Test whether the result is affected by a Mock's "target_arch".
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
-    :raises exceptions.ValueError: if the result cannot be obtained or
-       if the test fails
 
     """
-    try:
-        context.execute_steps("""
-            When I build RPMs of the tito-enabled project
-            Then I should have RPMs of the tito-enabled project""")
-    # FIXME: https://github.com/behave/behave/issues/308
-    except Exception:
-        raise ValueError('execution failed')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     # There is no way how to test whether the RPMs were built using the
     # given option since it's not specified what the option does.
-
-
-# FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.then('I should have the result for Fedora 22')  # pylint: disable=E1101
-def _test_releasever(context):
-    """Test whether the result is for Fedora 22.
-
-    :param context: the context as described in the environment file
-    :type context: behave.runner.Context
-    :raises exceptions.ValueError: if the result cannot be obtained
-    :raises exceptions.AssertionError: if the test fails
-
-    """
-    try:
-        context.execute_steps('When I build RPMs of the tito-enabled project')
-    # FIXME: https://github.com/behave/behave/issues/308
-    except Exception:
-        raise ValueError('execution failed')
-    header = _rpm_header(os.path.join(context.workdn, 'packages'))
-    assert header, 'no readable binary RPM found'
-    expected = {b'/usr/share/foo/fedora', b'/usr/share/foo/22'}
-    assert set(header[rpm.RPMTAG_FILENAMES]) >= expected, 'RPM not for F22'
+    pass
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -217,20 +168,12 @@ def _test_repository(context, repository):  # pylint: disable=unused-argument
     :type context: behave.runner.Context
     :param repository: a name of the repository
     :type repository: unicode
-    :raises exceptions.ValueError: if the result cannot be obtained or
-       if the test fails
 
     """
-    try:
-        context.execute_steps("""
-            When I build RPMs of the tito-enabled project
-            Then I should have RPMs of the tito-enabled project""")
-    # FIXME: https://github.com/behave/behave/issues/308
-    except Exception:
-        raise ValueError('execution failed')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
     # There is no way how to test whether the RPMs were built using the
     # given option since it's not specified what the option does.
+    pass
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -242,16 +185,10 @@ def _test_rpmmacros(context):
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
-    :raises exceptions.ValueError: if the result cannot be obtained
     :raises exceptions.AssertionError: if the test fails
 
     """
     release = b'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
-    try:
-        context.execute_steps('When I build RPMs of the tito-enabled project')
-    # FIXME: https://github.com/behave/behave/issues/308
-    except Exception:
-        raise ValueError('execution failed')
     header = _rpm_header(os.path.join(context.workdn, 'packages'))
     assert header, 'no readable binary RPM found'
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
