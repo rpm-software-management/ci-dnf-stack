@@ -73,6 +73,8 @@ def _configure_options(context):
             context.arch_option = row[1]
         elif row[0] == '--fedora' and len(row) == 2:
             context.fedora_option = row[1]
+        elif row[0] == '--add-non-rawhide' and len(row) == 2:
+            context.nonrawhide_option.append(row[1])
         elif row[0] == '--add-rawhide' and len(row) == 1:
             context.rawhide_option = True
         elif row[0] == '--define' and len(row) == 3:
@@ -118,6 +120,9 @@ def _build_tito_rpms(context):
         cmdline.insert(2, '--define')
     if context.rawhide_option:
         cmdline.insert(2, '--add-rawhide')
+    for version in reversed(context.nonrawhide_option):
+        cmdline.insert(2, version)
+        cmdline.insert(2, '--add-non-rawhide')
     if context.fedora_option is not None:
         cmdline.insert(2, context.fedora_option)
         cmdline.insert(2, '--fedora')
@@ -204,12 +209,14 @@ def _test_releasever(context):
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.then(  # pylint: disable=no-member
     "I should have the result that is produced if config_opts['yum.conf'] "
-    'contains the Rawhide repository')
-def _test_repository(context):
+    'contains the {repository} repository')
+def _test_repository(context, repository):  # pylint: disable=unused-argument
     """Test whether the result is affected by a repo. in "yum.conf".
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
+    :param repository: a name of the repository
+    :type repository: unicode
     :raises exceptions.ValueError: if the result cannot be obtained or
        if the test fails
 

@@ -18,28 +18,32 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] [--fedora VERSION] [--add-rawhide]
-                [--define MACRO EXPR]
+    usage: prog [-h] [--fedora VERSION] [--add-non-rawhide VERSION]
+                [--add-rawhide] [--define MACRO EXPR]
                 ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
     the current working directory. The RPMs will be stored in a
     subdirectory "packages" of the destination directory. Also
     corresponding metadata will be added so that the subdirectory
-    will work as an RPM repository.
+    could work as an RPM repository.
 
     positional arguments:
-      ARCHITECTURE         the value of the Mock's
-                           "config_opts['target_arch']" option
-      DESTINATION          the name of a destination directory
-                           (the directory will be overwritten)
+      ARCHITECTURE          the value of the Mock's
+                            "config_opts['target_arch']" option
+      DESTINATION           the name of a destination directory
+                            (the directory will be overwritten)
 
     optional arguments:
-      -h, --help           show this help message and exit
-      --fedora VERSION     the target Fedora release version
-      --add-rawhide        add the Fedora Rawhide repository to the
-                           Mock's "config_opts['yum.conf']" option
-      --define MACRO EXPR  define an RPM MACRO with the value EXPR
+      -h, --help            show this help message and exit
+      --fedora VERSION      the target Fedora release version
+      --add-non-rawhide VERSION
+                            add a Fedora non-Rawhide release repository
+                            to the Mock's "config_opts['yum.conf']"
+                            option
+      --add-rawhide         add the Fedora Rawhide repository to the
+                            Mock's "config_opts['yum.conf']" option
+      --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
     The "tito" and "mock" executables must be available. If an error
     occurs the exit status is non-zero.
@@ -272,8 +276,8 @@ def _start_commandline():
 
     The interface usage is::
 
-        usage: prog [-h] [--fedora VERSION] [--add-rawhide]
-                    [--define MACRO EXPR]
+        usage: prog [-h] [--fedora VERSION] [--add-non-rawhide VERSION]
+                    [--add-rawhide] [--define MACRO EXPR]
                     ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
@@ -283,17 +287,21 @@ def _start_commandline():
         could work as an RPM repository.
 
         positional arguments:
-          ARCHITECTURE         the value of the Mock's
-                               "config_opts['target_arch']" option
-          DESTINATION          the name of a destination directory
-                               (the directory will be overwritten)
+          ARCHITECTURE          the value of the Mock's
+                                "config_opts['target_arch']" option
+          DESTINATION           the name of a destination directory
+                                (the directory will be overwritten)
 
         optional arguments:
-          -h, --help           show this help message and exit
-          --fedora VERSION     the target Fedora release version
-          --add-rawhide        add the Fedora Rawhide repository to the
-                               Mock's "config_opts['yum.conf']" option
-          --define MACRO EXPR  define an RPM MACRO with the value EXPR
+          -h, --help            show this help message and exit
+          --fedora VERSION      the target Fedora release version
+          --add-non-rawhide VERSION
+                                add a Fedora non-Rawhide release
+                                repository to the Mock's
+                                "config_opts['yum.conf']" option
+          --add-rawhide         add the Fedora Rawhide repository to the
+                                Mock's "config_opts['yum.conf']" option
+          --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
         The "tito" and "mock" executables must be available. If an error
         occurs the exit status is non-zero.
@@ -315,6 +323,12 @@ def _start_commandline():
     argparser.add_argument(
         '--fedora', default='rawhide', type=unicode, metavar='VERSION',
         help='the target Fedora release version')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    argparser.add_argument(
+        '--add-non-rawhide', action='append', default=[], type=unicode,
+        help="add a Fedora non-Rawhide release repository to the Mock's "
+             "\"config_opts['yum.conf']\" option",
+        metavar='VERSION')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
     argparser.add_argument(
         '--add-rawhide', action='store_true',
@@ -352,7 +366,11 @@ def _start_commandline():
     handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
     LOGGER.addHandler(handler)
     pat = 'https://mirrors.fedoraproject.org/metalink?repo={}&arch=$basearch'
-    repos = []
+    repos = [
+        pat.format('fedora-{}'.format(ver)) for ver in options.add_non_rawhide]
+    repos.extend(
+        'https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{}&'
+        'arch=$basearch'.format(ver) for ver in options.add_non_rawhide)
     if options.add_rawhide:
         repos.append(pat.format('rawhide'))
     try:
