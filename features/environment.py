@@ -16,7 +16,7 @@
 
 Among other things, the fixture contains a tito-enabled project
 directory and an empty working directory which is created before
-every feature. The only RPM of the project appends the value of
+every scenario. The only RPM of the project appends the value of
 an RPM macro %{snapshot} to its release number if set.
 
 The :class:`behave.runner.Context` instance passed to the environmental
@@ -98,13 +98,13 @@ def before_all(context):
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
-def before_feature(context, feature):  # pylint: disable=unused-argument
-    """Do the preparation that must be done before every feature.
+def before_scenario(context, scenario):  # pylint: disable=unused-argument
+    """Do the preparation that must be done before every scenario.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
-    :param feature: the next tested feature
-    :type feature: behave.model.Feature
+    :param scenario: the next tested scenario
+    :type scenario: behave.model.Scenario
 
     """
     context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
@@ -116,13 +116,13 @@ def before_feature(context, feature):  # pylint: disable=unused-argument
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
-def after_feature(context, feature):  # pylint: disable=unused-argument
-    """Do the preparation that must be done after every feature.
+def after_scenario(context, scenario):  # pylint: disable=unused-argument
+    """Do the preparation that must be done after every scenario.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
-    :param feature: the next tested feature
-    :type feature: behave.model.Feature
+    :param scenario: the next tested scenario
+    :type scenario: behave.model.Scenario
     :raises exceptions.OSError: if the working directory cannot be
        removed
 
