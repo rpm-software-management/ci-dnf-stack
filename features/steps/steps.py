@@ -75,10 +75,25 @@ def _configure_options(context):
             context.nonrawhide_option.append(row[1])
         elif row[0] == '--add-rawhide' and len(row) == 1:
             context.rawhide_option = True
+        elif row[0] == '--add-repository' and len(row) == 2:
+            context.repo_option.append(row[1])
         elif row[0] == '--define' and len(row) == 3:
             context.def_option.append((row[1], row[2]))
         else:
             raise NotImplementedError('configuration not supported')
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.given(  # pylint: disable=no-member
+    '“$URL” is replaced with the URL of a testing repository in all options')
+def _assign_substitution(context):
+    """Assign a value that should replace a value in all options.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+
+    """
+    context.substitute = True
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -95,17 +110,23 @@ def _build_tito_rpms(context):
     :raises subprocess.CalledProcessError: if the build fails
 
     """
+    old = '$URL'
+    new = context.repourl if context.substitute else old
     cmdline = [
-        'python', os.path.abspath('dnfstackci.py'), context.arch_option,
-        context.dest_option]
+        'python', os.path.abspath('dnfstackci.py'),
+        context.arch_option.replace(old, new),
+        context.dest_option.replace(old, new)]
     for name, value in reversed(context.def_option):
-        cmdline.insert(2, value)
-        cmdline.insert(2, name)
+        cmdline.insert(2, value.replace(old, new))
+        cmdline.insert(2, name.replace(old, new))
         cmdline.insert(2, '--define')
+    for url in reversed(context.repo_option):
+        cmdline.insert(2, url.replace(old, new))
+        cmdline.insert(2, '--add-repository')
     if context.rawhide_option:
         cmdline.insert(2, '--add-rawhide')
     for version in reversed(context.nonrawhide_option):
-        cmdline.insert(2, version)
+        cmdline.insert(2, version.replace(old, new))
         cmdline.insert(2, '--add-non-rawhide')
     subprocess.check_call(cmdline, cwd=context.titodn)
 

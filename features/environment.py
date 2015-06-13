@@ -15,9 +15,9 @@
 """This module provides the test fixture common to all the features.
 
 Among other things, the fixture contains a tito-enabled project
-directory and an empty working directory which is created before
-every scenario. The only RPM of the project appends the value of
-an RPM macro %{snapshot} to its release number if set.
+directory, a testing repository and an empty working directory which
+is created before every scenario. The only RPM of the project appends
+the value of an RPM macro %{snapshot} to its release number if set.
 
 The :class:`behave.runner.Context` instance passed to the environmental
 controls and to the step implementations is expected to have following
@@ -25,6 +25,8 @@ attributes:
 
 :attr:`!titodn` : :class:`str`
     A name of the directory with the tito-enabled project.
+:attr:`!repourl` : :data:`types.UnicodeType`
+    The URL of the testing repository.
 :attr:`!workdn` : :data:`types.UnicodeType`
     A name of the working directory.
 :attr:`!arch_option` : :data:`types.UnicodeType`
@@ -36,10 +38,16 @@ attributes:
 :attr:`!rawhide_option` : :class:`bool`
     ``True`` if the Fedora Rawhide repository should be added to the
     Mock's "config_opts['yum.conf']" option, ``False`` otherwise.
+:attr:`!repo_option` : :class:`list[types.UnicodeType]`
+    The URL of each repository that should be added to the Mock's
+    "config_opts['yum.conf']" option.
 :attr:`!def_option` : :class:`list[types.TupleType[types.UnicodeType, types.UnicodeType]]`
     A name and a value of each RPM macro to be defined.
 :attr:`!dest_option` : :data:`types.UnicodeType`
     A name of the destination directory of dnf-stack-ci.
+:attr:`!substitute` : :class:`bool`
+    ``True`` if "$URL" should be replaced with the URL of the testing
+    repository in all options, ``False`` otherwise.
 
 """
 
@@ -51,6 +59,8 @@ import os
 import shutil
 import subprocess
 import tempfile
+import urllib
+import urlparse
 
 import pkg_resources
 import pygit2
@@ -95,6 +105,10 @@ def before_all(context):
         raise ValueError('Git repository creation failed')
     # FIXME: https://github.com/dgoodwin/tito/issues/171
     subprocess.check_call(['tito', 'init'], cwd=context.titodn)
+    repodn = pkg_resources.resource_filename(
+        dnfstackci.__name__, 'resources/repository')
+    context.repourl = urlparse.urlunsplit((
+        'file', '', urllib.pathname2url(os.path.abspath(repodn)), '', ''))
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -111,8 +125,10 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.arch_option = 'x86_64'
     context.nonrawhide_option = []
     context.rawhide_option = False
+    context.repo_option = []
     context.def_option = []
     context.dest_option = context.workdn
+    context.substitute = False
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535

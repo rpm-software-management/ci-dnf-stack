@@ -29,3 +29,12 @@ Feature: Add repositories to config_opts['yum.conf']
        | --add-rawhide |
      When I build RPMs of the tito-enabled project
      Then I should have the result that is produced if config_opts['yum.conf'] contains the Rawhide repository
+
+  Scenario: Add URL
+    Given following options are configured as follows:
+       | Option            | Value |
+       | --add-repository  | $URL  |
+       | --add-non-rawhide | 22    |
+    Given “$URL” is replaced with the URL of a testing repository in all options
+     When I build RPMs of the tito-enabled project
+     Then I should have the result that is produced if config_opts['yum.conf'] contains the testing repository

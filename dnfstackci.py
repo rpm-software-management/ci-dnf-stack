@@ -19,7 +19,7 @@ When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
     usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                [--define MACRO EXPR]
+                [--add-repository URL] [--define MACRO EXPR]
                 ARCHITECTURE DESTINATION
 
     Build RPMs of a tito-enabled project from the checkout in
@@ -42,6 +42,8 @@ program is started. The interface usage is::
                             option
       --add-rawhide         add the Fedora Rawhide repository to the
                             Mock's "config_opts['yum.conf']" option
+      --add-repository URL  the URL of a repository to be added to the
+                            Mock's "config_opts['yum.conf']" option
       --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
     The "tito" and "mock" executables must be available. If an error
@@ -60,6 +62,7 @@ from __future__ import unicode_literals
 
 import argparse
 import errno
+import itertools
 import logging
 import os
 import re
@@ -201,9 +204,10 @@ def _build_rpms(  # pylint: disable=too-many-locals
     :type destdn: unicode
     :param last_tag: build from the latest tag instead of the current HEAD
     :type last_tag: bool
-    :param repos: the matalink URL of each repository added to the
+    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and the
+       URL (direct or metalink) of each repository to be added to the
        Mock's config_opts['yum.conf']
-    :type repos: collections.Sequence[unicode]
+    :type repos: collections.Sequence[tuple[unicode, unicode]]
     :param macros: the name and the value of each RPM macro to be
        defined
     :type macros: collections.Sequence[tuple[unicode, unicode]]
@@ -274,7 +278,7 @@ def _start_commandline():
     The interface usage is::
 
         usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                    [--define MACRO EXPR]
+                    [--add-repository URL] [--define MACRO EXPR]
                     ARCHITECTURE DESTINATION
 
         Build RPMs of a tito-enabled project from the checkout in
@@ -297,6 +301,9 @@ def _start_commandline():
                                 "config_opts['yum.conf']" option
           --add-rawhide         add the Fedora Rawhide repository to the
                                 Mock's "config_opts['yum.conf']" option
+          --add-repository URL  the URL of a repository to be added to
+                                the Mock's "config_opts['yum.conf']"
+                                option
           --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
         The "tito" and "mock" executables must be available. If an error
@@ -327,6 +334,12 @@ def _start_commandline():
         '--add-rawhide', action='store_true',
         help="add the Fedora Rawhide repository to the Mock's "
              "\"config_opts['yum.conf']\" option")
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    argparser.add_argument(
+        '--add-repository', action='append', default=[], type=unicode,
+        help="the URL of a repository to be added to the Mock's "
+             "\"config_opts['yum.conf']\" option",
+        metavar='URL')
     argparser.add_argument(
         '--define', action='append', nargs=2, default=[], type=unicode,
         help='define an RPM MACRO with the value EXPR',
@@ -360,12 +373,16 @@ def _start_commandline():
     LOGGER.addHandler(handler)
     pat = 'https://mirrors.fedoraproject.org/metalink?repo={}&arch=$basearch'
     repos = [
-        pat.format('fedora-{}'.format(ver)) for ver in options.add_non_rawhide]
+        ('metalink', pat.format('fedora-{}'.format(version)))
+        for version in options.add_non_rawhide]
     repos.extend(
-        'https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{}&'
-        'arch=$basearch'.format(ver) for ver in options.add_non_rawhide)
+        ('metalink',
+         'https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{}'
+         '&arch=$basearch'.format(version))
+        for version in options.add_non_rawhide)
     if options.add_rawhide:
-        repos.append(pat.format('rawhide'))
+        repos.append(('metalink', pat.format('rawhide')))
+    repos.extend(itertools.product(['baseurl'], options.add_repository))
     try:
         _build_rpms(
             options.arch, os.path.join(options.destdn, pkgsreldn),
@@ -392,9 +409,10 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
     :type root: unicode
     :ivar arch: the value set as "config_opts['target_arch']"
     :type arch: unicode
-    :ivar repos: the matalink URL of each repository added to
+    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and
+       the URL (direct or metalink) of each repository to be added to
        config_opts['yum.conf']
-    :type repos: collections.Sequence[unicode]
+    :type repos: collections.Sequence[tuple[unicode, unicode]]
     :ivar cfgfn: a name of the file where the configuration is stored
     :type cfgfn: unicode | None
 
@@ -405,9 +423,10 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
         :param arch: a value set as "config_opts['target_arch']"
         :type arch: unicode
-        :param repos: the matalink URL of each repository added to
-            config_opts['yum.conf']
-        :type repos: collections.Sequence[unicode]
+        :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and
+           the URL (direct or metalink) of each repository to be added
+           to config_opts['yum.conf']
+        :type repos: collections.Sequence[tuple[unicode, unicode]]
 
         """
         self.basedir = None
@@ -427,8 +446,8 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         """
         self.basedir = decode_path(tempfile.mkdtemp())
         repos = '\n'.join(
-            '[user-{}]\nmetalink={}\n'.format(index, url)
-            for index, url in enumerate(self.repos))
+            '[user-{}]\n{}={}\n'.format(index, type_, url)
+            for index, (type_, url) in enumerate(self.repos))
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
         config = template.decode('utf-8').format(
