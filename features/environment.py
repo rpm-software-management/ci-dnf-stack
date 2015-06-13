@@ -89,7 +89,7 @@ def before_all(context):
     context.titodn = tempfile.mkdtemp()
     src_spec = pkg_resources.resource_stream(
         dnfstackci.__name__, 'resources/foo.spec')
-    dst_spec = open(os.path.join(context.titodn, 'foo.spec'), 'wb')
+    dst_spec = open(os.path.join(context.titodn, b'foo.spec'), 'wb')
     with src_spec, dst_spec:
         shutil.copyfileobj(src_spec, dst_spec)
     try:
