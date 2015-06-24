@@ -27,17 +27,15 @@ import createrepo_c
 import rpm
 
 
-def _rpm_header(dirname):
-    """Get the header of the RPM of the testing project in a directory.
+def _rpm_headers(dirname):
+    """Iterate over the headers of the RPMs in a directory.
 
     :param dirname: a name of the directory
     :type dirname: unicode
-    :return: the header of the RPM file
-    :rtype: rpm.hdr | None
+    :return: a generator yielding the RPM headers
+    :rtype: generator[rpm.hdr]
 
     """
-    # There is no reliable way how to test whether given RPMs were build
-    # from given sources. Thus we just find an RPM.
     filenames = glob.iglob(os.path.join(dirname, '*.rpm'))
     transaction = rpm.TransactionSet()
     for filename in filenames:
@@ -47,8 +45,35 @@ def _rpm_header(dirname):
         except (IOError, rpm.error):
             continue
         if not header.isSource():
-            return header
-    return None
+            yield header
+
+
+def _tito_rpm(dirname):
+    """Get the RPM header of the tito-enabled project in a directory.
+
+    :param dirname: a name of the directory
+    :type dirname: unicode
+    :return: the header of the RPM file
+    :rtype: rpm.hdr | None
+
+    """
+    # There is no reliable way how to test whether given RPMs were build
+    # from given sources. Thus we just find an RPM.
+    return next(_rpm_headers(dirname), None)
+
+
+def _librepo_rpms(dirname):
+    """Get the headers of the RPMs of the librepo fork in a directory.
+
+    :param dirname: a name of the directory
+    :type dirname: unicode
+    :return: a generator yielding the RPM headers
+    :rtype: generator[rpm.hdr]
+
+    """
+    # There is no reliable way how to test whether given RPMs were build
+    # from given sources. Thus we just find RPMs.
+    return _rpm_headers(dirname)
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -97,15 +122,16 @@ def _assign_substitution(context):
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.when(  # pylint: disable=no-member
-    'I build RPMs of the tito-enabled project')
-def _build_tito_rpms(context):
-    """Build RPMs of the tito-enabled project.
+@behave.when('I build RPMs of the {project}')  # pylint: disable=no-member
+def _build_rpms(context, project):
+    """Build RPMs of a project.
 
-    The "python" executable must be available.
+    The "mock", "python" and "tito" executables must be available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
+    :param project: a description of the project
+    :type project: unicode
     :raises exceptions.OSError: if the executable cannot be executed
     :raises subprocess.CalledProcessError: if the build fails
 
@@ -116,10 +142,19 @@ def _build_tito_rpms(context):
         'python', os.path.abspath('dnfstackci.py'),
         context.arch_option.replace(old, new),
         context.dest_option.replace(old, new)]
-    for name, value in reversed(context.def_option):
-        cmdline.insert(2, value.replace(old, new))
-        cmdline.insert(2, name.replace(old, new))
-        cmdline.insert(2, '--define')
+    if project == 'tito-enabled project':
+        for name, value in reversed(context.def_option):
+            cmdline.insert(2, value.replace(old, new))
+            cmdline.insert(2, name.replace(old, new))
+            cmdline.insert(2, '--define')
+        cmdline.insert(2, 'tito')
+        cwd = context.titodn
+    elif project == 'librepo project fork':
+        cmdline.insert(4, '38f323b94ea6ba3352827518e011d818202167a3')
+        cmdline.insert(2, 'librepo')
+        cwd = context.librepodn
+    else:
+        raise NotImplementedError('project not supported')
     for url in reversed(context.repo_option):
         cmdline.insert(2, url.replace(old, new))
         cmdline.insert(2, '--add-repository')
@@ -128,13 +163,12 @@ def _build_tito_rpms(context):
     for version in reversed(context.nonrawhide_option):
         cmdline.insert(2, version.replace(old, new))
         cmdline.insert(2, '--add-non-rawhide')
-    subprocess.check_call(cmdline, cwd=context.titodn)
+    subprocess.check_call(cmdline, cwd=cwd)
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.then(  # pylint: disable=no-member
-    'I should have RPMs of the tito-enabled project')
-def _test_rpms(context):
+@behave.then('I should have RPMs of the {project}')  # pylint: disable=E1101
+def _test_rpms(context, project):
     """Test whether the work dir. contains binary RPMs of a project.
 
     :param context: the context as described in the environment file
@@ -143,11 +177,18 @@ def _test_rpms(context):
 
     """
     dirname = os.path.join(context.workdn, 'packages')
-    header = _rpm_header(dirname)
-    assert header, 'no readable binary RPM found'
-    rpmnevra = (
-        header[rpm.RPMTAG_N], str(header[rpm.RPMTAG_EPOCHNUM]),
-        header[rpm.RPMTAG_V], header[rpm.RPMTAG_R], header[rpm.RPMTAG_ARCH])
+    if project == 'tito-enabled project':
+        headers = [_tito_rpm(dirname)]
+        assert headers[0], 'no readable binary RPM found'
+    elif project == 'librepo fork':
+        headers = list(_librepo_rpms(dirname))
+        assert headers, 'readable binary RPMs not found'
+    else:
+        raise NotImplementedError('project not supported')
+    rpmnevras = {
+        (header[rpm.RPMTAG_N], str(header[rpm.RPMTAG_EPOCHNUM]),
+         header[rpm.RPMTAG_V], header[rpm.RPMTAG_R], header[rpm.RPMTAG_ARCH])
+        for header in headers}
     repository = createrepo_c.Metadata()
     # FIXME: https://github.com/Tojaj/createrepo_c/issues/29
     # noinspection PyBroadException
@@ -155,10 +196,10 @@ def _test_rpms(context):
         repository.locate_and_load_xml(dirname)
     except Exception:  # pylint: disable=broad-except
         assert False, 'no readable repository found'
-    reponevras = (
+    reponevras = {
         (pkg.name, pkg.epoch, pkg.version, pkg.release, pkg.arch)
-        for pkg in (repository.get(key) for key in repository.keys()))
-    assert rpmnevra in reponevras, 'repository not correct'
+        for pkg in (repository.get(key) for key in repository.keys())}
+    assert rpmnevras <= reponevras, 'repository not correct'
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -210,7 +251,7 @@ def _test_rpmmacros(context):
 
     """
     release = b'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
-    header = _rpm_header(os.path.join(context.workdn, 'packages'))
+    header = _tito_rpm(os.path.join(context.workdn, 'packages'))
     assert header, 'no readable binary RPM found'
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
     assert release in header[rpm.RPMTAG_RELEASE], 'macro not defined'
