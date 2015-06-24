@@ -104,6 +104,8 @@ def _configure_options(context):
             context.repo_option.append(row[1])
         elif row[0] == '--define' and len(row) == 3:
             context.def_option.append((row[1], row[2]))
+        elif row[0] == '--release' and len(row) == 2:
+            context.rel_option = row[1]
         else:
             raise NotImplementedError('configuration not supported')
 
@@ -151,6 +153,9 @@ def _build_rpms(context, project):
         cwd = context.titodn
     elif project == 'librepo project fork':
         cmdline.insert(4, '38f323b94ea6ba3352827518e011d818202167a3')
+        if context.rel_option:
+            cmdline.insert(2, context.rel_option)
+            cmdline.insert(2, '--release')
         cmdline.insert(2, 'librepo')
         cwd = context.librepodn
     else:
@@ -255,3 +260,21 @@ def _test_rpmmacros(context):
     assert header, 'no readable binary RPM found'
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
     assert release in header[rpm.RPMTAG_RELEASE], 'macro not defined'
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    'the release number of the resulting RPMs of the librepo fork should be '
+    '99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm')
+def _test_release(context):
+    """Test whether the result is affected by RPM macro definitions.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :raises exceptions.AssertionError: if the test fails
+
+    """
+    headers = list(_librepo_rpms(os.path.join(context.workdn, 'packages')))
+    assert headers, 'readable binary RPMs not found'
+    release = b'99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
+    assert all(header[rpm.RPMTAG_RELEASE] == release for header in headers)

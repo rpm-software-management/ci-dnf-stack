@@ -48,6 +48,9 @@ attributes:
     A name and a value of each RPM macro to be defined.
 :attr:`!dest_option` : :data:`types.UnicodeType`
     A name of the destination directory of dnf-stack-ci.
+:attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
+    A custom release number of the resulting RPMs passed to
+    dnf-stack-ci.
 :attr:`!substitute` : :class:`bool`
     ``True`` if "$URL" should be replaced with the URL of the testing
     repository in all options, ``False`` otherwise.
@@ -139,6 +142,7 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.rawhide_option = False
     context.repo_option = []
     context.def_option = []
+    context.rel_option = None
     context.dest_option = context.workdn
     context.substitute = False
 
