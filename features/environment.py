@@ -15,9 +15,10 @@
 """This module provides the test fixture common to all the features.
 
 Among other things, the fixture contains a tito-enabled project
-directory, a testing repository and an empty working directory which
-is created before every scenario. The only RPM of the project appends
-the value of an RPM macro %{snapshot} to its release number if set.
+directory, a librepo fork directory, a testing repository and an
+empty working directory which is created before every scenario.
+The only RPM of the tito-enabled project appends the value of an
+RPM macro %{snapshot} to its release number if set.
 
 The :class:`behave.runner.Context` instance passed to the environmental
 controls and to the step implementations is expected to have following
@@ -25,6 +26,8 @@ attributes:
 
 :attr:`!titodn` : :class:`str`
     A name of the directory with the tito-enabled project.
+:attr:`!librepodn` : :class:`str`
+    A name of the directory with the librepo project fork.
 :attr:`!repourl` : :data:`types.UnicodeType`
     The URL of the testing repository.
 :attr:`!workdn` : :data:`types.UnicodeType`
@@ -93,13 +96,13 @@ def before_all(context):
     with src_spec, dst_spec:
         shutil.copyfileobj(src_spec, dst_spec)
     try:
-        repository = pygit2.init_repository(context.titodn)
-        repository.index.add(
-            os.path.relpath(dst_spec.name, repository.workdir))
-        repository.index.write()
-        repository.create_commit(
+        titorepo = pygit2.init_repository(context.titodn)
+        titorepo.index.add(
+            os.path.relpath(dst_spec.name, titorepo.workdir))
+        titorepo.index.write()
+        titorepo.create_commit(
             'refs/heads/master', signature, signature, 'Add a spec file.',
-            repository.index.write_tree(), [])
+            titorepo.index.write_tree(), [])
     # FIXME: https://github.com/libgit2/pygit2/issues/531
     except Exception:
         raise ValueError('Git repository creation failed')
@@ -109,6 +112,15 @@ def before_all(context):
         dnfstackci.__name__, 'resources/repository')
     context.repourl = urlparse.urlunsplit((
         'file', '', urllib.pathname2url(os.path.abspath(repodn)), '', ''))
+    context.librepodn = tempfile.mkdtemp()
+    try:
+        libreporepo = pygit2.clone_repository(
+            'https://github.com/Tojaj/librepo.git', context.librepodn)
+        libreporepo.reset(
+            'd9bed0d9f96b505fb86a1adc50b3d6f8275fab93', pygit2.GIT_RESET_HARD)
+    # FIXME: https://github.com/libgit2/pygit2/issues/531
+    except Exception:
+        raise ValueError('Git repository creation failed')
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -155,4 +167,5 @@ def after_all(context):
        removed
 
     """
+    shutil.rmtree(context.librepodn)
     shutil.rmtree(context.titodn)

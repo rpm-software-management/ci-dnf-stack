@@ -19,20 +19,17 @@ When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
     usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                [--add-repository URL] [--define MACRO EXPR]
-                ARCHITECTURE DESTINATION
+                [--add-repository URL]
+                {tito,librepo} ...
 
-    Build RPMs of a tito-enabled project from the checkout in
-    the current working directory. The RPMs will be stored in a
-    subdirectory "packages" of the destination directory. Also
-    corresponding metadata will be added so that the subdirectory
-    could work as an RPM repository.
+    Build RPMs of a project from the checkout in the current working
+    directory. The RPMs will be stored in a subdirectory "packages"
+    of the destination directory. Also corresponding metadata will
+    be added so that the subdirectory could work as an RPM
+    repository.
 
     positional arguments:
-      ARCHITECTURE          the value of the Mock's
-                            "config_opts['target_arch']" option
-      DESTINATION           the name of a destination directory
-                            (the directory will be overwritten)
+      {tito,librepo}        the type of the project
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -44,10 +41,43 @@ program is started. The interface usage is::
                             Mock's "config_opts['yum.conf']" option
       --add-repository URL  the URL of a repository to be added to the
                             Mock's "config_opts['yum.conf']" option
-      --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
-    The "tito" and "mock" executables must be available. If an error
-    occurs the exit status is non-zero.
+    The "mock" executable must be available. If an error occurs the exit
+    status is non-zero.
+
+The usage for "tito" projects is::
+
+    usage: prog tito [-h] [--define MACRO EXPR] ARCHITECTURE DESTINATION
+
+    Build a tito-enabled project.
+
+    positional arguments:
+      ARCHITECTURE         the value of the Mock's
+                           "config_opts['target_arch']" option
+      DESTINATION          the name of a destination directory
+                           (the directory will be overwritten)
+
+    optional arguments:
+      -h, --help           show this help message and exit
+      --define MACRO EXPR  define an RPM MACRO with the value EXPR
+
+    In addition, the "tito" executable must be available.
+
+The usage for "librepo" projects is::
+
+    usage: prog librepo [-h] ARCHITECTURE DESTINATION SPEC
+
+    Build a librepo project fork.
+
+    positional arguments:
+      ARCHITECTURE  the value of the Mock's "config_opts['target_arch']"
+                    option
+      DESTINATION   the name of a destination directory (the directory
+                    will be overwritten)
+      SPEC          the ID of the Fedora Git revision of the spec file
+
+    optional arguments:
+      -h, --help    show this help message and exit
 
 :var NAME: the name of the project
 :type NAME: unicode
@@ -70,6 +100,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib
 
 import createrepo_c
 import pkg_resources
@@ -78,18 +109,6 @@ import pkg_resources
 NAME = 'dnf-stack-ci'
 
 LOGGER = logging.getLogger(NAME)
-
-
-def _indent(text):
-    """Indent all the lines of a text.
-
-    :param text: the text to be indented
-    :type text: unicode
-    :returns: the indented text
-    :rtype: unicode
-
-    """
-    return re.sub(r'^', '    ', text, flags=re.MULTILINE)
 
 
 def decode_path(path):
@@ -121,6 +140,27 @@ def _remkdir(name, notexists_ok=False):
         if not notexists_ok or err.errno != errno.ENOENT:
             raise
     os.mkdir(name)
+
+
+def _log_call(executable, status, output, encoding='utf-8'):
+    """Log the result of an executable.
+
+    :param executable: a name of the executable
+    :type executable: unicode
+    :param status: the exit status
+    :type status: int
+    :param output: the captured output
+    :type output: str
+    :param encoding: the encoding of the output
+    :type encoding: unicode
+
+    """
+    LOGGER.log(
+        logging.ERROR if status else logging.DEBUG,
+        '"%s" have exited with %s:\n  captured output:\n%s',
+        executable,
+        status,
+        re.sub(r'^', '    ', output.decode(encoding, 'replace'), flags=re.M))
 
 
 def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
@@ -189,7 +229,7 @@ def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
         file_.write(repomd.xml_dump())
 
 
-def _build_rpms(  # pylint: disable=too-many-locals
+def _build_tito(  # pylint: disable=too-many-locals
         arch, destdn, last_tag=True, repos=(), macros=()):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
@@ -218,49 +258,164 @@ def _build_rpms(  # pylint: disable=too-many-locals
 
     """
     LOGGER.info('Building RPMs from %s...', os.getcwdu())
+    basedir = decode_path(tempfile.mkdtemp())
+    try:
+        _remkdir(destdn, notexists_ok=True)
+        with _MockConfig(arch, repos, basedir) as mockcfg:
+            # FIXME: https://github.com/dgoodwin/tito/issues/171
+            cmd = [
+                'tito', 'build', '--rpm',
+                '--output={}'.format(destdn),
+                '--builder=mock',
+                '--arg=mock={}'.format(mockcfg.cfgfn)]
+            if macros:
+                # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205823
+                arg = ' '.join(
+                    "--define '{0[0]} {0[1]}'".format(pair) for pair in macros)
+                cmd.append('--arg=mock_args={}'.format(arg))
+                # FIXME: https://github.com/dgoodwin/tito/issues/149
+                cmd.insert(4, '--rpmbuild-options={}'.format(arg))
+            if not last_tag:
+                cmd.insert(3, '--test')
+            status = 0
+            try:
+                # FIXME: https://github.com/dgoodwin/tito/issues/165
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as err:
+                status, output = err.returncode, err.output
+                raise ValueError('"tito" failed')
+            finally:
+                mdestdn = os.path.join(destdn, 'mock')
+                assert not os.path.exists(mdestdn), 'not move *into* the dir'
+                # FIXME: https://github.com/dgoodwin/tito/issues/178
+                try:
+                    shutil.move(mockcfg.resultdn, mdestdn)
+                except (OSError, IOError) as err:
+                    # Mock could fail, a new mock version could have changed
+                    # the path or a new tito version could have changed its
+                    # output structure.
+                    if isinstance(err.filename, str):
+                        fname = decode_path(err.filename)
+                    else:
+                        fname = err.filename
+                    LOGGER.warning("Mock's path %s is not accessible.", fname)
+                _log_call(cmd[0], status, output)
+    finally:
+        shutil.rmtree(basedir)
+    try:
+        _create_rpmrepo(destdn, '.rpm')
+    except (OSError, ValueError, IOError):
+        raise ValueError('repository creation failed')
+
+
+def _build_librepo(spec, arch, destdn, repos=()):
+    """Build RPMs of a librepo project fork in the current work. dir.
+
+    The "mock" executable must be available. The destination directory
+    will be overwritten. Corresponding metadata will be added so that
+    the directory could work as an RPM repository.
+
+    :param spec: the ID of the Fedora Git revision of the spec file
+    :type spec: unicode
+    :param arch: the value of the Mock's "config_opts['target_arch']"
+       option
+    :type arch: unicode
+    :param destdn: the name of a destination directory
+    :type destdn: unicode
+    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and the
+       URL (direct or metalink) of each repository to be added to the
+       Mock's config_opts['yum.conf']
+    :type repos: collections.Sequence[tuple[unicode, unicode]]
+    :raises exceptions.IOError: if the spec file of librepo cannot be
+       downloaded
+    :raises urllib.ContentTooShortError: if the spec file of librepo
+       cannot be downloaded
+    :raises exceptions.OSError: if the destination directory cannot be
+       created or overwritten or if some of the executables cannot be
+       executed
+    :raises exceptions.ValueError: if the build fails
+
+    """
+    LOGGER.info('Building RPMs from %s...', os.getcwdu())
+    workdn = '/tmp/{}'.format(NAME)
+    specurlpat = (
+        'http://pkgs.fedoraproject.org/cgit/librepo.git/plain/librepo.spec?'
+        'id={}')
+    specfn = urllib.urlretrieve(specurlpat.format(spec))[0]
     _remkdir(destdn, notexists_ok=True)
     with _MockConfig(arch, repos) as mockcfg:
-        # FIXME: https://github.com/dgoodwin/tito/issues/171
-        command = [
-            'tito', 'build', '--rpm',
-            '--output={}'.format(destdn),
-            '--builder=mock',
-            '--arg=mock={}'.format(mockcfg.cfgfn)]
-        if macros:
-            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205823
-            arg = ' '.join(
-                "--define '{0[0]} {0[1]}'".format(pair) for pair in macros)
-            command.append('--arg=mock_args={}'.format(arg))
-            # FIXME: https://github.com/dgoodwin/tito/issues/149
-            command.insert(4, '--rpmbuild-options={}'.format(arg))
-        if not last_tag:
-            command.insert(3, '--test')
-        # FIXME: https://github.com/dgoodwin/tito/issues/165
-        tito = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        streams, status = tito.communicate(), tito.poll()
-        stdout, stderr = (
-            stream.decode('utf-8', 'replace') for stream in streams)
-        assert not any('\ufffd' in stream for stream in [stdout, stderr])
-        mdestdn = os.path.join(destdn, 'mock')
-        assert not os.path.exists(mdestdn), "let's not move it *into* the dir"
-        # FIXME: https://github.com/dgoodwin/tito/issues/178
+        # FIXME: https://github.com/Tojaj/librepo/pull/61
         try:
-            shutil.move(mockcfg.resultdn, mdestdn)
-        except (OSError, IOError) as err:
-            # Mock could fail, a new mock version could have changed the path
-            # or a new tito version could have changed its output structure.
-            if isinstance(err.filename, str):
-                filename = decode_path(err.filename)
-            else:
-                filename = err.filename
-            LOGGER.warning("Mock's path %s is not accessible.", filename)
-    LOGGER.log(
-        logging.ERROR if status else logging.DEBUG,
-        '"tito" have exited with %s:\n  standard output:\n%s\n  standard '
-        'error:\n%s', status, _indent(stdout), _indent(stderr))
-    if status:
-        raise ValueError('"tito" failed')
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--install', '/usr/bin/git', 'check-devel', 'cmake',
+                 'expat-devel', 'gcc', 'glib2-devel', 'gpgme-devel',
+                 'libattr-devel', 'libcurl-devel', 'openssl-devel',
+                 'python2-devel', 'python3-devel', 'pygpgme',
+                 'python3-pygpgme', 'python-flask', 'python3-flask',
+                 'python-nose', 'python3-nose', 'pyxattr', 'python3-pyxattr',
+                 'doxygen', 'python-sphinx', 'python3-sphinx'],
+                stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--chroot', '--', 'rm', '--recursive', '--force', workdn],
+                stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--copyin', '.', workdn], stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--copyin', decode_path(specfn),
+                 '{}/librepo.spec'.format(workdn)], stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--chroot', '--', 'chmod', '--recursive', '+rX', workdn],
+                stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--chroot',
+                 'ln --symbolic --force /builddir/build "$HOME/rpmbuild"'],
+                stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            _log_call(err.cmd[0], err.returncode, err.output)
+            raise ValueError('environment preparation failed')
+        status = 0
+        try:
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            output = subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--chroot', 'cd "{}" && utils/make_rpm.sh .'.format(workdn)],
+                stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            status, output = err.returncode, err.output
+            raise ValueError('"utils/make_rpm.sh" in chroot failed')
+        finally:
+            _log_call('mock', status, output)
+        try:
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            srpms = subprocess.check_output([
+                'mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                '--chroot', 'for NAME in {}/*.src.rpm; do echo "$NAME"; done'
+                .format(workdn)])
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            rpms = subprocess.check_output([
+                'mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                '--chroot', 'for NAME in /builddir/build/RPMS/*.rpm; '
+                'do echo "$NAME"; done'])
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--copyout'] + srpms.splitlines() + rpms.splitlines() +
+                [destdn], stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            _log_call(err.cmd[0], err.returncode, err.output)
+            raise ValueError('result saving failed')
     try:
         _create_rpmrepo(destdn, '.rpm')
     except (OSError, ValueError, IOError):
@@ -278,20 +433,17 @@ def _start_commandline():
     The interface usage is::
 
         usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                    [--add-repository URL] [--define MACRO EXPR]
-                    ARCHITECTURE DESTINATION
+                    [--add-repository URL]
+                    {tito,librepo} ...
 
-        Build RPMs of a tito-enabled project from the checkout in
-        the current working directory. The RPMs will be stored in a
-        subdirectory "packages" of the destination directory. Also
-        corresponding metadata will be added so that the subdirectory
-        could work as an RPM repository.
+        Build RPMs of a project from the checkout in the current working
+        directory. The RPMs will be stored in a subdirectory "packages"
+        of the destination directory. Also corresponding metadata will
+        be added so that the subdirectory could work as an RPM
+        repository.
 
         positional arguments:
-          ARCHITECTURE          the value of the Mock's
-                                "config_opts['target_arch']" option
-          DESTINATION           the name of a destination directory
-                                (the directory will be overwritten)
+          {tito,librepo}        the type of the project
 
         optional arguments:
           -h, --help            show this help message and exit
@@ -304,10 +456,45 @@ def _start_commandline():
           --add-repository URL  the URL of a repository to be added to
                                 the Mock's "config_opts['yum.conf']"
                                 option
-          --define MACRO EXPR   define an RPM MACRO with the value EXPR
 
-        The "tito" and "mock" executables must be available. If an error
-        occurs the exit status is non-zero.
+        The "mock" executable must be available. If an error occurs the
+        exit status is non-zero.
+
+    The usage for "tito" projects is::
+
+        usage: prog tito [-h] [--define MACRO EXPR]
+                         ARCHITECTURE DESTINATION
+
+        Build a tito-enabled project.
+
+        positional arguments:
+          ARCHITECTURE         the value of the Mock's
+                               "config_opts['target_arch']" option
+          DESTINATION          the name of a destination directory
+                               (the directory will be overwritten)
+
+        optional arguments:
+          -h, --help           show this help message and exit
+          --define MACRO EXPR  define an RPM MACRO with the value EXPR
+
+        In addition, the "tito" executable must be available.
+
+    The usage for "librepo" projects is::
+
+        usage: prog librepo [-h] ARCHITECTURE DESTINATION SPEC
+
+        Build a librepo project fork.
+
+        positional arguments:
+          ARCHITECTURE  the value of the Mock's
+                        "config_opts['target_arch']" option
+          DESTINATION   the name of a destination directory
+                        (the directory will be overwritten)
+          SPEC          the ID of the Fedora Git revision of
+                        the spec file
+
+        optional arguments:
+          -h, --help    show this help message and exit
 
     :raises exceptions.SystemExit: with a non-zero exit status if an
        error occurs
@@ -315,14 +502,14 @@ def _start_commandline():
     """
     pkgsreldn = 'packages'
     argparser = argparse.ArgumentParser(
-        description='Build RPMs of a tito-enabled project from the checkout in'
-                    ' the current working directory. The RPMs will be stored '
-                    'in a subdirectory "{}" of the destination directory. Also'
-                    ' corresponding metadata will be added so that the '
+        description='Build RPMs of a project from the checkout in the current '
+                    'working directory. The RPMs will be stored in a '
+                    'subdirectory "{}" of the destination directory. Also '
+                    'corresponding metadata will be added so that the '
                     'subdirectory could work as an RPM repository.'
                     ''.format(pkgsreldn),
-        epilog='The "tito" and "mock" executables must be available. If an '
-               'error occurs the exit status is non-zero.')
+        epilog='The "mock" executable must be available. If an error occurs '
+               'the exit status is non-zero.')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
     argparser.add_argument(
         '--add-non-rawhide', action='append', default=[], type=unicode,
@@ -340,18 +527,31 @@ def _start_commandline():
         help="the URL of a repository to be added to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='URL')
-    argparser.add_argument(
-        '--define', action='append', nargs=2, default=[], type=unicode,
-        help='define an RPM MACRO with the value EXPR',
-        metavar=('MACRO', 'EXPR'), dest='macros')
+    commonparser = argparse.ArgumentParser(add_help=False)
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    argparser.add_argument(
+    commonparser.add_argument(
         'arch', type=unicode, metavar='ARCHITECTURE',
         help="the value of the Mock's \"config_opts['target_arch']\" option")
-    argparser.add_argument(
+    commonparser.add_argument(
         'destdn', type=unicode, metavar='DESTINATION',
         help='the name of a destination directory (the directory will be '
              'overwritten)')
+    projparser = argparser.add_subparsers(
+        dest='project', help='the type of the project')
+    titoparser = projparser.add_parser(
+        'tito', description='Build a tito-enabled project.',
+        epilog='In addition, the "tito" executable must be available.',
+        parents=[commonparser])
+    titoparser.add_argument(
+        '--define', action='append', nargs=2, default=[], type=unicode,
+        help='define an RPM MACRO with the value EXPR',
+        metavar=('MACRO', 'EXPR'), dest='macros')
+    repoparser = projparser.add_parser(
+        'librepo', description='Build a librepo project fork.',
+        parents=[commonparser])
+    repoparser.add_argument(
+        'fedrev', type=unicode, metavar='SPEC',
+        help='the ID of the Fedora Git revision of the spec file')
     options = argparser.parse_args()
     try:
         _remkdir(options.destdn, notexists_ok=True)
@@ -371,6 +571,7 @@ def _start_commandline():
     handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
     LOGGER.addHandler(handler)
+    destdn = os.path.join(options.destdn, pkgsreldn)
     pat = 'https://mirrors.fedoraproject.org/metalink?repo={}&arch=$basearch'
     repos = [
         ('metalink', pat.format('fedora-{}'.format(version)))
@@ -383,18 +584,28 @@ def _start_commandline():
     if options.add_rawhide:
         repos.append(('metalink', pat.format('rawhide')))
     repos.extend(itertools.product(['baseurl'], options.add_repository))
-    try:
-        _build_rpms(
-            options.arch, os.path.join(options.destdn, pkgsreldn),
-            last_tag=False, repos=repos, macros=options.macros)
-    except ValueError:
-        sys.exit(
-            'The build have failed. Hopefully the executables have created an '
-            'output in the destination directory.')
-    except OSError:
-        sys.exit(
-            'The destination directory cannot be overwritten or some of the '
-            'executables cannot be executed.')
+    if options.project == b'tito':
+        try:
+            _build_tito(
+                options.arch, destdn, last_tag=False, repos=repos,
+                macros=options.macros)
+        except ValueError:
+            sys.exit(
+                'The build have failed. Hopefully the executables have created'
+                ' an output in the destination directory.')
+        except OSError:
+            sys.exit(
+                'The destination directory cannot be overwritten or some of '
+                'the executables cannot be executed.')
+    elif options.project == b'librepo':
+        try:
+            _build_librepo(options.fedrev, options.arch, destdn, repos)
+        except (IOError, urllib.ContentTooShortError, ValueError):
+            sys.exit('The build have failed.')
+        except OSError:
+            sys.exit(
+                'The destination directory cannot be overwritten or some of '
+                'the executables cannot be executed.')
 
 
 class _MockConfig(object):  # pylint: disable=too-few-public-methods
@@ -418,7 +629,7 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, arch, repos=()):
+    def __init__(self, arch, repos=(), basedir=None):
         """Initialize the configuration.
 
         :param arch: a value set as "config_opts['target_arch']"
@@ -427,9 +638,11 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
            the URL (direct or metalink) of each repository to be added
            to config_opts['yum.conf']
         :type repos: collections.Sequence[tuple[unicode, unicode]]
+        :param basedir: a value set as "config_opts['basedir']"
+        :type basedir: unicode | None
 
         """
-        self.basedir = None
+        self.basedir = basedir
         self.root = '{}-{}'.format(NAME, arch)
         self.arch = arch
         self.repos = repos
@@ -444,14 +657,16 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         :rtype: ._MockConfig
 
         """
-        self.basedir = decode_path(tempfile.mkdtemp())
         repos = '\n'.join(
             '[user-{}]\n{}={}\n'.format(index, type_, url)
             for index, (type_, url) in enumerate(self.repos))
+        opts = ''
+        if self.basedir:
+            opts = "config_opts['basedir'] = '{}'".format(self.basedir)
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
         config = template.decode('utf-8').format(
-            basedir=self.basedir, root=self.root, arch=self.arch, repos=repos)
+            root=self.root, arch=self.arch, repos=repos, opts=opts)
         file_ = tempfile.NamedTemporaryFile('wb', suffix='.cfg', delete=False)
         with file_:
             file_.write(config)
@@ -466,6 +681,8 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         :rtype: str
 
         """
+        if not self.basedir:
+            raise NotImplementedError('unset basedir not supported')
         return os.path.join(self.basedir, self.root, 'result')
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -489,16 +706,12 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         :raises exceptions.OSError: if the executable cannot be executed
 
         """
-        # The rmtree below could fail otherwise because it may miss privileges.
+        # Basedir removal could fail otherwise because it may miss privileges.
         # See also: https://bugzilla.redhat.com/show_bug.cgi?id=450726
         # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
         status = subprocess.call([
             'mock', '--quiet', '--root={}'.format(self.cfgfn), '--scrub=all'])
         assert not status, 'mock should be able to remove its files'
-        try:
-            shutil.rmtree(self.basedir)
-        except OSError:
-            assert False, 'temporary directories should be removable'
         try:
             os.remove(self.cfgfn)
         except OSError:
