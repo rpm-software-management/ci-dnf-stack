@@ -27,3 +27,10 @@ Feature: Build RPMs of a project
   Scenario: Build librepo fork
      When I build RPMs of the librepo project fork
      Then I should have RPMs of the librepo fork
+
+  Scenario: Configure librepo release
+    Given following options are configured as follows:
+       | Option    | Value                                                    |
+       | --release | 99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm |
+     When I build RPMs of the librepo project fork
+     Then the release number of the resulting RPMs of the librepo fork should be 99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm

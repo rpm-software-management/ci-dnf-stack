@@ -65,19 +65,22 @@ The usage for "tito" projects is::
 
 The usage for "librepo" projects is::
 
-    usage: prog librepo [-h] ARCHITECTURE DESTINATION SPEC
+    usage: prog librepo [-h] [--release RELEASE]
+                        ARCHITECTURE DESTINATION SPEC
 
     Build a librepo project fork.
 
     positional arguments:
-      ARCHITECTURE  the value of the Mock's "config_opts['target_arch']"
-                    option
-      DESTINATION   the name of a destination directory (the directory
-                    will be overwritten)
-      SPEC          the ID of the Fedora Git revision of the spec file
+      ARCHITECTURE       the value of the Mock's
+                         "config_opts['target_arch']" option
+      DESTINATION        the name of a destination directory
+                         (the directory will be overwritten)
+      SPEC               the ID of the Fedora Git revision of
+                         the spec file
 
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help         show this help message and exit
+      --release RELEASE  a custom release number of the resulting RPMs
 
 :var NAME: the name of the project
 :type NAME: unicode
@@ -88,10 +91,12 @@ The usage for "librepo" projects is::
 
 
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
 import errno
+import fileinput
 import itertools
 import logging
 import os
@@ -308,7 +313,8 @@ def _build_tito(  # pylint: disable=too-many-locals
         raise ValueError('repository creation failed')
 
 
-def _build_librepo(spec, arch, destdn, repos=()):
+def _build_librepo(  # pylint: disable=too-many-locals
+        spec, arch, destdn, repos=(), release=None):
     """Build RPMs of a librepo project fork in the current work. dir.
 
     The "mock" executable must be available. The destination directory
@@ -326,6 +332,8 @@ def _build_librepo(spec, arch, destdn, repos=()):
        URL (direct or metalink) of each repository to be added to the
        Mock's config_opts['yum.conf']
     :type repos: collections.Sequence[tuple[unicode, unicode]]
+    :param release: a custom release number of the resulting RPMs
+    :type release: str | None
     :raises exceptions.IOError: if the spec file of librepo cannot be
        downloaded
     :raises urllib.ContentTooShortError: if the spec file of librepo
@@ -342,6 +350,15 @@ def _build_librepo(spec, arch, destdn, repos=()):
         'http://pkgs.fedoraproject.org/cgit/librepo.git/plain/librepo.spec?'
         'id={}')
     specfn = urllib.urlretrieve(specurlpat.format(spec))[0]
+    if release:
+        count = 0
+        for line in fileinput.input([specfn], inplace=1):
+            if re.match(br'^\s*Release\s*:\s*.+$', line, re.IGNORECASE):
+                print(b'Release: {}'.format(release))
+                count += 1
+                continue
+            print(line, end=b'')
+        assert count == 1, 'unexpected spec file'
     _remkdir(destdn, notexists_ok=True)
     with _MockConfig(arch, repos) as mockcfg:
         # FIXME: https://github.com/Tojaj/librepo/pull/61
@@ -422,7 +439,7 @@ def _build_librepo(spec, arch, destdn, repos=()):
         raise ValueError('repository creation failed')
 
 
-def _start_commandline():
+def _start_commandline():  # pylint: disable=too-many-statements
     """Start the command line interface to the program.
 
     The root logger is configured to write DEBUG+ messages into the
@@ -481,20 +498,23 @@ def _start_commandline():
 
     The usage for "librepo" projects is::
 
-        usage: prog librepo [-h] ARCHITECTURE DESTINATION SPEC
+        usage: prog librepo [-h] [--release RELEASE]
+                            ARCHITECTURE DESTINATION SPEC
 
         Build a librepo project fork.
 
         positional arguments:
-          ARCHITECTURE  the value of the Mock's
-                        "config_opts['target_arch']" option
-          DESTINATION   the name of a destination directory
-                        (the directory will be overwritten)
-          SPEC          the ID of the Fedora Git revision of
-                        the spec file
+          ARCHITECTURE       the value of the Mock's
+                             "config_opts['target_arch']" option
+          DESTINATION        the name of a destination directory
+                             (the directory will be overwritten)
+          SPEC               the ID of the Fedora Git revision of
+                             the spec file
 
         optional arguments:
-          -h, --help    show this help message and exit
+          -h, --help         show this help message and exit
+          --release RELEASE  a custom release number of the
+                             resulting RPMs
 
     :raises exceptions.SystemExit: with a non-zero exit status if an
        error occurs
@@ -552,6 +572,8 @@ def _start_commandline():
     repoparser.add_argument(
         'fedrev', type=unicode, metavar='SPEC',
         help='the ID of the Fedora Git revision of the spec file')
+    repoparser.add_argument(
+        '--release', help='a custom release number of the resulting RPMs')
     options = argparser.parse_args()
     try:
         _remkdir(options.destdn, notexists_ok=True)
@@ -599,7 +621,8 @@ def _start_commandline():
                 'the executables cannot be executed.')
     elif options.project == b'librepo':
         try:
-            _build_librepo(options.fedrev, options.arch, destdn, repos)
+            _build_librepo(
+                options.fedrev, options.arch, destdn, repos, options.release)
         except (IOError, urllib.ContentTooShortError, ValueError):
             sys.exit('The build have failed.')
         except OSError:
