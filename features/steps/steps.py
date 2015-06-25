@@ -76,6 +76,20 @@ def _librepo_rpms(dirname):
     return _rpm_headers(dirname)
 
 
+def _libcomps_rpms(dirname):
+    """Get the headers of the RPMs of the libcomps fork in a directory.
+
+    :param dirname: a name of the directory
+    :type dirname: unicode
+    :return: a generator yielding the RPM headers
+    :rtype: generator[rpm.hdr]
+
+    """
+    # There is no reliable way how to test whether given RPMs were build
+    # from given sources. Thus we just find RPMs.
+    return _rpm_headers(dirname)
+
+
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.given(  # pylint: disable=no-member
     'following options are configured as follows')
@@ -128,7 +142,8 @@ def _assign_substitution(context):
 def _build_rpms(context, project):
     """Build RPMs of a project.
 
-    The "mock", "python" and "tito" executables must be available.
+    The "createrepo_c", "mock", "python" and "tito" executables must be
+    available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
@@ -158,6 +173,9 @@ def _build_rpms(context, project):
             cmdline.insert(2, '--release')
         cmdline.insert(2, 'librepo')
         cwd = context.librepodn
+    elif project == 'libcomps project fork':
+        cmdline.insert(2, 'libcomps')
+        cwd = context.libcompsdn
     else:
         raise NotImplementedError('project not supported')
     for url in reversed(context.repo_option):
@@ -187,6 +205,9 @@ def _test_rpms(context, project):
         assert headers[0], 'no readable binary RPM found'
     elif project == 'librepo fork':
         headers = list(_librepo_rpms(dirname))
+        assert headers, 'readable binary RPMs not found'
+    elif project == 'libcomps fork':
+        headers = list(_libcomps_rpms(dirname))
         assert headers, 'readable binary RPMs not found'
     else:
         raise NotImplementedError('project not supported')
