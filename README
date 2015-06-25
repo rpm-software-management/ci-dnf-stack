@@ -37,6 +37,7 @@ attention:
 
 - build RPMs of tito-enabled projects
 - build RPMs of librepo project forks
+- build RPMs of libcomps project forks
 - configure Mock's "config_opts['target_arch']" option
 - add repositories to Mock's "config_opts['yum.conf']" option
 - define RPM macros
@@ -74,6 +75,7 @@ dnf-stack-ci:
 Following additional executables and Python modules are required to run
 a test suite:
 
+- `createrepo_c executable <https://github.com/Tojaj/createrepo_c>`_
 - `python executable <http://www.python.org/>`_
 - `behave Python module <http://github.com/behave/behave/>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_

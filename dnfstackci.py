@@ -20,7 +20,7 @@ program is started. The interface usage is::
 
     usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
                 [--add-repository URL]
-                {tito,librepo} ...
+                {tito,librepo,libcomps} ...
 
     Build RPMs of a project from the checkout in the current working
     directory. The RPMs will be stored in a subdirectory "packages"
@@ -29,7 +29,8 @@ program is started. The interface usage is::
     repository.
 
     positional arguments:
-      {tito,librepo}        the type of the project
+      {tito,librepo,libcomps}
+                            the type of the project
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -81,6 +82,24 @@ The usage for "librepo" projects is::
     optional arguments:
       -h, --help         show this help message and exit
       --release RELEASE  a custom release number of the resulting RPMs
+
+The usage for "libcomps" projects is::
+
+    usage: prog libcomps [-h] ARCHITECTURE DESTINATION
+
+    Build a libcomps project fork.
+
+    positional arguments:
+      ARCHITECTURE  the value of the Mock's
+                    "config_opts['target_arch']" option
+      DESTINATION   the name of a destination directory
+                    (the directory will be overwritten)
+
+    optional arguments:
+      -h, --help    show this help message and exit
+
+    In addition, the "createrepo_c" and "python" executables must be
+    available.
 
 :var NAME: the name of the project
 :type NAME: unicode
@@ -266,7 +285,7 @@ def _build_tito(  # pylint: disable=too-many-locals
     basedir = decode_path(tempfile.mkdtemp())
     try:
         _remkdir(destdn, notexists_ok=True)
-        with _MockConfig(arch, repos, basedir) as mockcfg:
+        with _MockConfig(arch, repos, basedir=basedir) as mockcfg:
             # FIXME: https://github.com/dgoodwin/tito/issues/171
             cmd = [
                 'tito', 'build', '--rpm',
@@ -439,6 +458,60 @@ def _build_librepo(  # pylint: disable=too-many-locals
         raise ValueError('repository creation failed')
 
 
+def _build_libcomps(arch, destdn, repos=()):
+    """Build RPMs of a librepo project fork in the current work. dir.
+
+    The "createrepo_c", "mock" and "python" executables must be
+    available. The destination directory will be overwritten.
+    Corresponding metadata will be added so that the directory
+    could work as an RPM repository.
+
+    :param arch: the value of the Mock's "config_opts['target_arch']"
+       option
+    :type arch: unicode
+    :param destdn: the name of a destination directory
+    :type destdn: unicode
+    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and the
+       URL (direct or metalink) of each repository to be added to the
+       Mock's config_opts['yum.conf']
+    :type repos: collections.Sequence[tuple[unicode, unicode]]
+    :raises exceptions.OSError: if some of the executables cannot be
+       executed
+    :raises exceptions.ValueError: if the build fails
+
+    """
+    LOGGER.info('Building RPMs from %s...', os.getcwdu())
+    with _MockConfig(arch, repos, createrepo=True) as mockcfg:
+        try:
+            # FIXME: https://github.com/midnightercz/libcomps/pull/26
+            subprocess.check_output(
+                ['python', 'build_prep.py'], stderr=subprocess.STDOUT)
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--resultdir={}'.format(destdn), '--buildsrpm', '--spec',
+                 'libcomps.spec', '--sources', '.'], stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            _log_call(err.cmd[0], err.returncode, err.output)
+            raise ValueError('sources preparation failed')
+        srpm, = (fnm for fnm in os.listdir(destdn) if fnm.endswith('.src.rpm'))
+        srpmfn = os.path.join(tempfile.mkdtemp(), 'libcomps.src.rpm')
+        shutil.move(os.path.join(destdn, srpm), srpmfn)
+        status = 0
+        try:
+            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
+            output = subprocess.check_output(
+                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
+                 '--resultdir={}'.format(destdn), srpmfn],
+                stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            status, output = err.returncode, err.output
+            raise ValueError('"mock" failed')
+        finally:
+            shutil.rmtree(os.path.dirname(srpmfn))
+            _log_call('mock', status, output)
+
+
 def _start_commandline():  # pylint: disable=too-many-statements
     """Start the command line interface to the program.
 
@@ -451,7 +524,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
         usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
                     [--add-repository URL]
-                    {tito,librepo} ...
+                    {tito,librepo,libcomps} ...
 
         Build RPMs of a project from the checkout in the current working
         directory. The RPMs will be stored in a subdirectory "packages"
@@ -460,7 +533,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
         repository.
 
         positional arguments:
-          {tito,librepo}        the type of the project
+          {tito,librepo,libcomps}
+                                the type of the project
 
         optional arguments:
           -h, --help            show this help message and exit
@@ -515,6 +589,24 @@ def _start_commandline():  # pylint: disable=too-many-statements
           -h, --help         show this help message and exit
           --release RELEASE  a custom release number of the
                              resulting RPMs
+
+    The usage for "libcomps" projects is::
+
+        usage: prog libcomps [-h] ARCHITECTURE DESTINATION
+
+        Build a libcomps project fork.
+
+        positional arguments:
+          ARCHITECTURE  the value of the Mock's
+                        "config_opts['target_arch']" option
+          DESTINATION   the name of a destination directory
+                        (the directory will be overwritten)
+
+        optional arguments:
+          -h, --help    show this help message and exit
+
+        In addition, the "createrepo_c" and "python" executables must be
+        available.
 
     :raises exceptions.SystemExit: with a non-zero exit status if an
        error occurs
@@ -574,6 +666,11 @@ def _start_commandline():  # pylint: disable=too-many-statements
         help='the ID of the Fedora Git revision of the spec file')
     repoparser.add_argument(
         '--release', help='a custom release number of the resulting RPMs')
+    projparser.add_parser(
+        'libcomps', description='Build a libcomps project fork.',
+        epilog='In addition, the "createrepo_c" and "python" executables must '
+               'be available.',
+        parents=[commonparser])
     options = argparser.parse_args()
     try:
         _remkdir(options.destdn, notexists_ok=True)
@@ -629,13 +726,25 @@ def _start_commandline():  # pylint: disable=too-many-statements
             sys.exit(
                 'The destination directory cannot be overwritten or some of '
                 'the executables cannot be executed.')
+    elif options.project == b'libcomps':
+        try:
+            _build_libcomps(options.arch, destdn, repos=repos)
+        except ValueError:
+            sys.exit(
+                'The build have failed. Hopefully the executables have created'
+                ' an output in the destination directory.')
+        except OSError:
+            sys.exit(
+                'Some of the executables cannot be executed.')
 
 
 class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
     """Class representing a mock configuration.
 
-    The instances can be used as a context manager.
+    The instances can be used as a context manager. It can be configured
+    to run createrepo on the rpms in the resultdir. In such case, the
+    "createrepo_c" executable must be available.
 
     :ivar basedir: the value set as "config_opts['basedir']"
     :type basedir: unicode | None
@@ -647,12 +756,14 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
        the URL (direct or metalink) of each repository to be added to
        config_opts['yum.conf']
     :type repos: collections.Sequence[tuple[unicode, unicode]]
+    :ivar createrepo: run createrepo on the rpms in the resultdir
+    :type createrepo: bool
     :ivar cfgfn: a name of the file where the configuration is stored
     :type cfgfn: unicode | None
 
     """
 
-    def __init__(self, arch, repos=(), basedir=None):
+    def __init__(self, arch, repos=(), createrepo=False, basedir=None):
         """Initialize the configuration.
 
         :param arch: a value set as "config_opts['target_arch']"
@@ -661,6 +772,8 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
            the URL (direct or metalink) of each repository to be added
            to config_opts['yum.conf']
         :type repos: collections.Sequence[tuple[unicode, unicode]]
+        :param createrepo: run createrepo on the rpms in the resultdir
+        :type createrepo: bool
         :param basedir: a value set as "config_opts['basedir']"
         :type basedir: unicode | None
 
@@ -669,6 +782,7 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         self.root = '{}-{}'.format(NAME, arch)
         self.arch = arch
         self.repos = repos
+        self.createrepo = createrepo
         self.cfgfn = None
 
     def __enter__(self):
@@ -685,7 +799,11 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
             for index, (type_, url) in enumerate(self.repos))
         opts = ''
         if self.basedir:
-            opts = "config_opts['basedir'] = '{}'".format(self.basedir)
+            opts = "config_opts['basedir'] = '{}'\n".format(self.basedir)
+        if self.createrepo:
+            opts += (
+                "config_opts['createrepo_on_rpms'] = True\n"
+                "config_opts['createrepo_command'] = 'createrepo_c --quiet'")
         template = pkg_resources.resource_string(
             __name__, b'resources/mock.cfg')
         config = template.decode('utf-8').format(

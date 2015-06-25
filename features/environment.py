@@ -28,6 +28,8 @@ attributes:
     A name of the directory with the tito-enabled project.
 :attr:`!librepodn` : :class:`str`
     A name of the directory with the librepo project fork.
+:attr:`!libcompsdn` : :class:`str`
+    A name of the directory with the libcomps project fork.
 :attr:`!repourl` : :data:`types.UnicodeType`
     The URL of the testing repository.
 :attr:`!workdn` : :data:`types.UnicodeType`
@@ -121,6 +123,15 @@ def before_all(context):
             'https://github.com/Tojaj/librepo.git', context.librepodn)
         libreporepo.reset(
             'd9bed0d9f96b505fb86a1adc50b3d6f8275fab93', pygit2.GIT_RESET_HARD)
+    # FIXME: https://github.com/libgit2/pygit2/issues/531
+    except Exception:
+        raise ValueError('Git repository creation failed')
+    context.libcompsdn = tempfile.mkdtemp()
+    try:
+        libcompsrepo = pygit2.clone_repository(
+            'https://github.com/midnightercz/libcomps.git', context.libcompsdn)
+        libcompsrepo.reset(
+            'eb966bc43097c0d00e154abe7f40f4d1d75fbcd1', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
     except Exception:
         raise ValueError('Git repository creation failed')
