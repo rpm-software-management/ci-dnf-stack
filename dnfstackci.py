@@ -85,18 +85,20 @@ The usage for "librepo" projects is::
 
 The usage for "libcomps" projects is::
 
-    usage: prog libcomps [-h] ARCHITECTURE DESTINATION
+    usage: prog libcomps [-h] [--release RELEASE]
+                         ARCHITECTURE DESTINATION
 
     Build a libcomps project fork.
 
     positional arguments:
-      ARCHITECTURE  the value of the Mock's
-                    "config_opts['target_arch']" option
-      DESTINATION   the name of a destination directory
-                    (the directory will be overwritten)
+      ARCHITECTURE       the value of the Mock's
+                         "config_opts['target_arch']" option
+      DESTINATION        the name of a destination directory
+                         (the directory will be overwritten)
 
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help         show this help message and exit
+      --release RELEASE  a custom release number of the resulting RPMs
 
     In addition, the "createrepo_c" and "python" executables must be
     available.
@@ -185,6 +187,26 @@ def _log_call(executable, status, output, encoding='utf-8'):
         executable,
         status,
         re.sub(r'^', '    ', output.decode(encoding, 'replace'), flags=re.M))
+
+
+def _set_release(filename, release):
+    """Set the "Release" tag in a spec file.
+
+    :param filename: a name of the spec file
+    :type filename: unicode
+    :param release: the new value of the tag
+    :type release: str
+    :raises exceptions.IOError: if the file is not accessible
+
+    """
+    count = 0
+    for line in fileinput.input([filename], inplace=1):
+        if re.match(br'^\s*Release\s*:\s*.+$', line, re.IGNORECASE):
+            print(b'Release: {}'.format(release))
+            count += 1
+            continue
+        print(line, end=b'')
+    assert count == 1, 'unexpected spec file'
 
 
 def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
@@ -370,14 +392,7 @@ def _build_librepo(  # pylint: disable=too-many-locals
         'id={}')
     specfn = urllib.urlretrieve(specurlpat.format(spec))[0]
     if release:
-        count = 0
-        for line in fileinput.input([specfn], inplace=1):
-            if re.match(br'^\s*Release\s*:\s*.+$', line, re.IGNORECASE):
-                print(b'Release: {}'.format(release))
-                count += 1
-                continue
-            print(line, end=b'')
-        assert count == 1, 'unexpected spec file'
+        _set_release(specfn, release)
     _remkdir(destdn, notexists_ok=True)
     with _MockConfig(arch, repos) as mockcfg:
         # FIXME: https://github.com/Tojaj/librepo/pull/61
@@ -458,7 +473,7 @@ def _build_librepo(  # pylint: disable=too-many-locals
         raise ValueError('repository creation failed')
 
 
-def _build_libcomps(arch, destdn, repos=()):
+def _build_libcomps(arch, destdn, repos=(), release=None):
     """Build RPMs of a librepo project fork in the current work. dir.
 
     The "createrepo_c", "mock" and "python" executables must be
@@ -475,25 +490,34 @@ def _build_libcomps(arch, destdn, repos=()):
        URL (direct or metalink) of each repository to be added to the
        Mock's config_opts['yum.conf']
     :type repos: collections.Sequence[tuple[unicode, unicode]]
+    :param release: a custom release number of the resulting RPMs
+    :type release: str | None
     :raises exceptions.OSError: if some of the executables cannot be
        executed
     :raises exceptions.ValueError: if the build fails
 
     """
     LOGGER.info('Building RPMs from %s...', os.getcwdu())
+    try:
+        # FIXME: https://github.com/midnightercz/libcomps/pull/26
+        subprocess.check_output(
+            ['python', 'build_prep.py'], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as err:
+        _log_call(err.cmd[0], err.returncode, err.output)
+        raise ValueError('sources preparation failed')
+    specfn = 'libcomps.spec'
+    if release:
+        _set_release(specfn, release)
     with _MockConfig(arch, repos, createrepo=True) as mockcfg:
         try:
-            # FIXME: https://github.com/midnightercz/libcomps/pull/26
-            subprocess.check_output(
-                ['python', 'build_prep.py'], stderr=subprocess.STDOUT)
             # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
             subprocess.check_output(
                 ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
                  '--resultdir={}'.format(destdn), '--buildsrpm', '--spec',
-                 'libcomps.spec', '--sources', '.'], stderr=subprocess.STDOUT)
+                 specfn, '--sources', '.'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as err:
             _log_call(err.cmd[0], err.returncode, err.output)
-            raise ValueError('sources preparation failed')
+            raise ValueError('SRPM preparation failed')
         srpm, = (fnm for fnm in os.listdir(destdn) if fnm.endswith('.src.rpm'))
         srpmfn = os.path.join(tempfile.mkdtemp(), 'libcomps.src.rpm')
         shutil.move(os.path.join(destdn, srpm), srpmfn)
@@ -592,18 +616,21 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage for "libcomps" projects is::
 
-        usage: prog libcomps [-h] ARCHITECTURE DESTINATION
+        usage: prog libcomps [-h] [--release RELEASE]
+                             ARCHITECTURE DESTINATION
 
         Build a libcomps project fork.
 
         positional arguments:
-          ARCHITECTURE  the value of the Mock's
-                        "config_opts['target_arch']" option
-          DESTINATION   the name of a destination directory
-                        (the directory will be overwritten)
+          ARCHITECTURE       the value of the Mock's
+                             "config_opts['target_arch']" option
+          DESTINATION        the name of a destination directory
+                             (the directory will be overwritten)
 
         optional arguments:
-          -h, --help    show this help message and exit
+          -h, --help         show this help message and exit
+          --release RELEASE  a custom release number of the
+                             resulting RPMs
 
         In addition, the "createrepo_c" and "python" executables must be
         available.
@@ -666,11 +693,13 @@ def _start_commandline():  # pylint: disable=too-many-statements
         help='the ID of the Fedora Git revision of the spec file')
     repoparser.add_argument(
         '--release', help='a custom release number of the resulting RPMs')
-    projparser.add_parser(
+    compsparser = projparser.add_parser(
         'libcomps', description='Build a libcomps project fork.',
         epilog='In addition, the "createrepo_c" and "python" executables must '
                'be available.',
         parents=[commonparser])
+    compsparser.add_argument(
+        '--release', help='a custom release number of the resulting RPMs')
     options = argparser.parse_args()
     try:
         _remkdir(options.destdn, notexists_ok=True)
@@ -728,7 +757,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
                 'the executables cannot be executed.')
     elif options.project == b'libcomps':
         try:
-            _build_libcomps(options.arch, destdn, repos=repos)
+            _build_libcomps(options.arch, destdn, repos, options.release)
         except ValueError:
             sys.exit(
                 'The build have failed. Hopefully the executables have created'

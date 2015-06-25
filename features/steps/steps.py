@@ -174,6 +174,9 @@ def _build_rpms(context, project):
         cmdline.insert(2, 'librepo')
         cwd = context.librepodn
     elif project == 'libcomps project fork':
+        if context.rel_option:
+            cmdline.insert(2, context.rel_option)
+            cmdline.insert(2, '--release')
         cmdline.insert(2, 'libcomps')
         cwd = context.libcompsdn
     else:
@@ -285,17 +288,26 @@ def _test_rpmmacros(context):
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.then(  # pylint: disable=no-member
-    'the release number of the resulting RPMs of the librepo fork should be '
+    'the release number of the resulting RPMs of the {project} fork should be '
     '99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm')
-def _test_release(context):
+def _test_release(context, project):
     """Test whether the result is affected by RPM macro definitions.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
+    :param project: a description of the project
+    :type project: unicode
     :raises exceptions.AssertionError: if the test fails
 
     """
-    headers = list(_librepo_rpms(os.path.join(context.workdn, 'packages')))
+    rpmsdn = os.path.join(context.workdn, 'packages')
+    if project == 'librepo':
+        headers = _librepo_rpms(rpmsdn)
+    elif project == 'libcomps':
+        headers = _libcomps_rpms(rpmsdn)
+    else:
+        raise NotImplementedError('project not supported')
+    headers = list(headers)
     assert headers, 'readable binary RPMs not found'
     release = b'99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
     assert all(header[rpm.RPMTAG_RELEASE] == release for header in headers)
