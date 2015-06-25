@@ -38,3 +38,10 @@ Feature: Build RPMs of a project
   Scenario: Build libcomps fork
      When I build RPMs of the libcomps project fork
      Then I should have RPMs of the libcomps fork
+
+  Scenario: Configure libcomps release
+    Given following options are configured as follows:
+       | Option    | Value                                                    |
+       | --release | 99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm |
+     When I build RPMs of the libcomps project fork
+     Then the release number of the resulting RPMs of the libcomps fork should be 99.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm

@@ -41,7 +41,7 @@ attention:
 - configure Mock's "config_opts['target_arch']" option
 - add repositories to Mock's "config_opts['yum.conf']" option
 - define RPM macros
-- configure release numbers of librepo RPMs
+- configure release numbers of librepo and libcomps RPMs
 
 The routines are not in the final shape yet. Further features are added
 on demand if they fit the purpose of the repository.
