@@ -1,0 +1,160 @@
+.. -*- coding: utf-8 -*-
+
+   Copyright 2015 dnf-stack-ci Authors. See the AUTHORS file
+   found in the top-level directory of this distribution and
+   at https://github.com/rholy/dnf-stack-ci/.
+
+   Licensed under the GNU General Public License; either version 2,
+   or (at your option) any later version. See the LICENSE file found
+   in the top-level directory of this distribution and at
+   https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
+   including this file, may be copied, modified, propagated, or
+   distributed except according to the terms contained in the LICENSE
+   file.
+
+
+Jenkins Setup
+=============
+
+
+Installation
+------------
+
+#. ``sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo`` [CIT1]_
+
+#. ``sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key`` [CIT1]_
+
+#. ``sudo yum install jenkins`` [CIT1]_
+
+#. ``sudo service jenkins start`` [CIT1]_
+
+#. http://localhost:8080/pluginManager/available
+
+#. install *Multiple SCMs plugin* and *GIT plugin*
+
+#. (optional) install *Warnings Plugin*
+
+    #. http://localhost:8080/configure
+
+    #. Compiler Warnings: Parsers: Add
+
+        #. Name: ``PyFlakes``
+
+        #. Link name: ``PyFlakes errors``
+
+        #. Trend report name: ``PyFlakes errors``
+
+        #. Regular Expression: ``^(.*):([0-9]*):(.*)$`` [CIT2]_
+
+        #. Mapping Script [CIT2]_::
+
+
+            import hudson.plugins.warnings.parser.Warning
+            import hudson.plugins.analysis.util.model.Priority
+
+            String fileName = matcher.group(1)
+            String category = "PyFlakes Error"
+            String lineNumber = matcher.group(2)
+            String message = matcher.group(3)
+
+            return new Warning(fileName, Integer.parseInt(lineNumber), category, "PyFlakes Parser", message);
+
+#. (optional) install *Violations* plugin
+
+.. [CIT1] https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions
+.. [CIT2] http://buildoutjenkins.readthedocs.org/en/latest/code-analysis.html#pyflakes
+
+
+Job creation
+------------
+
+#. http://localhost:8080/view/All/newJob
+
+#. Item name: ``dnf-nightly-fedora-rawhide``
+
+#. Multi-configuration project
+
+#. OK
+
+
+Job configuration
+-----------------
+
+#. Multi-configuration project name: ``dnf-nightly-fedora-rawhide``
+
+#. Description: ``Nightly builds of DNF for Fedora Rawhide.``
+
+#. GitHub project: ``https://github.com/rpm-software-management/dnf/``
+
+#. (if needed) Restrict where this project can be run: *check*
+
+#. Source Code Management: *Multiple SCMs*
+
+    #. Add SCM: *GIT*
+
+        #. Repository URL: ``https://github.com/rpm-software-management/dnf.git``
+
+        #. Add: *Check out to a sub-directory*: ``dnf``
+
+    #. Add SCM: *GIT*
+
+        #. Repository URL: ``https://github.com/rholy/dnf-stack-ci.git``
+
+        #. Add: *Check out to a sub-directory*: ``dnf-stack-ci``
+
+#. Build Triggers:
+
+    #. (optional) Trigger builds remotely (e.g., from scripts): *check*
+
+        #. Authentication Token: ``GIT_PUSH_NOTIFY``
+
+    #. Poll SCM: *check*
+
+        #. Schedule: ``H/20 * * * *``
+
+#. Configuration Matrix:
+
+    #. Add axis: *User-defined Axis*
+
+        #. Name: ``architecture``
+
+        #. Values: ``x86_64 i686``
+
+#. Build: Add build step: *Execute shell*::
+
+    #!/usr/bin/env bash
+    cd dnf
+    PATH=/usr/bin:$PATH python2 ../dnf-stack-ci/dnfstackci.py --add-rawhide --add-repository "$JENKINS_URL/job/hawkey-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --add-repository "$JENKINS_URL/job/librepo-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --add-repository "$JENKINS_URL/job/libcomps-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --root ci-${JOB_NAME//[^[:alnum:]-_]/-} tito --define snapshot ".$BUILD_NUMBER.%(date +%%Y%%m%%d)git$(git rev-parse HEAD)" $architecture ../result
+
+#. (optional) Post-build Actions
+
+    #. Add post-build action: *Archive the artifacts*
+
+        #. Files to archive: ``result/**``
+
+    #. Add post-build action: *Build other projects*
+
+        #. Projects to build: ``dnf-plugins-core-nightly-fedora-rawhide``
+
+    #. Add post-build action: *Scan for compiler warnings*: Scan workspace files: Add
+
+        #. File pattern: ``*-build/*-pyflakes.log``
+
+        #. Parser: *pyflakes*
+
+        #. Advanced...
+
+            #. Resolve relative paths: *check*
+
+            #. Health thresholds: ``999`` - ``9999``
+
+    #. Add post-build action: *Report Violations*
+
+        ========== ========= ========= ========= ========================
+           type      sunny    stormy   unstable          pattern
+        ========== ========= ========= ========= ========================
+        ``pep8``   ``99998`` ``99999`` ``99999`` ``*-build/*-pep8.log``
+        ``pylint`` ``99998`` ``99999`` ``99999`` ``*-build/*-pylint.log``
+        ========== ========= ========= ========= ========================
+
+    #. Email Notification
