@@ -118,6 +118,8 @@ def _configure_options(context):
             context.repo_option.append(row[1])
         elif row[0] == '--define' and len(row) == 3:
             context.def_option.append((row[1], row[2]))
+        elif row[0] == '--root' and len(row) == 2:
+            context.root_option = row[1]
         elif row[0] == '--release' and len(row) == 2:
             context.rel_option = row[1]
         else:
@@ -181,6 +183,9 @@ def _build_rpms(context, project):
         cwd = context.libcompsdn
     else:
         raise NotImplementedError('project not supported')
+    if context.root_option:
+        cmdline.insert(2, context.root_option.replace(old, new))
+        cmdline.insert(2, '--root')
     for url in reversed(context.repo_option):
         cmdline.insert(2, url.replace(old, new))
         cmdline.insert(2, '--add-repository')
@@ -284,6 +289,23 @@ def _test_rpmmacros(context):
     assert header, 'no readable binary RPM found'
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
     assert release in header[rpm.RPMTAG_RELEASE], 'macro not defined'
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    "I should have the result that is produced if config_opts['root'] == "
+    "'test-hawkey-x86_64-rawhide'")
+def _test_root(context):  # pylint: disable=unused-argument
+    """Test whether the result is affected by a Mock's "root".
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+
+    """
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
+    # There is no way how to test whether the RPMs were built using the
+    # given option since it's not specified what the option does.
+    pass
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
