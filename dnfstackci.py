@@ -19,7 +19,7 @@ When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
     usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                [--add-repository URL]
+                [--add-repository URL] [--root ROOT]
                 {tito,librepo,libcomps} ...
 
     Build RPMs of a project from the checkout in the current working
@@ -42,6 +42,8 @@ program is started. The interface usage is::
                             Mock's "config_opts['yum.conf']" option
       --add-repository URL  the URL of a repository to be added to the
                             Mock's "config_opts['yum.conf']" option
+      --root ROOT           the value of the Mock's
+                            "config_opts['root']" option
 
     The "mock" executable must be available. If an error occurs the exit
     status is non-zero.
@@ -275,8 +277,8 @@ def _create_rpmrepo(dirname, suffix):  # pylint: disable=too-many-locals
         file_.write(repomd.xml_dump())
 
 
-def _build_tito(  # pylint: disable=too-many-locals
-        arch, destdn, last_tag=True, repos=(), macros=()):
+def _build_tito(  # pylint: disable=too-many-arguments,too-many-locals
+        arch, destdn, last_tag=True, repos=(), macros=(), root=NAME):
     """Build RPMs of a tito-enabled project in the current work. dir.
 
     The "tito" and "mock" executables must be available. The destination
@@ -297,6 +299,8 @@ def _build_tito(  # pylint: disable=too-many-locals
     :param macros: the name and the value of each RPM macro to be
        defined
     :type macros: collections.Sequence[tuple[unicode, unicode]]
+    :param root: the value of the Mock's "config_opts['root']" option
+    :type root: unicode
     :raises exceptions.OSError: if the destination directory cannot be
        created or overwritten or if some of the executables cannot be
        executed
@@ -307,7 +311,7 @@ def _build_tito(  # pylint: disable=too-many-locals
     basedir = decode_path(tempfile.mkdtemp())
     try:
         _remkdir(destdn, notexists_ok=True)
-        with _MockConfig(arch, repos, basedir=basedir) as mockcfg:
+        with _MockConfig(arch, repos, basedir=basedir, root=root) as mockcfg:
             # FIXME: https://github.com/dgoodwin/tito/issues/171
             cmd = [
                 'tito', 'build', '--rpm',
@@ -354,8 +358,8 @@ def _build_tito(  # pylint: disable=too-many-locals
         raise ValueError('repository creation failed')
 
 
-def _build_librepo(  # pylint: disable=too-many-locals
-        spec, arch, destdn, repos=(), release=None):
+def _build_librepo(  # pylint: disable=too-many-arguments,too-many-locals
+        spec, arch, destdn, repos=(), release=None, root=NAME):
     """Build RPMs of a librepo project fork in the current work. dir.
 
     The "mock" executable must be available. The destination directory
@@ -375,6 +379,8 @@ def _build_librepo(  # pylint: disable=too-many-locals
     :type repos: collections.Sequence[tuple[unicode, unicode]]
     :param release: a custom release number of the resulting RPMs
     :type release: str | None
+    :param root: the value of the Mock's "config_opts['root']" option
+    :type root: unicode
     :raises exceptions.IOError: if the spec file of librepo cannot be
        downloaded
     :raises urllib.ContentTooShortError: if the spec file of librepo
@@ -394,7 +400,7 @@ def _build_librepo(  # pylint: disable=too-many-locals
     if release:
         _set_release(specfn, release)
     _remkdir(destdn, notexists_ok=True)
-    with _MockConfig(arch, repos) as mockcfg:
+    with _MockConfig(arch, repos, root=root) as mockcfg:
         # FIXME: https://github.com/Tojaj/librepo/pull/61
         try:
             # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
@@ -473,7 +479,7 @@ def _build_librepo(  # pylint: disable=too-many-locals
         raise ValueError('repository creation failed')
 
 
-def _build_libcomps(arch, destdn, repos=(), release=None):
+def _build_libcomps(arch, destdn, repos=(), release=None, root=NAME):
     """Build RPMs of a librepo project fork in the current work. dir.
 
     The "createrepo_c", "mock" and "python" executables must be
@@ -492,6 +498,8 @@ def _build_libcomps(arch, destdn, repos=(), release=None):
     :type repos: collections.Sequence[tuple[unicode, unicode]]
     :param release: a custom release number of the resulting RPMs
     :type release: str | None
+    :param root: the value of the Mock's "config_opts['root']" option
+    :type root: unicode
     :raises exceptions.OSError: if some of the executables cannot be
        executed
     :raises exceptions.ValueError: if the build fails
@@ -508,7 +516,7 @@ def _build_libcomps(arch, destdn, repos=(), release=None):
     specfn = 'libcomps.spec'
     if release:
         _set_release(specfn, release)
-    with _MockConfig(arch, repos, createrepo=True) as mockcfg:
+    with _MockConfig(arch, repos, createrepo=True, root=root) as mockcfg:
         try:
             # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
             subprocess.check_output(
@@ -547,7 +555,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
     The interface usage is::
 
         usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                    [--add-repository URL]
+                    [--add-repository URL] [--root ROOT]
                     {tito,librepo,libcomps} ...
 
         Build RPMs of a project from the checkout in the current working
@@ -571,6 +579,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
           --add-repository URL  the URL of a repository to be added to
                                 the Mock's "config_opts['yum.conf']"
                                 option
+          --root ROOT           the value of the Mock's
+                                "config_opts['root']" option
 
         The "mock" executable must be available. If an error occurs the
         exit status is non-zero.
@@ -666,6 +676,10 @@ def _start_commandline():  # pylint: disable=too-many-statements
         help="the URL of a repository to be added to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='URL')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    argparser.add_argument(
+        '--root', default=NAME, type=unicode,
+        help="the value of the Mock's \"config_opts['root']\" option")
     commonparser = argparse.ArgumentParser(add_help=False)
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     commonparser.add_argument(
@@ -736,7 +750,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
         try:
             _build_tito(
                 options.arch, destdn, last_tag=False, repos=repos,
-                macros=options.macros)
+                macros=options.macros, root=options.root)
         except ValueError:
             sys.exit(
                 'The build have failed. Hopefully the executables have created'
@@ -748,7 +762,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
     elif options.project == b'librepo':
         try:
             _build_librepo(
-                options.fedrev, options.arch, destdn, repos, options.release)
+                options.fedrev, options.arch, destdn, repos, options.release,
+                options.root)
         except (IOError, urllib.ContentTooShortError, ValueError):
             sys.exit('The build have failed.')
         except OSError:
@@ -757,7 +772,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
                 'the executables cannot be executed.')
     elif options.project == b'libcomps':
         try:
-            _build_libcomps(options.arch, destdn, repos, options.release)
+            _build_libcomps(
+                options.arch, destdn, repos, options.release, options.root)
         except ValueError:
             sys.exit(
                 'The build have failed. Hopefully the executables have created'
@@ -792,7 +808,8 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
 
     """
 
-    def __init__(self, arch, repos=(), createrepo=False, basedir=None):
+    def __init__(  # pylint: disable=too-many-arguments
+            self, arch, repos=(), createrepo=False, basedir=None, root=NAME):
         """Initialize the configuration.
 
         :param arch: a value set as "config_opts['target_arch']"
@@ -805,10 +822,12 @@ class _MockConfig(object):  # pylint: disable=too-few-public-methods
         :type createrepo: bool
         :param basedir: a value set as "config_opts['basedir']"
         :type basedir: unicode | None
+        :param root: a value set as "config_opts['root']"
+        :type root: unicode
 
         """
         self.basedir = basedir
-        self.root = '{}-{}'.format(NAME, arch)
+        self.root = root
         self.arch = arch
         self.repos = repos
         self.createrepo = createrepo

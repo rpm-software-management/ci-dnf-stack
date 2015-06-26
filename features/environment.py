@@ -48,6 +48,9 @@ attributes:
     "config_opts['yum.conf']" option.
 :attr:`!def_option` : :class:`list[types.TupleType[types.UnicodeType, types.UnicodeType]]`
     A name and a value of each RPM macro to be defined.
+:attr:`!root_option` : :data:`types.UnicodeType` | :data:`None`
+    A value of the Mock's "config_opts['root']" option used by
+    dnf-stack-ci.
 :attr:`!dest_option` : :data:`types.UnicodeType`
     A name of the destination directory of dnf-stack-ci.
 :attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
@@ -153,6 +156,7 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.rawhide_option = False
     context.repo_option = []
     context.def_option = []
+    context.root_option = None
     context.rel_option = None
     context.dest_option = context.workdn
     context.substitute = False
