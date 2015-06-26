@@ -204,6 +204,8 @@ def _test_rpms(context, project):
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
+    :param project: a description of the project
+    :type project: unicode
     :raises exceptions.AssertionError: if the test fails
 
     """
