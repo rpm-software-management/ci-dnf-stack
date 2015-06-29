@@ -268,7 +268,7 @@ def _test_repository(context, repository):  # pylint: disable=unused-argument
     :type repository: unicode
 
     """
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     # There is no way how to test whether the RPMs were built using the
     # given option since it's not specified what the option does.
     pass

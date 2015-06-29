@@ -659,24 +659,24 @@ def _start_commandline():  # pylint: disable=too-many-statements
                     ''.format(pkgsreldn),
         epilog='The "mock" executable must be available. If an error occurs '
                'the exit status is non-zero.')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         '--add-non-rawhide', action='append', default=[], type=unicode,
         help="add a Fedora non-Rawhide release repository to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='VERSION')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         '--add-rawhide', action='store_true',
         help="add the Fedora Rawhide repository to the Mock's "
              "\"config_opts['yum.conf']\" option")
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         '--add-repository', action='append', default=[], type=unicode,
         help="the URL of a repository to be added to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='URL')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1230749
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
     argparser.add_argument(
         '--root', default=NAME, type=unicode,
         help="the value of the Mock's \"config_opts['root']\" option")
