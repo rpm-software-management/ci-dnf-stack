@@ -468,8 +468,9 @@ def _build_librepo(  # pylint: disable=too-many-arguments,too-many-locals
             # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
             subprocess.check_output(
                 ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
-                 '--copyout'] + srpms.splitlines() + rpms.splitlines() +
-                [destdn], stderr=subprocess.STDOUT)
+                 '--copyout'] + srpms.decode('utf-8').splitlines() +
+                rpms.decode('utf-8').splitlines() + [destdn],
+                stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as err:
             _log_call(err.cmd[0], err.returncode, err.output)
             raise ValueError('result saving failed')
