@@ -67,6 +67,7 @@ dnf-stack-ci works on Python 2.7.
 Following executables and Python modules are required to run
 dnf-stack-ci:
 
+- `createrepo_c executable <https://github.com/Tojaj/createrepo_c>`_
 - `mock executable <http://fedoraproject.org/wiki/Projects/Mock>`_
 - `tito executable <http://rm-rf.ca/tito>`_
 - `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
@@ -76,7 +77,6 @@ dnf-stack-ci:
 Following additional executables and Python modules are required to run
 a test suite:
 
-- `createrepo_c executable <https://github.com/Tojaj/createrepo_c>`_
 - `python executable <http://www.python.org/>`_
 - `behave Python module <http://github.com/behave/behave/>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_
