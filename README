@@ -69,6 +69,7 @@ dnf-stack-ci:
 
 - `createrepo_c executable <https://github.com/Tojaj/createrepo_c>`_
 - `mock executable <http://fedoraproject.org/wiki/Projects/Mock>`_
+- `python executable <http://www.python.org/>`_
 - `tito executable <http://rm-rf.ca/tito>`_
 - `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
 - `pkg_resources Python module
@@ -77,7 +78,6 @@ dnf-stack-ci:
 Following additional executables and Python modules are required to run
 a test suite:
 
-- `python executable <http://www.python.org/>`_
 - `behave Python module <http://github.com/behave/behave/>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_
 - `rpm Python module <http://www.rpm.org/>`_
