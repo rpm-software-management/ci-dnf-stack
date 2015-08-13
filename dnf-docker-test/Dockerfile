@@ -11,12 +11,17 @@ WORKDIR /build/libsolv_src/
 
 ADD libsolv-enable_complex_deps.patch ./
 
+RUN dnf --nogpgcheck -y upgrade cmake
 RUN wget https://kojipkgs.fedoraproject.org/packages/libsolv/0.6.11/1.fc23/src/${PKG_NAME}\
  && rpm2cpio ${PKG_NAME} | cpio -idmv\
  && mkdir -p ~/rpmbuild/SOURCES/\
  && patch libsolv.spec libsolv-enable_complex_deps.patch\
  && cp *.tar.gz libsolv-rubyinclude.patch ~/rpmbuild/SOURCES/\
- && rpmbuild -bb libsolv.spec
+ && rm -f /usr/bin/python\
+ && ln -s /usr/bin/python3 /usr/bin/python\
+ && rpmbuild -bb libsolv.spec\
+ && rm -f /usr/bin/python\
+ && ln -s /usr/bin/python2 /usr/bin/python
 
 VOLUME /repo 
 
