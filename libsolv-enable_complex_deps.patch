@@ -1,0 +1,12 @@
+--- libsolv.spec	2015-06-22 19:17:31.000000000 +0200
++++ l	2015-08-03 11:34:40.338972922 +0200
+@@ -95,7 +95,8 @@ make ARGS="-V" test
+        -DENABLE_DEBIAN=1 \
+        -DENABLE_ARCHREPO=1 \
+        -DENABLE_LZMA_COMPRESSION=1 \
+-       -DMULTI_SEMANTICS=1
++       -DMULTI_SEMANTICS=1 \
++       -DENABLE_COMPLEX_DEPS=1
+ 
+ make %{?_smp_mflags}
+ 
