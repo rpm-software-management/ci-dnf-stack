@@ -1,5 +1,5 @@
 {
-  "name": "TestA installation using DNF",
+  "name": "TestA installation using DNF with TestB already installed",
   "description": "TestA `Requires: (TestB | TestC)` and `Recommends: TestC`",
   "repository": "repos/test-1",
   "cases": [
