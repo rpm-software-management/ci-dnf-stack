@@ -10,9 +10,8 @@ RUN dnf --nogpgcheck -y install dnf-plugins-core\
 WORKDIR /build/libsolv_src/
 
 ADD libsolv-enable_complex_deps.patch ./
-ADD test-suite.py /usr/bin/
+ADD test-suite /usr/bin/
 
-RUN dnf --nogpgcheck -y upgrade cmake
 RUN wget https://kojipkgs.fedoraproject.org/packages/libsolv/0.6.11/1.fc23/src/${PKG_NAME}\
  && rpm2cpio ${PKG_NAME} | cpio -idmv\
  && mkdir -p ~/rpmbuild/SOURCES/\
@@ -30,3 +29,5 @@ RUN rpm -Uvh ~/rpmbuild/RPMS/x86_64/libsolv-0*\
  && echo -ne "[test]\nname=test\nbaseurl=file:///repo\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/test.repo
 
 WORKDIR /
+
+ENTRYPOINT ["test-suite"]

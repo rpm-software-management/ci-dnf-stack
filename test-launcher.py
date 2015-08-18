@@ -44,7 +44,7 @@ with open(config, 'r') as fp:
 
 def container_run(repo, test_input):
   r = os.path.join(os.getcwd(), repo) + ':/repo:Z'
-  DOCKER_RUN = ['docker', 'run', '-i', '-v', os.getcwd() + '/test-suite.py' + ':/usr/bin/test-suite.py:Z', '-v', r, DOCKER_IMAGE, '/usr/bin/test-suite.py']
+  DOCKER_RUN = ['docker', 'run', '-i', '-v', r, DOCKER_IMAGE]
   print('Starting container:\n ' + blue_text(' '.join(DOCKER_RUN)) + '\n')
 
   p = subprocess.Popen(DOCKER_RUN, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
