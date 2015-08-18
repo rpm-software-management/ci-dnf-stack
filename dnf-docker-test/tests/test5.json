@@ -1,0 +1,11 @@
+{
+  "name": "TestA installation using DNF",
+  "description": "TestA `Requires: (TestB && ((TestC || TestE) IF TestD))` and TestF `Conflicts: TestC`",
+  "repository": "repos/test-3",
+  "cases": [
+    { "pre_packages": [], "post_packages": ["+TestD", "+TestF"], 
+      "command": ["install", "TestD", "TestF"], "type": "dnf", "return_code": 0},
+    { "pre_packages": [], "post_packages": ["+TestA", "+TestB", "+TestE"], 
+      "command": ["install", "TestA"], "type": "dnf", "return_code": 0}
+  ]
+}
