@@ -50,5 +50,5 @@ Executes each case in the `JSON` passed in by the `test-launcher`.
 
 ## Examples
 
-As of now the test suite contains two tests that work against the same repository, yet one fails
-and the other one succeeds. (hint: the second test installs TestB first, and the test fails because TestC is also installed)
+As of now the test suite contains two tests that work against the same repository `repos/test-1`, yet one fails
+and the other one succeeds. (hint: the second test installs `TestB` first, and the test fails because `TestC` is also installed)
