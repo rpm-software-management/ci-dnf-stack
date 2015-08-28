@@ -9,6 +9,27 @@ correctly. In overall the system is written in such a way that it is package-man
 agnostic, so plugging in tests for `PackageKit` is just about providing correct
 CLI arguments.
 
+## Usage
+
+Install:
+```
+$ git clone https://github.com/shaded-enmity/richdeps-docker/
+$ cd richdeps-docker/
+$ git checkout behave-integration
+$ docker pull pavelo/richdeps:1.0.0
+```
+
+Execute test:
+```
+$ ./test-launcher.py test-1
+```
+
+To rebuild the Docker image you can use the following command:
+```
+$ cd richdeps-docker/
+$ docker build -t pavelo/richdeps:1.0.0 .
+```
+
 ## Binaries
 
 ### test-launcher.py
@@ -34,5 +55,7 @@ Scenario: Install TestA from repository "test-1"
 ```
 
 Possible actions: install, remove
+
 Possible package managers: dnf, rpm (pkcon soonish)
+
 Possible states: installed, removed, absent
