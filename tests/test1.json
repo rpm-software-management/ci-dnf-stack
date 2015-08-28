@@ -1,9 +1,0 @@
-{
-  "name": "TestA installation using DNF",
-  "description": "TestA `Requires: (TestB | TestC)` and `Recommends: TestC`",
-  "repository": "repos/test-1",
-  "cases": [
-    { "pre_packages": [], "post_packages": ["+TestA", "+TestC"], 
-      "command": ["install", "TestA"], "type": "dnf", "return_code": 0}
-  ]
-}
