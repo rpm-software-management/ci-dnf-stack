@@ -1,7 +1,7 @@
 #!/usr/bin/python -tt
 
 from behave import *
-import os, sys, subprocess, shutil
+import os, sys, subprocess, glob
 
 DNF_FLAGS = ['-y', '--disablerepo=*', '--nogpgcheck']
 RPM_INSTALL_FLAGS = ['-Uvh']
@@ -14,6 +14,16 @@ def _left_decorator(item):
 def _right_decorator(item):
   " Installed packages "
   return u'+' + item
+
+def find_pkg(pkg):
+  " Find the package file in the repository "
+  candidates = glob.glob('/repo/'+pkg+'*.rpm')
+  assert len(candidates) == 1
+  return candidates[0]
+
+def decorate_rpm_packages(pkgs):
+  " Converts package names like TestA, TestB into absolute paths "
+  return [find_pkg(p) for p in pkgs]
 
 def get_package_list():
   " Gets all installed packages in the system "
@@ -39,7 +49,8 @@ def execute_rpm_command(pkg, action):
     action = RPM_ERASE_FLAGS
   elif action == "install":
     action = RPM_INSTALL_FLAGS
-  return subprocess.check_call(['rpm'] + [action] + pkg )
+    pkg = decorate_rpm_packages(pkg)
+  return subprocess.check_call(['rpm'] + [action] + pkg)
 
 def piecewise_compare(a, b):
   " Check if the two sequences are identical regardless of ordering "
