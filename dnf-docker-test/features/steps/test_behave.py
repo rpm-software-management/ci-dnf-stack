@@ -50,7 +50,7 @@ def execute_rpm_command(pkg, action):
   elif action == "install":
     action = RPM_INSTALL_FLAGS
     pkg = decorate_rpm_packages(pkg)
-  return subprocess.check_call(['rpm'] + action + pkg)
+  return subprocess.check_call(['rpm'] + action + pkg, stdout=subprocess.PIPE)
 
 def piecewise_compare(a, b):
   " Check if the two sequences are identical regardless of ordering "
