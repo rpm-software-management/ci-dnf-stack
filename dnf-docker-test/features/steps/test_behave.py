@@ -43,14 +43,14 @@ def execute_dnf_command(cmd, reponame):
 
 def execute_rpm_command(pkg, action):
   " Execute given action over specified pkg(s) "
-  if not isinstance(list, pkg):
+  if not isinstance(pkg, list):
     pkg = [pkg]
   if action == "remove":
     action = RPM_ERASE_FLAGS
   elif action == "install":
     action = RPM_INSTALL_FLAGS
     pkg = decorate_rpm_packages(pkg)
-  return subprocess.check_call(['rpm'] + [action] + pkg)
+  return subprocess.check_call(['rpm'] + action + pkg)
 
 def piecewise_compare(a, b):
   " Check if the two sequences are identical regardless of ordering "
