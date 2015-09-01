@@ -18,6 +18,8 @@ def _right_decorator(item):
 def find_pkg(pkg):
   " Find the package file in the repository "
   candidates = glob.glob('/repo/'+pkg+'*.rpm')
+  if len(candidates) == 0:
+    print("No candidates for: '{0}'".format(pkg))
   assert len(candidates) == 1
   return candidates[0]
 
@@ -75,9 +77,9 @@ def when_action_package(context, action, pkg, manager):
   assert manager in ["rpm", "dnf", "pkcon"]
   assert pkg
   if manager == 'rpm':
-    assert execute_rpm_command(pkg.split(','), action) == 0
+    assert execute_rpm_command(split(pkg), action) == 0
   elif manager == 'dnf':
-    assert execute_dnf_command([action] + pkg.split(','), 'test') == 0
+    assert execute_dnf_command([action] + split(pkg), 'test') == 0
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
@@ -96,4 +98,3 @@ def then_package_state(context, pkg, state):
     if state == 'absent':
       assert ('+' + n) not in installed
       assert ('-' + n) not in removed
-
