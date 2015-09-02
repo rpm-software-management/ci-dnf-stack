@@ -2,7 +2,7 @@
 
 import os, sys, subprocess, json
 
-DOCKER_IMAGE='richdeps:1.0.0'
+DOCKER_IMAGE='pavelo/richdeps:1.0.0'
 
 class Colors(object):
   HEADER = '\033[95m'
@@ -31,25 +31,15 @@ if len(sys.argv) == 1:
   print("Missing configuration file argument")
   sys.exit(1)
 
-config = sys.argv[1]
+repo = sys.argv[1]
 
-if not os.path.exists(config):
-  print("Path to configuration file is invalid")
-  sys.exit(1)
-
-test_data, jo = '', None
-with open(config, 'r') as fp:
-  test_data = fp.read()
-  jo = json.loads(test_data)
-
-def container_run(repo, test_input):
-  r = os.path.join(os.getcwd(), repo) + ':/repo:Z'
-  DOCKER_RUN = ['docker', 'run', '-i', '-v', r, DOCKER_IMAGE]
+def container_run(repo):
+  r = os.path.join(os.getcwd(), 'repo') + ':/build:Z'
+  f = os.path.join(os.getcwd(), 'features') + ':/behave:Z'
+  DOCKER_RUN = ['docker', 'run', '-i', '-v', r, '-v', f, DOCKER_IMAGE, repo]
   print('Starting container:\n ' + blue_text(' '.join(DOCKER_RUN)) + '\n')
 
-  p = subprocess.Popen(DOCKER_RUN, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-  out, _ = p.communicate(test_input)
-  rc = p.poll()
+  rc = subprocess.check_call(DOCKER_RUN)
 
   if rc != 0:
     print(red_text("Container returned non zero value({}), stdout:\n ".format(rc)) + out)
@@ -57,8 +47,8 @@ def container_run(repo, test_input):
 
   return rc
 
-print('Loading test configuration from:\n ' + blue_text(config))
+print('Running test:\n ' + blue_text(repo))
 
-r = container_run(jo['repository'], test_data)
+r = container_run(repo)
 if not r:
   print(green_text('OK'))

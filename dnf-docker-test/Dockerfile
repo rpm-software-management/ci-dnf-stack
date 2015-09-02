@@ -5,12 +5,12 @@ ENV PKG_NAME=libsolv-0.6.11-1.fc23.src.rpm
 
 RUN dnf --nogpgcheck -y install dnf-plugins-core\
  && dnf --nogpgcheck -y builddep libsolv\ 
- && dnf --nogpgcheck -y install automake gcc-c++ make rpm-build  wget which
+ && dnf --nogpgcheck -y install automake gcc-c++ make python-behave rpm-build  wget which
 
 WORKDIR /build/libsolv_src/
 
 ADD libsolv-enable_complex_deps.patch ./
-ADD test-suite /usr/bin/
+ADD launch-test /usr/bin/
 
 RUN wget https://kojipkgs.fedoraproject.org/packages/libsolv/0.6.11/1.fc23/src/${PKG_NAME}\
  && rpm2cpio ${PKG_NAME} | cpio -idmv\
@@ -30,4 +30,4 @@ RUN rpm -Uvh ~/rpmbuild/RPMS/x86_64/libsolv-0*\
 
 WORKDIR /
 
-ENTRYPOINT ["test-suite"]
+ENTRYPOINT ["launch-test"]
