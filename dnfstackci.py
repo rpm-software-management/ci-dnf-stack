@@ -32,22 +32,26 @@ program is started. The interface usage is::
 
 The usage of the "setup" command is::
 
-    usage: prog setup [-h] CHROOT [CHROOT ...] PROJECT
+    usage: prog setup [-h] [--add-repository URL]
+                      CHROOT [CHROOT ...] PROJECT
 
     Create a new Copr project.
 
     positional arguments:
-      CHROOT      the chroots to be used in the project
-                  ("22" adds "fedora-22-i386,
-                  fedora-22-ppc64le, fedora-22-x86_64",
-                  "23" adds "fedora-23-i386,
-                  fedora-23-ppc64le, fedora-23-x86_64",
-                  "rawhide" adds "fedora-rawhide-i386,
-                  fedora-rawhide-ppc64le, fedora-rawhide-x86_64")
-      PROJECT     the name of the project
+      CHROOT                the chroots to be used in the project
+                            ("22" adds "fedora-22-i386,
+                            fedora-22-ppc64le, fedora-22-x86_64",
+                            "23" adds "fedora-23-i386,
+                            fedora-23-ppc64le, fedora-23-x86_64",
+                            "rawhide" adds "fedora-rawhide-i386,
+                            fedora-rawhide-ppc64le, fedora-rawhide-
+                            x86_64")
+      PROJECT               the name of the project
 
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --add-repository URL  the URL of an additional repository
+                            that is required
 
 The usage of the "build" command is::
 
@@ -225,21 +229,23 @@ def _log_call(executable, status, output, encoding='utf-8'):
         re.sub(r'^', '    ', output.decode(encoding, 'replace'), flags=re.M))
 
 
-def _create_copr(name, chroots):
+def _create_copr(name, chroots, repos=()):
     """Create a Copr project.
 
     :param name: a name of the project
     :type name: unicode
     :param chroots: names of the chroots to be used in the project
     :type chroots: collections.Iterable[unicode]
+    :param repos: the URL of each additional repository that is required
+    :type repos: collections.Iterable[unicode]
     :raises exceptions.ValueError: if the project cannot be created
 
     """
-    chroots = list(chroots)
+    chroots, repos = list(chroots), list(repos)
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
     try:
         client = copr.client.CoprClient.create_from_file_config()
-        client.create_project(name, chroots=chroots)
+        client.create_project(name, chroots=chroots, repos=repos)
     except Exception as err:
         LOGGER.error('Copr failed with: %s', err)
         raise ValueError('Copr failed')
@@ -623,22 +629,26 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage of the "setup" command is::
 
-        usage: prog setup [-h] CHROOT [CHROOT ...] PROJECT
+        usage: prog setup [-h] [--add-repository URL]
+                          CHROOT [CHROOT ...] PROJECT
 
         Create a new Copr project.
 
         positional arguments:
-          CHROOT      the chroots to be used in the project
-                      ("22" adds "fedora-22-i386,
-                      fedora-22-ppc64le, fedora-22-x86_64",
-                      "23" adds "fedora-23-i386,
-                      fedora-23-ppc64le, fedora-23-x86_64",
-                      "rawhide" adds "fedora-rawhide-i386,
-                      fedora-rawhide-ppc64le, fedora-rawhide-x86_64")
-          PROJECT     the name of the project
+          CHROOT                the chroots to be used in the project
+                                ("22" adds "fedora-22-i386,
+                                fedora-22-ppc64le, fedora-22-x86_64",
+                                "23" adds "fedora-23-i386,
+                                fedora-23-ppc64le, fedora-23-x86_64",
+                                "rawhide" adds "fedora-rawhide-i386,
+                                fedora-rawhide-ppc64le, fedora-rawhide-
+                                x86_64")
+          PROJECT               the name of the project
 
         optional arguments:
-          -h, --help  show this help message and exit
+          -h, --help            show this help message and exit
+          --add-repository URL  the URL of an additional repository
+                                that is required
 
     The usage of the "build" command is::
 
@@ -751,6 +761,10 @@ def _start_commandline():  # pylint: disable=too-many-statements
     setupparser = cmdparser.add_parser(
         'setup', description='Create a new Copr project.')
     setupparser.add_argument(
+        '--add-repository', action='append', default=[], type=unicode,
+        help='the URL of an additional repository that is required',
+        metavar='URL')
+    setupparser.add_argument(
         'chroot', nargs='+', choices=sorted(chroot2chroots), metavar='CHROOT',
         help='the chroots to be used in the project ({})'.format(
             ', '.join('"{}" adds "{}"'.format(key, ', '.join(sorted(value)))
@@ -850,7 +864,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
         chroots = set(itertools.chain.from_iterable(
             chroot2chroots[chroot] for chroot in options.chroot))
         try:
-            _create_copr(options.project, chroots)
+            _create_copr(options.project, chroots, options.add_repository)
         except ValueError:
             sys.exit('Copr have failed to create the project.')
     elif options.command == b'build':

@@ -131,14 +131,14 @@ def _configure_options(context):
             context.chr_option.append(row[1])
         elif row[0] == 'PROJECT' and len(row) == 2:
             context.proj_option = row[1]
+        elif row[0] == '--add-repository' and len(row) == 2:
+            context.repo_option.append(row[1])
         elif row[0] == 'ARCHITECTURE' and len(row) == 2:
             context.arch_option = row[1]
         elif row[0] == '--add-non-rawhide' and len(row) == 2:
             context.nonrawhide_option.append(row[1])
         elif row[0] == '--add-rawhide' and len(row) == 1:
             context.rawhide_option = True
-        elif row[0] == '--add-repository' and len(row) == 2:
-            context.repo_option.append(row[1])
         elif row[0] == '--define' and len(row) == 3:
             context.def_option.append((row[1], row[2]))
         elif row[0] == '--root' and len(row) == 2:
@@ -177,9 +177,13 @@ def _create_copr(context):
 
     """
     old = '$URL'
-    name = context.proj_option.replace(
-        old, context.repourl if context.substitute else old)
-    _run_ci(['setup'] + context.chr_option + [name])
+    new = context.repourl if context.substitute else old
+    name = context.proj_option.replace(old, new)
+    args = ['setup'] + context.chr_option + [name]
+    for url in reversed(context.repo_option):
+        args.insert(1, url.replace(old, new))
+        args.insert(1, '--add-repository')
+    _run_ci(args)
     context.temp_coprs.add(name)
 
 
@@ -243,7 +247,7 @@ def _build_rpms(context, project):
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.then(  # pylint: disable=no-member
     'I should have a Copr project called {name} with chroots {chroots}')
-def _test_copr(context, name, chroots):  # pylint: disable=unused-argument
+def _test_copr_project(context, name, chroots):  # pylint: disable=W0613
     """Test whether a Copr project exists.
 
     :param context: the context as described in the environment file
@@ -263,6 +267,33 @@ def _test_copr(context, name, chroots):  # pylint: disable=unused-argument
     except Exception:
         raise ValueError('Copr failed')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259608
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    'I should have the {repository} repository added to the Copr project '
+    'called {name}')
+def _test_copr_repo(context, repository, name):  # pylint: disable=W0613
+    """Test whether a repository has been added to a Copr project.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :param repository: the URL of the repository
+    :type repository: unicode
+    :param name: the name of the project
+    :type name: unicode
+    :raises exceptions.AssertionError: if the test fails
+
+    """
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+    try:
+        client = copr.client.CoprClient.create_from_file_config()
+        details = client.get_project_details(name)
+    except Exception:
+        raise ValueError('Copr failed')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259683
+    repos = details.data['detail']['additional_repos'].split(' ')
+    assert repository in repos, 'repository not added'
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
