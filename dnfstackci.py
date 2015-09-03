@@ -18,9 +18,42 @@
 When the module is run as a script, the command line interface to the
 program is started. The interface usage is::
 
-    usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                [--add-repository URL] [--root ROOT]
-                {tito,librepo,libcomps} ...
+    usage: prog [-h] {setup,build} ...
+
+    Test the DNF stack.
+
+    positional arguments:
+      {setup,build}  the action to be performed
+
+    optional arguments:
+      -h, --help     show this help message and exit
+
+    If an error occurs the exit status is non-zero.
+
+The usage of the "setup" command is::
+
+    usage: prog setup [-h] CHROOT [CHROOT ...] PROJECT
+
+    Create a new Copr project.
+
+    positional arguments:
+      CHROOT      the chroots to be used in the project
+                  ("22" adds "fedora-22-i386,
+                  fedora-22-ppc64le, fedora-22-x86_64",
+                  "23" adds "fedora-23-i386,
+                  fedora-23-ppc64le, fedora-23-x86_64",
+                  "rawhide" adds "fedora-rawhide-i386,
+                  fedora-rawhide-ppc64le, fedora-rawhide-x86_64")
+      PROJECT     the name of the project
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+The usage of the "build" command is::
+
+    usage: prog build [-h] [--add-non-rawhide VERSION] [--add-rawhide]
+                      [--add-repository URL] [--root ROOT]
+                      {tito,librepo,libcomps} ...
 
     Build RPMs of a project from the checkout in the current working
     directory. The RPMs will be stored in a subdirectory "packages"
@@ -45,12 +78,12 @@ program is started. The interface usage is::
       --root ROOT           the value of the Mock's
                             "config_opts['root']" option
 
-    The "mock" executable must be available. If an error occurs the exit
-    status is non-zero.
+    The "mock" executable must be available.
 
 The usage for "tito" projects is::
 
-    usage: prog tito [-h] [--define MACRO EXPR] ARCHITECTURE DESTINATION
+    usage: prog build tito [-h] [--define MACRO EXPR]
+                           ARCHITECTURE DESTINATION
 
     Build a tito-enabled project.
 
@@ -68,8 +101,8 @@ The usage for "tito" projects is::
 
 The usage for "librepo" projects is::
 
-    usage: prog librepo [-h] [--release RELEASE]
-                        ARCHITECTURE DESTINATION SPEC
+    usage: prog build librepo [-h] [--release RELEASE]
+                              ARCHITECTURE DESTINATION SPEC
 
     Build a librepo project fork.
 
@@ -87,8 +120,8 @@ The usage for "librepo" projects is::
 
 The usage for "libcomps" projects is::
 
-    usage: prog libcomps [-h] [--release RELEASE]
-                         ARCHITECTURE DESTINATION
+    usage: prog build libcomps [-h] [--release RELEASE]
+                               ARCHITECTURE DESTINATION
 
     Build a libcomps project fork.
 
@@ -130,6 +163,7 @@ import sys
 import tempfile
 import urllib
 
+import copr
 import createrepo_c
 import pkg_resources
 
@@ -189,6 +223,26 @@ def _log_call(executable, status, output, encoding='utf-8'):
         executable,
         status,
         re.sub(r'^', '    ', output.decode(encoding, 'replace'), flags=re.M))
+
+
+def _create_copr(name, chroots):
+    """Create a Copr project.
+
+    :param name: a name of the project
+    :type name: unicode
+    :param chroots: names of the chroots to be used in the project
+    :type chroots: collections.Iterable[unicode]
+    :raises exceptions.ValueError: if the project cannot be created
+
+    """
+    chroots = list(chroots)
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+    try:
+        client = copr.client.CoprClient.create_from_file_config()
+        client.create_project(name, chroots=chroots)
+    except Exception as err:
+        LOGGER.error('Copr failed with: %s', err)
+        raise ValueError('Copr failed')
 
 
 def _set_release(filename, release):
@@ -555,9 +609,43 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The interface usage is::
 
-        usage: prog [-h] [--add-non-rawhide VERSION] [--add-rawhide]
-                    [--add-repository URL] [--root ROOT]
-                    {tito,librepo,libcomps} ...
+        usage: prog [-h] {setup,build} ...
+
+        Test the DNF stack.
+
+        positional arguments:
+          {setup,build}  the action to be performed
+
+        optional arguments:
+          -h, --help     show this help message and exit
+
+        If an error occurs the exit status is non-zero.
+
+    The usage of the "setup" command is::
+
+        usage: prog setup [-h] CHROOT [CHROOT ...] PROJECT
+
+        Create a new Copr project.
+
+        positional arguments:
+          CHROOT      the chroots to be used in the project
+                      ("22" adds "fedora-22-i386,
+                      fedora-22-ppc64le, fedora-22-x86_64",
+                      "23" adds "fedora-23-i386,
+                      fedora-23-ppc64le, fedora-23-x86_64",
+                      "rawhide" adds "fedora-rawhide-i386,
+                      fedora-rawhide-ppc64le, fedora-rawhide-x86_64")
+          PROJECT     the name of the project
+
+        optional arguments:
+          -h, --help  show this help message and exit
+
+    The usage of the "build" command is::
+
+        usage: prog build [-h] [--add-non-rawhide VERSION]
+                          [--add-rawhide] [--add-repository URL]
+                          [--root ROOT]
+                          {tito,librepo,libcomps} ...
 
         Build RPMs of a project from the checkout in the current working
         directory. The RPMs will be stored in a subdirectory "packages"
@@ -583,13 +671,12 @@ def _start_commandline():  # pylint: disable=too-many-statements
           --root ROOT           the value of the Mock's
                                 "config_opts['root']" option
 
-        The "mock" executable must be available. If an error occurs the
-        exit status is non-zero.
+        The "mock" executable must be available.
 
     The usage for "tito" projects is::
 
-        usage: prog tito [-h] [--define MACRO EXPR]
-                         ARCHITECTURE DESTINATION
+        usage: prog build tito [-h] [--define MACRO EXPR]
+                               ARCHITECTURE DESTINATION
 
         Build a tito-enabled project.
 
@@ -607,8 +694,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage for "librepo" projects is::
 
-        usage: prog librepo [-h] [--release RELEASE]
-                            ARCHITECTURE DESTINATION SPEC
+        usage: prog build librepo [-h] [--release RELEASE]
+                                  ARCHITECTURE DESTINATION SPEC
 
         Build a librepo project fork.
 
@@ -627,8 +714,8 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage for "libcomps" projects is::
 
-        usage: prog libcomps [-h] [--release RELEASE]
-                             ARCHITECTURE DESTINATION
+        usage: prog build libcomps [-h] [--release RELEASE]
+                                   ARCHITECTURE DESTINATION
 
         Build a libcomps project fork.
 
@@ -650,35 +737,55 @@ def _start_commandline():  # pylint: disable=too-many-statements
        error occurs
 
     """
+    chroot2chroots = {
+        '22': {'fedora-22-i386', 'fedora-22-ppc64le', 'fedora-22-x86_64'},
+        '23': {'fedora-23-i386', 'fedora-23-ppc64le', 'fedora-23-x86_64'},
+        'rawhide': {'fedora-rawhide-i386', 'fedora-rawhide-ppc64le',
+                    'fedora-rawhide-x86_64'}}
     pkgsreldn = 'packages'
     argparser = argparse.ArgumentParser(
+        description='Test the DNF stack.',
+        epilog='If an error occurs the exit status is non-zero.')
+    cmdparser = argparser.add_subparsers(
+        dest='command', help='the action to be performed')
+    setupparser = cmdparser.add_parser(
+        'setup', description='Create a new Copr project.')
+    setupparser.add_argument(
+        'chroot', nargs='+', choices=sorted(chroot2chroots), metavar='CHROOT',
+        help='the chroots to be used in the project ({})'.format(
+            ', '.join('"{}" adds "{}"'.format(key, ', '.join(sorted(value)))
+                      for key, value in sorted(chroot2chroots.items()))))
+    setupparser.add_argument(
+        'project', type=unicode, metavar='PROJECT',
+        help='the name of the project')
+    buildparser = cmdparser.add_parser(
+        'build',
         description='Build RPMs of a project from the checkout in the current '
                     'working directory. The RPMs will be stored in a '
                     'subdirectory "{}" of the destination directory. Also '
                     'corresponding metadata will be added so that the '
                     'subdirectory could work as an RPM repository.'
                     ''.format(pkgsreldn),
-        epilog='The "mock" executable must be available. If an error occurs '
-               'the exit status is non-zero.')
+        epilog='The "mock" executable must be available.')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    argparser.add_argument(
+    buildparser.add_argument(
         '--add-non-rawhide', action='append', default=[], type=unicode,
         help="add a Fedora non-Rawhide release repository to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='VERSION')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    argparser.add_argument(
+    buildparser.add_argument(
         '--add-rawhide', action='store_true',
         help="add the Fedora Rawhide repository to the Mock's "
              "\"config_opts['yum.conf']\" option")
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    argparser.add_argument(
+    buildparser.add_argument(
         '--add-repository', action='append', default=[], type=unicode,
         help="the URL of a repository to be added to the Mock's "
              "\"config_opts['yum.conf']\" option",
         metavar='URL')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    argparser.add_argument(
+    buildparser.add_argument(
         '--root', default=NAME, type=unicode,
         help="the value of the Mock's \"config_opts['root']\" option")
     commonparser = argparse.ArgumentParser(add_help=False)
@@ -690,7 +797,7 @@ def _start_commandline():  # pylint: disable=too-many-statements
         'destdn', type=unicode, metavar='DESTINATION',
         help='the name of a destination directory (the directory will be '
              'overwritten)')
-    projparser = argparser.add_subparsers(
+    projparser = buildparser.add_subparsers(
         dest='project', help='the type of the project')
     titoparser = projparser.add_parser(
         'tito', description='Build a tito-enabled project.',
@@ -716,72 +823,86 @@ def _start_commandline():  # pylint: disable=too-many-statements
     compsparser.add_argument(
         '--release', help='a custom release number of the resulting RPMs')
     options = argparser.parse_args()
-    try:
-        _remkdir(options.destdn, notexists_ok=True)
-    except OSError:
-        sys.exit('The destination directory cannot be created or overwritten.')
+    if hasattr(options, 'destdn'):
+        try:
+            _remkdir(options.destdn, notexists_ok=True)
+        except OSError:
+            sys.exit(
+                'The destination directory cannot be created or overwritten.')
+        logfn = os.path.join(options.destdn, 'debug.log')
+    else:
+        logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
     try:
         logging.basicConfig(
-            filename=os.path.join(options.destdn, 'debug.log'),
+            filename=logfn,
             filemode='wt',
             format='%(asctime)s.%(msecs)03d:%(levelname)s:%(name)s:'
                    '%(message)s',
             datefmt='%Y%m%dT%H%M%S',
             level=logging.DEBUG)
     except IOError:
-        sys.exit('The destination directory cannot be created or overwritten.')
+        sys.exit('A log file ({}) be created or overwritten.'.format(logfn))
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter('%(levelname)s %(message)s'))
     LOGGER.addHandler(handler)
-    destdn = os.path.join(options.destdn, pkgsreldn)
-    pat = 'https://mirrors.fedoraproject.org/metalink?repo={}&arch=$basearch'
-    repos = [
-        ('metalink', pat.format('fedora-{}'.format(version)))
-        for version in options.add_non_rawhide]
-    repos.extend(
-        ('metalink',
-         'https://mirrors.fedoraproject.org/metalink?repo=updates-released-f{}'
-         '&arch=$basearch'.format(version))
-        for version in options.add_non_rawhide)
-    if options.add_rawhide:
-        repos.append(('metalink', pat.format('rawhide')))
-    repos.extend(itertools.product(['baseurl'], options.add_repository))
-    if options.project == b'tito':
+    if options.command == b'setup':
+        chroots = set(itertools.chain.from_iterable(
+            chroot2chroots[chroot] for chroot in options.chroot))
         try:
-            _build_tito(
-                options.arch, destdn, last_tag=False, repos=repos,
-                macros=options.macros, root=options.root)
+            _create_copr(options.project, chroots)
         except ValueError:
-            sys.exit(
-                'The build have failed. Hopefully the executables have created'
-                ' an output in the destination directory.')
-        except OSError:
-            sys.exit(
-                'The destination directory cannot be overwritten or some of '
-                'the executables cannot be executed.')
-    elif options.project == b'librepo':
-        try:
-            _build_librepo(
-                options.fedrev, options.arch, destdn, repos, options.release,
-                options.root)
-        except (IOError, urllib.ContentTooShortError, ValueError):
-            sys.exit('The build have failed.')
-        except OSError:
-            sys.exit(
-                'The destination directory cannot be overwritten or some of '
-                'the executables cannot be executed.')
-    elif options.project == b'libcomps':
-        try:
-            _build_libcomps(
-                options.arch, destdn, repos, options.release, options.root)
-        except ValueError:
-            sys.exit(
-                'The build have failed. Hopefully the executables have created'
-                ' an output in the destination directory.')
-        except OSError:
-            sys.exit(
-                'Some of the executables cannot be executed.')
+            sys.exit('Copr have failed to create the project.')
+    elif options.command == b'build':
+        destdn = os.path.join(options.destdn, pkgsreldn)
+        repopat = \
+            'https://mirrors.fedoraproject.org/metalink?repo={}&arch=$basearch'
+        repos = [
+            ('metalink', repopat.format('fedora-{}'.format(version)))
+            for version in options.add_non_rawhide]
+        repos.extend(
+            ('metalink',
+             'https://mirrors.fedoraproject.org/metalink?'
+             'repo=updates-released-f{}&arch=$basearch'.format(version))
+            for version in options.add_non_rawhide)
+        if options.add_rawhide:
+            repos.append(('metalink', repopat.format('rawhide')))
+        repos.extend(itertools.product(['baseurl'], options.add_repository))
+        if options.project == b'tito':
+            try:
+                _build_tito(
+                    options.arch, destdn, last_tag=False, repos=repos,
+                    macros=options.macros, root=options.root)
+            except ValueError:
+                sys.exit(
+                    'The build have failed. Hopefully the executables have '
+                    'created an output in the destination directory.')
+            except OSError:
+                sys.exit(
+                    'The destination directory cannot be overwritten or some '
+                    'of the executables cannot be executed.')
+        elif options.project == b'librepo':
+            try:
+                _build_librepo(
+                    options.fedrev, options.arch, destdn, repos,
+                    options.release, options.root)
+            except (IOError, urllib.ContentTooShortError, ValueError):
+                sys.exit('The build have failed.')
+            except OSError:
+                sys.exit(
+                    'The destination directory cannot be overwritten or some '
+                    'of the executables cannot be executed.')
+        elif options.project == b'libcomps':
+            try:
+                _build_libcomps(
+                    options.arch, destdn, repos, options.release, options.root)
+            except ValueError:
+                sys.exit(
+                    'The build have failed. Hopefully the executables have '
+                    'created an output in the destination directory.')
+            except OSError:
+                sys.exit(
+                    'Some of the executables cannot be executed.')
 
 
 class _MockConfig(object):  # pylint: disable=too-few-public-methods

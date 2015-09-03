@@ -34,6 +34,10 @@ attributes:
     The URL of the testing repository.
 :attr:`!workdn` : :data:`types.UnicodeType`
     A name of the working directory.
+:attr:`!chr_option` : :class:`list[types.UnicodeType]`
+    Names the chroots to be used in a Copr project.
+:attr:`!proj_option` : :data:`types.UnicodeType` | :data:`None`
+    A name of the Copr project to be created.
 :attr:`!arch_option` : :data:`types.UnicodeType`
     A value of the Mock's "config_opts['target_arch']" option used by
     dnf-stack-ci.
@@ -59,6 +63,8 @@ attributes:
 :attr:`!substitute` : :class:`bool`
     ``True`` if "$URL" should be replaced with the URL of the testing
     repository in all options, ``False`` otherwise.
+:attr:`!temp_coprs` : :class:`set[types.UnicodeType]`
+    Names of the Copr projects to be removed after every scenario.
 
 """
 
@@ -73,6 +79,7 @@ import tempfile
 import urllib
 import urlparse
 
+import copr
 import pkg_resources
 import pygit2
 
@@ -151,6 +158,8 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
 
     """
     context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
+    context.chr_option = []
+    context.proj_option = None
     context.arch_option = 'x86_64'
     context.nonrawhide_option = []
     context.rawhide_option = False
@@ -160,6 +169,7 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.rel_option = None
     context.dest_option = context.workdn
     context.substitute = False
+    context.temp_coprs = set()
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -172,9 +182,22 @@ def after_scenario(context, scenario):  # pylint: disable=unused-argument
     :type scenario: behave.model.Scenario
     :raises exceptions.OSError: if the working directory cannot be
        removed
+    :raises exceptions.ValueError: if the temporary Copr projects cannot
+       be removed
 
     """
     shutil.rmtree(context.workdn)
+    while True:
+        try:
+            name = context.temp_coprs.pop()
+        except KeyError:
+            break
+        # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+        try:
+            client = copr.client.CoprClient.create_from_file_config()
+            client.delete_project(name)
+        except Exception:
+            raise ValueError('Copr failed')
 
 
 def after_all(context):
