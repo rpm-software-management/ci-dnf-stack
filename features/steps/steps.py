@@ -23,8 +23,27 @@ import os
 import subprocess
 
 import behave
+import copr
 import createrepo_c
 import rpm
+
+
+def _run_ci(args, cwd=None):
+    """Run dnfstackci.py from command line.
+
+    The "createrepo_c", "mock", "python" and "tito" executables must be
+    available.
+
+    :param args: additional command line arguments
+    :type args: list[unicode]
+    :param cwd: a name of the desired working directory
+    :type cwd: unicode | None
+    :raises exceptions.OSError: if an executable cannot be executed
+    :raises subprocess.CalledProcessError: if the script fails
+
+    """
+    subprocess.check_call(
+        ['python', os.path.abspath('dnfstackci.py')] + args, cwd=cwd)
 
 
 def _rpm_headers(dirname):
@@ -108,7 +127,11 @@ def _configure_options(context):
     if context.table.headings not in expected:
         raise NotImplementedError('configuration format not supported')
     for row in context.table:
-        if row[0] == 'ARCHITECTURE' and len(row) == 2:
+        if row[0] == 'CHROOT' and len(row) == 2:
+            context.chr_option.append(row[1])
+        elif row[0] == 'PROJECT' and len(row) == 2:
+            context.proj_option = row[1]
+        elif row[0] == 'ARCHITECTURE' and len(row) == 2:
             context.arch_option = row[1]
         elif row[0] == '--add-non-rawhide' and len(row) == 2:
             context.nonrawhide_option.append(row[1])
@@ -140,6 +163,27 @@ def _assign_substitution(context):
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.when('I create a Copr project')  # pylint: disable=no-member
+def _create_copr(context):
+    """Create a Copr project.
+
+    The "createrepo_c", "mock", "python" and "tito" executables must be
+    available.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :raises exceptions.OSError: if an executable cannot be executed
+    :raises subprocess.CalledProcessError: if the creation fails
+
+    """
+    old = '$URL'
+    name = context.proj_option.replace(
+        old, context.repourl if context.substitute else old)
+    _run_ci(['setup'] + context.chr_option + [name])
+    context.temp_coprs.add(name)
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.when('I build RPMs of the {project}')  # pylint: disable=no-member
 def _build_rpms(context, project):
     """Build RPMs of a project.
@@ -157,44 +201,68 @@ def _build_rpms(context, project):
     """
     old = '$URL'
     new = context.repourl if context.substitute else old
-    cmdline = [
-        'python', os.path.abspath('dnfstackci.py'),
-        context.arch_option.replace(old, new),
+    args = [
+        'build', context.arch_option.replace(old, new),
         context.dest_option.replace(old, new)]
     if project == 'tito-enabled project':
         for name, value in reversed(context.def_option):
-            cmdline.insert(2, value.replace(old, new))
-            cmdline.insert(2, name.replace(old, new))
-            cmdline.insert(2, '--define')
-        cmdline.insert(2, 'tito')
+            args.insert(1, value.replace(old, new))
+            args.insert(1, name.replace(old, new))
+            args.insert(1, '--define')
+        args.insert(1, 'tito')
         cwd = context.titodn
     elif project == 'librepo project fork':
-        cmdline.insert(4, '38f323b94ea6ba3352827518e011d818202167a3')
+        args.insert(3, '38f323b94ea6ba3352827518e011d818202167a3')
         if context.rel_option:
-            cmdline.insert(2, context.rel_option)
-            cmdline.insert(2, '--release')
-        cmdline.insert(2, 'librepo')
+            args.insert(1, context.rel_option)
+            args.insert(1, '--release')
+        args.insert(1, 'librepo')
         cwd = context.librepodn
     elif project == 'libcomps project fork':
         if context.rel_option:
-            cmdline.insert(2, context.rel_option)
-            cmdline.insert(2, '--release')
-        cmdline.insert(2, 'libcomps')
+            args.insert(1, context.rel_option)
+            args.insert(1, '--release')
+        args.insert(1, 'libcomps')
         cwd = context.libcompsdn
     else:
         raise NotImplementedError('project not supported')
     if context.root_option:
-        cmdline.insert(2, context.root_option.replace(old, new))
-        cmdline.insert(2, '--root')
+        args.insert(1, context.root_option.replace(old, new))
+        args.insert(1, '--root')
     for url in reversed(context.repo_option):
-        cmdline.insert(2, url.replace(old, new))
-        cmdline.insert(2, '--add-repository')
+        args.insert(1, url.replace(old, new))
+        args.insert(1, '--add-repository')
     if context.rawhide_option:
-        cmdline.insert(2, '--add-rawhide')
+        args.insert(1, '--add-rawhide')
     for version in reversed(context.nonrawhide_option):
-        cmdline.insert(2, version.replace(old, new))
-        cmdline.insert(2, '--add-non-rawhide')
-    subprocess.check_call(cmdline, cwd=cwd)
+        args.insert(1, version.replace(old, new))
+        args.insert(1, '--add-non-rawhide')
+    _run_ci(args, cwd)
+
+
+# FIXME: https://bitbucket.org/logilab/pylint/issue/535
+@behave.then(  # pylint: disable=no-member
+    'I should have a Copr project called {name} with chroots {chroots}')
+def _test_copr(context, name, chroots):  # pylint: disable=unused-argument
+    """Test whether a Copr project exists.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :param name: the name of the project
+    :type name: unicode
+    :param chroots: names of the chroots to be used in the project
+    :type chroots: unicode
+    :raises exceptions.ValueError: if the details of the project cannot
+       be retrieved
+
+    """
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+    try:
+        client = copr.client.CoprClient.create_from_file_config()
+        client.get_project_details(name)
+    except Exception:
+        raise ValueError('Copr failed')
+    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259608
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
