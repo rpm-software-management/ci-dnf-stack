@@ -38,6 +38,9 @@ attributes:
     Names the chroots to be used in a Copr project.
 :attr:`!proj_option` : :data:`types.UnicodeType` | :data:`None`
     A name of the Copr project to be created.
+:attr:`!repo_option` : :class:`list[types.UnicodeType]`
+    The URL of each repository that should be added to the Copr project
+    or to the Mock's "config_opts['yum.conf']" option.
 :attr:`!arch_option` : :data:`types.UnicodeType`
     A value of the Mock's "config_opts['target_arch']" option used by
     dnf-stack-ci.
@@ -47,9 +50,6 @@ attributes:
 :attr:`!rawhide_option` : :class:`bool`
     ``True`` if the Fedora Rawhide repository should be added to the
     Mock's "config_opts['yum.conf']" option, ``False`` otherwise.
-:attr:`!repo_option` : :class:`list[types.UnicodeType]`
-    The URL of each repository that should be added to the Mock's
-    "config_opts['yum.conf']" option.
 :attr:`!def_option` : :class:`list[types.TupleType[types.UnicodeType, types.UnicodeType]]`
     A name and a value of each RPM macro to be defined.
 :attr:`!root_option` : :data:`types.UnicodeType` | :data:`None`
@@ -160,10 +160,10 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
     context.chr_option = []
     context.proj_option = None
+    context.repo_option = []
     context.arch_option = 'x86_64'
     context.nonrawhide_option = []
     context.rawhide_option = False
-    context.repo_option = []
     context.def_option = []
     context.root_option = None
     context.rel_option = None
