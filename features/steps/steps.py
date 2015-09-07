@@ -18,7 +18,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import glob
 import os
 import subprocess
 
@@ -26,6 +25,8 @@ import behave
 import copr
 import createrepo_c
 import rpm
+
+import dnfstackci
 
 
 def _run_ci(args, cwd=None):
@@ -46,39 +47,27 @@ def _run_ci(args, cwd=None):
         ['python', os.path.abspath('dnfstackci.py')] + args, cwd=cwd)
 
 
-def _rpm_headers(dirname):
-    """Iterate over the headers of the RPMs in a directory.
+def _run_setup(name, chroots, repos=()):
+    """Run the setup command of dnfstackci.py from command line.
 
-    :param dirname: a name of the directory
-    :type dirname: unicode
-    :return: a generator yielding the RPM headers
-    :rtype: generator[rpm.hdr]
+    The "createrepo_c", "mock", "python" and "tito" executables must be
+    available.
 
-    """
-    filenames = glob.iglob(os.path.join(dirname, '*.rpm'))
-    transaction = rpm.TransactionSet()
-    for filename in filenames:
-        try:
-            with open(filename) as file_:
-                header = transaction.hdrFromFdno(file_.fileno())
-        except (IOError, rpm.error):
-            continue
-        if not header.isSource():
-            yield header
-
-
-def _tito_rpm(dirname):
-    """Get the RPM header of the tito-enabled project in a directory.
-
-    :param dirname: a name of the directory
-    :type dirname: unicode
-    :return: the header of the RPM file
-    :rtype: rpm.hdr | None
+    :param name: a name of the project
+    :type name: unicode
+    :param chroots: names of the chroots to be used in the project
+    :type chroots: collections.Iterable[unicode]
+    :param repos: the URL of each additional repository that is required
+    :type repos: collections.Iterable[unicode]
+    :raises exceptions.OSError: if an executable cannot be executed
+    :raises subprocess.CalledProcessError: if the command fails
 
     """
-    # There is no reliable way how to test whether given RPMs were build
-    # from given sources. Thus we just find an RPM.
-    return next(_rpm_headers(dirname), None)
+    args = ['setup'] + list(chroots) + [name]
+    for url in repos:
+        args.insert(1, url)
+        args.insert(1, '--add-repository')
+    _run_ci(args)
 
 
 def _librepo_rpms(dirname):
@@ -92,7 +81,9 @@ def _librepo_rpms(dirname):
     """
     # There is no reliable way how to test whether given RPMs were build
     # from given sources. Thus we just find RPMs.
-    return _rpm_headers(dirname)
+    return (
+        pair[1] for pair in dnfstackci.rpm_headers(dirname)
+        if not pair[1].isSource())
 
 
 def _libcomps_rpms(dirname):
@@ -106,7 +97,28 @@ def _libcomps_rpms(dirname):
     """
     # There is no reliable way how to test whether given RPMs were build
     # from given sources. Thus we just find RPMs.
-    return _rpm_headers(dirname)
+    return (
+        pair[1] for pair in dnfstackci.rpm_headers(dirname)
+        if not pair[1].isSource())
+
+
+@behave.given('a Copr project {name} exists')  # pylint: disable=no-member
+def _prepare_copr(context, name):
+    """Prepare a Copr project.
+
+    The "createrepo_c", "mock", "python" and "tito" executables must be
+    available.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+    :param name: a name of the project
+    :type name: unicode
+    :raises exceptions.OSError: if an executable cannot be executed
+    :raises subprocess.CalledProcessError: if the creation fails
+
+    """
+    _run_setup(name, ['rawhide'])
+    context.temp_coprs.add(name)
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -139,8 +151,6 @@ def _configure_options(context):
             context.nonrawhide_option.append(row[1])
         elif row[0] == '--add-rawhide' and len(row) == 1:
             context.rawhide_option = True
-        elif row[0] == '--define' and len(row) == 3:
-            context.def_option.append((row[1], row[2]))
         elif row[0] == '--root' and len(row) == 2:
             context.root_option = row[1]
         elif row[0] == '--release' and len(row) == 2:
@@ -179,11 +189,9 @@ def _create_copr(context):
     old = '$URL'
     new = context.repourl if context.substitute else old
     name = context.proj_option.replace(old, new)
-    args = ['setup'] + context.chr_option + [name]
-    for url in reversed(context.repo_option):
-        args.insert(1, url.replace(old, new))
-        args.insert(1, '--add-repository')
-    _run_ci(args)
+    _run_setup(
+        name, context.chr_option,
+        (url.replace(old, new) for url in reversed(context.repo_option)))
     context.temp_coprs.add(name)
 
 
@@ -205,42 +213,40 @@ def _build_rpms(context, project):
     """
     old = '$URL'
     new = context.repourl if context.substitute else old
-    args = [
-        'build', context.arch_option.replace(old, new),
-        context.dest_option.replace(old, new)]
+    args = ['build']
     if project == 'tito-enabled project':
-        for name, value in reversed(context.def_option):
-            args.insert(1, value.replace(old, new))
-            args.insert(1, name.replace(old, new))
-            args.insert(1, '--define')
+        args.insert(1, context.proj_option.replace(old, new))
         args.insert(1, 'tito')
         cwd = context.titodn
-    elif project == 'librepo project fork':
-        args.insert(3, '38f323b94ea6ba3352827518e011d818202167a3')
-        if context.rel_option:
-            args.insert(1, context.rel_option)
-            args.insert(1, '--release')
-        args.insert(1, 'librepo')
-        cwd = context.librepodn
-    elif project == 'libcomps project fork':
-        if context.rel_option:
-            args.insert(1, context.rel_option)
-            args.insert(1, '--release')
-        args.insert(1, 'libcomps')
-        cwd = context.libcompsdn
+    elif project in {'librepo project fork', 'libcomps project fork'}:
+        args.insert(1, context.dest_option.replace(old, new))
+        args.insert(1, context.arch_option.replace(old, new))
+        if project == 'librepo project fork':
+            args.insert(3, '38f323b94ea6ba3352827518e011d818202167a3')
+            if context.rel_option:
+                args.insert(1, context.rel_option)
+                args.insert(1, '--release')
+            args.insert(1, 'librepo')
+            cwd = context.librepodn
+        elif project == 'libcomps project fork':
+            if context.rel_option:
+                args.insert(1, context.rel_option)
+                args.insert(1, '--release')
+            args.insert(1, 'libcomps')
+            cwd = context.libcompsdn
+        if context.root_option:
+            args.insert(2, context.root_option.replace(old, new))
+            args.insert(2, '--root')
+        for url in reversed(context.repo_option):
+            args.insert(2, url.replace(old, new))
+            args.insert(2, '--add-repository')
+        if context.rawhide_option:
+            args.insert(2, '--add-rawhide')
+        for version in reversed(context.nonrawhide_option):
+            args.insert(2, version.replace(old, new))
+            args.insert(2, '--add-non-rawhide')
     else:
         raise NotImplementedError('project not supported')
-    if context.root_option:
-        args.insert(1, context.root_option.replace(old, new))
-        args.insert(1, '--root')
-    for url in reversed(context.repo_option):
-        args.insert(1, url.replace(old, new))
-        args.insert(1, '--add-repository')
-    if context.rawhide_option:
-        args.insert(1, '--add-rawhide')
-    for version in reversed(context.nonrawhide_option):
-        args.insert(1, version.replace(old, new))
-        args.insert(1, '--add-non-rawhide')
     _run_ci(args, cwd)
 
 
@@ -296,6 +302,19 @@ def _test_copr_repo(context, repository, name):  # pylint: disable=W0613
     assert repository in repos, 'repository not added'
 
 
+@behave.then('the build should have succeeded')  # pylint: disable=no-member
+def _test_success(context):  # pylint: disable=unused-argument
+    """Test whether the preceding build have succeeded.
+
+    :param context: the context as described in the environment file
+    :type context: behave.runner.Context
+
+    """
+    # Behave would fail otherwise so the build must have succeeded if we
+    # are here.
+    pass
+
+
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.then('I should have RPMs of the {project}')  # pylint: disable=E1101
 def _test_rpms(context, project):
@@ -309,10 +328,7 @@ def _test_rpms(context, project):
 
     """
     dirname = os.path.join(context.workdn, 'packages')
-    if project == 'tito-enabled project':
-        headers = [_tito_rpm(dirname)]
-        assert headers[0], 'no readable binary RPM found'
-    elif project == 'librepo fork':
+    if project == 'librepo fork':
         headers = list(_librepo_rpms(dirname))
         assert headers, 'readable binary RPMs not found'
     elif project == 'libcomps fork':
@@ -375,27 +391,8 @@ def _test_repository(context, repository):  # pylint: disable=unused-argument
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
 @behave.then(  # pylint: disable=no-member
-    'I should have the result that is produced if %{{snapshot}} == '
-    "'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'")
-def _test_rpmmacros(context):
-    """Test whether the result is affected by RPM macro definitions.
-
-    :param context: the context as described in the environment file
-    :type context: behave.runner.Context
-    :raises exceptions.AssertionError: if the test fails
-
-    """
-    release = b'.2.20150102git3a45678901b23c456d78ef90g1234hijk56789lm'
-    header = _tito_rpm(os.path.join(context.workdn, 'packages'))
-    assert header, 'no readable binary RPM found'
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1205830
-    assert release in header[rpm.RPMTAG_RELEASE], 'macro not defined'
-
-
-# FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.then(  # pylint: disable=no-member
     "I should have the result that is produced if config_opts['root'] == "
-    "'test-hawkey-x86_64-rawhide'")
+    "'test-libcomps-x86_64-rawhide'")
 def _test_root(context):  # pylint: disable=unused-argument
     """Test whether the result is affected by a Mock's "root".
 

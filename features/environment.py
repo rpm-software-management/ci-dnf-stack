@@ -50,8 +50,6 @@ attributes:
 :attr:`!rawhide_option` : :class:`bool`
     ``True`` if the Fedora Rawhide repository should be added to the
     Mock's "config_opts['yum.conf']" option, ``False`` otherwise.
-:attr:`!def_option` : :class:`list[types.TupleType[types.UnicodeType, types.UnicodeType]]`
-    A name and a value of each RPM macro to be defined.
 :attr:`!root_option` : :data:`types.UnicodeType` | :data:`None`
     A value of the Mock's "config_opts['root']" option used by
     dnf-stack-ci.
@@ -164,7 +162,6 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.arch_option = 'x86_64'
     context.nonrawhide_option = []
     context.rawhide_option = False
-    context.def_option = []
     context.root_option = None
     context.rel_option = None
     context.dest_option = context.workdn

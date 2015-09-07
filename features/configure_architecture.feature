@@ -25,5 +25,5 @@ Feature: Configure config_opts['target_arch']
     Given following options are configured as follows:
        | Option       | Value |
        | ARCHITECTURE | i686  |
-     When I build RPMs of the tito-enabled project
+     When I build RPMs of the libcomps project fork
      Then I should have the result that is produced if config_opts['target_arch'] == 'i686'
