@@ -1,5 +1,5 @@
 Feature: Richdeps/Behave test
- TestA requires (TestB OR TestC), TestA recommends TestC
+ TestA requires (TestB or TestC), TestA recommends TestC
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"

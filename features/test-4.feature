@@ -1,5 +1,5 @@
 Feature: Richdeps/Behave test
-  TestA requires (TestB && (TestC IF TestD))
+  TestA requires (TestB and (TestC if TestD))
 
 Scenario: 
   Given I use the repository "test-2"

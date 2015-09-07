@@ -1,5 +1,5 @@
 Feature: Richdeps/Behave test
- TestA `Requires: (TestB && ((TestC || TestE) IF TestD))` and TestF `Conflicts: TestC`
+ TestA `Requires: (TestB and ((TestC or TestE) if TestD))` and TestF `Conflicts: TestC`
 
 Scenario: 
   Given I use the repository "test-3"
