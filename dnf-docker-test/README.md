@@ -15,7 +15,6 @@ Install:
 ```
 $ git clone https://github.com/shaded-enmity/richdeps-docker/
 $ cd richdeps-docker/
-$ git checkout behave-integration
 $ docker pull pavelo/richdeps:1.0.2
 ```
 
