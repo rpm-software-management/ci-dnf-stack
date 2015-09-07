@@ -1,33 +1,23 @@
 FROM fedora:rawhide
 MAINTAINER Pavel Odvody <podvody@redhat.com>
 
-ENV PKG_NAME=libsolv-0.6.11-1.fc23.src.rpm
+RUN dnf -y install automake cmake dnf-plugins-core expat-devel \
+                   gcc-c++ git make python-behave rpm-build wget which\
+ && dnf -y builddep rpm libsolv
 
-RUN dnf --nogpgcheck -y install dnf-plugins-core\
- && dnf --nogpgcheck -y builddep libsolv\ 
- && dnf --nogpgcheck -y install automake gcc-c++ make python-behave rpm-build  wget which
+RUN git clone https://github.com/rpm-software-management/rpm.git\
+ && (cd rpm/\
+  && ./autogen.sh --prefix=/usr --with-external-db --enable-python CPPFLAGS="-I/usr/include/nspr4 -I/usr/include/nss3"\
+  && make && make install)
 
-WORKDIR /build/libsolv_src/
+RUN git clone https://github.com/openSUSE/libsolv.git\
+ && (cd libsolv/ && mkdir build && cd build/\ 
+  && cmake -DENABLE_COMPLEX_DEPS=1 -DUSE_VENDORDIRS=1 -DFEDORA=1 -DCMAKE_INSTALL_PREFIX=/usr ../\
+  && make && make install)
 
-ADD libsolv-enable_complex_deps.patch ./
 ADD launch-test /usr/bin/
-
-RUN wget https://kojipkgs.fedoraproject.org/packages/libsolv/0.6.11/1.fc23/src/${PKG_NAME}\
- && rpm2cpio ${PKG_NAME} | cpio -idmv\
- && mkdir -p ~/rpmbuild/SOURCES/\
- && patch libsolv.spec libsolv-enable_complex_deps.patch\
- && cp *.tar.gz libsolv-rubyinclude.patch ~/rpmbuild/SOURCES/\
- && rm -f /usr/bin/python\
- && ln -s /usr/bin/python3 /usr/bin/python\
- && rpmbuild -bb libsolv.spec\
- && rm -f /usr/bin/python\
- && ln -s /usr/bin/python2 /usr/bin/python
-
 VOLUME /repo 
 
-RUN rpm -Uvh ~/rpmbuild/RPMS/x86_64/libsolv-0*\
- && echo -ne "[test]\nname=test\nbaseurl=file:///repo\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/test.repo
-
-WORKDIR /
+RUN echo -ne "[test]\nname=test\nbaseurl=file:///repo\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/test.repo
 
 ENTRYPOINT ["launch-test"]
