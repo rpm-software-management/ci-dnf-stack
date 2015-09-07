@@ -16,7 +16,7 @@ Install:
 $ git clone https://github.com/shaded-enmity/richdeps-docker/
 $ cd richdeps-docker/
 $ git checkout behave-integration
-$ docker pull pavelo/richdeps:1.0.0
+$ docker pull pavelo/richdeps:1.0.2
 ```
 
 Execute test:
@@ -27,7 +27,7 @@ $ ./test-launcher.py test-1
 To rebuild the Docker image you can use the following command:
 ```
 $ cd richdeps-docker/
-$ docker build -t pavelo/richdeps:1.0.0 .
+$ docker build -t pavelo/richdeps:1.0.2 .
 ```
 
 ## Binaries
@@ -44,7 +44,7 @@ Here's an example configuration from the first ported test:
 
 ```
 Feature: Richdeps/Behave test-1
- TestA requires (TestB OR TestC), TestA recommends TestC
+ TestA requires (TestB or TestC), TestA recommends TestC
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
