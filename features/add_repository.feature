@@ -29,14 +29,14 @@ Feature: Add repositories to build configurations
     Given following options are configured as follows:
        | Option            | Value |
        | --add-non-rawhide | 22    |
-     When I build RPMs of the tito-enabled project
+     When I build RPMs of the libcomps project fork
      Then I should have the result that is produced if config_opts['yum.conf'] contains the Fedora 22 repository
 
   Scenario: Add Fedora Rawhide to config_opts['yum.conf']
     Given following options are configured as follows:
        | Option        |
        | --add-rawhide |
-     When I build RPMs of the tito-enabled project
+     When I build RPMs of the libcomps project fork
      Then I should have the result that is produced if config_opts['yum.conf'] contains the Rawhide repository
 
   Scenario: Add URL to config_opts['yum.conf']
@@ -45,5 +45,5 @@ Feature: Add repositories to build configurations
        | --add-repository  | $URL  |
        | --add-non-rawhide | 22    |
     Given “$URL” is replaced with the URL of a testing repository in all options
-     When I build RPMs of the tito-enabled project
+     When I build RPMs of the libcomps project fork
      Then I should have the result that is produced if config_opts['yum.conf'] contains the testing repository

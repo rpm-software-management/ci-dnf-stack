@@ -41,7 +41,6 @@ attention:
 - build RPMs of libcomps project forks
 - configure Mock's "config_opts['target_arch']" option
 - add repositories to build configurations
-- define RPM macros
 - configure Mock's "config_opts['root']" option
 - configure release numbers of librepo and libcomps RPMs
 
@@ -76,13 +75,13 @@ dnf-stack-ci:
 - `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
 - `pkg_resources Python module
   <https://bitbucket.org/pypa/setuptools/>`_
+- `rpm Python module <http://www.rpm.org/>`_
 
 Following additional executables and Python modules are required to run
 a test suite:
 
 - `behave Python module <http://github.com/behave/behave/>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_
-- `rpm Python module <http://www.rpm.org/>`_
 
 
 Installation

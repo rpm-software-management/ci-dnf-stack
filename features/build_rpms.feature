@@ -21,8 +21,12 @@ Feature: Build RPMs of a project
        | --add-rawhide |
 
   Scenario: Build tito-enabled project
+    Given a Copr project _dnf-stack-ci_test exists
+    Given following options are configured as follows:
+       | Option  | Value              |
+       | PROJECT | _dnf-stack-ci_test |
      When I build RPMs of the tito-enabled project
-     Then I should have RPMs of the tito-enabled project
+     Then the build should have succeeded
 
   Scenario: Build librepo fork
      When I build RPMs of the librepo project fork

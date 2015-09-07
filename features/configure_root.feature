@@ -21,9 +21,9 @@ Feature: Configure config_opts['root']
        | Option        |
        | --add-rawhide |
 
-  Scenario: Configure test-hawkey-x86_64-rawhide
+  Scenario: Configure test-libcomps-x86_64-rawhide
     Given following options are configured as follows:
-       | Option | Value                      |
-       | --root | test-hawkey-x86_64-rawhide |
-     When I build RPMs of the tito-enabled project
-     Then I should have the result that is produced if config_opts['root'] == 'test-hawkey-x86_64-rawhide'
+       | Option | Value                        |
+       | --root | test-libcomps-x86_64-rawhide |
+     When I build RPMs of the libcomps project fork
+     Then I should have the result that is produced if config_opts['root'] == 'test-libcomps-x86_64-rawhide'
