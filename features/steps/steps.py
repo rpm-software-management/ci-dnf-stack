@@ -70,22 +70,6 @@ def _run_setup(name, chroots, repos=()):
     _run_ci(args)
 
 
-def _librepo_rpms(dirname):
-    """Get the headers of the RPMs of the librepo fork in a directory.
-
-    :param dirname: a name of the directory
-    :type dirname: unicode
-    :return: a generator yielding the RPM headers
-    :rtype: generator[rpm.hdr]
-
-    """
-    # There is no reliable way how to test whether given RPMs were build
-    # from given sources. Thus we just find RPMs.
-    return (
-        pair[1] for pair in dnfstackci.rpm_headers(dirname)
-        if not pair[1].isSource())
-
-
 def _libcomps_rpms(dirname):
     """Get the headers of the RPMs of the libcomps fork in a directory.
 
@@ -145,6 +129,8 @@ def _configure_options(context):
             context.proj_option = row[1]
         elif row[0] == '--add-repository' and len(row) == 2:
             context.repo_option.append(row[1])
+        elif row[0] == '--release' and len(row) == 2:
+            context.rel_option = row[1]
         elif row[0] == 'ARCHITECTURE' and len(row) == 2:
             context.arch_option = row[1]
         elif row[0] == '--add-non-rawhide' and len(row) == 2:
@@ -153,8 +139,6 @@ def _configure_options(context):
             context.rawhide_option = True
         elif row[0] == '--root' and len(row) == 2:
             context.root_option = row[1]
-        elif row[0] == '--release' and len(row) == 2:
-            context.rel_option = row[1]
         else:
             raise NotImplementedError('configuration not supported')
 
@@ -200,8 +184,8 @@ def _create_copr(context):
 def _build_rpms(context, project):
     """Build RPMs of a project.
 
-    The "createrepo_c", "mock", "python" and "tito" executables must be
-    available.
+    The "createrepo_c", "git", "mock", "python", "rpmbuild", "sh",
+    "tito" and "xz" executables must be available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
@@ -214,37 +198,37 @@ def _build_rpms(context, project):
     old = '$URL'
     new = context.repourl if context.substitute else old
     args = ['build']
-    if project == 'tito-enabled project':
+    if project in {'tito-enabled project', 'librepo project fork'}:
         args.insert(1, context.proj_option.replace(old, new))
-        args.insert(1, 'tito')
-        cwd = context.titodn
-    elif project in {'librepo project fork', 'libcomps project fork'}:
-        args.insert(1, context.dest_option.replace(old, new))
-        args.insert(1, context.arch_option.replace(old, new))
-        if project == 'librepo project fork':
-            args.insert(3, '38f323b94ea6ba3352827518e011d818202167a3')
+        if project == 'tito-enabled project':
+            args.insert(1, 'tito')
+            cwd = context.titodn
+        elif project == 'libcomps project fork':
+            args.insert(2, '38f323b94ea6ba3352827518e011d818202167a3')
             if context.rel_option:
                 args.insert(1, context.rel_option)
                 args.insert(1, '--release')
             args.insert(1, 'librepo')
             cwd = context.librepodn
-        elif project == 'libcomps project fork':
-            if context.rel_option:
-                args.insert(1, context.rel_option)
-                args.insert(1, '--release')
-            args.insert(1, 'libcomps')
-            cwd = context.libcompsdn
+    elif project == 'libcomps project fork':
+        args.insert(1, context.dest_option.replace(old, new))
+        args.insert(1, context.arch_option.replace(old, new))
+        if context.rel_option:
+            args.insert(1, context.rel_option)
+            args.insert(1, '--release')
         if context.root_option:
-            args.insert(2, context.root_option.replace(old, new))
-            args.insert(2, '--root')
+            args.insert(1, context.root_option.replace(old, new))
+            args.insert(1, '--root')
         for url in reversed(context.repo_option):
-            args.insert(2, url.replace(old, new))
-            args.insert(2, '--add-repository')
+            args.insert(1, url.replace(old, new))
+            args.insert(1, '--add-repository')
         if context.rawhide_option:
-            args.insert(2, '--add-rawhide')
+            args.insert(1, '--add-rawhide')
         for version in reversed(context.nonrawhide_option):
-            args.insert(2, version.replace(old, new))
-            args.insert(2, '--add-non-rawhide')
+            args.insert(1, version.replace(old, new))
+            args.insert(1, '--add-non-rawhide')
+        args.insert(1, 'libcomps')
+        cwd = context.libcompsdn
     else:
         raise NotImplementedError('project not supported')
     _run_ci(args, cwd)
@@ -316,30 +300,22 @@ def _test_success(context):  # pylint: disable=unused-argument
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
-@behave.then('I should have RPMs of the {project}')  # pylint: disable=E1101
-def _test_rpms(context, project):
-    """Test whether the work dir. contains binary RPMs of a project.
+@behave.then(  # pylint: disable=no-member
+    'I should have RPMs of the libcomps fork')
+def _test_libcomps(context):
+    """Test whether the work dir. contains binary RPMs of libcomps.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
-    :param project: a description of the project
-    :type project: unicode
     :raises exceptions.AssertionError: if the test fails
 
     """
     dirname = os.path.join(context.workdn, 'packages')
-    if project == 'librepo fork':
-        headers = list(_librepo_rpms(dirname))
-        assert headers, 'readable binary RPMs not found'
-    elif project == 'libcomps fork':
-        headers = list(_libcomps_rpms(dirname))
-        assert headers, 'readable binary RPMs not found'
-    else:
-        raise NotImplementedError('project not supported')
     rpmnevras = {
         (header[rpm.RPMTAG_N], str(header[rpm.RPMTAG_EPOCHNUM]),
          header[rpm.RPMTAG_V], header[rpm.RPMTAG_R], header[rpm.RPMTAG_ARCH])
-        for header in headers}
+        for header in _libcomps_rpms(dirname)}
+    assert rpmnevras, 'readable binary RPMs not found'
     repository = createrepo_c.Metadata()
     # FIXME: https://github.com/Tojaj/createrepo_c/issues/29
     # noinspection PyBroadException
@@ -422,7 +398,9 @@ def _test_release(context, project):
     """
     rpmsdn = os.path.join(context.workdn, 'packages')
     if project == 'librepo':
-        headers = _librepo_rpms(rpmsdn)
+        # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+        # There is no documented way how to obtain the RPMs.
+        return
     elif project == 'libcomps':
         headers = _libcomps_rpms(rpmsdn)
     else:

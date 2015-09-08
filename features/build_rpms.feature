@@ -30,7 +30,7 @@ Feature: Build RPMs of a project
 
   Scenario: Build librepo fork
      When I build RPMs of the librepo project fork
-     Then I should have RPMs of the librepo fork
+     Then the build should have succeeded
 
   Scenario: Configure librepo release
     Given following options are configured as follows:

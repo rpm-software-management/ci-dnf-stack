@@ -41,6 +41,9 @@ attributes:
 :attr:`!repo_option` : :class:`list[types.UnicodeType]`
     The URL of each repository that should be added to the Copr project
     or to the Mock's "config_opts['yum.conf']" option.
+:attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
+    A custom release number of the resulting RPMs passed to
+    dnf-stack-ci.
 :attr:`!arch_option` : :data:`types.UnicodeType`
     A value of the Mock's "config_opts['target_arch']" option used by
     dnf-stack-ci.
@@ -55,9 +58,6 @@ attributes:
     dnf-stack-ci.
 :attr:`!dest_option` : :data:`types.UnicodeType`
     A name of the destination directory of dnf-stack-ci.
-:attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
-    A custom release number of the resulting RPMs passed to
-    dnf-stack-ci.
 :attr:`!substitute` : :class:`bool`
     ``True`` if "$URL" should be replaced with the URL of the testing
     repository in all options, ``False`` otherwise.
@@ -159,11 +159,11 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.chr_option = []
     context.proj_option = None
     context.repo_option = []
+    context.rel_option = None
     context.arch_option = 'x86_64'
     context.nonrawhide_option = []
     context.rawhide_option = False
     context.root_option = None
-    context.rel_option = None
     context.dest_option = context.workdn
     context.substitute = False
     context.temp_coprs = set()
