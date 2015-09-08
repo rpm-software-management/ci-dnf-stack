@@ -68,11 +68,14 @@ Following executables and Python modules are required to run
 dnf-stack-ci:
 
 - `createrepo_c executable <https://github.com/Tojaj/createrepo_c>`_
+- `git executable <http://git-scm.com/>`_
 - `mock executable <http://fedoraproject.org/wiki/Projects/Mock>`_
 - `python executable <http://www.python.org/>`_
+- `rpmbuild executable <http://www.rpm.org/>`_
+- sh executable
 - `tito executable <http://rm-rf.ca/tito>`_
+- `xz executable <http://tukaani.org/xz/>`_
 - `copr Python module <https://fedorahosted.org/copr/>`_
-- `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
 - `pkg_resources Python module
   <https://bitbucket.org/pypa/setuptools/>`_
 - `rpm Python module <http://www.rpm.org/>`_
@@ -81,6 +84,7 @@ Following additional executables and Python modules are required to run
 a test suite:
 
 - `behave Python module <http://github.com/behave/behave/>`_
+- `createrepo_c Python module <https://github.com/Tojaj/createrepo_c>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_
 
 
