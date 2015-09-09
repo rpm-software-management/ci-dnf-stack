@@ -39,10 +39,11 @@ def container_run(repo):
   DOCKER_RUN = ['docker', 'run', '-i', '-v', r, '-v', f, DOCKER_IMAGE, repo]
   print('Starting container:\n ' + blue_text(' '.join(DOCKER_RUN)) + '\n')
 
-  rc = subprocess.check_call(DOCKER_RUN)
+  rc = subprocess.call(DOCKER_RUN)
 
   if rc != 0:
-    print(red_text("Container returned non zero value({}), stdout:\n ".format(rc)) + out)
+    print(red_text('-'*80))
+    print(header_text("Container returned non zero value({})".format(rc)))
     print(red_text('-'*80))
 
   return rc
