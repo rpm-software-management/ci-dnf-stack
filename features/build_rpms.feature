@@ -15,16 +15,13 @@
 Feature: Build RPMs of a project
   In order to test a project, I want to build its software packages.
 
-  Background: Fedora Rawhide is added
-    Given following options are configured as follows:
-       | Option        |
-       | --add-rawhide |
-
-  Scenario: Build tito-enabled project
+  Background: Copr project is configured
     Given a Copr project _dnf-stack-ci_test exists
     Given following options are configured as follows:
        | Option  | Value              |
        | PROJECT | _dnf-stack-ci_test |
+
+  Scenario: Build tito-enabled project
      When I build RPMs of the tito-enabled project
      Then the build should have succeeded
 
@@ -41,7 +38,7 @@ Feature: Build RPMs of a project
 
   Scenario: Build libcomps fork
      When I build RPMs of the libcomps project fork
-     Then I should have RPMs of the libcomps fork
+     Then the build should have succeeded
 
   Scenario: Configure libcomps release
     Given following options are configured as follows:
