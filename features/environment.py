@@ -32,8 +32,6 @@ attributes:
     A name of the directory with the libcomps project fork.
 :attr:`!repourl` : :data:`types.UnicodeType`
     The URL of the testing repository.
-:attr:`!workdn` : :data:`types.UnicodeType`
-    A name of the working directory.
 :attr:`!chr_option` : :class:`list[types.UnicodeType]`
     Names the chroots to be used in a Copr project.
 :attr:`!proj_option` : :data:`types.UnicodeType` | :data:`None`
@@ -44,23 +42,6 @@ attributes:
 :attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
     A custom release number of the resulting RPMs passed to
     dnf-stack-ci.
-:attr:`!arch_option` : :data:`types.UnicodeType`
-    A value of the Mock's "config_opts['target_arch']" option used by
-    dnf-stack-ci.
-:attr:`!nonrawhide_option` : :class:`list[types.UnicodeType]`
-    The version of each Fedora non-Rawhide repository that should be
-    added to the Mock's "config_opts['yum.conf']" option.
-:attr:`!rawhide_option` : :class:`bool`
-    ``True`` if the Fedora Rawhide repository should be added to the
-    Mock's "config_opts['yum.conf']" option, ``False`` otherwise.
-:attr:`!root_option` : :data:`types.UnicodeType` | :data:`None`
-    A value of the Mock's "config_opts['root']" option used by
-    dnf-stack-ci.
-:attr:`!dest_option` : :data:`types.UnicodeType`
-    A name of the destination directory of dnf-stack-ci.
-:attr:`!substitute` : :class:`bool`
-    ``True`` if "$URL" should be replaced with the URL of the testing
-    repository in all options, ``False`` otherwise.
 :attr:`!temp_coprs` : :class:`set[types.UnicodeType]`
     Names of the Copr projects to be removed after every scenario.
 
@@ -74,8 +55,6 @@ import os
 import shutil
 import subprocess
 import tempfile
-import urllib
-import urlparse
 
 import copr
 import pkg_resources
@@ -121,10 +100,6 @@ def before_all(context):
         raise ValueError('Git repository creation failed')
     # FIXME: https://github.com/dgoodwin/tito/issues/171
     subprocess.check_call(['tito', 'init'], cwd=context.titodn)
-    repodn = pkg_resources.resource_filename(
-        dnfstackci.__name__, 'resources/repository')
-    context.repourl = urlparse.urlunsplit((
-        'file', '', urllib.pathname2url(os.path.abspath(repodn)), '', ''))
     context.librepodn = tempfile.mkdtemp()
     try:
         libreporepo = pygit2.clone_repository(
@@ -155,17 +130,10 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     :type scenario: behave.model.Scenario
 
     """
-    context.workdn = dnfstackci.decode_path(tempfile.mkdtemp())
     context.chr_option = []
     context.proj_option = None
     context.repo_option = []
     context.rel_option = None
-    context.arch_option = 'x86_64'
-    context.nonrawhide_option = []
-    context.rawhide_option = False
-    context.root_option = None
-    context.dest_option = context.workdn
-    context.substitute = False
     context.temp_coprs = set()
 
 
@@ -177,13 +145,10 @@ def after_scenario(context, scenario):  # pylint: disable=unused-argument
     :type context: behave.runner.Context
     :param scenario: the next tested scenario
     :type scenario: behave.model.Scenario
-    :raises exceptions.OSError: if the working directory cannot be
-       removed
     :raises exceptions.ValueError: if the temporary Copr projects cannot
        be removed
 
     """
-    shutil.rmtree(context.workdn)
     while True:
         try:
             name = context.temp_coprs.pop()

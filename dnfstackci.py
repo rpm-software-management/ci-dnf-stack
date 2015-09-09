@@ -55,12 +55,13 @@ The usage of the "setup" command is::
 
 The usage of the "build" command is::
 
-    usage: prog build [-h] {tito,librepo,libcomps} ...
+    usage: prog build [-h] PROJECT {tito,librepo,libcomps} ...
 
     Build RPMs of a project from the checkout in the current working
-    directory.
+    directory in Copr.
 
     positional arguments:
+      PROJECT               the name of the Copr project
       {tito,librepo,libcomps}
                             the type of the project
 
@@ -69,26 +70,22 @@ The usage of the "build" command is::
 
 The usage for "tito" projects is::
 
-    usage: prog build tito [-h] PROJECT
+    usage: prog build PROJECT tito [-h]
 
-    Build a tito-enabled project in Copr.
-
-    positional arguments:
-      PROJECT     the name of the Copr project
+    Build a tito-enabled project.
 
     optional arguments:
       -h, --help  show this help message and exit
 
-    In addition, the "tito" executable must be available.
+    The "tito" executable must be available.
 
 The usage for "librepo" projects is::
 
-    usage: prog build librepo [-h] [--release RELEASE] PROJECT SPEC
+    usage: prog build PROJECT librepo [-h] [--release RELEASE] SPEC
 
-    Build a librepo project fork in Copr.
+    Build a librepo project fork.
 
     positional arguments:
-      PROJECT            the name of the Copr project
       SPEC               the ID of the Fedora Git
                          revision of the spec file
 
@@ -100,39 +97,15 @@ The usage for "librepo" projects is::
 
 The usage for "libcomps" projects is::
 
-    usage: prog build libcomps [-h] [--add-non-rawhide VERSION]
-                               [--add-rawhide] [--add-repository URL]
-                               [--root ROOT] [--release RELEASE]
-                               ARCHITECTURE DESTINATION
+    usage: prog build PROJECT libcomps [-h] [--release RELEASE]
 
-    Build a libcomps project fork. The RPMs will be stored in a
-    subdirectory "packages" of the destination directory. Also
-    corresponding metadata will be added so that the subdirectory
-    could work as an RPM repository.
-
-    positional arguments:
-      ARCHITECTURE          the value of the Mock's
-                            "config_opts['target_arch']" option
-      DESTINATION           the name of a destination directory
-                            (the directory will be overwritten)
+    Build a libcomps project fork.
 
     optional arguments:
-      -h, --help            show this help message and exit
-      --add-non-rawhide VERSION
-                            add a Fedora non-Rawhide release repository
-                            to the Mock's "config_opts['yum.conf']"
-                            option
-      --add-rawhide         add the Fedora Rawhide repository to the
-                            Mock's "config_opts['yum.conf']" option
-      --add-repository URL  the URL of a repository to be added to the
-                            Mock's "config_opts['yum.conf']" option
-      --root ROOT           the value of the Mock's
-                            "config_opts['root']" option
-      --release RELEASE     a custom release number of the resulting
-                            RPMs
+      -h, --help         show this help message and exit
+      --release RELEASE  a custom release number of the resulting RPMs
 
-    In addition, the "createrepo_c", "mock" and "python" executables
-    must be available.
+    The "python" and "rpmbuild" executables must be available.
 
 :var NAME: the name of the project
 :type NAME: unicode
@@ -162,7 +135,6 @@ import time
 import urllib
 
 import copr
-import pkg_resources
 import rpm
 
 
@@ -289,20 +261,53 @@ def rpm_headers(dirname):
         yield filename, header
 
 
-def _set_release(filename, release):
-    """Set the "Release" tag in a spec file.
+def _build_srpm(spec, sources, destdn, release=None):
+    """Build a SRPM from a spec file and source archives.
 
-    :param filename: a name of the spec file
-    :type filename: unicode
-    :param release: the new value of the tag
-    :type release: str
-    :raises exceptions.IOError: if the file is not accessible
+    The "rpmbuild" executable must be available. The source archives and
+    SRPMs in ~/rpmbuild/SRPMS will be removed.
+
+    :param spec: a name of the spec file
+    :type spec: unicode
+    :param sources: a name of the source archives (with shell-style
+       wildcards)
+    :param sources: str
+    :param destdn: the name of a destination directory
+    :type destdn: unicode
+    :param release: a custom release number of the resulting SRPM
+    :type release: str | None
+    :returns: a combination of the standard output and standard error of
+       the executable
+    :rtype: str
+    :raises exceptions.IOError: if the build cannot be prepared
+    :raises exceptions.OSError: if the build cannot be prepared or if
+       the executable cannot be executed
+    :raises subprocess.CalledProcessError: if the executable fails to
+       build the SRPM
 
     """
-    count = _substitute_file(
-        filename, re.compile(br'^\s*Release\s*:\s*.+$', re.IGNORECASE),
-        b'Release: {}'.format(release))
-    assert count == 1, 'unexpected spec file'
+    if release:
+        count = _substitute_file(
+            spec, re.compile(br'^\s*Release\s*:\s*.+$', re.IGNORECASE),
+            b'Release: {}'.format(release))
+        assert count == 1, 'unexpected spec file'
+    rpmbuilddn = os.path.expanduser(os.path.join('~', 'rpmbuild'))
+    for filename in glob.iglob(sources):
+        shutil.move(filename, os.path.join(rpmbuilddn, 'SOURCES'))
+    srpmdn = os.path.join(rpmbuilddn, 'SRPMS')
+    for filename, header in rpm_headers(srpmdn):
+        if not header.isSource():
+            continue
+        os.remove(filename)
+    output = subprocess.check_output(
+        [b'rpmbuild', b'--quiet', b'-bs', b'--clean', b'--rmsource',
+         b'--rmspec', spec],
+        stderr=subprocess.STDOUT)
+    for filename, header in rpm_headers(srpmdn):
+        if not header.isSource():
+            continue
+        shutil.move(filename, destdn)
+    return output
 
 
 def _build_tito(destdn, last_tag=True):
@@ -379,8 +384,6 @@ def _build_librepo(spec, destdn, release=None):
         specfn, re.compile(br'^\s*%global\s+gitrev\s+.+$'),
         b'%global gitrev {}'.format(gitrev))
     assert count == 1, 'unexpected spec file'
-    if release:
-        _set_release(specfn, release)
     try:
         subprocess.check_output(
             [b'sh', os.path.join(b'utils', b'make_tarball.sh'), gitrev],
@@ -388,59 +391,35 @@ def _build_librepo(spec, destdn, release=None):
     except subprocess.CalledProcessError as err:
         _log_call(err.cmd[0], err.returncode, err.output)
         raise ValueError('"utils/make_tarball.sh" failed')
-    rpmbuilddn = os.path.expanduser(os.path.join('~', 'rpmbuild'))
-    for filename in glob.iglob(b'*-{}.tar.xz'.format(gitrev)):
-        shutil.move(filename, os.path.join(rpmbuilddn, 'SOURCES'))
-    srpmdn = os.path.join(rpmbuilddn, 'SRPMS')
-    for filename, header in rpm_headers(srpmdn):
-        if not header.isSource():
-            continue
-        os.remove(filename)
-    status = 0
-    try:
-        output = subprocess.check_output(
-            [b'rpmbuild', b'--quiet', b'-bs', b'--clean', b'--rmsource',
-             b'--rmspec', specfn],
-            stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as err:
-        status, output = err.returncode, err.output
-        raise ValueError('"rpmbuild" failed')
-    finally:
-        _log_call('rpmbuild', status, output)
     _remkdir(destdn, notexists_ok=True)
-    for filename, header in rpm_headers(srpmdn):
-        if not header.isSource():
-            continue
-        shutil.move(filename, destdn)
+    try:
+        output = _build_srpm(
+            specfn, b'*-{}.tar.xz'.format(gitrev), destdn, release)
+    except subprocess.CalledProcessError as err:
+        _log_call('rpmbuild', err.returncode, err.output)
+        raise ValueError('"rpmbuild" failed')
+    else:
+        _log_call('rpmbuild', 0, output)
 
 
-def _build_libcomps(arch, destdn, repos=(), release=None, root=NAME):
-    """Build RPMs of a librepo project fork in the current work. dir.
+def _build_libcomps(destdn, release=None):
+    """Build a SRPM of a librepo project fork in the current work. dir.
 
-    The "createrepo_c", "mock" and "python" executables must be
-    available. The destination directory will be overwritten.
-    Corresponding metadata will be added so that the directory
-    could work as an RPM repository.
+    The "python" and "rpmbuild" executables must be available. The
+    destination directory will be overwritten.
 
-    :param arch: the value of the Mock's "config_opts['target_arch']"
-       option
-    :type arch: unicode
     :param destdn: the name of a destination directory
     :type destdn: unicode
-    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and the
-       URL (direct or metalink) of each repository to be added to the
-       Mock's config_opts['yum.conf']
-    :type repos: collections.Sequence[tuple[unicode, unicode]]
-    :param release: a custom release number of the resulting RPMs
+    :param release: a custom release number of the resulting SRPM
     :type release: str | None
-    :param root: the value of the Mock's "config_opts['root']" option
-    :type root: unicode
     :raises exceptions.OSError: if some of the executables cannot be
-       executed
+       executed or if the destination directory cannot be created or
+       overwritten
+    :raises exceptions.IOError: if the build cannot be prepared
     :raises exceptions.ValueError: if the build fails
 
     """
-    LOGGER.info('Building RPMs from %s...', os.getcwdu())
+    LOGGER.info('Building a SRPM from %s...', os.getcwdu())
     try:
         # FIXME: https://github.com/midnightercz/libcomps/pull/26
         subprocess.check_output(
@@ -448,35 +427,14 @@ def _build_libcomps(arch, destdn, repos=(), release=None, root=NAME):
     except subprocess.CalledProcessError as err:
         _log_call(err.cmd[0], err.returncode, err.output)
         raise ValueError('sources preparation failed')
-    specfn = 'libcomps.spec'
-    if release:
-        _set_release(specfn, release)
-    with _MockConfig(arch, repos, createrepo=True, root=root) as mockcfg:
-        try:
-            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
-            subprocess.check_output(
-                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
-                 '--resultdir={}'.format(destdn), '--buildsrpm', '--spec',
-                 specfn, '--sources', '.'], stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as err:
-            _log_call(err.cmd[0], err.returncode, err.output)
-            raise ValueError('SRPM preparation failed')
-        srpm, = (fnm for fnm in os.listdir(destdn) if fnm.endswith('.src.rpm'))
-        srpmfn = os.path.join(tempfile.mkdtemp(), 'libcomps.src.rpm')
-        shutil.move(os.path.join(destdn, srpm), srpmfn)
-        status = 0
-        try:
-            # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
-            output = subprocess.check_output(
-                ['mock', '--quiet', '--root={}'.format(mockcfg.cfgfn),
-                 '--resultdir={}'.format(destdn), srpmfn],
-                stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as err:
-            status, output = err.returncode, err.output
-            raise ValueError('"mock" failed')
-        finally:
-            shutil.rmtree(os.path.dirname(srpmfn))
-            _log_call('mock', status, output)
+    _remkdir(destdn, notexists_ok=True)
+    try:
+        output = _build_srpm('libcomps.spec', b'*-*.tar.gz', destdn, release)
+    except subprocess.CalledProcessError as err:
+        _log_call('rpmbuild', err.returncode, err.output)
+        raise ValueError('"rpmbuild" failed')
+    else:
+        _log_call('rpmbuild', 0, output)
 
 
 def _build_in_copr(dirname, project):
@@ -536,7 +494,7 @@ def _build_in_copr(dirname, project):
         raise ValueError('build failed')
 
 
-def _start_commandline():  # pylint: disable=too-many-statements
+def _start_commandline():  # pylint: disable=R0912,R0915
     """Start the command line interface to the program.
 
     The root logger is configured to write DEBUG+ messages into the
@@ -583,12 +541,13 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage of the "build" command is::
 
-        usage: prog build [-h] {tito,librepo,libcomps} ...
+        usage: prog build [-h] PROJECT {tito,librepo,libcomps} ...
 
         Build RPMs of a project from the checkout in the current working
-        directory.
+        directory in Copr.
 
         positional arguments:
+          PROJECT               the name of the Copr project
           {tito,librepo,libcomps}
                                 the type of the project
 
@@ -597,26 +556,22 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage for "tito" projects is::
 
-        usage: prog build tito [-h] PROJECT
+        usage: prog build PROJECT tito [-h]
 
-        Build a tito-enabled project in Copr.
-
-        positional arguments:
-          PROJECT     the name of the Copr project
+        Build a tito-enabled project.
 
         optional arguments:
           -h, --help  show this help message and exit
 
-        In addition, the "tito" executable must be available.
+        The "tito" executable must be available.
 
     The usage for "librepo" projects is::
 
-        usage: prog build librepo [-h] [--release RELEASE] PROJECT SPEC
+        usage: prog build PROJECT librepo [-h] [--release RELEASE] SPEC
 
-        Build a librepo project fork in Copr.
+        Build a librepo project fork.
 
         positional arguments:
-          PROJECT            the name of the Copr project
           SPEC               the ID of the Fedora Git
                              revision of the spec file
 
@@ -630,41 +585,16 @@ def _start_commandline():  # pylint: disable=too-many-statements
 
     The usage for "libcomps" projects is::
 
-        usage: prog build libcomps [-h] [--add-non-rawhide VERSION]
-                                   [--add-rawhide]
-                                   [--add-repository URL] [--root ROOT]
-                                   [--release RELEASE]
-                                   ARCHITECTURE DESTINATION
+        usage: prog build PROJECT libcomps [-h] [--release RELEASE]
 
-        Build a libcomps project fork. The RPMs will be stored in a
-        subdirectory "packages" of the destination directory. Also
-        corresponding metadata will be added so that the subdirectory
-        could work as an RPM repository.
-
-        positional arguments:
-          ARCHITECTURE          the value of the Mock's
-                                "config_opts['target_arch']" option
-          DESTINATION           the name of a destination directory
-                                (the directory will be overwritten)
+        Build a libcomps project fork.
 
         optional arguments:
-          -h, --help            show this help message and exit
-          --add-non-rawhide VERSION
-                                add a Fedora non-Rawhide release
-                                repository to the Mock's
-                                "config_opts['yum.conf']" option
-          --add-rawhide         add the Fedora Rawhide repository to the
-                                Mock's "config_opts['yum.conf']" option
-          --add-repository URL  the URL of a repository to be added to
-                                the Mock's "config_opts['yum.conf']"
-                                option
-          --root ROOT           the value of the Mock's
-                                "config_opts['root']" option
-          --release RELEASE     a custom release number of the
-                                resulting RPMs
+          -h, --help         show this help message and exit
+          --release RELEASE  a custom release number of the
+                             resulting RPMs
 
-        In addition, the "createrepo_c", "mock" and "python" executables
-        must be available.
+        The "python" and "rpmbuild" executables must be available.
 
     :raises exceptions.SystemExit: with a non-zero exit status if an
        error occurs
@@ -675,7 +605,6 @@ def _start_commandline():  # pylint: disable=too-many-statements
         '23': {'fedora-23-i386', 'fedora-23-ppc64le', 'fedora-23-x86_64'},
         'rawhide': {'fedora-rawhide-i386', 'fedora-rawhide-ppc64le',
                     'fedora-rawhide-x86_64'}}
-    pkgsreldn = 'packages'
     argparser = argparse.ArgumentParser(
         description='Test the DNF stack.',
         epilog='If an error occurs the exit status is non-zero.')
@@ -695,80 +624,35 @@ def _start_commandline():  # pylint: disable=too-many-statements
     setupparser.add_argument(
         'project', type=unicode, metavar='PROJECT',
         help='the name of the project')
-    commonparser = argparse.ArgumentParser(add_help=False)
-    commonparser.add_argument(
-        'copr', type=unicode, metavar='PROJECT',
-        help='the name of the Copr project')
     buildparser = cmdparser.add_parser(
         'build',
         description='Build RPMs of a project from the checkout in the current '
-                    'working directory.')
+                    'working directory in Copr.')
+    buildparser.add_argument(
+        'copr', type=unicode, metavar='PROJECT',
+        help='the name of the Copr project')
     projparser = buildparser.add_subparsers(
         dest='project', help='the type of the project')
     projparser.add_parser(
-        'tito', description='Build a tito-enabled project in Copr.',
-        epilog='In addition, the "tito" executable must be available.',
-        parents=[commonparser])
+        'tito', description='Build a tito-enabled project.',
+        epilog='The "tito" executable must be available.')
+    commonparser = argparse.ArgumentParser(add_help=False)
+    commonparser.add_argument(
+        '--release', help='a custom release number of the resulting RPMs')
     repoparser = projparser.add_parser(
-        'librepo', description='Build a librepo project fork in Copr.',
+        'librepo', description='Build a librepo project fork.',
         epilog='The "git", "rpmbuild", "sh" and "xz" executables must be '
                'available.',
         parents=[commonparser])
     repoparser.add_argument(
         'fedrev', type=unicode, metavar='SPEC',
         help='the ID of the Fedora Git revision of the spec file')
-    repoparser.add_argument(
-        '--release', help='a custom release number of the resulting RPMs')
-    compsparser = projparser.add_parser(
-        'libcomps',
-        description='Build a libcomps project fork. The RPMs will be stored in'
-                    ' a subdirectory "{}" of the destination directory. Also '
-                    'corresponding metadata will be added so that the '
-                    'subdirectory could work as an RPM repository.'
-                    ''.format(pkgsreldn),
-        epilog='In addition, the "createrepo_c", "mock" and "python" '
-               'executables must be available.')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    compsparser.add_argument(
-        '--add-non-rawhide', action='append', default=[], type=unicode,
-        help="add a Fedora non-Rawhide release repository to the Mock's "
-             "\"config_opts['yum.conf']\" option",
-        metavar='VERSION')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    compsparser.add_argument(
-        '--add-rawhide', action='store_true',
-        help="add the Fedora Rawhide repository to the Mock's "
-             "\"config_opts['yum.conf']\" option")
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    compsparser.add_argument(
-        '--add-repository', action='append', default=[], type=unicode,
-        help="the URL of a repository to be added to the Mock's "
-             "\"config_opts['yum.conf']\" option",
-        metavar='URL')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    compsparser.add_argument(
-        '--root', default=NAME, type=unicode,
-        help="the value of the Mock's \"config_opts['root']\" option")
-    compsparser.add_argument(
-        '--release', help='a custom release number of the resulting RPMs')
-    # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1228751
-    compsparser.add_argument(
-        'arch', type=unicode, metavar='ARCHITECTURE',
-        help="the value of the Mock's \"config_opts['target_arch']\" option")
-    compsparser.add_argument(
-        'destdn', type=unicode, metavar='DESTINATION',
-        help='the name of a destination directory (the directory will be '
-             'overwritten)')
+    projparser.add_parser(
+        'libcomps', description='Build a libcomps project fork.',
+        epilog='The "python" and "rpmbuild" executables must be available.',
+        parents=[commonparser])
     options = argparser.parse_args()
-    if hasattr(options, 'destdn'):
-        try:
-            _remkdir(options.destdn, notexists_ok=True)
-        except OSError:
-            sys.exit(
-                'The destination directory cannot be created or overwritten.')
-        logfn = os.path.join(options.destdn, 'debug.log')
-    else:
-        logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
+    logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
     try:
         logging.basicConfig(
             filename=logfn,
@@ -791,170 +675,49 @@ def _start_commandline():  # pylint: disable=too-many-statements
         except ValueError:
             sys.exit('Copr have failed to create the project.')
     elif options.command == b'build':
-        if options.project in {b'tito', b'librepo'}:
-            destdn = decode_path(tempfile.mkdtemp())
-            try:
-                if options.project == b'tito':
-                    try:
-                        _build_tito(destdn, last_tag=False)
-                    except ValueError:
-                        sys.exit(
-                            'The build have failed. Hopefully the executables '
-                            'have created an output in the destination '
-                            'directory.')
-                    except OSError:
-                        sys.exit(
-                            'The destination directory cannot be overwritten '
-                            'or the executable cannot be executed.')
-                elif options.project == b'librepo':
-                    try:
-                        _build_librepo(
-                            options.fedrev, destdn, options.release)
-                    except (IOError, urllib.ContentTooShortError, ValueError):
-                        sys.exit('The build have failed.')
-                    except OSError:
-                        sys.exit(
-                            'The destination directory cannot be overwritten '
-                            'or some of the executables cannot be executed.')
+        destdn = decode_path(tempfile.mkdtemp())
+        try:
+            if options.project == b'tito':
                 try:
-                    _build_in_copr(destdn, options.copr)
+                    _build_tito(destdn, last_tag=False)
                 except ValueError:
                     sys.exit(
-                        'The build could not be requested or the build have '
-                        'failed. Hopefully Copr provides some details.')
-            finally:
-                shutil.rmtree(destdn)
-        elif options.project == b'libcomps':
-            destdn = os.path.join(options.destdn, pkgsreldn)
-            repopat = \
-                'https://mirrors.fedoraproject.org/metalink?repo={}&' \
-                'arch=$basearch'
-            repos = [
-                ('metalink', repopat.format('fedora-{}'.format(version)))
-                for version in options.add_non_rawhide]
-            repos.extend(
-                ('metalink',
-                 'https://mirrors.fedoraproject.org/metalink?'
-                 'repo=updates-released-f{}&arch=$basearch'.format(version))
-                for version in options.add_non_rawhide)
-            if options.add_rawhide:
-                repos.append(('metalink', repopat.format('rawhide')))
-            repos.extend(
-                itertools.product(['baseurl'], options.add_repository))
+                        'The build have failed. Hopefully the executables '
+                        'have created an output in the destination '
+                        'directory.')
+                except OSError:
+                    sys.exit(
+                        'The destination directory cannot be overwritten '
+                        'or the executable cannot be executed.')
+            elif options.project == b'librepo':
+                try:
+                    _build_librepo(
+                        options.fedrev, destdn, options.release)
+                except (IOError, urllib.ContentTooShortError, ValueError):
+                    sys.exit('The build have failed.')
+                except OSError:
+                    sys.exit(
+                        'The destination directory cannot be overwritten '
+                        'or some of the executables cannot be executed.')
+            elif options.project == b'libcomps':
+                try:
+                    _build_libcomps(destdn, options.release)
+                except (IOError, ValueError):
+                    sys.exit(
+                        'The build have failed. Hopefully the executables have'
+                        ' created an output in the destination directory.')
+                except OSError:
+                    sys.exit(
+                        'The destination directory cannot be overwritten '
+                        'or some of the executables cannot be executed.')
             try:
-                _build_libcomps(
-                    options.arch, destdn, repos, options.release, options.root)
+                _build_in_copr(destdn, options.copr)
             except ValueError:
                 sys.exit(
-                    'The build have failed. Hopefully the executables have'
-                    ' created an output in the destination directory.')
-            except OSError:
-                sys.exit(
-                    'Some of the executables cannot be executed.')
-
-
-class _MockConfig(object):  # pylint: disable=too-few-public-methods
-
-    """Class representing a mock configuration.
-
-    The instances can be used as a context manager. It can be configured
-    to run createrepo on the rpms in the resultdir. In such case, the
-    "createrepo_c" executable must be available.
-
-    :ivar root: the value set as "config_opts['root']"
-    :type root: unicode
-    :ivar arch: the value set as "config_opts['target_arch']"
-    :type arch: unicode
-    :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and
-       the URL (direct or metalink) of each repository to be added to
-       config_opts['yum.conf']
-    :type repos: collections.Sequence[tuple[unicode, unicode]]
-    :ivar createrepo: run createrepo on the rpms in the resultdir
-    :type createrepo: bool
-    :ivar cfgfn: a name of the file where the configuration is stored
-    :type cfgfn: unicode | None
-
-    """
-
-    def __init__(self, arch, repos=(), createrepo=False, root=NAME):
-        """Initialize the configuration.
-
-        :param arch: a value set as "config_opts['target_arch']"
-        :type arch: unicode
-        :param repos: an URL type (``'baseurl'`` or ``'metalink'``) and
-           the URL (direct or metalink) of each repository to be added
-           to config_opts['yum.conf']
-        :type repos: collections.Sequence[tuple[unicode, unicode]]
-        :param createrepo: run createrepo on the rpms in the resultdir
-        :type createrepo: bool
-        :param root: a value set as "config_opts['root']"
-        :type root: unicode
-
-        """
-        self.root = root
-        self.arch = arch
-        self.repos = repos
-        self.createrepo = createrepo
-        self.cfgfn = None
-
-    def __enter__(self):
-        """Enter the runtime context related to this object.
-
-        The configuration is written into a file.
-
-        :returns: self
-        :rtype: ._MockConfig
-
-        """
-        repos = '\n'.join(
-            '[user-{}]\n{}={}\n'.format(index, type_, url)
-            for index, (type_, url) in enumerate(self.repos))
-        opts = ''
-        if self.createrepo:
-            opts += (
-                "config_opts['createrepo_on_rpms'] = True\n"
-                "config_opts['createrepo_command'] = 'createrepo_c --quiet'")
-        template = pkg_resources.resource_string(
-            __name__, b'resources/mock.cfg')
-        config = template.decode('utf-8').format(
-            root=self.root, arch=self.arch, repos=repos, opts=opts)
-        file_ = tempfile.NamedTemporaryFile('wb', suffix='.cfg', delete=False)
-        with file_:
-            file_.write(config)
-        self.cfgfn = decode_path(file_.name)
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        """Exit the runtime context related to this object.
-
-        The configuration file and the chroot files are removed.
-
-        The "mock" executable must be available.
-
-        :param exc_type: the type of the exception that caused the
-           context to be exited
-        :type exc_type: type
-        :param exc_value: the instance of the exception
-        :type exc_value: exceptions.BaseException
-        :param traceback: the traceback that encapsulates the call stack
-           at the point where the exception originally occurred
-        :type traceback: types.TracebackType
-        :returns: suppress the exception that caused the context to be
-           exited
-        :rtype: bool
-        :raises exceptions.OSError: if the executable cannot be executed
-
-        """
-        # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1221975
-        status = subprocess.call([
-            'mock', '--quiet', '--root={}'.format(self.cfgfn), '--scrub=all'])
-        assert not status, 'mock should be able to remove its files'
-        try:
-            os.remove(self.cfgfn)
-        except OSError:
-            assert False, 'temporary files should be removable'
-        self.cfgfn = None
-        return False
+                    'The build could not be requested or the build have '
+                    'failed. Hopefully Copr provides some details.')
+        finally:
+            shutil.rmtree(destdn)
 
 
 if __name__ == '__main__':
