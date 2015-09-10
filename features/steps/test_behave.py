@@ -67,7 +67,7 @@ def given_repo_condition(context, repo):
   assert repo
   assert os.path.exists('/build/' + repo)
   a = [os.remove(p) for p in os.listdir('/repo')]
-  assert subprocess.check_call(['cp -rs /build/' + repo + '/* /repo/'], shell=True) == 0
+  subprocess.check_call(['cp -rs /build/' + repo + '/* /repo/'], shell=True)
   context.pre_packages = get_package_list()
   assert context.pre_packages
 
@@ -77,9 +77,9 @@ def when_action_package(context, action, pkg, manager):
   assert manager in ["rpm", "dnf", "pkcon"]
   assert pkg
   if manager == 'rpm':
-    assert execute_rpm_command(split(pkg), action) == 0
+    execute_rpm_command(split(pkg), action)
   elif manager == 'dnf':
-    assert execute_dnf_command([action] + split(pkg), 'test') == 0
+    execute_dnf_command([action] + split(pkg), 'test')
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
