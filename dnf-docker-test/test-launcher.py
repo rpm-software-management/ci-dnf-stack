@@ -2,7 +2,7 @@
 
 import os, sys, subprocess, json
 
-DOCKER_IMAGE='pavelo/richdeps:1.0.2'
+DOCKER_IMAGE='pavelo/richdeps:1.0.3'
 
 class Colors(object):
   HEADER = '\033[95m'
