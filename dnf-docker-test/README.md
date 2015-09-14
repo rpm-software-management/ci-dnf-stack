@@ -15,7 +15,7 @@ Install:
 ```
 $ git clone https://github.com/shaded-enmity/richdeps-docker/
 $ cd richdeps-docker/
-$ docker pull pavelo/richdeps:1.0.2
+$ docker pull pavelo/richdeps:1.0.4
 ```
 
 Execute test:
@@ -26,7 +26,7 @@ $ ./test-launcher.py test-1
 To rebuild the Docker image you can use the following command:
 ```
 $ cd richdeps-docker/
-$ docker build -t pavelo/richdeps:1.0.2 .
+$ docker build -t pavelo/richdeps:1.0.4 .
 ```
 
 ## Binaries
