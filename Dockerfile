@@ -13,7 +13,7 @@ RUN git clone https://github.com/rpm-software-management/rpm.git\
 
 RUN git clone https://github.com/openSUSE/libsolv.git\
  && (cd libsolv/ && mkdir build && cd build/\ 
-  && cmake -DENABLE_COMPLEX_DEPS=1 -DUSE_VENDORDIRS=1 -DFEDORA=1 -DCMAKE_INSTALL_PREFIX=/usr ../\
+  && cmake -DENABLE_LZMA_COMPRESSION=1 -DENABLE_COMPLEX_DEPS=1 -DUSE_VENDORDIRS=1 -DFEDORA=1 -DCMAKE_INSTALL_PREFIX=/usr ../\
   && make && make install && rm -rf /libsolv/)
 
 ADD launch-test /usr/bin/
