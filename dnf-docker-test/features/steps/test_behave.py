@@ -68,14 +68,15 @@ def given_repo_condition(context, repo):
   assert os.path.exists('/build/' + repo)
   a = [os.remove(p) for p in os.listdir('/repo')]
   subprocess.check_call(['cp -rs /build/' + repo + '/* /repo/'], shell=True)
-  context.pre_packages = get_package_list()
-  assert context.pre_packages
 
 @when('I "{action}" a package "{pkg}" with "{manager}"')
 def when_action_package(context, action, pkg, manager):
   assert action in ["install", "remove"]
   assert manager in ["rpm", "dnf", "pkcon"]
   assert pkg
+  context.pre_packages = get_package_list()
+  assert context.pre_packages
+
   if manager == 'rpm':
     execute_rpm_command(split(pkg), action)
   elif manager == 'dnf':
@@ -93,8 +94,15 @@ def then_package_state(context, pkg, state):
   for n in split(pkg):
     if state == 'installed':
       assert ('+' + n) in installed
+      installed.remove('+' + n)
     if state == 'removed':
       assert ('-' + n) in removed
+      removed.remove('-' + n)
     if state == 'absent':
       assert ('+' + n) not in installed
       assert ('-' + n) not in removed
+
+  ''' This checks that installations/removals are always fully specified,
+  so that we always cover the requirements/expecations entirely '''
+  if state != 'absent':
+    assert not installed and not removed
