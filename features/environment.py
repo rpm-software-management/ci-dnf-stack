@@ -57,7 +57,6 @@ import subprocess
 import tempfile
 
 import copr
-import pkg_resources
 import pygit2
 
 import dnfstackci
@@ -82,15 +81,13 @@ def before_all(context):
     signature = pygit2.Signature(
         dnfstackci.NAME, '{}@example.com'.format(dnfstackci.NAME))
     context.titodn = tempfile.mkdtemp()
-    src_spec = pkg_resources.resource_stream(
-        dnfstackci.__name__, 'resources/foo.spec')
-    dst_spec = open(os.path.join(context.titodn, b'foo.spec'), 'wb')
-    with src_spec, dst_spec:
-        shutil.copyfileobj(src_spec, dst_spec)
+    dst_spec = os.path.join(context.titodn, b'foo.spec')
+    shutil.copy(
+        os.path.join(os.path.dirname(__file__), b'resources', b'foo.spec'),
+        dst_spec)
     try:
         titorepo = pygit2.init_repository(context.titodn)
-        titorepo.index.add(
-            os.path.relpath(dst_spec.name, titorepo.workdir))
+        titorepo.index.add(os.path.relpath(dst_spec, titorepo.workdir))
         titorepo.index.write()
         titorepo.create_commit(
             'refs/heads/master', signature, signature, 'Add a spec file.',

@@ -78,8 +78,6 @@ Following additional executables and Python modules are required to run
 a test suite:
 
 - `behave Python module <http://github.com/behave/behave/>`_
-- `pkg_resources Python module
-  <https://bitbucket.org/pypa/setuptools/>`_
 - `pygit2 Python module <http://www.pygit2.org/>`_
 
 
