@@ -93,8 +93,8 @@ def before_all(context):
             'refs/heads/master', signature, signature, 'Add a spec file.',
             titorepo.index.write_tree(), [])
     # FIXME: https://github.com/libgit2/pygit2/issues/531
-    except Exception:
-        raise ValueError('Git repository creation failed')
+    except Exception as err:
+        raise ValueError('Git repository creation failed: {}'.format(err))
     # FIXME: https://github.com/dgoodwin/tito/issues/171
     subprocess.check_call(['tito', 'init'], cwd=context.titodn)
     context.librepodn = tempfile.mkdtemp()
@@ -104,8 +104,8 @@ def before_all(context):
         libreporepo.reset(
             'd9bed0d9f96b505fb86a1adc50b3d6f8275fab93', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
-    except Exception:
-        raise ValueError('Git repository creation failed')
+    except Exception as err:
+        raise ValueError('Git repository creation failed: {}'.format(err))
     context.libcompsdn = tempfile.mkdtemp()
     try:
         libcompsrepo = pygit2.clone_repository(
@@ -113,8 +113,8 @@ def before_all(context):
         libcompsrepo.reset(
             'eb966bc43097c0d00e154abe7f40f4d1d75fbcd1', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
-    except Exception:
-        raise ValueError('Git repository creation failed')
+    except Exception as err:
+        raise ValueError('Git repository creation failed: {}'.format(err))
 
 
 # FIXME: https://bitbucket.org/logilab/pylint/issue/535
@@ -155,8 +155,8 @@ def after_scenario(context, scenario):  # pylint: disable=unused-argument
         try:
             client = copr.client.CoprClient.create_from_file_config()
             client.delete_project(name)
-        except Exception:
-            raise ValueError('Copr failed')
+        except Exception as err:
+            raise ValueError('Copr failed: {}'.format(err))
 
 
 def after_all(context):
