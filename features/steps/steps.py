@@ -196,8 +196,8 @@ def _test_copr_project(context, name, chroots):  # pylint: disable=W0613
     try:
         client = copr.client.CoprClient.create_from_file_config()
         client.get_project_details(name)
-    except Exception:
-        raise ValueError('Copr failed')
+    except Exception as err:
+        raise ValueError('Copr failed: {}'.format(err))
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259608
 
 
@@ -221,8 +221,8 @@ def _test_copr_repo(context, repository, name):  # pylint: disable=W0613
     try:
         client = copr.client.CoprClient.create_from_file_config()
         details = client.get_project_details(name)
-    except Exception:
-        raise ValueError('Copr failed')
+    except Exception as err:
+        raise ValueError('Copr failed: {}'.format(err))
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259683
     repos = details.data['detail']['additional_repos'].split(' ')
     assert repository in repos, 'repository not added'

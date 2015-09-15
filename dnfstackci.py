@@ -234,8 +234,8 @@ def _create_copr(name, chroots, repos=()):
     try:
         client = copr.client.CoprClient.create_from_file_config()
         client.create_project(name, chroots=chroots, repos=repos)
-    except Exception as err:
-        LOGGER.error('Copr failed with: %s', err)
+    except Exception:
+        LOGGER.debug('Copr have failed to create a project.', exc_info=True)
         raise ValueError('Copr failed')
 
 
@@ -255,6 +255,7 @@ def rpm_headers(dirname):
             with open(filename) as file_:
                 header = transaction.hdrFromFdno(file_.fileno())
         except (IOError, rpm.error):
+            LOGGER.debug('Failed to read %s', filename, exc_info=True)
             continue
         yield filename, header
 
@@ -455,8 +456,8 @@ def _build_in_copr(dirname, project):
     try:
         client = copr.client.CoprClient.create_from_file_config()
         result = client.create_new_build(project, pkgs=pkgs)
-    except OSError as err:
-        LOGGER.error('Copr failed with: %s', err)
+    except OSError:
+        LOGGER.debug('Copr have failed to create a project.', exc_info=True)
         raise ValueError('Copr failed')
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1258970
     while True:
@@ -464,8 +465,9 @@ def _build_in_copr(dirname, project):
             # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
             try:
                 status = build.handle.get_build_details().status
-            except Exception as err:
-                LOGGER.error('Copr failed with: %s', err)
+            except Exception:
+                LOGGER.debug(
+                    'Copr have failed to get build details.', exc_info=True)
                 raise ValueError('Copr failed')
             if status not in {'skipped', 'failed', 'succeeded'}:
                 break
@@ -477,8 +479,9 @@ def _build_in_copr(dirname, project):
         # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
         try:
             details = build.handle.get_build_details()
-        except Exception as err:
-            LOGGER.error('Copr failed with: %s', err)
+        except Exception:
+            LOGGER.debug(
+                'Copr have failed to get build details.', exc_info=True)
             raise ValueError('Copr failed')
         if details.status == 'failed':
             success = False
@@ -668,6 +671,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         try:
             _create_copr(options.project, chroots, options.add_repository)
         except ValueError:
+            LOGGER.debug(
+                'An exception have occurred during setup.', exc_info=True)
             sys.exit('Copr have failed to create the project.')
     elif options.command == b'build':
         destdn = decode_path(tempfile.mkdtemp())
@@ -676,11 +681,17 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                 try:
                     _build_tito(destdn, last_tag=False)
                 except ValueError:
+                    LOGGER.debug(
+                        'An exception have occurred during the tito build.',
+                        exc_info=True)
                     sys.exit(
                         'The build have failed. Hopefully the executables '
                         'have created an output in the destination '
                         'directory.')
                 except OSError:
+                    LOGGER.debug(
+                        'An exception have occurred during the tito build.',
+                        exc_info=True)
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or the executable cannot be executed.')
@@ -689,8 +700,14 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     _build_librepo(
                         options.fedrev, destdn, options.release)
                 except (IOError, urllib.ContentTooShortError, ValueError):
+                    LOGGER.debug(
+                        'An exception have occurred during the librepo build.',
+                        exc_info=True)
                     sys.exit('The build have failed.')
                 except OSError:
+                    LOGGER.debug(
+                        'An exception have occurred during the librepo build.',
+                        exc_info=True)
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
@@ -698,16 +715,24 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                 try:
                     _build_libcomps(destdn, options.release)
                 except (IOError, ValueError):
+                    LOGGER.debug(
+                        'An exception have occurred during the libcmps build.',
+                        exc_info=True)
                     sys.exit(
                         'The build have failed. Hopefully the executables have'
                         ' created an output in the destination directory.')
                 except OSError:
+                    LOGGER.debug(
+                        'An exception have occurred during the libcmps build.',
+                        exc_info=True)
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
             try:
                 _build_in_copr(destdn, options.copr)
             except ValueError:
+                LOGGER.debug(
+                    'Copr have failed to build the RPMs.', exc_info=True)
                 sys.exit(
                     'The build could not be requested or the build have '
                     'failed. Hopefully Copr provides some details.')
