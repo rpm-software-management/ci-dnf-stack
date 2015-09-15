@@ -40,12 +40,10 @@ The usage of the "setup" command is::
     positional arguments:
       CHROOT                the chroots to be used in the project
                             ("22" adds "fedora-22-i386,
-                            fedora-22-ppc64le, fedora-22-x86_64",
-                            "23" adds "fedora-23-i386,
-                            fedora-23-ppc64le, fedora-23-x86_64",
+                            fedora-22-x86_64", "23" adds
+                            "fedora-23-i386, fedora-23-x86_64",
                             "rawhide" adds "fedora-rawhide-i386,
-                            fedora-rawhide-ppc64le, fedora-rawhide-
-                            x86_64")
+                            fedora-rawhide-x86_64")
       PROJECT               the name of the project
 
     optional arguments:
@@ -526,12 +524,10 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         positional arguments:
           CHROOT                the chroots to be used in the project
                                 ("22" adds "fedora-22-i386,
-                                fedora-22-ppc64le, fedora-22-x86_64",
-                                "23" adds "fedora-23-i386,
-                                fedora-23-ppc64le, fedora-23-x86_64",
+                                fedora-22-x86_64", "23" adds
+                                "fedora-23-i386, fedora-23-x86_64",
                                 "rawhide" adds "fedora-rawhide-i386,
-                                fedora-rawhide-ppc64le, fedora-rawhide-
-                                x86_64")
+                                fedora-rawhide-x86_64")
           PROJECT               the name of the project
 
         optional arguments:
@@ -601,10 +597,9 @@ def _start_commandline():  # pylint: disable=R0912,R0915
 
     """
     chroot2chroots = {
-        '22': {'fedora-22-i386', 'fedora-22-ppc64le', 'fedora-22-x86_64'},
-        '23': {'fedora-23-i386', 'fedora-23-ppc64le', 'fedora-23-x86_64'},
-        'rawhide': {'fedora-rawhide-i386', 'fedora-rawhide-ppc64le',
-                    'fedora-rawhide-x86_64'}}
+        '22': {'fedora-22-i386', 'fedora-22-x86_64'},
+        '23': {'fedora-23-i386', 'fedora-23-x86_64'},
+        'rawhide': {'fedora-rawhide-i386', 'fedora-rawhide-x86_64'}}
     argparser = argparse.ArgumentParser(
         description='Test the DNF stack.',
         epilog='If an error occurs the exit status is non-zero.')

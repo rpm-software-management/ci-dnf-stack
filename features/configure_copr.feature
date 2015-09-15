@@ -22,7 +22,7 @@ Feature: Configure Copr projects
        | CHROOT  | rawhide            |
        | PROJECT | _dnf-stack-ci_test |
      When I create a Copr project
-     Then I should have a Copr project called _dnf-stack-ci_test with chroots fedora-rawhide-i386, fedora-rawhide-ppc64le, fedora-rawhide-x86_64
+     Then I should have a Copr project called _dnf-stack-ci_test with chroots fedora-rawhide-i386, fedora-rawhide-x86_64
 
   Scenario: Add URL to Copr project
     Given following options are configured as follows:
