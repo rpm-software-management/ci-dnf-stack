@@ -32,37 +32,7 @@ Installation
 
 #. install *Multiple SCMs plugin* and *GIT plugin*
 
-#. (optional) install *Warnings Plugin*
-
-    #. http://localhost:8080/configure
-
-    #. Compiler Warnings: Parsers: Add
-
-        #. Name: ``PyFlakes``
-
-        #. Link name: ``PyFlakes errors``
-
-        #. Trend report name: ``PyFlakes errors``
-
-        #. Regular Expression: ``^(.*):([0-9]*):(.*)$`` [CIT2]_
-
-        #. Mapping Script [CIT2]_::
-
-
-            import hudson.plugins.warnings.parser.Warning
-            import hudson.plugins.analysis.util.model.Priority
-
-            String fileName = matcher.group(1)
-            String category = "PyFlakes Error"
-            String lineNumber = matcher.group(2)
-            String message = matcher.group(3)
-
-            return new Warning(fileName, Integer.parseInt(lineNumber), category, "PyFlakes Parser", message);
-
-#. (optional) install *Violations* plugin
-
 .. [CIT1] https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions
-.. [CIT2] http://buildoutjenkins.readthedocs.org/en/latest/code-analysis.html#pyflakes
 
 
 Job creation
@@ -72,7 +42,7 @@ Job creation
 
 #. Item name: ``dnf-nightly-fedora-rawhide``
 
-#. Multi-configuration project
+#. Freestyle project
 
 #. OK
 
@@ -80,7 +50,7 @@ Job creation
 Job configuration
 -----------------
 
-#. Multi-configuration project name: ``dnf-nightly-fedora-rawhide``
+#. Project name: ``dnf-nightly-fedora-rawhide``
 
 #. Description: ``Nightly builds of DNF for Fedora Rawhide.``
 
@@ -112,49 +82,36 @@ Job configuration
 
         #. Schedule: ``H/20 * * * *``
 
-#. Configuration Matrix:
-
-    #. Add axis: *User-defined Axis*
-
-        #. Name: ``architecture``
-
-        #. Values: ``x86_64 i686``
-
 #. Build: Add build step: *Execute shell*::
 
     #!/usr/bin/env bash
     cd dnf
-    PATH=/usr/bin:$PATH python2 ../dnf-stack-ci/dnfstackci.py --add-rawhide --add-repository "$JENKINS_URL/job/hawkey-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --add-repository "$JENKINS_URL/job/librepo-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --add-repository "$JENKINS_URL/job/libcomps-nightly-fedora-rawhide/architecture=$architecture/lastSuccessfulBuild/artifact/result/packages/" --root ci-${JOB_NAME//[^[:alnum:]-_]/-} tito --define snapshot ".$BUILD_NUMBER.%(date +%%Y%%m%%d)git$(git rev-parse HEAD)" $architecture ../result
+    python2 ../dnf-stack-ci/dnfstackci.py build dnf-nightly-fedora-rawhide tito
 
 #. (optional) Post-build Actions
 
     #. Add post-build action: *Archive the artifacts*
 
-        #. Files to archive: ``result/**``
+        #. Files to archive: ``dnf/*.log``
 
     #. Add post-build action: *Build other projects*
 
         #. Projects to build: ``dnf-plugins-core-nightly-fedora-rawhide``
 
-    #. Add post-build action: *Scan for compiler warnings*: Scan workspace files: Add
-
-        #. File pattern: ``*-build/*-pyflakes.log``
-
-        #. Parser: *pyflakes*
-
-        #. Advanced...
-
-            #. Resolve relative paths: *check*
-
-            #. Health thresholds: ``999`` - ``9999``
-
-    #. Add post-build action: *Report Violations*
-
-        ========== ========= ========= ========= ========================
-           type      sunny    stormy   unstable          pattern
-        ========== ========= ========= ========= ========================
-        ``pep8``   ``99998`` ``99999`` ``99999`` ``*-build/*-pep8.log``
-        ``pylint`` ``99998`` ``99999`` ``99999`` ``*-build/*-pylint.log``
-        ========== ========= ========= ========= ========================
-
     #. Email Notification
+
+
+Copr Setup
+==========
+
+
+API token
+---------
+
+#. follow the instructions at https://copr.fedoraproject.org/api/
+
+
+Server
+------
+
+#. Create a new project ``dnf-nightly-fedora-rawhide`` (e.g. ``python2 dnfstackci.py setup --add-repository copr://rpmsoftwaremanagement/hawkey-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/librepo-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/libcomps-nightly-fedora-rawhide rawhide dnf-nightly-fedora-rawhide``)
