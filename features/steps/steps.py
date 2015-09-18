@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2015 dnf-stack-ci Authors. See the AUTHORS file
+# Copyright 2015 ci-dnf-stack Authors. See the AUTHORS file
 # found in the top-level directory of this distribution and
-# at https://github.com/rholy/dnf-stack-ci/.
+# at https://github.com/rpm-software-management/ci-dnf-stack/.
 #
 # Licensed under the GNU General Public License; either version 2,
 # or (at your option) any later version. See the LICENSE file found
 # in the top-level directory of this distribution and at
-# https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
-# including this file, may be copied, modified, propagated, or
-# distributed except according to the terms contained in the LICENSE
-# file.
+# https://github.com/rpm-software-management/ci-dnf-stack. No part
+# of ci-dnf-stack, including this file, may be copied, modified,
+# propagated, or distributed except according to the terms contained
+# in the LICENSE file.
 
 """This module implements the feature steps."""
 
@@ -26,7 +26,7 @@ import copr
 
 
 def _run_ci(args, cwd=None):
-    """Run dnfstackci.py from command line.
+    """Run cidnfstack.py from command line.
 
     The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
     must be available.
@@ -40,11 +40,11 @@ def _run_ci(args, cwd=None):
 
     """
     subprocess.check_call(
-        ['python', os.path.abspath('dnfstackci.py')] + args, cwd=cwd)
+        ['python', os.path.abspath('cidnfstack.py')] + args, cwd=cwd)
 
 
 def _run_setup(name, chroots, repos=()):
-    """Run the setup command of dnfstackci.py from command line.
+    """Run the setup command of cidnfstack.py from command line.
 
     The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
     must be available.

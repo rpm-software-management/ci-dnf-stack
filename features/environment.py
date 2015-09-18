@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2015 dnf-stack-ci Authors. See the AUTHORS file
+# Copyright 2015 ci-dnf-stack Authors. See the AUTHORS file
 # found in the top-level directory of this distribution and
-# at https://github.com/rholy/dnf-stack-ci/.
+# at https://github.com/rpm-software-management/ci-dnf-stack/.
 #
 # Licensed under the GNU General Public License; either version 2,
 # or (at your option) any later version. See the LICENSE file found
 # in the top-level directory of this distribution and at
-# https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
-# including this file, may be copied, modified, propagated, or
-# distributed except according to the terms contained in the LICENSE
-# file.
+# https://github.com/rpm-software-management/ci-dnf-stack. No part
+# of ci-dnf-stack, including this file, may be copied, modified,
+# propagated, or distributed except according to the terms contained
+# in the LICENSE file.
 
 """This module provides the test fixture common to all the features.
 
@@ -41,7 +41,7 @@ attributes:
     or to the Mock's "config_opts['yum.conf']" option.
 :attr:`!rel_option` : :data:`types.UnicodeType` | :data:`None`
     A custom release number of the resulting RPMs passed to
-    dnf-stack-ci.
+    ci-dnf-stack.
 :attr:`!temp_coprs` : :class:`set[types.UnicodeType]`
     Names of the Copr projects to be removed after every scenario.
 
@@ -59,7 +59,7 @@ import tempfile
 import copr
 import pygit2
 
-import dnfstackci
+import cidnfstack
 
 
 def before_all(context):
@@ -79,7 +79,7 @@ def before_all(context):
 
     """
     signature = pygit2.Signature(
-        dnfstackci.NAME, '{}@example.com'.format(dnfstackci.NAME))
+        cidnfstack.NAME, '{}@example.com'.format(cidnfstack.NAME))
     context.titodn = tempfile.mkdtemp()
     dst_spec = os.path.join(context.titodn, b'foo.spec')
     shutil.copy(
@@ -100,7 +100,8 @@ def before_all(context):
     context.librepodn = tempfile.mkdtemp()
     try:
         libreporepo = pygit2.clone_repository(
-            'https://github.com/Tojaj/librepo.git', context.librepodn)
+            'https://github.com/rpm-software-management/librepo.git',
+            context.librepodn)
         libreporepo.reset(
             'd9bed0d9f96b505fb86a1adc50b3d6f8275fab93', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
@@ -109,7 +110,8 @@ def before_all(context):
     context.libcompsdn = tempfile.mkdtemp()
     try:
         libcompsrepo = pygit2.clone_repository(
-            'https://github.com/midnightercz/libcomps.git', context.libcompsdn)
+            'https://github.com/rpm-software-management/libcomps.git',
+            context.libcompsdn)
         libcompsrepo.reset(
             'eb966bc43097c0d00e154abe7f40f4d1d75fbcd1', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
