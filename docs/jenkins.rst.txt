@@ -1,16 +1,16 @@
 .. -*- coding: utf-8 -*-
 
-   Copyright 2015 dnf-stack-ci Authors. See the AUTHORS file
+   Copyright 2015 ci-dnf-stack Authors. See the AUTHORS file
    found in the top-level directory of this distribution and
-   at https://github.com/rholy/dnf-stack-ci/.
+   at https://github.com/rpm-software-management/ci-dnf-stack/.
 
    Licensed under the GNU General Public License; either version 2,
    or (at your option) any later version. See the LICENSE file found
    in the top-level directory of this distribution and at
-   https://github.com/rholy/dnf-stack-ci/. No part of dnf-stack-ci,
-   including this file, may be copied, modified, propagated, or
-   distributed except according to the terms contained in the LICENSE
-   file.
+   https://github.com/rpm-software-management/ci-dnf-stack. No part
+   of ci-dnf-stack, including this file, may be copied, modified,
+   propagated, or distributed except according to the terms contained
+   in the LICENSE file.
 
 
 Jenkins Setup
@@ -68,9 +68,9 @@ Job configuration
 
     #. Add SCM: *GIT*
 
-        #. Repository URL: ``https://github.com/rholy/dnf-stack-ci.git``
+        #. Repository URL: ``https://github.com/rpm-software-management/ci-dnf-stack.git``
 
-        #. Add: *Check out to a sub-directory*: ``dnf-stack-ci``
+        #. Add: *Check out to a sub-directory*: ``ci-dnf-stack``
 
 #. Build Triggers:
 
@@ -86,7 +86,7 @@ Job configuration
 
     #!/usr/bin/env bash
     cd dnf
-    python2 ../dnf-stack-ci/dnfstackci.py build dnf-nightly-fedora-rawhide tito
+    python2 ../ci-dnf-stack/cidnfstack.py build dnf-nightly-fedora-rawhide tito
 
 #. (optional) Post-build Actions
 
@@ -114,4 +114,4 @@ API token
 Server
 ------
 
-#. Create a new project ``dnf-nightly-fedora-rawhide`` (e.g. ``python2 dnfstackci.py setup --add-repository copr://rpmsoftwaremanagement/hawkey-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/librepo-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/libcomps-nightly-fedora-rawhide rawhide dnf-nightly-fedora-rawhide``)
+#. Create a new project ``dnf-nightly-fedora-rawhide`` (e.g. ``python2 cidnfstack.py setup --add-repository copr://rpmsoftwaremanagement/hawkey-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/librepo-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/libcomps-nightly-fedora-rawhide rawhide dnf-nightly-fedora-rawhide``)
