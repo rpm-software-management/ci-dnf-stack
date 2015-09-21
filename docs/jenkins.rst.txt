@@ -86,7 +86,7 @@ Job configuration
 
     #!/usr/bin/env bash
     cd dnf
-    python2 ../ci-dnf-stack/cidnfstack.py build dnf-nightly-fedora-rawhide tito
+    python2 ../ci-dnf-stack/cidnfstack.py build dnf-nightly tito
 
 #. (optional) Post-build Actions
 
@@ -114,4 +114,4 @@ API token
 Server
 ------
 
-#. Create a new project ``dnf-nightly-fedora-rawhide`` (e.g. ``python2 cidnfstack.py setup --add-repository copr://rpmsoftwaremanagement/hawkey-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/librepo-nightly-fedora-rawhide --add-repository copr://rpmsoftwaremanagement/libcomps-nightly-fedora-rawhide rawhide dnf-nightly-fedora-rawhide``)
+#. Create a new project ``dnf-nightly`` (e.g. ``python2 cidnfstack.py setup 22 23 rawhide dnf-nightly``)
