@@ -40,7 +40,7 @@ Job creation
 
 #. http://localhost:8080/view/All/newJob
 
-#. Item name: ``dnf-nightly-fedora-rawhide``
+#. Item name: ``dnf-nightly``
 
 #. Freestyle project
 
@@ -50,9 +50,9 @@ Job creation
 Job configuration
 -----------------
 
-#. Project name: ``dnf-nightly-fedora-rawhide``
+#. Project name: ``dnf-nightly``
 
-#. Description: ``Nightly builds of DNF for Fedora Rawhide.``
+#. Description: ``Nightly builds of DNF.``
 
 #. GitHub project: ``https://github.com/rpm-software-management/dnf/``
 
@@ -96,7 +96,7 @@ Job configuration
 
     #. Add post-build action: *Build other projects*
 
-        #. Projects to build: ``dnf-plugins-core-nightly-fedora-rawhide``
+        #. Projects to build: ``dnf-plugins-core-nightly``
 
     #. Email Notification
 
