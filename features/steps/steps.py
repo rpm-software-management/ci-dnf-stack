@@ -28,8 +28,8 @@ import copr
 def _run_ci(args, cwd=None):
     """Run cidnfstack.py from command line.
 
-    The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
-    must be available.
+    The "cp", "dirname", "echo", "git", "mv", "python", "rpmbuild",
+    "rm", "sed", "sh", "tito" and "xz" executables must be available.
 
     :param args: additional command line arguments
     :type args: list[unicode]
@@ -46,8 +46,8 @@ def _run_ci(args, cwd=None):
 def _run_setup(name, chroots, repos=()):
     """Run the setup command of cidnfstack.py from command line.
 
-    The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
-    must be available.
+    The "cp", "dirname", "echo", "git", "mv", "python", "rpmbuild",
+    "rm", "sed", "sh", "tito" and "xz" executables must be available.
 
     :param name: a name of the project
     :type name: unicode
@@ -70,8 +70,8 @@ def _run_setup(name, chroots, repos=()):
 def _prepare_copr(context, name):
     """Prepare a Copr project.
 
-    The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
-    must be available.
+    The "cp", "dirname", "echo", "git", "mv", "python", "rpmbuild",
+    "rm", "sed", "sh", "tito" and "xz" executables must be available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
@@ -124,8 +124,8 @@ def _configure_options(context):
 def _create_copr(context):
     """Create a Copr project.
 
-    The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
-    must be available.
+    The "cp", "dirname", "echo", "git", "mv", "python", "rpmbuild",
+    "rm", "sed", "sh", "tito" and "xz" executables must be available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context
@@ -143,8 +143,8 @@ def _create_copr(context):
 def _build_rpms(context, project):
     """Build RPMs of a project.
 
-    The "git", "python", "rpmbuild", "sh", "tito" and "xz" executables
-    must be available.
+    The "cp", "dirname", "echo", "git", "mv", "python", "rpmbuild",
+    "rm", "sed", "sh", "tito" and "xz" executables must be available.
 
     :param context: the context as described in the environment file
     :type context: behave.runner.Context

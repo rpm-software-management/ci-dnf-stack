@@ -91,7 +91,8 @@ The usage for "librepo" projects is::
       -h, --help         show this help message and exit
       --release RELEASE  a custom release number of the resulting RPMs
 
-    The "git", "rpmbuild", "sh" and "xz" executables must be available.
+    The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", "sed",
+    "sh" and "xz" executables must be available.
 
 The usage for "libcomps" projects is::
 
@@ -118,6 +119,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import contextlib
 import errno
 import fileinput
 import glob
@@ -170,30 +172,6 @@ def _remkdir(name, notexists_ok=False):
         if not notexists_ok or err.errno != errno.ENOENT:
             raise
     os.mkdir(name)
-
-
-def _substitute_file(filename, regex, replacement):
-    """Replace every occurrence of a regular expression in a file.
-
-    :param filename: a name of the file
-    :type filename: unicode
-    :param regex: the regular expression
-    :type regex: re.RegexObject
-    :param replacement: the replacement
-    :type replacement: str
-    :returns: the number of substituted lines
-    :rtype: int
-    :raises exceptions.IOError: if the file is not accessible
-
-    """
-    count = 0
-    for line in fileinput.input([filename], inplace=1):
-        if regex.match(line):
-            print(replacement)
-            count += 1
-            continue
-        print(line, end=b'')
-    return count
 
 
 def _log_call(executable, status, output, encoding='utf-8'):
@@ -260,6 +238,53 @@ def rpm_headers(dirname):
         yield filename, header
 
 
+def _set_release(filename, release):
+    """Set the "Release" tag in a spec file.
+
+    :param filename: a name of the spec file
+    :type filename: unicode
+    :param release: the new value of the tag
+    :type release: str
+    :raises exceptions.IOError: if the file is not accessible
+
+    """
+    count = 0
+    for line in fileinput.input([filename], inplace=1):
+        if re.match(br'^\s*Release\s*:\s*.+$', line, re.IGNORECASE):
+            print(b'Release: {}'.format(release))
+            count += 1
+            continue
+        print(line, end=b'')
+    assert count == 1, 'unexpected spec file'
+
+
+@contextlib.contextmanager
+def _move_srpms(source, destination):
+    """Move all the source RPMs from one directory to another one.
+
+    The function should be used as a context manager. On enter, all
+    SRPMs in the source directory are removed. On exit, all SRPMs in the
+    source directory are moved to the destination directory.
+
+    :param source: a name of the source directory
+    :type source: unicode
+    :param destination: a name of the destination directory
+    :type destination: unicode
+    :raises exceptions.OSError: if a SRPM cannot be removed
+    :raises exceptions.IOError: if a SRPM cannot be moved
+
+    """
+    for filename, header in rpm_headers(source):
+        if not header.isSource():
+            continue
+        os.remove(filename)
+    yield
+    for filename, header in rpm_headers(source):
+        if not header.isSource():
+            continue
+        shutil.move(filename, destination)
+
+
 def _build_srpm(spec, sources, destdn, release=None):
     """Build a SRPM from a spec file and source archives.
 
@@ -286,26 +311,15 @@ def _build_srpm(spec, sources, destdn, release=None):
 
     """
     if release:
-        count = _substitute_file(
-            spec, re.compile(br'^\s*Release\s*:\s*.+$', re.IGNORECASE),
-            b'Release: {}'.format(release))
-        assert count == 1, 'unexpected spec file'
+        _set_release(spec, release)
     rpmbuilddn = os.path.expanduser(os.path.join('~', 'rpmbuild'))
     for filename in glob.iglob(sources):
         shutil.move(filename, os.path.join(rpmbuilddn, 'SOURCES'))
-    srpmdn = os.path.join(rpmbuilddn, 'SRPMS')
-    for filename, header in rpm_headers(srpmdn):
-        if not header.isSource():
-            continue
-        os.remove(filename)
-    output = subprocess.check_output(
-        [b'rpmbuild', b'--quiet', b'-bs', b'--clean', b'--rmsource',
-         b'--rmspec', spec],
-        stderr=subprocess.STDOUT)
-    for filename, header in rpm_headers(srpmdn):
-        if not header.isSource():
-            continue
-        shutil.move(filename, destdn)
+    with _move_srpms(os.path.join(rpmbuilddn, 'SRPMS'), destdn):
+        output = subprocess.check_output(
+            [b'rpmbuild', b'--quiet', b'-bs', b'--clean', b'--rmsource',
+             b'--rmspec', spec],
+            stderr=subprocess.STDOUT)
     return output
 
 
@@ -347,8 +361,9 @@ def _build_tito(destdn, last_tag=True):
 def _build_librepo(spec, destdn, release=None):
     """Build a SRPM of a librepo project fork in the current work. dir.
 
-    The "git", "rpmbuild", "sh" and "xz" executables must be available.
-    The destination directory will be overwritten.
+    The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", "sed",
+    "sh" and "xz" executables must be available. The destination
+    directory will be overwritten.
 
     :param spec: the ID of the Fedora Git revision of the spec file
     :type spec: unicode
@@ -360,9 +375,9 @@ def _build_librepo(spec, destdn, release=None):
        downloaded or if the build cannot be prepared
     :raises urllib.ContentTooShortError: if the spec file of librepo
        cannot be downloaded
-    :raises exceptions.OSError: if the build cannot be prepared or if
-       an executable cannot be executed or if the destination directory
-       cannot be created or overwritten
+    :raises exceptions.OSError: if the destination directory cannot be
+       created or overwritten or if the build cannot be prepared or if
+       an executable cannot be executed
     :raises exceptions.ValueError: if the build fails
 
     """
@@ -370,35 +385,22 @@ def _build_librepo(spec, destdn, release=None):
     specurlpat = (
         'http://pkgs.fedoraproject.org/cgit/librepo.git/plain/librepo.spec?'
         'id={}')
-    specfn = urllib.urlretrieve(specurlpat.format(spec))[0]
-    # FIXME: https://github.com/Tojaj/librepo/issues/69
-    try:
-        gitrev = subprocess.check_output(
-            ['git', 'rev-parse', '--short', 'HEAD'], universal_newlines=True)
-    except subprocess.CalledProcessError as err:
-        _log_call(err.cmd[0], err.returncode, err.output)
-        raise ValueError('"utils/make_tarball.sh" failed')
-    gitrev = gitrev.rstrip('\n')
-    count = _substitute_file(
-        specfn, re.compile(br'^\s*%global\s+gitrev\s+.+$'),
-        b'%global gitrev {}'.format(gitrev))
-    assert count == 1, 'unexpected spec file'
-    try:
-        subprocess.check_output(
-            [b'sh', os.path.join(b'utils', b'make_tarball.sh'), gitrev],
-            stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as err:
-        _log_call(err.cmd[0], err.returncode, err.output)
-        raise ValueError('"utils/make_tarball.sh" failed')
+    specfn = 'librepo.spec'
+    urllib.urlretrieve(specurlpat.format(spec), specfn)
+    if release:
+        _set_release(specfn, release)
     _remkdir(destdn, notexists_ok=True)
-    try:
-        output = _build_srpm(
-            specfn, b'*-{}.tar.xz'.format(gitrev), destdn, release)
-    except subprocess.CalledProcessError as err:
-        _log_call('rpmbuild', err.returncode, err.output)
-        raise ValueError('"rpmbuild" failed')
-    else:
-        _log_call('rpmbuild', 0, output)
+    with _move_srpms('.', destdn):
+        try:
+            output = subprocess.check_output(
+                ['sh', os.path.join('utils', 'make_rpm.sh'), '.',
+                 '--srpm-only'],
+                stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as err:
+            _log_call('utils/make_tarball.sh', err.returncode, err.output)
+            raise ValueError('"utils/make_tarball.sh" failed')
+        else:
+            _log_call('utils/make_tarball.sh', 0, output)
 
 
 def _build_libcomps(destdn, release=None):
@@ -579,8 +581,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
           --release RELEASE  a custom release number of the
                              resulting RPMs
 
-        The "git", "rpmbuild", "sh" and "xz" executables must be
-        available.
+        The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm",
+        "sed", "sh" and "xz" executables must be available.
 
     The usage for "libcomps" projects is::
 
@@ -639,8 +641,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         '--release', help='a custom release number of the resulting RPMs')
     repoparser = projparser.add_parser(
         'librepo', description='Build a librepo project fork.',
-        epilog='The "git", "rpmbuild", "sh" and "xz" executables must be '
-               'available.',
+        epilog='The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", '
+               '"sed", "sh" and "xz" executables must be available.',
         parents=[commonparser])
     repoparser.add_argument(
         'fedrev', type=unicode, metavar='SPEC',
