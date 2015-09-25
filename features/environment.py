@@ -103,7 +103,7 @@ def before_all(context):
             'https://github.com/rpm-software-management/librepo.git',
             context.librepodn)
         libreporepo.reset(
-            'd9bed0d9f96b505fb86a1adc50b3d6f8275fab93', pygit2.GIT_RESET_HARD)
+            '159b80cb15ed33505a12e136db420d05c0e43c66', pygit2.GIT_RESET_HARD)
     # FIXME: https://github.com/libgit2/pygit2/issues/531
     except Exception as err:
         raise ValueError('Git repository creation failed: {}'.format(err))

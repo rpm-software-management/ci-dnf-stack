@@ -63,9 +63,15 @@ ci-dnf-stack works on Python 2.7.
 Following executables and Python modules are required to run
 ci-dnf-stack:
 
+- `cp executable <http://www.gnu.org/software/coreutils/>`_
+- `dirname executable <http://www.gnu.org/software/coreutils/>`_
+- `echo executable <http://www.gnu.org/software/coreutils/>`_
 - `git executable <http://git-scm.com/>`_
+- `mv executable <http://www.gnu.org/software/coreutils/>`_
 - `python executable <http://www.python.org/>`_
+- `rm executable <http://www.gnu.org/software/coreutils/>`_
 - `rpmbuild executable <http://www.rpm.org/>`_
+- `sed executable <http://sed.sourceforge.net/>`_
 - sh executable
 - `tito executable <http://rm-rf.ca/tito>`_
 - `xz executable <http://tukaani.org/xz/>`_
