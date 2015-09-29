@@ -449,10 +449,7 @@ def _build_in_copr(dirname, project):
        if the build fails
 
     """
-    srpms = {
-        fname: header[rpm.RPMTAG_N] for fname, header in rpm_headers(dirname)
-        if header.isSource()}
-    pkgs = list(srpms.keys())
+    pkgs = [fname for fname, hdr in rpm_headers(dirname) if hdr.isSource()]
     LOGGER.info('Building RPMs from %s...', ', '.join(pkgs))
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
     try:
@@ -487,11 +484,8 @@ def _build_in_copr(dirname, project):
             raise ValueError('Copr failed')
         if details.status == 'failed':
             success = False
-        # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259251
-        for chroot in details.data['chroots']:
-            for package in srpms.values():
-                urls.append('{}/{}/{:08}-{}'.format(
-                    details.results, chroot, build.build_id, package.decode()))
+        # See https://bugzilla.redhat.com/show_bug.cgi?id=1259251#c1
+        urls.extend(details.data['results_by_chroot'].values())
     LOGGER.info('Results of the build can be found at: %s', ', '.join(urls))
     if not success:
         raise ValueError('build failed')
