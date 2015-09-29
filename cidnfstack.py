@@ -473,7 +473,7 @@ def _build_in_copr(dirname, project):
         else:
             break
         time.sleep(10)
-    success, urls = True, []
+    success, url2status = True, {}
     for build in result.builds_list:
         # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
         try:
@@ -485,8 +485,11 @@ def _build_in_copr(dirname, project):
         if details.status == 'failed':
             success = False
         # See https://bugzilla.redhat.com/show_bug.cgi?id=1259251#c1
-        urls.extend(details.data['results_by_chroot'].values())
-    LOGGER.info('Results of the build can be found at: %s', ', '.join(urls))
+        url2status.update({
+            url: details.data['chroots'][chroot]
+            for chroot, url in details.data['results_by_chroot'].items()})
+    LOGGER.info('Results of the build can be found at: %s', ', '.join(
+        '{} ({})'.format(url, stt.upper()) for url, stt in url2status.items()))
     if not success:
         raise ValueError('build failed')
 
