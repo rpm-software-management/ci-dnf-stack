@@ -1,3 +1,4 @@
 #!/bin/bash
 
+httpd -k start
 behave -i $1 /behave/
