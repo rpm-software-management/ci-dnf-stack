@@ -17,7 +17,7 @@ def _right_decorator(item):
 
 def find_pkg(pkg):
   " Find the package file in the repository "
-  candidates = glob.glob('/repo/'+pkg+'*.rpm')
+  candidates = glob.glob('/repo/' + pkg + '*.rpm')
   if len(candidates) == 0:
     print("No candidates for: '{0}'".format(pkg))
   assert len(candidates) == 1
