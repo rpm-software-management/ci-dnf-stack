@@ -2,7 +2,6 @@
 
 from behave import *
 import os
-import sys
 import subprocess
 import glob
 import re
@@ -13,17 +12,17 @@ RPM_ERASE_FLAGS = ['-e']
 
 
 def _left_decorator(item):
-    " Removed packages "
+    """ Removed packages """
     return u'-' + item
 
 
 def _right_decorator(item):
-    " Installed packages "
+    """ Installed packages """
     return u'+' + item
 
 
 def find_pkg(pkg):
-    " Find the package file in the repository "
+    """ Find the package file in the repository """
     candidates = glob.glob('/repo/' + pkg + '*.rpm')
     if len(candidates) == 0:
         print("No candidates for: '{0}'".format(pkg))
@@ -32,44 +31,44 @@ def find_pkg(pkg):
 
 
 def decorate_rpm_packages(pkgs):
-    " Converts package names like TestA, TestB into absolute paths "
+    """ Converts package names like TestA, TestB into absolute paths """
     return [find_pkg(p) for p in pkgs]
 
 
 def get_rpm_package_list():
-    " Gets all installed packages in the system "
+    """ Gets all installed packages in the system """
     pkgstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}\n'])
     return pkgstr.splitlines()
 
 
 def get_rpm_package_version_list():
-    " Gets all installed packages in the system with version"
+    """ Gets all installed packages in the system with version"""
     pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}.%{VERSION}.%{RELEASE}\n'])
     return pkgverstr.splitlines()
 
 
 def diff_package_lists(a, b):
-    " Computes both left/right diff between lists `a` and `b` "
+    """ Computes both left/right diff between lists `a` and `b` """
     sa, sb = set(a), set(b)
     return (map(_left_decorator, list(sa - sb)),
         map(_right_decorator, list(sb - sa)))
 
 
 def package_version_lists(pkg, list_ver):
-    " Select package versions "
+    """ Select package versions """
     found_pkgs = [x for x in list_ver if re.search('^' + pkg, x)]
     assert len(found_pkgs) == 1
     return str(found_pkgs[0])
 
 
 def execute_dnf_command(cmd, reponame):
-    " Execute DNF command with default flags and the specified `reponame` enabled "
+    """ Execute DNF command with default flags and the specified `reponame` enabled """
     flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
     return subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
 
 
 def execute_rpm_command(pkg, action):
-    " Execute given action over specified pkg(s) "
+    """ Execute given action over specified pkg(s) """
     if not isinstance(pkg, list):
         pkg = [pkg]
     if action == "remove":
@@ -81,7 +80,7 @@ def execute_rpm_command(pkg, action):
 
 
 def piecewise_compare(a, b):
-    " Check if the two sequences are identical regardless of ordering "
+    """ Check if the two sequences are identical regardless of ordering """
     return sorted(a) == sorted(b)
 
 
@@ -91,7 +90,7 @@ def split(pkg):
 
 @given('I use the repository "{repo}"')
 def given_repo_condition(context, repo):
-    " :type context: behave.runner.Context "
+    """ :type context: behave.runner.Context """
     assert repo
     context.repo = repo
     assert os.path.exists('/var/www/html/repo/' + repo)
@@ -156,8 +155,7 @@ def then_package_state(context, pkg, state):
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
 
-
-    ''' This checks that installations/removals are always fully specified,
-    so that we always cover the requirements/expecations entirely '''
+    """ This checks that installations/removals are always fully specified,
+    so that we always cover the requirements/expecations entirely """
     if state != 'absent':
         assert not installed and not removed
