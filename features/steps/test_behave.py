@@ -124,7 +124,7 @@ def when_action_package(context, action, pkg, manager):
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded"]
+    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded']
     assert pkg
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
@@ -149,7 +149,12 @@ def then_package_state(context, pkg, state):
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver > pre_rpm_ver
-
+        if state == 'unupgraded':
+            pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
+            post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
+            assert post_rpm_ver
+            assert pre_rpm_ver
+            assert post_rpm_ver == pre_rpm_ver
 
 
     ''' This checks that installations/removals are always fully specified,
