@@ -125,7 +125,7 @@ def when_action_package(context, action, pkg, manager):
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded"]
+    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded']
     assert pkg
     pkgs = get_package_list()
     pkgs_ver = get_package_version_list()
@@ -151,6 +151,12 @@ def then_package_state(context, pkg, state):
             assert post_ver
             assert pre_ver
             assert post_ver > pre_ver
+        if state == 'unupgraded':
+            pre_ver = package_version_lists(n, context.pre_packages_version)
+            post_ver = package_version_lists(n, pkgs_ver)
+            assert post_ver
+            assert pre_ver
+            assert post_ver == pre_ver
 
 
 
