@@ -1,3 +1,0 @@
-rpm -qa --queryformat %{NAME}%{VERSION}\n
-
-
