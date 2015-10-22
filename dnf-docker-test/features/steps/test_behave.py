@@ -100,7 +100,7 @@ def given_repo_condition(context, repo):
 
 @when('I "{action}" a package "{pkg}" with "{manager}"')
 def when_action_package(context, action, pkg, manager):
-    assert action in ["install", "remove", "upgrade"]
+    assert action in ["install", "remove", "upgrade", "downgrade"]
     assert manager in ["rpm", "dnf", "pkcon"]
     assert pkg
     context.pre_packages = get_package_list()
@@ -121,7 +121,7 @@ def when_action_package(context, action, pkg, manager):
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded']
+    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded"]
     assert pkg
     pkgs = get_package_list()
     pkgs_ver = get_package_version_list()
@@ -153,6 +153,12 @@ def then_package_state(context, pkg, state):
             assert post_ver
             assert pre_ver
             assert post_ver == pre_ver
+        if state == 'downgraded':
+            pre_ver = package_version_lists(n, context.pre_packages_version)
+            post_ver = package_version_lists(n, pkgs_ver)
+            assert post_ver
+            assert pre_ver
+            assert post_ver < pre_ver
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
