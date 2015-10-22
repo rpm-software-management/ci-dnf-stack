@@ -12,8 +12,7 @@ ADD httpd.conf /etc/httpd/conf/
 
 ADD launch-test /usr/bin/
 
-VOLUME /repo 
+VOLUME /repo
 
-RUN echo -ne "[test]\nname=test\nbaseurl=file:///repo\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/test.repo
 
 ENTRYPOINT ["launch-test"]
