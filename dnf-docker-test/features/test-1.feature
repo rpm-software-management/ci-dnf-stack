@@ -1,5 +1,10 @@
 Feature: Richdeps/Behave test
- TestA requires TestB,
+ Version of packages: 1.0.0-1
+ TestA	Requires	TestB
+ TestD	Requires	TestE = 1.0.0-1
+ TestF	Requires	TestG >= 1.0.0-1, TestH = 1.0.0-1
+ TestI	Requires	TestJ >= 1.0.0-2 (cannot be installed)
+
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
