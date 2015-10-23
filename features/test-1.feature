@@ -1,5 +1,4 @@
 Feature: Richdeps/Behave test
- TestA requires TestB,
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
