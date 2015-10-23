@@ -15,6 +15,7 @@ Summary:	Richdeps test package
 License:	MIT
 URL:		http://127.0.0.1/
 Source0:	testdata.tar.gz
+BuildArch:  noarch
 
 #BuildRequires:
 
@@ -31,7 +32,7 @@ Richdeps test package
 %doc
 %changelog\n"""
 
-dir_name = "new_spec2"
+dir_name = "new_spec4"
 dir_rpm = "test-1"
 
 
@@ -43,12 +44,15 @@ def ensure_dir(f):
 def spec_creator():
     with open("spec.txt", 'r') as f:
         for line in f:
-            line = line.split()
+            line = line.split("\t")
             name = line[0]
             rel = line[1]
             try:
                 req = line[2]
                 spec_bases = SPEC_BASE
+                m=re.search('\w+', req)
+                if not m:
+                    spec_bases = re.sub("Requires:.*REQ.*", '', SPEC_BASE)
             except IndexError:
                 spec_bases = re.sub("Requires:.*REQ.*", '', SPEC_BASE)
                 req = ""
@@ -64,7 +68,7 @@ def create_rpm():
     subprocess.check_call(['cp ' + dir_name + '/* ~/rpmbuild/SPECS'], shell=True)
     subprocess.check_call(['rpmbuild ~/rpmbuild/SPECS/* -bb --rmspec'], shell=True)
     ensure_dir(dir_rpm)
-    subprocess.check_call(['mv ~/rpmbuild/RPMS/x86_64/* ' + dir_rpm], shell=True)
+    subprocess.check_call(['mv ~/rpmbuild/RPMS/noarch/* ' + dir_rpm], shell=True)
 
 
 def create_repo():

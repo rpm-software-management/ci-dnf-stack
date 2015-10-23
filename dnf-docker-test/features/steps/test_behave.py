@@ -67,6 +67,12 @@ def execute_dnf_command(cmd, reponame):
     return subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
 
 
+def execute_dnf_command_notinstall(cmd, reponame):
+    """ Execute DNF command with default flags and the specified `reponame` enabled """
+    flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
+    return subprocess.call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
+
+
 def execute_rpm_command(pkg, action):
     """ Execute given action over specified pkg(s) """
     if not isinstance(pkg, list):
@@ -100,7 +106,7 @@ def given_repo_condition(context, repo):
 
 @when('I "{action}" a package "{pkg}" with "{manager}"')
 def when_action_package(context, action, pkg, manager):
-    assert action in ["install", "remove", "upgrade", "downgrade"]
+    assert action in ["install", "remove", "upgrade", "downgrade", "notinstall"]
     assert manager in ["rpm", "dnf", "pkcon"]
     assert pkg
     context.pre_packages = get_package_list()
@@ -115,6 +121,9 @@ def when_action_package(context, action, pkg, manager):
                 execute_dnf_command([action], context.repo)
             else:
                 execute_dnf_command([action] + split(pkg), context.repo)
+        elif action == 'notinstall':
+            exit_code = execute_dnf_command_notinstall(["install"] + split(pkg), context.repo)
+            assert exit_code != 0
         else:
             execute_dnf_command([action] + split(pkg), context.repo)
 
@@ -128,8 +137,7 @@ def then_package_state(context, pkg, state):
     assert pkgs
     assert context.pre_packages
     removed, installed = diff_package_lists(context.pre_packages, pkgs)
-    upgraded = "a"
-    assert removed != None and installed != None
+    assert removed is not None and installed is not None
   
     for n in split(pkg):
         if state == 'installed':
