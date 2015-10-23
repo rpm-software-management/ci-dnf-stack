@@ -61,6 +61,13 @@ def package_version_lists(pkg, list_ver):
     return str(found_pkgs[0])
 
 
+def package_absence(pkg, list_ver):
+    """ Select package versions """
+    found_pkgs = [x for x in list_ver if re.search('^' + pkg, x)]
+    assert len(found_pkgs) == 0
+    return None
+
+
 def execute_dnf_command(cmd, reponame):
     """ Execute DNF command with default flags and the specified `reponame` enabled """
     flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
@@ -132,7 +139,7 @@ def when_action_package(context, action, pkg, manager):
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded"]
+    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded", 'present']
     assert pkg
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
@@ -151,6 +158,8 @@ def then_package_state(context, pkg, state):
         if state == 'absent':
             assert ('+' + n) not in installed
             assert ('-' + n) not in removed
+            post_absence = package_absence(n, pkgs_rpm_ver)
+            assert not post_absence
         if state == 'upgraded':
             pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
@@ -169,6 +178,11 @@ def then_package_state(context, pkg, state):
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver < pre_rpm_ver
+        if state == 'present':
+            assert ('+' + n) not in installed
+            assert ('-' + n) not in removed
+            post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
+            assert post_rpm_present
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
