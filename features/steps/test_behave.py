@@ -172,5 +172,5 @@ def then_package_state(context, pkg, state):
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
-    if state != 'absent':
+    if state in ["installed", "removed"]:
         assert not installed and not removed
