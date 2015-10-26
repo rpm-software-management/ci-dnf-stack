@@ -32,8 +32,8 @@ Richdeps test package
 %doc
 %changelog\n"""
 
-dir_name = "new_spec4"
-dir_rpm = "test-1"
+dir_name = "upgrade_1/spec"
+dir_rpm = "upgrade_1/build"
 
 
 def ensure_dir(f):
@@ -58,7 +58,7 @@ def spec_creator():
                 req = ""
             new_file = spec_bases.format(NAME=name, REL=rel, REQ=req)
             ensure_dir(dir_name)
-            new_spec = open(dir_name + "/" + name + ".spec", "w")
+            new_spec = open(dir_name + "/" + name + "-" + rel + ".spec", "w")
             new_spec.write(new_file)
 
 
