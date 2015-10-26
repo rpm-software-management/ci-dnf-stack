@@ -22,7 +22,7 @@ TestE	2
 TestF	2	TestG >= 1.0.0-2
 TestG	2
 TestH	2
-TestJ	2	
+TestJ	2
 TestK	2	TestJ >= 1.0.0-3
 TestM	2
 
