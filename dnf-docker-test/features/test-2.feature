@@ -23,6 +23,8 @@ TestF	2	TestG >= 1.0.0-2
 TestG	2
 TestH	2
 TestJ	2
+TestK	2	TestJ >= 1.0.0-3
+TestM	2
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
