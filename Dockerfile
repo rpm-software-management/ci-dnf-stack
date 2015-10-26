@@ -14,5 +14,4 @@ ADD launch-test /usr/bin/
 
 VOLUME /repo
 
-
 ENTRYPOINT ["launch-test"]
