@@ -1,6 +1,8 @@
 FROM fedora:rawhide
 MAINTAINER Jaroslav Mracek <jmracek@redhat.com>
 
+RUN dnf -y install dnf-plugins-core
+
 #RUN dnf -y upgrade dnf
 
 RUN dnf -y upgrade rpm

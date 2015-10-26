@@ -47,6 +47,14 @@ def get_package_version_list():
     return pkgverstr.splitlines()
 
 
+def get_package_dnf_version_list():
+    """ Gets all installed packages in the system with version"""
+    pkgverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--queryformat', '%{name}.%{version}.%{release}\n'])
+    pkgverstr = pkgverstr.splitlines()
+    return pkgverstr[1:]
+
+
+
 def diff_package_lists(a, b):
     """ Computes both left/right diff between lists `a` and `b` """
     sa, sb = set(a), set(b)
@@ -120,6 +128,8 @@ def when_action_package(context, action, pkg, manager):
     assert context.pre_packages
     context.pre_packages_version = get_package_version_list()
     assert context.pre_packages_version
+    context.pre_packages_dnf_version = get_package_dnf_version_list()
+    assert context.pre_packages_dnf_version
     if manager == 'rpm':
         execute_rpm_command(split(pkg), action)
     elif manager == 'dnf':
@@ -141,6 +151,7 @@ def then_package_state(context, pkg, state):
     assert pkg
     pkgs = get_package_list()
     pkgs_ver = get_package_version_list()
+    pkgs_dnf_ver = get_package_dnf_version_list()
     assert pkgs
     assert context.pre_packages
     removed, installed = diff_package_lists(context.pre_packages, pkgs)
@@ -150,14 +161,24 @@ def then_package_state(context, pkg, state):
         if state == 'installed':
             assert ('+' + n) in installed
             installed.remove('+' + n)
+            post_present = package_version_lists(n, pkgs_ver)
+            assert post_present
+            post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
+            assert post_dnf_present
         if state == 'removed':
             assert ('-' + n) in removed
             removed.remove('-' + n)
+            post_absence = package_absence(n, pkgs_ver)
+            assert not post_absence
+            post_dnf_absence = package_absence(n, pkgs_dnf_ver)
+            assert not post_dnf_absence
         if state == 'absent':
             assert ('+' + n) not in installed
             assert ('-' + n) not in removed
             post_absence = package_absence(n, pkgs_ver)
             assert not post_absence
+            post_dnf_absence = package_absence(n, pkgs_dnf_ver)
+            assert not post_dnf_absence
         if state == 'upgraded':
             pre_ver = package_version_lists(n, context.pre_packages_version)
             post_ver = package_version_lists(n, pkgs_ver)
@@ -181,6 +202,8 @@ def then_package_state(context, pkg, state):
             assert ('-' + n) not in removed
             post_present = package_version_lists(n, pkgs_ver)
             assert post_present
+            post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
+            assert post_dnf_present
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
