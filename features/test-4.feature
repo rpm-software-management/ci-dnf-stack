@@ -1,5 +1,4 @@
-Feature: Richdeps/Behave test
-upgrade test
+Feature: Richdeps/Behave test (downgrade test)
 
 Scenario: Install TestA from repository "upgrade_1"
  Given I use the repository "upgrade_1"

@@ -43,7 +43,7 @@ def get_rpm_package_list():
 
 def get_rpm_package_version_list():
     """ Gets all installed packages in the system with version"""
-    pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}.%{VERSION}.%{RELEASE}\n'])
+    pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}\n'])
     return pkgverstr.splitlines()
 
 
@@ -122,7 +122,7 @@ def given_repo_condition(context, repo):
 
 @when('I "{action}" a package "{pkg}" with "{manager}"')
 def when_action_package(context, action, pkg, manager):
-    assert action in ["install", "remove", "upgrade", "downgrade", "notinstall"]
+    assert action in ["install", "remove", "upgrade", "downgrade", "notinstall", "autoremove", "upgrade-to"]
     assert manager in ["rpm", "dnf", "pkcon"]
     assert pkg
     context.pre_rpm_packages = get_rpm_package_list()
@@ -142,13 +142,15 @@ def when_action_package(context, action, pkg, manager):
         elif action == 'notinstall':
             exit_code = execute_dnf_command_notinstall(["install"] + split(pkg), context.repo)
             assert exit_code != 0
+        elif action == 'autoremove':
+            subprocess.check_call(['dnf', '-y', action], stdout=subprocess.PIPE)
         else:
             execute_dnf_command([action] + split(pkg), context.repo)
 
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded", 'present']
+    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded", 'present', 'upgraded-to']
     assert pkg
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
@@ -193,8 +195,8 @@ def then_package_state(context, pkg, state):
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
         if state == 'downgraded':
-            pre_ver = package_version_lists(n, context.pre_rpm_packages_version)
-            post_ver = package_version_lists(n, pkgs_rpm_ver)
+            pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
+            post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver < pre_rpm_ver
@@ -205,6 +207,8 @@ def then_package_state(context, pkg, state):
             assert post_rpm_present
             post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
             assert post_dnf_present
+        if state == 'upgraded-to':
+            assert n in package_version_lists(n, pkgs_rpm_ver)
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
