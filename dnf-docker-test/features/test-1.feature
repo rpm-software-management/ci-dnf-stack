@@ -1,4 +1,5 @@
-Feature: Richdeps/Behave test
+Feature: Richdeps/Behave test (install remove test)
+
  Version of packages: 1.0.0-1
  TestA	Requires	TestB
  TestD	Requires	TestE = 1.0.0-1
