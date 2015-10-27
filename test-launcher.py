@@ -34,8 +34,10 @@ if len(sys.argv) == 1:
 repo = sys.argv[1]
 
 def container_run(repo):
-  r = os.path.join(os.getcwd(), 'repo') + ':/build:Z'
-  f = os.path.join(os.getcwd(), 'features') + ':/behave:Z'
+  work_dir = os.path.realpath(__file__)
+  r = os.path.join(os.path.dirname(work_dir), 'repo') + ':/build:Z'
+  f = os.path.join(os.path.dirname(work_dir), 'features') + ':/behave:Z'
+  g = os.path.join(os.path.dirname(work_dir), 'initial_settings') + ':/initial_settings:Z'
   DOCKER_RUN = ['docker', 'run', '-i', '-v', r, '-v', f, DOCKER_IMAGE, repo]
   print('Starting container:\n ' + blue_text(' '.join(DOCKER_RUN)) + '\n')
 
