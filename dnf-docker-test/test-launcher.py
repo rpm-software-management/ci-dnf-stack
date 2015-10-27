@@ -12,6 +12,10 @@ class Colors(object):
   FAIL = '\033[91m'
   ENDC = '\033[0m'
 
+def copy_log():
+  subprocess.check_call(['cp ci-dnf-stack.log ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), 'initial_settings')], shell=True)
+
+
 def color_text(c, text):
   return "{}{}{}".format(c, text, Colors.ENDC)
 
@@ -37,7 +41,7 @@ def container_run(repo):
   r = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'repo') + ':/build:Z'
   f = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'features') + ':/behave:Z'
   g = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'initial_settings') + ':/initial_settings:Z'
-  DOCKER_RUN = ['docker', 'run', '-i', '-v', r, '-v', f, DOCKER_IMAGE, repo]
+  DOCKER_RUN = ['docker', 'run', '-i', '-v', r, '-v', f, '-v', g, DOCKER_IMAGE, repo]
   print('Starting container:\n ' + blue_text(' '.join(DOCKER_RUN)) + '\n')
 
   rc = subprocess.call(DOCKER_RUN)
@@ -51,6 +55,7 @@ def container_run(repo):
 
 print('Running test:\n ' + blue_text(repo))
 
+copy_log()
 r = container_run(repo)
 if not r:
   print(green_text('OK'))
