@@ -49,7 +49,7 @@ def get_package_version_list():
 
 def get_package_dnf_version_list():
     """ Gets all installed packages in the system with version"""
-    pkgverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--queryformat', '%{name}.%{version}.%{release}\n'])
+    pkgverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '-C', '--queryformat', '%{name}.%{version}.%{release}\n'])
     pkgverstr = pkgverstr.splitlines()
     return pkgverstr[1:]
 
