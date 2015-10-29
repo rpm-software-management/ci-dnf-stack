@@ -12,6 +12,8 @@ ADD httpd.conf /etc/httpd/conf/
 
 ADD launch-test /usr/bin/
 
+RUN mkdir -p /temp/dnf.repo
+
 VOLUME /repo
 
 ENTRYPOINT ["launch-test"]
