@@ -16,6 +16,9 @@ COPY repo /var/www/html/repo/
 ADD httpd.conf /etc/httpd/conf/
 
 ADD launch-test /usr/bin/
+
+RUN mkdir -p /temp/dnf.repo
+
 VOLUME /repo
 
 #RUN echo -ne "[test]\nname=test\nbaseurl=file:///repo\nenabled=1\ngpgcheck=0" > /etc/yum.repos.d/test.repo
