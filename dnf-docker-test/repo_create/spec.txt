@@ -8,3 +8,7 @@ TestG	1
 TestH	1	
 TestI	1	TestJ >= 1.0.0-2
 TestJ	1	
+TestK	1	TestM
+TestL	1	TestM
+TestM	1	
+TestN	1	

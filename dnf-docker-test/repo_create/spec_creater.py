@@ -32,8 +32,8 @@ Richdeps test package
 %doc
 %changelog\n"""
 
-dir_name = "upgrade_1/spec"
-dir_rpm = "upgrade_1/build"
+dir_name = "test-1/spec"
+dir_rpm = "test-1/build"
 
 
 def ensure_dir(f):
