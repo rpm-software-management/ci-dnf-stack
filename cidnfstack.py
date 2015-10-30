@@ -605,6 +605,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
     argparser = argparse.ArgumentParser(
         description='Test the DNF stack.',
         epilog='If an error occurs the exit status is non-zero.')
+    argparser.add_argument(
+        '-dnf_docker_test', help='start the test of DNF command interface after copr build', action="store_true")
     cmdparser = argparser.add_subparsers(
         dest='command', help='the action to be performed')
     setupparser = cmdparser.add_parser(
@@ -737,6 +739,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     'failed. Hopefully Copr provides some details.')
         finally:
             shutil.rmtree(destdn)
+    if options.dnf_docker_test:
+        LOGGER.info("I am going to test it")
 
 
 if __name__ == '__main__':
