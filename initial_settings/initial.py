@@ -20,8 +20,14 @@ class DnfEnvSetup():
         version = list(set(version))
         assert len(version) == 1
         m = re.search("(dnf-\d+[.]\d+[.]\d+)(-\d+[.]git[.][a-zA-Z0-9.]+)", version[0])
-        dnf_in_repository = subprocess.check_output(['dnf', 'repoquery', '-q', m.group(1), '--queryformat',
+        dnfs_in_repository = subprocess.check_output(['dnf', 'repoquery', '-q', m.group(1), '--queryformat',
                                                      '%{name}-%{version}-%{release}']).splitlines()
+        dnf_in_repository = []
+        for pkg in dnfs_in_repository:
+            m1 = re.search(m.group(2), pkg)
+            if m1:
+                dnf_in_repository.append(pkg)
+        print dnf_in_repository
         dnf_in_repository = list(set(dnf_in_repository))
         assert len(dnf_in_repository) == 1
         return dnf_in_repository
