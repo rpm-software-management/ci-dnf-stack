@@ -1,5 +1,5 @@
 #!/bin/bash
 
 httpd -k start
-./initial_settings/initial.py
-behave -i $1 /behave/
+mv /etc/yum.repos.d/* /temp/dnf.repo/
+./initial_settings/initial.py && behave -i $1 /behave/
