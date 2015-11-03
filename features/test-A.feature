@@ -1,4 +1,4 @@
-Feature: Richdeps/Behave test (install remove test)
+Feature: DNF/Behave test (install remove test)
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"

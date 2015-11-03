@@ -1,4 +1,4 @@
-Feature: Richdeps/Behave test (upgrade test - ALL)
+Feature: DNF/Behave test (upgrade test - ALL)
 
 Scenario: Install packages from repository "test-1"
  Given I use the repository "test-1"
