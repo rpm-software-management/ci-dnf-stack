@@ -1,7 +1,8 @@
 #!/usr/bin/python -tt
 
-import re
 import subprocess
+from sys import argv
+import dnf
 
 
 class DnfEnvSetup():
@@ -11,26 +12,12 @@ class DnfEnvSetup():
                     '/results/rpmsoftwaremanagement/dnf-pull-requests/fedora-rawhide-x86_64/\nenabled=1\ngpgcheck=0')
 
     def dnf_version(self):
-        f = open("/initial_settings/ci-dnf-stack.log")
-        version = []
-        for line in f:
-            m = re.search("(dnf-\d+[.]\d+[.]\d+-\d+[.]git[.][a-zA-Z0-9.]+)[.]fc", line)
-            if m:
-                version.append(m.group(1))
-        version = list(set(version))
-        assert len(version) == 1
-        m = re.search("(dnf-\d+[.]\d+[.]\d+)(-\d+[.]git[.][a-zA-Z0-9.]+)", version[0])
-        dnfs_in_repository = subprocess.check_output(['dnf', 'repoquery', '-q', m.group(1), '--queryformat',
-                                                     '%{name}-%{version}-%{release}']).splitlines()
-        dnf_in_repository = []
-        for pkg in dnfs_in_repository:
-            m1 = re.search(m.group(2), pkg)
-            if m1:
-                dnf_in_repository.append(pkg)
-        print dnf_in_repository
-        dnf_in_repository = list(set(dnf_in_repository))
-        assert len(dnf_in_repository) == 1
-        return dnf_in_repository
+        with dnf.Base() as base:
+            base.read_all_repos()
+            base.fill_sack()
+            query = base.sack.query().filter(nevra__glob='dnf-' + argv[1] + '*').filter(arch__neq="src")
+            assert len(query) == 1
+            return str(query[0])
 
     def upgrade_dnf_dependencies_from_nightly(self):
         with open('/etc/yum.repos.d/dnf-nightly.repo', 'w') as f:
@@ -40,7 +27,7 @@ class DnfEnvSetup():
 
     def upgrade_dnf_from_pull_request(self, pkg):
         return subprocess.check_call(['dnf', 'upgrade-to', '-y', '--disablerepo=*',
-                                      '--enablerepo=dnf-pull-requests'] + pkg)
+                                      '--enablerepo=dnf-pull-requests', pkg])
 
 installer = DnfEnvSetup()
 installer.upgrade_dnf_dependencies_from_nightly()

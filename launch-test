@@ -2,4 +2,4 @@
 
 httpd -k start
 mv /etc/yum.repos.d/* /temp/dnf.repo/
-./initial_settings/initial.py && behave -i $1 /behave/
+python3 /initial_settings/initial.py $2 && behave -i $1 /behave/
