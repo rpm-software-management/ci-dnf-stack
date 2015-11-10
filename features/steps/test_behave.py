@@ -148,6 +148,18 @@ def when_action_package(context, action, pkg, manager):
             execute_dnf_command([action] + split(pkg), context.repo)
 
 
+@when('I execute command "{command}"')
+def when_action_command(context, command):
+    assert command
+    context.pre_rpm_packages = get_rpm_package_list()
+    assert context.pre_rpm_packages
+    context.pre_rpm_packages_version = get_rpm_package_version_list()
+    assert context.pre_rpm_packages_version
+    context.pre_dnf_packages_version = get_dnf_package_version_list()
+    assert context.pre_dnf_packages_version
+    subprocess.check_call(command, shell=True, stdout=subprocess.PIPE)
+
+
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
     assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded", 'present', 'upgraded-to']
