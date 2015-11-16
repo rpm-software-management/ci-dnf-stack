@@ -1,10 +1,8 @@
-FROM fedora:rawhide
+FROM fedora:23
 MAINTAINER Jaroslav Mracek <jmracek@redhat.com>
 
-RUN dnf -y install dnf-plugins-core\
-  && dnf -y upgrade rpm\
-  && dnf -y upgrade libsolv\
-  && dnf -y install httpd python-behave
+RUN dnf -y --setopt=deltarpm=false upgrade rpm libsolv\
+  && dnf -y --setopt=deltarpm=false install dnf-plugins-core httpd python-behave
 
 COPY repo /var/www/html/repo/
 
