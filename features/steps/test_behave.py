@@ -5,6 +5,7 @@ import os
 import subprocess
 import glob
 import re
+import shutil
 
 DNF_FLAGS = ['-y', '--disablerepo=*', '--nogpgcheck']
 RPM_INSTALL_FLAGS = ['-Uvh']
@@ -81,12 +82,6 @@ def execute_dnf_command(cmd, reponame):
     return subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
 
 
-def execute_dnf_command_notinstall(cmd, reponame):
-    """ Execute DNF command with default flags and the specified `reponame` enabled """
-    flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
-    return subprocess.call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
-
-
 def execute_rpm_command(pkg, action):
     """ Execute given action over specified pkg(s) """
     if not isinstance(pkg, list):
@@ -114,7 +109,11 @@ def given_repo_condition(context, repo):
     assert repo
     context.repo = repo
     assert os.path.exists('/var/www/html/repo/' + repo)
-    a = [os.remove(p) for p in os.listdir('/repo')]
+    for root, dirs, files in os.walk('/repo'):
+        for f in files:
+    	    os.unlink(os.path.join(root, f))
+        for d in dirs:
+    	    shutil.rmtree(os.path.join(root, d))
     subprocess.check_call(['cp -rs /var/www/html/repo/' + repo + '/* /repo/'], shell=True)
     with open('/etc/yum.repos.d/' + repo + '.repo', 'w') as f:
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
@@ -122,8 +121,6 @@ def given_repo_condition(context, repo):
 
 @when('I "{action}" a package "{pkg}" with "{manager}"')
 def when_action_package(context, action, pkg, manager):
-    assert action in ["install", "remove", "upgrade", "downgrade", "notinstall", "autoremove", "upgrade-to"]
-    assert manager in ["rpm", "dnf", "pkcon"]
     assert pkg
     context.pre_rpm_packages = get_rpm_package_list()
     assert context.pre_rpm_packages
@@ -132,24 +129,28 @@ def when_action_package(context, action, pkg, manager):
     context.pre_dnf_packages_version = get_dnf_package_version_list()
     assert context.pre_dnf_packages_version
     if manager == 'rpm':
-        execute_rpm_command(split(pkg), action)
+        if action in ["install", "remove"]:
+            execute_rpm_command(split(pkg), action)
+        else:
+            raise AssertionError('The action {} is not allowed parameter with rpm manager'.format(action))
     elif manager == 'dnf':
         if action == 'upgrade':
             if pkg == 'all':
                 execute_dnf_command([action], context.repo)
             else:
                 execute_dnf_command([action] + split(pkg), context.repo)
-        elif action == 'notinstall':
-            exit_code = execute_dnf_command_notinstall(["install"] + split(pkg), context.repo)
-            assert exit_code != 0
         elif action == 'autoremove':
             subprocess.check_call(['dnf', '-y', action], stdout=subprocess.PIPE)
-        else:
+        elif action in ["install", "remove", "downgrade", "upgrade-to"]:
             execute_dnf_command([action] + split(pkg), context.repo)
+        else:
+            raise AssertionError('The action {} is not allowed parameter with dnf manager'.format(action))
+    else:
+        raise AssertionError('The manager {} is not allowed parameter'.format(manager))
 
 
-@when('I execute command "{command}"')
-def when_action_command(context, command):
+@when('I execute command "{command}" with "{result}"')
+def when_action_command(context, command, result):
     assert command
     context.pre_rpm_packages = get_rpm_package_list()
     assert context.pre_rpm_packages
@@ -157,12 +158,19 @@ def when_action_command(context, command):
     assert context.pre_rpm_packages_version
     context.pre_dnf_packages_version = get_dnf_package_version_list()
     assert context.pre_dnf_packages_version
-    subprocess.check_call(command, shell=True, stdout=subprocess.PIPE)
+    cmd_output = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    context.cmd_rc = cmd_output.returncode
+    if result == "success":
+        assert context.cmd_rc == 0
+    elif result == "fail":
+        assert context.cmd_rc != 0
+    else:
+        raise AssertionError('The option {} is not allowed option for expected result of command. '
+                             'Allowed options are "success" and "fail"'.format(result))
 
 
 @then('package "{pkg}" should be "{state}"')
 def then_package_state(context, pkg, state):
-    assert state in ["installed", "removed", "absent", "upgraded", 'unupgraded', "downgraded", 'present', 'upgraded-to']
     assert pkg
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
@@ -180,49 +188,57 @@ def then_package_state(context, pkg, state):
             assert post_rpm_present
             post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
             assert post_dnf_present
-        if state == 'removed':
+        elif state == 'removed':
             assert ('-' + n) in removed
             removed.remove('-' + n)
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
             post_dnf_absence = package_absence(n, pkgs_dnf_ver)
             assert not post_dnf_absence
-        if state == 'absent':
+        elif state == 'absent':
             assert ('+' + n) not in installed
             assert ('-' + n) not in removed
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
             post_dnf_absence = package_absence(n, pkgs_dnf_ver)
             assert not post_dnf_absence
-        if state == 'upgraded':
+        elif state == 'upgraded':
             pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver > pre_rpm_ver
-        if state == 'unupgraded':
+        elif state == 'unupgraded':
             pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
-        if state == 'downgraded':
+        elif state == 'downgraded':
             pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
             assert post_rpm_ver < pre_rpm_ver
-        if state == 'present':
+        elif state == 'present':
             assert ('+' + n) not in installed
             assert ('-' + n) not in removed
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
             post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
             assert post_dnf_present
-        if state == 'upgraded-to':
+        elif state == 'upgraded-to':
             assert n in package_version_lists(n, pkgs_rpm_ver)
+        else:
+            raise AssertionError('The state {} is not allowed option for Then statement'.format(state))
 
     """ This checks that installations/removals are always fully specified,
     so that we always cover the requirements/expecations entirely """
     if state in ["installed", "removed"]:
         assert not installed and not removed
+
+
+@then('exit code of command should be equal to "{exit_code}"')
+def then_package_state(context, exit_code):
+    exit_code = int(exit_code)
+    assert context.cmd_rc == exit_code

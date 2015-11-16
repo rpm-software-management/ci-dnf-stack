@@ -9,5 +9,3 @@ Scenario: Upgrade-to packages from repository "upgrade_1"
  Given I use the repository "upgrade_1"
  When I "upgrade-to" a package "TestN-1.0.0-3" with "dnf"
  Then package "TestN-1.0.0-3" should be "upgraded-to"
-
-

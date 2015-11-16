@@ -10,16 +10,20 @@ Scenario: Install TestA from repository "test-1"
  When I "remove" a package "TestA" with "dnf"
  Then package "TestA, TestB" should be "removed"
  And package "TestC" should be "absent"
+
  When I "install" a package "TestD" with "dnf"
  Then package "TestD, TestE" should be "installed"
  When I "remove" a package "TestD" with "dnf"
  Then package "TestD, TestE" should be "removed"
+
  When I "install" a package "TestF" with "dnf"
  Then package "TestF, TestG, TestH" should be "installed"
  When I "remove" a package "TestF" with "dnf"
  Then package "TestF, TestG, TestH" should be "removed"
- When I "notinstall" a package "TestI" with "dnf"
+
+ When I execute command "dnf install -y TestI" with "fail"
  Then package "TestI, TestJ" should be "absent"
+
  When I "install" a package "TestK, TestL" with "dnf"
  Then package "TestK, TestL, TestM" should be "installed"
  When I "remove" a package "TestK" with "dnf"
