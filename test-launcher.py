@@ -32,22 +32,22 @@ def container_run(repo, pkg):
 
     if rc != 0:
         print('-'*80)
-        print("Container returned non zero value({})".format(rc))
+        print("FAIL: Container returned non zero value({})".format(rc))
         print('-'*80)
 
     return rc
 
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print("Missing configuration file argument")
+        sys.exit(1)
 
-if len(sys.argv) == 1:
-    print("Missing configuration file argument")
-    sys.exit(1)
+    repo = sys.argv[1]
 
-repo = sys.argv[1]
+    print('Running test:\n ' + repo)
 
-print('Running test:\n ' + repo)
-
-r = container_run(repo, get_dnf_testing_version())
-if not r:
-    print('OK')
-else:
-    exit(1)
+    r = container_run(repo, get_dnf_testing_version())
+    if not r:
+        print('OK')
+    else:
+        exit(1)

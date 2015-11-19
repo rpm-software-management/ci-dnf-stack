@@ -99,8 +99,8 @@ def piecewise_compare(a, b):
     return sorted(a) == sorted(b)
 
 
-def split(pkg):
-    return [p.strip() for p in pkg.split(',')]
+def split(pkgs):
+    return [p.strip() for p in pkgs.split(',')]
 
 
 @given('I use the repository "{repo}"')
@@ -119,9 +119,9 @@ def given_repo_condition(context, repo):
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
 
 
-@when('I "{action}" a package "{pkg}" with "{manager}"')
-def when_action_package(context, action, pkg, manager):
-    assert pkg
+@when('I "{action}" a package "{pkgs}" with "{manager}"')
+def when_action_package(context, action, pkgs, manager):
+    assert pkgs
     context.pre_rpm_packages = get_rpm_package_list()
     assert context.pre_rpm_packages
     context.pre_rpm_packages_version = get_rpm_package_version_list()
@@ -130,19 +130,19 @@ def when_action_package(context, action, pkg, manager):
     assert context.pre_dnf_packages_version
     if manager == 'rpm':
         if action in ["install", "remove"]:
-            execute_rpm_command(split(pkg), action)
+            execute_rpm_command(split(pkgs), action)
         else:
             raise AssertionError('The action {} is not allowed parameter with rpm manager'.format(action))
     elif manager == 'dnf':
         if action == 'upgrade':
-            if pkg == 'all':
+            if pkgs == 'all':
                 execute_dnf_command([action], context.repo)
             else:
-                execute_dnf_command([action] + split(pkg), context.repo)
+                execute_dnf_command([action] + split(pkgs), context.repo)
         elif action == 'autoremove':
             subprocess.check_call(['dnf', '-y', action], stdout=subprocess.PIPE)
         elif action in ["install", "remove", "downgrade", "upgrade-to"]:
-            execute_dnf_command([action] + split(pkg), context.repo)
+            execute_dnf_command([action] + split(pkgs), context.repo)
         else:
             raise AssertionError('The action {} is not allowed parameter with dnf manager'.format(action))
     else:
@@ -169,9 +169,9 @@ def when_action_command(context, command, result):
                              'Allowed options are "success" and "fail"'.format(result))
 
 
-@then('package "{pkg}" should be "{state}"')
-def then_package_state(context, pkg, state):
-    assert pkg
+@then('package "{pkgs}" should be "{state}"')
+def then_package_state(context, pkgs, state):
+    assert pkgs
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
     pkgs_dnf_ver = get_dnf_package_version_list()
@@ -180,7 +180,7 @@ def then_package_state(context, pkg, state):
     removed, installed = diff_package_lists(context.pre_rpm_packages, pkgs_rpm)
     assert removed is not None and installed is not None
   
-    for n in split(pkg):
+    for n in split(pkgs):
         if state == 'installed':
             assert ('+' + n) in installed
             installed.remove('+' + n)
