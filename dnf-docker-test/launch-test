@@ -1,0 +1,5 @@
+#!/bin/bash
+
+httpd -k start
+mv /etc/yum.repos.d/* /temp/dnf.repo/
+python3 /initial_settings/initial.py $2 && behave -i $1 /behave/
