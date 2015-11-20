@@ -1,5 +1,8 @@
-# richdeps-docker
-Docker image for testing rich dependencies in DNF/RPM using the Behave framework
+# dnf_docker_test
+The project originated from richdeps-docker (https://github.com/shaded-enmity
+/richdeps-docker). Docker image for testing rich dependencies and CLI in DNF/RPM
+using the Behave framework. The project was optimized for incorporation to
+ci-dnf-stack.
 
 ## Overview
 Each test runs in it's own container making it possible to run multiple tests
@@ -13,20 +16,21 @@ CLI arguments.
 
 Install:
 ```
-$ git clone https://github.com/shaded-enmity/richdeps-docker/
-$ cd richdeps-docker/
-$ docker pull pavelo/richdeps:1.0.4
+$ git clone https://github.com/j-mracek/dnf_docker_test.git
+$ cd dnf_docker_test/
+$ sudo dnf install docker python3-rpmfluff
+$ sudo docker build -t jmracek/dnftest:1.0.1 .
 ```
 
-Execute test:
+Execute test from directory with ci-dnf-stack.log:
 ```
-$ ./test-launcher.py test-1
+$ sudo ./some_path/test-launcher.py test-1
 ```
 
 To rebuild the Docker image you can use the following command:
 ```
-$ cd richdeps-docker/
-$ docker build -t pavelo/richdeps:1.0.4 .
+$ cd dnf_docker_test/
+$ sudo docker build -t jmracek/dnftest:1.0.1 .
 ```
 
 ## Binaries
@@ -53,8 +57,13 @@ Scenario: Install TestA from repository "test-1"
 
 ```
 
-Possible actions: install, remove
+Possible actions:
+    for rpm: install, remove
+    for dnf: install, remove, upgrade, upgrade (with package name: all), upbrade-to,
+    downgrade, autoremove
+    for command-line commands: unlimited
 
-Possible package managers: dnf, rpm (pkcon soonish)
+Possible package managers: dnf, rpm
 
-Possible states: installed, removed, absent
+Possible states: installed, removed, absent, upgraded, unupgraded, downgraded, present,
+upgraded-to
