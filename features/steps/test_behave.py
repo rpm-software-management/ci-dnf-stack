@@ -64,7 +64,7 @@ def diff_package_lists(a, b):
 
 def package_version_lists(pkg, list_ver):
     """ Select package versions """
-    found_pkgs = [x for x in list_ver if re.search('^' + pkg, x)]
+    found_pkgs = [x for x in list_ver if x.startswith(pkg)]
     assert len(found_pkgs) == 1
     return str(found_pkgs[0])
 
@@ -87,11 +87,11 @@ def execute_rpm_command(pkg, action):
     if not isinstance(pkg, list):
         pkg = [pkg]
     if action == "remove":
-        action = RPM_ERASE_FLAGS
+        rpm_command = RPM_ERASE_FLAGS
     elif action == "install":
-        action = RPM_INSTALL_FLAGS
+        rpm_command = RPM_INSTALL_FLAGS
         pkg = decorate_rpm_packages(pkg)
-    return subprocess.check_call(['rpm'] + action + pkg, stdout=subprocess.PIPE)
+    return subprocess.check_call(['rpm'] + rpm_command + pkg, stdout=subprocess.PIPE)
 
 
 def piecewise_compare(a, b):
