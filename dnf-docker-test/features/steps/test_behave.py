@@ -6,6 +6,7 @@ import subprocess
 import glob
 import re
 import shutil
+from time import sleep
 
 DNF_FLAGS = ['-y', '--disablerepo=*', '--nogpgcheck']
 RPM_INSTALL_FLAGS = ['-Uvh']
@@ -79,7 +80,8 @@ def package_absence(pkg, list_ver):
 def execute_dnf_command(cmd, reponame):
     """ Execute DNF command with default flags and the specified `reponame` enabled """
     flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
-    return subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
+    subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
+    return sleep(1)
 
 
 def execute_rpm_command(pkg, action):
@@ -91,7 +93,8 @@ def execute_rpm_command(pkg, action):
     elif action == "install":
         rpm_command = RPM_INSTALL_FLAGS
         pkg = decorate_rpm_packages(pkg)
-    return subprocess.check_call(['rpm'] + rpm_command + pkg, stdout=subprocess.PIPE)
+    subprocess.check_call(['rpm'] + rpm_command + pkg, stdout=subprocess.PIPE)
+    return sleep(1)
 
 
 def piecewise_compare(a, b):
@@ -141,6 +144,7 @@ def when_action_package(context, action, pkgs, manager):
                 execute_dnf_command([action] + split(pkgs), context.repo)
         elif action == 'autoremove':
             subprocess.check_call(['dnf', '-y', action], stdout=subprocess.PIPE)
+            sleep(1)
         elif action in ["install", "remove", "downgrade", "upgrade-to"]:
             execute_dnf_command([action] + split(pkgs), context.repo)
         else:
@@ -159,6 +163,7 @@ def when_action_command(context, command, result):
     context.pre_dnf_packages_version = get_dnf_package_version_list()
     assert context.pre_dnf_packages_version
     cmd_output = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    cmd_output.wait()
     context.cmd_rc = cmd_output.returncode
     if result == "success":
         assert context.cmd_rc == 0
