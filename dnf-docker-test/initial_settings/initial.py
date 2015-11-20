@@ -23,6 +23,8 @@ class DnfEnvSetup():
         with open('/etc/yum.repos.d/dnf-nightly.repo', 'w') as f:
             f.write('[dnf-nightly]\nname=dnf-nightly\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/'
                     'rpmsoftwaremanagement/dnf-nightly/fedora-rawhide-x86_64/\nenabled=1\ngpgcheck=0')
+        subprocess.check_call(['dnf', 'install', '--disablerepo=*', '--enablerepo=dnf-nightly', '--allowerasing', '-y',
+                               'dnf-plugins-core'])
         return subprocess.check_call(['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly'])
 
     def upgrade_dnf_from_pull_request(self, pkg):

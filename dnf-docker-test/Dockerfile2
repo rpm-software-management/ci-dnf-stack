@@ -2,16 +2,22 @@ FROM fedora:23
 MAINTAINER Jaroslav Mracek <jmracek@redhat.com>
 
 RUN dnf -y --setopt=deltarpm=false upgrade rpm libsolv\
-  && dnf -y --setopt=deltarpm=false install dnf-plugins-core httpd python-behave
+  && dnf -y --setopt=deltarpm=false install httpd python-behave
 
 COPY repo /var/www/html/repo/
+
+COPY initial_settings /initial_settings/
 
 ADD httpd.conf /etc/httpd/conf/
 
 ADD launch-test /usr/bin/
 
-RUN mkdir -p /temp/dnf.repo
+RUN mkdir -p /temp/dnf.repo\
+  && python3 /initial_settings/initial.py {}
 
 VOLUME /repo
+
+RUN rm -rf /var/cache/dnf/*\
+  && mv /etc/yum.repos.d/* /temp/dnf.repo/
 
 ENTRYPOINT ["launch-test"]
