@@ -29,7 +29,7 @@ class DnfEnvSetup():
 
     def upgrade_dnf_from_pull_request(self, pkg):
         return subprocess.check_call(['dnf', 'upgrade-to', '-y', '--disablerepo=*',
-                                      '--enablerepo=dnf-pull-requests', pkg])
+                                      '--enablerepo=dnf-pull-requests', '--allowerasing', pkg])
 
 installer = DnfEnvSetup()
 installer.upgrade_dnf_dependencies_from_nightly()
