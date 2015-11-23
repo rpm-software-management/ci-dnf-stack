@@ -9,7 +9,7 @@ class DnfEnvSetup():
     def create_repo(self):
         with open('/etc/yum.repos.d/dnf-pull-requests.repo', 'w') as f:
             f.write('[dnf-pull-requests]\nname=dnf-pull-requests\nbaseurl=https://copr-be.cloud.fedoraproject.org'
-                    '/results/rpmsoftwaremanagement/dnf-pull-requests/fedora-rawhide-x86_64/\nenabled=1\ngpgcheck=0')
+                    '/results/rpmsoftwaremanagement/dnf-pull-requests/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
 
     def dnf_version(self):
         with dnf.Base() as base:
@@ -22,7 +22,7 @@ class DnfEnvSetup():
     def upgrade_dnf_dependencies_from_nightly(self):
         with open('/etc/yum.repos.d/dnf-nightly.repo', 'w') as f:
             f.write('[dnf-nightly]\nname=dnf-nightly\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/'
-                    'rpmsoftwaremanagement/dnf-nightly/fedora-rawhide-x86_64/\nenabled=1\ngpgcheck=0')
+                    'rpmsoftwaremanagement/dnf-nightly/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
         subprocess.check_call(['dnf', 'install', '--disablerepo=*', '--enablerepo=dnf-nightly', '--allowerasing', '-y',
                                'dnf-plugins-core'])
         return subprocess.check_call(['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly'])

@@ -766,6 +766,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         docker_creator_dir = os.path.join(work_dir, 'dnf-docker-test/')
         docker_creator = subprocess.Popen(['docker build --no-cache -t jmracek/dnftest:1.0.2 ' + docker_creator_dir], stdout=subprocess.PIPE,
                                           stderr=subprocess.STDOUT, shell=True)
+        docker_creator.wait()
         stdout, _ = docker_creator.communicate()
         rc = docker_creator.returncode
         if rc:
