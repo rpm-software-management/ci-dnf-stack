@@ -770,13 +770,14 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         stdout, _ = docker_creator.communicate()
         rc = docker_creator.returncode
         if rc:
-            LOGGER.error("Dnf_docker_test build docker image failed")
+            LOGGER.error("Dnf_docker_test docker build image failed")
+            if stdout:
+                _log_call('dnf_docker_test build docker image', rc, stdout)
+            sys.exit("Dnf_docker_test docker build image failed")
         else:
             LOGGER.info("Dnf_docker_test build docker image successfully passed")
-        if stdout:
-            _log_call('dnf_docker_test build docker image', rc, stdout)
-
-
+            if stdout:
+                _log_call('dnf_docker_test build docker image', rc, stdout)
 
         docker_starter = os.path.join(work_dir, 'dnf-docker-test/test-launcher.py')
         feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
