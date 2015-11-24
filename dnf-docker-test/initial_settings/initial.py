@@ -16,7 +16,10 @@ class DnfEnvSetup():
             base.read_all_repos()
             base.fill_sack()
             query = base.sack.query().filter(nevra__glob='dnf-' + argv[1] + '*').filter(arch__neq="src")
-            assert len(query) == 1
+            assert len(query) > 0
+            for n in range(0,len(query)):
+                str(query[0]) == str(query[n])
+            print ("\nINFO: DNF will upgrade to {}\n".format(str(query[0])))
             return str(query[0])
 
     def upgrade_dnf_dependencies_from_nightly(self):
