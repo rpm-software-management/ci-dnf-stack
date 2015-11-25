@@ -1,8 +1,8 @@
-# dnf_docker_test
+# dnf_docker_test in ci-dnf-stack
 The project originated from richdeps-docker (https://github.com/shaded-enmity
 /richdeps-docker). Docker image for testing rich dependencies and CLI in DNF/RPM
 using the Behave framework. The project was optimized for incorporation to
-ci-dnf-stack.
+ci-dnf-stack as a module.
 
 ## Overview
 Each test runs in it's own container making it possible to run multiple tests
@@ -12,25 +12,30 @@ correctly. In overall the system is written in such a way that it is package-man
 agnostic, so plugging in tests for `PackageKit` is just about providing correct
 CLI arguments.
 
-## Usage
+## Execute
 
-Install:
+Tests can be executed using -dnf_docker_test option for ci-dnf-stack
+
+Example:
 ```
-$ git clone https://github.com/j-mracek/dnf_docker_test.git
-$ cd dnf_docker_test/
+python2 ../ci-dnf-stack/cidnfstack.py -dnf_docker_test build dnf-pull-requests tito)
+```
+
+## Requirements for Jenkins
+
 $ sudo dnf install docker python3-rpmfluff
-$ sudo docker build -t jmracek/dnftest:1.0.1 .
-```
+$ sudo usermod -a -G dockerroot jenkins
 
-Execute test from directory with ci-dnf-stack.log:
-```
-$ sudo ./some_path/test-launcher.py test-1
-```
+Edit /etc/sysconfig/docker where replace line OPTIONS='--selinux-enabled' with OPTIONS='--selinux-enabled -G dockerroot'
+
+Reboot server or logout and login jenkins user (ensure that jenkins user is able to see membership in dockerroot group)
+
+## Notes
 
 To rebuild the Docker image you can use the following command:
 ```
 $ cd dnf_docker_test/
-$ sudo docker build -t jmracek/dnftest:1.0.1 .
+$ sudo docker build -t jmracek/dnftest:1.0.2 .
 ```
 
 ## Binaries
