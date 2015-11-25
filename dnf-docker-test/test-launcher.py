@@ -7,10 +7,7 @@ import subprocess
 DOCKER_IMAGE='jmracek/dnftest:1.0.2'
 
 def container_run(repo):
-    work_dir = os.path.realpath(__file__)
-    rp = os.path.join(os.path.dirname(work_dir), 'repo') + ':/build:Z'
-    fp = os.path.join(os.path.dirname(work_dir), 'features') + ':/behave:Z'
-    docker_run = ['docker', 'run', '-i', '-v', rp, '-v', fp, DOCKER_IMAGE, repo]
+    docker_run = ['docker', 'run', '-i', DOCKER_IMAGE, repo]
     print('Starting container:\n ' + (' '.join(docker_run)) + '\n')
 
     rc = subprocess.call(docker_run)
