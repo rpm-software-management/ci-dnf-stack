@@ -11,11 +11,11 @@ class DnfEnvSetup():
             f.write('[dnf-pull-requests]\nname=dnf-pull-requests\nbaseurl=https://copr-be.cloud.fedoraproject.org'
                     '/results/rpmsoftwaremanagement/dnf-pull-requests/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
 
-    def dnf_version(self):
+    def dnf_version(self, package_name):
         with dnf.Base() as base:
             base.read_all_repos()
             base.fill_sack()
-            query = base.sack.query().filter(nevra__glob='dnf-' + argv[1] + '*').filter(arch__neq="src")
+            query = base.sack.query().filter(nevra__glob=package_name + argv[1] + '*').filter(arch__neq="src")
             assert len(query) > 0
             for n in range(0,len(query)):
                 str(query[0]) == str(query[n])
@@ -31,10 +31,11 @@ class DnfEnvSetup():
         return subprocess.check_call(['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly'])
 
     def upgrade_dnf_from_pull_request(self, pkg):
-        return subprocess.check_call(['dnf', 'upgrade-to', '-y', '--disablerepo=*',
+        return subprocess.check_call(['dnf', 'install', '-y', '--disablerepo=*',
                                       '--enablerepo=dnf-pull-requests', '--allowerasing', pkg])
 
 installer = DnfEnvSetup()
 installer.upgrade_dnf_dependencies_from_nightly()
 installer.create_repo()
-installer.upgrade_dnf_from_pull_request(installer.dnf_version())
+installer.upgrade_dnf_from_pull_request(installer.dnf_version('dnf-'))
+installer.upgrade_dnf_from_pull_request(installer.dnf_version('python2-dnf-'))

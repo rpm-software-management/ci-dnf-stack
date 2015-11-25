@@ -77,10 +77,10 @@ def package_absence(pkg, list_ver):
     return None
 
 
-def execute_dnf_command(cmd, reponame):
+def execute_dnf_command(dnf_command_version, cmd, reponame):
     """ Execute DNF command with default flags and the specified `reponame` enabled """
     flags = DNF_FLAGS + ['--enablerepo={0}'.format(reponame)]
-    subprocess.check_call(['dnf'] + flags + cmd, stdout=subprocess.PIPE)
+    subprocess.check_call([dnf_command_version] + flags + cmd, stdout=subprocess.PIPE)
     return sleep(1)
 
 
@@ -102,7 +102,7 @@ def piecewise_compare(a, b):
     return sorted(a) == sorted(b)
 
 
-def split(pkgs):
+def splitter(pkgs):
     return [p.strip() for p in pkgs.split(',')]
 
 
@@ -114,9 +114,9 @@ def given_repo_condition(context, repo):
     assert os.path.exists('/var/www/html/repo/' + repo)
     for root, dirs, files in os.walk('/repo'):
         for f in files:
-    	    os.unlink(os.path.join(root, f))
+            os.unlink(os.path.join(root, f))
         for d in dirs:
-    	    shutil.rmtree(os.path.join(root, d))
+            shutil.rmtree(os.path.join(root, d))
     subprocess.check_call(['cp -rs /var/www/html/repo/' + repo + '/* /repo/'], shell=True)
     with open('/etc/yum.repos.d/' + repo + '.repo', 'w') as f:
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
@@ -131,29 +131,32 @@ def when_action_package(context, action, pkgs, manager):
     assert context.pre_rpm_packages_version
     context.pre_dnf_packages_version = get_dnf_package_version_list()
     assert context.pre_dnf_packages_version
+    dnf_command_version = context.config.userdata['dnf_command_version']
+    assert dnf_command_version
     if manager == 'rpm':
         if action in ["install", "remove"]:
-            execute_rpm_command(split(pkgs), action)
+            execute_rpm_command(splitter(pkgs), action)
         else:
             raise AssertionError('The action {} is not allowed parameter with rpm manager'.format(action))
     elif manager == 'dnf':
         if action == 'upgrade':
             if pkgs == 'all':
-                execute_dnf_command([action], context.repo)
+                execute_dnf_command(dnf_command_version, [action], context.repo)
             else:
-                execute_dnf_command([action] + split(pkgs), context.repo)
+                execute_dnf_command(dnf_command_version, [action] + splitter(pkgs), context.repo)
         elif action == 'autoremove':
-            subprocess.check_call(['dnf', '-y', action], stdout=subprocess.PIPE)
+            subprocess.check_call([dnf_command_version, '-y', action],
+                                  stdout=subprocess.PIPE)
             sleep(1)
         elif action in ["install", "remove", "downgrade", "upgrade-to"]:
-            execute_dnf_command([action] + split(pkgs), context.repo)
+            execute_dnf_command(dnf_command_version, [action] + splitter(pkgs), context.repo)
         else:
             raise AssertionError('The action {} is not allowed parameter with dnf manager'.format(action))
     else:
         raise AssertionError('The manager {} is not allowed parameter'.format(manager))
 
 
-@when('I execute command "{command}" with "{result}"')
+@when('I execute dnf command "{command}" with "{result}"')
 def when_action_command(context, command, result):
     assert command
     context.pre_rpm_packages = get_rpm_package_list()
@@ -162,7 +165,10 @@ def when_action_command(context, command, result):
     assert context.pre_rpm_packages_version
     context.pre_dnf_packages_version = get_dnf_package_version_list()
     assert context.pre_dnf_packages_version
-    cmd_output = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    dnf_command_version = context.config.userdata['dnf_command_version']
+    assert dnf_command_version
+    dnf_command_version = dnf_command_version + " " + command
+    cmd_output = subprocess.Popen(dnf_command_version, shell=True, stdout=subprocess.PIPE)
     cmd_output.wait()
     context.cmd_rc = cmd_output.returncode
     if result == "success":
@@ -185,7 +191,7 @@ def then_package_state(context, pkgs, state):
     removed, installed = diff_package_lists(context.pre_rpm_packages, pkgs_rpm)
     assert removed is not None and installed is not None
   
-    for n in split(pkgs):
+    for n in splitter(pkgs):
         if state == 'installed':
             assert ('+' + n) in installed
             installed.remove('+' + n)

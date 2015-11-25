@@ -770,14 +770,14 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         stdout, _ = docker_creator.communicate()
         rc = docker_creator.returncode
         if rc:
-            LOGGER.error("Dnf_docker_test docker build image failed")
+            LOGGER.error("Dnf_docker_test build of docker image failed")
             if stdout:
-                _log_call('dnf_docker_test build docker image', rc, stdout)
-            sys.exit("Dnf_docker_test docker build image failed")
+                _log_call('Dnf_docker_test build of docker image', rc, stdout)
+            sys.exit("Dnf_docker_test build of docker image failed")
         else:
-            LOGGER.info("Dnf_docker_test build docker image successfully passed")
+            LOGGER.info("Dnf_docker_test build of docker image successfully passed")
             if stdout:
-                _log_call('dnf_docker_test build docker image', rc, stdout)
+                _log_call('Dnf_docker_test build of docker image', rc, stdout)
 
         docker_starter = os.path.join(work_dir, 'dnf-docker-test/test-launcher.py')
         feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
@@ -785,18 +785,19 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         failed_tests = 0
         passed_tests = 0
         for test in sorted(tests):
-            docker_run = subprocess.Popen(['python2', docker_starter, test], stdout=subprocess.PIPE,
-                                                            stderr=subprocess.STDOUT)
-            stdout, _ = docker_run.communicate()
-            rc = docker_run.returncode
-            if rc:
-                failed_tests += 1
-                LOGGER.error("Dnf_docker_test {} failed".format(test))
-            else:
-                passed_tests += 1
-                LOGGER.info("Dnf_docker_test {} successfully passed".format(test))
-            if stdout:
-                _log_call('dnf_docker_test ' + test, rc, stdout)
+            for dnf_command_version in ['dnf', 'dnf-2', 'dnf-3']:
+                docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version], stdout=subprocess.PIPE,
+                                                                stderr=subprocess.STDOUT)
+                stdout, _ = docker_run.communicate()
+                rc = docker_run.returncode
+                if rc:
+                    failed_tests += 1
+                    LOGGER.error("Dnf_docker_test {} using {} failed".format(test, dnf_command_version))
+                else:
+                    passed_tests += 1
+                    LOGGER.info("Dnf_docker_test {} using {} successfully passed".format(test,  dnf_command_version))
+                if stdout:
+                    _log_call('Dnf_docker_test ' + test + ' using ' + dnf_command_version, rc, stdout)
         if failed_tests:
             LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
             sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
