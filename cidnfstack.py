@@ -494,6 +494,18 @@ def _build_in_copr(dirname, project):
         raise ValueError('build failed')
 
 
+def get_dnf_testing_version():
+    f = open("ci-dnf-stack.log")
+    version = []
+    for line in f:
+        m = re.search('"src_version": "([^"]*)[.][\w]+"', line)
+        if m:
+            version.append(m.group(1))
+    version = set(version)
+    assert len(version) == 1
+    return version.pop()
+
+
 def _start_commandline():  # pylint: disable=R0912,R0915
     """Start the command line interface to the program.
 
@@ -605,6 +617,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
     argparser = argparse.ArgumentParser(
         description='Test the DNF stack.',
         epilog='If an error occurs the exit status is non-zero.')
+    argparser.add_argument(
+        '-dnf_docker_test', help='start the test of DNF command interface after copr build', action="store_true")
     cmdparser = argparser.add_subparsers(
         dest='command', help='the action to be performed')
     setupparser = cmdparser.add_parser(
@@ -738,6 +752,56 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         finally:
             shutil.rmtree(destdn)
 
+    if options.dnf_docker_test:
+        LOGGER.info("Dnf_docker_test was initiated")
+        LOGGER.info("Docker image builder was initiated")
+        dnf_version = get_dnf_testing_version()
+        work_dir = os.path.dirname(os.path.realpath(__file__))
+        docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile2')
+        docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
+        with open(docker_input_file, 'r') as docker_in:
+            docker_in = docker_in.read().format(dnf_version)
+            with open(docker_output_file, 'w') as docker_output:
+                docker_output.write(docker_in)
+        docker_creator_dir = os.path.join(work_dir, 'dnf-docker-test/')
+        docker_creator = subprocess.Popen(['docker build --no-cache -t jmracek/dnftest:1.0.2 ' + docker_creator_dir], stdout=subprocess.PIPE,
+                                          stderr=subprocess.STDOUT, shell=True)
+        docker_creator.wait()
+        stdout, _ = docker_creator.communicate()
+        rc = docker_creator.returncode
+        if rc:
+            LOGGER.error("Dnf_docker_test build of docker image failed")
+            if stdout:
+                _log_call('Dnf_docker_test build of docker image', rc, stdout)
+            sys.exit("Dnf_docker_test build of docker image failed")
+        else:
+            LOGGER.info("Dnf_docker_test build of docker image successfully passed")
+            if stdout:
+                _log_call('Dnf_docker_test build of docker image', rc, stdout)
 
+        docker_starter = os.path.join(work_dir, 'dnf-docker-test/test-launcher.py')
+        feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
+        tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
+        failed_tests = 0
+        passed_tests = 0
+        for test in sorted(tests):
+            for dnf_command_version in ['dnf', 'dnf-2', 'dnf-3']:
+                docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version], stdout=subprocess.PIPE,
+                                                                stderr=subprocess.STDOUT)
+                stdout, _ = docker_run.communicate()
+                rc = docker_run.returncode
+                if rc:
+                    failed_tests += 1
+                    LOGGER.error("Dnf_docker_test {} using {} failed".format(test, dnf_command_version))
+                else:
+                    passed_tests += 1
+                    LOGGER.info("Dnf_docker_test {} using {} successfully passed".format(test,  dnf_command_version))
+                if stdout:
+                    _log_call('Dnf_docker_test ' + test + ' using ' + dnf_command_version, rc, stdout)
+        if failed_tests:
+            LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
+            sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
+        else:
+            LOGGER.info("Dnf_docker_test successfully passed {} tests".format(passed_tests))
 if __name__ == '__main__':
     _start_commandline()

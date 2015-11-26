@@ -9,7 +9,7 @@ Scenario: Install packages from repository "test-1"
 
 Scenario: Upgrade ALL from repository "upgrade_1"
  Given I use the repository "upgrade_1"
- When I "upgrade" a package "all" with "dnf"
+ When I execute dnf command "upgrade -y '*'" with "success"
  Then package "TestA, TestB, TestD, TestE, TestF, TestG, TestH, TestM" should be "upgraded"
  And package "TestC" should be "absent"
  And package "TestK" should be "unupgraded"
