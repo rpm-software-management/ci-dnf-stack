@@ -1,4 +1,4 @@
-Feature: DNF/Behave test (upgrade test - single packages)
+Feature: DNF/Behave test (autoremove test)
 
 Scenario: Install packages from repository "test-1"
  Given I use the repository "test-1"
