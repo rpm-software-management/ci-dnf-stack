@@ -759,13 +759,14 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         work_dir = os.path.dirname(os.path.realpath(__file__))
         docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile2')
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
+        docker_image = 'jmracek/dnftest:1.0.2'
         with open(docker_input_file, 'r') as docker_in:
             docker_in = docker_in.read().format(dnf_version)
             with open(docker_output_file, 'w') as docker_output:
                 docker_output.write(docker_in)
         docker_creator_dir = os.path.join(work_dir, 'dnf-docker-test/')
-        docker_creator = subprocess.Popen(['docker build --no-cache -t jmracek/dnftest:1.0.2 ' + docker_creator_dir], stdout=subprocess.PIPE,
-                                          stderr=subprocess.STDOUT, shell=True)
+        docker_creator = subprocess.Popen(['docker', 'build', '--no-cache', '-t', docker_image, docker_creator_dir],
+                                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         docker_creator.wait()
         stdout, _ = docker_creator.communicate()
         rc = docker_creator.returncode
@@ -786,8 +787,9 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         passed_tests = 0
         for test in sorted(tests):
             for dnf_command_version in ['dnf', 'dnf-2', 'dnf-3']:
-                docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version], stdout=subprocess.PIPE,
-                                                                stderr=subprocess.STDOUT)
+                docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version, docker_image],
+                                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                docker_run.wait()
                 stdout, _ = docker_run.communicate()
                 rc = docker_run.returncode
                 if rc:
@@ -798,10 +800,24 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     LOGGER.info("Dnf_docker_test {} using {} successfully passed".format(test,  dnf_command_version))
                 if stdout:
                     _log_call('Dnf_docker_test ' + test + ' using ' + dnf_command_version, rc, stdout)
+
+        LOGGER.info("Removal of docker image initiated")
+        image_cleaner = subprocess.Popen(['docker', 'rmi', '-f', docker_image], stdout=subprocess.PIPE,
+                                         stderr=subprocess.STDOUT)
+        image_cleaner.wait()
+        stdout, _ = image_cleaner.communicate()
+        rc = image_cleaner.returncode
+        if rc:
+            LOGGER.error("Removal of docker image " + docker_image + " failed")
+        else:
+            LOGGER.info("Removal of docker image " + docker_image + " succeed")
+        if stdout:
+            _log_call('Removal of docker image ' + docker_image, rc, stdout)
         if failed_tests:
             LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
             sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
         else:
             LOGGER.info("Dnf_docker_test successfully passed {} tests".format(passed_tests))
+
 if __name__ == '__main__':
     _start_commandline()
