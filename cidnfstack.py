@@ -786,7 +786,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         failed_tests = 0
         passed_tests = 0
         for test in sorted(tests):
-            for dnf_command_version in ['dnf', 'dnf-2', 'dnf-3']:
+            for dnf_command_version in ['dnf-2', 'dnf-3']:
                 docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version, docker_image],
                                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 docker_run.wait()
