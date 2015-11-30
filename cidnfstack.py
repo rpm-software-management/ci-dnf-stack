@@ -495,6 +495,9 @@ def _build_in_copr(dirname, project):
 
 
 def get_dnf_testing_version():
+    """ Parse ci-dnf-stack.log logfile for package that was built by Copr.
+
+    """
     f = open("ci-dnf-stack.log")
     version = []
     for line in f:
@@ -780,26 +783,27 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             if stdout:
                 _log_call('Dnf_docker_test build of docker image', rc, stdout)
 
-        docker_starter = os.path.join(work_dir, 'dnf-docker-test/test-launcher.py')
         feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
         tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
         failed_tests = 0
         passed_tests = 0
         for test in sorted(tests):
             for dnf_command_version in ['dnf-2', 'dnf-3']:
-                docker_run = subprocess.Popen(['python2', docker_starter, test, dnf_command_version, docker_image],
-                                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                LOGGER.info('Running test: ' + test)
+                docker_run = ['docker', 'run', '--rm', '-i', docker_image, test, dnf_command_version]
+                LOGGER.info('Starting container: ' + (' '.join(docker_run)))
+                docker_run = subprocess.Popen(docker_run, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 docker_run.wait()
                 stdout, _ = docker_run.communicate()
                 rc = docker_run.returncode
-                if rc:
-                    failed_tests += 1
-                    LOGGER.error("Dnf_docker_test {} using {} failed".format(test, dnf_command_version))
-                else:
-                    passed_tests += 1
-                    LOGGER.info("Dnf_docker_test {} using {} successfully passed".format(test,  dnf_command_version))
                 if stdout:
                     _log_call('Dnf_docker_test ' + test + ' using ' + dnf_command_version, rc, stdout)
+                if rc:
+                    failed_tests += 1
+                    LOGGER.error("Dnf_docker_test {} using {} failed \n ".format(test, dnf_command_version))
+                else:
+                    passed_tests += 1
+                    LOGGER.info("Dnf_docker_test {} using {} successfully passed \n ".format(test,  dnf_command_version))
 
         LOGGER.info("Removal of docker image initiated")
         image_cleaner = subprocess.Popen(['docker', 'rmi', '-f', docker_image], stdout=subprocess.PIPE,
@@ -807,12 +811,13 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         image_cleaner.wait()
         stdout, _ = image_cleaner.communicate()
         rc = image_cleaner.returncode
-        if rc:
-            LOGGER.error("Removal of docker image " + docker_image + " failed")
-        else:
-            LOGGER.info("Removal of docker image " + docker_image + " succeed")
         if stdout:
             _log_call('Removal of docker image ' + docker_image, rc, stdout)
+        if rc:
+            LOGGER.error("Removal of docker image " + docker_image + " failed \n")
+        else:
+            LOGGER.info("Removal of docker image " + docker_image + " succeed \n")
+
         if failed_tests:
             LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
             sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
