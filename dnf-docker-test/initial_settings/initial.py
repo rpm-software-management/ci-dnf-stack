@@ -28,11 +28,12 @@ class DnfEnvSetup():
                     'rpmsoftwaremanagement/dnf-nightly/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
         subprocess.check_call(['dnf', 'install', '--disablerepo=*', '--enablerepo=dnf-nightly', '--allowerasing', '-y',
                                'dnf-plugins-core'])
-        return subprocess.check_call(['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly'])
+        return subprocess.check_call(['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly', '--best'])
 
     def upgrade_dnf_from_pull_request(self, pkg):
-        return subprocess.check_call(['dnf', 'install', '-y', '--disablerepo=*',
-                                      '--enablerepo=dnf-pull-requests', '--allowerasing', pkg])
+        subprocess.check_call(['dnf', 'install', '-y', '--disablerepo=*', '--enablerepo=dnf-pull-requests',
+                               '--allowerasing', pkg])
+        subprocess.check_call(['rpm', '-q', pkg])
 
 installer = DnfEnvSetup()
 installer.upgrade_dnf_dependencies_from_nightly()
