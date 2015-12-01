@@ -14,11 +14,11 @@ CLI arguments.
 
 ## Execute
 
-Tests can be executed using --dnf_docker_test option for ci-dnf-stack
+Tests can be executed using --dnf_docker_test option or -ddd for ci-dnf-stack
 
 Example:
 ```
-python2 ../ci-dnf-stack/cidnfstack.py --dnf_docker_test build dnf-pull-requests tito)
+python2 ../ci-dnf-stack/cidnfstack.py build --dnf_docker_test dnf-pull-requests tito)
 ```
 
 ## Requirements for Jenkins

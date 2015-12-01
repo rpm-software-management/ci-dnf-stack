@@ -620,8 +620,6 @@ def _start_commandline():  # pylint: disable=R0912,R0915
     argparser = argparse.ArgumentParser(
         description='Test the DNF stack.',
         epilog='If an error occurs the exit status is non-zero.')
-    argparser.add_argument(
-        '--dnf_docker_test', help='start the test of DNF command interface after copr build', action="store_true")
     cmdparser = argparser.add_subparsers(
         dest='command', help='the action to be performed')
     setupparser = cmdparser.add_parser(
@@ -642,6 +640,9 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         'build',
         description='Build RPMs of a project from the checkout in the current '
                     'working directory in Copr.')
+    buildparser.add_argument(
+        '-ddd', '--dnf_docker_test', help='start the test of DNF command interface after copr build',
+        action="store_true")
     buildparser.add_argument(
         'copr', type=unicode, metavar='PROJECT',
         help='the name of the Copr project')
@@ -764,7 +765,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
         docker_image = 'jmracek/dnftest:1.0.2'
         with open(docker_input_file, 'r') as docker_in:
-            docker_in = docker_in.read().format(dnf_version)
+            docker_in = docker_in.read().format(version=dnf_version, copr_project=options.copr)
             with open(docker_output_file, 'w') as docker_output:
                 docker_output.write(docker_in)
         docker_creator_dir = os.path.join(work_dir, 'dnf-docker-test/')

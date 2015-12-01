@@ -37,6 +37,7 @@ class DnfEnvSetup():
 
 installer = DnfEnvSetup()
 installer.upgrade_dnf_dependencies_from_nightly()
-installer.create_repo()
-installer.upgrade_dnf_from_pull_request(installer.dnf_version('dnf-'))
-installer.upgrade_dnf_from_pull_request(installer.dnf_version('python2-dnf-'))
+if argv[2] != 'dnf-nightly':
+    installer.create_repo()
+    installer.upgrade_dnf_from_pull_request(installer.dnf_version('dnf-'))
+    installer.upgrade_dnf_from_pull_request(installer.dnf_version('python2-dnf-'))

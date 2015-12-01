@@ -15,7 +15,7 @@ ADD httpd.conf /etc/httpd/conf/
 ADD launch-test /usr/bin/
 
 RUN mkdir -p /temp/dnf.repo\
-  && python3 /initial_settings/initial.py {}
+  && python3 /initial_settings/initial.py {version} {copr_project}
 
 VOLUME /repo
 
