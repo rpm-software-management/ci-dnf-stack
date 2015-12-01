@@ -501,7 +501,7 @@ def get_dnf_testing_version():
     f = open("ci-dnf-stack.log")
     version = []
     for line in f:
-        m = re.search('"src_version": "([^"]*)[.][\w]+"', line)
+        m = re.search('"src_pkg": "[^"]*[/]([^"]*)[.][\w]+[.][\w]+[.][\w]+"', line)
         if m:
             version.append(m.group(1))
     version = set(version)
@@ -763,7 +763,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         work_dir = os.path.dirname(os.path.realpath(__file__))
         docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile2')
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
-        docker_image = 'jmracek/dnftest:1.0.2'
+        docker_image = 'jmracek/' + options.copr + ':1.0.2'
         with open(docker_input_file, 'r') as docker_in:
             docker_in = docker_in.read().format(version=dnf_version, copr_project=options.copr)
             with open(docker_output_file, 'w') as docker_output:
