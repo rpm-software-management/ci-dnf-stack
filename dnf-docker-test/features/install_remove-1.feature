@@ -32,3 +32,18 @@ Scenario: Install TestA from repository "test-1"
  And package "TestL, TestM" should be "unupgraded"
  When I "remove" a package "TestL" with "dnf"
  Then package "TestL, TestM" should be "removed"
+
+ When I execute "dnf" command "install -y ProvideA" with "success"
+ Then package "TestO, TestC" should be "installed"
+ When I execute "dnf" command "remove -y ProvideA" with "success"
+ Then package "TestO, TestC" should be "removed"
+
+ When I execute "dnf" command "install -y http://127.0.0.1/repo/test-1/TestB-1.0.0-1.noarch.rpm" with "success"
+ Then package "TestB" should be "installed"
+ When I execute "dnf" command "remove -y TestB" with "success"
+ Then package "TestB" should be "removed"
+
+ When I execute "dnf" command "install -y /var/www/html/repo/test-1/TestB-1.0.0-1.noarch.rpm" with "success"
+ Then package "TestB" should be "installed"
+ When I execute "dnf" command "remove -y TestB" with "success"
+ Then package "TestB" should be "removed"

@@ -86,6 +86,11 @@ rpm = SimpleRpmBuild('TestN', '1.0.0', '1', ['noarch'])
 pkgs.append(rpm)
 # Used in upgrade tests
 
+rpm = SimpleRpmBuild('TestO', '1.0.0', '1', ['noarch'])
+rpm.add_requires('TestC')
+rpm.add_provides('ProvideA')
+pkgs.append(rpm)
+
 repo = YumRepoBuild(pkgs)
 
 repo.repoDir = repo_dir
