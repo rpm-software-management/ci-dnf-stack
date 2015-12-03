@@ -46,13 +46,14 @@ def get_rpm_package_list():
 def get_rpm_package_version_list():
     """ Gets all installed packages in the system with version"""
     pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}\n'])
-    return pkgverstr.splitlines()
-
-
-def get_dnf_package_version_list():
-    """ Gets all installed packages in the system with version to check that dnf has same data about installed packages"""
-    pkgverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '-Cq', '--queryformat', '%{name}.%{version}.%{release}\n'])
+    dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '-Cq', '--queryformat',
+                                         '%{name}-%{version}-%{release}'])
     pkgverstr = pkgverstr.splitlines()
+    comparerpmver = pkgverstr
+    for pkg in comparerpmver:
+        if pkg.decode().startswith('gpg-pubkey'):
+            comparerpmver.remove(pkg)
+    assert sorted(comparerpmver) == sorted(dnfverstr.splitlines())
     return pkgverstr
 
 
@@ -129,8 +130,6 @@ def when_action_package(context, action, pkgs, manager):
     assert context.pre_rpm_packages
     context.pre_rpm_packages_version = get_rpm_package_version_list()
     assert context.pre_rpm_packages_version
-    context.pre_dnf_packages_version = get_dnf_package_version_list()
-    assert context.pre_dnf_packages_version
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
     if manager == 'rpm':
@@ -163,8 +162,6 @@ def when_action_command(context, type_of_command, command, result):
     assert context.pre_rpm_packages
     context.pre_rpm_packages_version = get_rpm_package_version_list()
     assert context.pre_rpm_packages_version
-    context.pre_dnf_packages_version = get_dnf_package_version_list()
-    assert context.pre_dnf_packages_version
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
     if type_of_command == 'dnf':
@@ -191,7 +188,6 @@ def then_package_state(context, pkgs, state):
     assert pkgs
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
-    pkgs_dnf_ver = get_dnf_package_version_list()
     assert pkgs_rpm
     assert context.pre_rpm_packages
     removed, installed = diff_package_lists(context.pre_rpm_packages, pkgs_rpm)
@@ -203,22 +199,16 @@ def then_package_state(context, pkgs, state):
             installed.remove('+' + n)
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
-            post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
-            assert post_dnf_present
         elif state == 'removed':
             assert ('-' + n) in removed
             removed.remove('-' + n)
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
-            post_dnf_absence = package_absence(n, pkgs_dnf_ver)
-            assert not post_dnf_absence
         elif state == 'absent':
             assert ('+' + n) not in installed
             assert ('-' + n) not in removed
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
-            post_dnf_absence = package_absence(n, pkgs_dnf_ver)
-            assert not post_dnf_absence
         elif state == 'upgraded':
             pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
@@ -242,8 +232,7 @@ def then_package_state(context, pkgs, state):
             assert ('-' + n) not in removed
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
-            post_dnf_present = package_version_lists(n, pkgs_dnf_ver)
-            assert post_dnf_present
+
         elif state == 'upgraded-to':
             assert n in package_version_lists(n, pkgs_rpm_ver)
         else:
