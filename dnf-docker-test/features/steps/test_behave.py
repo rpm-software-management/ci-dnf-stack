@@ -156,8 +156,8 @@ def when_action_package(context, action, pkgs, manager):
         raise AssertionError('The manager {} is not allowed parameter'.format(manager))
 
 
-@when('I execute dnf command "{command}" with "{result}"')
-def when_action_command(context, command, result):
+@when('I execute "{type_of_command}" command "{command}" with "{result}"')
+def when_action_command(context, type_of_command, command, result):
     assert command
     context.pre_rpm_packages = get_rpm_package_list()
     assert context.pre_rpm_packages
@@ -167,7 +167,13 @@ def when_action_command(context, command, result):
     assert context.pre_dnf_packages_version
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
-    dnf_command_version = dnf_command_version + " " + command
+    if type_of_command == 'dnf':
+        dnf_command_version = dnf_command_version + " " + command
+    elif type_of_command == 'bash':
+        dnf_command_version = command
+    else:
+        raise AssertionError('The type of command {} is not allowed parameter (allowed: dnf, bash)'
+                             .format(type_of_command))
     cmd_output = subprocess.Popen(dnf_command_version, shell=True, stdout=subprocess.PIPE)
     cmd_output.wait()
     context.cmd_rc = cmd_output.returncode

@@ -2,7 +2,7 @@ Feature: DNF/Behave test (install remove test)
 
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
- When I execute dnf command "install -y TestA" with "success"
+ When I execute "dnf" command "install -y TestA" with "success"
  Then package "TestA, TestB" should be "installed"
  And package "TestC" should be "absent"
  When I "install" a package "TestA" with "dnf"
@@ -21,7 +21,7 @@ Scenario: Install TestA from repository "test-1"
  When I "remove" a package "TestF" with "dnf"
  Then package "TestF, TestG, TestH" should be "removed"
 
- When I execute dnf command "install -y TestI" with "fail"
+ When I execute "dnf" command "install -y TestI" with "fail"
  Then package "TestI, TestJ" should be "absent"
 
  When I "install" a package "TestK, TestL" with "dnf"
