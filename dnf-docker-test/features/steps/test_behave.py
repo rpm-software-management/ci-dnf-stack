@@ -195,8 +195,8 @@ def then_package_state(context, pkgs, state):
   
     for n in splitter(pkgs):
         if state == 'installed':
-            assert ('+' + n) in installed
-            installed.remove('+' + n)
+            assert ('+' + n.split('-', 1)[0]) in installed
+            installed.remove('+' + n.split('-', 1)[0])
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
         elif state == 'removed':
@@ -210,7 +210,7 @@ def then_package_state(context, pkgs, state):
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
         elif state == 'upgraded':
-            pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
+            pre_rpm_ver = package_version_lists(n.split('-', 1)[0], context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
@@ -222,7 +222,7 @@ def then_package_state(context, pkgs, state):
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
         elif state == 'downgraded':
-            pre_rpm_ver = package_version_lists(n, context.pre_rpm_packages_version)
+            pre_rpm_ver = package_version_lists(n.split('-', 1)[0], context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver

@@ -18,3 +18,10 @@ Scenario: Upgrade packages from repository "upgrade_1"
 
  When I "install" a package "TestI, TestK" with "dnf"
  Then package "TestI, TestJ, TestK, TestM" should be "installed"
+
+ When I execute "dnf" command "install -y TestN-1.0.0-3" with "success"
+ Then package "TestN-1.0.0-3" should be "installed"
+ When I execute "dnf" command "install -y TestN-1.0.0-4" with "success"
+ Then package "TestN-1.0.0-4" should be "upgraded"
+ When I execute "dnf" command "install -y TestN-1.0.0-2" with "success"
+ Then package "TestN-1.0.0-2" should be "downgraded"
