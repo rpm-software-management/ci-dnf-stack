@@ -5,6 +5,7 @@ from rpmfluff import YumRepoBuild
 from pathlib import PurePosixPath
 import os
 import shutil
+import subprocess
 
 work_file = os.path.realpath(__file__)
 work_dir = os.path.dirname(work_file)
@@ -156,5 +157,9 @@ repo.repoDir = repo_dir
 repo.make("noarch")
 
 shutil.rmtree(temp_dir)
+
+shutil.rmtree(os.path.join(repo_dir, 'repodata'))
+
+subprocess.check_call(['createrepo_c', '-g', work_dir + '/comps-f23.xml', repo_dir])
 
 print("DNF repo is located at %s" % repo.repoDir)

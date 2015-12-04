@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+        
+  <group>
+   <id>testgroup</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>Testgroup</name>
+   <description>Testgroup is used as a testgroup</description>
+    <packagelist>
+      <packagereq type="mandatory">TestA</packagereq>
+      <packagereq type="default">TestC</packagereq>
+      <packagereq type="optional">TestD</packagereq>
+    </packagelist>
+  </group>
+</comps>

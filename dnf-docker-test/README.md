@@ -23,7 +23,7 @@ python2 ../ci-dnf-stack/cidnfstack.py build --dnf_docker_test dnf-pull-requests 
 
 ## Requirements for Jenkins
 
-$ sudo dnf install docker python3-rpmfluff
+$ sudo dnf install docker
 $ sudo usermod -a -G dockerroot jenkins
 
 Edit /etc/sysconfig/docker where replace line OPTIONS='--selinux-enabled' with OPTIONS='--selinux-enabled -G dockerroot'
@@ -36,6 +36,12 @@ To rebuild the Docker image you can use the following command:
 ```
 $ cd dnf_docker_test/
 $ sudo docker build -t jmracek/dnftest:1.0.2 .
+```
+To rebuild test-1 or upgrade_1 repository run test-1.py or upgrade_1.py in
+dnf-docker-test/repo_create directory. It requires following components:
+python3-rpmfluff, createrepo, createrepo_c that can be installed as follows:
+```
+$ sudo dnf install python3-rpmfluff createrepo createrepo_c
 ```
 
 ## Binaries
