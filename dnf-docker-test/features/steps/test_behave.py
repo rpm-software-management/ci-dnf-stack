@@ -172,7 +172,7 @@ def when_action_command(context, type_of_command, command, result):
         raise AssertionError('The type of command {} is not allowed parameter (allowed: dnf, bash)'
                              .format(type_of_command))
     cmd_output = subprocess.Popen(dnf_command_version, shell=True, stdout=subprocess.PIPE)
-    cmd_output.wait()
+    context.cmd_output = cmd_output.communicate()[0].decode()
     context.cmd_rc = cmd_output.returncode
     if result == "success":
         assert context.cmd_rc == 0
@@ -248,3 +248,17 @@ def then_package_state(context, pkgs, state):
 def then_package_state(context, exit_code):
     exit_code = int(exit_code)
     assert context.cmd_rc == exit_code
+
+@then('output line should "{state}" with "{line_start}"')
+def then_package_state(context, state, line_start):
+    counter = 0
+    for line in context.cmd_output.split('\n'):
+        if line.startswith(line_start):
+            counter += 1
+    if state == 'start':
+        assert counter > 0
+    elif state == 'not start':
+        assert counter == 0
+    else:
+        raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start'
+                             .format(state))
