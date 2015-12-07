@@ -48,6 +48,13 @@ Scenario: Install TestA from repository "test-1"
  When I execute "dnf" command "remove -y TestB" with "success"
  Then package "TestB" should be "removed"
 
+ When I execute "bash" command "mkdir /test" with "success"
+ When I execute "bash" command "cp /var/www/html/repo/test-1/Test{A,B,C}*.rpm /test" with "success"
+ When I execute "dnf" command "install -y /test/*.rpm" with "success"
+ Then package "TestA, TestB, TestC" should be "installed"
+ When I execute "dnf" command "remove -y TestA TestB TestC" with "success"
+ Then package "TestA, TestB, TestC" should be "removed"
+
  When I execute "dnf" command "install -y @Testgroup" with "success"
  Then package "TestA, TestB, TestC" should be "installed"
  When I execute "dnf" command "install -y TestD" with "success"
