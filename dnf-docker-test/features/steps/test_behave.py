@@ -260,5 +260,16 @@ def then_package_state(context, state, line_start):
     elif state == 'not start':
         assert counter == 0
     else:
-        raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start'
+        raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start)'
+                             .format(state))
+
+@then('file "{path_to_file}" should be "{state}"')
+def then_file_presence(context, path_to_file, state):
+    file_existence = os.path.isfile(path_to_file)
+    if state == 'present':
+        assert file_existence
+    elif state == 'absent':
+        assert not file_existence
+    else:
+        raise AssertionError('The state {} is not allowed option for Then statement (allowed present, absent)'
                              .format(state))
