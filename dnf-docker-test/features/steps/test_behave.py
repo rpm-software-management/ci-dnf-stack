@@ -171,9 +171,12 @@ def when_action_command(context, type_of_command, command, result):
     else:
         raise AssertionError('The type of command {} is not allowed parameter (allowed: dnf, bash)'
                              .format(type_of_command))
-    cmd_output = subprocess.Popen(dnf_command_version, shell=True, stdout=subprocess.PIPE)
-    context.cmd_output = cmd_output.communicate()[0].decode()
+    cmd_output = subprocess.Popen(
+            dnf_command_version, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    context.cmd_output, context.cmd_error = cmd_output.communicate()
     context.cmd_rc = cmd_output.returncode
+    if context.cmd_error:
+        print(context.cmd_error)
     if result == "success":
         assert context.cmd_rc == 0
     elif result == "fail":
@@ -249,10 +252,17 @@ def then_package_state(context, exit_code):
     exit_code = int(exit_code)
     assert context.cmd_rc == exit_code
 
-@then('output line should "{state}" with "{line_start}"')
-def then_package_state(context, state, line_start):
+@then('line from "{std_message}" should "{state}" with "{line_start}"')
+def then_package_state(context, std_message, state, line_start):
     counter = 0
-    for line in context.cmd_output.split('\n'):
+    if std_message == 'stdout':
+        message = context.cmd_output.split('\n')
+    elif std_message == 'stderr':
+        message = context.cmd_error.split('\n')
+    else:
+        raise AssertionError('The std_message {} is not allowed option for Then statement (allowed stdout, stderr)'
+                             .format(std_message))
+    for line in message:
         if line.startswith(line_start):
             counter += 1
     if state == 'start':
@@ -262,6 +272,7 @@ def then_package_state(context, state, line_start):
     else:
         raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start)'
                              .format(state))
+
 
 @then('file "{path_to_file}" should be "{state}"')
 def then_file_presence(context, path_to_file, state):

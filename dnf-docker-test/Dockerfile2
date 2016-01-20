@@ -2,7 +2,7 @@ FROM fedora:23
 MAINTAINER Jaroslav Mracek <jmracek@redhat.com>
 
 RUN dnf -y --setopt=deltarpm=false upgrade rpm libsolv\
-  && dnf -y --setopt=deltarpm=false install httpd python-behave python2-dnf
+  && dnf -y --setopt=deltarpm=false install httpd python-behave python2-dnf python-dnf-plugins-core
 
 COPY repo /var/www/html/repo/
 
