@@ -1,4 +1,4 @@
 #!/bin/bash
 
 httpd -k start
-behave -i $1 -D dnf_command_version=$2 /behave/
+behave -i $1 --no-capture --no-capture-stderr -D dnf_command_version=$2 /behave/
