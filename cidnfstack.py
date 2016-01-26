@@ -509,6 +509,20 @@ def get_dnf_testing_version():
     return version.pop()
 
 
+def run_shell_cmd(cmd, msg):
+    LOGGER.info(msg + " was initiated")
+    docker_removal = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, _ = docker_removal.communicate()
+    rc = docker_removal.returncode
+    if stdout:
+        _log_call(msg, rc, stdout)
+    if rc:
+        LOGGER.error(msg + " failed \n")
+        sys.exit(msg + " failed")
+    else:
+        LOGGER.info(msg + " successfully passed \n")
+
+
 def _start_commandline():  # pylint: disable=R0912,R0915
     """Start the command line interface to the program.
 
@@ -641,11 +655,18 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         description='Build RPMs of a project from the checkout in the current '
                     'working directory in Copr.')
     buildparser.add_argument(
-        '-ddd', '--dnf_docker_test', help='start the test of DNF command interface after copr build',
+        '-d', '--dnf-docker-test', help='start the functional test of project after Copr build',
         action="store_true")
     buildparser.add_argument(
+        '-k', '--keep-image', help='keep Docker image after successful test',
+        action="store_true")
+    buildparser.add_argument(
+        '-l', '--localdir', help='describe path to tested project (/absolute/path/to/project). It can be used only with'
+                                 ' local-build',
+        action="append")
+    buildparser.add_argument(
         'copr', type=unicode, metavar='PROJECT',
-        help='the name of the Copr project')
+        help='the name of the Copr project. If name is local-build, the test runs locally (no copr build)')
     projparser = buildparser.add_subparsers(
         dest='project', help='the type of the project')
     projparser.add_parser(
@@ -668,6 +689,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         parents=[commonparser])
     options = argparser.parse_args()
     logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
+    work_dir = os.path.dirname(os.path.realpath(__file__))
     try:
         logging.basicConfig(
             filename=logfn,
@@ -693,10 +715,31 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             sys.exit('Copr have failed to create the project.')
     elif options.command == b'build':
         destdn = decode_path(tempfile.mkdtemp())
+        if options.copr == 'local-build':
+            local_rpm_path = os.path.join(work_dir, 'dnf-docker-test/local_rpm')
+            if os.path.exists(local_rpm_path):
+                shutil.rmtree(local_rpm_path)
+        else:
+            local_rpm_path = None
         try:
             if options.project == b'tito':
                 try:
-                    _build_tito(destdn, last_tag=False)
+                    if options.localdir:
+                        if options.copr != 'local-build':
+                            LOGGER.error('"Localdir" option has to be used only with "local-build" PROJECT name')
+                            sys.exit('Unsupported options combination')
+                        else:
+                            localdir_couter = 1
+                            for localdir in options.localdir:
+                                localdir = localdir[:-1] if localdir.endswith('/') else localdir
+                                shutil.copytree(localdir, os.path.join(local_rpm_path, 'temp', str(localdir_couter),
+                                                                       os.path.split(localdir)[1]))
+                                localdir_couter += 1
+                    elif options.copr == 'local-build':
+                        shutil.copytree(os.getcwdu(), os.path.join(local_rpm_path, 'temp', '1',
+                                                                   os.path.split(os.getcwdu())[1]))
+                    else:
+                        _build_tito(destdn, last_tag=False)
                 except ValueError:
                     LOGGER.debug(
                         'An exception have occurred during the tito build.',
@@ -745,44 +788,65 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
-            try:
-                _build_in_copr(destdn, options.copr)
-            except ValueError:
-                LOGGER.debug(
-                    'Copr have failed to build the RPMs.', exc_info=True)
-                sys.exit(
-                    'The build could not be requested or the build have '
-                    'failed. Hopefully Copr provides some details.')
+            if options.copr != 'local-build':
+                try:
+                    _build_in_copr(destdn, options.copr)
+                except ValueError:
+                    LOGGER.debug(
+                        'Copr have failed to build the RPMs.', exc_info=True)
+                    sys.exit(
+                        'The build could not be requested or the build have '
+                        'failed. Hopefully Copr provides some details.')
+
         finally:
             shutil.rmtree(destdn)
 
     if options.dnf_docker_test:
-        LOGGER.info("Dnf_docker_test was initiated")
+        LOGGER.info("Dnf-docker-test was initiated")
         LOGGER.info("Docker image builder was initiated")
-        dnf_version = get_dnf_testing_version()
-        work_dir = os.path.dirname(os.path.realpath(__file__))
-        docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile2')
+        if options.copr == 'local-build':
+            dnf_version = 'local-build'
+        else:
+            dnf_version = get_dnf_testing_version()
+        docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile.in')
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
         docker_image = 'jmracek/' + options.copr + ':1.0.2'
+        docker_image_updated = docker_image + '.1'
         with open(docker_input_file, 'r') as docker_in:
-            docker_in = docker_in.read().format(version=dnf_version, copr_project=options.copr)
+            if options.copr == 'local-build':
+                copy_local_file = 'COPY local_rpm/temp /local_rpm/'
+                install_tito = 'tito'
+            else:
+                copy_local_file = ''
+                install_tito = ''
+            docker_in = docker_in.read().format(install_tito=install_tito, copy_local_file=copy_local_file)
             with open(docker_output_file, 'w') as docker_output:
                 docker_output.write(docker_in)
         docker_creator_dir = os.path.join(work_dir, 'dnf-docker-test/')
-        docker_creator = subprocess.Popen(['docker', 'build', '--no-cache', '-t', docker_image, docker_creator_dir],
-                                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        docker_creator.wait()
-        stdout, _ = docker_creator.communicate()
-        rc = docker_creator.returncode
-        if rc:
-            LOGGER.error("Dnf_docker_test build of docker image failed")
-            if stdout:
-                _log_call('Dnf_docker_test build of docker image', rc, stdout)
-            sys.exit("Dnf_docker_test build of docker image failed")
-        else:
-            LOGGER.info("Dnf_docker_test build of docker image successfully passed")
-            if stdout:
-                _log_call('Dnf_docker_test build of docker image', rc, stdout)
+        cmd = ['docker', 'build', '--no-cache', '-t', docker_image, docker_creator_dir]
+        msg = "Dnf-docker-test build of docker image"
+        run_shell_cmd(cmd, msg)
+        container_id_file = 'ID_container'
+        cmd = ['docker', 'run', '-i', '--cidfile=' + container_id_file, docker_image, 'python3',
+               '/initial_settings/initial.py', dnf_version, options.copr]
+        # Docker 'run' option '-t' is needed only for tito build inside docker by DNF unitests.
+        # Docker 'run' option '-t' works correctly in docker-1.9.1-6 in f23, but not in version docker-io-1.8.2-2 in f21
+        if options.copr == 'local-build':
+            cmd.insert(3, '-t')
+        msg = "Dnf-docker-test update of docker image"
+        run_shell_cmd(cmd, msg)
+
+        with open(container_id_file, 'r') as cotainer_id:
+            cotainer_id = cotainer_id.read()
+            cmd = ['docker', 'commit', cotainer_id, docker_image_updated]
+            msg = "Dnf-docker-test commits of docker image"
+            run_shell_cmd(cmd, msg)
+
+            cmd = ['docker', 'rm', cotainer_id]
+            msg = "Dnf-docker-test remove container of docker image"
+            run_shell_cmd(cmd, msg)
+
+        os.remove(container_id_file)
 
         feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
         tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
@@ -791,39 +855,38 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         for test in sorted(tests):
             for dnf_command_version in ['dnf-2', 'dnf-3']:
                 LOGGER.info('Running test: ' + test)
-                docker_run = ['docker', 'run', '--rm', '-i', docker_image, test, dnf_command_version]
+                docker_run = ['docker', 'run', '--rm', '-i', docker_image_updated, "launch-test", test, dnf_command_version]
                 LOGGER.info('Starting container: ' + (' '.join(docker_run)))
                 docker_run = subprocess.Popen(docker_run, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                docker_run.wait()
                 stdout, _ = docker_run.communicate()
                 rc = docker_run.returncode
                 if stdout:
-                    _log_call('Dnf_docker_test ' + test + ' using ' + dnf_command_version, rc, stdout)
+                    _log_call('Dnf-docker-test ' + test + ' using ' + dnf_command_version, rc, stdout)
                 if rc:
                     failed_tests += 1
-                    LOGGER.error("Dnf_docker_test {} using {} failed \n ".format(test, dnf_command_version))
+                    LOGGER.error("Dnf-docker-test {} using {} failed \n ".format(test, dnf_command_version))
                 else:
                     passed_tests += 1
-                    LOGGER.info("Dnf_docker_test {} using {} successfully passed \n ".format(test,  dnf_command_version))
-
+                    LOGGER.info("Dnf-docker-test {} using {} successfully passed \n ".format(test,  dnf_command_version))
         LOGGER.info("Removal of docker image initiated")
-        image_cleaner = subprocess.Popen(['docker', 'rmi', '-f', docker_image], stdout=subprocess.PIPE,
-                                         stderr=subprocess.STDOUT)
-        image_cleaner.wait()
-        stdout, _ = image_cleaner.communicate()
-        rc = image_cleaner.returncode
-        if stdout:
-            _log_call('Removal of docker image ' + docker_image, rc, stdout)
-        if rc:
-            LOGGER.error("Removal of docker image " + docker_image + " failed \n")
+        cmd = ['docker', 'rmi', '-f', docker_image]
+        msg = 'Removal of docker image ' + docker_image
+        run_shell_cmd(cmd, msg)
+
+        if options.keep_image:
+            LOGGER.info("Docker image " + docker_image_updated + " is kept until next succesful build of the same image")
+            LOGGER.info("The image can be opened using command: "
+                        "sudo docker run -it --entrypoint=/bin/bash " + docker_image_updated + "\n")
         else:
-            LOGGER.info("Removal of docker image " + docker_image + " succeed \n")
+            cmd = ['docker', 'rmi', '-f', docker_image_updated]
+            msg = 'Removal of docker image ' + docker_image_updated
+            run_shell_cmd(cmd, msg)
 
         if failed_tests:
             LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
             sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
         else:
-            LOGGER.info("Dnf_docker_test successfully passed {} tests".format(passed_tests))
+            LOGGER.info("Dnf-docker-test successfully passed {} tests".format(passed_tests))
 
 if __name__ == '__main__':
     _start_commandline()
