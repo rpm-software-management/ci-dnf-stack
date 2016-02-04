@@ -810,7 +810,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             dnf_version = get_dnf_testing_version()
         docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile.in')
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
-        docker_image = 'jmracek/' + options.copr + ':1.0.2'
+        docker_image = 'jmracek/' + options.copr + '/' + dnf_version + ':1.0.2'
         docker_image_updated = docker_image + '.1'
         with open(docker_input_file, 'r') as docker_in:
             if options.copr == 'local-build':
