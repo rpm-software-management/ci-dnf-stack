@@ -134,7 +134,6 @@ import tempfile
 import time
 import urllib
 
-import copr
 import rpm
 
 
@@ -209,6 +208,7 @@ def _create_copr(name, chroots, repos=()):
     """
     chroots, repos = list(chroots), list(repos)
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+    import copr
     try:
         client = copr.client.CoprClient.create_from_file_config()
         client.create_project(name, chroots=chroots, repos=repos)
@@ -452,6 +452,7 @@ def _build_in_copr(dirname, project):
     pkgs = [fname for fname, hdr in rpm_headers(dirname) if hdr.isSource()]
     LOGGER.info('Building RPMs from %s...', ', '.join(pkgs))
     # FIXME: https://bugzilla.redhat.com/show_bug.cgi?id=1259293
+    import copr
     try:
         client = copr.client.CoprClient.create_from_file_config()
         result = client.create_new_build(project, pkgs=pkgs)
