@@ -141,6 +141,7 @@ NAME = 'ci-dnf-stack'
 
 LOGGER = logging.getLogger(NAME)
 
+FEDREV = 'master'
 
 def decode_path(path):
     """Decode a filesystem path string.
@@ -656,7 +657,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         description='Build RPMs of a project from the checkout in the current '
                     'working directory in Copr.')
     buildparser.add_argument(
-        '-d', '--dnf-docker-test', help='start the functional test of project after Copr build',
+        '-n', '--no-dnf-docker-test', help='do not start the functional test of project after Copr build',
         action="store_true")
     buildparser.add_argument(
         '-k', '--keep-image', help='keep Docker image after successful test',
@@ -666,28 +667,15 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                                  ' local-build',
         action="append")
     buildparser.add_argument(
-        'copr', type=unicode, metavar='PROJECT',
-        help='the name of the Copr project. If name is local-build, the test runs locally (no copr build)')
-    projparser = buildparser.add_subparsers(
-        dest='project', help='the type of the project')
-    projparser.add_parser(
-        'tito', description='Build a tito-enabled project.',
-        epilog='The "tito" executable must be available.')
-    commonparser = argparse.ArgumentParser(add_help=False)
-    commonparser.add_argument(
+        '-c', '--copr', type=unicode, nargs='+', default=['local-build', 'tito'], metavar=('PROJECT', 'BUILDER'),
+        help='the name of the Copr project. If option not present default values are used: "local-build" "tito" and '
+             'the test runs locally (no copr build). '
+             'If BUILDER tito, the "tito" executable must be available. '
+             'If BUILDER librepo, the "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", "sed", "sh" and "xz" '
+             'executables must be available.'
+             'If BUILDER libscomps, the "python" and "rpmbuild" executables must be available.')
+    buildparser.add_argument(
         '--release', help='a custom release number of the resulting RPMs')
-    repoparser = projparser.add_parser(
-        'librepo', description='Build a librepo project fork.',
-        epilog='The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", '
-               '"sed", "sh" and "xz" executables must be available.',
-        parents=[commonparser])
-    repoparser.add_argument(
-        'fedrev', type=unicode, metavar='SPEC',
-        help='the ID of the Fedora Git revision of the spec file')
-    projparser.add_parser(
-        'libcomps', description='Build a libcomps project fork.',
-        epilog='The "python" and "rpmbuild" executables must be available.',
-        parents=[commonparser])
     options = argparser.parse_args()
     logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
     work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -716,17 +704,17 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             sys.exit('Copr have failed to create the project.')
     elif options.command == b'build':
         destdn = decode_path(tempfile.mkdtemp())
-        if options.copr == 'local-build':
+        if options.copr[0] == 'local-build':
             local_rpm_path = os.path.join(work_dir, 'dnf-docker-test/local_rpm')
             if os.path.exists(local_rpm_path):
                 shutil.rmtree(local_rpm_path)
         else:
             local_rpm_path = None
         try:
-            if options.project == b'tito':
+            if options.copr[1] == b'tito':
                 try:
                     if options.localdir:
-                        if options.copr != 'local-build':
+                        if options.copr[0] != 'local-build':
                             LOGGER.error('"Localdir" option has to be used only with "local-build" PROJECT name')
                             sys.exit('Unsupported options combination')
                         else:
@@ -736,7 +724,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                                 shutil.copytree(localdir, os.path.join(local_rpm_path, 'temp', str(localdir_couter),
                                                                        os.path.split(localdir)[1]))
                                 localdir_couter += 1
-                    elif options.copr == 'local-build':
+                    elif options.copr[0] == 'local-build':
                         shutil.copytree(os.getcwdu(), os.path.join(local_rpm_path, 'temp', '1',
                                                                    os.path.split(os.getcwdu())[1]))
                     else:
@@ -756,10 +744,10 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or the executable cannot be executed.')
-            elif options.project == b'librepo':
+            elif options.copr[1] == b'librepo':
                 try:
                     _build_librepo(
-                        options.fedrev, destdn, options.release)
+                        FEDREV, destdn, options.release)
                 except (IOError, urllib.ContentTooShortError, ValueError):
                     LOGGER.debug(
                         'An exception have occurred during the librepo build.',
@@ -772,7 +760,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
-            elif options.project == b'libcomps':
+            elif options.copr[1] == b'libcomps':
                 try:
                     _build_libcomps(destdn, options.release)
                 except (IOError, ValueError):
@@ -789,9 +777,9 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
-            if options.copr != 'local-build':
+            if options.copr[0] != 'local-build':
                 try:
-                    _build_in_copr(destdn, options.copr)
+                    _build_in_copr(destdn, options.copr[0])
                 except ValueError:
                     LOGGER.debug(
                         'Copr have failed to build the RPMs.', exc_info=True)
@@ -802,19 +790,19 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         finally:
             shutil.rmtree(destdn)
 
-    if options.dnf_docker_test:
+    if not options.no_dnf_docker_test:
         LOGGER.info("Dnf-docker-test was initiated")
         LOGGER.info("Docker image builder was initiated")
-        if options.copr == 'local-build':
+        if options.copr[0] == 'local-build':
             dnf_version = 'local-build'
         else:
             dnf_version = get_dnf_testing_version()
         docker_input_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile.in')
         docker_output_file = os.path.join(work_dir, 'dnf-docker-test/Dockerfile')
-        docker_image = 'jmracek/' + options.copr + '/' + dnf_version + ':1.0.2'
+        docker_image = 'jmracek/' + options.copr[0] + '/' + dnf_version + ':1.0.2'
         docker_image_updated = docker_image + '.1'
         with open(docker_input_file, 'r') as docker_in:
-            if options.copr == 'local-build':
+            if options.copr[0] == 'local-build':
                 copy_local_file = 'COPY local_rpm/temp /local_rpm/'
                 install_tito = 'tito'
             else:
@@ -829,10 +817,10 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         run_shell_cmd(cmd, msg)
         container_id_file = 'ID_container'
         cmd = ['docker', 'run', '-i', '--cidfile=' + container_id_file, docker_image, 'python3',
-               '/initial_settings/initial.py', dnf_version, options.copr]
+               '/initial_settings/initial.py', dnf_version, options.copr[0]]
         # Docker 'run' option '-t' is needed only for tito build inside docker by DNF unitests.
         # Docker 'run' option '-t' works correctly in docker-1.9.1-6 in f23, but not in version docker-io-1.8.2-2 in f21
-        if options.copr == 'local-build':
+        if options.copr[0] == 'local-build':
             cmd.insert(3, '-t')
         msg = "Dnf-docker-test update of docker image"
         run_shell_cmd(cmd, msg)
