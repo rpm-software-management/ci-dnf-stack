@@ -816,6 +816,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         msg = "Dnf-docker-test build of docker image"
         run_shell_cmd(cmd, msg)
         container_id_file = 'ID_container'
+        if os.path.isfile(container_id_file):
+            os.remove(container_id_file)
         cmd = ['docker', 'run', '-i', '--cidfile=' + container_id_file, docker_image, 'python3',
                '/initial_settings/initial.py', dnf_version, options.copr[0]]
         # Docker 'run' option '-t' is needed only for tito build inside docker by DNF unitests.
