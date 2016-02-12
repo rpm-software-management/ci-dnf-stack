@@ -1,6 +1,6 @@
 Feature: Richdeps/Behave test (upgrade-to test)
 
-Scenario: Install packages from repository "test-1"
+Scenario: Preparation - Install packages from repository "test-1"
  Given I use the repository "test-1"
  When I "install" a package "TestN" with "dnf"
  Then package "TestN" should be "installed"

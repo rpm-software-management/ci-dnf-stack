@@ -1,6 +1,6 @@
 Feature: DNF/Behave test (install remove test)
 
-Scenario: Install TestA from repository "test-1"
+Scenario: Install Remove TestA from repository "test-1" that requires TestB
  Given I use the repository "test-1"
  When I execute "dnf" command "install -y TestA" with "success"
  Then package "TestA, TestB" should be "installed"
@@ -11,19 +11,27 @@ Scenario: Install TestA from repository "test-1"
  Then package "TestA, TestB" should be "removed"
  And package "TestC" should be "absent"
 
+Scenario: Install Remove TestD from repository "test-1" that requires TestE = 1.0.0-1
+ Given I use the repository "test-1"
  When I "install" a package "TestD" with "dnf"
  Then package "TestD, TestE" should be "installed"
  When I "remove" a package "TestD" with "dnf"
  Then package "TestD, TestE" should be "removed"
 
+Scenario: Install Remove TestF from repository "test-1" that requires TestG >= 1.0.0-1, TestH = 1.0.0-1
+ Given I use the repository "test-1"
  When I "install" a package "TestF" with "dnf"
  Then package "TestF, TestG, TestH" should be "installed"
  When I "remove" a package "TestF" with "dnf"
  Then package "TestF, TestG, TestH" should be "removed"
 
+Scenario: Install TestI from repository "test-1" that requires TestJ >= 1.0.0-2 and requirements cannot be installed
+ Given I use the repository "test-1"
  When I execute "dnf" command "install -y TestI" with "fail"
  Then package "TestI, TestJ" should be "absent"
 
+Scenario: Install Remove multiple packages TestK, TestL from repository "test-1" that both require TestM
+ Given I use the repository "test-1"
  When I "install" a package "TestK, TestL" with "dnf"
  Then package "TestK, TestL, TestM" should be "installed"
  When I "remove" a package "TestK" with "dnf"
@@ -33,21 +41,29 @@ Scenario: Install TestA from repository "test-1"
  When I "remove" a package "TestL" with "dnf"
  Then package "TestL, TestM" should be "removed"
 
+Scenario: Install Remove provide from repository "test-1" that is provided by TestO that require TestC
+ Given I use the repository "test-1"
  When I execute "dnf" command "install -y ProvideA" with "success"
  Then package "TestO, TestC" should be "installed"
  When I execute "dnf" command "remove -y ProvideA" with "success"
  Then package "TestO, TestC" should be "removed"
 
+Scenario: Install package from URL
+ Given I use the repository "test-1"
  When I execute "dnf" command "install -y http://127.0.0.1/repo/test-1/TestB-1.0.0-1.noarch.rpm" with "success"
  Then package "TestB" should be "installed"
  When I execute "dnf" command "remove -y TestB" with "success"
  Then package "TestB" should be "removed"
 
+Scenario: Install TestB-1.0.0-1.noarch.rpm from local path
+ Given I use the repository "test-1"
  When I execute "dnf" command "install -y /var/www/html/repo/test-1/TestB-1.0.0-1.noarch.rpm" with "success"
  Then package "TestB" should be "installed"
  When I execute "dnf" command "remove -y TestB" with "success"
  Then package "TestB" should be "removed"
 
+Scenario: Install *.rpm from local path
+ Given I use the repository "test-1"
  When I execute "bash" command "mkdir /test" with "success"
  When I execute "bash" command "cp /var/www/html/repo/test-1/Test{A,B,C}*.rpm /test" with "success"
  When I execute "dnf" command "install -y /test/*.rpm" with "success"
@@ -55,6 +71,8 @@ Scenario: Install TestA from repository "test-1"
  When I execute "dnf" command "remove -y TestA TestB TestC" with "success"
  Then package "TestA, TestB, TestC" should be "removed"
 
+Scenario: Group Install Remove
+ Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
@@ -73,6 +91,8 @@ Scenario: Install TestA from repository "test-1"
  When I execute "dnf" command "remove -y TestD, TestE" with "success"
  Then package "TestD, TestE" should be "removed"
 
+Scenario: Group Install Remove List with with-optional option
+ Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
@@ -87,6 +107,8 @@ Scenario: Install TestA from repository "test-1"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
 
+Scenario: Group Install Remove List if package with dependency is installed before group install
+ Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
@@ -110,6 +132,8 @@ Scenario: Install TestA from repository "test-1"
  When I execute "dnf" command "remove -y TestA" with "success"
  Then package "TestA, TestB" should be "removed"
 
+Scenario: Group Install Remove List if package is installed before group install
+ Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
