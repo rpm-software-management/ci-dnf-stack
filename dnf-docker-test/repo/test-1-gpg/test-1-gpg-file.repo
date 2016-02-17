@@ -1,0 +1,6 @@
+[test-1-gpg-file]
+name=test-1-gpg-file
+baseurl=http://127.0.0.1/repo/test-1-gpg
+enabled=1
+gpgcheck=1
+gpgkey=file:///var/www/html/repo/test-1-gpg/RPM-GPG-KEY-dtest1
