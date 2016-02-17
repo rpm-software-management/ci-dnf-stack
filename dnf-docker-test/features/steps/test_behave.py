@@ -276,7 +276,7 @@ def then_package_state(context, std_message, state, line_start):
                              .format(state))
 
 
-@then('file "{path_to_file}" should be "{state}"')
+@then('the file "{path_to_file}" should be "{state}"')
 def then_file_presence(context, path_to_file, state):
     file_existence = os.path.isfile(path_to_file)
     if state == 'present':
@@ -286,3 +286,11 @@ def then_file_presence(context, path_to_file, state):
     else:
         raise AssertionError('The state {} is not allowed option for Then statement (allowed present, absent)'
                              .format(state))
+
+
+@then('the file "{path_to_file}" should contain "{content}"')
+def then_file_contein(context, path_to_file, content):
+    assert os.path.isfile(path_to_file), "The file {} is not a file or doesn't exist".format(path_to_file)
+    with open(path_to_file, 'r') as f:
+        assert content in f, "The file {} doesn't contain '{}'".format(path_to_file, content)
+
