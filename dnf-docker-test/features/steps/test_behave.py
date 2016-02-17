@@ -112,6 +112,8 @@ def given_repo_condition(context, repo):
     """ :type context: behave.runner.Context """
     assert repo
     context.repo = repo
+    for file in glob.glob('/etc/yum.repos.d/*.repo'):
+        os.remove(file)
     assert os.path.exists('/var/www/html/repo/' + repo)
     for root, dirs, files in os.walk('/repo'):
         for f in files:
