@@ -196,6 +196,19 @@ system.
 - issue tracker: https://github.com/rpm-software-management/ci-dnf-stack/issues
 
 
+Notes for functional testing
+----------------------------
+
+Repo test-1-gpg:
+Was created from rpms in test-1 repo. All rpm were signed with gpg-pubkey-2d2e7ca3-56c1e69d	gpg(DNF Test1 (TESTER)
+<dnf@testteam.org>) except TestE (not signed), TestG (signed with key gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2 
+(TESTER) <dnf@testteam.org>)), and TestJ (not signed and incorrect check-sum).
+
+Repo upgrade_1-gpg:
+Was created from rpms in upgrade_1 repo. All rpm were signed with gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2 
+(TESTER) <dnf@testteam.org>) except both TestE (not signed) packages.
+
+
 Contributions
 -------------
 
