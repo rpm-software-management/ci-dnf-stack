@@ -640,16 +640,6 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         description='Build RPMs of a project from the checkout in the current '
                     'working directory in Copr.')
     buildparser.add_argument(
-        '-n', '--no-dnf-docker-test', help='do not start the functional test of project after Copr build',
-        action="store_true")
-    buildparser.add_argument(
-        '-k', '--keep-image', help='keep Docker image after successful test',
-        action="store_true")
-    buildparser.add_argument(
-        '-l', '--localdir', help='describe path to tested project (/absolute/path/to/project). It can be used only with'
-                                 ' local-build',
-        action="append")
-    buildparser.add_argument(
         '-c', '--copr', type=unicode, nargs='+', default=['local-build', 'tito'], metavar=('PROJECT', 'BUILDER'),
         help='the name of the Copr project. If option not present default values are used: "local-build" "tito" and '
              'the test runs locally (no copr build). '
@@ -658,7 +648,20 @@ def _start_commandline():  # pylint: disable=R0912,R0915
              'executables must be available.'
              'If BUILDER libscomps, the "python" and "rpmbuild" executables must be available.')
     buildparser.add_argument(
+        '-k', '--keep-image', help='keep Docker image after successful test',
+        action="store_true")
+    buildparser.add_argument(
+        '-l', '--localdir', help='describe path to tested project (/absolute/path/to/project). It can be used only with'
+                                 ' local-build',
+        action="append")
+    buildparser.add_argument(
+        '-n', '--no-dnf-docker-test', help='do not start the functional test of project after Copr build',
+        action="store_true")
+    buildparser.add_argument(
         '--release', help='a custom release number of the resulting RPMs')
+    buildparser.add_argument(
+        '-t', '--test', nargs='*', metavar=('TEST-NAME'),
+        help='select only named test for dnf-docker-test')
     options = argparser.parse_args()
     logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
     work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -834,7 +837,10 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         os.remove(container_id_file)
 
         feature_pattern = os.path.join(work_dir, 'dnf-docker-test/features/*feature')
-        tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
+        if options.test:
+            tests = options.test
+        else:
+            tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
         failed_tests = 0
         passed_tests = 0
         for test in sorted(tests):
