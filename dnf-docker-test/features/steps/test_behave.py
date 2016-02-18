@@ -46,7 +46,7 @@ def get_rpm_package_list():
 def get_rpm_package_version_list():
     """ Gets all installed packages in the system with version"""
     pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}\n'])
-    dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '-Cq', '--queryformat',
+    dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--disableexclude=all', '-Cq', '--queryformat',
                                          '%{name}-%{version}-%{release}'])
     pkgverstr = pkgverstr.splitlines()
     comparerpmver = pkgverstr
@@ -186,6 +186,15 @@ def when_action_command(context, type_of_command, command, result):
     else:
         raise AssertionError('The option {} is not allowed option for expected result of command. '
                              'Allowed options are "success" and "fail"'.format(result))
+
+
+@when('I create a file "{file_with_path}" with content: "{file_content}"')
+def when_action_command(context, file_with_path, file_content):
+    if not os.path.exists(os.path.dirname(file_with_path)):
+        os.makedirs(os.path.dirname(file_with_path))
+    file_content = file_content.replace(u'\\n', u'\n')
+    with open(file_with_path, 'w') as f:
+        f.write(file_content + '\n')
 
 
 @then('package "{pkgs}" should be "{state}"')
