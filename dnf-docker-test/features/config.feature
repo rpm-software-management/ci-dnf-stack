@@ -35,8 +35,8 @@ Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
   Given I use the repository "test-1"
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=true"
   When I execute "dnf" command "config-manager --setopt=reposdir=/dockertesting/etc/yum.repos.d --add-repo /etc/yum.repos.d/test-1.repo" with "success"
-  Then the file "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
-  And the file "/dockertesting/etc/dnf/dnf.conf" should be "absent"
+  Then the path "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
+  And the path "/dockertesting/etc/dnf/dnf.conf" should be "absent"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestA" with "fail"
   When I execute "bash" command "rpm -q --root=/dockertesting TestA" with "fail"
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nclean_requirements_on_remove=true"
@@ -47,7 +47,7 @@ Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   Given I use the repository "test-1"
   When I create a file "/dockertesting/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestE"
-  Then the file "/dockertesting/etc/dnf/dnf.conf" should be "present"
+  Then the path "/dockertesting/etc/dnf/dnf.conf" should be "present"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestE" with "fail"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "fail"
 

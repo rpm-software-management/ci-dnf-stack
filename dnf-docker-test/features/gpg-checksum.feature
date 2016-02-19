@@ -47,6 +47,15 @@ Scenario: Add repository with gpgcheck=0 and install package with unknown key an
  When I execute "dnf" command "-y remove TestF TestD" with "success"
  Then package "TestD, TestE, TestF, TestG, TestH" should be "removed"
 
+Scenario: Add repository with without gpgcheck and try to install insigned package (test if gpgcheck is taken from dnf.conf)
+ Given I use the repository "test-1"
+ When I create a file "/etc/yum.repos.d/gpg.repo" with content: "[gpg]\nname=gpg\nbaseurl=http://127.0.0.1/repo/test-1\nenabled=1"
+ Then the path "/etc/yum.repos.d/gpg.repo" should be "present"
+ When I execute "dnf" command "-y --disablerepo=test-1 install TestC" with "fail"
+ Then package "TestC" should be "absent"
+ When I execute "dnf" command "-y --disablerepo=test-1 --nogpgcheck install TestC" with "success"
+ Then package "TestC" should be "installed"
+
 #It is brocken - activate after fix in dnf - if gpgcheck=0 dnf doesn't controle checksum (https://bugzilla.redhat.com/show_bug.cgi?id=1314405)
 #Scenario: Install package with incorrect checksum from repository with gpgcheck=0
 # Given I use the repository "test-1-gpg"

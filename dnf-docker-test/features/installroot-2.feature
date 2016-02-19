@@ -3,7 +3,7 @@ Feature: DNF/Behave test (installroot test)
 Scenario: Install package from installroot repository into installroot, and test metadata handling in installroot
   Given I use the repository "test-1"
   When I execute "dnf" command "config-manager --setopt=reposdir=/dockertesting/etc/yum.repos.d --add-repo /etc/yum.repos.d/test-1.repo" with "success"
-  Then the file "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
+  Then the path "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
 # Install first package from installroot repo into installroot and make cache for metadata in installroot.
 # It have to prefer installroot repo
   Given I use the repository "upgrade_1"
