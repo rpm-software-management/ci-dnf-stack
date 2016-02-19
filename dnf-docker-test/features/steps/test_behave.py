@@ -285,13 +285,19 @@ def then_package_state(context, std_message, state, line_start):
                              .format(state))
 
 
-@then('the file "{path_to_file}" should be "{state}"')
-def then_file_presence(context, path_to_file, state):
-    file_existence = os.path.isfile(path_to_file)
+@then('the path "{path_to_object}" should be "{state}"')
+def then_file_presence(context, path_to_object, state):
+    assert path_to_object, "The path was not specified"
+    if path_to_object.endswith('/'):
+        result = os.path.isdir(path_to_object)
+    elif path_to_object.endswith('/*'):
+        result = glob.glob(path_to_object)
+    else:
+        result = os.path.isfile(path_to_object)
     if state == 'present':
-        assert file_existence
+        assert result
     elif state == 'absent':
-        assert not file_existence
+        assert not result
     else:
         raise AssertionError('The state {} is not allowed option for Then statement (allowed present, absent)'
                              .format(state))

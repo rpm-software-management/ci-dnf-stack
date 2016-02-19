@@ -31,15 +31,15 @@ Scenario: Create dnf.conf file and test if host is taking option -c /dnf.conf fi
 
 Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
   When I execute "dnf" command "config-manager --installroot=/dockertesting --add-repo /etc/yum.repos.d/test-1.repo" with "success"
-  Then file "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
-  And file "/dockertesting/etc/dnf/dnf.conf" should be "absent"
+  Then the path "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
+  And the path "/dockertesting/etc/dnf/dnf.conf" should be "absent"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestA" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestA" with "success"
   Then line from "stdout" should "start" with "TestA-1.0.0-1."
 
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   When I create a file "/dockertesting/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestE"
-  Then file "/dockertesting/etc/dnf/dnf.conf" should be "present"
+  Then the path "/dockertesting/etc/dnf/dnf.conf" should be "present"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestE" with "fail"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "fail"
 
