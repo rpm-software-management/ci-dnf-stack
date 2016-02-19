@@ -34,14 +34,21 @@ Scenario: Install package from installroot repository into installroot, test met
   When I execute "bash" command "rpm -q TestB" with "success"
   Then line from "stdout" should "start" with "TestB-1.0.0-2."
 
-Scenario: Add repository to host with gpgcheck=1 from repofile and control 'repolist' command
+Scenario: Add repository to host with gpgcheck=1 from repofile and control 'repolist' command plus dnf.log test
  When I execute "dnf" command "repolist" with "success"
  Then line from "stdout" should "not start" with "upgrade_1-gpg*"
  When I execute "dnf" command "config-manager --add-repo http://127.0.0.1/repo/upgrade_1-gpg/upgrade_1-gpg-file.repo" with "success"
  When I execute "dnf" command "repolist upgrade_1-g*" with "success"
  Then line from "stdout" should "start" with "upgrade_1-gpg-file"
+# It also test if dnf.log file is used from host if package installed in host
+ When I execute "bash" command "rm -f /var/log/dnf.log" with "success"
+ Then file "/var/log/dnf.log" should be "absent"
+ When I execute "bash" command "rm -f /dockertesting/var/log/dnf.log" with "success"
+ Then file "/dockertesting/var/log/dnf.log" should be "absent"
  When I execute "dnf" command "-y --disablerepo=* --enablerepo=upgrade_1-gpg-file install TestN" with "success"
  Then package "TestN" should be "installed"
+ And file "/dockertesting/var/log/dnf.log" should be "absent"
+ And file "/var/log/dnf.log" should be "present"
  When I execute "bash" command "rpm --root=/dockertesting -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "fail"
  When I execute "bash" command "rpm -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "success"
  Then line from "stdout" should "start" with "gpg-pubkey-705f3e8c-56c2e298 --> gpg(DNF Test2 (TESTER) <dnf@testteam.org>)"
@@ -53,11 +60,17 @@ Scenario: Add repository to installroot with gpgcheck=1 from repofile and contro
  When I execute "dnf" command "--installroot=/dockertesting repolist test-1-g*" with "success"
  Then line from "stdout" should "start" with "test-1-gpg-file"
 
-Scenario: GPG key import after package install
+Scenario: GPG key import after package install plus dnf.log test in installroot
  When I execute "bash" command "rpm --root=/dockertesting -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "fail"
  When I execute "bash" command "rpm -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "success"
  Then line from "stdout" should "not start" with "gpg-pubkey-2d2e7ca3-56c1e69d --> gpg(DNF Test1 (TESTER) <dnf@testteam.org>)"
+# It also test if dnf.log file is used from installroot if package installed in installroot
+ When I execute "bash" command "rm -f /var/log/dnf.log" with "success"
+ Then file "/var/log/dnf.log" should be "absent"
+ When I execute "bash" command "rm -f /dockertesting/var/log/dnf.log" with "success"
+ Then file "/dockertesting/var/log/dnf.log" should be "absent"
  When I execute "dnf" command "--installroot=/dockertesting -y --disablerepo=* --enablerepo=test-1-gpg-file install TestA" with "success"
+ Then file "/dockertesting/var/log/dnf.log" should be "present"
  When I execute "bash" command "rpm -q --root=/dockertesting TestA TestB" with "success"
  Then line from "stdout" should "start" with "TestA-1.0.0-1."
  And line from "stdout" should "start" with "TestB-1.0.0-1."
