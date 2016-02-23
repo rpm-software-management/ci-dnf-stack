@@ -50,3 +50,25 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
   When I execute "bash" command "rpm -q --root=/dockertesting TestD" with "fail"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestD" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestD" with "success"
+
+Scenario: Reposdir option in dnf conf.file in host
+  Given I use the repository "upgrade_1"
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nreposdir=/var/www/html/repo/test-1-gpg"
+  When I execute "dnf" command "-y install TestN" with "success"
+  Then package "TestN-1.0.0-1" should be "installed"
+
+Scenario: Reposdir option in dnf.conf file in installroot=dockertesting2
+  Given I use the repository "test-1"
+  When I create a file "/dockertesting2/etc/dnf/dnf.conf" with content: "[main]\nreposdir=/var/www/html/repo/upgrade_1-gpg"
+  When I create a file "/dockertesting2/var/www/html/repo/upgrade_1-gpg/install.repo" with content: "[upgrade_1-gpg-file]\nname=upgrade_1-gpg-file\nbaseurl=http://127.0.0.1/repo/upgrade_1-gpg\nenabled=1\ngpgcheck=1\ngpgkey=file:///var/www/html/repo/upgrade_1-gpg/RPM-GPG-KEY-dtest2"
+  When I execute "dnf" command "--installroot=/dockertesting2 -y install TestN" with "success"
+  When I execute "bash" command "rpm -q --root=/dockertesting2 TestN" with "success"
+  Then line from "stdout" should "start" with "TestN-1.0.0-4"
+
+Scenario: Reposdir option in dnf.conf file with --config option in installroot=dockertesting2
+  Given I use the repository "test-1"
+  When I create a file "/dnf/dnf.conf" with content: "[main]\nreposdir=/var/www/html/repo/test-1-gpg"
+  When I create a file "/dockertesting2/var/www/html/repo/test-1-gpg/test.repo" with content: "[test]\nname=test\nbaseurl=http://127.0.0.1/repo/test-1-gpg\nenabled=1\ngpgcheck=1\ngpgkey=file:///var/www/html/repo/test-1-gpg/RPM-GPG-KEY-dtest1"
+  When I execute "dnf" command "--installroot=/dockertesting2 -c /dnf/dnf.conf -y install TestC" with "success"
+  When I execute "bash" command "rpm -q --root=/dockertesting2 TestC" with "success"
+  Then line from "stdout" should "start" with "TestC-1.0.0-1"
