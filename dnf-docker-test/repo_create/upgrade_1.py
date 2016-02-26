@@ -33,6 +33,10 @@ rpm.add_requires('TestB')
 pkgs.append(rpm)
 # Used for upgrade tests
 
+rpm = SimpleRpmBuild('TestA-debuginfo', '1.0.0', '2', ['noarch'])
+pkgs.append(rpm)
+# Used for install debuginfo and test pluginconfpath.
+
 rpm = SimpleRpmBuild('TestB', '1.0.0', '1', ['noarch'])
 pkgs.append(rpm)
 # Requirement of TestA
@@ -40,6 +44,10 @@ pkgs.append(rpm)
 rpm = SimpleRpmBuild('TestB', '1.0.0', '2', ['noarch'])
 pkgs.append(rpm)
 # Used for upgrade tests
+
+rpm = SimpleRpmBuild('TestB-debuginfo', '1.0.0', '2', ['noarch'])
+pkgs.append(rpm)
+# Used for install debuginfo and test pluginconfpath.
 
 rpm = SimpleRpmBuild('TestC', '1.0.0', '1', ['noarch'])
 pkgs.append(rpm)
