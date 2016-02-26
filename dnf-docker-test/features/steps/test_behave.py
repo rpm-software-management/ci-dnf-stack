@@ -1,11 +1,12 @@
 #!/usr/bin/python -tt
 
 from behave import *
-import os
-import subprocess
+import dnf
 import glob
+import os
 import re
 import shutil
+import subprocess
 from time import sleep
 
 DNF_FLAGS = ['-y', '--disablerepo=*', '--nogpgcheck']
@@ -64,6 +65,14 @@ def diff_package_lists(a, b):
         map(_right_decorator, list(sb - sa)))
 
 
+def diff_query_lists(sack_a, sack_b):
+    """ Computes diff between sack_a and sack_b """
+    sa, sb = list(sack_a.query().installed()), list(sack_b.query().installed())
+    rem = [x for x in sa if x not in sb]
+    inst = [x for x in sb if x not in sa]
+    return rem, inst
+
+
 def package_version_lists(pkg, list_ver):
     """ Select package versions """
     found_pkgs = [x for x in list_ver if x.startswith(pkg)]
@@ -76,6 +85,12 @@ def package_absence(pkg, list_ver):
     found_pkgs = [x for x in list_ver if re.search('^' + pkg, x)]
     assert len(found_pkgs) == 0
     return None
+
+
+def ensure_path_exist(path):
+    """Ensure that os path exist. If doesn't exist it create the path."""
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 def execute_dnf_command(dnf_command_version, cmd, reponame):
@@ -101,6 +116,19 @@ def execute_rpm_command(pkg, action):
 def piecewise_compare(a, b):
     """ Check if the two sequences are identical regardless of ordering """
     return sorted(a) == sorted(b)
+
+
+def package_name_finder(sack, package_string):
+    """
+    @param sack: sack with packages
+    @param package_string: package description in nevra format
+    @return: name of package
+
+    """
+    subj = dnf.subject.Subject(package_string)
+    candidate = subj.get_best_query(sack)
+    assert len(candidate) == 1
+    return candidate[0].name
 
 
 def splitter(pkgs):
@@ -134,6 +162,8 @@ def when_action_package(context, action, pkgs, manager):
     assert context.pre_rpm_packages_version
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
+    context.pre_sack = dnf.Base().fill_sack(load_available_repos=False)
+    assert context.pre_sack
     if manager == 'rpm':
         if action in ["install", "remove"]:
             execute_rpm_command(splitter(pkgs), action)
@@ -157,7 +187,7 @@ def when_action_package(context, action, pkgs, manager):
         raise AssertionError('The manager {} is not allowed parameter'.format(manager))
 
 
-@when('I execute "{type_of_command}" command "{command}" with "{result}"')
+@step('I execute "{type_of_command}" command "{command}" with "{result}"')
 def when_action_command(context, type_of_command, command, result):
     assert command
     context.pre_rpm_packages = get_rpm_package_list()
@@ -166,6 +196,8 @@ def when_action_command(context, type_of_command, command, result):
     assert context.pre_rpm_packages_version
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
+    context.pre_sack = dnf.Base().fill_sack(load_available_repos=False)
+    assert context.pre_sack
     if type_of_command == 'dnf':
         dnf_command_version = dnf_command_version + " " + command
     elif type_of_command == 'bash':
@@ -190,11 +222,25 @@ def when_action_command(context, type_of_command, command, result):
 
 @when('I create a file "{file_with_path}" with content: "{file_content}"')
 def when_action_command(context, file_with_path, file_content):
-    if not os.path.exists(os.path.dirname(file_with_path)):
-        os.makedirs(os.path.dirname(file_with_path))
+    ensure_path_exist(os.path.dirname(file_with_path))
     file_content = file_content.replace(u'\\n', u'\n')
     with open(file_with_path, 'w') as f:
         f.write(file_content + '\n')
+
+
+@when('I copy plugin module "{plugin_modules}" from default plugin path into "{directory}"')
+def when_plugin_dir_creator(context, plugin_modules, directory):
+    """Create directory with list of plugins
+
+    @param context: the context in which the function is called
+    @param directory: pluginpath directory that will be created
+    @param plugin_module: modules comma separated that will be copied into directory
+    """
+    with dnf.Base() as base:
+        plugindn = base.conf.pluginpath[0]
+    ensure_path_exist(directory)
+    for module in splitter(plugin_modules):
+        shutil.copy2(os.path.join(plugindn, module), directory)
 
 
 @then('package "{pkgs}" should be "{state}"')
@@ -202,20 +248,33 @@ def then_package_state(context, pkgs, state):
     assert pkgs
     pkgs_rpm = get_rpm_package_list()
     pkgs_rpm_ver = get_rpm_package_version_list()
+    post_sack = dnf.Base().fill_sack(load_available_repos=False)
     assert pkgs_rpm
     assert context.pre_rpm_packages
     removed, installed = diff_package_lists(context.pre_rpm_packages, pkgs_rpm)
     assert removed is not None and installed is not None
-  
+    removed_packages, installed_packages = diff_query_lists(context.pre_sack, post_sack)
+
     for n in splitter(pkgs):
         if state == 'installed':
-            assert ('+' + n.split('-', 1)[0]) in installed
-            installed.remove('+' + n.split('-', 1)[0])
+            package_name = package_name_finder(post_sack, n)
+            assert ('+' + package_name) in installed
+            installed.remove('+' + package_name)
+            for package in installed_packages:
+                if n in '{}-{}-{}'.format(package.name, package.version, package.release):
+                    installed_packages.remove(package)
+                    break
+
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
         elif state == 'removed':
+            package_name = package_name_finder(context.pre_sack, n)
             assert ('-' + n) in removed
             removed.remove('-' + n)
+            for package in removed_packages:
+                if n in '{}-{}-{}'.format(package.name, package.version, package.release):
+                    removed_packages.remove(package)
+                    break
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
         elif state == 'absent':
@@ -224,7 +283,8 @@ def then_package_state(context, pkgs, state):
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
         elif state == 'upgraded':
-            pre_rpm_ver = package_version_lists(n.split('-', 1)[0], context.pre_rpm_packages_version)
+            package_name = package_name_finder(post_sack, n)
+            pre_rpm_ver = package_version_lists(package_name, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
@@ -236,7 +296,8 @@ def then_package_state(context, pkgs, state):
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
         elif state == 'downgraded':
-            pre_rpm_ver = package_version_lists(n.split('-', 1)[0], context.pre_rpm_packages_version)
+            package_name = package_name_finder(post_sack, n)
+            pre_rpm_ver = package_version_lists(package_name, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
             assert pre_rpm_ver
@@ -256,6 +317,7 @@ def then_package_state(context, pkgs, state):
     so that we always cover the requirements/expecations entirely """
     if state in ["installed", "removed"]:
         assert not installed and not removed
+        assert not installed_packages and not removed_packages
 
 
 @then('exit code of command should be equal to "{exit_code}"')
