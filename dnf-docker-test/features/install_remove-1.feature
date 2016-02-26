@@ -65,7 +65,7 @@ Scenario: Install TestB-1.0.0-1.noarch.rpm from local path
 Scenario: Install *.rpm from local path
  Given I use the repository "test-1"
  When I execute "bash" command "mkdir /test" with "success"
- When I execute "bash" command "cp /var/www/html/repo/test-1/Test{A,B,C}*.rpm /test" with "success"
+ When I execute "bash" command "cp /var/www/html/repo/test-1/Test{A,B,C}-1*.rpm /test" with "success"
  When I execute "dnf" command "install -y /test/*.rpm" with "success"
  Then package "TestA, TestB, TestC" should be "installed"
  When I execute "dnf" command "remove -y TestA TestB TestC" with "success"

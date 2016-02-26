@@ -29,9 +29,17 @@ rpm.add_group('Testgroup')
 pkgs.append(rpm)
 # Used for install remove tests if requirement TestB is handled properly.
 
+rpm = SimpleRpmBuild('TestA-debuginfo', '1.0.0', '1', ['noarch'])
+pkgs.append(rpm)
+# Used for install debuginfo and test pluginconfpath.
+
 rpm = SimpleRpmBuild('TestB', '1.0.0', '1', ['noarch'])
 pkgs.append(rpm)
 # Requirement of TestA
+
+rpm = SimpleRpmBuild('TestB-debuginfo', '1.0.0', '1', ['noarch'])
+pkgs.append(rpm)
+# Used for install debuginfo and test pluginconfpath.
 
 rpm = SimpleRpmBuild('TestC', '1.0.0', '1', ['noarch'])
 rpm.add_group('Testgroup')
