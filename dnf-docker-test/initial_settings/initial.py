@@ -30,7 +30,7 @@ class DnfEnvSetup:
             query = base.sack.query().filter(nevra__glob=package_name + '*').filter(arch__neq="src")
             assert len(query) > 0
             for n in range(0, len(query)):
-                str(query[0]) == str(query[n])
+                assert str(query[0]) == str(query[n])
             return str(query[0])
 
     def upgrade_dnf_dependencies_from_nightly(self):
