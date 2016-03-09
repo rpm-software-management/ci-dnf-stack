@@ -7,6 +7,10 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf.
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA"
   When I execute "dnf" command "install -y TestA" with "fail"
   Then package "TestA, TestB" should be "absent"
+  # Cleaning traces from scenario - dnf.conf with only main section
+  When I execute "dnf" command "remove -y TestC" with "success"
+  Then package "TestC" should be "removed"
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
 Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   Given I use the repository "test-1"
@@ -17,9 +21,12 @@ Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   Then package "TestA" should be "removed"
   When I execute "dnf" command "remove -y TestB" with "success"
   Then package "TestB" should be "removed"
+  # Cleaning traces from scenario - dnf.conf with only main section
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
 Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.conf file (absolute and relative path)
   Given I use the repository "test-1"
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
   When I create a file "/test/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "install -y -c /test/dnf.conf TestA" with "success"
   Then package "TestA, TestB" should be "installed"
@@ -33,6 +40,7 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
 
 Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
   Given I use the repository "test-1"
+  When I create a file "/test/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=true"
   When I execute "dnf" command "config-manager --setopt=reposdir=/dockertesting/etc/yum.repos.d --add-repo /etc/yum.repos.d/test-1.repo" with "success"
   Then the path "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
@@ -53,6 +61,7 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
 
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
   Given I use the repository "test-1"
+  When I create a file "/dockertesting/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestE"
   When I create a file "/test/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "--installroot=/dockertesting -y -c /test/dnf.conf install TestE" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "success"
