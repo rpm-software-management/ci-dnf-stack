@@ -7,6 +7,10 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf.
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA"
   When I execute "dnf" command "install -y TestA" with "fail"
   Then package "TestA, TestB" should be "absent"
+  # Cleaning traces from scenario - dnf.conf with only main section
+  When I execute "dnf" command "remove -y TestC" with "success"
+  Then package "TestC" should be "removed"
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
 Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
@@ -16,8 +20,11 @@ Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   Then package "TestA" should be "removed"
   When I execute "dnf" command "remove -y TestB" with "success"
   Then package "TestB" should be "removed"
+  # Cleaning traces from scenario - dnf.conf with only main section
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
 Scenario: Create dnf.conf file and test if host is taking option -c /dnf.conf file (absolute and relative path)
+  When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
   When I create a file "/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "install -y -c /dnf.conf TestA" with "success"
   Then package "TestA, TestB" should be "installed"
@@ -30,6 +37,7 @@ Scenario: Create dnf.conf file and test if host is taking option -c /dnf.conf fi
   Then package "TestA, TestB" should be "removed"
 
 Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
+  When I create a file "/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "config-manager --installroot=/dockertesting --add-repo /etc/yum.repos.d/test-1.repo" with "success"
   Then the path "/dockertesting/etc/yum.repos.d/test-1.repo" should be "present"
   And the path "/dockertesting/etc/dnf/dnf.conf" should be "absent"
@@ -44,6 +52,8 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "fail"
 
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
+  When I create a file "/dockertesting/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestE"
+  When I create a file "/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "--installroot=/dockertesting -y -c /dnf.conf install TestE" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "success"
   When I execute "dnf" command "--installroot=/dockertesting -y -c /dnf.conf install TestD" with "fail"
@@ -72,3 +82,15 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot=d
   When I execute "dnf" command "--installroot=/dockertesting2 -c /dnf/dnf.conf -y install TestC" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting2 TestC" with "success"
   Then line from "stdout" should "start" with "TestC-1.0.0-1"
+
+Scenario: Reposdir option set by --setopt in host and installroot=dockertesting3
+  Given I use the repository "test-1"
+  When I create a file "/dockertesting3/var/www/html/repo/upgrade_1-gpg/install.repo" with content: "[upgrade_1-gpg-file]\nname=upgrade_1-gpg-file\nbaseurl=http://127.0.0.1/repo/upgrade_1-gpg\nenabled=1\ngpgcheck=1\ngpgkey=file:///var/www/html/repo/upgrade_1-gpg/RPM-GPG-KEY-dtest2"
+  When I execute "dnf" command "--installroot=/dockertesting3 -y install TestN" with "fail"
+  # Install in installroot from repository described by setopt=reposdir= (path is affected by installroot path)
+  When I execute "dnf" command "--installroot=/dockertesting3 -y --setopt=reposdir=/var/www/html/repo/upgrade_1-gpg install TestN" with "success"
+  When I execute "bash" command "rpm -q --root=/dockertesting3 TestN" with "success"
+  Then line from "stdout" should "start" with "TestN-1.0.0-4"
+  # Install in host from repository described by setopt=reposdir
+  When I execute "dnf" command "-y --setopt=reposdir=/dockertesting3/var/www/html/repo/upgrade_1-gpg install TestB" with "success"
+  Then package "TestB-1.0.0-2" should be "installed"
