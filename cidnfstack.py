@@ -691,7 +691,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
     elif options.command == b'build':
         destdn = decode_path(tempfile.mkdtemp())
         if options.copr[0] == 'local-build':
-            local_rpm_path = os.path.join(work_dir, 'dnf-docker-test/local_rpm')
+            tmp = 'tmp_local_rpm'
+            local_rpm_path = os.path.join(work_dir, 'dnf-docker-test/' + tmp)
             if os.path.exists(local_rpm_path):
                 shutil.rmtree(local_rpm_path)
         else:
@@ -707,11 +708,11 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                             localdir_couter = 1
                             for localdir in options.localdir:
                                 localdir = localdir[:-1] if localdir.endswith('/') else localdir
-                                shutil.copytree(localdir, os.path.join(local_rpm_path, 'temp', str(localdir_couter),
+                                shutil.copytree(localdir, os.path.join(local_rpm_path, str(localdir_couter),
                                                                        os.path.split(localdir)[1]))
                                 localdir_couter += 1
                     elif options.copr[0] == 'local-build':
-                        shutil.copytree(os.getcwdu(), os.path.join(local_rpm_path, 'temp', '1',
+                        shutil.copytree(os.getcwdu(), os.path.join(local_rpm_path, '1',
                                                                    os.path.split(os.getcwdu())[1]))
                     else:
                         _build_tito(destdn, last_tag=False)
@@ -800,7 +801,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         docker_image_updated = docker_image + '.1'
         with open(docker_input_file, 'r') as docker_in:
             if options.copr[0] == 'local-build':
-                copy_local_file = 'COPY local_rpm/temp /local_rpm/'
+                copy_local_file = 'COPY ' + tmp + ' /local_rpm/'
                 install_tito = 'tito'
             else:
                 copy_local_file = ''
@@ -875,9 +876,16 @@ def _start_commandline():  # pylint: disable=R0912,R0915
 
         if failed_tests:
             LOGGER.error("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
+            if local_rpm_path:
+                if os.path.exists(local_rpm_path):
+                    shutil.rmtree(local_rpm_path)
             sys.exit("{} tests failed and {} tests passed".format(failed_tests, passed_tests))
         else:
             LOGGER.info("Dnf-docker-test successfully passed {} tests".format(passed_tests))
+
+    if local_rpm_path:
+        if os.path.exists(local_rpm_path):
+            shutil.rmtree(local_rpm_path)
 
 if __name__ == '__main__':
     _start_commandline()
