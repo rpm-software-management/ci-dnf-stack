@@ -7,11 +7,11 @@ Scenario: Install Remove TestA from repository "test-1" that requires TestB
    | State        | Packages      |
    | installed    | TestA, TestB  |
    | absent       | TestC         |
- When I "install" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y install TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | present      | TestA, TestB  |
- When I "remove" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y remove TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestA, TestB  |
@@ -19,22 +19,22 @@ Scenario: Install Remove TestA from repository "test-1" that requires TestB
 
 Scenario: Install Remove TestD from repository "test-1" that requires TestE = 1.0.0-1
  Given I use the repository "test-1"
- When I "install" a package "TestD" with "dnf"
+ When I execute "dnf" command "-y install TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestD, TestE  |
- When I "remove" a package "TestD" with "dnf"
+ When I execute "dnf" command "-y remove TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestD, TestE  |
 
 Scenario: Install Remove TestF from repository "test-1" that requires TestG >= 1.0.0-1, TestH = 1.0.0-1
  Given I use the repository "test-1"
- When I "install" a package "TestF" with "dnf"
+ When I execute "dnf" command "-y install TestF" with "success"
  Then transaction changes are as follows
    | State        | Packages             |
    | installed    | TestF, TestG, TestH  |
- When I "remove" a package "TestF" with "dnf"
+ When I execute "dnf" command "-y remove TestF" with "success"
  Then transaction changes are as follows
    | State        | Packages             |
    | removed      | TestF, TestG, TestH  |
@@ -48,16 +48,16 @@ Scenario: Install TestI from repository "test-1" that requires TestJ >= 1.0.0-2 
 
 Scenario: Install Remove multiple packages TestK, TestL from repository "test-1" that both require TestM
  Given I use the repository "test-1"
- When I "install" a package "TestK, TestL" with "dnf"
+ When I execute "dnf" command "-y install TestK TestL" with "success"
  Then transaction changes are as follows
    | State        | Packages             |
    | installed    | TestK, TestL, TestM  |
- When I "remove" a package "TestK" with "dnf"
+ When I execute "dnf" command "-y remove TestK" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestK         |
    | present      | TestL, TestM  |
- When I "remove" a package "TestL" with "dnf"
+ When I execute "dnf" command "-y remove TestL" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestL, TestM  |

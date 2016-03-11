@@ -2,7 +2,7 @@ Feature: DNF/Behave test (upgrade test - ALL)
 
 Scenario: Preparation - Install packages from repository "test-1"
  Given I use the repository "test-1"
- When I "install" a package "TestA, TestD, TestF, TestK" with "dnf"
+ When I execute "dnf" command "-y install TestA TestD TestF TestK" with "success"
  Then transaction changes are as follows
    | State        | Packages                                                       |
    | installed    | TestA, TestB, TestD, TestE, TestF, TestG, TestH, TestK, TestM  |

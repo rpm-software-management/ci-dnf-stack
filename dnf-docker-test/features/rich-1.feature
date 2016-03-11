@@ -3,7 +3,7 @@ Feature: Richdeps/Behave test
 
 Scenario: Install TestA from repository "rich-1"
  Given I use the repository "rich-1"
- When I "install" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y install TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestC  |

@@ -2,7 +2,7 @@ Feature: DNF/Behave test (upgrade test - single packages)
 
 Scenario: Install packages from repository "test-1"
  Given I use the repository "test-1"
- When I "install" a package "TestA, TestD, TestF" with "dnf"
+ When I execute "dnf" command "-y install TestA TestD TestF" with "success"
  Then transaction changes are as follows
    | State        | Packages                                         |
    | installed    | TestA, TestB, TestD, TestE, TestF, TestG, TestH  |
@@ -10,7 +10,7 @@ Scenario: Install packages from repository "test-1"
 
 Scenario: Upgrade package TestA from repository "upgrade_1"
  Given I use the repository "upgrade_1"
- When I "upgrade" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y upgrade TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages   |
    | upgraded     | TestA      |
@@ -18,13 +18,13 @@ Scenario: Upgrade package TestA from repository "upgrade_1"
 
 Scenario: Upgrade two packages from repository "upgrade_1"
  Given I use the repository "upgrade_1"
- When I "upgrade" a package "TestD, TestF" with "dnf"
+ When I execute "dnf" command "-y upgrade TestD TestF" with "success"
  Then transaction changes are as follows
    | State        | Packages                    |
    | upgraded     | TestD, TestE, TestF, TestG  |
    | present      | TestH                       |
 
- When I "install" a package "TestI, TestK" with "dnf"
+ When I execute "dnf" command "-y install TestI TestK" with "success"
  Then transaction changes are as follows
    | State        | Packages                    |
    | installed    | TestI, TestJ, TestK, TestM  |
