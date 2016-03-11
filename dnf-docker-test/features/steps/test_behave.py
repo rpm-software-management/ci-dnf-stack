@@ -46,16 +46,24 @@ def get_rpm_package_list():
 
 def get_rpm_package_version_list():
     """ Gets all installed packages in the system with version"""
-    pkgverstr = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}\n'])
-    dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--disableexclude=all', '-Cq', '--queryformat',
-                                         '%{name}-%{version}-%{release}'])
-    pkgverstr = pkgverstr.splitlines()
-    comparerpmver = pkgverstr
-    for pkg in comparerpmver:
-        if pkg.decode().startswith('gpg-pubkey'):
-            comparerpmver.remove(pkg)
+    comparerpmver = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n'])
+    dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--disableexclude=all', '-Cq',
+                                         '--queryformat', '%{name}-%{version}-%{release}.%{arch}'])
+    comparerpmver = [p for p in comparerpmver.splitlines() if not p.decode().startswith('gpg-pubkey')]
     assert sorted(comparerpmver) == sorted(dnfverstr.splitlines())
-    return pkgverstr
+    sack = dnf.Base().fill_sack(load_available_repos=False)
+    list_sack = list(sack.query().installed())
+    assert len(list_sack) == len(comparerpmver)
+    comparerpmver_remove = list(comparerpmver)
+    for pkg in comparerpmver:
+        subj = dnf.subject.Subject(pkg)
+        candidate = subj.get_best_query(sack)
+        assert len(candidate) == 1
+        list_sack.remove(candidate[0])
+        comparerpmver_remove.remove(pkg)
+    assert not list_sack
+    assert not comparerpmver_remove
+    return comparerpmver
 
 
 def diff_package_lists(a, b):
