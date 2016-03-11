@@ -2,12 +2,12 @@ Feature: DNF/Behave test (downgrade test)
 
 Scenario: Downgrade TestA from repository "upgrade_1"
  Given I use the repository "upgrade_1"
- When I "install" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y install TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestB  |
    | absent       | TestC         |
- When I "downgrade" a package "TestA" with "dnf"
+ When I execute "dnf" command "-y downgrade TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages   |
    | downgraded   | TestA      |
@@ -16,7 +16,7 @@ Scenario: Downgrade TestA from repository "upgrade_1"
 
 Scenario: Downgrade TestD from repository "upgrade_1" that require --allowerasing
  Given I use the repository "upgrade_1"
- When I "install" a package "TestD" with "dnf"
+ When I execute "dnf" command "-y install TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestD, TestE  |
@@ -31,7 +31,7 @@ Scenario: Downgrade TestD from repository "upgrade_1" that require --allowerasin
 
 Scenario: Downgrade TestN from repository "upgrade_1" only to previous version
  Given I use the repository "upgrade_1"
- When I "install" a package "TestN" with "dnf"
+ When I execute "dnf" command "-y install TestN" with "success"
  Then transaction changes are as follows
    | State        | Packages   |
    | installed    | TestN      |
