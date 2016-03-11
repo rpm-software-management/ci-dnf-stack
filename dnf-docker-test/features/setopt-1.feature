@@ -13,7 +13,11 @@ Scenario: Reposdir option set by --setopt in host and installroot=dockertesting3
   Then line from "stdout" should "start" with "TestN-1.0.0-4"
   # Install in host from repository described by setopt=reposdir
   When I execute "dnf" command "-y --setopt=reposdir=/dockertesting3/repository install TestB" with "success"
-  Then package "TestB-1.0.0-2" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | installed    | TestB-1.0.0-2  |
   # Cleaning steps
   When I execute "dnf" command "-y remove TestB" with "success"
-  Then package "TestB" should be "removed"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | removed      | TestB-1.0.0-2  |

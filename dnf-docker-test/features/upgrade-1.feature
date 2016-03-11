@@ -3,29 +3,43 @@ Feature: DNF/Behave test (upgrade test - single packages)
 Scenario: Install packages from repository "test-1"
  Given I use the repository "test-1"
  When I "install" a package "TestA, TestD, TestF" with "dnf"
- Then package "TestA, TestB, TestD, TestE, TestF, TestG, TestH" should be "installed"
- And package "TestC" should be "absent"
+ Then transaction changes are as follows
+   | State        | Packages                                         |
+   | installed    | TestA, TestB, TestD, TestE, TestF, TestG, TestH  |
+   | absent       | TestC                                            |
 
 Scenario: Upgrade package TestA from repository "upgrade_1"
  Given I use the repository "upgrade_1"
  When I "upgrade" a package "TestA" with "dnf"
- Then package "TestA" should be "upgraded"
- And package "TestB" should be "unupgraded"
+ Then transaction changes are as follows
+   | State        | Packages   |
+   | upgraded     | TestA      |
+   | present      | TestB      |
 
 Scenario: Upgrade two packages from repository "upgrade_1"
  Given I use the repository "upgrade_1"
  When I "upgrade" a package "TestD, TestF" with "dnf"
- Then package "TestD, TestE, TestF, TestG" should be "upgraded"
- And package "TestH" should be "unupgraded"
+ Then transaction changes are as follows
+   | State        | Packages                    |
+   | upgraded     | TestD, TestE, TestF, TestG  |
+   | present      | TestH                       |
 
  When I "install" a package "TestI, TestK" with "dnf"
- Then package "TestI, TestJ, TestK, TestM" should be "installed"
+ Then transaction changes are as follows
+   | State        | Packages                    |
+   | installed    | TestI, TestJ, TestK, TestM  |
 
 Scenario: Upgrade or downgrade to specific version with install command from repository "upgrade_1"
  Given I use the repository "upgrade_1"
  When I execute "dnf" command "install -y TestN-1.0.0-3" with "success"
- Then package "TestN-1.0.0-3" should be "installed"
+ Then transaction changes are as follows
+   | State        | Packages       |
+   | installed    | TestN-1.0.0-3  |
  When I execute "dnf" command "install -y TestN-1.0.0-4" with "success"
- Then package "TestN-1.0.0-4" should be "upgraded"
+ Then transaction changes are as follows
+   | State        | Packages       |
+   | upgraded     | TestN-1.0.0-4  |
  When I execute "dnf" command "install -y TestN-1.0.0-2" with "success"
- Then package "TestN-1.0.0-2" should be "downgraded"
+ Then transaction changes are as follows
+   | State        | Packages       |
+   | downgraded   | TestN-1.0.0-2  |

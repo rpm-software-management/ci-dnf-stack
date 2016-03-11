@@ -4,9 +4,13 @@ Feature: Richdeps/Behave test
   with and observe if the Recommended TestC is also installed
 
 
-Scenario: 
+Scenario:
   Given I use the repository "rich-1"
   When I "install" a package "TestB" with "rpm"
-  Then package "TestB" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | installed    | TestB      |
   When I "install" a package "TestA" with "dnf"
-  Then package "TestA, TestC" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages      |
+   | installed    | TestA, TestC  |
