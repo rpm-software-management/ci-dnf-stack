@@ -46,6 +46,7 @@ def get_rpm_package_list():
 
 def get_rpm_package_version_list():
     """ Gets all installed packages in the system with version"""
+    # Comparison of epoch is imposible, because rpm return (none), but dnf repoquery 0 if it is not defined.
     comparerpmver = subprocess.check_output(['rpm', '-qa', '--queryformat', '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n'])
     dnfverstr = subprocess.check_output(['dnf', 'repoquery', '--installed', '--disableexclude=all', '-Cq',
                                          '--queryformat', '%{name}-%{version}-%{release}.%{arch}'])
@@ -126,7 +127,7 @@ def piecewise_compare(a, b):
     return sorted(a) == sorted(b)
 
 
-def package_name_finder(sack, package_string):
+def package_finder(sack, package_string, package_count=1):
     """
     @param sack: sack with packages
     @param package_string: package description in nevra format
@@ -135,8 +136,12 @@ def package_name_finder(sack, package_string):
     """
     subj = dnf.subject.Subject(package_string)
     candidate = subj.get_best_query(sack)
-    assert len(candidate) == 1
-    return candidate[0].name
+    assert len(candidate) == package_count, 'The number of found packages {} (packages - {}) for string "{}" differs ' \
+                                            'from expected {}'.format(
+        len(candidate), ' '.join([str(pkg) for pkg in candidate]), package_string, package_count)
+
+    if package_count == 1:
+        return candidate[0]
 
 
 def splitter(pkgs):
@@ -265,10 +270,10 @@ def then_package_state(context, pkgs, state):
 
     for n in splitter(pkgs):
         if state == 'installed':
-            package_name = package_name_finder(post_sack, n)
+            package_name = package_finder(post_sack, n).name
             assert ('+' + package_name) in installed
             installed.remove('+' + package_name)
-            for package in installed_packages:
+            for package in list(installed_packages):
                 if n in '{}-{}-{}'.format(package.name, package.version, package.release):
                     installed_packages.remove(package)
                     break
@@ -276,7 +281,7 @@ def then_package_state(context, pkgs, state):
             post_rpm_present = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_present
         elif state == 'removed':
-            package_name = package_name_finder(context.pre_sack, n)
+            package_name = package_finder(context.pre_sack, n).name
             assert ('-' + n) in removed
             removed.remove('-' + n)
             for package in removed_packages:
@@ -291,7 +296,7 @@ def then_package_state(context, pkgs, state):
             post_rpm_absence = package_absence(n, pkgs_rpm_ver)
             assert not post_rpm_absence
         elif state == 'upgraded':
-            package_name = package_name_finder(post_sack, n)
+            package_name = package_finder(post_sack, n).name
             pre_rpm_ver = package_version_lists(package_name, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
@@ -304,7 +309,7 @@ def then_package_state(context, pkgs, state):
             assert pre_rpm_ver
             assert post_rpm_ver == pre_rpm_ver
         elif state == 'downgraded':
-            package_name = package_name_finder(post_sack, n)
+            package_name = package_finder(post_sack, n).name
             pre_rpm_ver = package_version_lists(package_name, context.pre_rpm_packages_version)
             post_rpm_ver = package_version_lists(n, pkgs_rpm_ver)
             assert post_rpm_ver
@@ -325,13 +330,58 @@ def then_package_state(context, pkgs, state):
     so that we always cover the requirements/expecations entirely """
     if state in ["installed", "removed"]:
         assert not installed and not removed
-        assert not installed_packages and not removed_packages
+        assert not installed_packages and not removed_packages, 'Packages (installed {} or removed {}) were ' \
+                                                                'unexpectably changed'.format(
+            ' '.join([str(pkg) for pkg in installed_packages]),' '.join([str(pkg) for pkg in removed_packages]))
+
+
+@then('transaction changes are as follows')
+def then_transaction_changes(context):
+    if not context.table:
+        raise ValueError('table not found')
+    if context.table.headings != ['State', 'Packages']:
+        raise NotImplementedError('configuration format not supported')
+    post_sack = dnf.Base().fill_sack(load_available_repos=False)
+    removed_packages, installed_packages = diff_query_lists(context.pre_sack, post_sack)
+    for state, packages in context.table:
+        for pkg in splitter(packages):
+            if state == 'installed':
+                candidate = package_finder(post_sack, pkg)
+                installed_packages.remove(candidate)
+            elif state == 'removed':
+                candidate = package_finder(context.pre_sack, pkg)
+                removed_packages.remove(candidate)
+            elif state == 'absent':
+                package_finder(post_sack, pkg, package_count=0)
+                package_finder(context.pre_sack, pkg, package_count=0)
+            elif state == 'upgraded':
+                package_upgr = package_finder(post_sack, pkg)
+                package_orig = package_finder(context.pre_sack, package_upgr.name)
+                assert package_upgr > package_orig
+                installed_packages.remove(package_upgr)
+                removed_packages.remove(package_orig)
+            elif state == 'downgraded':
+                package_down = package_finder(post_sack, pkg)
+                package_orig = package_finder(context.pre_sack, package_down.name)
+                assert package_down < package_orig
+                installed_packages.remove(package_down)
+                removed_packages.remove(package_orig)
+            elif state == 'present':
+                package_post = package_finder(post_sack, pkg)
+                package_orig = package_finder(context.pre_sack, pkg)
+                assert package_post == package_orig
+            else:
+                raise AssertionError('The state {} is not allowed option for Then statement'.format(state))
+    assert not installed_packages and not removed_packages, 'Packages (installed {} or removed {}) were unexpectably ' \
+                                                            'changed'.format(
+        ' '.join([str(pkg) for pkg in installed_packages]),' '.join([str(pkg) for pkg in removed_packages]))
 
 
 @then('exit code of command should be equal to "{exit_code}"')
 def then_package_state(context, exit_code):
     exit_code = int(exit_code)
     assert context.cmd_rc == exit_code
+
 
 @then('line from "{std_message}" should "{state}" with "{line_start}"')
 def then_package_state(context, std_message, state, line_start):

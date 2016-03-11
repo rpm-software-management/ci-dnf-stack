@@ -16,7 +16,9 @@ Scenario: Add repository to host with gpgcheck=1 from repofile and test 'repolis
  Then the path "/dockertesting/var/log/dnf.log" should be "absent"
 # Test if correct repo is enabled and gpg-key import
  When I execute "dnf" command "-y --disablerepo=* --enablerepo=upgrade_1-gpg-file install TestN" with "success"
- Then package "TestN" should be "installed"
+ Then transaction changes are as follows
+   | State        | Packages      |
+   | installed    | TestN-1.0.0-4 |
  And the path "/dockertesting/var/log/dnf.log" should be "absent"
  And the path "/var/log/dnf.log" should be "present"
  When I execute "bash" command "rpm --root=/dockertesting -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "fail"

@@ -13,7 +13,9 @@ Scenario: Install package from installroot repository into installroot, and test
   When I execute "bash" command "rpm -q TestC" with "fail"
 # Install package from host repo into host and make host cache for metadata in host
   When I execute "dnf" command "install -y TestB" with "success"
-  Then package "TestB" should be "installed"
+  Then transaction changes are as follows
+    | State        | Packages      |
+    | installed    | TestB-1.0.0-2 |
 # Delete installroot cache and commands for installroot with -C should fail
   When I execute "bash" command "rm -rf /dockertesting/var/cache/dnf/*" with "success"
   When I execute "dnf" command "install --installroot=/dockertesting --releasever=23  -y -C TestB" with "fail"
