@@ -19,7 +19,9 @@ Scenario: Install package from installroot repository into installroot, test met
   When I execute "bash" command "rpm -q TestC" with "fail"
 # Install package from host repo into host and make host cache for metadata in host
   When I execute "dnf" command "install -y TestB" with "success"
-  Then package "TestB-1.0.0-2" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | installed    | TestB-1.0.0-2  |
 # Delete installroot cache and commands for installroot with -C should fail
   When I execute "bash" command "rm -rf /dockertesting/var/cache/dnf/*" with "success"
   When I execute "dnf" command "install --installroot=/dockertesting --releasever=23  -y -C TestB" with "fail"
@@ -46,7 +48,9 @@ Scenario: Add repository to host with gpgcheck=1 from repofile and control 'repo
  When I execute "bash" command "rm -f /dockertesting/var/log/dnf.log" with "success"
  Then the path "/dockertesting/var/log/dnf.log" should be "absent"
  When I execute "dnf" command "-y --disablerepo=* --enablerepo=upgrade_1-gpg-file install TestN" with "success"
- Then package "TestN" should be "installed"
+ Then transaction changes are as follows
+   | State        | Packages   |
+   | installed    | TestN      |
  And the path "/dockertesting/var/log/dnf.log" should be "absent"
  And the path "/var/log/dnf.log" should be "present"
  When I execute "bash" command "rpm --root=/dockertesting -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'" with "fail"
@@ -95,7 +99,9 @@ Scenario: Tracking information are stored in host persist-dir if package is inst
   When I execute "bash" command "rm -rf /var/lib/dnf" with "success"
   Then the path "/var/lib/dnf/" should be "absent"
   When I execute "dnf" command "-y install TestG" with "success"
-  Then package "TestG" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | installed  | TestG  |
   And the path "/var/lib/dnf/*" should be "present"
 
 Scenario: Tracking information are stored in installroot persist-dir if package is installed in installroot

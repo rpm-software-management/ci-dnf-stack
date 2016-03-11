@@ -3,23 +3,35 @@ Feature: DNF/Behave test (DNF config and config files in installroot)
 Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf.
   Given I use the repository "test-1"
   When I execute "dnf" command "install -y TestC" with "success"
-  Then package "TestC" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | installed    | TestC      |
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA"
   When I execute "dnf" command "install -y TestA" with "fail"
-  Then package "TestA, TestB" should be "absent"
+  Then transaction changes are as follows
+   | State        | Packages      |
+   | absent       | TestA, TestB  |
   # Cleaning traces from scenario - dnf.conf with only main section
   When I execute "dnf" command "remove -y TestC" with "success"
-  Then package "TestC" should be "removed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | removed      | TestC      |
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
 Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
   When I execute "dnf" command "install -y --disableexclude=main TestA" with "success"
-  Then package "TestA, TestB" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages      |
+   | installed    | TestA, TestB  |
   When I execute "dnf" command "remove -y --disableexclude=all TestA" with "success"
-  Then package "TestA" should be "removed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | removed      | TestA      |
   When I execute "dnf" command "remove -y TestB" with "success"
-  Then package "TestB" should be "removed"
+  Then transaction changes are as follows
+   | State        | Packages   |
+   | removed      | TestB      |
   # Cleaning traces from scenario - dnf.conf with only main section
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]"
 
@@ -27,14 +39,18 @@ Scenario: Create dnf.conf file and test if host is taking option -c /dnf.conf fi
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
   When I create a file "/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
   When I execute "dnf" command "install -y -c /dnf.conf TestA" with "success"
-  Then package "TestA, TestB" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages      |
+   | installed    | TestA, TestB  |
   When I execute "dnf" command "install -y -c /dnf.conf TestD" with "fail"
   When I execute "dnf" command "install -y --config dnf.conf TestD" with "fail"
 # TestA cannot be removed due to host exclude in dnf.conf
   When I execute "dnf" command "remove -y TestA" with "fail"
 # TestB can be removed because TestA that is installed and require TestB was excluded
   When I execute "dnf" command "remove -y TestB" with "success"
-  Then package "TestA, TestB" should be "removed"
+  Then transaction changes are as follows
+   | State        | Packages      |
+   | removed      | TestA, TestB  |
 
 Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
   When I create a file "/dnf.conf" with content: "[main]\nexclude=TestD\nclean_requirements_on_remove=true"
@@ -65,7 +81,9 @@ Scenario: Reposdir option in dnf conf.file in host
   Given I use the repository "upgrade_1"
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nreposdir=/var/www/html/repo/test-1-gpg"
   When I execute "dnf" command "-y install TestN" with "success"
-  Then package "TestN-1.0.0-1" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | installed    | TestN-1.0.0-1  |
 
 Scenario: Reposdir option in dnf.conf file in installroot=dockertesting2
   Given I use the repository "test-1"
@@ -93,4 +111,6 @@ Scenario: Reposdir option set by --setopt in host and installroot=dockertesting3
   Then line from "stdout" should "start" with "TestN-1.0.0-4"
   # Install in host from repository described by setopt=reposdir
   When I execute "dnf" command "-y --setopt=reposdir=/dockertesting3/var/www/html/repo/upgrade_1-gpg install TestB" with "success"
-  Then package "TestB-1.0.0-2" should be "installed"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | installed    | TestB-1.0.0-2  |
