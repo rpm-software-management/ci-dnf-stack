@@ -180,21 +180,19 @@ Feature: Richdeps/Behave test-1
 Scenario: Install TestA from repository "test-1"
  Given I use the repository "test-1"
  When I execute "dnf" command "install -y TestA" with "success"
- Then package "TestA, TestB" should be "installed"
- And package "TestC" should be "absent"
+ Then transaction changes are as follows
+   | State        | Packages      |
+   | installed    | TestA, TestC  |
+   | absent       | TestB         |
 
 ```
 
-Possible actions:
-    for rpm: install, remove
-    for dnf: install, remove, upgrade, upgrade (with package name: all),
-    upbrade-to, downgrade, autoremove
-    for command-line commands: unlimited + dnf-2 and dnf-3 run
+Possible actions in step like  When I execute "dnf" command "install -y TestA" with "success":
+    for "bash" commands: unlimited commands
+    for "dnf" commands: the command without dnf is run with dnf-2 and dnf-3
 
-Possible package managers: dnf, rpm
-
-Possible states: installed, removed, absent, upgraded, unupgraded, downgraded,
-present, upgraded-to
+Possible states: installed, removed, absent, upgraded, downgraded, present. The states present and absent can be used
+for detailed description of tested step or to ensure, that required conditions before or after tested step were met.
 
 Support
 -------
@@ -210,11 +208,11 @@ Notes for functional testing
 
 Repo test-1-gpg:
 Was created from rpms in test-1 repo. All rpm were signed with gpg-pubkey-2d2e7ca3-56c1e69d	gpg(DNF Test1 (TESTER)
-<dnf@testteam.org>) except TestE (not signed), TestG (signed with key gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2 
+<dnf@testteam.org>) except TestE (not signed), TestG (signed with key gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2
 (TESTER) <dnf@testteam.org>)), and TestJ (not signed and incorrect check-sum).
 
 Repo upgrade_1-gpg:
-Was created from rpms in upgrade_1 repo. All rpm were signed with gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2 
+Was created from rpms in upgrade_1 repo. All rpm were signed with gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2
 (TESTER) <dnf@testteam.org>) except both TestE (not signed) packages.
 
 
