@@ -4,7 +4,7 @@ Feature: Richdeps/Behave test
   with and observe if the Recommended TestC is also installed
 
 
-Scenario:
+Scenario: Install TestB first with RPM, then install TestA with DNF and observe if the Recommended TestC is also installed
   Given I use the repository "rich-1"
   When I execute "bash" command "rpm -Uvh  /repo/TestB*.rpm" with "success"
   Then transaction changes are as follows
