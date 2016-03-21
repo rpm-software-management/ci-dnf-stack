@@ -222,6 +222,8 @@ def then_file_presence(context, path_to_object, state):
 
 @then('the file "{path_to_file}" should contain "{content}"')
 def then_file_contein(context, path_to_file, content):
-    assert os.path.isfile(path_to_file), "The file {} is not a file or doesn't exist".format(path_to_file)
-    with open(path_to_file, 'r') as f:
-        assert content in f, "The file {} doesn't contain '{}'".format(path_to_file, content)
+    path = glob.glob(path_to_file)
+    assert len(path) == 1, '{} objects ({}) were found instead of 1'.format(len(path), ' '.join(path))
+    assert os.path.isfile(path[0]), "The file {} is not a file or doesn't exist".format(path[0])
+    with open(path[0], 'r') as f:
+        assert content in f, "The file {} doesn't contain '{}'".format(path[0], content)
