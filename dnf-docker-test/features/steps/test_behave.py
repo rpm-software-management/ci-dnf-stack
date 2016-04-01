@@ -15,13 +15,13 @@ def sack_rpm_comparator():
                                              '%{NAME}-%|epoch?{%{epoch}:}:{0:}|%{VERSION}-%{RELEASE}.%{ARCH}\n'])
     comparerpmver = [p for p in comparerpmver.splitlines() if not p.decode().startswith('gpg-pubkey')]
     set_comparerpmver = set(comparerpmver)
-    assert len(comparerpmver) == len(set_comparerpmver)
+    assert len(comparerpmver) == len(set_comparerpmver), 'RPM found multiple packages with same nevra'
     sack = dnf.Base().fill_sack(load_available_repos=False)
     list_sack = ['{}-{}:{}-{}.{}'.format(pkg.name, pkg.epoch, pkg.version, pkg.release, pkg.arch
                                          ) for pkg in sack.query().installed()]
     set_sack = set(list_sack)
-    assert len(set_sack) == len(list_sack)
-    assert set_sack == set_comparerpmver
+    assert len(set_sack) == len(list_sack), 'DNF sack has multiple packages with same nevra'
+    assert set_sack == set_comparerpmver, 'There are different items in DNF sack and RPM-db'
     return sack
 
 
@@ -63,11 +63,12 @@ def splitter(pkgs):
 @given('I use the repository "{repo}"')
 def given_repo_condition(context, repo):
     """ :type context: behave.runner.Context """
-    assert repo
+    assert repo, 'Repository name was not specified'
     context.repo = repo
     for file in glob.glob('/etc/yum.repos.d/*.repo'):
         os.remove(file)
-    assert os.path.exists('/var/www/html/repo/' + repo)
+    assert os.path.exists('/var/www/html/repo/' + repo), "The directory {} for repository {} doesn't exist" \
+                                                         "".format('/var/www/html/repo/' + repo, repo)
     for root, dirs, files in os.walk('/repo'):
         for f in files:
             os.unlink(os.path.join(root, f))
@@ -80,7 +81,7 @@ def given_repo_condition(context, repo):
 
 @step('I execute "{type_of_command}" command "{command}" with "{result}"')
 def when_action_command(context, type_of_command, command, result):
-    assert command
+    assert command, 'Command was not specified'
     dnf_command_version = context.config.userdata['dnf_command_version']
     assert dnf_command_version
     context.pre_sack = sack_rpm_comparator()
@@ -101,9 +102,9 @@ def when_action_command(context, type_of_command, command, result):
     if context.cmd_error:
         print(context.cmd_error)
     if result == "success":
-        assert context.cmd_rc == 0
+        assert context.cmd_rc == 0, 'Return code was {}, but expected 0'.format(context.cmd_rc)
     elif result == "fail":
-        assert context.cmd_rc != 0
+        assert context.cmd_rc != 0, 'Return code was {}, but expected non zero (fail)'.format(context.cmd_rc)
     else:
         raise AssertionError('The option {} is not allowed option for expected result of command. '
                              'Allowed options are "success" and "fail"'.format(result))
@@ -154,19 +155,19 @@ def then_transaction_changes(context):
             elif state == 'upgraded':
                 package_upgr = package_finder(post_sack, pkg)
                 package_orig = package_finder(context.pre_sack, package_upgr.name)
-                assert package_upgr > package_orig
+                assert package_upgr > package_orig, "The original package {} is not upgraded (package after transaction - {})".format(str(package_orig), str(package_upgr))
                 installed_packages.remove(package_upgr)
                 removed_packages.remove(package_orig)
             elif state == 'downgraded':
                 package_down = package_finder(post_sack, pkg)
                 package_orig = package_finder(context.pre_sack, package_down.name)
-                assert package_down < package_orig
+                assert package_down < package_orig, "The original package {} is not downgraded (package after transaction - {})".format(str(package_orig), str(package_down))
                 installed_packages.remove(package_down)
                 removed_packages.remove(package_orig)
             elif state == 'present':
                 package_post = package_finder(post_sack, pkg)
                 package_orig = package_finder(context.pre_sack, pkg)
-                assert package_post == package_orig
+                assert package_post == package_orig, "The original package {} is not identical (package after transaction - {})".format(str(package_orig), str(package_post))
             else:
                 raise AssertionError('The state {} is not allowed option for Then statement'.format(state))
     assert not installed_packages and not removed_packages, 'Packages (installed {} or removed {}) were unexpectably ' \
@@ -194,9 +195,9 @@ def then_package_state(context, std_message, state, line_start):
         if line.startswith(line_start):
             counter += 1
     if state == 'start':
-        assert counter > 0
+        assert counter > 0, 'The line starting with "{}" was not found in "{}"'.format(line_start, std_message)
     elif state == 'not start':
-        assert counter == 0
+        assert counter == 0, 'The line starting with "{}" was found in "{}", but should be absent'.format(line_start, std_message)
     else:
         raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start)'
                              .format(state))
@@ -212,9 +213,9 @@ def then_file_presence(context, path_to_object, state):
     else:
         result = os.path.isfile(path_to_object)
     if state == 'present':
-        assert result
+        assert result, 'Object not found'
     elif state == 'absent':
-        assert not result
+        assert not result, "Object was found but should be absent (hint - {})".format(str(result))
     else:
         raise AssertionError('The state {} is not allowed option for Then statement (allowed present, absent)'
                              .format(state))
