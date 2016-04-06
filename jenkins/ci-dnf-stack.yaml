@@ -46,7 +46,7 @@
       - libsolv-fedora
     triggers:
       - pollscm:
-          cron: "*/10 * * * *"
+          cron: "H H * * *"
           ignore-post-commit-hooks: True
     builders:
       - shell: "./cidnfstack.py build -c dnf-pull-requests libsolv"
