@@ -820,6 +820,11 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                     sys.exit(
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
+            elif options.copr[1] == b'libsolv':
+                import pygit2
+                from ci_dnf_stack import utils
+                srpm = utils.build_srpm('libsolv', 'upstream', 'fedora/libsolv.spec')
+                shutil.move(srpm, destdn)
             if options.copr[0] != 'local-build':
                 try:
                     _build_in_copr(destdn, options.copr[0])

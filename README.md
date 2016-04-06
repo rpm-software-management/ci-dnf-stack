@@ -105,12 +105,12 @@ ci-dnf-stack for Copr tests:
 - `xz executable <http://tukaani.org/xz/>`_
 - `copr Python module <https://fedorahosted.org/copr/>`_
 - `rpm Python module <http://www.rpm.org/>`_
+- `pygit2 Python module <http://www.pygit2.org/>`_
 
 Following additional executables and Python modules are required to run
 a test suite:
 
 - `behave Python module <http://github.com/behave/behave/>`_
-- `pygit2 Python module <http://www.pygit2.org/>`_
 
 To rebuild test-1 or upgrade_1 repository for Dnf Docker Test run test-1.py
 or upgrade_1.py in dnf-docker-test/repo_create directory. It requires

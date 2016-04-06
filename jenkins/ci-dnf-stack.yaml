@@ -1,0 +1,58 @@
+- project:
+    name: ci-dnf-stack
+    jobs:
+      - "libsolv"
+
+- scm:
+    name: ci-dnf-stack
+    scm:
+      - git:
+          #url: https://github.com/rpm-software-management/ci-dnf-stack.git
+          url: https://github.com/ignatenkobrain/ci-dnf-stack.git
+          browser: githubweb
+          browser-url: https://github.com/rpm-software-management/ci-dnf-stack/
+          branches:
+            - origin/libsolv
+
+- scm:
+    name: libsolv-upstream
+    scm:
+      - git:
+         url: https://github.com/openSUSE/libsolv.git
+         browser: githubweb
+         browser-url: https://github.com/openSUSE/libsolv/
+         branches:
+           - origin/master
+         basedir: upstream
+         skip-tag: True
+
+- scm:
+    name: libsolv-fedora
+    scm:
+      - git:
+          url: git://pkgs.fedoraproject.org/rpms/libsolv.git
+          browser: cgit
+          browser-url: http://pkgs.fedoraproject.org/cgit/rpms/libsolv.git/
+          branches:
+            - origin/master
+          basedir: fedora
+
+- job:
+    name: libsolv
+    project-type: freestyle
+    scm:
+      - ci-dnf-stack
+      - libsolv-upstream
+      - libsolv-fedora
+    triggers:
+      - pollscm:
+          cron: "*/10 * * * *"
+          ignore-post-commit-hooks: True
+    builders:
+      - shell: "./cidnfstack.py build -c dnf-pull-requests libsolv"
+    publishers:
+      - archive:
+          artifacts: "*.log"
+    properties:
+      - github:
+          url: https://github.com/openSUSE/libsolv
