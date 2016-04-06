@@ -128,6 +128,14 @@ def build_srpm(package, repository, rpmspec, commit_sha=None):
                                 directory=archive_prefix,
                                 changelog=_gen_changelog(version, release))
 
+    # FIXME: https://github.com/libgit2/pygit2/issues/616
+    # pygit2.write_archive() looses permissions on files
+    # some of packages requires them, e.g. libsolv
+    if package == "libsolv":
+        tmp = spec.split("\n")
+        tmp.insert(tmp.index("%check") + 1, "chmod +x test/runtestcases")
+        spec = "\n".join(tmp)
+
     # TODO: Use tempfile.TemporaryDirectory() contextmanager once we will migrate to py3
     tmpdir = tempfile.mkdtemp(prefix=prefix)
     try:
