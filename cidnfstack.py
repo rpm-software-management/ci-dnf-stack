@@ -134,7 +134,10 @@ import tempfile
 import time
 import urllib
 
+import pygit2
 import rpm
+
+from ci_dnf_stack import utils
 
 
 NAME = 'ci-dnf-stack'
@@ -357,51 +360,6 @@ def _build_tito(destdn, last_tag=True):
         raise ValueError('"tito" failed')
     finally:
         _log_call(cmd[0], status, output)
-
-
-def _build_librepo(spec, destdn, release=None):
-    """Build a SRPM of a librepo project fork in the current work. dir.
-
-    The "cp", "dirname", "echo", "git", "mv", "rpmbuild", "rm", "sed",
-    "sh" and "xz" executables must be available. The destination
-    directory will be overwritten.
-
-    :param spec: the ID of the Fedora Git revision of the spec file
-    :type spec: unicode
-    :param destdn: the name of a destination directory
-    :type destdn: unicode
-    :param release: a custom release number of the resulting RPMs
-    :type release: str | None
-    :raises exceptions.IOError: if the spec file of librepo cannot be
-       downloaded or if the build cannot be prepared
-    :raises urllib.ContentTooShortError: if the spec file of librepo
-       cannot be downloaded
-    :raises exceptions.OSError: if the destination directory cannot be
-       created or overwritten or if the build cannot be prepared or if
-       an executable cannot be executed
-    :raises exceptions.ValueError: if the build fails
-
-    """
-    LOGGER.info('Building a SRPM from %s...', os.getcwdu())
-    specurlpat = (
-        'http://pkgs.fedoraproject.org/cgit/librepo.git/plain/librepo.spec?'
-        'id={}')
-    specfn = 'librepo.spec'
-    urllib.urlretrieve(specurlpat.format(spec), specfn)
-    if release:
-        _set_release(specfn, release)
-    _remkdir(destdn, notexists_ok=True)
-    with _move_srpms('.', destdn):
-        try:
-            output = subprocess.check_output(
-                ['sh', os.path.join('utils', 'make_rpm.sh'), '.',
-                 '--srpm-only'],
-                stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as err:
-            _log_call('utils/make_tarball.sh', err.returncode, err.output)
-            raise ValueError('"utils/make_tarball.sh" failed')
-        else:
-            _log_call('utils/make_tarball.sh', 0, output)
 
 
 def _build_libcomps(destdn, release=None):
@@ -770,21 +728,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                         'The destination directory cannot be overwritten '
                         'or the executable cannot be executed.')
             elif options.copr[1] == b'librepo':
-                try:
-                    _build_librepo(
-                        FEDREV, destdn, options.release)
-                except (IOError, urllib.ContentTooShortError, ValueError):
-                    LOGGER.debug(
-                        'An exception have occurred during the librepo build.',
-                        exc_info=True)
-                    sys.exit('The build have failed.')
-                except OSError:
-                    LOGGER.debug(
-                        'An exception have occurred during the librepo build.',
-                        exc_info=True)
-                    sys.exit(
-                        'The destination directory cannot be overwritten '
-                        'or some of the executables cannot be executed.')
+                srpm = utils.build_srpm('librepo', 'upstream', 'fedora/librepo.spec')
+                shutil.move(srpm, destdn)
             elif options.copr[1] == b'libcomps':
                 try:
                     _build_libcomps(destdn, options.release)
@@ -821,8 +766,6 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                         'The destination directory cannot be overwritten '
                         'or some of the executables cannot be executed.')
             elif options.copr[1] == b'libsolv':
-                import pygit2
-                from ci_dnf_stack import utils
                 srpm = utils.build_srpm('libsolv', 'upstream', 'fedora/libsolv.spec')
                 shutil.move(srpm, destdn)
             if options.copr[0] != 'local-build':

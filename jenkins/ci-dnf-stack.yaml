@@ -1,6 +1,7 @@
 - project:
     name: ci-dnf-stack
     jobs:
+      - "librepo"
       - "libsolv"
 
 - scm:
@@ -13,6 +14,29 @@
           browser-url: https://github.com/rpm-software-management/ci-dnf-stack/
           branches:
             - origin/libsolv
+
+- scm:
+    name: librepo-upstream
+    scm:
+      - git:
+         url: https://github.com/rpm-software-management/librepo.git
+         browser: githubweb
+         browser-url: https://github.com/rpm-software-management/librepo/
+         branches:
+           - origin/master
+         basedir: upstream
+         skip-tag: True
+
+- scm:
+    name: librepo-fedora
+    scm:
+      - git:
+          url: git://pkgs.fedoraproject.org/rpms/librepo.git
+          browser: cgit
+          browser-url: http://pkgs.fedoraproject.org/cgit/rpms/librepo.git/
+          branches:
+            - origin/master
+          basedir: fedora
 
 - scm:
     name: libsolv-upstream
@@ -36,6 +60,26 @@
           branches:
             - origin/master
           basedir: fedora
+
+- job:
+    name: librepo
+    project-type: freestyle
+    scm:
+      - ci-dnf-stack
+      - librepo-upstream
+      - librepo-fedora
+    triggers:
+      - pollscm:
+          cron: "H H * * *"
+          ignore-post-commit-hooks: True
+    builders:
+      - shell: "./cidnfstack.py build -c dnf-pull-requests librepo"
+    publishers:
+      - archive:
+          artifacts: "*.log"
+    properties:
+      - github:
+          url: https://github.com/rpm-software-management/librepo
 
 - job:
     name: libsolv

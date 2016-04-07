@@ -12,16 +12,39 @@ import tempfile
 
 import pygit2
 
-def _get_version(repository, commit=None):
+def _fixup_spec(package, spec):
+    """
+    :param package: Package name
+    :type package: str
+    :param spec: RPM Spec
+    :type spec: str
+    :return: RPM Spec
+    :rtype: str
+    """
+    # FIXME: https://github.com/libgit2/pygit2/issues/616
+    # pygit2.write_archive() looses permissions on files
+    # some of packages requires them, e.g. libsolv
+    tmp = spec.split("\n")
+    if package == "libsolv":
+        tmp.insert(tmp.index("%check") + 1, "chmod +x test/runtestcases")
+    elif package == "librepo":
+        tmp.insert(tmp.index("%check") + 1, "find tests/ -type f -name '*.sh' -exec chmod +x {} ';'")
+    return "\n".join(tmp)
+
+def _get_version(repository, commit=None, prefix=None):
     """
     :param repository: Repository
     :type repository: pygit2.Repository
     :param commit: Commit
     :type commit: pygit2.Commit | None
+    :param prefix: Prefix
+    :type prefix: str | None
     :return: Version and release
     :rtype: tuple(str, str)
     """
     ver = repository.describe(commit)
+    if prefix is not None:
+        ver = ver[len(prefix):]
     index = ver.find("-")
     if index > 0:
         version = ver[:index]
@@ -50,6 +73,7 @@ def _templatify_spec(rpmspec):
     # Templatify version/release/etc.
     patch_re = re.compile(r"^Patch\d+:")
     for line in spec:
+        line = line.replace("$", "$$")
         line = line.rstrip()
         if line.startswith("Version:"):
             line = "Version: ${version}"
@@ -108,7 +132,11 @@ def build_srpm(package, repository, rpmspec, commit_sha=None):
         commit = repo[commit]
         oid = commit.oid
 
-    version, release = _get_version(repo, commit)
+    if package == "librepo":
+        prefix = "librepo-"
+    else:
+        prefix = None
+    version, release = _get_version(repo, commit=commit, prefix=prefix)
     prefix = "{}-{}-{}".format(package, version, release)
 
     # Prepare archive
@@ -127,14 +155,9 @@ def build_srpm(package, repository, rpmspec, commit_sha=None):
                                 archive=archive_name,
                                 directory=archive_prefix,
                                 changelog=_gen_changelog(version, release))
+    spec = "\n".join((line.replace("$$", "$") for line in spec.split("\n")))
 
-    # FIXME: https://github.com/libgit2/pygit2/issues/616
-    # pygit2.write_archive() looses permissions on files
-    # some of packages requires them, e.g. libsolv
-    if package == "libsolv":
-        tmp = spec.split("\n")
-        tmp.insert(tmp.index("%check") + 1, "chmod +x test/runtestcases")
-        spec = "\n".join(tmp)
+    spec = _fixup_spec(package, spec)
 
     # TODO: Use tempfile.TemporaryDirectory() contextmanager once we will migrate to py3
     tmpdir = tempfile.mkdtemp(prefix=prefix)
