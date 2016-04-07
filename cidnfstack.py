@@ -439,6 +439,31 @@ def _build_libcomps(destdn, release=None):
         _log_call('rpmbuild', 0, output)
 
 
+def _build_rpm(destdn, release=None):
+    print(destdn)
+    LOGGER.info('Building a SRPM from %s...', os.getcwdu())
+    specurlpat = 'https://lkardos.fedorapeople.org/rpm-master.spec'
+    specfn = 'rpm-master.spec'
+    urllib.urlretrieve(specurlpat, specfn)
+    if release:
+        _set_release(specfn, release)
+    try:
+        subprocess.check_output(
+            ['tar -cvjSf rpm.tar.bz2 ./*'],
+            stderr=subprocess.STDOUT, shell=True)
+    except subprocess.CalledProcessError as err:
+        _log_call(err.cmd[0], err.returncode, err.output)
+        raise ValueError('archive preparation failed')
+    _remkdir(destdn, notexists_ok=True)
+    try:
+        output = _build_srpm(specfn, b'rpm.tar.bz2', destdn, release)
+    except subprocess.CalledProcessError as err:
+        _log_call('rpmbuild', err.returncode, err.output)
+        raise ValueError('"rpmbuild" failed')
+    else:
+        _log_call('rpmbuild', 0, output)
+
+
 def _build_in_copr(dirname, project):
     """Build RPMs from SRPMs in Copr.
 
@@ -773,6 +798,24 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                 except OSError:
                     LOGGER.debug(
                         'An exception have occurred during the libcmps build.',
+                        exc_info=True)
+                    sys.exit(
+                        'The destination directory cannot be overwritten '
+                        'or some of the executables cannot be executed.')
+            elif options.copr[1] == b'rpm':
+                try:
+                    print(destdn)
+                    _build_rpm(destdn)
+                except (IOError, ValueError):
+                    LOGGER.debug(
+                        'An exception have occurred during the rpm build.',
+                        exc_info=True)
+                    sys.exit(
+                        'The build have failed. Hopefully the executables have'
+                        ' created an output in the destination directory.')
+                except OSError:
+                    LOGGER.debug(
+                        'An exception have occurred during the rpm build.',
                         exc_info=True)
                     sys.exit(
                         'The destination directory cannot be overwritten '
