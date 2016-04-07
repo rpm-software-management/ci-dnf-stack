@@ -61,6 +61,18 @@
             - origin/master
           basedir: fedora
 
+- scm:
+    name: dnf-plugins-extras
+    scm:
+      - git:
+         url: https://github.com/rpm-software-management/dnf-plugins-extras.git
+         browser: githubweb
+         browser-url: https://github.com/rpm-software-management/dnf-plugins-extras/
+         branches:
+           - origin/master
+         basedir: upstream
+         skip-tag: True
+
 - job:
     name: librepo
     project-type: freestyle
@@ -100,3 +112,21 @@
     properties:
       - github:
           url: https://github.com/openSUSE/libsolv
+
+- job:
+    name: dnf-plugins-extras
+    scm:
+      - ci-dnf-stack
+      - dnf-plugins-extras
+    triggers:
+      - pollscm:
+          cron: "H H * * *"
+          ignore-post-commit-hooks: True
+    builders:
+      - shell: "./cidnfstack.py build -c dnf-pull-requests dnf-plugins-extras"
+    publishers:
+      - archive:
+          artifacts: "*.log"
+    properties:
+      - github:
+          url: https://github.com/rpm-software-management/dnf-plugins-extras

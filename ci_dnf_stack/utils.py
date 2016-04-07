@@ -31,7 +31,7 @@ def _fixup_spec(package, spec):
         tmp.insert(tmp.index("%check") + 1, "find tests/ -type f -name '*.sh' -exec chmod +x {} ';'")
     return "\n".join(tmp)
 
-def _get_version(repository, commit=None, prefix=None):
+def _get_version(package, repository, commit=None):
     """
     :param repository: Repository
     :type repository: pygit2.Repository
@@ -42,9 +42,9 @@ def _get_version(repository, commit=None, prefix=None):
     :return: Version and release
     :rtype: tuple(str, str)
     """
-    ver = repository.describe(commit)
-    if prefix is not None:
-        ver = ver[len(prefix):]
+    ver = repository.describe(commit, describe_strategy=pygit2.GIT_DESCRIBE_TAGS)
+    if ver.startswith("{}-".format(package)):
+        ver = ver[len(package) + 1:]
     index = ver.find("-")
     if index > 0:
         version = ver[:index]
@@ -132,11 +132,7 @@ def build_srpm(package, repository, rpmspec, commit_sha=None):
         commit = repo[commit]
         oid = commit.oid
 
-    if package == "librepo":
-        prefix = "librepo-"
-    else:
-        prefix = None
-    version, release = _get_version(repo, commit=commit, prefix=prefix)
+    version, release = _get_version(package, repo, commit=commit)
     prefix = "{}-{}-{}".format(package, version, release)
 
     # Prepare archive

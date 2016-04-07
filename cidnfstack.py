@@ -768,6 +768,9 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             elif options.copr[1] == b'libsolv':
                 srpm = utils.build_srpm('libsolv', 'upstream', 'fedora/libsolv.spec')
                 shutil.move(srpm, destdn)
+            elif options.copr[1] == b'dnf-plugins-extras':
+                srpm = utils.build_srpm('dnf-plugins-extras', 'upstream', 'upstream/dnf-plugins-extras.spec')
+                shutil.move(srpm, destdn)
             if options.copr[0] != 'local-build':
                 try:
                     _build_in_copr(destdn, options.copr[0])
