@@ -150,6 +150,15 @@ rpmsoftwaremanagement/dnf-nightly, then it will install all requirements for
 first project and install the project itself. The same process will be repeated
 for second project and so on.
 
+Configuring Jenkins
+-------------------
+
+We are using [jenkins-job-builder](http://docs.openstack.org/infra/jenkins-job-builder/)
+to manage jenkins jobs.
+
+To deploy jobs you need configure your [jenkins_jobs.ini](http://docs.openstack.org/infra/jenkins-job-builder/execution.html)
+and run `jenkins-jobs --config=/path/to/jenkins_jobs.ini update jenkins/ci-dnf-stack.yaml`.
+
 
 Binaries
 --------
