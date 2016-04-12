@@ -28,7 +28,7 @@ def _fixup_spec(package, spec):
     if package == "libsolv":
         tmp.insert(tmp.index("%check") + 1, "chmod +x test/runtestcases")
     elif package == "librepo":
-        tmp.insert(tmp.index("%check") + 1, "find tests/ -type f -name '*.sh' -exec chmod +x {} ';'")
+        tmp.insert(tmp.index("%prep") + 2, "find tests/ -type f -name '*.sh.in' -exec chmod +x {} ';'")
     return "\n".join(tmp)
 
 def _get_version(package, repository, commit=None):
