@@ -21,7 +21,12 @@ class DnfEnvSetup:
         print('='*160)
         print("\nINFO: The following command will be performed: {}\n".format(command))
         print('='*160)
-        subprocess.check_call(command_in_list)
+        commandrun = subprocess.Popen(command_in_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        output = commandrun.communicate()[0]
+        print(output)
+        if commandrun.returncode != 0:
+            print('=' * 160)
+            sys.exit("\nERROR: The command {} FAILED\n".format(command))
 
     def dnf_version(self, package_name):
         with dnf.Base() as base:
