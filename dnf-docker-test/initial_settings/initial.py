@@ -38,14 +38,16 @@ class DnfEnvSetup:
                 assert str(query[0]) == str(query[n])
             return str(query[0])
 
-    def upgrade_dnf_dependencies_from_nightly(self):
+    def upgrade_dnf_dependencies_from_nightly(self, update_copr_repo):
         with open('/etc/yum.repos.d/dnf-nightly.repo', 'w') as f:
-            f.write('[dnf-nightly]\nname=dnf-nightly\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/'
-                    'rpmsoftwaremanagement/dnf-nightly/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
-        command_in_list = ['dnf', 'install', '--disablerepo=*', '--enablerepo=dnf-nightly', '--allowerasing', '-y',
-                           'dnf-plugins-core']
+            f.write('[' + update_copr_repo.rsplit('/', 1)[1] + ']\nname=' + update_copr_repo.rsplit('/', 1)[1] +
+                    '\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/' +
+                    update_copr_repo + '/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
+        command_in_list = ['dnf', 'install', '--disablerepo=*', '--enablerepo=' + update_copr_repo.rsplit('/', 1)[1],
+                           '--allowerasing', '-y', 'dnf-plugins-core']
         self.command_cl_runner(command_in_list)
-        command_in_list = ['dnf', 'upgrade', '-y', '--disablerepo=*', '--enablerepo=dnf-nightly', '--best']
+        command_in_list = ['dnf', '-y', '--disablerepo=*', '--enablerepo=' + update_copr_repo.rsplit('/', 1)[1],
+                           '--best', 'upgrade']
         self.command_cl_runner(command_in_list)
 
     def upgrade_copr_built_package(self, pkg):
@@ -55,9 +57,10 @@ class DnfEnvSetup:
         self.command_cl_runner(command_in_list)
 
 installer = DnfEnvSetup()
-installer.upgrade_dnf_dependencies_from_nightly()
 package_name = sys.argv[1]
 job_name = sys.argv[2]
+update_copr_repo = sys.argv[3]
+installer.upgrade_dnf_dependencies_from_nightly(update_copr_repo)
 if job_name != 'dnf-nightly':
     if job_name != 'local-build':
         installer.create_repo(job_name)
