@@ -106,6 +106,19 @@ The usage for "libcomps" projects is::
 
     The "python" and "rpmbuild" executables must be available.
 
+The usage for "rpm" projects is::
+
+    usage: prog build PROJECT rpm [-h] [--release RELEASE]
+
+    Build a rpm project fork.
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --release RELEASE  a custom release number of the resulting RPMs
+
+    The "python", "tar" and "rpmbuild" executables must be available.
+
+
 :var NAME: the name of the project
 :type NAME: unicode
 :var LOGGER: the logger used by this project
@@ -398,6 +411,22 @@ def _build_libcomps(destdn, release=None):
 
 
 def _build_rpm(destdn, release=None):
+    """Build a SRPM of a rpm project fork in the current work. dir.
+
+    The "python", "tar" and "rpmbuild" executables must be available. The
+    destination directory will be overwritten.
+
+    :param destdn: the name of a destination directory
+    :type destdn: unicode
+    :param release: a custom release number of the resulting SRPM
+    :type release: str | None
+    :raises exceptions.OSError: if some of the executables cannot be
+       executed or if the destination directory cannot be created or
+       overwritten
+    :raises exceptions.IOError: if the build cannot be prepared
+    :raises exceptions.ValueError: if the build fails
+
+    """
     print(destdn)
     LOGGER.info('Building a SRPM from %s...', os.getcwdu())
     specurlpat = 'https://lkardos.fedorapeople.org/rpm-master.spec'
@@ -407,7 +436,7 @@ def _build_rpm(destdn, release=None):
         _set_release(specfn, release)
     try:
         subprocess.check_output(
-            ['tar -cvjSf rpm.tar.bz2 ./*'],
+            ['tar --transform="s|^|rpm/|" -cvjSf rpm.tar.bz2 *'],
             stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as err:
         _log_call(err.cmd[0], err.returncode, err.output)
@@ -749,7 +778,6 @@ def _start_commandline():  # pylint: disable=R0912,R0915
                         'or some of the executables cannot be executed.')
             elif options.copr[1] == b'rpm':
                 try:
-                    print(destdn)
                     _build_rpm(destdn)
                 except (IOError, ValueError):
                     LOGGER.debug(
