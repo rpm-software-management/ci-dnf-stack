@@ -691,6 +691,10 @@ def _start_commandline():  # pylint: disable=R0912,R0915
     buildparser.add_argument(
         '-t', '--test', nargs='*', metavar=('TEST-NAME'),
         help='select only named test for dnf-docker-test')
+    buildparser.add_argument(
+        '-u', '--update-copr-repo', default='rpmsoftwaremanagement/dnf-nightly', metavar=('COPR-REPO-NAME'),
+        help='the name of copr-repo used for updates of docker image. If option not present default value '
+             '"rpmsoftwaremanagement/dnf-nightly" is used:')
     options = argparser.parse_args()
     logfn = os.path.join(os.getcwdu(), '{}.log'.format(NAME))
     work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -845,7 +849,7 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         if os.path.isfile(container_id_file):
             os.remove(container_id_file)
         cmd = ['docker', 'run', '-i', '--cidfile=' + container_id_file, docker_image, 'python3',
-               '/initial_settings/initial.py', dnf_version, options.copr[0]]
+               '/initial_settings/initial.py', dnf_version, options.copr[0], options.update_copr_repo]
         # Docker 'run' option '-t' is needed only for tito build inside docker by DNF unitests.
         # Docker 'run' option '-t' works correctly in docker-1.9.1-6 in f23, but not in version docker-io-1.8.2-2 in f21
         if options.copr[0] == 'local-build':
@@ -872,7 +876,12 @@ def _start_commandline():  # pylint: disable=R0912,R0915
             tests = [os.path.basename(x.rsplit(".", 1)[0]) for x in glob.glob(feature_pattern)]
         failed_tests = 0
         passed_tests = 0
-        for test in sorted(tests):
+        # List of tests that require new behavior of installroot.
+        dnf2_0 = ['config-1', 'config', 'gpg-2', 'gpg-4', 'installroot-2', 'installroot-3', 'installroot-4',
+                  'plugin-path-5', 'plugin-path-6', 'repository-1', 'repository-2']
+        # Compatibility step for dnf2.0 and new installroot behavior. Can be updated after installroot PR is merged.
+        for test in sorted(set(tests) - set(dnf2_0)) if options.update_copr_repo == 'rpmsoftwaremanagement/dnf-2.0-nightly'\
+                else sorted(set(tests) - set(dnf2_0)):
             for dnf_command_version in ['dnf-2', 'dnf-3']:
                 LOGGER.info('Running test: ' + test)
                 docker_run = ['docker', 'run', '--rm', '-i', docker_image_updated, "launch-test", test, dnf_command_version]
