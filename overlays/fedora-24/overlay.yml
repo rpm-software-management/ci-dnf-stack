@@ -1,0 +1,82 @@
+---
+components:
+  - name: rpm
+    git: https://github.com/rpm-software-management/rpm
+    #branch: rpm-4.13.x
+    distgit:
+      #git: https://pkgs.fedoraproject.org/git/rpms/rpm
+      git: https://github.com/ignatenkobrain/rpm-fedora.git
+      patches-policy: drop
+      patches:
+        - rpm-4.11.x-siteconfig.patch
+        - rpm-4.9.90-fedora-specspo.patch
+        - rpm-4.9.90-no-man-dirs.patch
+        - rpm-4.8.1-use-gpg2.patch
+        - rpm-4.12.0-rpm2cpio-hack.patch
+        - rpm-4.7.1-geode-i686.patch
+        - rpm-4.9.1.1-ld-flags.patch
+        - rpm-4.10.0-dwz-debuginfo.patch
+        - rpm-4.10.0-minidebuginfo.patch
+        - rpm-4.11.1-sepdebugcrcfix.patch
+        - rpm-4.12.0.x-CVE-2013-6435.patch
+        - rpm-4.12.0.x-CVE-2014-8118.patch
+
+  - name: libsolv
+    git: https://github.com/openSUSE/libsolv
+    # https://github.com/rpm-software-management/libhif/issues/118
+    freeze: e48fbd2121efa59911b87c070125e3f774a1bd55
+    distgit:
+      git: https://pkgs.fedoraproject.org/git/rpms/libsolv
+
+  - name: librepo
+    git: https://github.com/rpm-software-management/librepo
+    distgit:
+      git: https://pkgs.fedoraproject.org/git/rpms/librepo
+
+  - name: createrepo_c
+    git: https://github.com/rpm-software-management/createrepo_c
+    distgit:
+      git: https://pkgs.fedoraproject.org/git/rpms/createrepo_c
+
+  - name: libcomps
+    git: https://github.com/rpm-software-management/libcomps
+    distgit:
+      git: https://pkgs.fedoraproject.org/git/rpms/libcomps
+
+  - name: libhif
+    git: https://github.com/rpm-software-management/libhif
+    version-func: |
+        ver_cmake = os.path.join(git.workdir, "VERSION.cmake")
+        with open(ver_cmake, "r") as cmake:
+            content = cmake.readlines()
+        regex = re.compile(r"^set \(HIF_(\w+)_VERSION (\d+)\)$")
+        versions = {}
+        lines = []
+        i = 1
+        for line in content:
+            match = regex.match(line)
+            if match:
+                versions[match.group(1).lower()] = match.group(2)
+                lines.append(i)
+            i += 1
+        version = "{}.{}.{}".format(versions["major"], versions["minor"], versions["micro"])
+        blame = git.blame("VERSION.cmake")
+        blames = {}
+        t = None
+        for hunk in blame:
+            t_tmp = git[hunk.final_commit_id].commit_time
+            if t is None or t_tmp < t:
+                t = t_tmp
+                commit = hunk.final_commit_id
+        _commits_num = 0
+        for c in git.walk(git.head.target):
+            if str(c.id) == str(commit):
+                break
+            _commits_num += 1
+        release = "{}g{}".format(_commits_num, str(commit)[:7])
+
+  - name: dnf
+    git: https://github.com/rpm-software-management/dnf
+
+  - name: dnf-plugins-core
+    git: https://github.com/rpm-software-management/dnf-plugins-core
