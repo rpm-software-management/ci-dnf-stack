@@ -1,0 +1,51 @@
+---
+aliases:
+  - name: github
+    url: https://github.com/
+  - name: fedorapkgs
+    url: git://pkgs.fedoraproject.org/rpms/
+
+chroot: fedora-24-x86_64
+
+components:
+  - name: rpm
+    git:
+      src: github:rpm-software-management/rpm.git
+    distgit:
+      src: github:ignatenkobrain/rpm-fedora.git
+
+  - name: libsolv
+    git:
+      src: github:openSUSE/libsolv.git
+    distgit:
+      src: fedorapkgs:libsolv.git
+
+  - name: librepo
+    git:
+      src: github:rpm-software-management/librepo.git
+    distgit:
+      src: fedorapkgs:librepo.git
+
+  - name: createrepo_c
+    git:
+      src: github:rpm-software-management/createrepo_c.git
+    distgit:
+      src: fedorapkgs:createrepo_c.git
+
+  - name: libcomps
+    git:
+      src: github:rpm-software-management/libcomps.git
+    distgit:
+      src: fedorapkgs:libcomps.git
+
+  - name: libhif
+    git:
+      src: github:rpm-software-management/libhif.git
+
+  - name: dnf
+    git:
+      src: github:rpm-software-management/dnf.git
+
+  - name: dnf-plugins-core
+    git:
+      src: github:rpm-software-management/dnf-plugins-core.git

@@ -1,0 +1,378 @@
+############
+## MACROS ##
+############
+
+- scm:
+    name: rpm-gitoverlay-scm
+    scm:
+      - git:
+          url: "https://github.com/ignatenkobrain/rpm-gitoverlay.git"
+          branches:
+            - origin/master
+          basedir: rpm-gitoverlay
+          skip-tag: True
+
+- scm:
+    name: ci-dnf-stack-scm
+    scm:
+      - git:
+          url: "https://github.com/rpm-software-management/ci-dnf-stack.git"
+          branches:
+            - origin/master
+          basedir: ci-dnf-stack
+          skip-tag: True
+
+- defaults:
+    name: github-testers-defaults
+    description: |
+        Maintainer: <a href="mailto:ignatenko@redhat.com">Igor Gnatenko</a><br>
+        Managed by Jenkins Job Builder. <strong>Do not edit via web.</strong<br>
+    wrappers:
+      - workspace-cleanup
+    github-context: "Jenkins (Red Hat)"
+
+##############
+## TRIGGERS ##
+##############
+
+- job-template:
+    name: "{name}-trigger"
+    defaults: github-testers-defaults
+    concurrent: True
+    properties:
+      # Required by GHPRB. Also adds a nice GitHub link on the job page.
+      - github:
+          url: "https://github.com/{github_repo}"
+    scm:
+      # Required to tell pollscm what we want to poll
+      - "{name}-scm"
+    triggers:
+      - pollscm:
+          # always check for new commits every 5 mins (ci trigger failsafe)
+          cron: "H/5 * * * *"
+          ignore-post-commit-hooks: True
+      - github-pull-request:
+          auth-id: "{ghprb-auth-id}"
+
+          # Always check for PR activity every 5 mins (ci trigger failsafe)
+          cron: "H/5 * * * *"
+
+          permit-all: True
+
+          # the commit status context we want to update
+          status-context: "{github-context}"
+
+          # Update status when triggered only, and not when started
+          triggered-status: "Testing job has been triggered."
+          started-status: "--none--"
+
+          # Don't do a status update if we succeeded since this is only the
+          # triggering job. We will make manually update with success once the
+          # testing job passes.
+          success-status: "--none--"
+
+          # Update status if somehow something goes wrong with triggering (but
+          # that should Never Happen (tm))
+          failure-status: "Internal error while triggering."
+          error-status: "Internal error while triggering."
+    builders:
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
+            echo "GIT_BRANCH=${{GIT_BRANCH#origin/}}" >> props
+            echo "GIT_COMMIT=$GIT_COMMIT" >> props
+          fi
+    publishers:
+      - trigger-parameterized-builds:
+          - project: "{name}-build"
+            current-parameters: True
+            trigger-with-no-params: True
+            property-file: props
+            condition: SUCCESS
+
+###################
+## UPDATE STATUS ##
+###################
+
+- job-template:
+    name: "{name}-update-gh-status"
+    defaults: github-testers-defaults
+    concurrent: True
+    builders:
+      - python: |
+          from __future__ import print_function
+
+          import os
+          import sys
+
+          import requests
+
+          if os.environ["ROOT_BUILD_CAUSE"] == "GHPRBCAUSE":
+              commit = os.environ["ghprbActualCommit"]
+          elif os.environ["ROOT_BUILD_CAUSE"] == "SCMTRIGGER":
+              commit = os.environ["GIT_COMMIT"]
+          else:
+              print("Triggered for unknown root cause, exiting..")
+              sys.exit(0)
+
+          print("Updating status for: %r" % commit)
+
+          data = {{"state": os.environ["GH_STATE"]}}
+
+          if "GH_CONTEXT" in os.environ:
+              data["context"] = os.environ["GH_CONTEXT"]
+          if "GH_URL" in os.environ:
+              data["target_url"] = os.environ["GH_URL"]
+          else:
+              data["target_url"] = os.environ["BUILD_URL"]
+          if "GH_DESC" in os.environ:
+              data["description"] = os.environ["GH_DESC"]
+
+          API_URL = ("https://api.github.com/repos/%s/statuses/%s" %
+                     ("{github_repo}", commit))
+
+          token_header = {{"Authorization": "token {github-token}"}}
+
+          # Requires requests >= 2.4.2
+          r = requests.post(API_URL, json=data, headers=token_header)
+
+          if r.status_code != requests.codes.created:
+              print("Failed to update commit status [HTTP %d]" % r.status_code)
+              print(r.headers)
+              print(r.json())
+              sys.exit(1)
+
+###########
+## BUILD ##
+###########
+
+- job-template:
+    name: "{name}-build"
+    defaults: github-testers-defaults
+    concurrent: True
+    scm:
+      - rpm-gitoverlay-scm
+      - ci-dnf-stack-scm
+    builders:
+      - trigger-builds:
+          - project: "{name}-update-gh-status"
+            current-parameters: True
+            predefined-parameters: |
+              GH_STATE=pending
+              GH_CONTEXT={github-context}
+              GH_DESC=Building RPM git-overlay job is running.
+
+      # Build overlay
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          export PYTHONPATH=`readlink -f rpm-gitoverlay`
+
+          pushd ci-dnf-stack/overlays/dnf-master/
+            python3 -m rgo --log DEBUG resolve
+            pushd "src/{name}-git/"
+              if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
+                git checkout $GIT_COMMIT
+              elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
+                git checkout "$ghprbTargetBranch"
+                git fetch origin "refs/pull/$ghprbPullId/head"
+                git merge FETCH_HEAD
+              fi
+            popd
+            python3 -m rgo --log DEBUG build -o rpms rpm copr --owner rpmsoftwaremanagement
+            RPMS=`cat rpms | xargs`
+          popd
+          echo "RPMS=$RPMS" > props
+    publishers:
+      - trigger-parameterized-builds:
+          - project: "{name}-provision"
+            current-parameters: True
+            condition: SUCCESS
+            property-file: props
+            fail-on-missing: True
+          - project: "{name}-update-gh-status"
+            current-parameters: True
+            condition: UNSTABLE_OR_WORSE
+            predefined-parameters: |
+              GH_STATE=error
+              GH_CONTEXT={github-context}
+              GH_DESC=Error while building RPM git-overlay.
+      - workspace-cleanup:
+          exclude:
+            - props
+
+###############
+## PROVISION ##
+###############
+
+- job-template:
+    name: "{name}-provision"
+    defaults: github-testers-defaults
+    concurrent: False
+    node: master
+    scm:
+      - ci-dnf-stack-scm
+    builders:
+      # Download RPMs
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          mkdir rpms
+          pushd rpms
+            echo "$RPMS" | xargs -n 1 curl -L -O
+            if ! ls *.rpm; then
+              exit 1
+            fi
+          popd
+
+      # Prepare container
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          cat << EOF > Dockerfile
+          FROM fedora:24
+          ENV LANG C
+
+          RUN dnf -y update
+          RUN dnf -y install httpd /usr/bin/behave-2
+          RUN dnf -y autoremove
+          COPY ci-dnf-stack/dnf-docker-test/repo /var/www/html/repo/
+          COPY ci-dnf-stack/dnf-docker-test/features /behave/
+
+          COPY rpms /rpms/
+          RUN dnf -y install /rpms/*.rpm
+          RUN dnf -y clean all
+          RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
+
+          ADD ci-dnf-stack/dnf-docker-test/httpd.conf /etc/httpd/conf/
+          ADD ci-dnf-stack/dnf-docker-test/launch-test /usr/bin/
+
+          VOLUME ["/repo", "/junit"]
+          EOF
+
+          CONTAINER="{name}-$BUILD_ID-`date +%s`"
+          sudo /usr/bin/docker build --no-cache --force-rm -t "$CONTAINER" .
+          echo "CONTAINER=$CONTAINER" > props
+    publishers:
+      - trigger-parameterized-builds:
+          - project: "{name}-test"
+            current-parameters: True
+            condition: SUCCESS
+            property-file: props
+            fail-on-missing: True
+          - project: "{name}-update-gh-status"
+            current-parameters: True
+            condition: UNSTABLE_OR_WORSE
+            predefined-parameters: |
+              GH_STATE=error
+              GH_CONTEXT={github-context}
+              GH_DESC=Error while preparing container.
+      - workspace-cleanup:
+          exclude:
+            - props
+
+##########
+## TEST ##
+##########
+
+- job-template:
+    name: "{name}-test"
+    defaults: github-testers-defaults
+    concurrent: False
+    node: master
+    scm:
+      - ci-dnf-stack-scm
+    builders:
+      - trigger-builds:
+          - project: "{name}-update-gh-status"
+            current-parameters: True
+            predefined-parameters: |
+              GH_STATE=pending
+              GH_CONTEXT={github-context}
+              GH_DESC=Testing job is running.
+      # Run tests
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          mkdir test-results/
+          TEST_DIR=`readlink -f test-results`
+          chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
+
+          # TODO: tests which currently broken
+          rm -vf ci-dnf-stack/dnf-docker-test/features/{{config,config-1,gpg-2,gpg-4,installroot-2,installroot-3,installroot-4,plugin-path-5,plugin-path-6,repository-1,repository-2}}.feature
+
+          for f in ci-dnf-stack/dnf-docker-test/features/*.feature; do
+            file=`basename $f`
+            test="${{file%.feature}}"
+            sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "$test" dnf || :
+          done
+      # Analyze results
+      - python: |
+          import glob
+
+          import xunitparser
+
+          all = 0
+          success = 0
+          for xml in glob.glob("test-results/*.xml"):
+              with open(xml, "r") as test:
+                  _, result = xunitparser.parse(test)
+              all += 1
+              if result.wasSuccessful():
+                  success += 1
+          with open("GH_UPDATE.txt", "w") as gh:
+              gh.write("GH_CONTEXT={github-context}\n")
+              if success != all:
+                  gh.write("GH_STATE=error\n")
+              else:
+                  gh.write("GH_STATE=success\n")
+              gh.write("GH_DESC=%d/%d features works\n" % (success, all))
+    publishers:
+      - junit:
+          results: test-results/*.xml
+      - trigger-parameterized-builds:
+          - project: "{name}-teardown"
+            current-parameters: True
+            condition: ALWAYS
+          - project: "{name}-update-gh-status"
+            current-parameters: True
+            condition: ALWAYS
+            property-file: GH_UPDATE.txt
+            fail-on-missing: True
+      - workspace-cleanup:
+          exclude:
+            - GH_UPDATE.txt
+            - test-results/*.xml
+
+##############
+## TEARDOWN ##
+##############
+
+- job-template:
+    name: "{name}-teardown"
+    defaults: github-testers-defaults
+    concurrent: False
+    node: master
+    builders:
+      - shell: |
+          sudo docker rmi -f "$CONTAINER"
+
+###################
+## PROJECT GROUP ##
+###################
+
+- job-group:
+    name: github-testers-jobs
+    jobs:
+      - "{name}-trigger"
+      - "{name}-update-gh-status"
+      - "{name}-build"
+      - "{name}-provision"
+      - "{name}-test"
+      - "{name}-teardown"

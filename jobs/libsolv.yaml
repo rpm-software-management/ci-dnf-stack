@@ -1,0 +1,18 @@
+- scm:
+    name: libsolv-scm
+    scm:
+      - git:
+          url: "https://github.com/openSUSE/libsolv.git"
+          branches:
+            - origin/master
+          basedir: libsolv
+          skip-tag: true
+
+- project:
+    name: libsolv
+    github-token: !include-raw: github-token.txt
+    ghprb-auth-id: !include-raw: ghprb-auth-id.txt
+    github_repo: openSUSE/libsolv
+
+    jobs:
+      - github-testers-jobs

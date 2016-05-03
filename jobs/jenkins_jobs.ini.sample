@@ -1,0 +1,10 @@
+[job_builder]
+ignore_cache=True
+keep_descriptions=False
+recursive=False
+allow_duplicates=False
+
+[jenkins]
+user=user
+password=pass
+url=https://209.132.179.118/
