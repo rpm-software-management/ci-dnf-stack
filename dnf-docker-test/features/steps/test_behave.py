@@ -32,7 +32,7 @@ def shell_call(list_command):
         print(error)
     if cmd_output.returncode:
         print(output)
-        assert not cmd_output.returncode, 'Command "{}" return {} return code, but expected 0'.format(
+        assert not cmd_output.returncode, 'Command {!r} returned {:d} return code, but expected 0'.format(
             ' '.join(list_command), cmd_output.returncode)
     return output
 
@@ -104,7 +104,7 @@ def when_action_command(context, type_of_command, command, result):
     elif type_of_command == 'bash':
         dnf_command_version = command
     else:
-        raise AssertionError('The type of command {} is not allowed parameter (allowed: dnf, bash)'
+        raise AssertionError('The type of command {!r} is not allowed parameter (allowed: dnf, bash)'
                              .format(type_of_command))
     cmd_output = subprocess.Popen(
             dnf_command_version, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
@@ -119,7 +119,7 @@ def when_action_command(context, type_of_command, command, result):
     elif result == "fail":
         assert context.cmd_rc != 0, 'Return code was {}, but expected non zero (fail)'.format(context.cmd_rc)
     else:
-        raise AssertionError('The option {} is not allowed option for expected result of command. '
+        raise AssertionError('The option {!r} is not allowed option for expected result of command. '
                              'Allowed options are "success" and "fail"'.format(result))
 
 
@@ -168,13 +168,13 @@ def then_transaction_changes(context):
             elif state == 'upgraded':
                 package_upgr = package_finder(post_sack, pkg)
                 package_orig = package_finder(context.pre_sack, package_upgr.name)
-                assert package_upgr > package_orig, "The original package {} is not upgraded (package after transaction - {})".format(str(package_orig), str(package_upgr))
+                assert package_upgr > package_orig, "The original package {!r} is not upgraded (package after transaction - {!r})".format(str(package_orig), str(package_upgr))
                 installed_packages.remove(package_upgr)
                 removed_packages.remove(package_orig)
             elif state == 'downgraded':
                 package_down = package_finder(post_sack, pkg)
                 package_orig = package_finder(context.pre_sack, package_down.name)
-                assert package_down < package_orig, "The original package {} is not downgraded (package after transaction - {})".format(str(package_orig), str(package_down))
+                assert package_down < package_orig, "The original package {!r} is not downgraded (package after transaction - {!r})".format(str(package_orig), str(package_down))
                 installed_packages.remove(package_down)
                 removed_packages.remove(package_orig)
             elif state == 'present':
@@ -182,9 +182,9 @@ def then_transaction_changes(context):
                 package_orig = package_finder(context.pre_sack, pkg)
                 assert package_post == package_orig, "The original package {} is not identical (package after transaction - {})".format(str(package_orig), str(package_post))
             else:
-                raise AssertionError('The state {} is not allowed option for Then statement'.format(state))
-    assert not installed_packages and not removed_packages, 'Packages (installed {} or removed {}) were unexpectably ' \
-                                                            'changed'.format(
+                raise AssertionError('The state {!r} is not allowed option for Then statement'.format(state))
+    assert not installed_packages and not removed_packages, 'Packages (installed {!r} or removed {!r}) were ' \
+                                                            'unexpectably changed'.format(
         ' '.join([str(pkg) for pkg in installed_packages]),' '.join([str(pkg) for pkg in removed_packages]))
 
 
@@ -202,17 +202,17 @@ def then_package_state(context, std_message, state, line_start):
     elif std_message == 'stderr':
         message = context.cmd_error.split('\n')
     else:
-        raise AssertionError('The std_message {} is not allowed option for Then statement (allowed stdout, stderr)'
+        raise AssertionError('The std_message {!r} is not allowed option for Then statement (allowed stdout, stderr)'
                              .format(std_message))
     for line in message:
         if line.startswith(line_start):
             counter += 1
     if state == 'start':
-        assert counter > 0, 'The line starting with "{}" was not found in "{}"'.format(line_start, std_message)
+        assert counter > 0, 'The line starting with {!r} was not found in {!r}'.format(line_start, std_message)
     elif state == 'not start':
-        assert counter == 0, 'The line starting with "{}" was found in "{}", but should be absent'.format(line_start, std_message)
+        assert counter == 0, 'The line starting with {!r} was found in {!r}, but should be absent'.format(line_start, std_message)
     else:
-        raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start)'
+        raise AssertionError('The state {!r} is not allowed option for Then statement (allowed start, not start)'
                              .format(state))
 
 
@@ -228,9 +228,9 @@ def then_file_presence(context, path_to_object, state):
     if state == 'present':
         assert result, 'Object not found'
     elif state == 'absent':
-        assert not result, "Object was found but should be absent (hint - {})".format(str(result))
+        assert not result, "Object was found but should be absent (hint - {!r})".format(str(result))
     else:
-        raise AssertionError('The state {} is not allowed option for Then statement (allowed present, absent)'
+        raise AssertionError('The state {!r} is not allowed option for Then statement (allowed present, absent)'
                              .format(state))
 
 
@@ -238,6 +238,6 @@ def then_file_presence(context, path_to_object, state):
 def then_file_contein(context, path_to_file, content):
     path = glob.glob(path_to_file)
     assert len(path) == 1, '{} objects ({}) were found instead of 1'.format(len(path), ' '.join(path))
-    assert os.path.isfile(path[0]), "The file {} is not a file or doesn't exist".format(path[0])
+    assert os.path.isfile(path[0]), "The file {!r} is not a file or doesn't exist".format(path[0])
     with open(path[0], 'r') as f:
-        assert content in f, "The file {} doesn't contain '{}'".format(path[0], content)
+        assert content in f, "The file {!r} doesn't contain {!r}".format(path[0], content)
