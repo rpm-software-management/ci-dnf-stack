@@ -202,7 +202,7 @@ def then_package_state(context, std_message, state, line_start):
     elif std_message == 'stderr':
         message = context.cmd_error.split('\n')
     else:
-        raise AssertionError('The std_message {} is not allowed option for Then statement (allowed stdout, stderr)'
+        raise AssertionError('The std_message "{}" is not allowed option for Then statement (allowed stdout, stderr)'
                              .format(std_message))
     for line in message:
         if line.startswith(line_start):
@@ -212,7 +212,7 @@ def then_package_state(context, std_message, state, line_start):
     elif state == 'not start':
         assert counter == 0, 'The line starting with "{}" was found in "{}", but should be absent'.format(line_start, std_message)
     else:
-        raise AssertionError('The state {} is not allowed option for Then statement (allowed start, not start)'
+        raise AssertionError('The state "{}" is not allowed option for Then statement (allowed start, not start)'
                              .format(state))
 
 
