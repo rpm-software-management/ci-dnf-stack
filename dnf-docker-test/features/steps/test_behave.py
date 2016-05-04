@@ -11,8 +11,8 @@ import time
 
 def sack_rpm_comparator():
     """ Gets all installed packages in the system, compare rpm output with DNF sack, and return sack"""
-    comparerpmver = subprocess.check_output(['rpm', '-qa', '--queryformat',
-                                             '%{NAME}-%|epoch?{%{epoch}:}:{0:}|%{VERSION}-%{RELEASE}.%{ARCH}\n'])
+    comparerpmver = shell_call(['rpm', '-qa', '--queryformat',
+                                '%{NAME}-%|epoch?{%{epoch}:}:{0:}|%{VERSION}-%{RELEASE}.%{ARCH}\n'])
     comparerpmver = [p for p in comparerpmver.splitlines() if not p.decode().startswith('gpg-pubkey')]
     set_comparerpmver = set(comparerpmver)
     assert len(comparerpmver) == len(set_comparerpmver), 'RPM found multiple packages with same nevra'
@@ -23,6 +23,18 @@ def sack_rpm_comparator():
     assert len(set_sack) == len(list_sack), 'DNF sack has multiple packages with same nevra'
     assert set_sack == set_comparerpmver, 'There are different items in DNF sack and RPM-db'
     return sack
+
+
+def shell_call(list_command):
+    cmd_output = subprocess.Popen(list_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    output, error = cmd_output.communicate()
+    if error:
+        print(error)
+    if cmd_output.returncode:
+        print(output)
+        assert not cmd_output.returncode, 'Command "{}" return {} return code, but expected 0'.format(
+            ' '.join(list_command), cmd_output.returncode)
+    return output
 
 
 def diff_query_lists(sack_a, sack_b):
