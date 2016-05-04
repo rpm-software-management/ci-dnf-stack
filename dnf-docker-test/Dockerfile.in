@@ -6,6 +6,9 @@ ENV LANG en_US.utf8
 RUN dnf -y --setopt=deltarpm=false upgrade rpm libsolv\
   && dnf -y --setopt=deltarpm=false --allowerasing install httpd python-behave python2-dnf dnf-plugins-core python-dnf-plugins-core python3-dnf-plugins-core {install_tito}
 
+# Fix compatibility issue of f23 with upstream targeted for f24
+RUN dnf mark install python3-dnf python3-dnf-plugins-core
+
 COPY repo /var/www/html/repo/
 
 COPY initial_settings /initial_settings/
