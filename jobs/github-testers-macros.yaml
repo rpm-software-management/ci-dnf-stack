@@ -336,6 +336,10 @@
           for f in ci-dnf-stack/dnf-docker-test/features/*.feature; do
             file=$(basename $f)
             test=${{file%.feature}}
+            if [[ "$test" == "vars-releasever" ]]; then
+              # XXX: https://github.com/rpm-software-management/ci-dnf-stack/pull/135
+              continue
+            fi
             sudo docker run --rm -v $TEST_DIR:/junit $CONTAINER launch-test "$test" dnf || :
           done
       # Analyze results
