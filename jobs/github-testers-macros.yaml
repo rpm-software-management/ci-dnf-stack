@@ -34,58 +34,7 @@
       - workspace-cleanup
       - timestamps
     github-context: 'Jenkins (Red Hat)'
-    # Folks to email when branches transition
-    email_recipients: ''
-    # Folks to email when any job transitions
-    qe_recipients: ''
-    # Folks to email when test job starts & finishes
-    test_recipients: ''
 
-# Parameters: recipients
-- publisher:
-    name: email_failfixed_notice
-    publishers:
-      - conditional-publisher:
-          - condition-kind: shell
-            condition-command: '[ -n "{recipients}" ]'
-            action:
-              - email-ext:
-                  recipients: '{recipients}'
-                  reply-to: '{recipients}'
-                  failure: False
-                  first-failure: True
-                  fixed: True
-
-# Parameters: recipients subject body
-- publisher:
-    name: email_teststart_notice
-    publishers:
-      - conditional-publisher:
-          - condition-kind: shell
-            condition-command: '[ -n "{recipients}" ]'
-            action:
-              - email-ext:
-                  recipients: '{recipients}'
-                  reply-to: '{recipients}'
-                  failure: False
-                  pre-build: True
-                  subject: '{subject}'
-                  body: '{body}'
-
-# Parameters: recipients subject body
-- publisher:
-    name: email_testend_notice
-    publishers:
-      - conditional-publisher:
-          - condition-kind: shell
-            condition-command: '[ -n "{recipients}" ]'
-            action:
-              - email-ext:
-                  recipients: '{recipients}'
-                  reply-to: '{recipients}'
-                  always: True
-                  subject: '{subject}'
-                  body: '{body}'
 
 ##############
 ## TRIGGERS ##
@@ -157,30 +106,6 @@
             echo "GIT_COMMIT=$GIT_COMMIT" >> props
           fi
 
-          # build up the subject and body of the test_recipients now because
-          # putting it directly in the test job among the conditional-publishers
-          # will not work
-          if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
-            target=${{GIT_BRANCH#origin/}}
-            commit=${{GIT_COMMIT::7}}
-            github_url=https://github.com/{github_repo}/commits/$target
-          elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
-            target="PR #$ghprbPullId"
-            commit=${{ghprbActualCommit::7}}
-            github_url=$ghprbPullLink
-          fi
-
-          cat << EOF >> props
-          TESTSTART_BODY=\\
-          Testing $target at commit $commit\\n\\
-          GitHub URL: $github_url
-          TESTEND_BODY=\\
-          Tested $target at commit $commit\\n\\
-          GitHub URL: $github_url
-          EOF
-
-          echo "TESTSTART_SUBJECT=[{github_repo}] $target - Starting test" >> props
-          echo "TESTEND_SUBJECT=[{github_repo}] $target - Finished test" >> props
     publishers:
       - trigger-parameterized-builds:
           - project: '{name}-build'
@@ -188,8 +113,6 @@
             trigger-with-no-params: True
             property-file: props
             condition: 'SUCCESS'
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
 
 ###################
 ## UPDATE STATUS ##
@@ -252,9 +175,6 @@
               print(r.headers)
               print(r.json())
               sys.exit(1)
-    publishers:
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
 
 ###########
 ## BUILD ##
@@ -310,8 +230,6 @@
               GH_STATE=error
               GH_CONTEXT={github-context}
               GH_DESC=Error while building RPM git-overlay.
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
 
 ###############
 ## PROVISION ##
@@ -386,8 +304,6 @@
               GH_STATE=error
               GH_CONTEXT={github-context}
               GH_DESC=Error while preparing container.
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
 
 ##########
 ## TEST ##
@@ -455,20 +371,6 @@
             condition: 'ALWAYS'
             property-file: GH_UPDATE.txt
             fail-on-missing: True
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
-      - email_teststart_notice:
-          recipients: "{test_recipients}"
-          subject: ${{ENV,var="TESTSTART_SUBJECT"}}
-          body: |
-            ${{ENV,var="TESTSTART_BODY"}}
-            Console ouput: $BUILD_URL
-      - email_testend_notice:
-          recipients: "{test_recipients}"
-          subject: ${{ENV,var="TESTEND_SUBJECT"}}
-          body: |
-            ${{ENV,var="TESTEND_BODY"}}
-            Console output: $BUILD_URL
 
 ##############
 ## TEARDOWN ##
@@ -486,9 +388,6 @@
     builders:
       - shell: |
           sudo docker rmi -f $CONTAINER
-    publishers:
-      - email_failfixed_notice:
-          recipients: "{qe_recipients}"
 
 ###################
 ## PROJECT GROUP ##
