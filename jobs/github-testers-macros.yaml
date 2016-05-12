@@ -200,6 +200,15 @@
     defaults: github-testers-defaults
     concurrent: True
     node: master
+    parameters:
+      - choice:
+          name: GH_STATE
+          choices:
+            - pending
+            - success
+            - error
+            - failure
+          description: 'GitHub commit state of the status'
     builders:
       - python: |
           from __future__ import print_function
@@ -313,6 +322,10 @@
     defaults: github-testers-defaults
     concurrent: False
     node: master
+    parameters:
+      - string:
+          name: RPMS
+          description: 'RPMS to install inside'
     scm:
       - ci-dnf-stack-scm
     builders:
@@ -471,6 +484,10 @@
     defaults: github-testers-defaults
     concurrent: False
     node: master
+    parameters:
+      - string:
+          name: CONTAINER
+          description: 'Docker image to remove'
     builders:
       - shell: |
           sudo docker rmi -f $CONTAINER
