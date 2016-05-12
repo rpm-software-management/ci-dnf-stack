@@ -379,18 +379,13 @@
             condition: 'SUCCESS'
             property-file: props
             fail-on-missing: True
-          - project: '{name}-teardown'
-            current-parameters: True
-            condition: 'UNSTABLE_OR_WORSE'
-            property-file: props
-            fail-on-missing: True
           - project: '{name}-update-gh-status'
             current-parameters: True
             condition: 'UNSTABLE_OR_WORSE'
             predefined-parameters: |
               GH_STATE=error
               GH_CONTEXT={github-context}
-              GH_DESC=Error while provisioning.
+              GH_DESC=Error while preparing container.
       - email_failfixed_notice:
           recipients: "{qe_recipients}"
 
