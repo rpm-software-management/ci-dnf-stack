@@ -70,6 +70,7 @@ if job_name == 'local-build':
         spec = glob.glob(project_dir + '/*.spec')
         cmd = ['dnf', '-y', '--allowerasing', 'builddep'] + spec
         installer.command_cl_runner(cmd)
+    for project_dir in sorted(project_dirs):
         rpm_path = os.path.split(project_dir)[0]
         os.chdir(project_dir)
         temp_rpm_file = os.path.join(rpm_path, 'build')
