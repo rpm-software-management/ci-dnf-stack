@@ -16,7 +16,7 @@
     github_repo: rpm-software-management/libhif
     admin-list: ignatenkobrain cgwalters hughsie
     org-list: rpm-software-management
-    white-list: mluscon jsilhan
+    white-list: mluscon jsilhan kalev
 
     jobs:
       - github-testers-jobs
