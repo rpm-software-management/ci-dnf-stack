@@ -23,10 +23,9 @@ components:
 
   - name: libsolv
     git: https://github.com/openSUSE/libsolv
-    # https://github.com/rpm-software-management/libhif/issues/118
-    freeze: e48fbd2121efa59911b87c070125e3f774a1bd55
     distgit:
       git: https://pkgs.fedoraproject.org/git/rpms/libsolv
+      patches-policy: drop
 
   - name: librepo
     git: https://github.com/rpm-software-management/librepo
