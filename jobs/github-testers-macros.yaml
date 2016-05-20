@@ -10,7 +10,7 @@
           branches:
             # FIXME
             #- origin/master
-            - origin/wip/subprocess_run
+            - origin/wip/subprocess_run2
           basedir: rpm-gitoverlay
           skip-tag: True
 
@@ -202,26 +202,27 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
-            OPTS="--freeze {name}#$GIT_COMMIT"
-          elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
-            OPTS="--freeze {name}@refs/pull/$ghprbPullId/head"
-          else
-            OPTS=""
-          fi
-
-          # Python 3 only
-          PYTHONPATH=rpm-gitoverlay python3 -m rgo \
-            --json -o $BUILD_NUMBER.json --log DEBUG --owner rpmsoftwaremanagement $OPTS \
-            ci-dnf-stack/overlays/fedora-24/
-          RPMS=$(cat $BUILD_NUMBER.json | python3 -c "import json, sys; obj = json.load(sys.stdin); print(' '.join(str(x) for x in obj['rpms']))")
-          echo "RPMS=$RPMS" > $BUILD_NUMBER.properties
+          export PYTHONPATH=`readlink -f rpm-gitoverlay`
+          pushd ci-dnf-stack/overlays/dnf-2/
+            python3 -m rgo --log DEBUG resolve
+            pushd src/{name}/
+              if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
+                git checkout $GIT_COMMIT
+              elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
+                git fetch origin refs/pull/$ghprbPullId/head
+                git merge FETCH_HEAD
+              fi
+            popd
+            python3 -m rgo --log DEBUG build -o ../../../results rpm copr --owner rpmsoftwaremanagement
+          popd
+          RPMS=$(cat results | xargs)
+          echo "RPMS=$RPMS" > props
     publishers:
       - trigger-parameterized-builds:
           - project: '{name}-provision'
             current-parameters: True
             condition: 'SUCCESS'
-            property-file: $BUILD_NUMBER.properties
+            property-file: props
             fail-on-missing: True
           - project: '{name}-update-gh-status'
             current-parameters: True
@@ -332,14 +333,9 @@
           mkdir test-results/
           TEST_DIR=$(readlink -f test-results)
           chcon -Rt svirt_sandbox_file_t $TEST_DIR
-          #sudo docker run --rm -v $TEST_DIR:/junit $CONTAINER launch-test autoremove-1 dnf || :
           for f in ci-dnf-stack/dnf-docker-test/features/*.feature; do
             file=$(basename $f)
             test=${{file%.feature}}
-            if [[ "$test" == "vars-releasever" ]]; then
-              # XXX: https://github.com/rpm-software-management/ci-dnf-stack/pull/135
-              continue
-            fi
             sudo docker run --rm -v $TEST_DIR:/junit $CONTAINER launch-test "$test" dnf || :
           done
       # Analyze results
