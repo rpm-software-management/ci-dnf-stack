@@ -879,8 +879,8 @@ def _start_commandline():  # pylint: disable=R0912,R0915
         # List of tests that require new behavior of installroot.
         dnf2_0 = ['config-1', 'config', 'gpg-2', 'gpg-4', 'installroot-2', 'installroot-3', 'installroot-4',
                   'plugin-path-5', 'plugin-path-6', 'repository-1', 'repository-2']
-        # Compatibility step for dnf2.0 and new installroot behavior. Can be updated after installroot PR is merged.
-        for test in sorted(set(tests) - set(dnf2_0)) if options.update_copr_repo == 'rpmsoftwaremanagement/dnf-2.0-nightly'\
+        # FIXME - Compatibility step for dnf2.0 and new installroot behavior.
+        for test in sorted(tests) if options.update_copr_repo == 'rpmsoftwaremanagement/dnf-2.0-nightly'\
                 else sorted(set(tests) - set(dnf2_0)):
             for dnf_command_version in ['dnf-2', 'dnf-3']:
                 LOGGER.info('Running test: ' + test)
