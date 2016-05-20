@@ -205,7 +205,7 @@
           export PYTHONPATH=`readlink -f rpm-gitoverlay`
           pushd ci-dnf-stack/overlays/dnf-2/
             python3 -m rgo --log DEBUG resolve
-            pushd src/{name}/
+            pushd src/{name}-git/
               if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
                 git checkout $GIT_COMMIT
               elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
