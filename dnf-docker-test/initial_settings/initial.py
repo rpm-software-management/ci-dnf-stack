@@ -89,6 +89,8 @@ if job_name == 'local-build':
         installer.command_cl_runner(cmd)
 else:
     installer.upgrade_copr_built_package(installer.dnf_version(package_name))
+# FIXME - After upgrade to dnf-2.0 python-dnf-plugins-core (userinstalled) is replaced by python2-dnf-plugins-core (dep)
+subprocess.call(['dnf', 'mark', 'install', 'python2-dnf-plugins-core'])
 repo_files = glob.glob('/etc/yum.repos.d/*')
 for repo_file in repo_files:
     shutil.move(repo_file, '/temp/dnf.repo')
