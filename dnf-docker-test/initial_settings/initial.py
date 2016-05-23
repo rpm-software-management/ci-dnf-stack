@@ -44,7 +44,7 @@ class DnfEnvSetup:
                     '\nbaseurl=https://copr-be.cloud.fedoraproject.org/results/' +
                     update_copr_repo + '/fedora-$releasever-$basearch/\nenabled=1\ngpgcheck=0')
         command_in_list = ['dnf', 'install', '--disablerepo=*', '--enablerepo=' + update_copr_repo.rsplit('/', 1)[1],
-                           '--allowerasing', '-y', 'dnf-plugins-core']
+                           '--allowerasing', '-y', 'dnf-plugins-core', 'python2-dnf-plugins-core', 'python3-dnf-plugins-core']
         self.command_cl_runner(command_in_list)
         command_in_list = ['dnf', '-y', '--disablerepo=*', '--enablerepo=' + update_copr_repo.rsplit('/', 1)[1],
                            '--best', 'upgrade']
