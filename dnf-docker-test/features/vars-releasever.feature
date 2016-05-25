@@ -28,7 +28,7 @@ Scenario: Test vars taken from installroot
  Scenario: Test host releasever
   When I create a file "/etc/yum.repos.d/var.repo" with content: "[var]\nname=var\nbaseurl=http://127.0.0.1/repo/$releasever\nenabled=1\ngpgcheck=0"
   Then the path "/etc/yum.repos.d/var.repo" should be "present"
-  When I execute "bash" command "mv /var/www/html/repo/test-1 /var/www/html/repo/$(rpm -q --provides $(rpm -q --whatprovides system-release) | grep -Po "(?<=system-release\()\d+(?=\))")" with "success"
+  When I execute "bash" command "mv /var/www/html/repo/test-1 /var/www/html/repo/$(rpm -q --provides $(rpm -q --whatprovides system-release) | grep -Po '(?<=system-release\()\d+(?=\))')" with "success"
   When I execute "bash" command "mv /var/www/html/repo/upgrade_1 /var/www/html/repo/22" with "success"
   When I execute "dnf" command "install -y TestE" with "success"
   Then transaction changes are as follows
@@ -44,6 +44,6 @@ Scenario: Test vars taken from installroot
   Then the path "/dockertesting/etc/yum.repos.d/var.repo" should be "present"
   When I execute "dnf" command "--installroot=/dockertesting -y install TestE" with "fail"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "fail"
-  When I execute "dnf" command "--installroot=/dockertesting -y --releasever=23 install TestE" with "success"
+  When I execute "dnf" command "--installroot=/dockertesting -y --releasever=$(rpm -q --provides $(rpm -q --whatprovides system-release) | grep -Po '(?<=system-release\()\d+(?=\))') install TestE" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "success"
   Then line from "stdout" should "start" with "TestE-1.0.0-1."
