@@ -3,6 +3,7 @@
 from behave import *
 import dnf
 import glob
+import re
 import os
 import shutil
 import subprocess
@@ -241,3 +242,24 @@ def then_file_contein(context, path_to_file, content):
     assert os.path.isfile(path[0]), "The file {!r} is not a file or doesn't exist".format(path[0])
     with open(path[0], 'r') as f:
         assert content in f, "The file {!r} doesn't contain {!r}".format(path[0], content)
+
+
+@then('the "{section}" section should contain packages "{pkgs}"')
+@then('the "{section}" section should contain package "{pkgs}"')
+def then_the_section(context, section, pkgs):
+    pkgs = splitter(pkgs)
+    lines = iter(context.cmd_output.split('\n'))
+    try:
+        while not re.match('^{}:'.format(section), lines.next()):
+            pass
+        while True:
+            pkg_line = lines.next()
+            if not pkg_line.startswith(' '):
+                raise AssertionError('packages {} has not been found in {} section'.format(pkgs, section))
+            pkg_name = pkg_line.split()[0]
+            if pkg_name in pkgs:
+                pkgs.remove(pkg_name)
+                if not pkgs:
+                    return
+    except StopIteration:
+        raise AssertionError('section {} has not been found'.format(section))
