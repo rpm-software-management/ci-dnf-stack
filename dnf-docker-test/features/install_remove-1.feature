@@ -3,6 +3,8 @@ Feature: DNF/Behave test (install remove test)
 Scenario: Install Remove TestA from repository "test-1" that requires TestB
  Given I use the repository "test-1"
  When I execute "dnf" command "install -y TestA" with "success"
+ Then the "Installing" section should contain package "TestA"
+ And the "Installing dependencies" section should contain package "TestB"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestB  |
@@ -24,6 +26,8 @@ Scenario: Install Remove TestD from repository "test-1" that requires TestE = 1.
    | State        | Packages      |
    | installed    | TestD, TestE  |
  When I execute "dnf" command "-y remove TestD" with "success"
+ Then the "Removing" section should contain package "TestD"
+ And the "Removing unused dependencies" section should contain package "TestE"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestD, TestE  |
