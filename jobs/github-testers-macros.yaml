@@ -197,7 +197,7 @@
             current-parameters: True
             condition: UNSTABLE_OR_WORSE
             predefined-parameters: |
-              GH_STATE=error
+              GH_STATE=failure
               GH_CONTEXT={github-context}
               GH_DESC=Error while building RPM git-overlay.
       - workspace-cleanup:
@@ -269,7 +269,7 @@
             current-parameters: True
             condition: UNSTABLE_OR_WORSE
             predefined-parameters: |
-              GH_STATE=error
+              GH_STATE=failure
               GH_CONTEXT={github-context}
               GH_DESC=Error while preparing container.
       - workspace-cleanup:
@@ -329,7 +329,7 @@
           with open("GH_UPDATE.txt", "w") as gh:
               gh.write("GH_CONTEXT={github-context}\n")
               if success != all:
-                  gh.write("GH_STATE=error\n")
+                  gh.write("GH_STATE=failure\n")
               else:
                   gh.write("GH_STATE=success\n")
               gh.write("GH_DESC=%d/%d features works\n" % (success, all))
