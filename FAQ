@@ -1,4 +1,4 @@
-Q: I have patches for multiple proejcts (libhif, dnf, dnf-plugins-core), how do I build RPMs with those?
+Q: I have patches for multiple projects (libhif, dnf, dnf-plugins-core), how do I build RPMs with those?
 A: Not that trivial, but possible!
    0. You need to have working rpm-gitoverlay
       0.1. git clone https://github.com/ignatenkobrain/rpm-gitoverlay.git
@@ -9,7 +9,7 @@ A: Not that trivial, but possible!
    3. Build RPMs: rpm-gitoverlay --log=DEBUG build rpm copr --owner=$YOUR_COPR_NAME
    Note if you want to change some code which you want to build - go to "src" directory, then component git repo, do changes and commit them (or git pull, or whatever)
 
-Q: I have RPMs, how do I run tests locally?
+Q: I have RPMs, how do I run functional/integration tests locally?
 A: Easily!
    0. You need to have fedora:24 docker image, as it is not yet in dockerhub, run following commands:
       0.1. curl -O https://download.fedoraproject.org/pub/fedora/linux/releases/test/24_Beta/Docker/x86_64/images/Fedora-Docker-Base-24_Beta-1.6.x86_64.tar.xz
