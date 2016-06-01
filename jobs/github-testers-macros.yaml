@@ -216,47 +216,23 @@
     scm:
       - ci-dnf-stack-scm
     builders:
-      # Download RPMs
+      # Download RPMs and prepare container
       - shell: |
           #!/bin/bash
           set -xeuo pipefail
-
-          mkdir rpms
-          pushd rpms
-            echo "$RPMS" | xargs -n 1 curl -L -O
-            if ! ls *.rpm; then
-              exit 1
-            fi
-          popd
-
-      # Prepare container
-      - shell: |
-          #!/bin/bash
-          set -xeuo pipefail
-
-          cat << EOF > Dockerfile
-          FROM fedora:24
-          ENV LANG C
-
-          RUN dnf -y update
-          RUN dnf -y install httpd /usr/bin/behave-2
-          RUN dnf -y autoremove
-          COPY ci-dnf-stack/dnf-docker-test/repo /var/www/html/repo/
-          COPY ci-dnf-stack/dnf-docker-test/features /behave/
-
-          COPY rpms /rpms/
-          RUN dnf -y install /rpms/*.rpm
-          RUN dnf -y clean all
-          RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
-
-          ADD ci-dnf-stack/dnf-docker-test/httpd.conf /etc/httpd/conf/
-          ADD ci-dnf-stack/dnf-docker-test/launch-test /usr/bin/
-
-          VOLUME ["/repo", "/junit"]
-          EOF
 
           CONTAINER="{name}-$BUILD_ID-`date +%s`"
-          sudo /usr/bin/docker build --no-cache --force-rm -t "$CONTAINER" .
+
+          pushd ci-dnf-stack
+            pushd rpms
+              echo "$RPMS" | xargs -n 1 curl -L -O
+              if ! ls *.rpm; then
+                exit 1
+              fi
+            popd
+            sudo /usr/bin/docker build --no-cache --force-rm -t "$CONTAINER" .
+          popd
+
           echo "CONTAINER=$CONTAINER" > props
     publishers:
       - trigger-parameterized-builds:

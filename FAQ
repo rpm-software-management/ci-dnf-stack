@@ -1,0 +1,9 @@
+Q: I have RPMs, how do I run tests locally?
+A: Easily!
+   0. You need to have fedora:24 docker image, as it is not yet in dockerhub, run following commands:
+      0.1. curl -O https://download.fedoraproject.org/pub/fedora/linux/releases/test/24_Beta/Docker/x86_64/images/Fedora-Docker-Base-24_Beta-1.6.x86_64.tar.xz
+      0.2. sudo docker load -i Fedora-Docker-Base-24_Beta-1.6.x86_64.tar.xz
+      0.3. sudo docker tag fedora-docker-base-24_beta-1.6.x86_64 fedora:24
+   1. Put your RPMs into "rpms" directory in repo
+   2. sudo docker build --no-cache --force-rm -t $MY_SUPER_CONTAINER .
+   3. sudo docker run --rm $MY_SUPER_CONTAINER launch-test $MY_COOL_TEST dnf-3
