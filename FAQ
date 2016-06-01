@@ -1,3 +1,14 @@
+Q: I have patches for multiple proejcts (libhif, dnf, dnf-plugins-core), how do I build RPMs with those?
+A: Not that trivial, but possible!
+   0. You need to have working rpm-gitoverlay
+      0.1. git clone https://github.com/ignatenkobrain/rpm-gitoverlay.git
+      0.2. alias rpm-gitoverlay="PYTHONPATH=$PYTHONPATH:`readlink -f rpm-gitoverlay` python3 -m rgo"
+      0.3. Also install needed dependencies
+   1. Copy overlays/dnf-master/overlay.yml and edit it (remove unneded components, add branch tags, etc.)
+   2. Clone repos, do checkouts: rpm-gitoverlay --log=DEBUG resolve
+   3. Build RPMs: rpm-gitoverlay --log=DEBUG build rpm copr --owner=$YOUR_COPR_NAME
+   Note if you want to change some code which you want to build - go to "src" directory, then component git repo, do changes and commit them (or git pull, or whatever)
+
 Q: I have RPMs, how do I run tests locally?
 A: Easily!
    0. You need to have fedora:24 docker image, as it is not yet in dockerhub, run following commands:
