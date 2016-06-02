@@ -1,0 +1,34 @@
+- job-template:
+    name: "{name}-{chroot}"
+    defaults: github-testers-defaults
+    concurrent: False
+    scm:
+      - rpm-gitoverlay-scm
+      - ci-dnf-stack-scm
+    triggers:
+      - timed: "@midnight"
+    builders:
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          export PYTHONPATH=`readlink -f rpm-gitoverlay`
+
+          pushd ci-dnf-stack/overlays/dnf-master
+            python3 -m rgo --log DEBUG resolve
+            python3 -m rgo --log DEBUG build --chroot "{chroot}" rpm copr --owner rpmsoftwaremanagement --project dnf-ng
+          popd
+    publishers:
+      - workspace-cleanup
+
+- project:
+    name: nightly
+    jobs:
+      - "{name}-{chroot}"
+    chroot:
+      - fedora-23-x86_64
+      - fedora-23-i386
+      - fedora-24-x86_64
+      - fedora-24-i386
+      - fedora-rawhide-x86_64
+      - fedora-rawhide-i386
