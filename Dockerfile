@@ -8,7 +8,8 @@ COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
 COPY rpms /rpms/
-RUN dnf -y install /rpms/*.rpm
+# TODO: COPR broken, drop --allowerasing
+RUN dnf -y install /rpms/*.rpm --allowerasing
 RUN dnf -y clean all
 RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
 
