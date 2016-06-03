@@ -86,7 +86,7 @@ def given_repo_condition(context, repo):
             os.unlink(os.path.join(root, f))
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
-    for src in glob.glob('/var/www/html/repo/' + repo + '/*.rpm'):
+    for src in glob.glob(os.path.join('/var/www/html/repo/', repo, '*.rpm')):
         os.symlink(src, '/repo/' + os.path.basename(src))
     with open('/etc/yum.repos.d/' + repo + '.repo', 'w') as f:
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
