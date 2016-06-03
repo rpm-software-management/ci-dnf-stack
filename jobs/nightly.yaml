@@ -16,7 +16,7 @@
 
           pushd ci-dnf-stack/overlays/dnf-master
             python3 -m rgo --log DEBUG resolve
-            python3 -m rgo --log DEBUG build --chroot "{chroot}" rpm copr --owner rpmsoftwaremanagement --project dnf-ng
+            python3 -m rgo --log DEBUG build --chroot "{chroot}" rpm copr --owner rpmsoftwaremanagement --project dnf-nightly
           popd
     publishers:
       - workspace-cleanup
