@@ -7,4 +7,4 @@ allow_duplicates=False
 [jenkins]
 user=user
 password=pass
-url=https://209.132.179.118/
+url=http://ci.dnf.baseurl.org/
