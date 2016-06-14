@@ -19,6 +19,7 @@ components:
       src: github:openSUSE/libsolv.git
     distgit:
       src: fedorapkgs:libsolv.git
+      patches: drop
 
   - name: librepo
     git:
