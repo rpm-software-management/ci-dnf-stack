@@ -141,7 +141,7 @@ Scenario: Group Install Remove List with with-optional option
  When I execute "dnf" command "group list Testgroup" with "success"
  Then line from "stdout" should "not start" with "Installed groups:"
  And line from "stdout" should "start" with "Available groups:"
- When I execute "dnf" command "group install -y with-optional Testgroup" with "success"
+ When I execute "dnf" command "group install -y --with-optional Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages                           |
    | installed    | TestA, TestB, TestC, TestD, TestE  |
