@@ -282,11 +282,12 @@
           TEST_DIR=`readlink -f test-results`
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
 
-          for f in ci-dnf-stack/dnf-docker-test/features/*.feature; do
-            file=`basename $f`
-            test="${{file%.feature}}"
-            sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "$test" dnf || :
+          FEATURES=(ci-dnf-stack/dnf-docker-test/features/*.feature)
+          for ((i=0; i<${{#FEATURES[@]}}; i++)); do
+            BASE_NAME=`basename ${{FEATURES[$i]}}`
+            FEATURES[$i]="${{BASE_NAME%.feature}}"
           done
+          parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{FEATURES[@]}}" || :
       # Analyze results
       - python: |
           import glob
