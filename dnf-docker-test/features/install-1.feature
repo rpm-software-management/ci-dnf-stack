@@ -10,6 +10,11 @@ Scenario: Apply exclude for rpms
   Then transaction changes are as follows
    | State        | Packages       |
    | absent       | TestB, TestA   |
+  When I execute "dnf" command "install -y --exclude=TestB --setopt strict=false /repo/TestB-1*.rpm /repo/TestC-1*.rpm" with "success"
+  Then transaction changes are as follows
+   | State        | Packages       |
+   | absent       | TestB          |
+   | installed    | TestC          |
   When I execute "dnf" command "install -y --exclude=TestC /repo/TestB-1*.rpm /repo/TestA-1*.rpm" with "success"
   Then transaction changes are as follows
    | State        | Packages       |
