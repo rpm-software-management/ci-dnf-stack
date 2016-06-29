@@ -294,18 +294,9 @@
 
           import xunitparser
 
-          IGNORE_TESTS = ("config",
-                          "config-1",
-                          "gpg-2",
-                          "gpg-4",
-                          "installroot-2",
-                          "installroot-3",
-                          "installroot-4",
-                          "plugin-path-5",
-                          "plugin-path-6",
-                          "repoquery-1",
-                          "repository-1",
-                          "repository-2")
+          IGNORE_TESTS = (
+              "installroot-3",
+          )
 
           all = 0
           success = 0
