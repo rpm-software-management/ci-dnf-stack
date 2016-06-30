@@ -5,6 +5,7 @@
           url: "https://github.com/rpm-software-management/dnf-plugins-core.git"
           branches:
             - origin/master
+            - origin/auto
           basedir: dnf-plugins-core
           skip-tag: true
 
