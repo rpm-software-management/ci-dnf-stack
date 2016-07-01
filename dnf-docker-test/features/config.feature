@@ -21,11 +21,11 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf.
 Scenario: Test removal of depemdency when clean_requirements_on_remove=false
   Given I use the repository "test-1"
   When I create a file "/etc/dnf/dnf.conf" with content: "[main]\nexclude=TestA\nclean_requirements_on_remove=false"
-  When I execute "dnf" command "install -y --disableexclude=main TestA" with "success"
+  When I execute "dnf" command "install -y --disableexcludes=main TestA" with "success"
   Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestB  |
-  When I execute "dnf" command "remove -y --disableexclude=all TestA" with "success"
+  When I execute "dnf" command "remove -y --disableexcludes=all TestA" with "success"
   Then transaction changes are as follows
    | State        | Packages   |
    | removed      | TestA      |
