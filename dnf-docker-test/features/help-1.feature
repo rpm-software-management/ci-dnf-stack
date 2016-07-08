@@ -8,7 +8,7 @@ Scenario: General help
   Then line from "stdout" should "start" with "List of Main Commands"
   When I execute "dnf" command "unknown-command" with "fail"
   Then line from "stderr" should "start" with "No such command"
-  Then line from "stdout" should "start" with "It could be a DNF plugin command"
+  Then line from "stderr" should "start" with "It could be a DNF plugin command"
   When I execute "dnf" command "help" with "success"
   Then line from "stdout" should "start" with "List of Main Commands"
 
