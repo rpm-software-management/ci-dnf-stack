@@ -13,11 +13,7 @@
           set -xeuo pipefail
 
           export PYTHONPATH=`readlink -f rpm-gitoverlay`
-
-          pushd ci-dnf-stack/overlays/dnf-master
-            python3 -m rgo --log DEBUG resolve
-            python3 -m rgo --log DEBUG build --chroot "{chroot}" rpm copr --owner rpmsoftwaremanagement --project dnf-nightly
-          popd
+          python3 -m rgo --log DEBUG build-overlay -s ci-dnf-stack/overlays/dnf-master rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly
     publishers:
       - workspace-cleanup
 

@@ -5,8 +5,6 @@ aliases:
   - name: fedorapkgs
     url: git://pkgs.fedoraproject.org/rpms/
 
-chroot: fedora-24-x86_64
-
 components:
   - name: rpm
     git:

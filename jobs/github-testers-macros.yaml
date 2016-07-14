@@ -157,6 +157,7 @@
     scm:
       - rpm-gitoverlay-scm
       - ci-dnf-stack-scm
+      - "{name}-scm"
     builders:
       - trigger-builds:
           - project: "{name}-update-gh-status"
@@ -172,21 +173,18 @@
           set -xeuo pipefail
 
           export PYTHONPATH=`readlink -f rpm-gitoverlay`
-
-          pushd ci-dnf-stack/overlays/dnf-master/
-            python3 -m rgo --log DEBUG resolve
-            pushd "src/{name}-git/"
-              if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
-                git checkout $GIT_COMMIT
-              elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
-                git checkout "$ghprbTargetBranch"
-                git fetch origin "refs/pull/$ghprbPullId/head"
-                git merge FETCH_HEAD
-              fi
-            popd
-            python3 -m rgo --log DEBUG build -o rpms rpm copr --owner rpmsoftwaremanagement
-            RPMS=`cat rpms | xargs`
+          pushd "{name}"
+            if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
+              git checkout $GIT_COMMIT
+            elif [ "$ROOT_BUILD_CAUSE" == "GHPRBCAUSE" ]; then
+              git checkout "$ghprbTargetBranch"
+              git fetch origin refs/pull/$ghprbPullId/head
+              git merge FETCH_HEAD
+            fi
           popd
+
+          python3 -m rgo --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/dnf-master/ rpm copr --chroot fedora-24-x86_64 --owner rpmsoftwaremanagement
+          RPMS=`cat rpms | xargs`
           echo "RPMS=$RPMS" > props
     publishers:
       - trigger-parameterized-builds:
