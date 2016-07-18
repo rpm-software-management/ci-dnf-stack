@@ -3,16 +3,6 @@
 ############
 
 - scm:
-    name: rpm-gitoverlay-scm
-    scm:
-      - git:
-          url: "https://github.com/ignatenkobrain/rpm-gitoverlay.git"
-          branches:
-            - origin/master
-          basedir: rpm-gitoverlay
-          skip-tag: True
-
-- scm:
     name: ci-dnf-stack-scm
     scm:
       - git:
@@ -155,7 +145,6 @@
     defaults: github-testers-defaults
     concurrent: True
     scm:
-      - rpm-gitoverlay-scm
       - ci-dnf-stack-scm
       - "{name}-scm"
     builders:
@@ -172,7 +161,6 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          export PYTHONPATH=`readlink -f rpm-gitoverlay`
           pushd "{name}"
             if [ "$ROOT_BUILD_CAUSE" == "SCMTRIGGER" ]; then
               git checkout $GIT_COMMIT
@@ -183,7 +171,7 @@
             fi
           popd
 
-          python3 -m rgo --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/dnf-master/ rpm copr --chroot fedora-24-x86_64 --owner rpmsoftwaremanagement
+          rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/dnf-master/ rpm copr --chroot fedora-24-x86_64 --owner rpmsoftwaremanagement
           RPMS=`cat rpms | xargs`
           echo "RPMS=$RPMS" > props
     publishers:

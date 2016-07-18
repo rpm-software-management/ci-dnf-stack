@@ -3,7 +3,6 @@
     defaults: github-testers-defaults
     concurrent: False
     scm:
-      - rpm-gitoverlay-scm
       - ci-dnf-stack-scm
     triggers:
       - timed: "@midnight"
@@ -12,8 +11,7 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          export PYTHONPATH=`readlink -f rpm-gitoverlay`
-          python3 -m rgo --log DEBUG build-overlay -s ci-dnf-stack/overlays/dnf-master rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly
+          rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/dnf-master rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly
     publishers:
       - workspace-cleanup
 
