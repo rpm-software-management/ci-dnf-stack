@@ -1,13 +1,11 @@
 Q: I have patches for multiple projects (libhif, dnf, dnf-plugins-core), how do I build RPMs with those?
 A: Not that trivial, but possible!
-   0. You need to have working rpm-gitoverlay
-      0.1. git clone https://github.com/ignatenkobrain/rpm-gitoverlay.git
-      0.2. alias rpm-gitoverlay="PYTHONPATH=$PYTHONPATH:`readlink -f rpm-gitoverlay` python3 -m rgo"
-      0.3. Also install needed dependencies
+   0. You need to have working rpm-gitoverlay (find instructions at https://github.com/ignatenkobrain/rpm-gitoverlay#installation)
    1. Copy overlays/dnf-master/overlay.yml and edit it (remove unneded components, add branch tags, etc.)
-   2. Clone repos, do checkouts: rpm-gitoverlay --log=DEBUG resolve
-   3. Build RPMs: rpm-gitoverlay --log=DEBUG build rpm copr --owner=$YOUR_COPR_NAME
-   Note if you want to change some code which you want to build - go to "src" directory, then component git repo, do changes and commit them (or git pull, or whatever)
+   2. Build (S)RPM(s): https://github.com/ignatenkobrain/rpm-gitoverlay#usage
+      2.1. To use existing git repositories, use --gitdir option
+      2.2. To build just SRPM(s): rpm-gitoverlay build-overlay srpm
+      2.3. To build RPM(s): rpm-gitoverlay build-overlay rpm [BUILDER], where builder is copr/rpmbuild with some additional parameters (see -h/--help)
 
 Q: I have RPMs, how do I run functional/integration tests locally?
 A: Easily!
