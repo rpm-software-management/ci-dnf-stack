@@ -209,8 +209,6 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          CONTAINER="{name}-$BUILD_ID-`date +%s`"
-
           pushd ci-dnf-stack
             pushd rpms
               echo "$RPMS" | xargs -n 1 curl -L -O
@@ -218,10 +216,12 @@
                 exit 1
               fi
             popd
-            sudo /usr/bin/docker build --no-cache --force-rm -t "$CONTAINER" .
+            TESTS=($(./dnf-testing.sh list))
+            CONTAINER=$(./dnf-testing.sh build)
           popd
 
-          echo "CONTAINER=$CONTAINER" > props
+          echo "TESTS=(${{TESTS[@]}})" > props
+          echo "CONTAINER=$CONTAINER" >> props
     publishers:
       - trigger-parameterized-builds:
           - project: "{name}-test"
@@ -249,8 +249,6 @@
     defaults: github-testers-defaults
     concurrent: False
     node: master
-    scm:
-      - ci-dnf-stack-scm
     builders:
       - trigger-builds:
           - project: "{name}-update-gh-status"
@@ -268,12 +266,7 @@
           TEST_DIR=`readlink -f test-results`
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
 
-          FEATURES=(ci-dnf-stack/dnf-docker-test/features/*.feature)
-          for ((i=0; i<${{#FEATURES[@]}}; i++)); do
-            BASE_NAME=`basename ${{FEATURES[$i]}}`
-            FEATURES[$i]="${{BASE_NAME%.feature}}"
-          done
-          parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{FEATURES[@]}}" || :
+          parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
       # Analyze results
       - python: |
           import glob

@@ -10,5 +10,6 @@ A: Not that trivial, but possible!
 Q: I have RPMs, how do I run functional/integration tests locally?
 A: Easily!
    1. Put your RPMs into "rpms" directory in repo
-   2. sudo docker build --no-cache --force-rm -t $MY_SUPER_CONTAINER .
-   3. sudo docker run --rm $MY_SUPER_CONTAINER launch-test $MY_COOL_TEST dnf-3
+   2. CONTAINER=$(./dnf-testing.sh build)
+   3. ./dnf-testing.sh run $CONTAINER
+   X. See ./dnf-testing.sh --help
