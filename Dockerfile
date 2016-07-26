@@ -14,7 +14,6 @@ RUN dnf -y autoremove
 RUN dnf -y clean all
 RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
 
-ADD dnf-docker-test/httpd.conf /etc/httpd/conf/
 ADD dnf-docker-test/launch-test /usr/bin/
 RUN mkdir /repo
 
