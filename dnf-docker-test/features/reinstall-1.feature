@@ -1,4 +1,4 @@
-Feature: reinstall
+Feature: Reinstall won't break dependencies
 
 Scenario: Dnf installs foo, that requires foo-libs. After reinstall of foo-libs there will be still removed foo-libs when removed foo.
  Given set of repositories
