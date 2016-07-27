@@ -1,6 +1,8 @@
-Feature: Reinstall won't break dependencies
+Feature: Re-install must not change "reason" of package which has been 
+installed as dependency 
 
-Scenario: Dnf installs foo, that requires foo-libs. After reinstall of foo-libs there will be still removed foo-libs when removed foo.
+Scenario: Dnf installs foo, that requires foo-libs. After reinstall of
+foo-libs there will be still removed foo-libs when removed foo.
  Given set of repositories
    | key        | value      |
    | Repository | base       |
