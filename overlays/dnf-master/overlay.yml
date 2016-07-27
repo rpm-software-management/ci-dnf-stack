@@ -37,7 +37,7 @@ components:
     distgit:
       src: fedorapkgs:libcomps.git
 
-  - name: libhif
+  - name: libdnf
     git:
       src: github:rpm-software-management/libhif.git
 
