@@ -282,6 +282,7 @@
 
           IGNORE_TESTS = (
               "installroot-3",
+              "reinstall-reason"
           )
 
           all = 0
