@@ -273,7 +273,9 @@
 
           import xunitparser
 
-          IGNORE_TESTS = ()
+          IGNORE_TESTS = (
+              "install-obsoletes",
+          )
 
           all = 0
           success = 0
