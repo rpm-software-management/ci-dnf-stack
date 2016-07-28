@@ -71,7 +71,7 @@ fi
 FEATURES=()
 gather_tests()
 {
-    local glob="$PROG_PATH/dnf-docker-test/features/*.feature"
+    local glob="$PROG_PATH/features/*.feature"
     local i=0
     for f in $glob; do
         if [ "$f" = "$glob" ]; then
