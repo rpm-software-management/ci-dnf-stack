@@ -1,6 +1,7 @@
 FROM fedora:24
 ENV LANG C
 
+RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
 RUN dnf -y install dnf-plugins-core
 RUN dnf config-manager --set-enabled updates-testing
 RUN dnf -y update
