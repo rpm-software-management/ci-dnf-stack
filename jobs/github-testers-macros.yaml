@@ -273,10 +273,7 @@
 
           import xunitparser
 
-          IGNORE_TESTS = (
-              "installroot-3",
-              "reinstall-reason"
-          )
+          IGNORE_TESTS = ()
 
           all = 0
           success = 0
