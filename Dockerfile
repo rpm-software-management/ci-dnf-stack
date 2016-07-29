@@ -2,8 +2,6 @@ FROM fedora:24
 ENV LANG C
 
 RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
-RUN dnf -y install dnf-plugins-core
-RUN dnf config-manager --set-enabled updates-testing
 RUN dnf -y update
 RUN dnf -y install httpd /usr/bin/behave-2 python2-rpmfluff
 COPY dnf-docker-test/repo /var/www/html/repo/
