@@ -220,7 +220,7 @@
             CONTAINER=$(./dnf-testing.sh build)
           popd
 
-          echo "TESTS=(${{TESTS[@]}})" > props
+          echo "TESTS=${{TESTS[@]}}" > props
           echo "CONTAINER=$CONTAINER" >> props
     publishers:
       - trigger-parameterized-builds:
@@ -265,7 +265,7 @@
           mkdir test-results/
           TEST_DIR=`readlink -f test-results`
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
-
+          TESTS=(${{TESTS[@]}})
           parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
       # Analyze results
       - python: |
