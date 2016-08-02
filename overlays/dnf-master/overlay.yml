@@ -9,6 +9,7 @@ components:
   - name: rpm
     git:
       src: github:rpm-software-management/rpm.git
+      freeze: 215f3e9466650819b0f5ebdb01512629bfd4fce1
     distgit:
       src: github:ignatenkobrain/rpm-fedora.git
 
