@@ -31,12 +31,6 @@ components:
     distgit:
       src: fedorapkgs:createrepo_c.git
 
-  - name: libcomps
-    git:
-      src: github:rpm-software-management/libcomps.git
-    distgit:
-      src: fedorapkgs:libcomps.git
-
   - name: libdnf
     git:
       src: github:rpm-software-management/libhif.git
