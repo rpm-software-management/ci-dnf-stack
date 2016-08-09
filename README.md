@@ -24,7 +24,7 @@ in parallel without interfering with each other. These tests are meant to
 verify that both DNF and RPM (if relevant) interpret the rich dependency semantics
 correctly and all functionality of DNF and related component is intact. Dnf Docker
 Test use its own feature files and steps descriptions placed in its directory
-(dnf-docker-test/).
+(features/).
 
 License
 -------
@@ -61,7 +61,7 @@ EOF
 ```
 
 To rebuild `test-1` or `upgrade_1` repository for Dnf Docker Test run
-`test-1.py` or `upgrade_1.py` in `dnf-docker-test/repo_create directory`.
+`test-1.py` or `upgrade_1.py` in `repo_create` directory.
 It requires following components:
 * python3-rpmfluff
 * createrepo
