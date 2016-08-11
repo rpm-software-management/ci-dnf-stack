@@ -64,8 +64,6 @@ To rebuild `test-1` or `upgrade_1` repository for Dnf Docker Test run
 `test-1.py` or `upgrade_1.py` in `dnf-docker-test/repo_create directory`.
 It requires following components:
 * python3-rpmfluff
-* createrepo
-* createrepo_c
 
 Configuring Jenkins
 -------------------

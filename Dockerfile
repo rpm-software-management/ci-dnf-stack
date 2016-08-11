@@ -3,13 +3,18 @@ ENV LANG C
 
 RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
 RUN dnf -y update
-RUN dnf -y install httpd /usr/bin/behave-2 python2-rpmfluff
+# behave: core
+# httpd: old-style repos
+# six: py2/py3
+# enum34: rpmdb State
+# whichcraft: shutil.which() for py2
+# jinja2: rpmspec template
+RUN dnf -y install httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python-jinja2
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
 COPY rpms /rpms/
-# TODO: COPR broken, drop --allowerasing
-RUN dnf -y install /rpms/*.rpm --allowerasing
+RUN dnf -y install /rpms/*.rpm
 RUN dnf -y autoremove
 RUN dnf -y clean all
 RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
