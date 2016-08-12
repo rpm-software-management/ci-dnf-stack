@@ -1,6 +1,7 @@
 import unittest
 
 class dummy(unittest.TestCase):
+    maxDiff = None
     def runTest(self):
         pass
 
