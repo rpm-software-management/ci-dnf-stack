@@ -1,25 +1,31 @@
-Feature: Re-install must not change "reason" of package which has been installed as dependency
+Feature: "Reason" of reinstalled package
+  Re-install must not change "reason" of package which has been installed
+  as dependency.
 
-  Scenario: Install foo which requires foo-libs, reinstall foo-libs, remove foo still should be removed as unneded dependency
-     Given set of repositories
-        | key        | value         |
-        | Repository | base          |
-        | Package    | foo           |
-        | Version    | 1             |
-        | Release    | 1             |
-        | Requires   | foo-libs      |
-        | Package    | foo-libs      |
-        | Version    | 1             |
-        | Release    | 1             |
-      When I execute "dnf" command "-y install foo" with "success"
-      Then transaction changes are as follows
-        | State      | Packages      |
-        | installed  | foo, foo-libs |
-      When I execute "dnf" command "-y reinstall foo-libs" with "success"
-      Then transaction changes are as follows
-        | State      | Packages      |
-        | present    | foo, foo-libs |
-      When I execute "dnf" command "-y remove foo" with "success"
-      Then transaction changes are as follows
-        | State      | Packages      |
-        | removed    | foo, foo-libs |
+  After reinstalling dependent package removal of main package should remove
+  dependent package as well.
+
+  @setup
+  Scenario: Feature Setup
+      Given repository "available" with packages
+         | Package    | Tag      | Value      |
+         | TestA      | Requires | TestA-libs |
+         | TestA-libs |          |            |
+       When I save rpmdb
+        And I enable repository "available"
+        And I successfully run "dnf -y install TestA"
+       Then rpmdb changes are
+         | State     | Packages          |
+         | installed | TestA, TestA-libs |
+
+  Scenario: Reinstall dependency, remove main package
+       When I save rpmdb
+        And I successfully run "dnf -y reinstall TestA-libs"
+       Then rpmdb changes are
+         | State       | Packages          |
+         | reinstalled | TestA-libs        |
+       When I save rpmdb
+        And I successfully run "dnf -y remove TestA"
+       Then rpmdb changes are
+         | State       | Packages          |
+         | removed     | TestA, TestA-libs |
