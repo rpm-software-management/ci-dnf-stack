@@ -1,25 +1,25 @@
 Feature: Obsoleting packages one-to-one
 
-  Scenario: Updating should replace one package with another
-     Given set of repositories
-        | key        | value   |
-        | Repository | base    |
-        | Package    | foo     |
-        | Version    | 1       |
-        | Release    | 1       |
-      When I execute "dnf" command "-y install foo" with "success"
-      Then transaction changes are as follows
-        | State     | Packages |
-        | installed | foo      |
-     Given set of repositories
-        | key        | value   |
-        | Repository | updates |
-        | Package    | bar     |
-        | Version    | 2       |
-        | Release    | 1       |
-        | Obsoletes  | foo < 2 |
-      When I execute "dnf" command "-y update" with "success"
-      Then transaction changes are as follows
-        | State     | Packages |
-        | removed   | foo      |
-        | installed | bar      |
+  @setup
+  Scenario: Feature Setup
+      Given repository "base" with packages
+         | Package | Tag       | Value       |
+         | TestA   |           |             |
+        And repository "updates" with packages
+         | Package | Tag       | Value       |
+         | TestB   | Obsoletes | TestA < 1-2 |
+       When I save rpmdb
+        And I enable repository "base"
+        And I successfully run "dnf -y install TestA"
+       Then rpmdb changes are
+         | State     | Packages |
+         | installed | TestA    |
+
+  Scenario: Update should replace one package with another
+       When I save rpmdb
+        And I enable repository "updates"
+        And I successfully run "dnf -y update"
+       Then rpmdb changes are
+         | State     | Packages |
+         | removed   | TestA    |
+         | installed | TestB    |
