@@ -209,12 +209,11 @@
           #!/bin/bash
           set -xeuo pipefail
 
+          join() { local IFS="$1"; shift; echo "$*"; }
+          RPMS=($RPMS)
           pushd ci-dnf-stack
             pushd rpms
-              echo "$RPMS" | xargs -n 1 curl -L -O
-              if ! ls *.rpm; then
-                exit 1
-              fi
+              join , "{{${{RPMS[@]}}}}" | xargs curl -O
             popd
             TESTS=($(./dnf-testing.sh list))
             CONTAINER=$(./dnf-testing.sh build)
