@@ -209,7 +209,7 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          join() { local IFS="$1"; shift; echo "$*"; }
+          join() {{ local IFS="$1"; shift; echo "$*"; }}
           RPMS=($RPMS)
           pushd ci-dnf-stack
             pushd rpms
