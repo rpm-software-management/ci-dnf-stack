@@ -1,18 +1,16 @@
-Feature: Installing package which has been obsoleted
+Feature: Installing obsoleted packages
 
-  Scenario: Install "owncloud" should be propagated to installing "nextcloud" as it obsoletes "owncloud"
-     Given set of repositories
-        | key        | value          |
-        | Repository | available      |
-        | Package    | owncloud       |
-        | Version    | 1              |
-        | Release    | 1              |
-        | Package    | nextcloud      |
-        | Version    | 2              |
-        | Release    | 1              |
-        | Provides   | owncloud = 2-1 |
-        | Obsoletes  | owncloud < 2   |
-      When I execute "dnf" command "-y install owncloud" with "success"
-      Then transaction changes are as follows
-        | State      | Packages       |
-        | installed  | nextcloud      |
+  @setup
+  Scenario: Feature Setup
+      Given repository "available" with packages
+         | Package | Tag       | Value |
+         | TestA   |           |       |
+         | TestB   | Obsoletes | TestA |
+
+  Scenario: Install "TestA" should be propagated to installing "TestB"
+       When I save rpmdb
+        And I enable repository "available"
+        And I successfully run "dnf -y install TestA"
+       Then rpmdb changes are
+         | State     | Packages |
+         | installed | TestB    |
