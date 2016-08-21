@@ -1,3 +1,6 @@
+Q: How to download latest RPMs from nightly?
+A: curl --silent http://ci.dnf.baseurl.org/job/nightly-fedora-24-x86_64/lastStableBuild/consoleText | grep "^https://copr.*\.rpm" | xargs wget
+
 Q: I have patches for multiple projects (libhif, dnf, dnf-plugins-core), how do I build RPMs with those?
 A: Not that trivial, but possible!
    0. You need to have working rpm-gitoverlay (find instructions at https://github.com/ignatenkobrain/rpm-gitoverlay#installation)
