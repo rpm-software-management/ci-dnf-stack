@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import collections
 import enum
 import functools
-import time
 
 import rpm
 
@@ -28,8 +27,6 @@ def get_rpmdb():
     :return: RPM Headers
     :rtype: list(rpm.hdr)
     """
-    # FIXME: if we get rpmdb right afteroperation it's might be not updated
-    time.sleep(1)
     pkgs = {}
     for hdr in rpm.TransactionSet().dbMatch():
         name = hdr["name"].decode()
