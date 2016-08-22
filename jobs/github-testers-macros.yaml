@@ -273,6 +273,7 @@
           import xunitparser
 
           IGNORE_TESTS = (
+              "gpg-1",
               "install-obsoletes",
           )
 
