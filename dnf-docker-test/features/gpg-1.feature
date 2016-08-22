@@ -6,8 +6,6 @@ Scenario: Add repository to host with gpgcheck=1 from repofile and test 'repolis
  Then line from "stdout" should "not start" with "upgrade_1-gpg"
  And line from "stdout" should "start" with "test-1"
  When I execute "dnf" command "config-manager --add-repo http://127.0.0.1/repo/upgrade_1-gpg/upgrade_1-gpg-file.repo" with "success"
-# TODO - Ensure that everything is written on hdd before dnf commands exit.
- When I execute "bash" command "sleep 1" with "success"
  When I execute "dnf" command "repolist" with "success"
  Then line from "stdout" should "start" with "upgrade_1-gpg-file"
  And line from "stdout" should "start" with "test-1"
