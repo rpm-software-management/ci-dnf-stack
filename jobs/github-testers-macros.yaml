@@ -274,6 +274,7 @@
 
           IGNORE_TESTS = (
               "install-obsoletes",
+              "obsoletes-reason",
           )
 
           all = 0
