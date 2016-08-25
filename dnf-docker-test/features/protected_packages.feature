@@ -1,37 +1,63 @@
-Feature: DNF/Behave test (protected_packages test)
+Feature: Protected packages
 
-Scenario: Removal of installed protected package
- Given I use the repository "test-1"
- When I execute "dnf" command "install -y TestA" with "success"
- Then transaction changes are as follows
-   | State        | Packages      |
-   | installed    | TestA, TestB  |
+  @setup
+  Scenario: Feature Setup
+      Given repository "base" with packages
+         | Package | Tag      | Value |
+         | TestA   | Requires | TestB |
+         | TestB   |          |       |
+       When I save rpmdb
+        And I enable repository "base"
+        And I successfully run "dnf -y install TestA"
+       Then rpmdb changes are
+         | State     | Packages     |
+         | installed | TestA, TestB |
 
- When I execute "dnf" command "-y remove TestA --setopt=protected_packages=TestA" with "fail"
- Then transaction changes are as follows
-   | State        | Packages     |
-   | present      | TestA, TestB |
- And line from "stderr" should "start" with "Error: The operation would result in removing the following protected packages: TestA"
+  Scenario: Removal of directly protected package
+       When I save rpmdb
+        And I run "dnf -y remove TestA --setopt=protected_packages=TestA"
+       Then the command should fail
+        And the command stderr should contain exactly
+            """
+            Error: The operation would result in removing the following protected packages: TestA
 
- When I execute "dnf" command "-y remove TestB --setopt=protected_packages=TestA" with "fail"
- Then transaction changes are as follows
-   | State        | Packages     |
-   | present      | TestA, TestB |
+            """
+        And rpmdb does not change
 
- When I execute "dnf" command "-y remove dnf" with "fail"
- Then transaction changes are as follows
-   | State        | Packages     |
-   | present      | dnf          |
- And line from "stderr" should "start" with "Error: The operation would result in removing the following protected packages: dnf"
+  Scenario: Removal of indirectly protected package
+       When I save rpmdb
+        And I run "dnf -y remove TestB --setopt=protected_packages=TestA"
+       Then the command should fail
+# FIXME: Error: package TestA-1-1.fc24.noarch requires TestB, but none of the providers can be installed
+#       And the command stderr should contain exactly
+#           """
+#           Error: The operation would result in removing the following protected packages: TestA
+#
+#           """
+        And rpmdb does not change
 
- When I create a file "/etc/yum/protected.d/donotremove.conf" with content: "TestA"
- When I execute "dnf" command "-y remove TestA" with "fail"
- Then transaction changes are as follows
-   | State        | Packages     |
-   | present      | TestA, TestB |
+  Scenario: Removal of DNF itself
+       When I save rpmdb
+        And I run "dnf -y remove dnf"
+       Then the command should fail
+        And the command stderr should contain exactly
+            """
+            Error: The operation would result in removing the following protected packages: dnf
 
- When I execute "bash" command "rm /etc/yum/protected.d/donotremove.conf" with "success"
- When I execute "dnf" command "-y remove TestB" with "success"
- Then transaction changes are as follows
-   | State        | Packages     |
-   | removed      | TestA, TestB |
+            """
+        And rpmdb does not change
+             
+  Scenario: Removal of protected package with conffile
+      Given a file "/etc/yum/protected.d/test.conf" with
+            """
+            TestA
+            """
+       When I save rpmdb
+        And I run "dnf -y remove TestA"
+       Then the command should fail
+        And the command stderr should contain exactly
+            """
+            Error: The operation would result in removing the following protected packages: TestA
+
+            """
+        And rpmdb does not change
