@@ -266,16 +266,16 @@
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
           TESTS=(${{TESTS[@]}})
           parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
+          XFAIL = ($(sudo docker run --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/ | jq -r '.[] | select(.tags[] | contains($tag)) | .location | gsub(".*/(?<name>.+)\\.feature:\\d+$"; "\(.name)")' --arg tag xfail))
+          export XFAIL="${XFAIL[@]}"
+
       # Analyze results
       - python: |
           import glob
-
+          import os
           import xunitparser
 
-          IGNORE_TESTS = (
-              "install-obsoletes",
-              "obsoletes-reason",
-          )
+          XFAIL = os.environ["XFAIL"].split()
 
           all = 0
           success = 0
@@ -286,7 +286,7 @@
               all += 1
               if result.wasSuccessful():
                   success += 1
-              elif ts.name.split(".", 1)[0] in IGNORE_TESTS:
+              elif ts.name.split(".", 1)[0] in XFAIL:
                   ignored += 1
           with open("GH_UPDATE.txt", "w") as gh:
               gh.write("GH_CONTEXT={github-context}\n")

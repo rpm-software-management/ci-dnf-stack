@@ -47,6 +47,7 @@ Requirements
 * git-core
 * /usr/bin/rpmbuild
 * docker
+* jq
 
 For building in COPR:
 * python3-copr
