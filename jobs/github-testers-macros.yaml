@@ -277,28 +277,31 @@
 
           XFAIL = os.environ["XFAIL"].split()
 
-          all = 0
-          success = 0
-          ignored = 0
+          all = (0, 0)
+          xfail = (0, 0)
           for xml in glob.glob("test-results/*.xml"):
               with open(xml, "r") as test:
                   ts, result = xunitparser.parse(test)
-              all += 1
-              if result.wasSuccessful():
-                  success += 1
-              elif ts.name.split(".", 1)[0] in XFAIL:
-                  ignored += 1
+              passed = result.wasSuccessful():
+              if ts.name.split(".", 1)[0] in XFAIL:
+                  xfail[1] += 1
+                  if passed:
+                      xfail[0] += 1
+              else:
+                  all[1] += 1
+                  if passed:
+                      all[0] += 1
           with open("GH_UPDATE.txt", "w") as gh:
               gh.write("GH_CONTEXT={github-context}\n")
               if all == 0:
                   gh.write("GH_STATE=error\n")
                   gh.write("GH_DESC=0 tests ran\n")
               else:
-                  if success + ignored != all:
+                  if all[0] != all[1]:
                       gh.write("GH_STATE=failure\n")
                   else:
                       gh.write("GH_STATE=success\n")
-                  gh.write("GH_DESC=%d/%d features works (%d failures ignored)\n" % (success, all, ignored))
+                  gh.write("GH_DESC=%d/%d normal + %d/%d xfail\n" % (all[0], all[1], xfail[0], xfail[1]))
     publishers:
       - junit:
           results: test-results/*.xml
