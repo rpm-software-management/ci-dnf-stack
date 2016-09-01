@@ -267,7 +267,7 @@
           TESTS=(${{TESTS[@]}})
           parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
           XFAIL = ($(sudo docker run --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/ | jq -r '.[] | select(.tags[] | contains($tag)) | .location | gsub(".*/(?<name>.+)\\.feature:\\d+$"; "\(.name)")' --arg tag xfail))
-          export XFAIL="${XFAIL[@]}"
+          export XFAIL="${{XFAIL[@]}}"
 
       # Analyze results
       - python: |
