@@ -266,8 +266,8 @@
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
           TESTS=(${{TESTS[@]}})
           parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
-          XFAIL = ($(sudo docker run --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/ | jq -r '.[] | select(.tags[] | contains($tag)) | .location | gsub(".*/(?<name>.+)\\.feature:\\d+$"; "\(.name)")' --arg tag xfail))
-          export XFAIL="${{XFAIL[@]}}"
+          JSON=$(sudo docker run --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/)
+          echo $JSON | jq -r '.[] | select(.tags[] | contains($tag)) | .location | gsub(".*/(?<name>.+)\\.feature:\\d+$"; "\(.name)")' --arg tag xfail | tee xfail
 
       # Analyze results
       - python: |
@@ -275,14 +275,15 @@
           import os
           import xunitparser
 
-          XFAIL = os.environ["XFAIL"].split()
+          with open("xfail", "r") as f:
+              XFAIL = f.readlines()
 
-          all = (0, 0)
-          xfail = (0, 0)
+          all = [0, 0]
+          xfail = [0, 0]
           for xml in glob.glob("test-results/*.xml"):
               with open(xml, "r") as test:
                   ts, result = xunitparser.parse(test)
-              passed = result.wasSuccessful():
+              passed = result.wasSuccessful()
               if ts.name.split(".", 1)[0] in XFAIL:
                   xfail[1] += 1
                   if passed:

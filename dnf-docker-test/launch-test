@@ -2,4 +2,4 @@
 set -xeuo pipefail
 
 httpd -k start
-behave-2 -i $1 -D dnf_command_version=$2 --junit --junit-directory /junit/ /behave/
+behave-2 -i $1 -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/
