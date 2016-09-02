@@ -95,7 +95,7 @@ def given_repo_condition(context, repo):
 @step('I execute "{type_of_command}" command "{command}" with "{result}"')
 def when_action_command(context, type_of_command, command, result):
     assert command, 'Command was not specified'
-    dnf_command_version = context.config.userdata['dnf_command_version']
+    dnf_command_version = context.command_map["dnf"]
     assert dnf_command_version
     context.pre_sack = sack_rpm_comparator()
     assert context.pre_sack
