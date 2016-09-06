@@ -20,6 +20,7 @@
     jobs:
       - "{name}-{chroot}"
     chroot:
+      - epel-7-x86_64
       - fedora-23-x86_64
       - fedora-23-i386
       - fedora-24-x86_64
