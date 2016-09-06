@@ -276,7 +276,7 @@
           import xunitparser
 
           with open("xfail", "r") as f:
-              XFAIL = f.readlines()
+              XFAIL = [x.rstrip() for x in f]
 
           all = [0, 0]
           xfail = [0, 0]
@@ -294,7 +294,7 @@
                       all[0] += 1
           with open("GH_UPDATE.txt", "w") as gh:
               gh.write("GH_CONTEXT={github-context}\n")
-              if all == 0:
+              if all[1] == 0:
                   gh.write("GH_STATE=error\n")
                   gh.write("GH_DESC=0 tests ran\n")
               else:
