@@ -9,8 +9,7 @@ Feature: Handling of --disablerepo and --enablerepo
       Given empty repository "test-1"
 
   Scenario: Handling of --disablerepo and --enablerepo with one repo
-       When I run "dnf repolist --enablerepo=test* --setopt=strict=true"
-       Then the command should fail
+       When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=true"
         And the command stderr should be empty
 
        When I successfully run "dnf repolist --disablerepo=test* --setopt=strict=true"
