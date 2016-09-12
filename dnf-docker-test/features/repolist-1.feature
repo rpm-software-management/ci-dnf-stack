@@ -9,3 +9,14 @@ Scenario: Handling of --disablerepo and --enablerepo with no repo
   Then line from "stderr" should "start" with "No repository match:"
   When I execute "dnf" command "repolist --disablerepo=* --setopt=strict=false" with "success"
   Then line from "stderr" should "start" with "No repository match:"
+
+Scenario: Handling of --disablerepo and --enablerepo with one repo
+  Given I use the repository "test-1"
+  When I execute "dnf" command "repolist --enablerepo=test* --setopt=strict=true" with "success"
+  Then line from "stderr" should "not start" with "Error: Unknown repo:"
+  When I execute "dnf" command "repolist --disablerepo=test* --setopt=strict=true" with "success"
+  Then line from "stderr" should "not start" with "No repository match:"
+  When I execute "dnf" command "repolist --enablerepo=test* --setopt=strict=false" with "success"
+  Then line from "stderr" should "not start" with "No repository match:"
+  When I execute "dnf" command "repolist --disablerepo=test* --setopt=strict=false" with "success"
+  Then line from "stderr" should "not start" with "No repository match:"
