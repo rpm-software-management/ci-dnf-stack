@@ -10,13 +10,23 @@ Feature: Handling of --disablerepo and --enablerepo
 
   Scenario: Handling of --disablerepo and --enablerepo with one repo
        When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=true"
-        And the command stderr should be empty
+       Then the command stdout should contain exactly
+            """
+            repo id                              repo name                            status
+            test-1                               test-1                               0
+
+            """
 
        When I successfully run "dnf repolist --disablerepo=test* --setopt=strict=true"
-       Then the command stderr should be empty
+       Then the command stdout should be empty
 
        When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=false"
-       Then the command stderr should be empty
+       Then the command stdout should contain exactly
+            """
+            repo id                              repo name                            status
+            test-1                               test-1                               0
+
+            """
 
        When I successfully run "dnf repolist --disablerepo=test* --setopt=strict=false"
-       Then the command stderr should be empty
+       Then the command stdout should be empty
