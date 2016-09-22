@@ -65,6 +65,17 @@ if [ "$action" = "run" ]; then
         TESTS+=("$arg")
         shift
     done
+elif [ "$action" = "build" ]; then
+    type="local"
+    for arg; do
+        case "$arg" in
+            jjb) type="jjb";;
+            local) type="local";;
+            "") type="local";;
+            *) fatal "Unknown argument: $arg";;
+        esac
+        shift
+    done
 fi
 [ $# -eq 0 ] || fatal "Too many arguments."
 
@@ -92,6 +103,11 @@ list()
 
 build()
 {
+    if [ "$type" = "jjb" ]; then
+        ln -sf Dockerfile.jjb Dockerfile
+    else
+        ln -sf Dockerfile.local Dockerfile
+    fi
     local output=($(sudo docker build --no-cache --force-rm "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     if [ ${#output[@]} -eq 3 ] && \
