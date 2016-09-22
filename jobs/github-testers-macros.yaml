@@ -216,7 +216,7 @@
               join , "{{${{RPMS[@]}}}}" | xargs curl -O
             popd
             TESTS=($(./dnf-testing.sh list))
-            CONTAINER=$(./dnf-testing.sh build)
+            CONTAINER=$(./dnf-testing.sh build jjb)
           popd
 
           echo "TESTS=${{TESTS[@]}}" > props

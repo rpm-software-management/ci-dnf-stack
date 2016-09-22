@@ -1,0 +1,27 @@
+FROM fedora:24
+ENV LANG C
+
+RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
+RUN dnf -y update
+# behave: core
+# httpd: old-style repos
+# six: py2/py3
+# enum34: rpmdb State
+# whichcraft: shutil.which() for py2
+# jinja2: rpmspec template
+RUN dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python-jinja2
+COPY dnf-docker-test/repo /var/www/html/repo/
+COPY dnf-docker-test/features /behave/
+
+# Allows to run test with rpms from only single component in rpms/
+RUN dnf -y copr enable rpmsoftwaremanagement/dnf-nightly
+COPY rpms /rpms/
+RUN dnf -y install /rpms/*.rpm
+RUN dnf -y autoremove
+RUN dnf -y clean all
+RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
+
+ADD dnf-docker-test/launch-test /usr/bin/
+RUN mkdir /repo
+
+VOLUME ["/junit"]
