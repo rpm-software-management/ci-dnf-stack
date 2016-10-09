@@ -136,17 +136,23 @@ run()
     [ ${#TESTS[@]} -eq 0 ] && TESTS=("${FEATURES[@]}")
     local failed=0
     local failed_test_name='Failed test(s):'
-    for feature in "${TESTS[@]}"; do
-        if [ -z "$devel" ];then
-            printf "\nsudo docker run --rm "$IMAGE" launch-test "$feature" dnf\n"
-            sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || \
-            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
-        else
-            printf "\nsudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf\n"
-            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || \
-            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
-        fi
-    done
+    if [ -z "$devel" ];then
+        for feature in "${TESTS[@]}"; do
+            for command in dnf-2 dnf-3; do
+                printf "\nsudo docker run --rm "$IMAGE" launch-test "$feature" $command\n"
+                sudo docker run --rm "$IMAGE" launch-test "$feature" $command >&2 || \
+                if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
+            done
+        done
+    else
+        for feature in "${TESTS[@]}"; do
+            for command in dnf-2 dnf-3; do
+                printf "\nsudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $command\n"
+                sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $command >&2 || \
+                if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
+            done
+        done
+    fi
     if [ "$failed" != 0 ]; then
         >&2 echo "$failed_test_name"
     fi
