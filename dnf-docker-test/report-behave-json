@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PREFIXES="$@"
+
+for file in $(find /behave -name *.feature -type f); do
+    old=${file%.*}
+    for prefix in ${PREFIXES[@]}; do
+        new=${old}-$prefix.feature
+        cp ${file} ${new}
+    done
+    rm ${file}
+done
+behave-2 --dry-run --no-summary -f json /behave/

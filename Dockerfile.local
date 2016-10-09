@@ -35,5 +35,5 @@ RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && mkdir /repo
 
 ADD dnf-docker-test/launch-test /usr/bin/
-
+ADD dnf-docker-test/report-behave-json /usr/bin/
 VOLUME ["/junit"]
