@@ -61,6 +61,9 @@ jenkins ALL=(ALL) NOPASSWD: /usr/bin/docker
 EOF
 ```
 
+docker need to be configured by command:
+docker network create -o com.docker.network.bridge.enable_icc=false -o com.docker.network.bridge.enable_ip_masquerade=false isolated
+
 To rebuild `test-1` or `upgrade_1` repository for Dnf Docker Test run
 `test-1.py` or `upgrade_1.py` in `dnf-docker-test/repo_create directory`.
 It requires following components:
