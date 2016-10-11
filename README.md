@@ -101,6 +101,15 @@ Possible actions in step like  When I execute "dnf" command "install -y TestA" w
 Possible states: installed, removed, absent, upgraded, downgraded, present. The states present and absent can be used
 for detailed description of tested step or to ensure, that required conditions before or after tested step were met.
 
+Generate documentation for dnf-docker-test
+------------------------------------------
+```
+$ cd dnf-docker-test/
+$ rm -vf doc/*.rst
+$ behave-3 -q --dry-run -f sphinx.steps -o doc/
+$ sphinx-build-3 -W -b html doc/ doc/_build/
+```
+
 Support
 -------
 
