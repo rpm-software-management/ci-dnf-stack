@@ -104,9 +104,9 @@ list()
 build()
 {
     if [ "$type" = "jjb" ]; then
-        cp Dockerfile.jjb Dockerfile
+        ln -sf Dockerfile.jjb Dockerfile
     else
-        cp Dockerfile.local Dockerfile
+        ln -sf Dockerfile.local Dockerfile
     fi
     local output=($(sudo docker build --no-cache --force-rm "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
