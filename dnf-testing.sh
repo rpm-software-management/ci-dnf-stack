@@ -15,6 +15,11 @@ show_usage()
     exit 1
 }
 
+set_devel()
+{
+    devel="$PROG_PATH/dnf-docker-test/features:/behave:Z"
+}
+
 show_help()
 {
     cat << EOF
@@ -24,6 +29,7 @@ Usage: $0 [OPTIONS...] {COMMAND}
 
 Options:
   -h, --help          Show this help
+  -d, --devel         Share local feature/ with docker
 
 Commands:
   list                List of available functional tests
@@ -34,13 +40,15 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o h -l help -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hd -l help,devel -- "$@") || show_usage
 eval set -- "$TEMP"
 
+devel=""
 while :; do
     case "$1" in
         --) shift; break;;
         -h|--help) show_help;;
+        -d|--devel) set_devel; shift;;
         *) fatal "Non-implemented option: $1"
     esac
 done
@@ -126,8 +134,13 @@ run()
     [ ${#TESTS[@]} -eq 0 ] && TESTS=("${FEATURES[@]}")
     local failed=0
     for feature in "${TESTS[@]}"; do
-        sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || :
-        [ $? -ne 0 ] && let ++failed
+        if [ -z "$devel" ];then
+            sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || :
+            [ $? -ne 0 ] && let ++failed
+        else
+            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || :
+            [ $? -ne 0 ] && let ++failed
+        fi
     done
     exit $failed
 }
