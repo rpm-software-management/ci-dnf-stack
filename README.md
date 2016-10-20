@@ -75,6 +75,23 @@ to manage jenkins jobs.
 To deploy jobs you need configure your [jenkins_jobs.ini](http://docs.openstack.org/infra/jenkins-job-builder/execution.html)
 and run `jenkins-jobs --config=/path/to/jenkins_jobs.ini update jobs/`.
 
+Local run
+---------
+
+Local test can be performed with dnf-testing.sh
+* Container build:
+** Put your RPMs into "dnf-docker-test/rpms" directory
+** Then run ``CONTAINER=$(./dnf-testing.sh build)``
+* Run tests
+** Run all tests use command ``./dnf-testing.sh run $CONTAINER``
+** Run particular tests run: ``./dnf-testing.sh run $CONTAINER TEST-A TEST-B ...``
+* Run in devel mode
+** It shares local feature dir with description of tests and test steps with docker image, therefore you can develop CI stack on fly.
+** Use command ``./dnf-testing.sh run --devel $CONTAINER TEST-A``
+* Get help
+** ./dnf-testing.sh --help
+
+
 Describing a test
 -----------------
 
