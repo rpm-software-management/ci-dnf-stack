@@ -15,8 +15,8 @@ COPY dnf-docker-test/features /behave/
 # Allows to run test with rpms from only single component in rpms/
 RUN dnf -y copr enable rpmsoftwaremanagement/dnf-nightly
 COPY rpms /rpms/
-RUN if ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else (>&2 echo "RPMs files do not exist"); fi
 RUN dnf -y update
+RUN if ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else (>&2 echo "RPMs files do not exist"); fi
 RUN dnf -y mark install $(dnf repoquery --unneeded -q)
 RUN dnf -y clean all
 RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
