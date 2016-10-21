@@ -133,15 +133,19 @@ run()
 {
     [ ${#TESTS[@]} -eq 0 ] && TESTS=("${FEATURES[@]}")
     local failed=0
+    local failed_test_name='Failed test(s):'
     for feature in "${TESTS[@]}"; do
         if [ -z "$devel" ];then
             sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || \
-            [ $? -ne 0 ] && let ++failed
+            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         else
             sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || \
-            [ $? -ne 0 ] && let ++failed
+            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         fi
     done
+    if [ "$failed" != 0 ]; then
+        >&2 echo "$failed_test_name"
+    fi
     exit $failed
 }
 [ "$action" = "run" ] && run
