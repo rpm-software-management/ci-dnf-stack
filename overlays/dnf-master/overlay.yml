@@ -48,3 +48,7 @@ components:
   - name: dnf-plugins-core
     git:
       src: github:rpm-software-management/dnf-plugins-core.git
+
+  - name: dnf-plugins-extras
+    git:
+      src: github:rpm-software-management/dnf-plugins-extras.git
