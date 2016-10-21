@@ -8,7 +8,7 @@ RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
 # enum34: rpmdb State
 # whichcraft: shutil.which() for py2
 # jinja2: rpmspec template
-RUN dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python-jinja2
+RUN dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
@@ -17,7 +17,7 @@ RUN dnf -y copr enable rpmsoftwaremanagement/dnf-nightly
 COPY rpms /rpms/
 RUN if ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else (>&2 echo "RPMs files do not exist"); fi
 RUN dnf -y update
-RUN dnf -y autoremove
+RUN dnf -y mark install $(dnf repoquery --unneeded -q)
 RUN dnf -y clean all
 RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
 
