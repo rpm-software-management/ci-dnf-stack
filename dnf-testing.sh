@@ -135,10 +135,10 @@ run()
     local failed=0
     for feature in "${TESTS[@]}"; do
         if [ -z "$devel" ];then
-            sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || :
+            sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || \
             [ $? -ne 0 ] && let ++failed
         else
-            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || :
+            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || \
             [ $? -ne 0 ] && let ++failed
         fi
     done
