@@ -28,27 +28,31 @@ $0 - functional tests for DNF.
 Usage: $0 [OPTIONS...] {COMMAND}
 
 Options:
-  -h, --help          Show this help
-  -d, --devel         Share local feature/ with docker
+  -h, --help               Show this help
+  -c, --container  IMAGE   Specified Image ID or name if do not want to run the last built image
+  -d, --devel              Share local feature/ with docker
 
 Commands:
-  list                List of available functional tests
-  build               Build container with functional tests
-  run IMAGE [TEST...] Run one or more functional tests
+  list             List of available functional tests
+  build            Build container with functional tests
+  run [TEST...]    Run all tests. The set of tests can be optionally specified by [TEST...]
 
 EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hd -l help,devel -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdc: -l help,devel,container: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
+IMAGE="dnf-bot/dnf-testing:latest"
+
 while :; do
     case "$1" in
         --) shift; break;;
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
+        -c|--container) IMAGE=$2; shift 2;;
         *) fatal "Non-implemented option: $1"
     esac
 done
@@ -66,8 +70,6 @@ for arg; do
 done
 [ "$action" != "" ] || fatal "Specify command to do."
 if [ "$action" = "run" ]; then
-    IMAGE=
-    [ $# -gt 0 ] && { IMAGE="$1"; shift; } || fatal "Missing image name."
     TESTS=()
     for arg; do
         TESTS+=("$arg")
@@ -116,7 +118,7 @@ build()
     else
         ln -sf Dockerfile.local Dockerfile
     fi
-    local output=($(sudo docker build --no-cache --force-rm "$PROG_PATH" | \
+    local output=($(sudo docker build --no-cache --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     if [ ${#output[@]} -eq 3 ] && \
        [ "${output[0]}" = "Successfully" ] && 
@@ -136,9 +138,11 @@ run()
     local failed_test_name='Failed test(s):'
     for feature in "${TESTS[@]}"; do
         if [ -z "$devel" ];then
+            printf "\nsudo docker run --rm "$IMAGE" launch-test "$feature" dnf\n"
             sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         else
+            printf "\nsudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf\n"
             sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         fi

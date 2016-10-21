@@ -14,5 +14,5 @@ Q: I have RPMs, how do I run functional/integration tests locally?
 A: Easily!
    1. Put your RPMs into "rpms" directory in repo
    2. CONTAINER=$(./dnf-testing.sh build)
-   3. ./dnf-testing.sh run $CONTAINER
+   3. ./dnf-testing.sh run -c $CONTAINER
    X. See ./dnf-testing.sh --help
