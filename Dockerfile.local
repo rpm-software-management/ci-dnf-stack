@@ -8,7 +8,7 @@ RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
 # enum34: rpmdb State
 # whichcraft: shutil.which() for py2
 # jinja2: rpmspec template
-RUN dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c
+RUN dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c python2-pexpect
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
