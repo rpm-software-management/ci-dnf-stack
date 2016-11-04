@@ -49,6 +49,12 @@ Obsoletes:      {{ obs }}
 {%- endfor %}
 {%- endif %}
 
+{%- if conflicts is defined %}
+{% for con in conflicts %}
+Conflicts:       {{ con }}
+{%- endfor %}
+{%- endif %}
+
 {%- if provides is defined %}
 {% for prv in provides %}
 Provides:       {{ prv }}
@@ -62,7 +68,7 @@ Provides:       {{ prv }}
 """
 REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 HEADINGS_REPO = ["Package", "Tag", "Value"]
-PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides"]
+PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides", "Conflicts"]
 PKG_TAGS = ["Summary", "Version", "Release", "License"] + PKG_TAGS_REPEATING
 
 JINJA_ENV = jinja2.Environment(undefined=jinja2.StrictUndefined)
@@ -113,6 +119,7 @@ def given_repository_with_packages(ctx, repository):
     Requires      []             
     Obsoletes     []             
     Provides      []             
+    Conflicts     []             
     ============= ===============
 
     All packages are built during step execution.
