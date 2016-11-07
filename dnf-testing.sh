@@ -20,6 +20,11 @@ set_devel()
     devel="$PROG_PATH/dnf-docker-test/features:/behave:Z"
 }
 
+set_command()
+{
+    dnf_command="$1"
+}
+
 show_help()
 {
     cat << EOF
@@ -30,6 +35,7 @@ Usage: $0 [OPTIONS...] {COMMAND}
 Options:
   -h, --help          Show this help
   -d, --devel         Share local feature/ with docker
+  -c, --command       Set alternative command to run, instead of dnf
 
 Commands:
   list                List of available functional tests
@@ -40,15 +46,17 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hd -l help,devel -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o "hdc:" -l "help,devel,command:" -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
+dnf_command="dnf"
 while :; do
     case "$1" in
         --) shift; break;;
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
+        -c|--command) set_command $2; shift 2;;
         *) fatal "Non-implemented option: $1"
     esac
 done
@@ -135,10 +143,10 @@ run()
     local failed=0
     for feature in "${TESTS[@]}"; do
         if [ -z "$devel" ];then
-            sudo docker run --rm "$IMAGE" launch-test "$feature" dnf >&2 || :
+            sudo docker run --rm "$IMAGE" launch-test "$feature" $dnf_command >&2 || :
             [ $? -ne 0 ] && let ++failed
         else
-            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" dnf >&2 || :
+            sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $dnf_command >&2 || :
             [ $? -ne 0 ] && let ++failed
         fi
     done
