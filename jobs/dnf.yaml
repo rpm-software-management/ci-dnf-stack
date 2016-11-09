@@ -18,10 +18,11 @@
     jobs:
       - github-testers-jobs
 
-    white-list:
-        - jsilhan
-        - mluscon
-        - ignatenkobrain
-        - j-mracek
-        - MichaelMraka
-        - mhatina
+    white-lists: |
+        jsilhan
+        mluscon
+        ignatenkobrain
+        j-mracek
+        MichaelMraka
+        mhatina
+        stepasm

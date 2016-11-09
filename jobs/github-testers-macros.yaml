@@ -44,7 +44,7 @@
       - github-pull-request:
           auth-id: "{ghprb-auth-id}"
 
-          white-list: "{white-list}"
+          white-list: {"{white-lists}"}
 
           # Always check for PR activity every 5 mins (ci trigger failsafe)
           cron: "H/5 * * * *"
