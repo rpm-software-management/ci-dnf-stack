@@ -130,6 +130,9 @@ system.
 Notes for functional testing
 ----------------------------
 
+Repo upgrade_1:
+updateinfo.xml was added using modifyrepo_c updateinfo.xml path/upgrade_1/repodata/
+
 Repo test-1-gpg:
 Was created from rpms in test-1 repo. All rpm were signed with gpg-pubkey-2d2e7ca3-56c1e69d	gpg(DNF Test1 (TESTER)
 <dnf@testteam.org>) except TestE (not signed), TestG (signed with key gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2

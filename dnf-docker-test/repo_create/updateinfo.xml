@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+ <update from="rholy@redhat.com" status="stable" type="bugfix" version="1.5">
+  <id>DNF-2014-1</id>
+  <title>TestB-1.0.0-1</title>
+  <release>Fedora 20</release>
+  <issued date="2014-07-08 17:34:01"/>
+  <references/>
+  <description>testing advisory</description>
+  <pkglist>
+   <collection short="F20">
+    <name>Fedora 20</name>
+    <package arch="noarch" epoch="0" name="TestB" release="1" src="https://github.com/akozumpl/dnf/blob/master/tests/repos/rpm/TestB-1.0.0-1.noarch.rpm" version="1.0.0">
+     <filename>TestB-1.0.0-1.noarch.rpm</filename>
+    </package>
+   </collection>
+  </pkglist>
+ </update>
+ <update from="rholy@redhat.com" status="stable" type="bugfix" version="1.5">
+  <id>DNF-2014-1</id>
+  <title>TestC-1.0.0-2</title>
+  <release>Fedora 20</release>
+  <issued date="2014-07-08 17:34:01"/>
+  <references/>
+  <description>testing advisory</description>
+  <pkglist>
+   <collection short="F20">
+    <name>Fedora 20</name>
+    <package arch="noarch" epoch="0" name="TestC" release="2" src="https://github.com/akozumpl/dnf/blob/master/tests/repos/rpm/TestC-1.0.0-2.noarch.rpm" version="1.0.0">
+     <filename>TestC-1.0.0-2.noarch.rpm</filename>
+    </package>
+   </collection>
+  </pkglist>
+ </update>
+ <update from="rholy@redhat.com" status="stable" type="bugfix" version="1.4">
+  <id>DNF-2014-1</id>
+  <title>TestN-1.0.0-2</title>
+  <release>Fedora 20</release>
+  <issued date="2014-07-08 17:34:01"/>
+  <references/>
+  <description>testing advisory</description>
+  <pkglist>
+   <collection short="F20">
+    <name>Fedora 20</name>
+    <package arch="noarch" epoch="0" name="TestN" release="2" src="https://github.com/akozumpl/dnf/blob/master/tests/repos/rpm/TestN-1.0.0-2.noarch.rpm" version="1.0.0">
+     <filename>TestN-1.0.0-2.noarch.rpm</filename>
+    </package>
+   </collection>
+  </pkglist>
+ </update>
+ <update from="rholy@redhat.com" status="stable" type="bugfix" version="1.4">
+  <id>DNF-2014-2</id>
+  <title>TestN-1.0.0-3</title>
+  <release>Fedora 20</release>
+  <issued date="2014-07-08 17:38:02"/>
+  <references/>
+  <description>testing advisory</description>
+  <pkglist>
+   <collection short="F20">
+    <name>Fedora 20</name>
+    <package arch="noarch" epoch="0" name="TestN" release="3" src="https://github.com/akozumpl/dnf/blob/master/tests/repos/rpm/TestN-1.0.0-3.noarch.rpm" version="1.0.0">
+     <filename>TestN-1.0.0-3.noarch.rpm</filename>
+    </package>
+   </collection>
+  </pkglist>
+ </update>
+ <update from="rholy@redhat.com" status="stable" type="security" version="1.4">
+  <id>DNF-2014-3</id>
+  <title>TestN-1.0.0-4</title>
+  <release>Fedora 20</release>
+  <issued date="2014-07-08 17:39:03"/>
+  <references/>
+  <description>testing advisory</description>
+  <pkglist>
+   <collection short="F20">
+    <name>Fedora 20</name>
+    <package arch="noarch" epoch="0" name="TestN" release="4" src="https://github.com/akozumpl/dnf/blob/master/tests/repos/rpm/TestN-1.0.0-4.noarch.rpm" version="1.0.0">
+     <filename>TestN-1.0.0-4.noarch.rpm</filename>
+    </package>
+   </collection>
+  </pkglist>
+ </update>
+</updates>

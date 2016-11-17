@@ -66,4 +66,12 @@
     <size>306</size>
     <open-size>570</open-size>
   </data>
+  <data type="updateinfo">
+    <checksum type="sha256">d995d4dae758f24d9de7ec9c12878887f5670f70e540f2716f464ec8c082b6a8</checksum>
+    <open-checksum type="sha256">4ed459806f0f21f0da3367c93b873fd98dc318f600ed78aad4ceed59775a5f77</open-checksum>
+    <location href="repodata/d995d4dae758f24d9de7ec9c12878887f5670f70e540f2716f464ec8c082b6a8-updateinfo.xml.gz"/>
+    <timestamp>1479389422</timestamp>
+    <size>509</size>
+    <open-size>3097</open-size>
+  </data>
 </repomd>
