@@ -9,5 +9,5 @@ Scenario: Upgrade of obsoleted package by package with higher version that obsol
    | installed    | TestA-1.0.0   |
  When I execute "dnf" command "-y upgrade" with "success"
  Then transaction changes are as follows
-   | State        | Packages      |
-   | installed    | TestA-3.0.0   |
+   | State      | Packages      |
+   | upgraded   | TestA-3.0.0   |
