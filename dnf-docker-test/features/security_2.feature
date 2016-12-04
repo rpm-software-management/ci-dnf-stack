@@ -1,4 +1,3 @@
-@xfail
 Feature: Test security options for update-minimal
 
   @setup

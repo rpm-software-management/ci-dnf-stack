@@ -1,4 +1,3 @@
-@xfail
 Feature: Installing obsoleted packages
 
   @setup

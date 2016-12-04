@@ -1,4 +1,3 @@
-@xfail
 Feature: Install of obsoleted package
 
 Scenario: Install of obsoleted package, but with presence of package with higher version that obsoleted

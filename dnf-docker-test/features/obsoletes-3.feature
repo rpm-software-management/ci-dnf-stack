@@ -1,4 +1,3 @@
-@xfail
 Feature: Upgrade obsoleted package
 
 Scenario: Upgrade of obsoleted package
