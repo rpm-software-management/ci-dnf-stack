@@ -267,8 +267,8 @@
           TEST_DIR=`readlink -f test-results`
           chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
           TESTS=(${{TESTS[@]}})
-          parallel -j100% sudo docker run --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
-          JSON=$(sudo docker run --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/)
+          parallel -j100% sudo docker run --net=isolated --rm -v "$TEST_DIR":/junit "$CONTAINER" launch-test "{{}}" dnf ::: "${{TESTS[@]}}" || :
+          JSON=$(sudo docker run --net=isolated --rm "$CONTAINER" behave-2 --dry-run --no-summary -f json /behave/)
           echo $JSON | jq -r '.[] | select(.tags[] | contains($tag)) | .location | gsub(".*/(?<name>.+)\\.feature:\\d+$"; "\(.name)")' --arg tag xfail | tee xfail
 
       # Analyze results
