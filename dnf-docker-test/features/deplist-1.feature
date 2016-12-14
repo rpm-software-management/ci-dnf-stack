@@ -5,7 +5,7 @@ Feature: Deplist as commmand and option
       Given I use the repository "upgrade_1"
 
   Scenario: Deplist as command
-       When I successfully run "dnf deplist TestA"
+       When I successfully run "yum deplist TestA"
        Then the command stdout should contain exactly
             """
             package: TestA-1.0.0-1.noarch
