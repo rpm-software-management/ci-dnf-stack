@@ -44,14 +44,12 @@
       - github-pull-request:
           auth-id: "{ghprb-auth-id}"
 
-          white-list: {"{white-lists}"}
-
           # Always check for PR activity every 5 mins (ci trigger failsafe)
           cron: "H/5 * * * *"
 
           github-hooks: True
 
-          permit-all: False
+          permit-all: True
 
           # the commit status context we want to update
           status-context: "{github-context}"

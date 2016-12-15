@@ -27,5 +27,3 @@
       - fedora-25-i386
       - fedora-rawhide-x86_64
       - fedora-rawhide-i386
-
-    white-lists: |

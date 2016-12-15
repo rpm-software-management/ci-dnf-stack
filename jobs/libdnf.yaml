@@ -17,19 +17,3 @@
 
     jobs:
       - github-testers-jobs
-
-    white-lists: |
-        jsilhan
-        mluscon
-        ignatenkobrain
-        j-mracek
-        MichaelMraka
-        mhatina
-        hughsie
-        ffesti
-        lkardos
-        mlschroe
-        pmatilai
-        james-antill
-        megaumi
-        stepasm
