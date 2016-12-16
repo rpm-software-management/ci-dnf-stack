@@ -15,7 +15,7 @@ COPY dnf-docker-test/features /behave/
 
 COPY rpms /rpms/
 # prevent installation of dnf-plugins-extras
-RUN rm /rpms/*extras*.rpm
+RUN rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm
 RUN dnf -y install /rpms/*.rpm
 RUN dnf -y autoremove
 RUN dnf -y clean all
