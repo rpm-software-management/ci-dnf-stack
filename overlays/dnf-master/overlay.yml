@@ -39,7 +39,7 @@ components:
 
   - name: libdnf
     git:
-      src: github:rpm-software-management/libhif.git
+      src: github:rpm-software-management/libdnf.git
 
   - name: dnf
     git:
