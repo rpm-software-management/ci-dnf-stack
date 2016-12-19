@@ -9,7 +9,7 @@ RUN dnf -y update
 # enum34: rpmdb State
 # whichcraft: shutil.which() for py2
 # jinja2: rpmspec template
-RUN dnf -y install httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python-jinja2 python2-pexpect
+RUN dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
