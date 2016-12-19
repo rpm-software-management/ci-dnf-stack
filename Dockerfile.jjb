@@ -14,8 +14,6 @@ COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 
 COPY rpms /rpms/
-# prevent installation of dnf-plugins-extras
-RUN rm /rpms/*extras*.rpm
 RUN dnf -y install /rpms/*.rpm
 RUN dnf -y autoremove
 RUN dnf -y clean all
