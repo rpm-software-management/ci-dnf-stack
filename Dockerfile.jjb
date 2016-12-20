@@ -1,27 +1,36 @@
 FROM fedora:24
 ENV LANG C
 
-RUN echo "deltarpm=0" >> /etc/dnf/dnf.conf
-RUN dnf -y update
-# behave: core
-# httpd: old-style repos
-# six: py2/py3
-# enum34: rpmdb State
-# whichcraft: shutil.which() for py2
-# jinja2: rpmspec template
-RUN dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
-
 COPY rpms /rpms/
-# prevent installation of dnf-plugins-extras
-RUN rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm
-RUN dnf -y install /rpms/*.rpm
-RUN dnf -y autoremove
-RUN dnf -y clean all
-RUN mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/
+
+RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
+    && echo "deltarpm=0" >> /etc/dnf/dnf.conf \
+    && echo "dnf -y update" \
+    && dnf -y update \
+
+    # behave: core
+    # httpd: old-style repos
+    # six: py2/py3
+    # enum34: rpmdb State
+    # whichcraft: shutil.which() for py2
+    # jinja2: rpmspec template
+    && echo "dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect" \
+    && dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect \
+    # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
+    && echo "rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm" \
+    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm
+    && echo "dnf -y install /rpms/*.rpm" \
+    && dnf -y install /rpms/*.rpm \
+    && echo "dnf -y autoremove" \
+    && dnf -y autoremove \
+    && echo "dnf -y clean all" \
+    && dnf -y clean all \
+    && echo "mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/" \
+    && mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ \
+    && echo "mkdir /repo" \
+    && mkdir /repo
 
 ADD dnf-docker-test/launch-test /usr/bin/
-RUN mkdir /repo
-
 VOLUME ["/junit"]
