@@ -14,7 +14,7 @@ RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     # whichcraft: shutil.which() for py2
     # jinja2: rpmspec template
     && echo $'\ndnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c python2-pexpect' \
-    && dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c python2-pexpect \
+    && dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 python2-whichcraft python2-jinja2 rpm-build createrepo_c python2-pexpect \
     # Allows to run test with rpms from only single component in rpms/
     && echo $'\ndnf -y copr enable rpmsoftwaremanagement/dnf-nightly' \
     && dnf -y copr enable rpmsoftwaremanagement/dnf-nightly \
