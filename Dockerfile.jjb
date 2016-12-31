@@ -7,6 +7,8 @@ COPY rpms /rpms/
 
 RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && echo "deltarpm=0" >> /etc/dnf/dnf.conf \
+    && echo "dnf -y update" \
+    && dnf -y update \
 
     # behave: core
     # httpd: old-style repos
