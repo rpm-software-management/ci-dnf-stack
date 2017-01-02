@@ -20,7 +20,7 @@ RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
     && echo "rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm" \
-    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm
+    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm \
     && echo "dnf -y install /rpms/*.rpm" \
     && dnf -y install /rpms/*.rpm \
     && echo "dnf -y autoremove" \
