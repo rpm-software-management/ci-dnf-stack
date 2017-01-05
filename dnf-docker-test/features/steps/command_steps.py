@@ -46,3 +46,10 @@ def step_the_command_stream_should_contain_exactly(ctx, stream):
 def step_the_command_stream_should_be_empty(ctx, stream):
     ctx.text = ""
     step_the_command_stream_should_contain_exactly(ctx, stream)
+
+@then("the command {stream:stdout_stderr} should match regexp")
+def step_the_command_stream_should_match_regexp(ctx, stream):
+    ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
+    text = getattr(ctx.cmd_result, stream)
+    ctx.assertion.assertRegexpMatches(text, ctx.text)
+
