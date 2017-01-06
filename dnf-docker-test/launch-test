@@ -1,5 +1,19 @@
 #!/bin/bash
 set -xeuo pipefail
 
+RESERVE=0
+RET=0
+
+if [ "$1" == "-r" ]; then
+    RESERVE=1
+    shift
+fi
+
 httpd -k start
-behave-2 -i $1 -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/
+behave-2 -i $1 -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/ || RET=$?
+
+if [ "$RESERVE" == "1" ]; then
+  bash || :
+fi
+
+exit $RET
