@@ -52,4 +52,3 @@ def step_the_command_stream_should_match_regexp(ctx, stream):
     ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
     text = getattr(ctx.cmd_result, stream)
     ctx.assertion.assertRegexpMatches(text, ctx.text)
-
