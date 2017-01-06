@@ -1,4 +1,4 @@
-FROM fedora:24
+FROM fedora:25
 ENV LANG C
 
 COPY dnf-docker-test/repo /var/www/html/repo/
