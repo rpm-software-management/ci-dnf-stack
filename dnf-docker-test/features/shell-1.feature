@@ -14,7 +14,11 @@ Feature: Installing updating and removing a package in dnf shell
          | State     | Packages     |
          | installed | TestA, TestB |
      When I run dnf shell command "exit"
-     Then the command output should contain "Leaving Shell"
+     Then the command stdout should contain exactly
+          """
+          Leaving Shell
+
+          """
 
   Scenario: Updating package using the upgrade command
     Given repository "TestRepoB" with packages
@@ -29,7 +33,11 @@ Feature: Installing updating and removing a package in dnf shell
          | State   | Packages |
          | updated | TestA    |
      When I run dnf shell command "exit"
-     Then the command output should contain "Leaving Shell"
+     Then the command stdout should contain exactly
+          """
+          Leaving Shell
+
+          """
 
   Scenario: Updating package using the update command
     Given repository "TestRepoC" with packages
@@ -44,7 +52,11 @@ Feature: Installing updating and removing a package in dnf shell
          | State   | Packages |
          | updated | TestB    |
      When I run dnf shell command "exit"
-     Then the command output should contain "Leaving Shell"
+     Then the command stdout should contain exactly
+          """
+          Leaving Shell
+
+          """
 
   Scenario: Removing a package
     Given I have dnf shell session opened with parameters "-y"
@@ -55,7 +67,11 @@ Feature: Installing updating and removing a package in dnf shell
          | State     | Packages |
          | removed   | TestA    |
      When I run dnf shell command "exit"
-     Then the command output should contain "Leaving Shell"
+     Then the command stdout should contain exactly
+          """
+          Leaving Shell
+
+          """
 
   Scenario: Installing and removing a package within one transaction
     Given I have dnf shell session opened with parameters "-y"
@@ -69,5 +85,8 @@ Feature: Installing updating and removing a package in dnf shell
          | installed | TestA    |
          | removed   | TestB    |
      When I run dnf shell command "exit"
-     Then the command output should contain "Leaving Shell"
+     Then the command stdout should contain exactly
+          """
+          Leaving Shell
 
+          """
