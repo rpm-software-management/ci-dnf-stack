@@ -1,4 +1,3 @@
-@xfail
 Feature: Upgrade obsoleted package if higher version presented
 
 Scenario: Upgrade of obsoleted package by package with higher version that obsoleted

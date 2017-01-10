@@ -1,3 +1,4 @@
+@xfail
 Feature: DNF/Behave test (downgrade test)
 
 Scenario: Downgrade TestA from repository "upgrade_1"
