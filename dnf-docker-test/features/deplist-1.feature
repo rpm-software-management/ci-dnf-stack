@@ -1,4 +1,3 @@
-@xfail
 Feature: Deplist as commmand and option
 
   Scenario: Feature Setup
