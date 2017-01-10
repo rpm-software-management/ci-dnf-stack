@@ -13,6 +13,7 @@
       <packagereq type="mandatory">TestA</packagereq>
       <packagereq type="default">TestC</packagereq>
       <packagereq type="optional">TestD</packagereq>
+      <packagereq type="conditional" requires="TestG">TestE</packagereq>
     </packagelist>
   </group>
 </comps>
