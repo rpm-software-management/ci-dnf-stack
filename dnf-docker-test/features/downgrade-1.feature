@@ -14,17 +14,13 @@ Scenario: Downgrade TestA from repository "upgrade_1"
    | present      | TestB      |
    | absent       | TestC      |
 
-Scenario: Downgrade TestD from repository "upgrade_1" that require --allowerasing
+Scenario: Downgrade TestD from repository "upgrade_1" that require downgrade of dependency
  Given I use the repository "upgrade_1"
  When I execute "dnf" command "-y install TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestD, TestE  |
- When I execute "dnf" command "-y downgrade TestD" with "fail"
- Then transaction changes are as follows
-   | State        | Packages      |
-   | present      | TestD, TestE  |
- When I execute "dnf" command "-y downgrade --allowerasing TestD" with "success"
+ When I execute "dnf" command "-y downgrade TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | downgraded   | TestD, TestE  |
