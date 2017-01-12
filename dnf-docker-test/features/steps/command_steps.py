@@ -52,3 +52,9 @@ def step_the_command_stream_should_be_empty(ctx, stream):
 def step_the_command_stream_should_match_regexp(ctx, stream, regexp):
     text = getattr(ctx.cmd_result, stream)
     ctx.assertion.assertRegexpMatches(text, regexp)
+
+
+@then('the command {stream:stdout_stderr} should not match regexp "{regexp}"')
+def step_the_command_stream_should_not_match_regexp(ctx, stream, regexp):
+    text = getattr(ctx.cmd_result, stream)
+    ctx.assertion.assertNotRegexpMatches(text, regexp)
