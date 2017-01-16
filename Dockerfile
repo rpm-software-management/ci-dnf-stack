@@ -4,6 +4,7 @@ ARG type=local
 
 COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
+COPY dnf-docker-test/features /tests/
 COPY rpms /rpms/
 
 RUN echo -e '\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
@@ -44,7 +45,9 @@ RUN echo -e '\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && echo -e '\nmkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/' \
     && mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ \
     && echo -e '\nmkdir /repo' \
-    && mkdir /repo
+    && mkdir /repo \
+    && echo -e 'rm -f /behave/*.feature' \
+    && rm -f /behave/*.feature
 
 ADD dnf-docker-test/launch-test /usr/bin/
 ADD dnf-docker-test/report-behave-json /usr/bin/

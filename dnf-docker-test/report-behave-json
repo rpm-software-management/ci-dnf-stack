@@ -2,12 +2,12 @@
 
 PREFIXES="$@"
 
-for file in $(find /behave -name *.feature -type f); do
-    old=${file%.*}
+for file in $(find /tests -name *.feature -type f); do
+    file_name=$(basename $file)
+    old=${file_name%.*}
     for prefix in ${PREFIXES[@]}; do
-        new=${old}-$prefix.feature
+        new=/behave/${old}-$prefix.feature
         cp ${file} ${new}
     done
-    rm ${file}
 done
 behave-2 --dry-run --no-summary -f json /behave/
