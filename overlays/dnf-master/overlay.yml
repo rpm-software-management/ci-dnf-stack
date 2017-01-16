@@ -6,12 +6,6 @@ aliases:
     url: git://pkgs.fedoraproject.org/rpms/
 
 components:
-  - name: rpm
-    git:
-      src: github:rpm-software-management/rpm.git
-    distgit:
-      src: github:ignatenkobrain/rpm-fedora.git
-
   - name: libsolv
     git:
       src: github:openSUSE/libsolv.git
