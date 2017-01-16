@@ -17,7 +17,8 @@ show_usage()
 
 set_devel()
 {
-    devel="$PROG_PATH/dnf-docker-test/features:/behave:Z"
+    devel="$PROG_PATH/dnf-docker-test/features:/tests:Z"
+    devel_steps="$PROG_PATH/dnf-docker-test/features/steps:/behave/steps:Z"
 }
 
 show_help()
@@ -144,7 +145,7 @@ run()
         for feature in "${TESTS[@]}"; do
             for command in dnf-2 dnf-3; do
                 printf "\nsudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $command\n"
-                sudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $command >&2 || \
+                sudo docker run --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
