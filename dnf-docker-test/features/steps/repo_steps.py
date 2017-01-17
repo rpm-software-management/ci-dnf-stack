@@ -83,6 +83,18 @@ def parse_enable_disable(text):
 
 register_type(enable_disable=parse_enable_disable)
 
+@parse.with_pattern(r"local |http |ftp |")
+def parse_repo_type(text):
+    if text == "http ":
+        return "http"
+    elif text == "ftp ":
+        return "ftp"
+    elif text == 'local ' or text == '':
+        return "file"
+    assert False
+
+register_type(repo_type=parse_repo_type)
+
 @when('I remove all repositories')
 def step_i_remove_all_repositories(ctx):
     """
@@ -91,10 +103,11 @@ def step_i_remove_all_repositories(ctx):
     for f in glob.glob("/etc/yum.repos.d/*.repo"):
         os.remove(f)
 
-@given('repository "{repository}" with packages')
-def given_repository_with_packages(ctx, repository):
+@given('{rtype:repo_type}repository "{repository}" with packages')
+def given_repository_with_packages(ctx, rtype, repository):
     """
     Builds dummy noarch packages, creates repo and *.repo* file.
+    Supported repo types are http, ftp or local (default).
 
     .. note::
 
@@ -136,7 +149,7 @@ def given_repository_with_packages(ctx, repository):
        Feature: Working with repositories
 
          Background: Repository base with dummy package
-               Given repository base with packages
+               Given http repository base with packages
                   | Package | Tag | Value |
                   | foo     |     |       |
 
@@ -152,7 +165,15 @@ def given_repository_with_packages(ctx, repository):
     createrepo = which("createrepo_c")
     ctx.assertion.assertIsNotNone(createrepo, "createrepo_c is required")
 
-    tmpdir = tempfile.mkdtemp()
+    if rtype == 'http':
+        tmpdir = tempfile.mkdtemp(dir='/var/www/html')
+        repopath = os.path.join('localhost', os.path.basename(tmpdir))
+    elif rtype == 'ftp':
+        tmpdir = tempfile.mkdtemp(dir='/var/ftp/pub')
+        repopath = os.path.join('localhost/pub', os.path.basename(tmpdir))
+    else:
+        tmpdir = tempfile.mkdtemp()
+        repopath = tmpdir
     template = JINJA_ENV.from_string(PKG_TMPL)
     for name, settings in packages.items():
         settings = {k.lower(): v for k, v in settings.items()}
@@ -165,12 +186,15 @@ def given_repository_with_packages(ctx, repository):
     cmd = "{!s} {!s}".format(createrepo, tmpdir)
     step_i_successfully_run_command(ctx, cmd)
 
+    # set proper directory content ownership
+    file_utils.set_dir_content_ownership(ctx, tmpdir)
+
     repofile = REPO_TMPL.format(repository)
     ctx.table = Table(HEADINGS_INI)
     ctx.table.add_row([repository, "name",     repository])
     ctx.table.add_row(["",         "enabled",  "False"])
     ctx.table.add_row(["",         "gpgcheck", "False"])
-    ctx.table.add_row(["",         "baseurl",  "file://{!s}".format(tmpdir)])
+    ctx.table.add_row(["",         "baseurl",  "{!s}://{!s}".format(rtype, repopath)])
     step_an_ini_file_filepath_with(ctx, repofile)
 
 @given('empty repository "{repository}"')
@@ -180,7 +204,7 @@ def given_empty_repository(ctx, repository):
     packages (empty).
     """
     ctx.table = Table(HEADINGS_REPO)
-    given_repository_with_packages(ctx, repository)
+    given_repository_with_packages(ctx, "file", repository)
 
 @when('I {state:enable_disable} repository "{repository}"')
 def i_enable_disable_repository(ctx, state, repository):
