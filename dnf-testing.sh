@@ -113,12 +113,8 @@ list()
 
 build()
 {
-    if [ "$type" = "jjb" ]; then
-        ln -sf Dockerfile.jjb Dockerfile
-    else
-        ln -sf Dockerfile.local Dockerfile
-    fi
-    local output=($(sudo docker build --no-cache --force-rm -t "$IMAGE" "$PROG_PATH" | \
+    local output=($(sudo docker build --build-arg type="$type" --no-cache \
+                    --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     if [ ${#output[@]} -eq 3 ] && \
        [ "${output[0]}" = "Successfully" ] && 
