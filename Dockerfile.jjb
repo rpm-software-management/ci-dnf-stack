@@ -5,29 +5,28 @@ COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 COPY rpms /rpms/
 
-RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
+RUN echo -e '\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && echo "deltarpm=0" >> /etc/dnf/dnf.conf \
-
     # behave: core
     # httpd: old-style repos
     # six: py2/py3
     # enum34: rpmdb State
     # whichcraft: shutil.which() for py2
     # jinja2: rpmspec template
-    && echo "dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect" \
+    && echo -e '\ndnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect' \
     && dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
-    && echo "rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm" \
-    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm \
-    && echo "dnf -y install /rpms/*.rpm" \
-    && dnf -y install /rpms/*.rpm \
-    && echo "dnf -y autoremove" \
+    && echo -e '\nrm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm' \
+    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm || echo "RPMs files do not exist" >&2 \
+    && echo -e '\nif ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else echo "RPMs files do not exist" >&2; fi' \
+    && if ls /rpms/*.rpm 1>/dev/null 2>&1; then dnf -y install /rpms/*.rpm else echo "RPMs files do not exist" >&2; fi \
+    && echo -e '\ndnf -y autoremove' \
     && dnf -y autoremove \
-    && echo "dnf -y clean all" \
+    && echo -e '\ndnf -y clean all' \
     && dnf -y clean all \
-    && echo "mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/" \
+    && echo -e '\nmkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/' \
     && mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ \
-    && echo "mkdir /repo" \
+    && echo -e '\nmkdir /repo' \
     && mkdir /repo
 
 ADD dnf-docker-test/launch-test /usr/bin/

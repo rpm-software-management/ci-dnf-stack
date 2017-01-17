@@ -5,7 +5,7 @@ COPY dnf-docker-test/repo /var/www/html/repo/
 COPY dnf-docker-test/features /behave/
 COPY rpms /rpms/
 
-RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
+RUN echo -e '\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     && echo "deltarpm=0" >> /etc/dnf/dnf.conf \
     # behave: core
     # httpd: old-style repos
@@ -13,25 +13,25 @@ RUN echo $'\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     # enum34: rpmdb State
     # whichcraft: shutil.which() for py2
     # jinja2: rpmspec template
-    && echo $'\ndnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c python2-pexpect' \
+    && echo -e '\ndnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 https://kojipkgs.fedoraproject.org//packages/python-whichcraft/0.4.0/2.fc24/noarch/python2-whichcraft-0.4.0-2.fc24.noarch.rpm python2-jinja2 rpm-build createrepo_c python2-pexpect' \
     && dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core httpd python2-behave python2-six python-enum34 python2-whichcraft python2-jinja2 rpm-build createrepo_c python2-pexpect \
     # Allows to run test with rpms from only single component in rpms/
-    && echo $'\ndnf -y copr enable rpmsoftwaremanagement/dnf-nightly' \
+    && echo -e '\ndnf -y copr enable rpmsoftwaremanagement/dnf-nightly' \
     && dnf -y copr enable rpmsoftwaremanagement/dnf-nightly \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
-    && echo $'\nrm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm || (>&2 echo "RPMs files do not exist")' \
-    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm || (>&2 echo "RPMs files do not exist") \
-    && echo $'\ndnf -y --best upgrade dnf' \
+    && echo -e '\nrm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm' \
+    && rm /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm || echo "RPMs files do not exist" >&2 \
+    && echo -e '\ndnf -y --best upgrade dnf' \
     && dnf -y --best upgrade dnf \
-    && echo $'\nif ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else (>&2 echo "RPMs files do not exist"); fi' \
-    && if ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else (>&2 echo "RPMs files do not exist"); fi \
-    && echo $'\ndnf -y mark install $(dnf repoquery --unneeded -q)' \
+    && echo -e '\nif ls /rpms/*.rpm 1> /dev/null 2>&1; then dnf -y install /rpms/*.rpm; else echo "RPMs files do not exist" >&2; fi' \
+    && if ls /rpms/*.rpm 1>/dev/null 2>&1; then dnf -y install /rpms/*.rpm else echo "RPMs files do not exist" >&2; fi \
+    && echo -e '\ndnf -y mark install $(dnf repoquery --unneeded -q)' \
     && dnf -y mark install $(dnf repoquery --unneeded -q) \
-    && echo $'\ndnf -y clean all' \
+    && echo -e '\ndnf -y clean all' \
     && dnf -y clean all \
-    && echo $'\nmkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/' \
+    && echo -e '\nmkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/' \
     && mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ \
-    && echo $'\nmkdir /repo' \
+    && echo -e '\nmkdir /repo' \
     && mkdir /repo
 
 ADD dnf-docker-test/launch-test /usr/bin/
