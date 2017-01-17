@@ -2,6 +2,7 @@
 set -xeuo pipefail
 
 httpd -k start
+vsftpd
 new_name=${1}-${2}
 EXIT_STATUS=0
 cp /tests/${1}.feature /behave/${new_name}.feature || EXIT_STATUS=1

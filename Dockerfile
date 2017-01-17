@@ -15,8 +15,8 @@ RUN echo -e '\necho "deltarpm=0" >> /etc/dnf/dnf.conf' \
     # enum34: rpmdb State
     # whichcraft: shutil.which() for py2
     # jinja2: rpmspec template
-    && echo -e '\ndnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect' \
-    && dnf -y install httpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect \
+    && echo -e '\ndnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect' \
+    && dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect \
     && if [ $type = "local" ] ; then \
         # Allows to run test with rpms from only single component in rpms/
         echo -e '\ndnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core rpm-build createrepo_c' \

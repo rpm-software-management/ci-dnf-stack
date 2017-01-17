@@ -7,6 +7,8 @@ import os
 import six
 from six.moves import configparser
 
+from command_steps import step_i_successfully_run_command
+
 def readline_generator(f):
     line = f.readline()
     while line:
@@ -51,3 +53,14 @@ def read_ini_file(filename):
         else:
             conf.read_file(readline_generator(instream))
     return conf
+
+def set_dir_content_ownership(ctx, directory, user=None):
+    if not user:
+        if directory.startswith('/var/www/html'):
+            user = 'apache'
+        elif directory.startswith('/var/ftp'):
+            user = 'ftp'
+        else:
+            user = 'root'
+    cmd = 'chown -R {!s} {!s}'.format(user, directory)
+    step_i_successfully_run_command(ctx, cmd)
