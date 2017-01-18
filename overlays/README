@@ -1,0 +1,2 @@
+* dnf-master is used for all Fedora
+* dnf-master-epel7 is used for EPEL7, main difference is that it doesn't contain dnf-plugins-extras
