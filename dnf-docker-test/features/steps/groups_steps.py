@@ -1,3 +1,5 @@
+import os
+
 from behave import given
 import table_utils
 
@@ -112,10 +114,8 @@ def given_package_groups_defined_in_repository(ctx, repository):
     """
     HEADINGS_GROUP = ['Group', 'Tag', 'Value']
     GROUP_TAGS_REPEATING = ['mandatory', 'default', 'optional', 'conditional']
-    GROUP_TAGS = ['is_default', 'is_uservisible', 'description'] + \
-                  GROUP_TAGS_REPEATING
-    pkg_groups = table_utils.parse_skv_table(ctx, HEADINGS_GROUP,
-                                             GROUP_TAGS, GROUP_TAGS_REPEATING)
+    GROUP_TAGS = ['is_default', 'is_uservisible', 'description'] + GROUP_TAGS_REPEATING
+    pkg_groups = table_utils.parse_skv_table(ctx, HEADINGS_GROUP, GROUP_TAGS, GROUP_TAGS_REPEATING)
 
     createrepo = which("createrepo_c")
     ctx.assertion.assertIsNotNone(createrepo, "createrepo_c is required")
@@ -138,8 +138,7 @@ def given_package_groups_defined_in_repository(ctx, repository):
     comps_xml += COMPS_SUFFIX
 
     # save comps.xml and recreate the repo
-    f_comps = open(repodir+'/comps.xml', 'w')
-    f_comps.write(comps_xml)
-    f_comps.close()
+    with open(os.path.join(repodir, "comps.xml"), "w") as f_comps:
+        f_comps.write(comps_xml)
     cmd = "{!s} -g comps.xml --update {!s}".format(createrepo, repodir)
     step_i_successfully_run_command(ctx, cmd)

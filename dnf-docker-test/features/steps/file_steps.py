@@ -18,6 +18,7 @@ def conf2table(configuration):
     :rtype: behave.model.Table
     """
     table = Table(HEADINGS_INI)
+
     def s2s(s):
         return six.text_type(s, "utf-8") if six.PY2 else s
     for section in configuration.sections():
