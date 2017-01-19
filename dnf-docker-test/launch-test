@@ -1,6 +1,12 @@
 #!/bin/bash
 set -xeuo pipefail
 
+RESERVE=0
+if [ "$1" == "-r" -o "$1" == "-R" ]; then
+    RESERVE="$1"
+    shift
+fi
+
 httpd -k start
 vsftpd
 new_name=${1}-${2}
@@ -10,4 +16,11 @@ if [ "$EXIT_STATUS" = 1 ]; then
     >&2 echo "Feature file ${1}.feature not found"
     exit 1
 fi
-behave-2 -i $new_name -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/
+
+TEST_EXIT=0
+behave-2 -i $new_name -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/ || TEST_EXIT=$?
+
+if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
+    bash || :
+fi
+exit $TEST_EXIT
