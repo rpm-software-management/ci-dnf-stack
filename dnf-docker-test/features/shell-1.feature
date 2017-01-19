@@ -14,7 +14,7 @@ Feature: Installing updating and removing a package in dnf shell
          | State     | Packages     |
          | installed | TestA, TestB |
      When I run dnf shell command "exit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 
@@ -33,7 +33,7 @@ Feature: Installing updating and removing a package in dnf shell
          | State   | Packages |
          | updated | TestA    |
      When I run dnf shell command "exit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 
@@ -52,7 +52,7 @@ Feature: Installing updating and removing a package in dnf shell
          | State   | Packages |
          | updated | TestB    |
      When I run dnf shell command "exit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 
@@ -67,7 +67,7 @@ Feature: Installing updating and removing a package in dnf shell
          | State     | Packages |
          | removed   | TestA    |
      When I run dnf shell command "exit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 
@@ -85,7 +85,7 @@ Feature: Installing updating and removing a package in dnf shell
          | installed | TestA    |
          | removed   | TestB    |
      When I run dnf shell command "exit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 

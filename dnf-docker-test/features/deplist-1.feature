@@ -5,7 +5,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist as command
        When I successfully run "yum deplist TestA"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             package: TestA-1.0.0-1.noarch
               dependency: TestB
@@ -19,7 +19,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist as repoquery option
        When I successfully run "dnf repoquery --deplist TestA"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             package: TestA-1.0.0-1.noarch
               dependency: TestB
@@ -33,7 +33,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist as repoquery option but using dnf bin
        When I successfully run "sh -c 'dnf repoquery --deplist TestA'"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             package: TestA-1.0.0-1.noarch
               dependency: TestB
@@ -47,7 +47,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist with --latest-limit
        When I successfully run "dnf repoquery --deplist --latest-limit 1 TestA"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             package: TestA-1.0.0-2.noarch
               dependency: TestB

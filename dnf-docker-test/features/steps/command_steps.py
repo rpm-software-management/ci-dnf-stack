@@ -34,8 +34,8 @@ def step_the_command_should_pass(ctx):
 def step_the_command_should_fail(ctx):
     ctx.assertion.assertNotEqual(ctx.cmd_result.returncode, 0)
 
-@then("the command {stream:stdout_stderr} should contain exactly")
-def step_the_command_stream_should_contain_exactly(ctx, stream):
+@then("the command {stream:stdout_stderr} should match exactly")
+def step_the_command_stream_should_match_exactly(ctx, stream):
     ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
     text = getattr(ctx.cmd_result, stream)
     ctx.assertion.assertMultiLineEqual(text, ctx.text)
@@ -43,7 +43,7 @@ def step_the_command_stream_should_contain_exactly(ctx, stream):
 @then("the command {stream:stdout_stderr} should be empty")
 def step_the_command_stream_should_be_empty(ctx, stream):
     ctx.text = ""
-    step_the_command_stream_should_contain_exactly(ctx, stream)
+    step_the_command_stream_should_match_exactly(ctx, stream)
 
 @then('the command {stream:stdout_stderr} should match regexp "{regexp}"')
 def step_the_command_stream_should_match_regexp(ctx, stream, regexp):
