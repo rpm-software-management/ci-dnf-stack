@@ -21,6 +21,18 @@ set_devel()
     devel_steps="$PROG_PATH/dnf-docker-test/features/steps:/behave/steps:Z"
 }
 
+set_reserve()
+{
+    PARAM_RESERVE="-r"
+    PARAM_TTY="-it"
+}
+
+set_reserveR()
+{
+    PARAM_RESERVE="-R"
+    PARAM_TTY="-it"
+}
+
 show_help()
 {
     cat << EOF
@@ -32,21 +44,26 @@ Options:
   -h, --help               Show this help
   -c, --container  IMAGE   Specified Image ID or name if do not want to run the last built image
   -d, --devel              Share local feature/ with docker
+  -r, --reserve            Keep bash shell session open after every single test executed
+  -R, --reserveonfail      Keep bash shell session open upon test failure
 
 Commands:
   list             List of available functional tests
   build            Build container with functional tests
   run [TEST...]    Run all tests. The set of tests can be optionally specified by [TEST...]
+  shell            Run a bash shell session within the container
 
 EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdc: -l help,devel,container: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdrRc: -l help,devel,reserve,reserveonfail,container: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
 IMAGE="dnf-bot/dnf-testing:latest"
+PARAM_RESERVE=""
+PARAM_TTY=""
 
 while :; do
     case "$1" in
@@ -54,6 +71,8 @@ while :; do
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
         -c|--container) IMAGE=$2; shift 2;;
+        -r|--reserve) set_reserve; shift;;
+        -R|--reserveonfail) set_reserveR; shift;;
         *) fatal "Non-implemented option: $1"
     esac
 done
@@ -64,6 +83,7 @@ for arg; do
         list) action="list";;
         build) action="build";;
         run) action="run";;
+        shell) action="shell";;
         *) fatal "Unknown argument: $arg";;
     esac
     shift
@@ -136,16 +156,16 @@ run()
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
             for command in dnf-2 dnf-3; do
-                printf "\nsudo docker run --rm "$IMAGE" launch-test "$feature" $command\n"
-                sudo docker run --rm "$IMAGE" launch-test "$feature" $command >&2 || \
+                printf "\nsudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command\n"
+                sudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
     else
         for feature in "${TESTS[@]}"; do
             for command in dnf-2 dnf-3; do
-                printf "\nsudo docker run --rm -v "$devel" "$IMAGE" launch-test "$feature" $command\n"
-                sudo docker run --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test "$feature" $command >&2 || \
+                printf "\nsudo docker run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command\n"
+                sudo docker run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
@@ -156,3 +176,15 @@ run()
     exit $failed
 }
 [ "$action" = "run" ] && run
+
+shell()
+{
+    if [ -z "$devel" ];then
+        printf "\nsudo docker run -it --rm "$IMAGE" bash\n"
+        sudo docker run -it --rm "$IMAGE" bash
+    else
+        printf "\nsudo docker run -it --rm -v "$devel" "$IMAGE" bash\n"
+        sudo docker run -it --rm -v "$devel" "$IMAGE" bash
+    fi
+}
+[ "$action" == "shell" ] && shell
