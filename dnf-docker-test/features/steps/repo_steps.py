@@ -29,7 +29,9 @@ Release:        {{ release|default("1") }}%{?dist}
 
 License:        {{ license|default("Public Domain") }}
 
+{%- if arch is not defined or arch == "noarch" %}
 BuildArch:      noarch
+{%- endif %}
 
 {%- if buildrequires is defined %}
 {% for buildreq in buildrequires %}
@@ -69,7 +71,7 @@ Provides:       {{ prv }}
 REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 HEADINGS_REPO = ["Package", "Tag", "Value"]
 PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides", "Conflicts"]
-PKG_TAGS = ["Summary", "Version", "Release", "License"] + PKG_TAGS_REPEATING
+PKG_TAGS = ["Summary", "Version", "Release", "License", "Arch"] + PKG_TAGS_REPEATING
 
 JINJA_ENV = jinja2.Environment(undefined=jinja2.StrictUndefined)
 
@@ -106,8 +108,9 @@ def step_i_remove_all_repositories(ctx):
 @given('{rtype:repo_type}repository "{repository}" with packages')
 def given_repository_with_packages(ctx, rtype, repository):
     """
-    Builds dummy noarch packages, creates repo and *.repo* file.
+    Builds dummy packages, creates repo and *.repo* file.
     Supported repo types are http, ftp or local (default).
+    Supported architectures are x86_64, i686 and noarch (default).
 
     .. note::
 
@@ -127,6 +130,7 @@ def given_repository_with_packages(ctx, rtype, repository):
     Summary       Empty          
     Version       1              
     Release       1              
+    Arch          x86_64         
     License       Public Domain  
     BuildRequires []             
     Requires      []             
@@ -180,9 +184,14 @@ def given_repository_with_packages(ctx, rtype, repository):
         ctx.text = template.render(name=name, **settings)
         fname = "{!s}/{!s}.spec".format(tmpdir, name)
         step_a_file_filepath_with(ctx, fname)
-        cmd = "{!s} --define '_rpmdir {!s}' -bb {!s}".format(
-            rpmbuild, tmpdir, fname)
+        if 'arch' not in settings or settings['arch'] == 'noarch':
+            cmd = "{!s} --define '_rpmdir {!s}' -bb {!s}".format(
+                rpmbuild, tmpdir, fname)
+        else:
+            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --target {!s} -bb {!s}".format(
+                settings['arch'], rpmbuild, tmpdir, settings['arch'], fname)
         step_i_successfully_run_command(ctx, cmd)
+
     cmd = "{!s} {!s}".format(createrepo, tmpdir)
     step_i_successfully_run_command(ctx, cmd)
 
