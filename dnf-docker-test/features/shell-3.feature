@@ -28,7 +28,7 @@ Feature: Switching conflicting packages in dnf shell
          | removed   | TestB    |
          | installed | TestC    |
      When I run dnf shell command "quit"
-     Then the command stdout should contain exactly
+     Then the command stdout should match exactly
           """
           Leaving Shell
 

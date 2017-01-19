@@ -16,7 +16,7 @@ Feature: Repolist when all repositories are disabled
 
   Scenario: Repolist with "disabled"
        When I successfully run "dnf repolist disabled"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             repo id                                  repo name                              
             TestA                                    TestA                                  
@@ -27,7 +27,7 @@ Feature: Repolist when all repositories are disabled
 
   Scenario: Repolist with "all"
        When I successfully run "dnf repolist all"
-       Then the command stdout should contain exactly
+       Then the command stdout should match exactly
             """
             repo id                              repo name                          status
             TestA                                TestA                              disabled

@@ -17,7 +17,7 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove TestA --setopt=protected_packages=TestA"
        Then the command should fail
-        And the command stderr should contain exactly
+        And the command stderr should match exactly
             """
             Error: The operation would result in removing the following protected packages: TestA
 
@@ -29,7 +29,7 @@ Feature: Protected packages
         And I run "dnf -y remove TestB --setopt=protected_packages=TestA"
        Then the command should fail
 # FIXME: Error: package TestA-1-1.fc24.noarch requires TestB, but none of the providers can be installed
-#       And the command stderr should contain exactly
+#       And the command stderr should match exactly
 #           """
 #           Error: The operation would result in removing the following protected packages: TestA
 #
@@ -40,7 +40,7 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove dnf"
        Then the command should fail
-        And the command stderr should contain exactly
+        And the command stderr should match exactly
             """
             Error: The operation would result in removing the following protected packages: dnf
 
@@ -55,7 +55,7 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove TestA"
        Then the command should fail
-        And the command stderr should contain exactly
+        And the command stderr should match exactly
             """
             Error: The operation would result in removing the following protected packages: TestA
 
