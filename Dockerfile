@@ -8,7 +8,7 @@ COPY dnf-docker-test/features /tests/
 COPY rpms /rpms/
 
 RUN set -x && \
-    echo "deltarpm=0" >> /etc/dnf/dnf.conf && \
+    echo -e "deltarpm=0\ntsflags=nodocs" >> /etc/dnf/dnf.conf && \
     # httpd:      http-style repos
     # vsftpd:     ftp-style repos
     # behave:     core
