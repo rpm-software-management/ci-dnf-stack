@@ -73,12 +73,12 @@ Feature: Installing updating and removing a package in dnf shell
 
           """
 
-  Scenario: Installing and removing a package within one transaction
+  Scenario: Installing and erasing a package within one transaction
     Given I have dnf shell session opened with parameters "-y"
      When I save rpmdb
       And I run dnf shell command "repo enable TestRepoA"
       And I run dnf shell command "install TestA"
-      And I run dnf shell command "remove TestB"
+      And I run dnf shell command "erase TestB"
       And I run dnf shell command "run"
      Then rpmdb changes are
          | State     | Packages |
