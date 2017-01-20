@@ -17,10 +17,11 @@ RUN set -x && \
     # whichcraft: shutil.which() for py2
     # jinja2:     rpmspec template
     # pexpect:    shell tests
-    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect && \
+    # rpm-build:  building dummy RPMs
+    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
-        dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core rpm-build createrepo_c && \
+        dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
         dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     fi && \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
