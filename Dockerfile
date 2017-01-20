@@ -9,12 +9,14 @@ COPY rpms /rpms/
 
 RUN set -x && \
     echo "deltarpm=0" >> /etc/dnf/dnf.conf && \
-    # behave: core
-    # httpd: old-style repos
-    # six: py2/py3
-    # enum34: rpmdb State
+    # httpd:      http-style repos
+    # vsftpd:     ftp-style repos
+    # behave:     core
+    # six:        py2/py3
+    # enum34:     enum for py2, rpmdb.State
     # whichcraft: shutil.which() for py2
-    # jinja2: rpmspec template
+    # jinja2:     rpmspec template
+    # pexpect:    shell tests
     dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
