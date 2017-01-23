@@ -93,6 +93,26 @@ def given_repo_condition(context, repo):
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
 
 
+@step('I execute rpm command "{command}" from repository "{repository}"')
+def when_action_command(context, command, repository):
+    assert command, 'Command was not specified'
+    assert repository, 'Repository was not specified'
+    cwd = None
+    cmd = "dnf repoinfo " + repository
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    cmd_output, cmd_error = process.communicate()
+    for line in cmd_output.splitlines():
+        match = re.match(r'^Repo-baseurl[\s:]+file://(.+)$', line)
+        if match:
+            cwd = match.groups()[0]
+            break
+
+    cmd = "rpm " + command
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, cwd=cwd)
+    cmd_output, cmd_error = process.communicate()
+    assert process.returncode == 0
+
+
 @step('I execute "{type_of_command}" command "{command}" with "{result}"')
 def when_action_command(context, type_of_command, command, result):
     assert command, 'Command was not specified'
