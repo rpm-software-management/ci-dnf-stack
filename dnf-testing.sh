@@ -155,6 +155,7 @@ run()
     local failed_test_name='Failed test(s):'
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
+            feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
                 printf "\nsudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command\n"
                 sudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command >&2 || \
@@ -163,6 +164,7 @@ run()
         done
     else
         for feature in "${TESTS[@]}"; do
+            feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
                 printf "\nsudo docker run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command\n"
                 sudo docker run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE "$feature" $command >&2 || \
