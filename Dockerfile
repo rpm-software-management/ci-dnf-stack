@@ -31,7 +31,7 @@ RUN set -x && \
         dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     fi && \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
-    rm -vf /rpms/*extras-versionlock*.rpm /rpms/*extras-local*.rpm /rpms/*extras-torproxy*.rpm && \
+    rm -vf /rpms/*dnf-plugin-versionlock*.rpm /rpms/*dnf-plugin-local*.rpm /rpms/*dnf-plugin-torproxy*.rpm && \
     # update dnf
     dnf -y --best upgrade dnf && \
     if [ $type = "local" ]; then \
