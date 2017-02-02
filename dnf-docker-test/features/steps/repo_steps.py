@@ -224,12 +224,13 @@ def given_repository_with_packages(ctx, rtype, repository):
         ctx.text = template.render(name=name, **settings)
         fname = "{!s}/{!s}.spec".format(tmpdir, name)
         step_a_file_filepath_with(ctx, fname)
+        buildname = '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm'
         if 'arch' not in settings or settings['arch'] == 'noarch':
-            cmd = "{!s} --define '_rpmdir {!s}' -bb {!s}".format(
-                rpmbuild, tmpdir, fname)
+            cmd = "{!s} --define '_rpmdir {!s}' --define '_build_name_fmt {!s}' -bb {!s}".format(
+                rpmbuild, tmpdir, buildname, fname)
         else:
-            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --target {!s} -bb {!s}".format(
-                settings['arch'], rpmbuild, tmpdir, settings['arch'], fname)
+            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --define '_build_name_fmt {!s}' --target {!s} -bb {!s}".format(
+                settings['arch'], rpmbuild, tmpdir, buildname, settings['arch'], fname)
         step_i_successfully_run_command(ctx, cmd)
 
     cmd = "{!s} {!s}".format(createrepo, tmpdir)
