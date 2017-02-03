@@ -19,7 +19,7 @@ RUN set -x && \
     # jinja2:     rpmspec template
     # pexpect:    shell tests
     # rpm-build:  building dummy RPMs
-    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl && \
+    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
         dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
@@ -53,6 +53,10 @@ RUN set -x && \
     /usr/local/bin/x509certgen x509CertSign --CA ca client && \
     /usr/local/bin/x509certgen x509CertSign --CA ca2 server2 && \
     /usr/local/bin/x509certgen x509CertSign --CA ca2 client2 && \
+    # configure httpd
+    sed -i "s/#ServerName .*/ServerName ${HOSTNAME}:80/" /etc/httpd/conf/httpd.conf && \
+    sed -i 's:^SSLCertificateFile .*:SSLCertificateFile /etc/pki/tls/certs/testcerts/server/cert.pem:' /etc/httpd/conf.d/ssl.conf && \
+    sed -i 's:^SSLCertificateKeyFile .*:SSLCertificateKeyFile /etc/pki/tls/certs/testcerts/server/key.pem:' /etc/httpd/conf.d/ssl.conf && \
     dnf -y clean all && \
     mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ && \
     mkdir /repo && \
