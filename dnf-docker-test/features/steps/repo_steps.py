@@ -125,10 +125,12 @@ def parse_enable_disable(text):
 
 register_type(enable_disable=parse_enable_disable)
 
-@parse.with_pattern(r"local |http |ftp |")
+@parse.with_pattern(r"local |http |https |ftp |")
 def parse_repo_type(text):
     if text == "http ":
         return "http"
+    elif text == "https ":
+        return "https"
     elif text == "ftp ":
         return "ftp"
     elif text == 'local ' or text == '':
@@ -149,7 +151,7 @@ def step_i_remove_all_repositories(ctx):
 def given_repository_with_packages(ctx, rtype, repository):
     """
     Builds dummy packages, creates repo and *.repo* file.
-    Supported repo types are http, ftp or local (default).
+    Supported repo types are http, https, ftp or local (default).
     Supported architectures are x86_64, i686 and noarch (default).
 
     .. note::
@@ -209,7 +211,7 @@ def given_repository_with_packages(ctx, rtype, repository):
     createrepo = which("createrepo_c")
     ctx.assertion.assertIsNotNone(createrepo, "createrepo_c is required")
 
-    if rtype == 'http':
+    if rtype == 'http' or rtype == 'https':
         tmpdir = tempfile.mkdtemp(dir='/var/www/html')
         repopath = os.path.join('localhost', os.path.basename(tmpdir))
     elif rtype == 'ftp':
@@ -245,6 +247,10 @@ def given_repository_with_packages(ctx, rtype, repository):
     ctx.table.add_row(["",         "enabled",  "False"])
     ctx.table.add_row(["",         "gpgcheck", "False"])
     ctx.table.add_row(["",         "baseurl",  "{!s}://{!s}".format(rtype, repopath)])
+    if rtype == 'https':
+        ctx.table.add_row(["", "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
+        ctx.table.add_row(["", "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
+        ctx.table.add_row(["", "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
     step_an_ini_file_filepath_with(ctx, repofile)
 
 @given('empty repository "{repository}"')

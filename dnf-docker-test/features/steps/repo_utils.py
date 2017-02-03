@@ -8,7 +8,7 @@ REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 
 
 def get_repo_dir(repository):
-    repo_prefixes = {'file://': '', 'http://localhost': '/var/www/html', 'ftp://localhost': '/var/ftp'}
+    repo_prefixes = {'file://': '', 'http://localhost': '/var/www/html', 'https://localhost': '/var/www/html', 'ftp://localhost': '/var/ftp'}
     repofile = REPO_TMPL.format(repository)
     config = configparser.ConfigParser()
     config.read(repofile)
