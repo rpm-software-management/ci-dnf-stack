@@ -148,3 +148,22 @@ def step_the_command_stream_section_should_not_match_regexp(ctx, stream, section
     text = getattr(ctx.cmd_result, stream)
     section_content = command_utils.extract_section_content_from_text(section, text)
     ctx.assertion.assertNotRegexpMatches(section_content, regexp)
+
+@then('history should contain "{cmd}" with action "{act}" and "{alt}" package')
+@then('history should contain "{cmd}" with action "{act}" and "{alt}" packages')
+def then_history_is(ctx, cmd, act, alt):
+    step_i_run_command(ctx, "dnf history")
+    text = getattr(ctx.cmd_result, "stdout")
+    lines = text.split('\n')
+    assert len(lines) > 3, 'No output'
+    del lines[:3]
+    match = False
+    for line in lines:
+        columns = line.split('|')
+        words = [word.strip() for word in columns]
+        # last member can be e.g. "1 >"
+        words += words[-1].split()
+        if set([cmd, act, alt]).issubset(set(words)):
+            match = True
+            break
+    assert match, '"{}" with action "{}" and "{}" packages not matched!'.format(cmd, act, alt)
