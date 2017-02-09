@@ -1,4 +1,3 @@
-@xfail
 Feature: Testing specific dnf shell text output
 
   @setup
