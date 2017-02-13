@@ -7,6 +7,7 @@ from behave import when
 import parse
 
 import command_utils
+import repo_utils
 
 @parse.with_pattern(r"stdout|stderr")
 def parse_stdout_stderr(text):
@@ -20,6 +21,13 @@ def step_i_run_command(ctx, command):
     Run a ``{command}`` as subprocess, collect its output and returncode.
     """
     ctx.cmd_result = command_utils.run(ctx, command)
+
+@when('I successfully run "{command}" in repository "{repository}"')
+def step_i_successfully_run_command_in_repository(ctx, command, repository):
+    repo = repo_utils.get_repo_dir(repository)
+    ctx.assertion.assertIsNotNone(repo, "repository does not exist")
+    ctx.cmd_result = command_utils.run(ctx, command, cwd=repo)
+    ctx.assertion.assertEqual(ctx.cmd_result.returncode, 0)
 
 @when('I successfully run "{command}"')
 def step_i_successfully_run_command(ctx, command):
