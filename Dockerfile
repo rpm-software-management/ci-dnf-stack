@@ -19,7 +19,12 @@ RUN set -x && \
     # jinja2:     rpmspec template
     # pexpect:    shell tests
     # rpm-build:  building dummy RPMs
-    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl && \
+    # openssl:    generating TLS certificates
+    # mod_ssl:    https-style repos
+    # gnupg2:     GPG keys
+    # rng-tools:  to generate enough _random_ data for GPG keys
+    # rpm-sign:   rpm signing
+    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl gnupg2 rng-tools rpm-sign && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
         dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
