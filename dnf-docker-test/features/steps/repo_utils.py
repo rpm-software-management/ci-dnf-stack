@@ -11,11 +11,11 @@ def get_repo_dir(repository):
     repo_prefixes = {'file://': '', 'http://localhost': '/var/www/html', 'https://localhost': '/var/www/html', 'ftp://localhost': '/var/ftp'}
     repofile = REPO_TMPL.format(repository)
     config = configparser.ConfigParser()
-    config.read(repofile)
-    baseurl = config.get(config.sections()[0], 'baseurl')
-    for prefix in repo_prefixes:
-        if baseurl.startswith(prefix):
-            return baseurl.replace(prefix, repo_prefixes[prefix])
+    if config.read(repofile) and config.sections():  # if there is some content to process
+        baseurl = config.get(config.sections()[0], 'baseurl')
+        for prefix in repo_prefixes:
+            if baseurl.startswith(prefix):
+                return baseurl.replace(prefix, repo_prefixes[prefix])
     return None
 
 
