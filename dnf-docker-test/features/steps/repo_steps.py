@@ -148,7 +148,7 @@ def step_i_remove_all_repositories(ctx):
         os.remove(f)
 
 @given('{rtype:repo_type}repository "{repository}" with packages')
-def given_repository_with_packages(ctx, rtype, repository):
+def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
     """
     Builds dummy packages, creates repo and *.repo* file.
     Supported repo types are http, https, ftp or local (default).
@@ -235,6 +235,13 @@ def given_repository_with_packages(ctx, rtype, repository):
                 settings['arch'], rpmbuild, tmpdir, buildname, settings['arch'], fname)
         step_i_successfully_run_command(ctx, cmd)
 
+    if gpgkey:
+        # sign all rpms built
+        rpmsign = which("rpmsign")
+        rpms = glob.glob("{!s}/*.rpm".format(tmpdir))
+        cmd = "{!s} --addsign --key-id '{!s}' {!s}".format(rpmsign, gpgkey, ' '.join(rpms))
+        step_i_successfully_run_command(ctx, cmd)
+
     cmd = "{!s} {!s}".format(createrepo, tmpdir)
     step_i_successfully_run_command(ctx, cmd)
 
@@ -245,13 +252,36 @@ def given_repository_with_packages(ctx, rtype, repository):
     ctx.table = Table(HEADINGS_INI)
     ctx.table.add_row([repository, "name",     repository])
     ctx.table.add_row(["",         "enabled",  "False"])
-    ctx.table.add_row(["",         "gpgcheck", "False"])
     ctx.table.add_row(["",         "baseurl",  "{!s}://{!s}".format(rtype, repopath)])
+    if gpgkey:
+        ctx.table.add_row(["", "gpgcheck", "True"])
+    else:
+        ctx.table.add_row(["", "gpgcheck", "False"])
     if rtype == 'https':
         ctx.table.add_row(["", "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
         ctx.table.add_row(["", "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
         ctx.table.add_row(["", "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
     step_an_ini_file_filepath_with(ctx, repofile)
+
+@given('{rtype:repo_type}repository "{repository}" with packages signed by "{gpgkey}"')
+def given_repository_with_packages_signed_by(ctx, rtype, repository, gpgkey):
+    """
+    Builds a repository with packages signed by the given GPG key.
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: Package signatures
+
+         Scenario: Setup repository with signed packages
+           Given GPG key "James Bond"
+             And GPG key "James Bond" imported in rpm database
+             And repository "TestRepo" with packages signed by "James Bond"
+               | Package | Tag | Value |
+               | TestA   |     |       |
+    """
+    given_repository_with_packages(ctx, rtype, repository, gpgkey=gpgkey)
 
 @given('empty repository "{repository}"')
 def given_empty_repository(ctx, repository):
