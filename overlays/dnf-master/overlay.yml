@@ -9,7 +9,6 @@ components:
   - name: libsolv
     git:
       src: github:openSUSE/libsolv.git
-      freeze: 0.6.25
     distgit:
       src: fedorapkgs:libsolv.git
       patches: drop
