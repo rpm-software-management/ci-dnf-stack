@@ -115,15 +115,15 @@ Scenario: Install *.rpm from local path
 Scenario: Group Install Remove
  Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "install -y @Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages             |
    | installed    | TestA, TestB, TestC  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "start" with "Installed groups:"
- And line from "stdout" should "not start" with "Available groups:"
+ Then line from "stdout" should "start" with "Installed Groups:"
+ And line from "stdout" should "not start" with "Available Groups:"
  When I execute "dnf" command "install -y TestD" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
@@ -133,8 +133,8 @@ Scenario: Group Install Remove
    | State        | Packages             |
    | removed      | TestA, TestB, TestC  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "remove -y TestD, TestE" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
@@ -143,51 +143,51 @@ Scenario: Group Install Remove
 Scenario: Group Install Remove List with with-optional option
  Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "group install -y --with-optional Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages                           |
    | installed    | TestA, TestB, TestC, TestD, TestE  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "start" with "Installed groups:"
- And line from "stdout" should "not start" with "Available groups:"
+ Then line from "stdout" should "start" with "Installed Groups:"
+ And line from "stdout" should "not start" with "Available Groups:"
  When I execute "dnf" command "remove -y @Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages                           |
    | removed      | TestA, TestB, TestC, TestD, TestE  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
 
 Scenario: Group Install Remove List if package with dependency is installed before group install
  Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "install -y TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestB  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "install -y @Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestC         |
    | present      | TestA, TestB  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "start" with "Installed groups:"
- And line from "stdout" should "not start" with "Available groups:"
+ Then line from "stdout" should "start" with "Installed Groups:"
+ And line from "stdout" should "not start" with "Available Groups:"
  When I execute "dnf" command "group remove -y Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestC         |
    | present      | TestA, TestB  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "remove -y TestA" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
@@ -196,30 +196,30 @@ Scenario: Group Install Remove List if package with dependency is installed befo
 Scenario: Group Install Remove List if package is installed before group install
  Given I use the repository "test-1"
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "install -y TestC" with "success"
  Then transaction changes are as follows
    | State        | Packages   |
    | installed    | TestC      |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "install -y @Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestB  |
    | present      | TestC         |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "start" with "Installed groups:"
- And line from "stdout" should "not start" with "Available groups:"
+ Then line from "stdout" should "start" with "Installed Groups:"
+ And line from "stdout" should "not start" with "Available Groups:"
  When I execute "dnf" command "group remove -y Testgroup" with "success"
  Then transaction changes are as follows
    | State        | Packages      |
    | removed      | TestA, TestB  |
  When I execute "dnf" command "group list Testgroup" with "success"
- Then line from "stdout" should "not start" with "Installed groups:"
- And line from "stdout" should "start" with "Available groups:"
+ Then line from "stdout" should "not start" with "Installed Groups:"
+ And line from "stdout" should "start" with "Available Groups:"
  When I execute "dnf" command "remove -y TestC" with "success"
  Then transaction changes are as follows
    | State        | Packages   |
