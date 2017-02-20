@@ -1,3 +1,4 @@
+@xfail
 Feature: Installing updating and removing a package in dnf shell
 
   Scenario: Installing packages

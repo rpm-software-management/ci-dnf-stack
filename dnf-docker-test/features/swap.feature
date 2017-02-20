@@ -1,3 +1,4 @@
+@xfail
 Feature: Test for swap command
 
   @setup
