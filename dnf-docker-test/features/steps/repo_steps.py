@@ -156,6 +156,14 @@ def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
 
     .. note::
 
+       *https* repositories are configured to use certificates at
+       following locations:
+         /etc/pki/tls/certs/testcerts/ca/cert.pem
+         /etc/pki/tls/certs/testcerts/client/key.pem
+         /etc/pki/tls/certs/testcerts/client/cert.pem
+
+    .. note::
+
        Requires *rpmbuild* and *createrepo_c*.
 
     Requires table with following headers:
