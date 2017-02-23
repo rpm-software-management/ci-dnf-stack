@@ -8,6 +8,7 @@ import parse
 
 import command_utils
 import repo_utils
+import table_utils
 
 @parse.with_pattern(r"stdout|stderr")
 def parse_stdout_stderr(text):
@@ -151,7 +152,7 @@ def step_the_command_stream_section_should_not_match_regexp(ctx, stream, section
 
 @then('history should contain "{cmd}" with action "{act}" and "{alt}" package')
 @then('history should contain "{cmd}" with action "{act}" and "{alt}" packages')
-def then_history_is(ctx, cmd, act, alt):
+def step_history_contains(ctx, cmd, act, alt):
     step_i_run_command(ctx, "dnf history")
     text = getattr(ctx.cmd_result, "stdout")
     lines = text.split('\n')
@@ -167,3 +168,18 @@ def then_history_is(ctx, cmd, act, alt):
             match = True
             break
     assert match, '"{}" with action "{}" and "{}" packages not matched!'.format(cmd, act, alt)
+
+@then('history userinstalled should')
+def step_userinstalled_match(ctx):
+    def pkgs_split(pkgs):
+        for pkg in pkgs.split(","):
+            yield pkg.strip()
+    keys = ['Match', 'Not match']
+    table = table_utils.parse_kv_table(ctx, ['Action', 'Packages'], keys)
+    step_i_run_command(ctx, "dnf history userinstalled")
+    text = getattr(ctx.cmd_result, "stdout")
+    assert text, 'No output'
+    for m in pkgs_split(table[keys[0]]):  # should be matched
+        assert m in text, 'Package {} not matched as userinstalled'.format(m)
+    for n in pkgs_split(table[keys[1]]):  # should not be matched
+        assert n not in text,  'Package {} matched as userinstalled'.format(m)
