@@ -21,11 +21,29 @@ Feature: Test for dnf check --duplicates command
        Then the command should pass
        When I run "dnf check"
        Then the command should fail
+        And the command stdout should match regexp "TestA.* is a duplicate with TestA-2.*"
+        And the command stderr should match exactly
+            """
+            Error: Check discovered 1 problem(s)
+
+            """
        When I run "dnf check --duplicates"
        Then the command should fail
+        And the command stdout should match regexp "TestA.* is a duplicate with TestA-2.*"
+        And the command stderr should match exactly
+            """
+            Error: Check discovered 1 problem(s)
+
+            """
        When I run "dnf check --dependencies"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --obsoleted"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --provides"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty

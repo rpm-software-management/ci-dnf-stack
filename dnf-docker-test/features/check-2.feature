@@ -15,14 +15,32 @@ Feature: Test for check --dependencies command
        Then the command should pass
        When I run "dnf check"
        Then the command should fail
+        And the command stdout should match regexp "TestA-1.* has missing requires of TestB"
+        And the command stderr should match exactly
+       """
+       Error: Check discovered 1 problem(s)
+
+       """
        When I run "dnf check --dependencies"
        Then the command should fail
+        And the command stdout should match regexp "TestA-1.* has missing requires of TestB"
+        And the command stderr should match exactly
+       """
+       Error: Check discovered 1 problem(s)
+
+       """
        When I run "dnf check --duplicates"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --obsoleted"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --provides"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
 
   Scenario: Fulfill the missing dependencies
        When I enable repository "base"
@@ -36,11 +54,29 @@ Feature: Test for check --dependencies command
        Then the command should pass
        When I run "dnf check"
        Then the command should fail
+        And the command stdout should match regexp "TestA-1.* has installed conflict "TestC": TestC-1.*"
+        And the command stderr should match exactly
+            """
+            Error: Check discovered 1 problem(s)
+
+            """
        When I run "dnf check --dependencies"
        Then the command should fail
+        And the command stdout should match regexp "TestA-1.* has installed conflict "TestC": TestC-1.*"
+        And the command stderr should match exactly
+            """
+            Error: Check discovered 1 problem(s)
+
+            """
        When I run "dnf check --duplicates"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --obsoleted"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I run "dnf check --provides"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
