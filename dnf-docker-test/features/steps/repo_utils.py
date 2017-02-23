@@ -139,6 +139,8 @@ def build_updateinfo_xml_elem_update(update, pkg_details):
     for pkg in update['Package']:
         # find the best match in available rpms stored in pkg_details dict
         rpms = [rpm for rpm in pkg_details.keys() if rpm.startswith(pkg)]
+        if not rpms:  # the package is not in the given repository, make the error more obvious
+            raise Exception('Package {!r} in not present in the repository'.format(pkg))
         rpms.sort()
         rpm = rpms[-1]  # take the last one as that should be the _latest_ version
         # create new package element
