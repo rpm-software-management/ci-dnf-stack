@@ -88,3 +88,15 @@ Feature: DNF/Behave test Transaction history - base
           | updated      | TestA, TestB, TestC, TestD  |
         When I successfully run "dnf history"
         Then history should contain "update -y" with action "Update" and "4" package
+
+    Scenario: Rollback update
+        When I save rpmdb
+          And I successfully run "dnf history rollback last-1 -y"
+        Then rpmdb changes are
+          | State        | Packages                   |
+          | downgraded   | TestA, TestB, TestC, TestD |
+        When I save rpmdb
+          And I successfully run "dnf history rollback last-3 -y"
+        Then rpmdb changes are
+          | State        | Packages                          |
+          | removed      | TestA, TestB, TestC, TestD, TestE |
