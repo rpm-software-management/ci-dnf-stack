@@ -17,18 +17,18 @@ Feature: Test for check --dependencies command
        Then the command should fail
         And the command stdout should match regexp "TestA-1.* has missing requires of TestB"
         And the command stderr should match exactly
-       """
-       Error: Check discovered 1 problem(s)
+            """
+            Error: Check discovered 1 problem(s)
 
-       """
+            """
        When I run "dnf check --dependencies"
        Then the command should fail
         And the command stdout should match regexp "TestA-1.* has missing requires of TestB"
         And the command stderr should match exactly
-       """
-       Error: Check discovered 1 problem(s)
+            """
+            Error: Check discovered 1 problem(s)
 
-       """
+            """
        When I run "dnf check --duplicates"
        Then the command should pass
         And the command stdout should be empty
