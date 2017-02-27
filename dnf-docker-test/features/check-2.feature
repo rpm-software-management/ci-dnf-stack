@@ -47,6 +47,8 @@ Feature: Test for check --dependencies command
         And I successfully run "dnf -y install TestB"
        When I run "dnf check"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
 
   Scenario: Force installation of conflicting package
        When I enable repository "base"

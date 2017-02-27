@@ -10,6 +10,8 @@ Feature: Test for dnf check --obsoleted command
        Then the command should pass
        When I run "dnf check"
        Then the command should pass
+        And the command stdout should be empty
+        And the command stderr should be empty
        When I successfully run "rpm -i --nodeps TestB*.rpm" in repository "base"
        Then the command should pass
         And the command stdout should be empty

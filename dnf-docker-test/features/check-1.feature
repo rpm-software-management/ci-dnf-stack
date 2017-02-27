@@ -11,6 +11,8 @@ Feature: Test for dnf check --duplicates command
          | State     | Packages       |
          | installed | TestA          |
        When I successfully run "dnf check"
+       Then the command stdout should be empty
+        And the command stderr should be empty
 
   Scenario: Install package in version 2 and check for duplicates
       Given repository "base2" with packages
