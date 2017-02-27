@@ -196,6 +196,9 @@ def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
         *BuildRequires* are ignored for build-time (*rpmbuild* is executed
         with ``--nodeps`` option).
 
+        If there is a space character in the package name only the preceding
+        part is used.
+
     Examples:
 
     .. code-block:: gherkin
@@ -210,6 +213,12 @@ def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
          Scenario: Installing dummy package from background
               When I enable repository base
               Then I successfully run "dnf -y install foo"
+
+         Scenario: Creating repository with multiple package versions
+             Given http repository "updates" with packages
+                | Package | Tag     | Value |
+                | foo     | Version |  2.0  |
+                | foo v3  | Version |  3.0  |
     """
     packages = table_utils.parse_skv_table(ctx, HEADINGS_REPO,
                                            PKG_TAGS, PKG_TAGS_REPEATING)
@@ -230,6 +239,7 @@ def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
         repopath = tmpdir
     template = JINJA_ENV.from_string(PKG_TMPL)
     for name, settings in packages.items():
+        name = name.split()[0]  # cut-off the pkg name _suffix_ to allow defining multiple package versions
         settings = {k.lower(): v for k, v in settings.items()}
         ctx.text = template.render(name=name, **settings)
         fname = "{!s}/{!s}.spec".format(tmpdir, name)
