@@ -65,7 +65,7 @@ PKG_TMPL = """
 Name:           {{ name }}
 Summary:        {{ summary|default("Empty") }}
 Version:        {{ version|default("1") }}
-Release:        {{ release|default("1") }}%{?dist}
+Release:        {{ release|default("1") }}
 
 License:        {{ license|default("Public Domain") }}
 

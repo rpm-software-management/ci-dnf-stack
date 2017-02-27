@@ -53,11 +53,20 @@ def step_rpmdb_changes_are(ctx):
     .. code-block:: gherkin
 
        Scenario: Detect reinstalled package
-          Given saved rpmdb
-           When I successfully run "dnf -y reinstall util-linux"
+           When I save rpmdb
+            And I successfully run "dnf -y reinstall util-linux"
            Then rpmdb changes are
              | State       | Packages   |
              | reinstalled | util-linux |
+
+    .. code-block:: gherkin
+
+       Scenario: Detect exact version
+           When I save rpmdb
+            And I successfully run "dnf -y update util-linux"
+           Then rpmdb changes are
+             | State   | Packages          |
+             | updated | util-linux/2.29.0 |
 
     .. _automatic rules:
 

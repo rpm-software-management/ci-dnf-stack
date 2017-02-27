@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import collections
 import enum
 import functools
+import logging
 
 import rpm
 
@@ -47,17 +48,36 @@ def hdr2nevra(hdr):
     """
     return hdr["nevra"].decode() if hdr else None
 
-def find_pkg(pkgs, name):
+def find_pkg(pkgs, pkg):
     """
     :param list(rpm.hdr) pkgs: List of RPM Headers
-    :param str name: Package name to find
+    :param str pkg: Package to find
     :return: First found RPM header
     :rtype: rpm.hdr or None
     """
-    try:
-        return next(pkg for pkg in pkgs if pkg.name == name.encode())
-    except StopIteration:
-        return None
+    epoch = version = release = None
+    if "/" in pkg:
+        name, evr = pkg.split("/")
+        if ":" in evr:
+            epoch = evr.split(":", 1)[0]
+            evr = evr[len(epoch) + 1:]
+        if "-" in evr:
+            version, release = evr.split("-")
+        else:
+            version = evr
+    else:
+        name = pkg
+
+    for p in pkgs:
+        if p.name != name:
+            continue
+        if (epoch is None or p.epoch == epoch) and \
+           (version is None or p.version == version) and \
+           (release is None or p.release == release):
+            return p
+        else:
+            logging.warning("Similar package to {!r}: {!r}".format(pkg, hdr2nevra(p)))
+    return None
 
 def analyze_state(pre, post):
     """
