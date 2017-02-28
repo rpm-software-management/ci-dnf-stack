@@ -44,6 +44,6 @@ Feature: Listing available updates using the dnf updateinfo command
   Scenario: Listing available updates
      When I enable repository "updates"
       And I run "dnf updateinfo list"
-     Then the command stdout should match regexp "RHSA-2016:007 security TestA-2"
-      And the command stdout should match regexp "RHSA-2016:007 security TestB-2"
-      And the command stdout should match regexp "RHBA-2016:101 bugfix   TestC-2"
+     Then the command stdout should match regexp "RHSA-2016:007 Important/Sec. TestA-2"
+      And the command stdout should match regexp "RHSA-2016:007 Important/Sec. TestB-2"
+      And the command stdout should match regexp "RHBA-2016:101 bugfix         TestC-2"
