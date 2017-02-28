@@ -48,10 +48,11 @@ def hdr2nevra(hdr):
     """
     return hdr["nevra"].decode() if hdr else None
 
-def find_pkg(pkgs, pkg):
+def find_pkg(pkgs, pkg, only_by_name=True):
     """
     :param list(rpm.hdr) pkgs: List of RPM Headers
     :param str pkg: Package to find
+    :param bool only_by_name: Whether to ignore Epoch, Version, Release
     :return: First found RPM header
     :rtype: rpm.hdr or None
     """
@@ -71,6 +72,8 @@ def find_pkg(pkgs, pkg):
     for p in pkgs:
         if p.name != name:
             continue
+        if only_by_name:
+            return p
         if (epoch is None or p.epoch == epoch) and \
            (version is None or p.version == version) and \
            (release is None or p.release == release):

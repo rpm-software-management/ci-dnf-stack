@@ -96,7 +96,7 @@ def step_rpmdb_changes_are(ctx):
     # Let's check what user has requested in table
     for expected_state, packages in table.items():
         for pkg in pkgs_split(packages):
-            pkg_pre = rpm_utils.find_pkg(ctx.rpmdb, pkg)
+            pkg_pre = rpm_utils.find_pkg(ctx.rpmdb, pkg, only_by_name=True)
             if pkg_pre:
                 ctx.rpmdb.remove(pkg_pre)
             pkg_post = rpm_utils.find_pkg(rpmdb, pkg)
