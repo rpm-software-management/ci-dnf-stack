@@ -99,7 +99,7 @@ def step_rpmdb_changes_are(ctx):
             pkg_pre = rpm_utils.find_pkg(ctx.rpmdb, pkg, only_by_name=True)
             if pkg_pre:
                 ctx.rpmdb.remove(pkg_pre)
-            pkg_post = rpm_utils.find_pkg(rpmdb, pkg)
+            pkg_post = rpm_utils.find_pkg(rpmdb, pkg, only_by_name=False)
             if pkg_post:
                 rpmdb.remove(pkg_post)
             state = rpm_utils.analyze_state(pkg_pre, pkg_post)
