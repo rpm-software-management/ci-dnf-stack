@@ -1,3 +1,4 @@
+@xfail
 Feature: Test for upgrade and upgrade-minimal with cve, cves, bugfix, advisory, advisories, sec-severity, secseverity and security options
  repo base: TestA-1 TestB-1
  repo ext1: errata bugfix: TestA-2
@@ -48,7 +49,7 @@ Feature: Test for upgrade and upgrade-minimal with cve, cves, bugfix, advisory, 
          | RHSA-2999-004   | Title      | TestB security update  |
          |                 | Type       | security               |
          |                 | Severity   | Critical               |
-         |                 | Reference  | CVE-2999-0002          | 
+         |                 | Reference  | CVE-2999-0002          |
          |                 | Reference  | BZ444                  |
          |                 | Package    | TestB-4                |
          | RHEA-2999-005   | Title      | TestA enhancement      |
@@ -58,130 +59,114 @@ Feature: Test for upgrade and upgrade-minimal with cve, cves, bugfix, advisory, 
        When I save rpmdb
         And I enable repository "base"
         And I successfully run "dnf -y install TestA TestB"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
-         | State     | Packages     |
-         | installed | TestA, TestB |
+         | State     | Packages         |
+         | installed | TestA/1, TestB/1 |
 
   Scenario: upgrade-minimal cve and advisory
        When I enable repository "ext1"
         And I enable repository "ext2"
         And I enable repository "ext3"
         And I save rpmdb
-        And I run "dnf -y --cve CVE-2999-0001 --advisory RHBA-2999-001 upgrade-minimal" 
-       # verze maji byt TestA-2 a TestB-2
+        And I run "dnf -y --cve CVE-2999-0001 --advisory RHBA-2999-001 upgrade-minimal"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/2,TestB/2    |
 
   Scenario: Cleanup after upgrade-minimal cve and advisory
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        |
+         | downgraded | TestA/1,TestB/1    |
 
   Scenario: upgrade advisories
        When I save rpmdb
-        And I run "dnf -y --advisories=RHSA-2999-004 --advisories=RHBA-2999-001 upgrade" 
-       # verze maji byt TestA-4 a TestB-4
+        And I run "dnf -y --advisories=RHSA-2999-004 --advisories=RHBA-2999-001 upgrade"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/4,TestB/4    |
 
   Scenario: Cleanup after upgrade advisories
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        | 
+         | downgraded | TestA/1,TestB/1    |
 
   Scenario: upgrade cves
        When I save rpmdb
-        And I run "dnf -y --cves=CVE-2999-0001 --cves=CVE-2999-0002 upgrade" 
-       # verze maji byt TestB-4
+        And I run "dnf -y --cves=CVE-2999-0001 --cves=CVE-2999-0002 upgrade"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestB              |
+         | updated    | TestB/4            |
 
   Scenario: Cleanup after upgrade cves
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        |
+         | downgraded | TestB/1            |
 
   Scenario: upgrade-minimal sec-severity
        When I save rpmdb
-        And I run "dnf -y --sec-severity Moderate upgrade-minimal" 
-       # verze ma byt TestB-2
+        And I run "dnf -y --sec-severity Moderate upgrade-minimal"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestB              |
+         | updated    | TestB/2            |
 
   Scenario: Cleanup after upgrade-minimal sec-severity
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestB              |
+         | downgraded | TestB/1            |
 
   Scenario: upgrade secseverity
        When I save rpmdb
-        And I run "dnf -y --secseverity Critical upgrade" 
-       # verze ma byt TestB-4
+        And I run "dnf -y --secseverity Critical upgrade"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestB              |
+         | updated    | TestB/4            |
 
   Scenario: Cleanup after upgrade secseverity
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestB              |
+         | downgraded | TestB/1            |
 
   Scenario: upgrade-minimal bugfix
        When I save rpmdb
-        And I run "dnf -y --bugfix upgrade-minimal" 
-       # verze maji byt TestA-3 a TestB-3
+        And I run "dnf -y --bugfix upgrade-minimal"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/3,TestB/3    |
 
   Scenario: Cleanup after upgrade-minimal bugfix
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        |
+         | downgraded | TestA/1,TestB/1    |
 
   Scenario: upgrade bugfix
        When I save rpmdb
-        And I run "dnf -y --bugfix upgrade" 
-       # verze maji byt TestA-4 a TestB-4
+        And I run "dnf -y --bugfix upgrade"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/4,TestB/4    |
 
   Scenario: Cleanup after upgrade bugfix
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        |
+         | downgraded | TestA/1,TestB/1    |
 
   Scenario: upgrade-minimal security plus bugfix
        When I save rpmdb
         And I run "dnf -y --security --bugfix upgrade-minimal" 
-       # verze maji byt TestA-3 a TestB-4
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/3,TestB/4    |
