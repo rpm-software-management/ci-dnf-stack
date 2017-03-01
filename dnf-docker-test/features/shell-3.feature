@@ -1,4 +1,3 @@
-@xfail
 Feature: Switching conflicting packages in dnf shell
 
   @setup
