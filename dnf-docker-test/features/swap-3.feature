@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for swap command with package groups
 
   @setup

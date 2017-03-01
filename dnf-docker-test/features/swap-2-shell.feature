@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for swap command with wildcards package specification (run in dnf shell)
 
   @setup

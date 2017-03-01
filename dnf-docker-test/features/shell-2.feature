@@ -1,4 +1,3 @@
-@xfail
 Feature: Running dnf shell commands in a batch
 
   @setup

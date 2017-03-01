@@ -1,4 +1,3 @@
-@xfail
 Feature: Installing a package group in dnf shell
 
 Scenario: Installing package group in dnf shell

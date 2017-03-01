@@ -1,4 +1,3 @@
-@xfail
 Feature: Enabling and disabling a repository in dnf shell
 
 Scenario: Enabling and disabling a repository in dnf shell
