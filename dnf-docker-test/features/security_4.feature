@@ -45,34 +45,30 @@ Feature: Test for upgrade and upgrade-minimal with bz and security options
        When I save rpmdb
         And I enable repository "base"
         And I successfully run "dnf -y install TestA TestB"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
-         | State     | Packages     |
-         | installed | TestA, TestB |
+         | State     | Packages         |
+         | installed | TestA/1, TestB/1 |
 
   Scenario: Security plus three explicitly mentioned bzs upgrade
        When I enable repository "sec-err-1"
         And I enable repository "sec-err-2"
         And I enable repository "bug-err"
         And I save rpmdb
-        And I run "dnf -y --bz 123 --bz 234 --bz 345 --security upgrade" 
-       # verze maji byt TestA-3 a TestB-3
+        And I run "dnf -y --bz 123 --bz 234 --bz 345 --security upgrade"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/3,TestB/3    |
 
   Scenario: Cleanup after security plus bzs upgrade
        When I save rpmdb
         And I successfully run "dnf -y history undo last"
-       # verze maji byt TestA-1 a TestB-1
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestA,TestB        |
+         | downgraded | TestA/1,TestB/1    |
 
   Scenario: Security plus three explicitly mentioned bzs upgrade-minimal
        When I save rpmdb
-        And I run "dnf -y --bz 123 --bz 234 --bz 345 --security upgrade-minimal" 
-       # verze maji byt TestA-2 a TestB-2
+        And I run "dnf -y --bz 123 --bz 234 --bz 345 --security upgrade-minimal"
        Then rpmdb changes are
          | State      | Packages           |
-         | updated    | TestA,TestB        |
+         | updated    | TestA/2,TestB/2    |
