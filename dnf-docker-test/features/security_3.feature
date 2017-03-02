@@ -68,7 +68,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages           |
          | updated    | TestA/4            |
-         | unchanged  | TestB              |
 
   Scenario: Cleanup after security update
        When I save rpmdb
@@ -76,7 +75,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages             |
          | downgraded | TestA/1              |
-         | unchanged  | TestB                |
 
   Scenario: Security upgrade
        When I save rpmdb
@@ -84,7 +82,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages             |
          | updated    | TestA/4              |
-         | unchanged  | TestB                |
 
   Scenario: Cleanup after security upgrade
        When I save rpmdb
@@ -92,7 +89,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages             |
          | downgraded | TestA/1              |
-         | unchanged  | TestB                |
 
   Scenario: Security update-minimal
        When I save rpmdb
@@ -100,7 +96,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages             |
          | updated    | TestA/3              |
-         | unchanged  | TestB                |
 
   Scenario: Cleanup after security update-minimal
        When I save rpmdb
@@ -108,7 +103,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages           |
          | downgraded | TestA/1            |
-         | unchanged  | TestB              |
 
   Scenario: Security upgrade-minimal
        When I save rpmdb
@@ -116,4 +110,3 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
        Then rpmdb changes are
          | State      | Packages           |
          | updated    | TestA/3            |
-         | unchanged  | TestB              |
