@@ -29,3 +29,5 @@
       - fedora-25-i386
       - fedora-26-x86_64
       - fedora-26-i386
+      - fedora-rawhide-x86_64
+      - fedora-rawhide-i386
