@@ -7,6 +7,7 @@ import tempfile
 
 from behave import given
 from behave import register_type
+from behave import then
 from behave import when
 from behave.model import Table
 import jinja2
@@ -321,6 +322,7 @@ def given_empty_repository(ctx, repository):
     ctx.table = Table(HEADINGS_REPO)
     given_repository_with_packages(ctx, False, "file", repository)
 
+@then('I {state:enable_disable} repository "{repository}"')
 @when('I {state:enable_disable} repository "{repository}"')
 def i_enable_disable_repository(ctx, state, repository):
     """
