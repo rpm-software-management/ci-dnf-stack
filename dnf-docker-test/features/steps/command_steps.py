@@ -180,11 +180,17 @@ def step_userinstalled_match(ctx):
     table = table_utils.parse_kv_table(ctx, ['Action', 'Packages'], keys)
     step_i_run_command(ctx, 'dnf history userinstalled')
     text = getattr(ctx.cmd_result, 'stdout')
+
+    match = table[keys[0]] if keys[0] in table else None
+    notmatch = table[keys[1]] if keys[1] in table else None
+
     assert text, 'No output'
-    for m in pkgs_split(table[keys[0]]):  # should be matched
-        assert m in text, 'Package {} not matched as userinstalled'.format(m)
-    for n in pkgs_split(table[keys[1]]):  # should not be matched
-        assert n not in text,  'Package {} matched as userinstalled'.format(m)
+    if match:
+        for m in pkgs_split(match):  # should be matched
+            assert m in text, 'Package {} not matched as userinstalled'.format(m)
+    if notmatch:
+        for n in pkgs_split(notmatch):  # should not be matched
+            assert n not in text, 'Package {} matched as userinstalled'.format(m)
 
 @then('history info "{spec}" should match')
 @then('history info should match')
