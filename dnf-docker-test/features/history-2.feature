@@ -26,21 +26,64 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
           | Match     | TestA, TestE |
           | Not match | TestB, TestC |
 
-    Scenario: History info
-
-
-    Scenario: History info in range
-
-
-    Scenario: History info package
-
-
-    Scenario: History list ranges
-
-
-    Scenario: History list single
-
+    Scenario: History list single and ranges
+        When I save rpmdb
+          And I successfully run "dnf install -y TestD"
+          And I successfully run "dnf remove -y TestE"
+        Then history "last-1..last" should match "install -y TestD" with "Install" and "1" package
+        And history "list last-1..last" should match "remove -y TestE" with "Erase" and "3" packages
+        And history "last" should match "remove -y TestE" with "Erase" and "3" packages
 
     Scenario: History list package
+        When I save rpmdb
+          And I successfully run "dnf install -y TestC"
+        Then history "TestC" should match "install -y TestC" with "Install" and "1" package
+        And history "list TestC" should match "remove -y TestE" with "Erase" and "3" packages
 
-    Scenario: List reponame
+    Scenario: History info
+        When I save rpmdb
+        Then history info should match
+          | Key          | Value            |
+          | Command Line | install -y TestC |
+          | Return-Code  | Success          |
+          | Install      | TestC            |
+        When I successfully run "dnf remove -y TestA"
+        Then history info should match
+          | Key          | Value            |
+          | Command Line | remove -y TestA  |
+          | Return-Code  | Success          |
+          | Erase        | TestA, TestB     |
+
+    Scenario: History info in range
+        When I save rpmdb
+          And I successfully run "dnf install -y TestA"
+        Then history info should match
+          | Key          | Value            |
+          | Command Line | install -y TestA |
+          | Return-Code  | Success          |
+          | Install      | TestA, TestB     |
+        When I save rpmdb
+          And I enable repository "updates"
+          And I successfully run "dnf update -y"
+        Then history info should match
+          | Key          | Value            |
+          | Command Line | update -y        |
+          | Return-Code  | Success          |
+          | Upgrade      | TestA, TestB     |
+          | Upgraded     | TestA, TestB     |
+        And history info "last-2..last" should match
+          | Key          | Value            |
+          | Return-Code  | Success          |
+          | Upgrade      | TestA, TestB     |
+          | Upgraded     | TestA, TestB     |
+          | Install      | TestA, TestB     |
+          | Erase        | TestA, TestB     |
+        And history info "TestA" should match
+          | Key          | Value                      |
+          | Return-Code  | Success                    |
+          | Upgrade      | TestA, TestB               |
+          | Upgraded     | TestA, TestB               |
+          | Install      | TestA, TestB, TestC, TestE |
+          | Erase        | TestA, TestB               |
+
+

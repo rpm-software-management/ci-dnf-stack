@@ -150,11 +150,13 @@ def step_the_command_stream_section_should_not_match_regexp(ctx, stream, section
     section_content = command_utils.extract_section_content_from_text(section, text)
     ctx.assertion.assertNotRegexpMatches(section_content, regexp)
 
-@then('history should contain "{cmd}" with action "{act}" and "{alt}" package')
-@then('history should contain "{cmd}" with action "{act}" and "{alt}" packages')
-def step_history_contains(ctx, cmd, act, alt):
-    step_i_run_command(ctx, "dnf history")
-    text = getattr(ctx.cmd_result, "stdout")
+@then('history should match "{cmd}" with "{act}" and "{alt}" package')
+@then('history should match "{cmd}" with "{act}" and "{alt}" packages')
+@then('history "{range}" should match "{cmd}" with "{act}" and "{alt}" package')
+@then('history "{range}" should match "{cmd}" with "{act}" and "{alt}" packages')
+def step_history_contains(ctx, cmd, act, alt, range=""):
+    step_i_run_command(ctx, 'dnf history ' + range)
+    text = getattr(ctx.cmd_result, 'stdout')
     lines = text.split('\n')
     assert len(lines) > 3, 'No output'
     del lines[:3]
@@ -167,7 +169,7 @@ def step_history_contains(ctx, cmd, act, alt):
         if set([cmd, act, alt]).issubset(set(words)):
             match = True
             break
-    assert match, '"{}" with action "{}" and "{}" packages not matched!'.format(cmd, act, alt)
+    assert match, '"{}" with "{}" and "{}" packages not matched!'.format(cmd, act, alt)
 
 @then('history userinstalled should')
 def step_userinstalled_match(ctx):
@@ -176,10 +178,74 @@ def step_userinstalled_match(ctx):
             yield pkg.strip()
     keys = ['Match', 'Not match']
     table = table_utils.parse_kv_table(ctx, ['Action', 'Packages'], keys)
-    step_i_run_command(ctx, "dnf history userinstalled")
-    text = getattr(ctx.cmd_result, "stdout")
+    step_i_run_command(ctx, 'dnf history userinstalled')
+    text = getattr(ctx.cmd_result, 'stdout')
     assert text, 'No output'
     for m in pkgs_split(table[keys[0]]):  # should be matched
         assert m in text, 'Package {} not matched as userinstalled'.format(m)
     for n in pkgs_split(table[keys[1]]):  # should not be matched
         assert n not in text,  'Package {} matched as userinstalled'.format(m)
+
+@then('history info "{spec}" should match')
+@then('history info should match')
+def step_history_info(ctx, spec=""):
+    def pkgs_split(pkgs):
+        return pkgs.split(",")
+
+    actions = ['Install', 'Erase', 'Upgrade', 'Upgraded', 'Reinstall', 'Downgrade']
+    keys = ['Command Line', 'Return-Code'] + actions
+
+    table = table_utils.parse_kv_table(ctx, ['Key', 'Value'], keys)
+    step_i_run_command(ctx, 'dnf history info ' + spec)
+
+    text = getattr(ctx.cmd_result, 'stdout')
+    lines = text.split('\n')
+    assert text and lines, 'No output'
+
+    brpmdb = None
+    erpmdb = None
+    cmdline = None
+    g_cmdline = table['Command Line'] if 'Command Line' in table else None
+    retcode = None
+    g_retcode = table['Return-Code'] if 'Return-Code' in table else None
+
+    for line in lines:
+        if 'Begin rpmdb' in line:
+            brpmdb = line.split(':')
+
+        if 'End rpmdb' in line:
+            erpmdb = line.split(':')
+
+        if brpmdb and erpmdb:
+            assert len(brpmdb) == len(erpmdb) == 3, 'Unexpected rpmdb version format'
+            assert brpmdb[2] != erpmdb[2], 'No change in rpmdb version'
+            erpmdb = None
+
+        if 'Return-Code' in line and g_retcode:
+            retcode = line.split(':')
+            assert len(retcode) == 2, 'Unexpected Return-Code format'
+            rc = retcode[1].strip()
+            assert rc == g_retcode, 'Return-Code "{}" not matched by "{}"'.format(rc, g_retcode)
+
+        if 'Command Line' in line and g_cmdline:
+            cmdline = line.split(':')
+            assert len(cmdline) == 2, 'Unexpected Command Line format'
+            cmd = cmdline[1].strip()
+            assert cmd == g_cmdline, 'Command Line "{}" not matched by "{}"'.format(cmd, g_cmdline)
+
+    assert brpmdb, 'Begin rpmdb version not found'
+
+    if g_cmdline:
+        assert cmdline, 'Command line not found'
+
+    if g_retcode:
+        assert retcode, 'Return-Code not found'
+
+    for key in actions:
+        if key in table:
+            pkgs = pkgs_split(table[key])
+            for line in lines:
+                for pkg in pkgs:
+                    if pkg in line and key in line:
+                        pkgs.remove(pkg)
+            assert not pkgs, '"{}" not matched as "{}"'.format(pkgs[0], key)

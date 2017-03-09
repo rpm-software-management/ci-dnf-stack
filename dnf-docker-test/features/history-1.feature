@@ -24,7 +24,7 @@ Feature: DNF/Behave test Transaction history - base
         Then rpmdb changes are
           | State        | Packages      |
           | installed    | TestA, TestB  |
-        And history should contain "install -y TestA" with action "Install" and "2" packages
+        And history should match "install -y TestA" with "Install" and "2" packages
 
     Scenario: Undo last transaction
         When I save rpmdb
@@ -32,7 +32,7 @@ Feature: DNF/Behave test Transaction history - base
         Then rpmdb changes are
           | State        | Packages      |
           | removed      | TestA, TestB  |
-        And history should contain "history undo last -y" with action "Erase" and "2" packages
+        And history should match "history undo last -y" with "Erase" and "2" packages
 
     Scenario: Undo last transaction 2
         When I save rpmdb
@@ -40,7 +40,7 @@ Feature: DNF/Behave test Transaction history - base
         Then rpmdb changes are
           | State        | Packages      |
           | installed    | TestA, TestB  |
-        And history should contain "history undo last -y" with action "Install" and "2" packages
+        And history should match "history undo last -y" with "Install" and "2" packages
 
     Scenario: Undo transaction last-2
         When I save rpmdb
@@ -48,7 +48,7 @@ Feature: DNF/Behave test Transaction history - base
         Then rpmdb changes are
           | State        | Packages      |
           | removed      | TestA, TestB  |
-        And history should contain "history undo last-2 -y" with action "Erase" and "2" packages
+        And history should match "history undo last-2 -y" with "Erase" and "2" packages
 
     Scenario: Redo last transaction
         When I save rpmdb
@@ -66,13 +66,13 @@ Feature: DNF/Behave test Transaction history - base
         Then rpmdb changes are
           | State        | Packages      |
           | installed    | TestA, TestB  |
-        And history should contain "history redo last-1 -y" with action "Install" and "2" packages
+        And history should match "history redo last-1 -y" with "Install" and "2" packages
         When I save rpmdb
           And I successfully run "dnf history redo last-1 -y"
         Then rpmdb changes are
           | State        | Packages      |
           | removed      | TestA, TestB  |
-        And history should contain "history redo last-1 -y" with action "Erase" and "2" packages
+        And history should match "history redo last-1 -y" with "Erase" and "2" packages
 
     Scenario: Update packages
         When I save rpmdb
@@ -87,7 +87,7 @@ Feature: DNF/Behave test Transaction history - base
           | State        | Packages                    |
           | updated      | TestA, TestB, TestC, TestD  |
         When I successfully run "dnf history"
-        Then history should contain "update -y" with action "Update" and "4" package
+        Then history should match "update -y" with "Update" and "4" package
 
     Scenario: Rollback update
         When I save rpmdb
