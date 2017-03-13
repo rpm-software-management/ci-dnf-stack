@@ -11,6 +11,7 @@ from behave import when
 from behave.model import Table
 import jinja2
 import parse
+import six
 from whichcraft import which
 
 from command_steps import step_i_successfully_run_command
@@ -125,6 +126,16 @@ def parse_enable_disable(text):
 
 register_type(enable_disable=parse_enable_disable)
 
+@parse.with_pattern(r"enabled |disabled |")
+def parse_enabled_status(text):
+    if text == "enabled ":
+        return True
+    if text == "disabled " or text == "":
+        return False
+    assert False
+
+register_type(enabled_status=parse_enabled_status)
+
 @parse.with_pattern(r"local |http |https |ftp |")
 def parse_repo_type(text):
     if text == "http ":
@@ -147,8 +158,8 @@ def step_i_remove_all_repositories(ctx):
     for f in glob.glob("/etc/yum.repos.d/*.repo"):
         os.remove(f)
 
-@given('{rtype:repo_type}repository "{repository}" with packages')
-def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
+@given('{enabled:enabled_status}{rtype:repo_type}repository "{repository}" with packages')
+def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None):
     """
     Builds dummy packages, creates repo and *.repo* file.
     Supported repo types are http, https, ftp or local (default).
@@ -268,21 +279,21 @@ def given_repository_with_packages(ctx, rtype, repository, gpgkey=None):
 
     repofile = REPO_TMPL.format(repository)
     ctx.table = Table(HEADINGS_INI)
-    ctx.table.add_row([repository, "name",     repository])
-    ctx.table.add_row(["",         "enabled",  "False"])
-    ctx.table.add_row(["",         "baseurl",  "{!s}://{!s}".format(rtype, repopath)])
+    ctx.table.add_row([repository, "name",          repository])
+    ctx.table.add_row(["",         "enabled",       six.text_type(enabled)])
+    ctx.table.add_row(["",         "baseurl",       "{!s}://{!s}".format(rtype, repopath)])
     if gpgkey:
-        ctx.table.add_row(["", "gpgcheck", "True"])
+        ctx.table.add_row(["",     "gpgcheck",      "True"])
     else:
-        ctx.table.add_row(["", "gpgcheck", "False"])
+        ctx.table.add_row(["",     "gpgcheck",      "False"])
     if rtype == 'https':
-        ctx.table.add_row(["", "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
-        ctx.table.add_row(["", "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
-        ctx.table.add_row(["", "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
+        ctx.table.add_row(["",     "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
+        ctx.table.add_row(["",     "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
+        ctx.table.add_row(["",     "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
     step_an_ini_file_filepath_with(ctx, repofile)
 
 @given('{rtype:repo_type}repository "{repository}" with packages signed by "{gpgkey}"')
-def given_repository_with_packages_signed_by(ctx, rtype, repository, gpgkey):
+def given_repository_with_packages_signed_by(ctx, enabled, rtype, repository, gpgkey):
     """
     Builds a repository with packages signed by the given GPG key.
 
@@ -299,7 +310,7 @@ def given_repository_with_packages_signed_by(ctx, rtype, repository, gpgkey):
                | Package | Tag | Value |
                | TestA   |     |       |
     """
-    given_repository_with_packages(ctx, rtype, repository, gpgkey=gpgkey)
+    given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=gpgkey)
 
 @given('empty repository "{repository}"')
 def given_empty_repository(ctx, repository):
@@ -308,7 +319,7 @@ def given_empty_repository(ctx, repository):
     packages (empty).
     """
     ctx.table = Table(HEADINGS_REPO)
-    given_repository_with_packages(ctx, "file", repository)
+    given_repository_with_packages(ctx, False, "file", repository)
 
 @when('I {state:enable_disable} repository "{repository}"')
 def i_enable_disable_repository(ctx, state, repository):
