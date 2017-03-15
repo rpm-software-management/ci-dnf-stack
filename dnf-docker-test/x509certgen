@@ -137,6 +137,10 @@ by B<x509Key> and B<x509Cert> functions.
 
 Name of file with private and public key. F<key.pem> by default
 
+=item B<x509OPENSSL>
+
+Path to the openssl tool used as the backend. F<openssl> by default.
+
 =back
 
 Note that changing the values of above variables between running different
@@ -156,7 +160,8 @@ x509CACNF=${x509CACNF:-ca.cnf}
 x509CAINDEX=${x509CAINDEX:-index.txt}
 x509CASERIAL=${x509CASERIAL:-serial}
 x509FIRSTSERIAL=${x509FIRSTSERIAL:-01}
-if openssl version | grep -q '0[.]9[.].'; then
+x509OPENSSL=${x509OPENSSL:-openssl}
+if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
     x509FORMAT=${x509FORMAT:-+%y%m%d%H%M%SZ}
 else
     x509FORMAT=${x509FORMAT:-+%Y%m%d%H%M%SZ}
@@ -171,7 +176,7 @@ __INTERNAL_x509GenConfig() {
     # variable that has the DN broken up by items, most significant first
     declare -a dn
     # hash used to sign the certificate
-    if openssl version | grep -q '0[.]9[.]7'; then
+    if ${x509OPENSSL} version | grep -q '0[.]9[.]7'; then
         local md="sha1"
     else
         local md="sha256"
@@ -306,13 +311,20 @@ __INTERNAL_x509GenConfig() {
         echo $x509FIRSTSERIAL > $kAlias/$x509CASERIAL
     fi
 
-    cat > "$kAlias/$x509CACNF" <<EOF
+    # OpenSSL 1.1.0 (? 1.1.1 definitely has) has the OID definition
+    if ${x509OPENSSL} version | grep -Eq '0[.]9[.]|1[.]0[.]'; then
+        cat > "$kAlias/$x509CACNF" <<EOF
 oid_section = new_oids
 
 [ new_oids ]
 ocspSigning = 1.3.6.1.5.5.7.3.9
-ocspNoCheck = 1.3.6.1.5.5.7.48.1.5
+noCheck = 1.3.6.1.5.5.7.48.1.5
 
+EOF
+    else
+        cat /dev/null > "$kAlias/$x509CACNF"
+    fi
+    cat >> "$kAlias/$x509CACNF" <<EOF
 [ ca ]
 default_ca = ca_cnf
 
@@ -463,6 +475,7 @@ B<x509KeyGen>
 [B<--params> I<alias>]
 [B<--conservative>]
 [B<--anti-conservative>]
+[B<--gen-opts> I<opts>]
 I<alias>
 
 =back
@@ -473,7 +486,7 @@ I<alias>
 
 Type of key pair to generate. Acceptable values are I<RSA> and I<DSA>. In
 case the script is running on RHEL 6.5, RHEL 7.0, Fedora 19 or later, I<ECDSA>
-is also supported.
+is also supported. For I<RSA-PSS>, OpenSSL 1.1.1 is required.
 
 I<RSA> by default.
 
@@ -515,6 +528,12 @@ size of PQG DSA parameters incorrecty - the G parameter won't have its MSB set.
 This is sort-of reverse of --conservative, the default behaviour is to generate
 a set of paramters randomly.
 
+=item B<--gen-opts> I<opts>
+
+Set additional key generation options for non rsa, dsa and ec key generation.
+
+Example options include I<rsa_pss_keygen_md:digest> for RSA-PSS keygen.
+
 =item I<alias>
 
 Name of directory in which the generated key pair will be placed.
@@ -544,12 +563,19 @@ x509KeyGen() {
     local conservative="False"
     # whether to gen unsafe paramters that are known to break interoperability
     local incompatible="False"
+    # additional options for keygen
+    local genpkeyOpts
+    declare -a genpkeyOpts
+    genpkeyOpts=()
 
     #
     # parse options
     #
 
-    local TEMP=$(getopt -o t:s: -l params: -l conservative -l anti-conservative \
+    local TEMP=$(getopt -o t:s: -l params: \
+                 -l conservative \
+                 -l anti-conservative \
+                 -l gen-opts: \
                  -n x509KeyGen -- "$@")
     if [ $? -ne 0 ]; then
         echo "x509KeyGen: can't parse options" >&2
@@ -569,6 +595,10 @@ x509KeyGen() {
             --conservative) conservative="True"; shift 1
                 ;;
             --anti-conservative) incompatible="True"; shift 1
+                ;;
+            --gen-opts) genpkeyOpts=("${genpkeyOpts[@]}" \
+                                     "-pkeyopt" "$2")
+                shift 2
                 ;;
             --) shift 1
                 break
@@ -593,7 +623,7 @@ x509KeyGen() {
         return 1
     fi
     if [[ $kType != "RSA" ]] && [[ $kType != "DSA" ]] \
-        && [[ $kType != "ECDSA" ]]; then
+        && [[ $kType != "ECDSA" ]] && [[ $kType != "RSA-PSS" ]]; then
 
         echo "x509KeyGen: Unknown key type: $kType" >&2
         return 1
@@ -623,7 +653,7 @@ x509KeyGen() {
     mkdir -p "$kAlias"
 
     if [[ $kType == "ECDSA" ]]; then
-        openssl ecparam -genkey -name "$kSize" -out "$kAlias/$x509PKEY"
+        ${x509OPENSSL} ecparam -genkey -name "$kSize" -out "$kAlias/$x509PKEY"
         if [ $? -ne 0 ]; then
             echo "x509KeyGen: Key generation failed" >&2
             return 1
@@ -632,7 +662,7 @@ x509KeyGen() {
         if [[ -z $paramAlias ]]; then
             while true; do
                 rm -f "$kAlias/dsa_params.pem"
-                openssl dsaparam "$kSize" -out "$kAlias/dsa_params.pem"
+                ${x509OPENSSL} dsaparam -out "$kAlias/dsa_params.pem" "$kSize"
                 if [ $? -ne 0 ]; then
                     echo "x509KeyGen: Parameter generation failed" >&2
                     return 1
@@ -641,12 +671,12 @@ x509KeyGen() {
                     break
                 fi
                 if [[ $conservative == "True" ]] &&
-                    openssl dsaparam -noout -text -in "$kAlias/dsa_params.pem" | \
+                    ${x509OPENSSL} dsaparam -noout -text -in "$kAlias/dsa_params.pem" | \
                     grep -iA1 'G:' | tail -n 1 | grep -E '^[[:space:]]*00:'; then
                     break
                 fi
                 if [[ $incompatible == "True" ]] &&
-                    openssl dsaparam -noout -text -in "$kAlias/dsa_params.pem" |\
+                    ${x509OPENSSL} dsaparam -noout -text -in "$kAlias/dsa_params.pem" |\
                     grep -iA1 'G:' | tail -n 1 | grep -E '^[[:space:]]*[1-3]'; then
                     break
                 fi
@@ -657,7 +687,7 @@ x509KeyGen() {
         fi
 
         while true; do
-            openssl gendsa -out "$kAlias/$x509PKEY" "$dsaParams"
+            ${x509OPENSSL} gendsa -out "$kAlias/$x509PKEY" "$dsaParams"
             if [ $? -ne 0 ]; then
                 echo "x509KeyGen: Key generation failed" >&2
                 return 1
@@ -667,26 +697,41 @@ x509KeyGen() {
             fi
             local prime_chars
             local pub_chars
-            prime_chars="$(openssl dsa -noout -text -in "$kAlias/$x509PKEY" | \
+            prime_chars="$(${x509OPENSSL} dsa -noout -text -in "$kAlias/$x509PKEY" | \
                 grep -iA 100 '^P:' | grep -iB 100 '^Q:' | wc -c)"
-            pub_chars="$(openssl dsa -noout -text -in "$kAlias/$x509PKEY" | \
+            pub_chars="$(${x509OPENSSL} dsa -noout -text -in "$kAlias/$x509PKEY" | \
                 grep -iA 100 'pub:' | grep -iB 100 '^P:' | wc -c)"
             # make sure that MSB is set
             # and that the public value is large enough
             if [[ $conservative == "True" ]] &&
-                openssl dsa -noout -text -in "$kAlias/$x509PKEY" | \
+                ${x509OPENSSL} dsa -noout -text -in "$kAlias/$x509PKEY" | \
                 grep -A1 'pub:' | tail -n 1 | grep -E '^[[:space:]]*00:' &&
                 [[ $pub_chars == $prime_chars ]]; then
                 break
             fi
             if [[ $incompatible == "True" ]] &&
-                openssl dsa -noout -text -in "$kAlias/$x509PKEY" | \
+                ${x509OPENSSL} dsa -noout -text -in "$kAlias/$x509PKEY" | \
                 grep -A1 'pub:' | tail -n 1 | grep -E '^[[:space:]]*[1-3]'; then
                 break
             fi
         done
-    else # RSA
-        openssl genrsa -out "$kAlias/$x509PKEY" "$kSize"
+    elif [[ $kType == "RSA" ]]; then
+        ${x509OPENSSL} genrsa -out "$kAlias/$x509PKEY" "$kSize"
+        if [ $? -ne 0 ]; then
+            echo "x509KeyGen: Key generation failed" >&2
+        fi
+    else # RSA-PSS, DH, GOST2001
+        local options
+        declare -a options
+        options=("-out" "$kAlias/$x509PKEY")
+        options=("${options[@]}" "-algorithm" "$kType")
+        if [[ $kType == "RSA-PSS" ]]; then
+            options=("${options[@]}" "-pkeyopt" "rsa_keygen_bits:$kSize")
+        fi
+        if [[ ${#genpkeyOpts[@]} -gt 0 ]]; then
+            options=("${options[@]}" "${genpkeyOpts[@]}")
+        fi
+        ${x509OPENSSL} genpkey "${options[@]}"
         if [ $? -ne 0 ]; then
             echo "x509KeyGen: Key generation failed" >&2
         fi
@@ -715,6 +760,8 @@ B<x509SelfSign>
 [B<--ncExclude> I<HOST>]
 [B<--ncNotCritical>]
 [B<--md> I<HASH>]
+[B<--padding> I<PADDING>]
+[B<--pssSaltLen> I<SALTLEN>]
 [B<--noAuthKeyId>]
 [B<--noBasicConstraints>]
 [B<--noSubjKeyId>]
@@ -853,6 +900,19 @@ SHA256 by default, will be updated to weakeast hash recommended by NIST or
 generally thought to be secure. SHA1 in case the openssl version installed
 doesn't support SHA256.
 
+=item B<--padding> I<PADDING>
+
+Set the specified RSA padding type for the certificate signature. Acceptable
+values are B<pkcs1> (the default, for PKCS#1 v1.5 padding with DigestInfo),
+B<x931> (for X 9.31 padding) and B<pss> (for RSASSA-PSS padding).
+
+=item B<--pssSaltLen> I<SALTLEN>
+
+Set the length of used salt (in bytes) that will be used to create the
+signature. Special values are: B<-1> for setting the salt size to the size
+of used message digest, B<-2> for automatically determining the size of
+the salt and B<-3> for using the maximum possible salt size.
+
 =item B<--noAuthKeyId>
 
 Do not set the Authority Key Identifier extension in the certificate.
@@ -950,6 +1010,10 @@ x509SelfSign() {
     local ncCritical="critical,"
     # set the message digest algorithm used for signing
     local certMD=""
+    # set the padding mode used for signature
+    local sigPad=""
+    # set the length of salt used in RSA-PSS signatures
+    local pssSaltLen=""
     # flag set when the Authority Key Identifier is not supposed to be
     # added to certificate
     local noAuthKeyId=""
@@ -974,6 +1038,8 @@ x509SelfSign() {
         -l noAuthKeyId \
         -l noSubjKeyId \
         -l md: \
+        -l padding: \
+        -l pssSaltLen: \
         -n x509SelfSign -- "$@")
     if [ $? -ne 0 ]; then
         echo "X509SelfSign: can't parse options" >&2
@@ -1016,6 +1082,10 @@ x509SelfSign() {
                 ;;
             --md) certMD="$2"; shift 2
                 ;;
+            --padding) sigPad="$2"; shift 2
+                ;;
+            --pssSaltLen) pssSaltLen="$2"; shift 2
+                ;;
             --noAuthKeyId) noAuthKeyId="true"; shift 1
                 ;;
             --noSubjKeyId) noSubjKeyId="true"; shift 1
@@ -1037,6 +1107,13 @@ x509SelfSign() {
     if [ ! -d "$kAlias" ] || [ ! -e "$kAlias/$x509PKEY" ]; then
         echo "x509SelfSign: private key '$kAlias' has not yet been generated"\
             >&2
+        return 1
+    fi
+
+    if [[ "$sigPad" && "$sigPad" != "pss" && "$pssSaltLen" ]] \
+        || [[ -z "$sigPad" && "$pssSaltLen" ]]; then
+
+        echo "x509SelfSign: pssSaltLen is only applicable to pss padding" >&2
         return 1
     fi
 
@@ -1195,20 +1272,29 @@ x509SelfSign() {
     #
     # create self signed certificate
     #
+    declare -a options=()
+    if [[ ! -z $sigPad ]]; then
+        options=("${options[@]}" "-sigopt" "rsa_padding_mode:$sigPad")
+    fi
+    if [[ ! -z $pssSaltLen ]]; then
+        options=("${options[@]}" "-sigopt" "rsa_pss_saltlen:$pssSaltLen")
+    fi
 
     # because we want to have full control over certificate fields
     # (like notBefore and notAfter) we have to create the certificate twice
 
     # create dummy self signed certificate
-    openssl req -x509 -new -key $kAlias/$x509PKEY -out $kAlias/temp-$x509CERT \
-        -batch -config $kAlias/$x509CACNF
+    ${x509OPENSSL} req -x509 -new -key $kAlias/$x509PKEY \
+        -out $kAlias/temp-$x509CERT \
+        -batch -config $kAlias/$x509CACNF "${options[@]}"
     if [ $? -ne 0 ]; then
         echo "x509SelfSign: temporary certificate generation failed" >&2
         return 1
     fi
 
     # create CSR for signing by the dummy certificate
-    openssl x509 -x509toreq -signkey $kAlias/$x509PKEY -out $kAlias/$x509CSR \
+    ${x509OPENSSL} x509 -x509toreq -signkey $kAlias/$x509PKEY \
+        -out $kAlias/$x509CSR \
         -in $kAlias/temp-$x509CERT
     if [ $? -ne 0 ]; then
         echo "x509SelfSign: certificate signing request failed" >&2
@@ -1220,10 +1306,17 @@ x509SelfSign() {
     if [[ $certV == "3" ]]; then
         caOptions=("${caOptions[@]}" "-extensions" "v3_ext")
     fi
+    if [[ ! -z "$sigPad" ]]; then
+        caOptions=("${caOptions[@]}" "-sigopt" "rsa_padding_mode:$sigPad")
+    fi
+    if [[ ! -z "$pssSaltLen" ]]; then
+        caOptions=("${caOptions[@]}" "-sigopt" "rsa_pss_saltlen:$pssSaltLen")
+    fi
 
     # sign the certificate using the full CA functionality to get proper
     # key id and subject key identifier
-    openssl ca -config $kAlias/$x509CACNF -batch -keyfile $kAlias/$x509PKEY \
+    ${x509OPENSSL} ca -config $kAlias/$x509CACNF -batch \
+        -keyfile $kAlias/$x509PKEY \
         -cert $kAlias/temp-$x509CERT -in $kAlias/$x509CSR \
         -out $kAlias/$x509CERT "${caOptions[@]}"
     if [ $? -ne 0 ]; then
@@ -1246,7 +1339,8 @@ x509SelfSign() {
         return 1
     fi
 
-    openssl ca -config $kAlias/$x509CACNF -batch -keyfile $kAlias/$x509PKEY \
+    ${x509OPENSSL} ca -config $kAlias/$x509CACNF -batch \
+        -keyfile $kAlias/$x509PKEY \
         -cert $kAlias/temp-$x509CERT -in $kAlias/$x509CSR \
         -out $kAlias/$x509CERT "${caOptions[@]}"
 
@@ -1353,6 +1447,8 @@ B<x509CertSign>
 [B<--ncExclude> I<HOST>]
 [B<--ncNotCritical>]
 [B<--md> I<HASHNAME>]
+[B<--padding> I<PADDING>]
+[B<--pssSaltLen> I<SALTLEN>]
 [B<--noBasicConstraints>]
 [B<--notAfter> I<ENDDATE>]
 [B<--notBefore> I<STARTDATE>]
@@ -1536,6 +1632,19 @@ For example, you can't sign using ECDSA and MD5.
 SHA256 by default, will be updated to weakeast hash recommended by NIST or
 generally thought to be secure.
 
+=item B<--padding> I<PADDING>
+
+Set the specified RSA padding type for the certificate signature. Acceptable
+values are B<pkcs1> (the default, for PKCS#1 v1.5 padding with DigestInfo),
+B<x931> (for X 9.31 padding) and B<pss> (for RSASSA-PSS padding).
+
+=item B<--pssSaltLen> I<SALTLEN>
+
+Set the length of used salt (in bytes) that will be used to create the
+signature. Special values are: B<-1> for setting the salt size to the size
+of used message digest, B<-2> for automatically determining the size of
+the salt and B<-3> for using the maximum possible salt size.
+
 =item B<--noAuthKeyId>
 
 Do not add the Authority Key Identifier extension to generated certificates.
@@ -1687,6 +1796,10 @@ x509CertSign() {
     # set the message digest used for signing the certificate
     # default is in config generator (sha256)
     local certMD=""
+    # set the RSA signature padding mode
+    local sigPad=""
+    # set the length of the salt used with RSA-PSS signatures
+    local pssSaltLen=""
     # sets the Basic Key Usage
     local basicKeyUsage=""
     # distinguished name of the signed certificate
@@ -1724,6 +1837,8 @@ x509CertSign() {
         -l ncNotCritical \
         -l basicKeyUsage: \
         -l md: \
+        -l padding: \
+        -l pssSaltLen: \
         -l subjectAltName: \
         -l subjectAltNameCritical \
         -l ocspResponderURI: \
@@ -1772,6 +1887,10 @@ x509CertSign() {
             --ncNotCritical) ncCritical=""; shift 1
                 ;;
             --md) certMD="$2"; shift 2
+                ;;
+            --padding) sigPad="$2"; shift 2
+                ;;
+            --pssSaltLen) pssSaltLen="$2"; shift 2
                 ;;
             --subjectAltName) subjectAltName=("${subjectAltName[@]}" "$2"); shift 2
                 ;;
@@ -1847,6 +1966,13 @@ x509CertSign() {
                 return 1
                 ;;
         esac
+    fi
+
+    if [[ "$sigPad" && "$sigPad" != "pss" && "$pssSaltLen" ]] \
+        || [[ -z "$sigPad" && "$pssSaltLen" ]]; then
+
+        echo "x509SelfSign: pssSaltLen is only applicable to pss padding" >&2
+        return 1
     fi
 
     if [[ -z $notAfter ]] && [[ $certRole == "ca" ]]; then
@@ -1975,10 +2101,10 @@ x509CertSign() {
 
     # DER:05:00 is a DER encoding of NULL (empty)
     if [[ $ocspNoCheck == "true" ]]; then
-        parameters=("${parameters[@]}" "--x509v3Extension=ocspNoCheck=DER:05:00")
+        parameters=("${parameters[@]}" "--x509v3Extension=noCheck=DER:05:00")
     fi
     if [[ $ocspNoCheck == "critical" ]]; then
-        parameters=("${parameters[@]}" "--x509v3Extension=ocspNoCheck=critical,DER:05:00")
+        parameters=("${parameters[@]}" "--x509v3Extension=noCheck=critical,DER:05:00")
     fi
 
     if [[ $noSubjKeyId != "true" ]]; then
@@ -1998,7 +2124,8 @@ x509CertSign() {
     # create the certificate
     #
 
-    openssl req -new -batch -key "$kAlias/$x509PKEY" -out "$kAlias/$x509CSR" \
+    ${x509OPENSSL} req -new -batch -key "$kAlias/$x509PKEY" \
+        -out "$kAlias/$x509CSR" \
         -config "$caAlias/$x509CACNF"
     if [ $? -ne 0 ]; then
         echo "x509CertSign: Certificate Signing Request generation failed" >&2
@@ -2010,8 +2137,14 @@ x509CertSign() {
     if [[ $certV == "3" ]]; then
         caOptions=("${caOptions[@]}" "-extensions" "v3_ext")
     fi
+    if [[ ! -z $sigPad ]]; then
+        caOptions=("${caOptions[@]}" "-sigopt" "rsa_padding_mode:$sigPad")
+    fi
+    if [[ ! -z $pssSaltLen ]]; then
+        caOptions=("${caOptions[@]}" "-sigopt" "rsa_pss_saltlen:$pssSaltLen")
+    fi
 
-    openssl ca -config "$caAlias/$x509CACNF" -batch \
+    ${x509OPENSSL} ca -config "$caAlias/$x509CACNF" -batch \
         -keyfile "$caAlias/$x509PKEY" \
         -cert "$caAlias/$x509CERT" \
         -in "$kAlias/$x509CSR" \
@@ -2151,7 +2284,7 @@ x509Key() {
     if [[ $der == "true" ]]; then
         if [[ $pkcs8 == "true" ]]; then
             if [[ ! -e $kAlias/$x509PKCS8DERKEY ]]; then
-                openssl pkcs8 -topk8 -in "$kAlias/$x509PKEY" -nocrypt \
+                ${x509OPENSSL} pkcs8 -topk8 -in "$kAlias/$x509PKEY" -nocrypt \
                     -outform DER -out "$kAlias/$x509PKCS8DERKEY"
             fi
             echo "$kAlias/$x509PKCS8DERKEY"
@@ -2159,19 +2292,22 @@ x509Key() {
             if [[ ! -e $kAlias/$x509DERKEY ]]; then
                 # openssl 0.9.8 doesn't have pkey subcommand, simulate it with
                 # rsa and dsa subcommands, ec subcommand is not supported there
-                if openssl version | grep -q '0[.]9[.].'; then
+                if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
                     if [[ -e "$kAlias/dsa_params.pem" ]]; then
-                        openssl dsa -in "$kAlias/$x509PKEY" -outform DER -out "$kAlias/$x509DERKEY"
+                        ${x509OPENSSL} dsa -in "$kAlias/$x509PKEY" \
+                            -outform DER -out "$kAlias/$x509DERKEY"
                     elif grep -q 'BEGIN RSA PRIVATE KEY' "$kAlias/$x509PKEY" \
                         || grep -q 'BEGIN PRIVATE KEY' "$kAlias/$x509PKEY"; then
-                        openssl rsa -in "$kAlias/$x509PKEY" -outform DER -out "$kAlias/$x509DERKEY"
+                        ${x509OPENSSL} rsa -in "$kAlias/$x509PKEY" \
+                            -outform DER -out "$kAlias/$x509DERKEY"
                     else
                         echo "Private key in unknown format" >&2
                         return 1
                     fi
 
                 else
-                    openssl pkey -in "$kAlias/$x509PKEY" -outform DER -out "$kAlias/$x509DERKEY"
+                    ${x509OPENSSL} pkey -in "$kAlias/$x509PKEY" -outform DER \
+                        -out "$kAlias/$x509DERKEY"
                 fi
             fi
             echo "$kAlias/$x509DERKEY"
@@ -2185,7 +2321,7 @@ x509Key() {
             # NSS doesn't support MACs other than MD5 and SHA1, or encryption
             # stronger than 3DES, see RHBZ#1220573
             # old OpenSSL doesn't support setting MAC at all
-            if openssl version | grep -q '0[.]9[.].'; then
+            if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
                 options=(${options[@]} -keypbe PBE-SHA1-3DES)
             else
                 options=(${options[@]} -keypbe DES-EDE3-CBC -macalg SHA1)
@@ -2197,19 +2333,19 @@ x509Key() {
 
                 # old OpenSSL versions don't support no encryption on certs
                 # use the weakest suppported by current (2015) FIPS
-                if openssl version | grep -q '0[.]9[.]7'; then
+                if ${x509OPENSSL} version | grep -q '0[.]9[.]7'; then
                     options=(${options[@]} -certpbe PBE-SHA1-3DES)
                 else
                     options=(${options[@]} -certpbe NONE)
                 fi
             else
-                if openssl version | grep -q '0[.]9[.]7'; then
+                if ${x509OPENSSL} version | grep -q '0[.]9[.]7'; then
                     echo "Export without certificate unsupported with this version of OpenSSL, try --with-cert" >&2
                     return 1
                 fi
                 options=("${options[@]}" -nocerts)
             fi
-            openssl pkcs12 ${options[@]}
+            ${x509OPENSSL} pkcs12 ${options[@]}
             if [[ $? -ne 0 ]]; then
                 echo "Key export failed" >&2
                 return 1
@@ -2218,7 +2354,7 @@ x509Key() {
         echo "$kAlias/$x509PKCS12"
     elif [[ $pkcs8 == "true" ]]; then
         if [[ ! -e $kAlias/$x509PKCS8KEY ]]; then
-            openssl pkcs8 -topk8 -in "$kAlias/$x509PKEY" -nocrypt \
+            ${x509OPENSSL} pkcs8 -topk8 -in "$kAlias/$x509PKEY" -nocrypt \
                 -out "$kAlias/$x509PKCS8KEY"
         fi
         echo "$kAlias/$x509PKCS8KEY"
@@ -2326,7 +2462,8 @@ x509Cert() {
 
     if [[ $der == "true" ]]; then
         if [[ ! -e $kAlias/$x509DERCERT ]]; then
-            openssl x509 -in "$kAlias/$x509CERT" -outform DER -out "$kAlias/$x509DERCERT"
+            ${x509OPENSSL} x509 -in "$kAlias/$x509CERT" -outform DER \
+                -out "$kAlias/$x509DERCERT"
             if [ $? -ne 0 ]; then
                 echo "File conversion failed" >&2
                 return 1
@@ -2342,7 +2479,7 @@ x509Cert() {
 
             # Old OpenSSL versions don't support lack of encryption on
             # certificate, use the weakest supported by current (2015) FIPS
-            if openssl version | grep -q '0[.]9[.]7'; then
+            if ${x509OPENSSL} version | grep -q '0[.]9[.]7'; then
                 options=(${options[@]} -certpbe PBE-SHA1-3DES)
             else
                 options=(${options[@]} -certpbe NONE)
@@ -2351,18 +2488,18 @@ x509Cert() {
             # note that NSS doesn't support MACs other that MD5 and SHA1
             # see RHBZ#1220573
             # older version of openssl don't support setting MAC at all
-            if openssl version | grep -q '0[.]9[.].'; then
+            if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
                 :
             else
                 options=(${options[@]} -macalg SHA1)
             fi
 
             local ret
-            openssl pkcs12 "${options[@]}"
+            ${x509OPENSSL} pkcs12 "${options[@]}"
             ret=$?
 
             # old openssl has broken return codes...
-            if ! openssl version | grep -q '0[.]9[.]7'; then
+            if ! ${x509OPENSSL} version | grep -q '0[.]9[.]7'; then
                 if [ $ret -ne 0 ]; then
                     echo "File conversion failed" >&2
                     return 1
@@ -2405,7 +2542,7 @@ Specify the name of the certificate to dump
 
 x509DumpCert(){
 
-    openssl x509 -in $(x509Cert "$1") -noout -text
+    ${x509OPENSSL} x509 -in $(x509Cert "$1") -noout -text
 }
 
 true <<'=cut'
