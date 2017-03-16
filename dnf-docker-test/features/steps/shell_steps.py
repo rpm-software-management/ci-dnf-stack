@@ -25,7 +25,8 @@ def step_i_run_dnf_shell_command(context, command):
         sys.stdout.write(context.pexpect_session.before)
         context.pexpect_session = None
     else:
-        context.pexpect_session.expect('\r\n[^ \r-]*> ')
+        # TODO: remove timeout ASAP
+        context.pexpect_session.expect('\r\n[^ \r-]*> ', timeout=600)
         # in the dnf shell command output we need to replace ^M characters added by pexpect
         context.cmd_result.stdout = context.pexpect_session.before[len(command) + 2:].replace('\r\n', '\n')
         sys.stdout.write("{}{}".format(context.pexpect_session.before, context.pexpect_session.match.group()))
