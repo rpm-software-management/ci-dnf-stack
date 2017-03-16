@@ -59,6 +59,35 @@ def step_the_command_exit_code_is(ctx, values):
             codes.append(int(part.strip()))  # just plain number
     ctx.assertion.assertIn(ctx.cmd_result.returncode, codes)
 
+@then("the command {stream:stdout_stderr} should match")
+def step_the_command_stream_should_match(ctx, stream):
+    """
+    Match multiline output from ``{stream}`` with text on the following lines.\n
+    Trailing spaces and newlines are ignored.
+
+    Example:
+        When I successfully run "dummy command"\n
+        Then the command stdout should match
+             \"\"\"\n
+             Dummy output\n
+             on\n
+             multiple lines!\n
+             \"\"\"
+    """
+    ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
+    text = getattr(ctx.cmd_result, stream)
+    textcore = ""
+    for line in text.split('\n'):
+        stripped = line.rstrip()
+        if stripped:
+            textcore += stripped + '\n'
+    ctxcore = ""
+    for line in ctx.text.split('\n'):
+        stripped = line.rstrip()
+        if stripped:
+            ctxcore += stripped + '\n'
+    ctx.assertion.assertMultiLineEqual(textcore, ctxcore)
+
 @then("the command {stream:stdout_stderr} should match exactly")
 def step_the_command_stream_should_match_exactly(ctx, stream):
     ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")

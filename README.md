@@ -99,24 +99,26 @@ Describing a test
 Here's an example configuration from the first ported test:
 
 ```
-Feature: Richdeps/Behave test-1
- TestA requires (TestB or TestC), TestA recommends TestC
+Feature: Install package with dependency
 
-Scenario: Install TestA from repository "test-1"
- Given I use the repository "test-1"
- When I execute "dnf" command "install -y TestA" with "success"
- Then transaction changes are as follows
-   | State        | Packages      |
-   | installed    | TestA, TestC  |
-   | absent       | TestB         |
+    @setup
+    Scenario: Feature setup
+        Given repository "test" with packages
+           | Package | Tag      | Value |
+           | TestA   | Requires | TestB |
+           | TestB   |          |       |
 
+    Scenario: Install TestA from repository "test" with dependency TestB
+         When I save rpmdb
+          And I enable repository "test"
+          And I successfully run "dnf install -y TestA" with "success"
+         Then rpmdb changes are
+           | State     | Packages     |
+           | installed | TestA, TestB |
 ```
 
-Possible actions in step like  When I execute "dnf" command "install -y TestA" with "success":
-    for "bash" commands: unlimited commands
-    for "dnf" commands: the command without dnf is run with dnf-2 and dnf-3
-
-Possible states: installed, removed, absent, upgraded, downgraded, present. The states present and absent can be used
+Possible states: installed, removed, absent, unchanged, reinstalled, updated, downgraded.
+The states unchanged and absent can be used
 for detailed description of tested step or to ensure, that required conditions before or after tested step were met.
 
 Support
