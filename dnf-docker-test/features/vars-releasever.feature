@@ -42,8 +42,6 @@ Scenario: Test vars taken from installroot
 Scenario: Test vars taken from installroot
   When I create a file "/dockertesting/etc/yum.repos.d/var.repo" with content: "[var]\nname=var\nbaseurl=http://127.0.0.1/repo/$releasever\nenabled=1\ngpgcheck=0"
   Then the path "/dockertesting/etc/yum.repos.d/var.repo" should be "present"
-  When I execute "dnf" command "--installroot=/dockertesting -y install TestE" with "fail"
-  When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "fail"
   When I execute "dnf" command "--installroot=/dockertesting -y --releasever=$(rpm -q --provides $(rpm -q --whatprovides system-release) | grep -Po '(?<=system-release\()\d+(?=\))') install TestE" with "success"
   When I execute "bash" command "rpm -q --root=/dockertesting TestE" with "success"
   Then line from "stdout" should "start" with "TestE-1.0.0-1."
