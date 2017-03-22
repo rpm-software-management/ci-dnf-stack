@@ -79,3 +79,43 @@ def step_the_command_stream_should_match_regexp(ctx, stream, regexp):
 def step_the_command_stream_should_not_match_regexp(ctx, stream, regexp):
     text = getattr(ctx.cmd_result, stream)
     ctx.assertion.assertNotRegexpMatches(text, regexp)
+
+@then('the command {stream:stdout_stderr} section "{section}" should match exactly')
+def step_the_command_stream_section_should_match_exactly(ctx, stream, section):
+    """
+    Compares the content of a particular section from the command output with a given multiline text
+
+    Examples:
+
+    .. code-block:: gherkin
+
+      Feature: DNF output section content matching
+
+        Scenario: Verify the transaction output"
+          Given I use the repository "test-1"
+           When I successfully run "dnf -y install TestA TestB"
+           Then the command stdout section "Installing:" should match exactly
+             \"\"\"
+              TestA            noarch            1.0.0-1             test-1            5.7 k
+              TestB            noarch            1.0.0-1             test-1            5.7 k
+             \"\"\"
+            And the command stdout section "Installed:" should match regexp "TestA\.noarch.*TestB\.noarch"
+    """
+    ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
+    text = getattr(ctx.cmd_result, stream)
+    section_content = command_utils.extract_section_content_from_text(section, text)
+    ctx.assertion.assertRegexpMatches(section_content, ctx.text)
+
+@then('the command {stream:stdout_stderr} section "{section}" should match regexp "{regexp}"')
+def step_the_command_stream_section_should_match_regexp(ctx, stream, section, regexp):
+    """Compares the content of a particular section from the command output with a given regexp"""
+    text = getattr(ctx.cmd_result, stream)
+    section_content = command_utils.extract_section_content_from_text(section, text)
+    ctx.assertion.assertRegexpMatches(section_content, regexp)
+
+@then('the command {stream:stdout_stderr} section "{section}" should not match regexp "{regexp}"')
+def step_the_command_stream_section_should_not_match_regexp(ctx, stream, section, regexp):
+    """Compares the content of a particular section from the command output with a given regexp"""
+    text = getattr(ctx.cmd_result, stream)
+    section_content = command_utils.extract_section_content_from_text(section, text)
+    ctx.assertion.assertNotRegexpMatches(section_content, regexp)
