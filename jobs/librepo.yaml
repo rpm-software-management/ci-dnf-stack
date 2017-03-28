@@ -1,0 +1,19 @@
+- scm:
+    name: librepo-scm
+    scm:
+      - git:
+          url: "https://github.com/rpm-software-management/librepo.git"
+          branches:
+            - origin/master
+            - origin/auto
+          basedir: librepo
+          skip-tag: true
+
+- project:
+    name: librepo
+    github-token: !include-raw: github-token.txt
+    ghprb-auth-id: !include-raw: ghprb-auth-id.txt
+    github_repo: rpm-software-management/librepo
+
+    jobs:
+      - github-testers-jobs
