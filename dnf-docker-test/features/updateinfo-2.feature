@@ -113,6 +113,8 @@ Feature: Test for updateinfo
        When I successfully run "dnf updateinfo --list"
        Then the command stdout should match regexp "RHSA-2999:001.*Moderate/Sec..*TestB-2-1"
 
+## severity (yum compatibility subcmd) is currently not implemented
+## uncomment the following scenario when/if it is implemented in dnf
 #  Scenario: updateinfo list severity Moderate
 #       When I successfully run "dnf updateinfo list severity Moderate"
 #       Then the command stdout should match regexp "RHSA-2999:001.*Moderate/Sec..*TestB-2-1"
