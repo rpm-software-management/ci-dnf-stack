@@ -1,4 +1,3 @@
-@xfail
 Feature: Reason of obsoleted package
   Replaced package by "Obsoletes" must not be marked for autoremoval.
 
