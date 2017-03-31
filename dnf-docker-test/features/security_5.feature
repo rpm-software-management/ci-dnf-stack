@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for upgrade and upgrade-minimal with cve, cves, bugfix, advisory, advisories, sec-severity, secseverity and security options
  repo base: TestA-1 TestB-1
  repo ext1: errata bugfix: TestA-2

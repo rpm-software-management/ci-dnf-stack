@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for updateinfo
  repo base: TestA-1 TestB-1
  repo ext1: errata security Moderate: TestB-2
