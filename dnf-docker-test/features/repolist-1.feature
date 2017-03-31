@@ -1,4 +1,3 @@
-@xfail
 Feature: Handling of --disablerepo and --enablerepo
   strict=false --disablerepo -> warning
   strict=false --enablerepo  -> warning
@@ -18,6 +17,7 @@ Feature: Handling of --disablerepo and --enablerepo
        Then the command stderr should match exactly
             """
             No repository match: *
+            No repositories available
 
             """
 
@@ -25,6 +25,7 @@ Feature: Handling of --disablerepo and --enablerepo
        Then the command stderr should match exactly
             """
             No repository match: *
+            No repositories available
 
             """
 
@@ -32,5 +33,6 @@ Feature: Handling of --disablerepo and --enablerepo
        Then the command stderr should match exactly
             """
             No repository match: *
+            No repositories available
 
             """
