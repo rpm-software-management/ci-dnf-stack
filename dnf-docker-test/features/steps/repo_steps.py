@@ -87,6 +87,30 @@ Requires:       {{ req }}
 {%- endfor %}
 {%- endif %}
 
+{%- if requires_pretrans is defined %}
+{% for req in requires_pretrans %}
+Requires(pretrans):  {{ req }}
+{%- endfor %}
+{%- endif %}
+
+{%- if requires_pre is defined %}
+{% for req in requires_pre %}
+Requires(pre):  {{ req }}
+{%- endfor %}
+{%- endif %}
+
+{%- if requires_post is defined %}
+{% for req in requires_post %}
+Requires(post):  {{ req }}
+{%- endfor %}
+{%- endif %}
+
+{%- if requires_preun is defined %}
+{% for req in requires_preun %}
+Requires(preun):  {{ req }}
+{%- endfor %}
+{%- endif %}
+
 {%- if obsoletes is defined %}
 {% for obs in obsoletes %}
 Obsoletes:      {{ obs }}
@@ -105,6 +129,48 @@ Provides:       {{ prv }}
 {%- endfor %}
 {%- endif %}
 
+{%- if _pretrans is defined %}
+%pretrans
+{% for line in _pretrans %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
+{%- if _pre is defined %}
+%pre
+{% for line in _pre %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
+{%- if _post is defined %}
+%post
+{% for line in _post %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
+{%- if _preun is defined %}
+%preun
+{% for line in _preun %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
+{%- if _postun is defined %}
+%postun
+{% for line in _postun %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
+{%- if _posttrans is defined %}
+%posttrans
+{% for line in _posttrans %}
+{{ line }}
+{%- endfor %}
+{%- endif %}
+
 %description
 %{summary}.
 
@@ -112,7 +178,7 @@ Provides:       {{ prv }}
 """
 REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 HEADINGS_REPO = ["Package", "Tag", "Value"]
-PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides", "Conflicts"]
+PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides", "Conflicts", "%pretrans", "%pre", "%post", "%preun", "%postun", "%posttrans", "Requires(pretrans)", "Requires(pre)", "Requires(post)", "Requires(preun)"]
 PKG_TAGS = ["Summary", "Version", "Release", "License", "Arch"] + PKG_TAGS_REPEATING
 
 JINJA_ENV = jinja2.Environment(undefined=jinja2.StrictUndefined)
@@ -186,20 +252,30 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
 
     *Tag* is tag in RPM. Supported ones are:
 
-    ============= ===============
-         Tag       Default value 
-    ============= ===============
-    Summary       Empty          
-    Version       1              
-    Release       1              
-    Arch          x86_64         
-    License       Public Domain  
-    BuildRequires []             
-    Requires      []             
-    Obsoletes     []             
-    Provides      []             
-    Conflicts     []             
-    ============= ===============
+    ================== ===============
+         Tag            Default value 
+    ================== ===============
+    Summary            Empty          
+    Version            1              
+    Release            1              
+    Arch               x86_64         
+    License            Public Domain  
+    BuildRequires      []             
+    Requires           []             
+    Requires(pretrans) []             
+    Requires(pre)      []             
+    Requires(post)     []             
+    Requires(preun)    []             
+    Obsoletes          []             
+    Provides           []             
+    Conflicts          []             
+    %pretrans          Empty          
+    %pre               Empty          
+    %post              Empty          
+    %preun             Empty          
+    %postun            Empty          
+    %posttrans         Empty          
+    ================== ===============
 
     All packages are built during step execution.
 
@@ -210,6 +286,11 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
 
         If there is a space character in the package name only the preceding
         part is used.
+
+    .. note::
+
+        Scriptlets such as *%pre* can be listed multiple time so that the
+        entering of a multi-line script is more comfortable.
 
     Examples:
 
@@ -231,6 +312,12 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
                 | Package | Tag     | Value |
                 | foo     | Version |  2.0  |
                 | foo v3  | Version |  3.0  |
+
+         Scenario: Creating a package with %pre scriptlet failing
+             Given http repository "more_updates" with packages
+                | Package | Tag     | Value   |
+                | foo     | Version |  4.0    |
+                |         | %pre    |  exit 1 |
     """
     packages = table_utils.parse_skv_table(ctx, HEADINGS_REPO,
                                            PKG_TAGS, PKG_TAGS_REPEATING)
@@ -252,7 +339,12 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
     template = JINJA_ENV.from_string(PKG_TMPL)
     for name, settings in packages.items():
         name = name.split()[0]  # cut-off the pkg name _suffix_ to allow defining multiple package versions
-        settings = {k.lower(): v for k, v in settings.items()}
+        # before processing the template
+        #   lower all characters
+        #   replace '%' in Tag name with '_'
+        #   replace '(' in Tag name with '_'
+        #   delete all ')' in Tag
+        settings = {k.lower().replace('%', '_').replace('(', '_').replace(')', ''): v for k, v in settings.items()}
         ctx.text = template.render(name=name, **settings)
         fname = "{!s}/{!s}.spec".format(tmpdir, name)
         step_a_file_filepath_with(ctx, fname)
