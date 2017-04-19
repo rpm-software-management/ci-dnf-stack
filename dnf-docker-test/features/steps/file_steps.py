@@ -84,3 +84,55 @@ def step_an_ini_file_filepath_with(ctx, filepath):
             conf[section] = settings
 
     file_utils.create_file_with_contents(filepath, conf)
+
+@given('an INI file "{filepath}" modified with')
+def step_an_ini_file_filepath_modified_with(ctx, filepath):
+    """
+    Similar to
+    :ref:`Given an INI file "{filepath}" with`, but accepts table with
+    modifications that should be made in the respective INI file.
+
+    Requires table with following headers:
+
+    ========= ===== =======
+     Section   Key   Value 
+    ========= ===== =======
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: Modifying an INI file
+         Scenario: Editing /etc/dnf/dnf.conf
+            Given an INI file "/etc/dnf/dnf.conf" modified with
+               | Section | Key        | Value |
+               | main    | debuglevel | 1     |
+               |         | -gpgcheck  |       |
+
+    .. note::
+
+       Section or Key prefixed with '-' results in the removal
+       of the respective record.
+    """
+    updates = table_utils.parse_skv_table(ctx, HEADINGS_INI)
+    sections = updates.keys()
+    sections.sort()  # sort so we have removal first
+    conf = configparser.ConfigParser()
+    conf.read(filepath)
+    for section in sections:
+        settings = updates[section]
+        if section.startswith("-"):
+            section = section[1:]
+            ctx.assertion.assertTrue(conf.remove_section(section), "No such section '%s' in '%s'" % (section, filepath))
+        else:
+            if not conf.has_section(section):
+                conf.add_section(section)
+            keys = settings.keys()
+            keys.sort()
+            for key in keys:
+                if key.startswith("-"):
+                    key = key[1:]
+                    ctx.assertion.assertTrue(conf.remove_option(section, key), "No such key '%s' in section '%s' in '%s'" % (key, section, filepath))
+                else:
+                    conf.set(section, key, settings[key])
+    file_utils.create_file_with_contents(filepath, conf)

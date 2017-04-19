@@ -14,6 +14,7 @@ import jinja2
 import parse
 import six
 from whichcraft import which
+from six.moves import configparser
 
 from command_steps import step_i_successfully_run_command
 from file_steps import HEADINGS_INI
@@ -600,3 +601,49 @@ def given_package_groups_defined_in_repository(ctx, repository):
     cmd = "{!s} -g comps.xml --update {!s}".format(createrepo, repodir)
     step_i_successfully_run_command(ctx, cmd)
     file_utils.set_dir_content_ownership(ctx, repodir)   # restore file ownership
+
+@given('a repo file of repository "{repository}" modified with')
+def step_a_repo_file_of_repository_modified_with(ctx, repository):
+    """
+    Similar to
+    :ref:`Given an INI file "{filepath}" updated with`, but with
+    scope limited to a particular repository identified by name.
+
+    Requires table with following headers:
+
+    ===== =======
+     Key   Value 
+    ===== =======
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: Modifying a repo file
+         Scenario: Enabling a gpgcheck
+            Given repository "TestRepoA" with packages
+               | Package | Tag       | Value |
+               |  TestA  |           |       |
+              And a repo file of repository "TestRepoA" modified with
+               | Key      | Value |
+               | gpgcheck | True  |
+
+    .. note::
+
+       Key prefixed with '-' results in the removal of the respective
+       record.
+    """
+    HEADINGS_REPO = ["Key", "Value"]
+    updates = table_utils.parse_kv_table(ctx, HEADINGS_REPO)
+    keys = updates.keys()
+    keys.sort()
+    repofile = repo_utils.REPO_TMPL.format(repository)
+    conf = configparser.ConfigParser()
+    conf.read(repofile)
+    for key in keys:
+        if key.startswith("-"):
+            key = key[1:]
+            ctx.assertion.assertTrue(conf.remove_option(repository, key), "No such key '%s' in repo file '%s'" % (key, repofile))
+        else:
+            conf.set(repository, key, updates[key])
+    file_utils.create_file_with_contents(repofile, conf)
