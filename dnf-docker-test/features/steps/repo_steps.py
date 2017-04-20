@@ -14,13 +14,13 @@ import jinja2
 import parse
 import six
 from whichcraft import which
-from six.moves import configparser
 
 from command_steps import step_i_successfully_run_command
 from file_steps import HEADINGS_INI
 from file_steps import conf2table
 from file_steps import step_a_file_filepath_with
 from file_steps import step_an_ini_file_filepath_with
+from file_steps import step_an_ini_file_filepath_modified_with
 import file_utils
 import table_utils
 import repo_utils
@@ -633,17 +633,7 @@ def step_a_repo_file_of_repository_modified_with(ctx, repository):
        Key prefixed with '-' results in the removal of the respective
        record.
     """
-    HEADINGS_REPO = ["Key", "Value"]
-    updates = table_utils.parse_kv_table(ctx, HEADINGS_REPO)
-    keys = updates.keys()
-    keys.sort()
+    skv_table = table_utils.convert_table_kv_to_skv(ctx.table, HEADINGS_INI, [repository])
+    ctx.table = skv_table
     repofile = repo_utils.REPO_TMPL.format(repository)
-    conf = configparser.ConfigParser()
-    conf.read(repofile)
-    for key in keys:
-        if key.startswith("-"):
-            key = key[1:]
-            ctx.assertion.assertTrue(conf.remove_option(repository, key), "No such key '%s' in repo file '%s'" % (key, repofile))
-        else:
-            conf.set(repository, key, updates[key])
-    file_utils.create_file_with_contents(repofile, conf)
+    step_an_ini_file_filepath_modified_with(ctx, repofile)
