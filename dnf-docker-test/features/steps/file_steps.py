@@ -128,7 +128,6 @@ def step_an_ini_file_filepath_modified_with(ctx, filepath):
             if not conf.has_section(section):
                 conf.add_section(section)
             keys = settings.keys()
-            keys.sort()
             for key in keys:
                 if key.startswith("-"):
                     key = key[1:]
