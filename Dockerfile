@@ -52,16 +52,17 @@ RUN set -x && \
     /usr/local/bin/x509certgen x509KeyGen ca2 && \
     /usr/local/bin/x509certgen x509KeyGen server2 && \
     /usr/local/bin/x509certgen x509KeyGen client2 && \
-    /usr/local/bin/x509certgen x509SelfSign ca && \
-    /usr/local/bin/x509certgen x509SelfSign ca2 && \
-    /usr/local/bin/x509certgen x509CertSign --CA ca server && \
-    /usr/local/bin/x509certgen x509CertSign --CA ca client && \
-    /usr/local/bin/x509certgen x509CertSign --CA ca2 server2 && \
-    /usr/local/bin/x509certgen x509CertSign --CA ca2 client2 && \
+    /usr/local/bin/x509certgen x509SelfSign -t ca ca && \
+    /usr/local/bin/x509certgen x509SelfSign -t ca ca2 && \
+    /usr/local/bin/x509certgen x509CertSign -t webserver --CA ca server && \
+    /usr/local/bin/x509certgen x509CertSign -t webclient --CA ca client && \
+    /usr/local/bin/x509certgen x509CertSign -t webserver --CA ca2 server2 && \
+    /usr/local/bin/x509certgen x509CertSign -t webclient --CA ca2 client2 && \
     # configure httpd
     sed -i "s/#ServerName .*/ServerName ${HOSTNAME}:80/" /etc/httpd/conf/httpd.conf && \
     sed -i 's:^SSLCertificateFile .*:SSLCertificateFile /etc/pki/tls/certs/testcerts/server/cert.pem:' /etc/httpd/conf.d/ssl.conf && \
     sed -i 's:^SSLCertificateKeyFile .*:SSLCertificateKeyFile /etc/pki/tls/certs/testcerts/server/key.pem:' /etc/httpd/conf.d/ssl.conf && \
+    sed -i 's:.*SSLCACertificateFile .*:SSLCACertificateFile /etc/pki/tls/certs/testcerts/ca/cert.pem:' /etc/httpd/conf.d/ssl.conf && \
     dnf -y clean all && \
     mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ && \
     mkdir /repo && \
