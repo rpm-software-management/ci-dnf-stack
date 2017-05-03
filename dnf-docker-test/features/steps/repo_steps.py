@@ -24,6 +24,7 @@ from file_steps import step_an_ini_file_filepath_modified_with
 import file_utils
 import table_utils
 import repo_utils
+from gpg_steps import GPGKEY_FILEPATH_TMPL
 
 COMPS_PREFIX = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
@@ -405,6 +406,47 @@ def given_repository_with_packages_signed_by(ctx, enabled, rtype, repository, gp
                | TestA   |     |       |
     """
     given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=gpgkey)
+
+@given('repository "{repository}" metadata signed by "{gpgkey}"')
+def given_repository_metadata_signed_by(ctx, repository, gpgkey):
+    """
+    Signs repodata.xml for a given repository using the given GPG key and
+    updates the repo file with gpgkey URL.
+    Should be used after the repo is created or updated.
+
+    .. note::
+
+        The default dnf settings is *repo_gpgcheck = False*.
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: Repodata signatures
+
+         Scenario: Setup repository with signed metadata
+           Given GPG key "JamesBond"
+             And GPG key "JamesBond" imported in rpm database
+             And repository "TestRepo" with packages signed by "JamesBond"
+               | Package | Tag | Value |
+               | TestA   |     |       |
+             And repository "TestRepo" metadata signed by "JamesBond"
+             And a repo file of repository "TestRepo" modified with
+               | Key           | Value |
+               | repo_gpgcheck | True  |
+    """
+    # sign the repomd.xml file
+    repodir = repo_utils.get_repo_dir(repository)
+    gpg = which("gpg2")
+    cmd = "{!s} --detach-sig --armor --default-key '{!s}' {!s}/repodata/repomd.xml".format(gpg, gpgkey, repodir)
+    step_i_successfully_run_command(ctx, cmd)
+    # update the repo file with path to the gpg key
+    pubkey = GPGKEY_FILEPATH_TMPL.format(gpgkey, "pubkey")
+    keyurl = "file://{!s}".format(pubkey)
+    repofile = REPO_TMPL.format(repository)
+    conf = file_utils.read_ini_file(repofile)
+    conf.set(repository, "gpgkey", keyurl)
+    file_utils.create_file_with_contents(repofile, conf)
 
 @given('empty repository "{repository}"')
 def given_empty_repository(ctx, repository):
