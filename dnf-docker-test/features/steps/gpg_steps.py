@@ -26,6 +26,27 @@ GPGKEY_FILEPATH_TMPL = "/root/{!s}.{!s}"
 
 JINJA_ENV = jinja2.Environment(undefined=jinja2.StrictUndefined)
 
+@given('GPG key "{signed_key}" signed by "{signing_key}"')
+def step_gpg_key_signed_by(ctx, signed_key, signing_key):
+    """
+    Signs one GPG with another GPG key producing a detached signature file.
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: GPG key signing
+
+         Scenario: Sign one GPG with another
+           Given GPG key "James Bond"
+             And GPG key "M"
+             And GPG key "James Bond" signed by "M"
+    """
+    signed_key_path = GPGKEY_FILEPATH_TMPL.format(signed_key, "pubkey")
+    gpgbin = which("gpg2")
+    cmd = "{!s} --detach-sig --armor --default-key '{!s}' '{!s}'".format(gpgbin, signing_key, signed_key_path)
+    step_i_successfully_run_command(ctx, cmd)
+
 @given('GPG key "{name_real}"')
 def step_gpg_key(ctx, name_real):
     """
