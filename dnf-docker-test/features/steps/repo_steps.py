@@ -386,7 +386,7 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
         ctx.table.add_row(["",     "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
     step_an_ini_file_filepath_with(ctx, repofile)
 
-@given('{rtype:repo_type}repository "{repository}" with packages signed by "{gpgkey}"')
+@given('{enabled:enabled_status}{rtype:repo_type}repository "{repository}" with packages signed by "{gpgkey}"')
 def given_repository_with_packages_signed_by(ctx, enabled, rtype, repository, gpgkey):
     """
     Builds a repository with packages signed by the given GPG key.
