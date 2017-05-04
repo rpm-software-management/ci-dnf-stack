@@ -14,8 +14,12 @@ GPGKEY_CONF_TMPL = """
 %transient-key
 Key-Type: {{ key_type|default("RSA") }}
 Key-Length: {{ key_length|default("2048") }}
-Subkey-Type: {{ subkey_type|default("RSA") }}
-Subkey-Length: {{ subkey_length|default("2048") }}
+{%- if subkey_type is defined %}
+Subkey-Type: {{ subkey_type }}
+{%- endif %}
+{%- if subkey_length is defined %}
+Subkey-Length: {{ subkey_length }}
+{%- endif %}
 Name-Real: {{ name_real|default("DNFtest") }}
 Name-Comment: {{ name_comment|default("No Comment") }}
 Name-Email: {{ name_email|default("dnf@noreply") }}
@@ -67,8 +71,8 @@ def step_gpg_key(ctx, name_real):
     ============= ===============
     Key-Type      RSA            
     Key-Length    2048           
-    Subkey-Type   RSA            
-    Subkey-Length 2048           
+    Subkey-Type   <not present>  
+    Subkey-Length <not present>  
     Name-Comment  No Comment     
     Name-Email    dnf@noreply    
     Expire-Date   0              
