@@ -113,6 +113,30 @@ Requires(preun):  {{ req }}
 {%- endfor %}
 {%- endif %}
 
+{%- if recommends is defined %}
+{% for rec in recommends %}
+Recommends:     {{ rec }}
+{%- endfor %}
+{%- endif %}
+
+{%- if suggests is defined %}
+{% for sug in suggests %}
+Suggests:       {{ sug }}
+{%- endfor %}
+{%- endif %}
+
+{%- if supplements is defined %}
+{% for sup in supplements %}
+Supplements:    {{ sup }}
+{%- endfor %}
+{%- endif %}
+
+{%- if enhances is defined %}
+{% for enh in enhances %}
+Enhances:       {{ enh }}
+{%- endfor %}
+{%- endif %}
+
 {%- if obsoletes is defined %}
 {% for obs in obsoletes %}
 Obsoletes:      {{ obs }}
@@ -180,7 +204,7 @@ Provides:       {{ prv }}
 """
 REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 HEADINGS_REPO = ["Package", "Tag", "Value"]
-PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Obsoletes", "Provides", "Conflicts", "%pretrans", "%pre", "%post", "%preun", "%postun", "%posttrans", "Requires(pretrans)", "Requires(pre)", "Requires(post)", "Requires(preun)"]
+PKG_TAGS_REPEATING = ["BuildRequires", "Requires", "Recommends", "Suggests", "Supplements", "Enhances", "Obsoletes", "Provides", "Conflicts", "%pretrans", "%pre", "%post", "%preun", "%postun", "%posttrans", "Requires(pretrans)", "Requires(pre)", "Requires(post)", "Requires(preun)"]
 PKG_TAGS = ["Summary", "Version", "Release", "License", "Arch"] + PKG_TAGS_REPEATING
 
 JINJA_ENV = jinja2.Environment(undefined=jinja2.StrictUndefined)
@@ -264,6 +288,10 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
     License            Public Domain  
     BuildRequires      []             
     Requires           []             
+    Recommends         []             
+    Suggests           []             
+    Supplements        []             
+    Enhances           []             
     Requires(pretrans) []             
     Requires(pre)      []             
     Requires(post)     []             
