@@ -17,11 +17,7 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove TestA --setopt=protected_packages=TestA"
        Then the command should fail
-        And the command stderr should match exactly
-            """
-            Error: The operation would result in removing the following protected packages: TestA
-
-            """
+        And the command stderr should match regexp "Problem: The operation would result in removing the following protected packages: TestA"
         And rpmdb does not change
 
   Scenario: Removal of indirectly protected package
@@ -40,11 +36,7 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove dnf"
        Then the command should fail
-        And the command stderr should match exactly
-            """
-            Error: The operation would result in removing the following protected packages: dnf
-
-            """
+        And the command stderr should match regexp "Problem: The operation would result in removing the following protected packages: dnf"
         And rpmdb does not change
              
   Scenario: Removal of protected package with conffile
@@ -55,9 +47,5 @@ Feature: Protected packages
        When I save rpmdb
         And I run "dnf -y remove TestA"
        Then the command should fail
-        And the command stderr should match exactly
-            """
-            Error: The operation would result in removing the following protected packages: TestA
-
-            """
+        And the command stderr should match regexp "Problem: The operation would result in removing the following protected packages: TestA"
         And rpmdb does not change
