@@ -19,7 +19,8 @@ Feature: Protected packages
        Then the command should fail
         And the command stderr should match exactly
             """
-            Error: The operation would result in removing the following protected packages: TestA
+            Error: 
+             Problem: The operation would result in removing the following protected packages: TestA
 
             """
         And rpmdb does not change
@@ -42,7 +43,8 @@ Feature: Protected packages
        Then the command should fail
         And the command stderr should match exactly
             """
-            Error: The operation would result in removing the following protected packages: dnf
+            Error: 
+             Problem: The operation would result in removing the following protected packages: dnf
 
             """
         And rpmdb does not change
@@ -57,7 +59,8 @@ Feature: Protected packages
        Then the command should fail
         And the command stderr should match exactly
             """
-            Error: The operation would result in removing the following protected packages: TestA
+            Error: 
+             Problem: The operation would result in removing the following protected packages: TestA
 
             """
         And rpmdb does not change
