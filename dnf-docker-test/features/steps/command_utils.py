@@ -88,7 +88,7 @@ def extract_section_content_from_text(section_header, text):
             'Installing:', 'Upgrading:', 'Removing:', 'Downgrading:', 'Installing dependencies:',
             'Removing unused dependencies:', # dnf install/remove... transaction listing
             'Installed:', 'Upgraded:', 'Removed:', 'Downgraded:', # dnf install/remove/... result
-            'Installed Packages', 'Available Packages', # dnf list
+            'Installed Packages', 'Available Packages', 'Recently Added Packages' # dnf list
             ]
     parsed = ''
     copy = False
