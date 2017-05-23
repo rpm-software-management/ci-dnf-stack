@@ -81,8 +81,12 @@ Feature: Test for successful and failing rpm scriptlets
         And the command stderr should match regexp "Non-fatal POSTTRANS scriptlet failure in rpm package Test-posttrans-fail"
 
   Scenario: Remove a pkg with a successful %preun scriptlet
-       When I run "dnf -y install Test-preun-ok"
-        And I save rpmdb
+       When I save rpmdb
+        And I run "dnf -y install Test-preun-ok"
+       Then rpmdb changes are
+         | State     | Packages         |
+         | installed | Test-preun-ok    |
+       When I save rpmdb
         And I run "dnf -y remove Test-preun-ok"
        Then rpmdb changes are
          | State     | Packages         |
@@ -90,8 +94,12 @@ Feature: Test for successful and failing rpm scriptlets
         And the command stdout should match regexp "stdout-preun"
 
   Scenario: Remove a pkg with a successful %postun scriptlet
-       When I run "dnf -y install Test-postun-ok"
-        And I save rpmdb
+       When I save rpmdb
+        And I run "dnf -y install Test-postun-ok"
+       Then rpmdb changes are
+         | State     | Packages          |
+         | installed | Test-postun-ok    |
+       When I save rpmdb
         And I run "dnf -y remove Test-postun-ok"
        Then rpmdb changes are
          | State     | Packages          |
@@ -99,7 +107,11 @@ Feature: Test for successful and failing rpm scriptlets
         And the command stdout should match regexp "stdout-postun"
 
   Scenario: Remove a pkg with a failing %preun scriptlet
-       When I run "dnf -y install Test-preun-fail"
+       When I save rpmdb
+        And I run "dnf -y install Test-preun-fail"
+       Then rpmdb changes are
+         | State     | Packages        |
+         | installed | Test-preun-fail |
        When I save rpmdb
         And I run "dnf -y remove Test-preun-fail"
        Then rpmdb does not change
@@ -112,10 +124,14 @@ Feature: Test for successful and failing rpm scriptlets
          | removed   | Test-preun-fail |
 
   Scenario: Remove a pkg with a failing %postun scriptlet
-       When I run "dnf -y install Test-postun-fail"
+       When I save rpmdb
+        And I run "dnf -y install Test-postun-fail"
+       Then rpmdb changes are
+         | State     | Packages         |
+         | installed | Test-postun-fail |
        When I save rpmdb
         And I run "dnf -y remove Test-postun-fail"
        Then rpmdb changes are
-         | State     | Packages       |
+         | State     | Packages         |
          | removed   | Test-postun-fail |
         And the command stderr should match regexp "Non-fatal POSTUN scriptlet failure in rpm package Test-postun-fail"
