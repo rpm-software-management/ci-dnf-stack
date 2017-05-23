@@ -22,3 +22,6 @@ Scenario: Enabling and disabling a repository in dnf shell
        And I run dnf shell command "repolist"
       Then the command stdout should match regexp "TestRepoA"
        And the command stdout should not match regexp "TestRepoB"
+
+      When I run dnf shell command "quit"
+      Then the command stdout should match regexp "Leaving Shell"
