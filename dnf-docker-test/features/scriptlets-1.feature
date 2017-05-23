@@ -53,16 +53,14 @@ Feature: Test for successful and failing rpm scriptlets
   Scenario: Install a pkg with a failing %pre scriptlet
        When I save rpmdb
         And I run "dnf -y install Test-pre-fail"
-       Then rpmdb changes are
-         | State     | Packages       |
+       Then rpmdb does not change
         And the command stderr should match regexp "Error in PREIN scriptlet in rpm package Test-pre-fail"
         And the command stderr should match regexp "Error: Transaction failed"
 
   Scenario: Install a pkg with a failing %pretrans scriptlet
        When I save rpmdb
         And I run "dnf -y install Test-pretrans-fail"
-       Then rpmdb changes are
-         | State     | Packages       |
+       Then rpmdb does not change
         And the command stderr should match regexp "Error in PRETRANS scriptlet in rpm package Test-pretrans-fail"
         And the command stderr should match regexp "Error: Transaction failed"
 
@@ -104,8 +102,7 @@ Feature: Test for successful and failing rpm scriptlets
        When I run "dnf -y install Test-preun-fail"
        When I save rpmdb
         And I run "dnf -y remove Test-preun-fail"
-       Then rpmdb changes are
-         | State     | Packages       |
+       Then rpmdb does not change
         And the command stderr should match regexp "Error in PREUN scriptlet in rpm package Test-preun-fail"
         And the command stderr should match regexp "Error: Transaction failed"
        When I save rpmdb
