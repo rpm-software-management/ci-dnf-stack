@@ -14,40 +14,16 @@ Feature: Repolist with enabled/disabled repositories
 
   Scenario: Repolist without arguments
        When I successfully run "dnf repolist"
-       Then the command stdout should match exactly
-            """
-            repo id                               repo name                           status
-            TestB                                 TestB                               0
-            TestC                                 TestC                               3
-
-            """
+       Then the command stdout should match regexp "repo id +repo name +status\s+TestB +TestB +0\s+TestC +TestC +3"
 
   Scenario: Repolist with "enabled"
        When I successfully run "dnf repolist enabled"
-       Then the command stdout should match exactly
-            """
-            repo id                               repo name                           status
-            TestB                                 TestB                               0
-            TestC                                 TestC                               3
-
-            """
+       Then the command stdout should match regexp "repo id +repo name +status\s+TestB +TestB +0\s+TestC +TestC +3"
 
   Scenario: Repolist with "disabled"
        When I successfully run "dnf repolist disabled"
-       Then the command stdout should match exactly
-            """
-            repo id                                  repo name                              
-            TestA                                    TestA                                  
-
-            """
+       Then the command stdout should match regexp "repo id +repo name\s+TestA +TestA"
 
   Scenario: Repolist with "all"
        When I successfully run "dnf repolist all"
-       Then the command stdout should match exactly
-            """
-            repo id                             repo name                         status
-            TestA                               TestA                             disabled
-            TestB                               TestB                             enabled: 0
-            TestC                               TestC                             enabled: 3
-
-            """
+       Then the command stdout should match regexp "repo id +repo name +status\s+TestA +TestA +disabled\s+TestB +TestB +enabled: 0\s+TestC +TestC +enabled: 3"
