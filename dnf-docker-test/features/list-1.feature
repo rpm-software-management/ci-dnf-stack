@@ -106,18 +106,18 @@ Feature: Test for dnf list (including all documented suboptions and yum compatib
 
   Scenario: dnf list upgrades
        When I successfully run "dnf list upgrades"
-       Then the command stdout section "Upgraded Packages" should match regexp "TestA.*2-1"
-        And the command stdout section "Upgraded Packages" should match regexp "TestB.*2-1"
+       Then the command stdout section "Available Upgrades" should match regexp "TestA.*2-1"
+        And the command stdout section "Available Upgrades" should match regexp "TestB.*2-1"
 
   Scenario: dnf list --upgrades
        When I successfully run "dnf list --upgrades"
-       Then the command stdout section "Upgraded Packages" should match regexp "TestA.*2-1"
-        And the command stdout section "Upgraded Packages" should match regexp "TestB.*2-1"
+       Then the command stdout section "Available Upgrades" should match regexp "TestA.*2-1"
+        And the command stdout section "Available Upgrades" should match regexp "TestB.*2-1"
 
   Scenario: dnf list updates (yum compatibility)
        When I successfully run "dnf list updates"
-       Then the command stdout section "Upgraded Packages" should match regexp "TestA.*2-1"
-        And the command stdout section "Upgraded Packages" should match regexp "TestB.*2-1"
+       Then the command stdout section "Available Upgrades" should match regexp "TestA.*2-1"
+        And the command stdout section "Available Upgrades" should match regexp "TestB.*2-1"
 
   Scenario: dnf list upgrades XTest (when XTest is not installed)
        When I run "dnf list upgrades XTest"
