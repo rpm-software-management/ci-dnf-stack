@@ -57,8 +57,6 @@ Feature: Test for check-update, upgrade, update, upgrade-minimal and update-mini
         And I enable repository "enh-err"
         And I run "dnf --security check-update"
        Then the command exit code is 100
-        And the command stdout should match regexp "TestA.*2-1.*sec-err-1"
-        And the command stdout should match regexp "TestA.*3-1.*sec-err-2"
         And the command stdout should match regexp "TestA.*4-1.*enh-err"
         And the command stdout should not match regexp "TestB"
 
