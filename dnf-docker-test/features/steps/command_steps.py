@@ -158,8 +158,8 @@ def step_history_contains(ctx, cmd, act, alt, range=""):
     step_i_run_command(ctx, 'dnf history ' + range)
     text = getattr(ctx.cmd_result, 'stdout')
     lines = text.split('\n')
-    assert len(lines) > 3, 'No output'
-    del lines[:3]
+    assert len(lines) > 2, 'No output'
+    del lines[:2]
     match = False
     for line in lines:
         columns = line.split('|')
@@ -224,7 +224,6 @@ def step_history_info(ctx, spec=""):
 
         if brpmdb and erpmdb:
             assert len(brpmdb) == len(erpmdb) == 3, 'Unexpected rpmdb version format'
-            assert brpmdb[2] != erpmdb[2], 'No change in rpmdb version'
             erpmdb = None
 
         if 'Return-Code' in line and g_retcode:
