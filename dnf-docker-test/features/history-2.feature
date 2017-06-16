@@ -54,7 +54,7 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
            | Return-Code  | Success          |
            | Erase        | TestA, TestB     |
 
-    Scenario: History info in range
+    Scenario: History info in range - transaction merging
          When I save rpmdb
           And I successfully run "dnf install -y TestA"
          Then history info should match
@@ -71,13 +71,22 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
            | Return-Code  | Success          |
            | Upgrade      | TestA, TestB     |
            | Upgraded     | TestA, TestB     |
+
+          And history info "last-1..last" should match
+           | Key          | Value            |
+           | Return-Code  | Success          |
+           | Install      | TestA            |
           And history info "last-2..last" should match
            | Key          | Value            |
            | Return-Code  | Success          |
-           | Upgrade      | TestA, TestB     |
-           | Upgraded     | TestA, TestB     |
-           | Install      | TestA, TestB     |
-           | Erase        | TestA, TestB     |
+           | Upgrade      | TestA            |
+           | Upgraded     | TestA            |
+          And history info "last-2..last-1" should match
+           | Key          | Value            |
+           | Return-Code  | Success          |
+           | Reinstall      | TestA            |
+
+    Scenario: History info of package
           And history info "TestA" should match
            | Key          | Value                      |
            | Return-Code  | Success                    |
