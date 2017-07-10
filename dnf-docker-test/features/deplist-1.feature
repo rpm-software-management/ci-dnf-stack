@@ -2,6 +2,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Feature Setup
       Given I use the repository "upgrade_1"
+      When I successfully run "dnf makecache"
 
   Scenario: Deplist as command
        When I successfully run "yum deplist TestA"

@@ -7,6 +7,7 @@ Feature: Handling of --disablerepo and --enablerepo
   @setup
   Scenario: Feature Setup
       Given empty repository "test-1"
+      When I successfully run "dnf --enablerepo=test* makecache"
 
   Scenario: Handling of --disablerepo and --enablerepo with one repo
        When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=true"
