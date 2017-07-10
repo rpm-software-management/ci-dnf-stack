@@ -6,7 +6,9 @@ Feature: Test for main repoquery functionality
   Scenario: Feature Setup
       Given repository "base" with packages
         | Package | Tag       | Value |
-        | TestA   | Requires  | TestB |
+        | TestA   | Version   | 1     |
+        |         | Release   | 1     |
+        |         | Requires  | TestB |
         |         | Provides  | TestC |
         |         | Conflicts | TestD |
         |         | Obsoletes | TestE |
@@ -15,46 +17,79 @@ Feature: Test for main repoquery functionality
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --requires TestA"
-       Then the command stdout should match regexp "TestB"
+       Then the command stdout should match exactly
+            """
+            TestB
+
+            """
 
   Scenario: repoquery --provides
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --provides TestA"
-       Then the command stdout should match regexp "TestC"
+       Then the command stdout should match exactly
+            """
+            TestA = 1-1
+            TestC
+
+            """
 
   Scenario: repoquery --conflicts
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --conflicts TestA"
-       Then the command stdout should match regexp "TestD"
+       Then the command stdout should match exactly
+            """
+            TestD
+
+            """
 
   Scenario: repoquery --obsoletes
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --obsoletes TestA"
-       Then the command stdout should match regexp "TestE"
+       Then the command stdout should match exactly
+            """
+            TestE
+
+            """
 
   Scenario: repoquery --whatrequires
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --whatrequires TestB"
-       Then the command stdout should match regexp "TestA"
+       Then the command stdout should match exactly
+            """
+            TestA-0:1-1.noarch
+
+            """
 
   Scenario: repoquery --whatprovides
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --whatprovides TestC"
-       Then the command stdout should match regexp "TestA"
+       Then the command stdout should match exactly
+            """
+            TestA-0:1-1.noarch
+
+            """
 
   Scenario: repoquery --whatconflicts
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --whatconflicts TestD"
-       Then the command stdout should match regexp "TestA"
+       Then the command stdout should match exactly
+            """
+            TestA-0:1-1.noarch
+
+            """
 
   Scenario: repoquery --whatobsoletes
        When I save rpmdb
         And I enable repository "base"
         And I run "dnf repoquery --whatobsoletes TestE"
-       Then the command stdout should match regexp "TestA"
+       Then the command stdout should match exactly
+            """
+            TestA-0:1-1.noarch
+
+            """
