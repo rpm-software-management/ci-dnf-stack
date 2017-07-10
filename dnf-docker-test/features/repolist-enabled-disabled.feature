@@ -11,6 +11,7 @@ Feature: Repolist with enabled/disabled repositories
          | TestC   |     |       |
        When I enable repository "TestB"
         And I enable repository "TestC"
+        And I successfully run "dnf makecache"
 
   Scenario: Repolist without arguments
        When I successfully run "dnf repolist"
