@@ -6,17 +6,7 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist as command
        When I successfully run "yum deplist TestA"
-       Then the command stdout should match exactly
-            """
-            package: TestA-1.0.0-1.noarch
-              dependency: TestB
-               provider: TestB-1.0.0-2.noarch
-
-            package: TestA-1.0.0-2.noarch
-              dependency: TestB
-               provider: TestB-1.0.0-2.noarch
-
-            """
+       Then the command stdout should match regexp "package: TestA-1.0.0-1.noarch\s*dependency: TestB\s*provider: TestB-1.0.0-2.noarch\s*package: TestA-1.0.0-2.noarch\s*dependency: TestB\s*provider: TestB-1.0.0-2.noarch"
 
   Scenario: Deplist as repoquery option
        When I successfully run "dnf repoquery --deplist TestA"
@@ -34,27 +24,11 @@ Feature: Deplist as commmand and option
 
   Scenario: Deplist as repoquery option but using dnf bin
        When I successfully run "sh -c 'dnf repoquery --deplist TestA'"
-       Then the command stdout should match exactly
-            """
-            package: TestA-1.0.0-1.noarch
-              dependency: TestB
-               provider: TestB-1.0.0-2.noarch
-
-            package: TestA-1.0.0-2.noarch
-              dependency: TestB
-               provider: TestB-1.0.0-2.noarch
-
-            """
+       Then the command stdout should match regexp "package: TestA-1.0.0-1.noarch\s*dependency: TestB\s*provider: TestB-1.0.0-2.noarch\s*package: TestA-1.0.0-2.noarch\s*dependency: TestB\s*provider: TestB-1.0.0-2.noarch"
 
   Scenario: Deplist with --latest-limit
        When I successfully run "dnf repoquery --deplist --latest-limit 1 TestA"
-       Then the command stdout should match exactly
-            """
-            package: TestA-1.0.0-2.noarch
-              dependency: TestB
-               provider: TestB-1.0.0-2.noarch
-
-            """
+       Then the command stdout should match regexp "package: TestA-1.0.0-2.noarch\s*dependency: TestB\s*provider: TestB-1.0.0-2.noarch"
 
   Scenario: Deplist with --latest-limit and verbose
        When I execute "dnf" command "repoquery --deplist --latest-limit 1 --verbose TestA" with "success"

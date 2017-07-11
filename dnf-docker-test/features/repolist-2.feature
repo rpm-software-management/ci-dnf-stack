@@ -11,23 +11,14 @@ Feature: Handling of --disablerepo and --enablerepo
 
   Scenario: Handling of --disablerepo and --enablerepo with one repo
        When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=true"
-       Then the command stdout should match exactly
-            """
-            repo id                              repo name                            status
-            test-1                               test-1                               0
-
-            """
+       Then the command stdout should match regexp "repo id +repo name +status\s+test-1 +test-1 +0"
 
        When I successfully run "dnf repolist --disablerepo=test* --setopt=strict=true"
        Then the command stdout should be empty
 
        When I successfully run "dnf repolist --enablerepo=test* --setopt=strict=false"
-       Then the command stdout should match exactly
-            """
-            repo id                              repo name                            status
-            test-1                               test-1                               0
 
-            """
+       Then the command stdout should match regexp "repo id +repo name +status\s+test-1 +test-1 +0"
 
        When I successfully run "dnf repolist --disablerepo=test* --setopt=strict=false"
        Then the command stdout should be empty
