@@ -12,6 +12,9 @@ Feature: Test for main repoquery functionality
         |         | Provides  | TestC |
         |         | Conflicts | TestD |
         |         | Obsoletes | TestE |
+       When I save rpmdb
+        And I enable repository "base"
+        And I run "dnf makecache"
 
   Scenario: repoquery --requires
        When I save rpmdb
