@@ -15,7 +15,7 @@ Feature: Running dnf shell commands in a batch
           run
           """
      When I save rpmdb
-      And I execute "dnf" command "shell /tmp/dnf_shell_transaction" with "success"
+      And _deprecated I execute "dnf" command "shell /tmp/dnf_shell_transaction" with "success"
      Then rpmdb changes are
          | State     | Packages |
          | installed | TestA    |
@@ -28,7 +28,7 @@ Feature: Running dnf shell commands in a batch
           run
           """
      When I save rpmdb
-      And I execute "dnf" command "shell < /tmp/dnf_shell_transaction" with "success"
+      And _deprecated I execute "dnf" command "shell < /tmp/dnf_shell_transaction" with "success"
      Then rpmdb changes are
          | State   | Packages |
          | removed | TestA    |

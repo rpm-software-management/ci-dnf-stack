@@ -73,7 +73,7 @@ def splitter(pkgs):
     return [p.strip() for p in pkgs.split(',')]
 
 
-@given('I use the repository "{repo}"')
+@given('_deprecated I use the repository "{repo}"')
 def given_repo_condition(context, repo):
     """ :type context: behave.runner.Context """
     assert repo, 'Repository name was not specified'
@@ -93,7 +93,7 @@ def given_repo_condition(context, repo):
         f.write('[' + repo + ']\nname=' + repo + '\nbaseurl=http://127.0.0.1/repo/' + repo + '\nenabled=1\ngpgcheck=0')
 
 
-@step('I execute "{type_of_command}" command "{command}" with "{result}"')
+@step('_deprecated I execute "{type_of_command}" command "{command}" with "{result}"')
 def when_action_command(context, type_of_command, command, result):
     assert command, 'Command was not specified'
     dnf_command_version = context.command_map["dnf"]
@@ -124,7 +124,7 @@ def when_action_command(context, type_of_command, command, result):
                              'Allowed options are "success" and "fail"'.format(result))
 
 
-@when('I create a file "{file_with_path}" with content: "{file_content}"')
+@when('_deprecated I create a file "{file_with_path}" with content: "{file_content}"')
 def when_action_command(context, file_with_path, file_content):
     ensure_path_exist(os.path.dirname(file_with_path))
     file_content = file_content.replace(u'\\n', u'\n')
@@ -132,7 +132,7 @@ def when_action_command(context, file_with_path, file_content):
         f.write(file_content + '\n')
 
 
-@when('I copy plugin module "{plugin_modules}" from default plugin path into "{directory}"')
+@when('_deprecated I copy plugin module "{plugin_modules}" from default plugin path into "{directory}"')
 def when_plugin_dir_creator(context, plugin_modules, directory):
     """Create directory with list of plugins
 
@@ -147,7 +147,7 @@ def when_plugin_dir_creator(context, plugin_modules, directory):
         shutil.copy2(os.path.join(plugindn, module), directory)
 
 
-@then('transaction changes are as follows')
+@then('_deprecated transaction changes are as follows')
 def then_transaction_changes(context):
     if not context.table:
         raise ValueError('table not found')
@@ -189,13 +189,13 @@ def then_transaction_changes(context):
         ' '.join([str(pkg) for pkg in installed_packages]),' '.join([str(pkg) for pkg in removed_packages]))
 
 
-@then('exit code of command should be equal to "{exit_code}"')
+@then('_deprecated exit code of command should be equal to "{exit_code}"')
 def then_package_state(context, exit_code):
     exit_code = int(exit_code)
     assert context.cmd_rc == exit_code
 
 
-@then('line from "{std_message}" should "{state}" with "{line_start}"')
+@then('_deprecated line from "{std_message}" should "{state}" with "{line_start}"')
 def then_package_state(context, std_message, state, line_start):
     counter = 0
     if std_message == 'stdout':
@@ -217,7 +217,7 @@ def then_package_state(context, std_message, state, line_start):
                              .format(state))
 
 
-@then('the path "{path_to_object}" should be "{state}"')
+@then('_deprecated the path "{path_to_object}" should be "{state}"')
 def then_file_presence(context, path_to_object, state):
     assert path_to_object, "The path was not specified"
     if path_to_object.endswith('/'):
@@ -235,7 +235,7 @@ def then_file_presence(context, path_to_object, state):
                              .format(state))
 
 
-@then('the file "{path_to_file}" should contain "{content}"')
+@then('_deprecated the file "{path_to_file}" should contain "{content}"')
 def then_file_contein(context, path_to_file, content):
     path = glob.glob(path_to_file)
     assert len(path) == 1, '{} objects ({}) were found instead of 1'.format(len(path), ' '.join(path))
@@ -244,8 +244,8 @@ def then_file_contein(context, path_to_file, content):
         assert content in f, "The file {!r} doesn't contain {!r}".format(path[0], content)
 
 
-@then('the "{section}" section should contain packages "{pkgs}"')
-@then('the "{section}" section should contain package "{pkgs}"')
+@then('_deprecated the "{section}" section should contain packages "{pkgs}"')
+@then('_deprecated the "{section}" section should contain package "{pkgs}"')
 def then_the_section(context, section, pkgs):
     pkgs = splitter(pkgs)
     lines = iter(context.cmd_output.split('\n'))
