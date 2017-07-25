@@ -5,12 +5,12 @@ Feature: Richdeps/Behave test
 
 
 Scenario: Install TestB first with RPM, then install TestA with DNF and observe if the Recommended TestC is also installed
-  Given I use the repository "rich-1"
-  When I execute "bash" command "rpm -Uvh  /repo/TestB*.rpm" with "success"
-  Then transaction changes are as follows
+  Given _deprecated I use the repository "rich-1"
+  When _deprecated I execute "bash" command "rpm -Uvh  /repo/TestB*.rpm" with "success"
+  Then _deprecated transaction changes are as follows
    | State        | Packages   |
    | installed    | TestB      |
-  When I execute "dnf" command "-y install TestA" with "success"
-  Then transaction changes are as follows
+  When _deprecated I execute "dnf" command "-y install TestA" with "success"
+  Then _deprecated transaction changes are as follows
    | State        | Packages      |
    | installed    | TestA, TestC  |

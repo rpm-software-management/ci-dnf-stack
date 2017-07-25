@@ -1,7 +1,7 @@
 Feature: Deplist as commmand and option
 
   Scenario: Feature Setup
-      Given I use the repository "upgrade_1"
+      Given _deprecated I use the repository "upgrade_1"
       When I successfully run "dnf makecache"
 
   Scenario: Deplist as command
@@ -57,8 +57,8 @@ Feature: Deplist as commmand and option
             """
 
   Scenario: Deplist with --latest-limit and verbose
-       When I execute "dnf" command "repoquery --deplist --latest-limit 1 --verbose TestA" with "success"
-       Then line from "stdout" should "start" with "package: TestA-1.0.0-2.noarch"
-       And line from "stdout" should "start" with "  dependency: TestB"
-       And line from "stdout" should "start" with "   provider: TestB-1.0.0-1.noarch"
-       And line from "stdout" should "start" with "   provider: TestB-1.0.0-2.noarch"
+       When _deprecated I execute "dnf" command "repoquery --deplist --latest-limit 1 --verbose TestA" with "success"
+       Then _deprecated line from "stdout" should "start" with "package: TestA-1.0.0-2.noarch"
+       And _deprecated line from "stdout" should "start" with "  dependency: TestB"
+       And _deprecated line from "stdout" should "start" with "   provider: TestB-1.0.0-1.noarch"
+       And _deprecated line from "stdout" should "start" with "   provider: TestB-1.0.0-2.noarch"
