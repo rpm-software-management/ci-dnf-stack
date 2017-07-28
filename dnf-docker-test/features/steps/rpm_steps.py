@@ -6,6 +6,7 @@ from behave import when
 from behave.model import Table
 import six
 from six.moves import zip
+import fnmatch
 
 import rpm_utils
 import table_utils
@@ -43,10 +44,15 @@ def step_rpmdb_changes_are(ctx):
     reinstalled  Installed      Installed     Same packages was reinstalled  
     updated      Installed      Installed     Package has been updated       
     downgraded   Installed      Installed     Package has been downgraded    
+    ignored          -              -         Package will be ignored        
     ============ ============== ============= ===============================
 
     For each *State* you can specify multiple *Packages* which are separated
     by comma.
+
+    For the *ignored* state you can use Unix shell-style wildcard to cover
+    multiple package names. Packages with state explicitely stated won't be
+    ignored even if they matches pattern.
 
     Examples:
 
@@ -94,17 +100,34 @@ def step_rpmdb_changes_are(ctx):
         for pkg in pkgs.split(","):
             yield pkg.strip()
     # Let's check what user has requested in table
+    ignore_list = []
     for expected_state, packages in table.items():
-        for pkg in pkgs_split(packages):
-            pkg_pre = rpm_utils.find_pkg(ctx.rpmdb, pkg, only_by_name=True)
-            if pkg_pre:
-                ctx.rpmdb.remove(pkg_pre)
-            pkg_post = rpm_utils.find_pkg(rpmdb, pkg)
-            if pkg_post:
-                rpmdb.remove(pkg_post)
-            state = rpm_utils.analyze_state(pkg_pre, pkg_post)
-            if state != expected_state:
-                unexpected_state(pkg, state, expected_state, pkg_pre, pkg_post)
+        if expected_state == rpm_utils.State.ignored:
+            ignore_list = packages
+        else:
+            for pkg in pkgs_split(packages):
+                pkg_pre = rpm_utils.find_pkg(ctx.rpmdb, pkg, only_by_name=True)
+                if pkg_pre:
+                    ctx.rpmdb.remove(pkg_pre)
+                pkg_post = rpm_utils.find_pkg(rpmdb, pkg)
+                if pkg_post:
+                    rpmdb.remove(pkg_post)
+                state = rpm_utils.analyze_state(pkg_pre, pkg_post)
+                if state != expected_state:
+                    unexpected_state(pkg, state, expected_state, pkg_pre, pkg_post)
+
+    # Now exclude packages matching regexp pattern in the ignore_list
+    def filter_rpmdb(pkgs, filters):  # remove packages matching any filter
+        remove = []
+        for pkg in pkgs:
+            for f in filters:
+                if f and fnmatch.fnmatchcase(pkg.name, f):
+                    remove.append(pkg)
+                    break  # no need to process additional filters
+        for pkg in remove:
+            pkgs.remove(pkg)
+    filter_rpmdb(rpmdb, list(pkgs_split(ignore_list)))
+    filter_rpmdb(ctx.rpmdb, list(pkgs_split(ignore_list)))
 
     # Let's check if NEVRAs are still same
     def rpmdb2nevra(rpmdb):
