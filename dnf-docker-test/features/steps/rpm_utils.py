@@ -17,6 +17,7 @@ class State(enum.Enum):
     updated = "updated"
     upgraded = "updated"
     downgraded = "downgraded"
+    ignored = "ignored"
 
 def get_rpmdb():
     """
