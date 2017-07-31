@@ -30,7 +30,7 @@ Feature: Testing specific dnf shell text output
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable TestRepo"
         And I run dnf shell command "install NoSuchPackage"
-       Then the command stdout should match regexp "No package NoSuchPackage available\."
+       Then the command stdout should match regexp "No match for argument: NoSuchPackage"
 
   Scenario: Removing a non-existent package
       Given I have dnf shell session opened with parameters "-y"
