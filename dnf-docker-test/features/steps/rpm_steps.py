@@ -100,7 +100,7 @@ def step_rpmdb_changes_are(ctx):
         for pkg in pkgs.split(","):
             yield pkg.strip()
     # Let's check what user has requested in table
-    ignore_list = []
+    ignore_list = ""
     for expected_state, packages in table.items():
         if expected_state == rpm_utils.State.ignored:
             ignore_list = packages
