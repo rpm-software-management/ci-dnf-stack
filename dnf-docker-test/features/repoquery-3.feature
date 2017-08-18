@@ -19,11 +19,14 @@ Feature: Test for dnf repoquery, options --all, --installed, --available, --upgr
        When I successfully run "rpm -i TestA-1*.rpm" in repository "base"
         And I successfully run "dnf repoquery --extras"
        Then the command stdout should match regexp "TestA.*1-1"
+        And the command stdout should not match regexp "TestB"
+        And the command stdout should not match regexp "XTest"
 
   Scenario: dnf repoquery --extras XTest (when there's no such extra pkg installed)
        When I run "dnf repoquery --extras XTest"
-       Then the command stdout should not match regexp "TestX"
-        And the command stdout should not match regexp "TestA.*1-1"
+       Then the command stdout should not match regexp "XTest"
+        And the command stdout should not match regexp "TestA"
+        And the command stdout should not match regexp "TestB"
 
   Scenario: dnf repoquery --available Test\* (when there are no such pkgs)
        When I successfully run "dnf repoquery --available Test\*"
@@ -49,17 +52,20 @@ Feature: Test for dnf repoquery, options --all, --installed, --available, --upgr
        When I successfully run "dnf repoquery --upgrades"
        Then the command stdout should match regexp "TestA.*2-1"
         And the command stdout should not match regexp "TestB"
+        And the command stdout should not match regexp "XTest"
 
   Scenario: dnf repoquery --upgrades Test\* (when there are no such pkgs)
        When I disable repository "ext"
         And I successfully run "dnf repoquery --upgrades Test\*"
        Then the command stdout should not match regexp "TestA.*2-1"
         And the command stdout should not match regexp "TestB"
+        And the command stdout should not match regexp "XTest"
 
   Scenario: dnf repoquery --upgrades --repo ext (when there are such pkgs in listed repos)
        When I successfully run "dnf repoquery --upgrades --repo ext"
        Then the command stdout should match regexp "TestA.*2-1"
         And the command stdout should not match regexp "TestB"
+        And the command stdout should not match regexp "XTest"
 
   Scenario: dnf repoquery --installed XTest\* (when there are no such pkgs)
        When I successfully run "dnf repoquery --installed XTest\*"
@@ -77,6 +83,7 @@ Feature: Test for dnf repoquery, options --all, --installed, --available, --upgr
        When I successfully run "dnf repoquery --installed TestA XTest"
        Then the command stdout should match regexp "TestA.*2-1"
         And the command stdout should not match regexp "XTest"
+        And the command stdout should not match regexp "TestB"
 
   # --recent: recently edited pkgs, all pkgs in ext and base repos are supposed
   #           to be recently edited
