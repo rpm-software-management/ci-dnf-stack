@@ -22,6 +22,9 @@ Scenario: Install package from installroot repository into installroot, and test
   When _deprecated I execute "bash" command "rpm -q --root=/dockertesting TestB" with "fail"
 # If makecache for installroot it downloads correct metadata for installroot and install package with -C into installroot
   When _deprecated I execute "dnf" command "--installroot=/dockertesting --releasever=23  makecache" with "success"
+  When _deprecated I execute "dnf" command "install --installroot=/dockertesting --releasever=23  -y -C TestB" with "fail"
+  When _deprecated I execute "bash" command "rpm -q --root=/dockertesting TestB" with "fail"
+  When _deprecated I execute "dnf" command "install --installroot=/dockertesting --releasever=23  -y --downloadonly TestB" with "success"
   When _deprecated I execute "dnf" command "install --installroot=/dockertesting --releasever=23  -y -C TestB" with "success"
   When _deprecated I execute "bash" command "rpm -q --root=/dockertesting TestB" with "success"
   Then _deprecated line from "stdout" should "start" with "TestB-1.0.0-1."
