@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from behave import register_type
 from behave import then
-from behave import when
+from behave import step
 import parse
 
 import command_utils
@@ -15,21 +15,21 @@ def parse_stdout_stderr(text):
 
 register_type(stdout_stderr=parse_stdout_stderr)
 
-@when('I run "{command}"')
+@step('I run "{command}"')
 def step_i_run_command(ctx, command):
     """
     Run a ``{command}`` as subprocess, collect its output and returncode.
     """
     ctx.cmd_result = command_utils.run(ctx, command)
 
-@when('I successfully run "{command}" in repository "{repository}"')
+@step('I successfully run "{command}" in repository "{repository}"')
 def step_i_successfully_run_command_in_repository(ctx, command, repository):
     repo = repo_utils.get_repo_dir(repository)
     ctx.assertion.assertIsNotNone(repo, "repository does not exist")
     ctx.cmd_result = command_utils.run(ctx, command, cwd=repo)
     ctx.assertion.assertEqual(ctx.cmd_result.returncode, 0)
 
-@when('I successfully run "{command}"')
+@step('I successfully run "{command}"')
 def step_i_successfully_run_command(ctx, command):
     step_i_run_command(ctx, command)
     step_the_command_should_pass(ctx)
