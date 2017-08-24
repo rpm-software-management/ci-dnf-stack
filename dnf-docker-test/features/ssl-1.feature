@@ -16,6 +16,10 @@ Feature: DNF SSL related features - Package installation
          | State     | Packages |
          | installed | TestA    |
 
+  @backup
+  Scenario: Backup /etc/httpd/conf.d/ssl.conf
+       Given I successfully run "cp -p /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.testbackup"
+
   Scenario: Installing a package from https repository with client verification
        When I successfully run "sed -i 's/.*SSLVerifyClient.*/SSLVerifyClient require/' /etc/httpd/conf.d/ssl.conf"
         And I successfully run "httpd -k restart"
@@ -33,3 +37,8 @@ Feature: DNF SSL related features - Package installation
        When I run "dnf -v -y install TestC"
        Then the command should fail
         And the command stdout should match regexp "Cannot download repomd.xml"
+
+  @restore
+  Scenario: Restore httpd setting
+      Given I successfully run "mv /etc/httpd/conf.d/ssl.conf.testbackup /etc/httpd/conf.d/ssl.conf"
+        And I successfully run "httpd -k restart"
