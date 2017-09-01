@@ -707,3 +707,35 @@ def step_a_repo_file_of_repository_modified_with(ctx, repository):
     ctx.table = skv_table
     repofile = repo_utils.REPO_TMPL.format(repository)
     step_an_ini_file_filepath_modified_with(ctx, repofile)
+
+@given('a file "{filepath}" with type "{mdtype}" added into repository "{repository}"')
+def step_a_file_with_type_added_into_repository(ctx, filepath, mdtype, repository):
+    """
+    Example:
+
+    Given repository "base" with packages
+        | Package | Tag     | Value |
+        | TestA   | Version | 1     |
+    And a file "metadata.ini" with type "newmd" added into repository "base"
+        \"\"\"
+        [example]
+        TestA = 1
+        \"\"\"
+    """
+    # verify that modifyrepo_c is present
+    modifyrepo = which("modifyrepo_c")
+    ctx.assertion.assertIsNotNone(modifyrepo, "modifyrepo_c is required")
+
+    repodir = repo_utils.get_repo_dir(repository)
+
+    if not os.path.isfile(filepath):
+        ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
+        tmpdir = tempfile.mkdtemp()
+        filepath = os.path.join(tmpdir, os.path.basename(filepath))
+        with open(filepath, 'w') as fw:
+            fw.write(ctx.text)
+
+    file_utils.set_dir_content_ownership(ctx, repodir, 'root')   # change file ownership to root so we can change it
+    cmd = "{} --mdtype={} {} {}".format(modifyrepo, mdtype, filepath, os.path.join(repodir, "repodata"))
+    step_i_successfully_run_command(ctx, cmd)
+    file_utils.set_dir_content_ownership(ctx, repodir)   # restore file ownership
