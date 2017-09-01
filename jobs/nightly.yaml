@@ -23,11 +23,7 @@
     chroot:
       - epel-7-x86_64:
          overlay_dir: dnf-master-epel7
-      - fedora-24-x86_64
-      - fedora-24-i386
       - fedora-25-x86_64
-      - fedora-25-i386
       - fedora-26-x86_64
-      - fedora-26-i386
+      - fedora-27-x86_64
       - fedora-rawhide-x86_64
-      - fedora-rawhide-i386
