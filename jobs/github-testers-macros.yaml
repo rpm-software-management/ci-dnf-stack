@@ -171,7 +171,7 @@
             fi
           popd
 
-          rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/dnf-master/ rpm copr --chroot fedora-25-x86_64 --owner rpmsoftwaremanagement
+          rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/dnf-master/ rpm copr --chroot fedora-26-x86_64 --owner rpmsoftwaremanagement
           RPMS=`cat rpms | xargs`
           echo "RPMS=$RPMS" > props
     publishers:
