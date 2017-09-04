@@ -40,7 +40,8 @@ RUN set -x && \
         # workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1398272
         rpm -q dnf && \
         # some unknown thing
-        dnf -q repoquery --unneeded | xargs --no-run-if-empty dnf mark install; \
+        UNNEEDED=$(dnf repoquery --unneeded -q | grep -v '^Loading repositories') && \
+        [ -z "$UNNEEDED" ] || dnf -y mark install $UNNEEDED; \
     else \
         dnf -y install /rpms/*.rpm && \
         dnf -y autoremove; \
