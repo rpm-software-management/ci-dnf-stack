@@ -2,6 +2,7 @@
     name: "{name}-{chroot}"
     defaults: github-testers-defaults
     concurrent: False
+    node: dnf
     scm:
       - ci-dnf-stack-scm
     triggers:

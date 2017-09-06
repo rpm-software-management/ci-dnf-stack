@@ -29,6 +29,7 @@
     name: "{name}-trigger"
     defaults: github-testers-defaults
     concurrent: True
+    node: dnf
     properties:
       # Required by GHPRB. Also adds a nice GitHub link on the job page.
       - github:
@@ -92,6 +93,7 @@
     name: "{name}-update-gh-status"
     defaults: github-testers-defaults
     concurrent: True
+    node: dnf
     builders:
       - python: |
           from __future__ import print_function
@@ -144,6 +146,7 @@
     name: "{name}-build"
     defaults: github-testers-defaults
     concurrent: True
+    node: dnf
     scm:
       - ci-dnf-stack-scm
       - "{name}-scm"
@@ -200,7 +203,7 @@
     name: "{name}-provision"
     defaults: github-testers-defaults
     concurrent: False
-    node: master
+    node: dnf
     scm:
       - ci-dnf-stack-scm
     builders:
@@ -247,7 +250,7 @@
     name: "{name}-test"
     defaults: github-testers-defaults
     concurrent: False
-    node: master
+    node: dnf
     builders:
       - trigger-builds:
           - project: "{name}-update-gh-status"
@@ -329,7 +332,7 @@
     name: "{name}-teardown"
     defaults: github-testers-defaults
     concurrent: False
-    node: master
+    node: dnf
     builders:
       - shell: |
           sudo docker rmi -f "$CONTAINER"
