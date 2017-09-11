@@ -1,3 +1,4 @@
+@xfail
 Feature: DNF SSL related features - certificate verification
 
   @setup
