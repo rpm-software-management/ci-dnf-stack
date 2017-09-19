@@ -48,8 +48,8 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
   When _deprecated I execute "dnf" command "install -y --config test/dnf.conf TestD" with "fail"
 # TestA cannot be removed due to host exclude in dnf.conf
   When _deprecated I execute "dnf" command "remove -y TestA" with "fail"
-# TestB can be removed because TestA that is installed and require TestB was excluded
-  When _deprecated I execute "dnf" command "remove -y TestB" with "success"
+# TestB can be removed because excludes were disabled
+  When _deprecated I execute "dnf" command "remove -y --disableexcludes=all TestB" with "success"
   Then _deprecated transaction changes are as follows
    | State        | Packages      |
    | removed      | TestA, TestB  |
