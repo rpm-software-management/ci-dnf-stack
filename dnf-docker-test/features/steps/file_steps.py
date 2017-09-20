@@ -5,6 +5,8 @@ from behave import given
 from behave.model import Table
 import six
 from six.moves import configparser
+import sys
+import os
 
 import file_utils
 import table_utils
@@ -135,3 +137,33 @@ def step_an_ini_file_filepath_modified_with(ctx, filepath):
                 else:
                     conf.set(section, key, settings[key])
     file_utils.create_file_with_contents(filepath, conf)
+
+@given('I run steps from file "{filepath}"')
+def step_i_run_steps_from_file(ctx, filepath):
+    """
+    Runs all the steps from the given file (``{filepath}``).
+    The file with steps is searched at a provided location
+    and in case it is not found, the filename is searched also
+    in a directory saved in the BEHAVE_FEATUREDIR environment
+    variable or under the /tests directory.
+    *.feature files but should not have *.feature suffix
+    so it won't be executed on its own. Also, the file
+    should contain only steps, there should be no
+    Feature: or Scenario: descriptions.
+    """
+    if not os.path.isfile(filepath):  # there is no such file, I will try to check other locations
+        # first check if the user exported the environment variable BEHAVE_FEATUREDIR
+        filename = os.path.basename(filepath)
+        if os.environ.get('BEHAVE_FEATUREDIR'):
+            filepath = os.path.join(os.environ.get('BEHAVE_FEATUREDIR'), filename.lstrip('/'))
+        # try the /tests/ directory used in Docker image
+        else:
+            filepath = os.path.join('/tests/', filename.lstrip('/'))
+        if not os.path.isfile(filepath):
+            raise AssertionError('Cannot find the file "%s", try exporting the BEHAVE_FEATUREDIR variable properly' % filepath)
+    with open(filepath, 'r') as f:
+        steps = f.read()
+    # print the steps to ease the debugging
+    sys.stdout.write('Running sub-steps from file %s:\n' % filepath)
+    sys.stdout.write('%s\n' % steps)
+    ctx.execute_steps(unicode(steps))
