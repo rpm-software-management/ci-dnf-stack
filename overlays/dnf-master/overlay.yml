@@ -3,7 +3,7 @@ aliases:
   - name: github
     url: https://github.com/
   - name: fedorapkgs
-    url: git://pkgs.fedoraproject.org/rpms/
+    url: https://src.fedoraproject.org/rpms/
 
 components:
   - name: libsolv
