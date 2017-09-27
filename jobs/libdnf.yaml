@@ -6,6 +6,7 @@
           branches:
             - origin/master
             - origin/auto
+            - origin/try
           basedir: libdnf
           skip-tag: true
 
