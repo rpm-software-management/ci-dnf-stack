@@ -5,6 +5,7 @@ from behave import register_type
 from behave import then
 from behave import step
 import parse
+import re
 
 import command_utils
 import repo_utils
@@ -98,6 +99,56 @@ def step_the_command_stream_should_match_exactly(ctx, stream):
 def step_the_command_stream_should_be_empty(ctx, stream):
     ctx.text = ""
     step_the_command_stream_should_match_exactly(ctx, stream)
+
+@then('the command {stream:stdout_stderr} should match line by line regexp')
+def step_the_command_stream_should_match_regexp_line_by_line(ctx, stream):
+    """
+    Match multiline output from ``{stream}`` against regular expressions
+    provided on the following lines line by line.
+    Regexp prefixed with ? is considered as optional match.
+
+    Example:
+        When I successfully run "dummy command"\n
+        Then the command stdout should match line by line regexp
+             \"\"\"\n
+             ?optional_regexp_pattern\n
+             regexp_for_1st_line\n
+             regexp_for_2nd_line\n
+             \"\"\"
+    """
+    ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
+    regexp_list = ctx.text.split('\n')
+    text = getattr(ctx.cmd_result, stream)  # read cmd output
+    cmdout_list = text.split('\n')
+    # following is a very ugly hack due to a dnf bug not wrapping lines properly
+    # we will normalize the output, i.e. split lines longer then terminal width
+    cmdout_list_norm = []
+    prev_line_length = 80
+    for line in cmdout_list:
+        if len(line) <= 80:
+            cmdout_list_norm.append(line)
+            prev_line_length = len(line)
+        else:  # table? need to split according to the length of the previous line (heading?)
+            cmdout_list_norm.extend([line[i:i + prev_line_length] for i in range(0, len(line), prev_line_length)])
+    cmdout_list = cmdout_list_norm
+    # -- end of the hack
+    while cmdout_list:
+        line = cmdout_list.pop(0)
+        if line and (not regexp_list):  # there is no remaining regexp
+            raise AssertionError("Not having a regexp to match line '%s'" % line)
+        elif regexp_list:
+            regexp = regexp_list.pop(0)
+            while regexp.startswith('?'):
+                if not re.search(regexp[1:], line):  # optional regexp that doesn't need to be matched
+                    if regexp_list:
+                        regexp = regexp_list.pop(0)
+                    else:
+                        raise AssertionError("Not having a regexp to match line '%s'" % line)
+                else:
+                    regexp = regexp[1:]
+            ctx.assertion.assertRegexpMatches(line, regexp)
+    if regexp_list:  # there are some unprocessed regexps
+        raise AssertionError("No more line to match regexp '%s'" % regexp_list[0])
 
 @then('the command {stream:stdout_stderr} should match regexp "{regexp}"')
 def step_the_command_stream_should_match_regexp(ctx, stream, regexp):
