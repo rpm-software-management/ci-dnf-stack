@@ -260,6 +260,11 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
 
     .. note::
 
+       Along with the repository also *-source repository with
+       src.rpm packages is built. The repository is disabled.
+
+    .. note::
+
        *https* repositories are configured to use certificates at
        following locations:
          /etc/pki/tls/certs/testcerts/ca/cert.pem
@@ -366,6 +371,9 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
     else:
         tmpdir = tempfile.mkdtemp()
         repopath = tmpdir
+    srpm_tmpdir = '%s-source' % tmpdir.strip('/')
+    srpm_repopath = '%s-source' % repopath.rstrip('/')
+    os.mkdir(srpm_tmpdir)  # create a directory for src.rpm pkgs
     template = JINJA_ENV.from_string(PKG_TMPL)
     for name, settings in packages.items():
         name = name.split()[0]  # cut-off the pkg name _suffix_ to allow defining multiple package versions
@@ -380,25 +388,29 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
         step_a_file_filepath_with(ctx, fname)
         buildname = '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm'
         if 'arch' not in settings or settings['arch'] == 'noarch':
-            cmd = "{!s} --define '_rpmdir {!s}' --define '_build_name_fmt {!s}' -bb {!s}".format(
-                rpmbuild, tmpdir, buildname, fname)
+            cmd = "{!s} --define '_rpmdir {!s}' --define '_srcrpmdir {!s}' --define '_build_name_fmt {!s}' -ba {!s}".format(
+                rpmbuild, tmpdir, srpm_tmpdir, buildname, fname)
         else:
-            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --define '_build_name_fmt {!s}' --target {!s} -bb {!s}".format(
-                settings['arch'], rpmbuild, tmpdir, buildname, settings['arch'], fname)
+            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --define '_srcrpmdir {!s}' --define '_build_name_fmt {!s}' --target {!s} -ba {!s}".format(
+                settings['arch'], rpmbuild, tmpdir, srpm_tmpdir, buildname, settings['arch'], fname)
         step_i_successfully_run_command(ctx, cmd)
 
     if gpgkey:
         # sign all rpms built
         rpmsign = which("rpmsign")
         rpms = glob.glob("{!s}/*.rpm".format(tmpdir))
-        cmd = "{!s} --addsign --key-id '{!s}' {!s}".format(rpmsign, gpgkey, ' '.join(rpms))
+        srpms = glob.glob("{!s}/*.rpm".format(srpm_tmpdir))
+        cmd = "{!s} --addsign --key-id '{!s}' {!s} {!s}".format(rpmsign, gpgkey, ' '.join(rpms), ' '.join(srpms))
         step_i_successfully_run_command(ctx, cmd)
 
     cmd = "{!s} {!s}".format(createrepo, tmpdir)
     step_i_successfully_run_command(ctx, cmd)
+    cmd = "{!s} {!s}".format(createrepo, srpm_tmpdir)
+    step_i_successfully_run_command(ctx, cmd)
 
     # set proper directory content ownership
     file_utils.set_dir_content_ownership(ctx, tmpdir)
+    file_utils.set_dir_content_ownership(ctx, srpm_tmpdir)
 
     repofile = REPO_TMPL.format(repository)
     ctx.table = Table(HEADINGS_INI)
@@ -413,6 +425,22 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
         ctx.table.add_row(["",     "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
         ctx.table.add_row(["",     "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
         ctx.table.add_row(["",     "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
+    step_an_ini_file_filepath_with(ctx, repofile)
+    # create -source repository too
+    srpm_repository = '%s-source' % repository
+    repofile = REPO_TMPL.format(srpm_repository)
+    ctx.table = Table(HEADINGS_INI)
+    ctx.table.add_row([srpm_repository, "name",          srpm_repository])
+    ctx.table.add_row(["",              "enabled",       "False"])
+    ctx.table.add_row(["",              "baseurl",       "{!s}://{!s}".format(rtype, srpm_repopath)])
+    if gpgkey:
+        ctx.table.add_row(["",          "gpgcheck",      "True"])
+    else:
+        ctx.table.add_row(["",          "gpgcheck",      "False"])
+    if rtype == 'https':
+        ctx.table.add_row(["",          "sslcacert",     "/etc/pki/tls/certs/testcerts/ca/cert.pem"])
+        ctx.table.add_row(["",          "sslclientkey",  "/etc/pki/tls/certs/testcerts/client/key.pem"])
+        ctx.table.add_row(["",          "sslclientcert", "/etc/pki/tls/certs/testcerts/client/cert.pem"])
     step_an_ini_file_filepath_with(ctx, repofile)
 
 @given('{enabled:enabled_status}{rtype:repo_type}repository "{repository}" with packages signed by "{gpgkey}"')
