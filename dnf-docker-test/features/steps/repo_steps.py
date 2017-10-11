@@ -69,7 +69,7 @@ PKG_TMPL = """
 Name:           {{ name }}
 Summary:        {{ summary|default("Empty") }}
 Version:        {{ version|default("1") }}
-Release:        {{ release|default("1") }}
+Release:        {{ release|default("1") }}{{ disttag }}
 
 License:        {{ license|default("Public Domain") }}
 
@@ -386,13 +386,17 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
     template = JINJA_ENV.from_string(PKG_TMPL)
     for name, settings in packages.items():
         name = name.split()[0]  # cut-off the pkg name _suffix_ to allow defining multiple package versions
+        disttag = ""
+        if '/' in name:  # using the module/pkgname notation, module would be placed to a disttag
+            (module, name) = name.split('/', 1)
+            disttag = ".{}".format(module)
         # before processing the template
         #   lower all characters
         #   replace '%' in Tag name with '_'
         #   replace '(' in Tag name with '_'
         #   delete all ')' in Tag
         settings = {k.lower().replace('%', '_').replace('(', '_').replace(')', ''): v for k, v in settings.items()}
-        ctx.text = template.render(name=name, **settings)
+        ctx.text = template.render(name=name, disttag=disttag, **settings)
         fname = "{!s}/{!s}.spec".format(tmpdir, name)
         step_a_file_filepath_with(ctx, fname)
         buildname = '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm'
