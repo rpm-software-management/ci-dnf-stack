@@ -34,7 +34,7 @@ RUN set -x && \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
     rm -vf /rpms/*dnf-plugin-versionlock*.rpm /rpms/*dnf-plugin-local*.rpm /rpms/*dnf-plugin-torproxy*.rpm && \
     # update dnf
-    dnf -y --best upgrade dnf && \
+    dnf -y --best upgrade dnf libdnf --enablerepo=updates-testing && \
     if [ $type = "local" ]; then \
         # install all rpms if present
         if ls /rpms/*.rpm 1>/dev/null 2>&1; then dnf -y install /rpms/*.rpm; fi && \
