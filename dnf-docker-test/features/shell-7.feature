@@ -24,7 +24,7 @@ Feature: Reinstall in dnf shell
     Given I have dnf shell session opened with parameters "-y"
      When I run dnf shell command "reinstall nonexistentpkg"
      Then the command stdout should match regexp "No match for argument"
-      And the command stdout should match regexp "Nothing to do"
+      And the command stdout should match regexp "No packages marked for reinstall"
      When I run dnf shell command "exit"
      Then the command should pass
 
@@ -33,7 +33,7 @@ Feature: Reinstall in dnf shell
      When I run dnf shell command "repo disable base"
      When I run dnf shell command "reinstall TestA"
      Then the command stdout should match regexp "Installed package.*not available"
-      And the command stdout should match regexp "Nothing to do"
+      And the command stdout should match regexp "No packages marked for reinstall"
      When I run dnf shell command "exit"
      Then the command should pass
 
