@@ -66,7 +66,7 @@ Feature: Downgrade, upgrade-minimal and distro-sync in dnf shell
     Given I have dnf shell session opened with parameters "-y"
      When I run dnf shell command "downgrade nonexistentpkg"
      Then the command stdout should match regexp "No package.*available"
-      And the command stdout should match regexp "Nothing to do"
+      And the command stdout should match regexp "No packages marked for downgrade."
      When I run dnf shell command "exit"
      Then the command should pass
 
@@ -74,7 +74,7 @@ Feature: Downgrade, upgrade-minimal and distro-sync in dnf shell
     Given I have dnf shell session opened with parameters "-y"
      When I run dnf shell command "downgrade TestA"
      Then the command stdout should match regexp "Package.*lowest version.*cannot downgrade"
-      And the command stdout should match regexp "Nothing to do"
+      And the command stdout should match regexp "No packages marked for downgrade."
      When I run dnf shell command "exit"
      Then the command should pass
 
