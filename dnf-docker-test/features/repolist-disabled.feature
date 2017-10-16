@@ -18,10 +18,13 @@ Feature: Repolist when all repositories are disabled
        When I successfully run "dnf repolist disabled"
        Then the command stdout should match exactly
             """
-            repo id                                  repo name                              
-            TestA                                    TestA                                  
-            TestB                                    TestB                                  
-            TestC                                    TestC                                  
+            repo id                                 repo name                               
+            TestA                                   TestA                                   
+            TestA-source                            TestA-source                            
+            TestB                                   TestB                                   
+            TestB-source                            TestB-source                            
+            TestC                                   TestC                                   
+            TestC-source                            TestC-source                            
 
             """
 
@@ -29,9 +32,12 @@ Feature: Repolist when all repositories are disabled
        When I successfully run "dnf repolist all"
        Then the command stdout should match exactly
             """
-            repo id                              repo name                          status
-            TestA                                TestA                              disabled
-            TestB                                TestB                              disabled
-            TestC                                TestC                              disabled
+            repo id                             repo name                           status
+            TestA                               TestA                               disabled
+            TestA-source                        TestA-source                        disabled
+            TestB                               TestB                               disabled
+            TestB-source                        TestB-source                        disabled
+            TestC                               TestC                               disabled
+            TestC-source                        TestC-source                        disabled
 
             """

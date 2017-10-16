@@ -37,8 +37,11 @@ Feature: Repolist with enabled/disabled repositories
        When I successfully run "dnf repolist disabled"
        Then the command stdout should match exactly
             """
-            repo id                                  repo name                              
-            TestA                                    TestA                                  
+            repo id                                 repo name                               
+            TestA                                   TestA                                   
+            TestA-source                            TestA-source                            
+            TestB-source                            TestB-source                            
+            TestC-source                            TestC-source                            
 
             """
 
@@ -46,9 +49,12 @@ Feature: Repolist with enabled/disabled repositories
        When I successfully run "dnf repolist all"
        Then the command stdout should match exactly
             """
-            repo id                             repo name                         status
-            TestA                               TestA                             disabled
-            TestB                               TestB                             enabled: 0
-            TestC                               TestC                             enabled: 3
+            repo id                            repo name                          status
+            TestA                              TestA                              disabled
+            TestA-source                       TestA-source                       disabled
+            TestB                              TestB                              enabled: 0
+            TestB-source                       TestB-source                       disabled
+            TestC                              TestC                              enabled: 3
+            TestC-source                       TestC-source                       disabled
 
             """

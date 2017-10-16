@@ -15,6 +15,7 @@ Feature: Handling of --disablerepo and --enablerepo
             """
             repo id                              repo name                            status
             test-1                               test-1                               0
+            test-1-source                        test-1-source                        0
 
             """
 
@@ -26,6 +27,7 @@ Feature: Handling of --disablerepo and --enablerepo
             """
             repo id                              repo name                            status
             test-1                               test-1                               0
+            test-1-source                        test-1-source                        0
 
             """
 
