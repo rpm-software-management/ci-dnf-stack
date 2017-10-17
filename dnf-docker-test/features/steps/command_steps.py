@@ -121,18 +121,6 @@ def step_the_command_stream_should_match_regexp_line_by_line(ctx, stream):
     regexp_list = ctx.text.split('\n')
     text = getattr(ctx.cmd_result, stream)  # read cmd output
     cmdout_list = text.split('\n')
-    # following is a very ugly hack due to a dnf bug not wrapping lines properly
-    # we will normalize the output, i.e. split lines longer then terminal width
-    cmdout_list_norm = []
-    prev_line_length = 80
-    for line in cmdout_list:
-        if len(line) <= 80:
-            cmdout_list_norm.append(line)
-            prev_line_length = len(line)
-        else:  # table? need to split according to the length of the previous line (heading?)
-            cmdout_list_norm.extend([line[i:i + prev_line_length] for i in range(0, len(line), prev_line_length)])
-    cmdout_list = cmdout_list_norm
-    # -- end of the hack
     while cmdout_list:
         line = cmdout_list.pop(0)
         if line and (not regexp_list):  # there is no remaining regexp
