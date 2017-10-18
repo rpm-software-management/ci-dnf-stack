@@ -7,6 +7,7 @@
             - origin/master
             - origin/auto
             - origin/try
+            - origin/wip/modularity
           basedir: dnf
           skip-tag: true
 

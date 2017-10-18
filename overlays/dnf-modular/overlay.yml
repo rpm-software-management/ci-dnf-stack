@@ -39,7 +39,7 @@ components:
   - name: dnf
     git:
       src: github:rpm-software-management/dnf.git
-      branch: wip/modularity
+      branch: origin/wip/modularity
 
   - name: dnf-plugins-core
     git:
