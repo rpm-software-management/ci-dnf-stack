@@ -40,11 +40,10 @@ Feature: DNF/Behave test Repository packages remove
          When I save rpmdb
           And I enable repository "test3"
           And I successfully run "dnf -y repository-packages test remove-or-reinstall"
-# FIXME - rpmdb changes doesn't work properly with reinstall
-#         Then rpmdb changes are
-#           | State       | Packages     |
-#           | removed     | TestA, TestB |
-#           | reinstalled | TestD        |
+         Then rpmdb changes are
+           | State       | Packages     |
+           | removed     | TestA, TestB |
+           | reinstalled | TestD        |
 
     Scenario: Remove or reinstall single package from repository
          When I save rpmdb
@@ -55,10 +54,9 @@ Feature: DNF/Behave test Repository packages remove
          When I save rpmdb
           And I enable repository "test4"
           And I successfully run "dnf -y repository-packages test2 remove-or-reinstall TestC"
-# FIXME - rpmdb changes doesn't work properly with reinstall
-#         Then rpmdb changes are
-#           | State       | Packages |
-#           | reinstalled | TestC    |
+         Then rpmdb changes are
+           | State       | Packages |
+           | reinstalled | TestC    |
          When I save rpmdb
           And I successfully run "dnf -y repository-packages test2 remove-or-reinstall TestB"
          Then rpmdb changes are
