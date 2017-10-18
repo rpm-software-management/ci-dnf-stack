@@ -12,7 +12,7 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/{overlay_dir} rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly
+          rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/{overlay_dir} rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project {repo}
     publishers:
       - workspace-cleanup
 
@@ -21,10 +21,22 @@
     jobs:
       - "{name}-{chroot}"
     overlay_dir: dnf-master
+    repo: dnf-nightly
     chroot:
       - epel-7-x86_64:
          overlay_dir: dnf-master-epel7
       - fedora-25-x86_64
+      - fedora-26-x86_64
+      - fedora-27-x86_64
+      - fedora-rawhide-x86_64
+
+- project:
+    name: nightly-modular
+    jobs:
+      - "{name}-{chroot}"
+    overlay_dir: dnf-modular
+    repo: dnf-nightly-modular
+    chroot:
       - fedora-26-x86_64
       - fedora-27-x86_64
       - fedora-rawhide-x86_64
