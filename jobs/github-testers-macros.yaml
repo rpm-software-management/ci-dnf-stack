@@ -177,9 +177,6 @@
 
           if [ "{name}" == "dnf" ] && [ -d dnf/dnf/module ]; then
             overlay_dir="dnf-modular"
-            pushd ci-dnf-stack
-              git checkout modularity
-            popd
           else
             overlay_dir="dnf-master"
           fi
@@ -225,6 +222,10 @@
           join() {{ local IFS="$1"; shift; echo "$*"; }}
           RPMS=($RPMS)
           pushd ci-dnf-stack
+            if [ "{name}" == "dnf" ] && [ -d dnf/dnf/module ]; then
+              git checkout modularity
+            fi
+
             pushd rpms
               join , "{{${{RPMS[@]}}}}" | xargs curl -O
             popd
