@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from behave import then
 from behave import when
 from behave.model import Table
+from rpm_utils import State
 import six
 from six.moves import zip
 import fnmatch
@@ -114,6 +115,11 @@ def step_rpmdb_changes_are(ctx):
                     rpmdb.remove(pkg_post)
                 state = rpm_utils.analyze_state(pkg_pre, pkg_post)
                 if state != expected_state:
+                    if state == State.unchanged and expected_state == State.reinstalled:
+                        # workaround for unchanged rpmdb timestamp
+                        text = getattr(ctx.cmd_result, 'stdout')
+                        if "Reinstalling     : {}".format(pkg) in text:
+                            continue
                     unexpected_state(pkg, state, expected_state, pkg_pre, pkg_post)
 
     # Now exclude packages matching regexp pattern in the ignore_list
