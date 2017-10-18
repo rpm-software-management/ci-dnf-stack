@@ -89,7 +89,7 @@ Given repository "modularityABDE" with packages
             rpms: [TestD]
         stream: f26
         summary: Module ModuleA summary
-        version: 1
+        version: 2
       document: modulemd
       version: 1
       ---
