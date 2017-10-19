@@ -176,6 +176,7 @@
 
           if [ "{name}" == "dnf" ] && [ -d dnf/dnf/module ]; then
             overlay_dir="dnf-modular"
+            sed -i -e "/wip\/modularity/d" ci-dnf-stack/overlays/$overlay_dir/overlay.yml
           else
             overlay_dir="dnf-master"
           fi
