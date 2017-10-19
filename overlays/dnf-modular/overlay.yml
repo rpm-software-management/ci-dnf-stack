@@ -6,6 +6,10 @@ aliases:
     url: https://src.fedoraproject.org/rpms/
 
 components:
+  - name: python-smartcols
+    distgit:
+      src: fedorapkgs:python-smartcols.git
+
   - name: libsolv
     git:
       src: github:openSUSE/libsolv.git
