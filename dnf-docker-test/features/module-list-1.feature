@@ -19,7 +19,7 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +1
+           ModuleA +f26 +2
            ModuleB +f26 +2
            ModuleD +f26 +1
            ModuleE +f26 +1
@@ -27,6 +27,8 @@ Feature: Module listing
            modularityX
            Name +Stream +Version
            ModuleX +f26 +1
+
+           Hint:
            """
 
   Scenario: I can list enabled modules
@@ -37,10 +39,13 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Version
            ModuleA +f26 +1
+           ModuleA +f26 +2
 
            modularityX
            Name +Stream +Version
            ModuleX +f26 +1
+
+           Hint:
            """
 
   Scenario: I can list installed modules
@@ -50,11 +55,13 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +1
+           ModuleA +f26 +2
 
            modularityX
            Name +Stream +Version
            ModuleX +f26 +1
+
+           Hint:
            """
 
   Scenario: I can list disabled modules
@@ -64,9 +71,12 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
+           ModuleB +f26 +1
            ModuleB +f26 +2
            ModuleD +f26 +1
            ModuleE +f26 +1
+
+           Hint:
            """
 
   Scenario: I can limit the scope through providing specific module names
@@ -76,12 +86,14 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +1
+           ModuleA +f26 +2
            ModuleE +f26 +1
 
            modularityX
            Name +Stream +Version
            ModuleX +f26 +1
+
+           Hint:
            """
        When I successfully run "dnf module list --installed ModuleX"
        Then the command stdout should match line by line regexp
@@ -90,6 +102,8 @@ Feature: Module listing
            modularityX
            Name +Stream +Version
            ModuleX +f26 +1
+
+           Hint:
            """
        When I successfully run "dnf module list --enabled ModuleA"
        Then the command stdout should match line by line regexp
@@ -98,6 +112,9 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Version
            ModuleA +f26 +1
+           ModuleA +f26 +2
+
+           Hint:
            """
        When I successfully run "dnf module list --disabled ModuleB ModuleD"
        Then the command stdout should match line by line regexp
@@ -106,7 +123,10 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Version
            ModuleB +f26 +1
+           ModuleB +f26 +2
            ModuleD +f26 +1
+
+           Hint:
            """
 
   Scenario: Following module details are listed: Name, Stream, Version, Profiles, Installed, Info
@@ -115,11 +135,13 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version +Profiles +Installed +Info
-           ModuleA +f26 +1 +client, default, ... +client +Module ModuleA summary
-           ModuleE +f26 +1 +default +Module ModuleE summary
+           Name +Stream +Version +Profiles +
+           ModuleA +f26 +2 +client \[i\], default, ...
+           ModuleE +f26 +1 +default
 
            modularityX
-           Name +Stream +Version +Profiles +Installed +Info
-           ModuleX +f26 +1 +default +default +Module ModuleX summary
+           Name +Stream +Version +Profiles +
+           ModuleX +f26 +1 +default \[i\]
+
+           Hint: \[d\]efault, \[i\]nstalled, \[l\]ocked
            """
