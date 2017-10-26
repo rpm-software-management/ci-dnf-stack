@@ -18,8 +18,8 @@ Feature: Installing and removing profiles and RPMs for a locked module stream
        When I successfully run "dnf module install -y ModuleA/client"
 #TODO verify that profile has been successfully installed
        Then rpmdb changes are
-            | State     | Packages  |
-            | installed | TestB-1-1 |
+            | State     | Packages       |
+            | installed | TestB/1-1.modA |
 
   Scenario: Having a locked module:stream I can still remove profiles for a locked profile version
        When I save rpmdb
@@ -34,9 +34,9 @@ Feature: Installing and removing profiles and RPMs for a locked module stream
         And I successfully run "dnf install -y TestC"
         And I successfully run "dnf remove --assumeyes TestD"
        Then rpmdb changes are
-            | State     | Packages  |
-            | installed | TestC-1-1 |
-            | removed   | TestD     |
+            | State     | Packages       |
+            | installed | TestC/1-1.modA |
+            | removed   | TestD          |
 
   Scenario: Having a locked module:stream, I won't be getting an updates for an installed profile
       Given I successfully run "dnf module install -y ModuleB:f26:1/default"
