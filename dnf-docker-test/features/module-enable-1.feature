@@ -8,7 +8,14 @@ Feature: Enabling module stream
 
   Scenario: I can enable a module when specifying stream
        When I successfully run "dnf module enable ModuleA:f26"
+#TODO: add a check that the module is really enabled
 
-  Scenario: I can't enable a module without specifying a stream
-       When I run "dnf module enable ModuleB"
-       Then the command exit code is 1
+  Scenario: I can enable a module when specifying both stream and corrent version
+       When I successfully run "dnf module enable ModuleB:f26:1"
+#TODO: add a check that the module is really enabled
+
+  Scenario: Enabling of an already enabled module would pass
+       When I successfully run "dnf module enable ModuleA:f26"
+
+  Scenario: I can enable a different stream of an already enabled module
+       When I successfully run "dnf module enable ModuleA:f27 --assumeyes"
