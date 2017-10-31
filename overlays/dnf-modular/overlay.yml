@@ -9,6 +9,7 @@ components:
   - name: libdnf
     git:
       src: github:rpm-software-management/libdnf.git
+      freeze: 0.11.1
 
   - name: dnf
     git:
