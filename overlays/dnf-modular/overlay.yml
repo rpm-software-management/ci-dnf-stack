@@ -6,32 +6,6 @@ aliases:
     url: https://src.fedoraproject.org/rpms/
 
 components:
-  - name: libsolv
-    git:
-      src: github:openSUSE/libsolv.git
-    distgit:
-      src: fedorapkgs:libsolv.git
-      patches: drop
-
-  - name: librepo
-    git:
-      src: github:rpm-software-management/librepo.git
-    distgit:
-      src: fedorapkgs:librepo.git
-
-  - name: createrepo_c
-    git:
-      src: github:rpm-software-management/createrepo_c.git
-    distgit:
-      src: fedorapkgs:createrepo_c.git
-      patches: drop
-
-  - name: libcomps
-    git:
-      src: github:rpm-software-management/libcomps.git
-    distgit:
-      src: fedorapkgs:libcomps.git
-
   - name: libdnf
     git:
       src: github:rpm-software-management/libdnf.git
