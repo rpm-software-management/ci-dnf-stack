@@ -15,11 +15,3 @@ components:
     git:
       src: github:rpm-software-management/dnf.git
       branch: origin/wip/modularity
-
-  - name: dnf-plugins-core
-    git:
-      src: github:rpm-software-management/dnf-plugins-core.git
-
-  - name: dnf-plugins-extras
-    git:
-      src: github:rpm-software-management/dnf-plugins-extras.git
