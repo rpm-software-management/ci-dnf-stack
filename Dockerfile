@@ -10,21 +10,22 @@ COPY dnf-docker-test/x509certgen /usr/local/bin
 
 RUN set -x && \
     echo -e "deltarpm=0\ntsflags=nodocs" >> /etc/dnf/dnf.conf && \
-    # httpd:      http-style repos
-    # vsftpd:     ftp-style repos
-    # behave:     core
-    # six:        py2/py3
-    # enum34:     enum for py2, rpmdb.State
-    # whichcraft: shutil.which() for py2
-    # jinja2:     rpmspec template
-    # pexpect:    shell tests
-    # rpm-build:  building dummy RPMs
-    # openssl:    generating TLS certificates
-    # mod_ssl:    https-style repos
-    # gnupg2:     GPG keys
-    # rng-tools:  to generate enough _random_ data for GPG keys
-    # rpm-sign:   rpm signing
-    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl gnupg2 rng-tools rpm-sign && \
+    # httpd:        http-style repos
+    # vsftpd:       ftp-style repos
+    # behave:       core
+    # six:          py2/py3
+    # enum34:       enum for py2, rpmdb.State
+    # whichcraft:   shutil.which() for py2
+    # jinja2:       rpmspec template
+    # pexpect:      shell tests
+    # rpm-build:    building dummy RPMs
+    # openssl:      generating TLS certificates
+    # mod_ssl:      https-style repos
+    # gnupg2:       GPG keys
+    # rng-tools:    to generate enough _random_ data for GPG keys
+    # rpm-sign:     rpm signing
+    # createrepo_c: building repos
+    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl gnupg2 rng-tools rpm-sign createrepo_c && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
         dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
