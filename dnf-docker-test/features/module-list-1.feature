@@ -19,7 +19,7 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +2
+           ModuleA +f26 \[e\] +2
            ModuleA +f27 +1
            ModuleB +f26 +2
            ModuleB +f27 +1
@@ -28,7 +28,7 @@ Feature: Module listing
 
            modularityX
            Name +Stream +Version
-           ModuleX +f26 +1
+           ModuleX +f26 \[e\] +1
 
            Hint:
            """
@@ -40,12 +40,12 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +1
-           ModuleA +f26 +2
+           ModuleA +f26 \[e\] +1
+           ModuleA +f26 \[e\] +2
 
            modularityX
            Name +Stream +Version
-           ModuleX +f26 +1
+           ModuleX +f26 \[e\] +1
 
            Hint:
            """
@@ -57,11 +57,11 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +2
+           ModuleA +f26 \[e\] +2
 
            modularityX
            Name +Stream +Version
-           ModuleX +f26 +1
+           ModuleX +f26 \[e\] +1
 
            Hint:
            """
@@ -90,13 +90,13 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +2
+           ModuleA +f26 \[e\] +2
            ModuleA +f27 +1
            ModuleE +f26 +1
 
            modularityX
            Name +Stream +Version
-           ModuleX +f26 +1
+           ModuleX +f26 \[e\] +1
 
            Hint:
            """
@@ -106,7 +106,7 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityX
            Name +Stream +Version
-           ModuleX +f26 +1
+           ModuleX +f26 \[e\] +1
 
            Hint:
            """
@@ -116,8 +116,8 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version
-           ModuleA +f26 +1
-           ModuleA +f26 +2
+           ModuleA +f26 \[e\] +1
+           ModuleA +f26 \[e\] +2
 
            Hint:
            """
@@ -142,13 +142,13 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Version +Profiles +
-           ModuleA +f26 +2 +client \[i\], default, ...
+           ModuleA +f26 \[e\] +2 +client \[i\], default, ...
            ModuleA +f27 +1 +client, default, ...
            ModuleE +f26 +1 +default
 
            modularityX
            Name +Stream +Version +Profiles +
-           ModuleX +f26 +1 +default \[i\]
+           ModuleX +f26 \[e\] +1 +default \[i\]
 
-           Hint: \[d\]efault, \[i\]nstalled, \[l\]ocked
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled, \[l\]ocked
            """
