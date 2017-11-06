@@ -93,7 +93,12 @@ done
 if [ "$action" = "run" ]; then
     TESTS=()
     for arg; do
-        TESTS+=("$arg")
+        tests=$( find $PROG_PATH/dnf-docker-test/features/ \( -name "$arg" -o -name "$arg.feature" \) -type f -printf "%f " )
+        if [ -z "$tests" ]; then
+            echo "No test matching '$arg'"
+            exit 1
+        fi
+        TESTS+=( $tests )
         shift
     done
 elif [ "$action" = "build" ]; then
