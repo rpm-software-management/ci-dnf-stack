@@ -147,6 +147,45 @@ def step_an_ini_file_filepath_modified_with(ctx, filepath):
                     conf.set(section, key, settings[key])
     file_utils.create_file_with_contents(filepath, conf)
 
+
+@then('an INI file "{filepath}" should contain')
+def step_an_ini_file_filepath_should_contain(ctx, filepath):
+    """
+    Tests whether an INI file contain respective Section, Key, Value
+    triples.
+
+    Requires table with following headers:
+
+    ========= ===== =======
+     Section   Key   Value
+    ========= ===== =======
+
+    Examples:
+
+    .. code-block:: gherkin
+
+       Feature: Testing an INI file content
+         Scenario: Check if repozitory Test was enabled
+            Then an INI file "/etc/yum.repos.d/test.repo" should contain
+               | Section | Key        | Value |
+               | Test    | enabled    | True  |
+    """
+    ini_table = table_utils.parse_skv_table(ctx, HEADINGS_INI)
+    sections = ini_table.keys()
+    conf = configparser.ConfigParser()
+    conf.read(filepath)
+    for section in sections:
+        settings = ini_table[section]
+        ctx.assertion.assertTrue(conf.has_section(section), "No such section '%s' in '%s'" % (section, filepath))
+        keys = settings.keys()
+        for key in keys:
+            ctx.assertion.assertTrue(conf.has_option(section, key),
+                                     "No such option '%s' in section '%s' in '%s'" % (key, section, filepath))
+            value = settings[key]
+            ini_value = conf.get(section, key)
+            ctx.assertion.assertEquals(value, ini_value)
+
+
 @given('I run steps from file "{filepath}"')
 def step_i_run_steps_from_file(ctx, filepath):
     """
