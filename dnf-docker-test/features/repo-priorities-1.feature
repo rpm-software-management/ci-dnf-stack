@@ -89,15 +89,16 @@ Feature: Test for repository priorities
         And I run "dnf -y upgrade Test*"
        Then rpmdb changes are
          | State     | Packages           |
-	 | updated   | TestB/2,TestD/3    |
+         | updated   | TestB/2,TestD/3    |
 
   Scenario: Downgrade a single pkg from the highest prio repo
        When I enable repository "repo10"
+        And I run "dnf -y upgrade TestB-3"
         And I save rpmdb
-        And I run "dnf -y downgrade TestD"
+        And I run "dnf -y downgrade TestB"
        Then rpmdb changes are
          | State      | Packages           |
-         | downgraded | TestD/1            |
+         | downgraded | TestB/1            |
 
   Scenario: Downgrade to required version of a pkg (not from the highest prio repo)
        When I run "dnf -y upgrade TestA-3"
@@ -113,4 +114,4 @@ Feature: Test for repository priorities
         And I run "dnf -y downgrade Test*"
        Then rpmdb changes are
          | State      | Packages           |
-	 | downgraded | TestA/2,TestB/1,TestC/2,TestD/1 |
+         | downgraded | TestA/2,TestB/1,TestC/2,TestD/1 |
