@@ -184,7 +184,6 @@ def step_userinstalled_match(ctx):
     match = table[keys[0]] if keys[0] in table else None
     notmatch = table[keys[1]] if keys[1] in table else None
 
-    assert text, 'No output'
     if match:
         for m in pkgs_split(match):  # should be matched
             assert m in text, 'Package {} not matched as userinstalled'.format(m)
