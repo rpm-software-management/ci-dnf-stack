@@ -371,7 +371,7 @@ def given_repository_with_packages(ctx, enabled, rtype, repository, gpgkey=None)
     else:
         tmpdir = tempfile.mkdtemp()
         repopath = tmpdir
-    srpm_tmpdir = '{}-source'.format(tmpdir.strip('/'))
+    srpm_tmpdir = '{}-source'.format(tmpdir.rstrip('/'))
     srpm_repopath = '{}-source'.format(repopath.rstrip('/'))
     os.mkdir(srpm_tmpdir)  # create a directory for src.rpm pkgs
     template = JINJA_ENV.from_string(PKG_TMPL)
