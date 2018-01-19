@@ -1,3 +1,4 @@
+@xfail
 Feature: Test for check --dependencies command
 
   @setup
