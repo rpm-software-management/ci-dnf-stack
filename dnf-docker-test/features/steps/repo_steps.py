@@ -200,7 +200,15 @@ Provides:       {{ prv }}
 %description
 %{summary}.
 
+%prep
+touch %{name}-%{version}-%{release}.tmp .
+
+%install
+mkdir -p %{buildroot}/usr/local/
+mv %{name}-%{version}-%{release}.tmp %{buildroot}/usr/local/
+
 %files
+/usr/local/%{name}-%{version}-%{release}.tmp
 """
 REPO_TMPL = "/etc/yum.repos.d/{!s}.repo"
 HEADINGS_REPO = ["Package", "Tag", "Value"]
