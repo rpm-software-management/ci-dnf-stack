@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from behave import given
+from behave import step
 from behave.model import Table
 import six
 from six.moves import configparser
@@ -40,6 +41,10 @@ def step_a_file_filepath_with(ctx, filepath):
     """
     ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
     file_utils.create_file_with_contents(filepath, ctx.text)
+
+@step('a file "{filepath}" exists')
+def step_a_file_filepath_exists(ctx, filepath):
+    ctx.assertion.assertTrue(os.path.exists(filepath))
 
 @given('an INI file "{filepath}" with')
 def step_an_ini_file_filepath_with(ctx, filepath):
