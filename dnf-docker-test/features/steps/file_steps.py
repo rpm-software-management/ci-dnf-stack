@@ -46,6 +46,10 @@ def step_a_file_filepath_with(ctx, filepath):
 def step_a_file_filepath_exists(ctx, filepath):
     ctx.assertion.assertTrue(os.path.exists(filepath))
 
+@step('a file "{filepath}" does not exist')
+def step_a_file_filepath_does_not_exist(ctx, filepath):
+    ctx.assertion.assertFalse(os.path.exists(filepath))
+
 @given('an INI file "{filepath}" with')
 def step_an_ini_file_filepath_with(ctx, filepath):
     """
