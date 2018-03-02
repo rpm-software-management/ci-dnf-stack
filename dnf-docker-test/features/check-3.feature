@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for dnf check --obsoleted command
 
   Scenario: Force install package that obsoletes already installed package

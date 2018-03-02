@@ -1,4 +1,3 @@
-@xfail
 Feature: Test for dnf check --duplicates command
 
   Scenario: Install package in version 1
