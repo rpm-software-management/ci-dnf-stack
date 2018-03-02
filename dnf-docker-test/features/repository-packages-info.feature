@@ -35,7 +35,7 @@ Feature: DNF/Behave test Repository packages info
               Version      : 1
               Release      : 1
               Arch         : noarch
-              Size         : 5.5 k
+              Size         : 6.1 k
               Source       : TestB-1-1.src.rpm
               Repo         : test
               Summary      : Empty
@@ -70,7 +70,7 @@ Feature: DNF/Behave test Repository packages info
               Version      : 1
               Release      : 1
               Arch         : noarch
-              Size         : 5.5 k
+              Size         : 6.1 k
               Source       : TestB-1-1.src.rpm
               Repo         : test
               Summary      : Empty
