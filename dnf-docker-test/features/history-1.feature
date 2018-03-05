@@ -32,7 +32,7 @@ Feature: DNF/Behave test Transaction history - base
          Then rpmdb changes are
            | State        | Packages      |
            | removed      | TestA, TestB  |
-          And history should match "history undo last -y" with "Erase" and "2" packages
+          And history should match "history undo last -y" with "Removed" and "2" packages
 
     Scenario: Undo last transaction again
          When I save rpmdb
@@ -48,7 +48,7 @@ Feature: DNF/Behave test Transaction history - base
          Then rpmdb changes are
            | State        | Packages      |
            | removed      | TestA, TestB  |
-          And history should match "history undo last-2 -y" with "Erase" and "2" packages
+          And history should match "history undo last-2 -y" with "Removed" and "2" packages
 
     Scenario: Redo last transaction
          When I save rpmdb
@@ -72,7 +72,7 @@ Feature: DNF/Behave test Transaction history - base
          Then rpmdb changes are
            | State        | Packages      |
            | removed      | TestA, TestB  |
-          And history should match "history redo last-1 -y" with "Erase" and "2" packages
+          And history should match "history redo last-1 -y" with "Removed" and "2" packages
 
     Scenario: History list of update packages
          When I save rpmdb
@@ -87,7 +87,7 @@ Feature: DNF/Behave test Transaction history - base
            | State        | Packages                    |
            | updated      | TestA, TestB, TestC, TestD  |
          When I successfully run "dnf history"
-         Then history should match "update -y" with "Update" and "4" package
+         Then history should match "update -y" with "Upgrade" and "4" package
 
     Scenario: Rollback update
          When I save rpmdb
