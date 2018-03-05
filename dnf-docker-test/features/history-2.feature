@@ -31,14 +31,14 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
           And I successfully run "dnf install -y TestD"
           And I successfully run "dnf remove -y TestE"
          Then history "last-1..last" should match "install -y TestD" with "Install" and "1" package
-          And history "list last-1..last" should match "remove -y TestE" with "Erase" and "3" packages
-          And history "last" should match "remove -y TestE" with "Erase" and "3" packages
+          And history "list last-1..last" should match "remove -y TestE" with "Removed" and "3" packages
+          And history "last" should match "remove -y TestE" with "Removed" and "3" packages
 
     Scenario: History list package
          When I save rpmdb
           And I successfully run "dnf install -y TestC"
          Then history "TestC" should match "install -y TestC" with "Install" and "1" package
-          And history "list TestC" should match "remove -y TestE" with "Erase" and "3" packages
+          And history "list TestC" should match "remove -y TestE" with "Removed" and "3" packages
 
     Scenario: History info
          When I save rpmdb
@@ -52,7 +52,7 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
            | Key          | Value            |
            | Command Line | remove -y TestA  |
            | Return-Code  | Success          |
-           | Erase        | TestA, TestB     |
+           | Removed      | TestA, TestB     |
 
     Scenario: History info in range - transaction merging
          When I save rpmdb
@@ -93,4 +93,4 @@ Feature: DNF/Behave test Transaction history [info, list, userinstalled]
            | Upgrade      | TestA, TestB               |
            | Upgraded     | TestA, TestB               |
            | Install      | TestA, TestB, TestC, TestE |
-           | Erase        | TestA, TestB               |
+           | Removed      | TestA, TestB               |
