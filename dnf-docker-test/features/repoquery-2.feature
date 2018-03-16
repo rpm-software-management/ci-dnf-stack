@@ -19,7 +19,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --requires
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --requires TestA"
+        And I run "dnf -q repoquery --requires TestA"
        Then the command stdout should match exactly
             """
             TestB
@@ -29,7 +29,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --provides
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --provides TestA"
+        And I run "dnf -q repoquery --provides TestA"
        Then the command stdout should match exactly
             """
             TestA = 1-1
@@ -40,7 +40,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --conflicts
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --conflicts TestA"
+        And I run "dnf -q repoquery --conflicts TestA"
        Then the command stdout should match exactly
             """
             TestD
@@ -50,7 +50,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --obsoletes
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --obsoletes TestA"
+        And I run "dnf -q repoquery --obsoletes TestA"
        Then the command stdout should match exactly
             """
             TestE
@@ -60,7 +60,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --whatrequires
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --whatrequires TestB"
+        And I run "dnf -q repoquery --whatrequires TestB"
        Then the command stdout should match exactly
             """
             TestA-0:1-1.noarch
@@ -70,7 +70,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --whatprovides
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --whatprovides TestC"
+        And I run "dnf -q repoquery --whatprovides TestC"
        Then the command stdout should match exactly
             """
             TestA-0:1-1.noarch
@@ -80,7 +80,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --whatconflicts
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --whatconflicts TestD"
+        And I run "dnf -q repoquery --whatconflicts TestD"
        Then the command stdout should match exactly
             """
             TestA-0:1-1.noarch
@@ -90,7 +90,7 @@ Feature: Test for main repoquery functionality
   Scenario: repoquery --whatobsoletes
        When I save rpmdb
         And I enable repository "base"
-        And I run "dnf repoquery --whatobsoletes TestE"
+        And I run "dnf -q repoquery --whatobsoletes TestE"
        Then the command stdout should match exactly
             """
             TestA-0:1-1.noarch
