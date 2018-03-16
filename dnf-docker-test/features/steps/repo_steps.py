@@ -691,6 +691,7 @@ def given_package_groups_defined_in_repository(ctx, repository):
 
     createrepo = which("createrepo_c")
     ctx.assertion.assertIsNotNone(createrepo, "createrepo_c is required")
+    createrepo = "{!s} {!s}".format(createrepo, "--no-database")
 
     # prepare the comps.xml
     comps_xml = COMPS_PREFIX
