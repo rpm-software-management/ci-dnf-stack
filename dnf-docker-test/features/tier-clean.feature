@@ -119,12 +119,14 @@ Feature: Tier tests for cleaning dnf cache
       # cleanup  
       When I successfully run "dnf -y remove TestA TestC"
 
+"""
+  # currently commented out, the desired behaviour is not clear
   # note: dnf info and repolist do not reflect expire-cache, see bug 1552576
   Scenario: Expire dnf cache (dnf clean expire-cache) and install previously cached package
   # CACHE-CLEAN-3
   # it is checked that install reflect expire-cache
       When I successfully run "dnf makecache"
-       And I successfully run "dnf -y install TestA"
+       And I successfully run "dnf -y --setopt=keepcache=1 install TestA"
        # pkg TestA is already cached
       Then the command stdout should match regexp ".SKIPPED. TestA-1-1.noarch.rpm: Already downloaded"
       When I successfully run "dnf -y remove TestA"
@@ -135,6 +137,7 @@ Feature: Tier tests for cleaning dnf cache
        And the command stdout should match regexp "TestA-1-1.noarch.rpm"
       # cleanup  
       When I successfully run "dnf -y remove TestA"
+"""
 
   Scenario: Expire dnf cache and run repoquery for a package that is no more available
   # CACHE-CLEAN-3
