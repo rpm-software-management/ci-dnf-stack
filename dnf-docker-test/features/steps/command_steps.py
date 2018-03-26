@@ -248,7 +248,7 @@ def step_history_info(ctx, spec=""):
     def pkgs_split(pkgs):
         return pkgs.split(",")
 
-    actions = ['Install', 'Erase', 'Upgrade', 'Upgraded', 'Reinstall', 'Downgrade']
+    actions = ['Install', 'Removed', 'Upgrade', 'Upgraded', 'Reinstall', 'Downgrade']
     keys = ['Command Line', 'Return-Code'] + actions
 
     table = table_utils.parse_kv_table(ctx, ['Key', 'Value'], keys)
