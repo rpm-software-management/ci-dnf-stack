@@ -12,6 +12,8 @@ Feature: Tier tests for cleaning dnf cache
       Given repository "local" with packages
          | Package       | Tag       | Value  |
          | TestC         | Version   | 1      |
+         | TestD         | Version   | 1      |
+         | TestE         | Version   | 1      |
       When I enable repository "base"
        And I enable repository "local"
        And I successfully run "dnf makecache"
@@ -119,9 +121,8 @@ Feature: Tier tests for cleaning dnf cache
       # cleanup  
       When I successfully run "dnf -y remove TestA TestC"
 
-"""
+"""    
   # currently commented out, the desired behaviour is not clear
-  # note: dnf info and repolist do not reflect expire-cache, see bug 1552576
   Scenario: Expire dnf cache (dnf clean expire-cache) and install previously cached package
   # CACHE-CLEAN-3
   # it is checked that install reflect expire-cache
@@ -139,9 +140,9 @@ Feature: Tier tests for cleaning dnf cache
       When I successfully run "dnf -y remove TestA"
 """
 
-  Scenario: Expire dnf cache and run repoquery for a package that is no more available
+  Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
   # CACHE-CLEAN-3
-  # it is checked that repoquery reflect expire-cache
+  # it is checked that repoquery reflects expire-cache
       When I successfully run "dnf makecache"
        # remove TestC from repo "local", it will be only in dnf cache
        And I successfully run "sh -c 'rm -f TestC*'" in repository "local"
@@ -151,3 +152,35 @@ Feature: Tier tests for cleaning dnf cache
       When I successfully run "dnf clean expire-cache"
        And I successfully run "dnf repoquery --available TestC"
       Then the command stdout should not match regexp "TestC"
+
+  Scenario: Expire dnf cache and run repolist when a package has been removed meanwhile
+  # CACHE-CLEAN-3
+  # it is checked that repolist reflects expire-cache
+      When I successfully run "dnf makecache"
+       # remove TestD from repo "local", it will be only in dnf cache
+       And I successfully run "sh -c 'rm -f TestD*'" in repository "local"
+       And I successfully run "sh -c 'createrepo_c --update .'" in repository "local"
+       And I successfully run "dnf repolist"
+      Then the command stdout should match regexp "local.*local.*2"
+      When I successfully run "dnf clean expire-cache"
+       And I successfully run "dnf repolist"
+      # number of packages in the repo local should be updated
+      Then the command stdout should match regexp "local.*local.*1"
+
+"""
+  # currently commented out
+  # note: dnf info still does not reflect expire-cache, see bug 1552576
+  Scenario: Expire dnf cache and run info for a package that has been removed meanwhile
+  # CACHE-CLEAN-3
+  # it is checked that info reflects expire-cache
+      When I successfully run "dnf makecache"
+       # remove TestE from repo "local", it will be only in dnf cache
+       And I successfully run "sh -c 'rm -f TestE*'" in repository "local"
+       And I successfully run "sh -c 'createrepo_c --update .'" in repository "local"
+       And I successfully run "dnf info TestE"
+      Then the command stdout should match regexp "Name.*:.*TestE"
+      When I successfully run "dnf clean expire-cache"
+       And I run "dnf info TestE"
+      Then the command should fail
+      Then the command stderr should match regexp "Error: No matching Packages"
+"""
