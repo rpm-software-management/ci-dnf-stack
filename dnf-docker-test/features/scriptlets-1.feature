@@ -70,7 +70,7 @@ Feature: Test for successful and failing rpm scriptlets
        Then rpmdb changes are
          | State     | Packages       |
          | installed | Test-post-fail |
-        And the command stderr should match regexp "Non-fatal POSTIN scriptlet failure in rpm package Test-post-fail"
+        And the command stderr should match regexp "Error in POSTIN scriptlet in rpm package Test-post-fail"
 
   Scenario: Install a pkg with a failing %posttrans scriptlet
        When I save rpmdb
@@ -78,7 +78,7 @@ Feature: Test for successful and failing rpm scriptlets
        Then rpmdb changes are
          | State     | Packages            |
          | installed | Test-posttrans-fail |
-        And the command stderr should match regexp "Non-fatal POSTTRANS scriptlet failure in rpm package Test-posttrans-fail"
+        And the command stderr should match regexp "Error in POSTTRANS scriptlet in rpm package Test-posttrans-fail"
 
   Scenario: Remove a pkg with a successful %preun scriptlet
        When I save rpmdb
@@ -134,4 +134,4 @@ Feature: Test for successful and failing rpm scriptlets
        Then rpmdb changes are
          | State     | Packages         |
          | removed   | Test-postun-fail |
-        And the command stderr should match regexp "Non-fatal POSTUN scriptlet failure in rpm package Test-postun-fail"
+        And the command stderr should match regexp "Error in POSTUN scriptlet in rpm package Test-postun-fail"
