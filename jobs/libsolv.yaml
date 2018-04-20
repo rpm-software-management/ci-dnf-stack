@@ -1,5 +1,5 @@
 - scm:
-    name: libsolv-scm
+    name: dnf-libsolv-scm
     scm:
       - git:
           url: "https://github.com/openSUSE/libsolv.git"
@@ -9,7 +9,7 @@
           skip-tag: true
 
 - project:
-    name: libsolv
+    name: dnf-libsolv
     github-token: !include-raw: github-token.txt
     ghprb-auth-id: !include-raw: ghprb-auth-id.txt
     github_repo: openSUSE/libsolv

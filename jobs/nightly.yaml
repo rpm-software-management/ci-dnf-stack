@@ -4,7 +4,7 @@
     concurrent: False
     node: dnf
     scm:
-      - ci-dnf-stack-scm
+      - dnf-ci-dnf-stack-scm
     triggers:
       - timed: "@midnight"
     builders:
@@ -17,7 +17,7 @@
       - workspace-cleanup
 
 - project:
-    name: nightly
+    name: dnf-nightly
     jobs:
       - "{name}-{chroot}"
     overlay_dir: dnf-master
@@ -31,7 +31,7 @@
       - fedora-rawhide-x86_64
 
 - project:
-    name: nightly-modular
+    name: dnf-nightly-modular
     jobs:
       - "{name}-{chroot}"
     overlay_dir: dnf-modular

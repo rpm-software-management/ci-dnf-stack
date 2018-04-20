@@ -1,5 +1,5 @@
 - scm:
-    name: dnf-scm
+    name: dnf-dnf-scm
     scm:
       - git:
           url: "https://github.com/rpm-software-management/dnf.git"
@@ -12,7 +12,7 @@
           skip-tag: true
 
 - project:
-    name: dnf
+    name: dnf-dnf
     github-token: !include-raw: github-token.txt
     ghprb-auth-id: !include-raw: ghprb-auth-id.txt
     github_repo: rpm-software-management/dnf
