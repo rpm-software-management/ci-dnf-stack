@@ -1,5 +1,5 @@
 - scm:
-    name: dnf-dnf-plugins-extras-scm
+    name: dnf-plugins-extras-scm
     scm:
       - git:
           url: "https://github.com/rpm-software-management/dnf-plugins-extras.git"
@@ -11,7 +11,7 @@
           skip-tag: true
 
 - project:
-    name: dnf-dnf-plugins-extras
+    name: dnf-plugins-extras
     github-token: !include-raw: github-token.txt
     ghprb-auth-id: !include-raw: ghprb-auth-id.txt
     github_repo: rpm-software-management/dnf-plugins-extras

@@ -3,7 +3,7 @@
 ############
 
 - scm:
-    name: dnf-ci-dnf-stack-scm
+    name: ci-dnf-stack-scm
     scm:
       - git:
           url: "https://github.com/rpm-software-management/ci-dnf-stack.git"
@@ -26,7 +26,7 @@
 ##############
 
 - job-template:
-    name: "{name}-trigger"
+    name: "dnf-{name}-trigger"
     defaults: github-testers-defaults
     concurrent: True
     node: dnf
@@ -79,7 +79,7 @@
           fi
     publishers:
       - trigger-parameterized-builds:
-          - project: "{name}-build"
+          - project: "dnf-{name}-build"
             current-parameters: True
             trigger-with-no-params: True
             property-file: props
@@ -90,7 +90,7 @@
 ###################
 
 - job-template:
-    name: "{name}-update-gh-status"
+    name: "dnf-{name}-update-gh-status"
     defaults: github-testers-defaults
     concurrent: True
     node: dnf
@@ -143,16 +143,16 @@
 ###########
 
 - job-template:
-    name: "{name}-build"
+    name: "dnf-{name}-build"
     defaults: github-testers-defaults
     concurrent: True
     node: dnf
     scm:
-      - dnf-ci-dnf-stack-scm
+      - ci-dnf-stack-scm
       - "{name}-scm"
     builders:
       - trigger-builds:
-          - project: "{name}-update-gh-status"
+          - project: "dnf-{name}-update-gh-status"
             current-parameters: True
             predefined-parameters: |
               GH_STATE=pending
@@ -186,12 +186,12 @@
           echo "RPMS=$RPMS" > props
     publishers:
       - trigger-parameterized-builds:
-          - project: "{name}-provision"
+          - project: "dnf-{name}-provision"
             current-parameters: True
             condition: SUCCESS
             property-file: props
             fail-on-missing: True
-          - project: "{name}-update-gh-status"
+          - project: "dnf-{name}-update-gh-status"
             current-parameters: True
             condition: UNSTABLE_OR_WORSE
             predefined-parameters: |
@@ -207,12 +207,12 @@
 ###############
 
 - job-template:
-    name: "{name}-provision"
+    name: "dnf-{name}-provision"
     defaults: github-testers-defaults
     concurrent: False
     node: dnf
     scm:
-      - dnf-ci-dnf-stack-scm
+      - ci-dnf-stack-scm
     builders:
       # Download RPMs and prepare container
       - shell: |
@@ -237,12 +237,12 @@
           echo "CONTAINER=$CONTAINER" >> props
     publishers:
       - trigger-parameterized-builds:
-          - project: "{name}-test"
+          - project: "dnf-{name}-test"
             current-parameters: True
             condition: SUCCESS
             property-file: props
             fail-on-missing: True
-          - project: "{name}-update-gh-status"
+          - project: "dnf-{name}-update-gh-status"
             current-parameters: True
             condition: UNSTABLE_OR_WORSE
             predefined-parameters: |
@@ -258,13 +258,13 @@
 ##########
 
 - job-template:
-    name: "{name}-test"
+    name: "dnf-{name}-test"
     defaults: github-testers-defaults
     concurrent: False
     node: dnf
     builders:
       - trigger-builds:
-          - project: "{name}-update-gh-status"
+          - project: "dnf-{name}-update-gh-status"
             current-parameters: True
             predefined-parameters: |
               GH_STATE=pending
@@ -322,10 +322,10 @@
       - junit:
           results: test-results/*.xml
       - trigger-parameterized-builds:
-          - project: "{name}-teardown"
+          - project: "dnf-{name}-teardown"
             current-parameters: True
             condition: ALWAYS
-          - project: "{name}-update-gh-status"
+          - project: "dnf-{name}-update-gh-status"
             current-parameters: True
             condition: ALWAYS
             property-file: GH_UPDATE.txt
@@ -340,7 +340,7 @@
 ##############
 
 - job-template:
-    name: "{name}-teardown"
+    name: "dnf-{name}-teardown"
     defaults: github-testers-defaults
     concurrent: False
     node: dnf
@@ -355,9 +355,9 @@
 - job-group:
     name: github-testers-jobs
     jobs:
-      - "{name}-trigger"
-      - "{name}-update-gh-status"
-      - "{name}-build"
-      - "{name}-provision"
-      - "{name}-test"
-      - "{name}-teardown"
+      - "dnf-{name}-trigger"
+      - "dnf-{name}-update-gh-status"
+      - "dnf-{name}-build"
+      - "dnf-{name}-provision"
+      - "dnf-{name}-test"
+      - "dnf-{name}-teardown"

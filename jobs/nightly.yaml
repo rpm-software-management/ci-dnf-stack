@@ -4,7 +4,7 @@
     concurrent: False
     node: dnf
     scm:
-      - dnf-ci-dnf-stack-scm
+      - ci-dnf-stack-scm
     triggers:
       - timed: "@midnight"
     builders:
