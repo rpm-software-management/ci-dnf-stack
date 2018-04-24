@@ -15,7 +15,7 @@ Feature: DNF/Behave test Repository packages info
 
     Scenario: List info of all packages in repository test
          When I successfully run "dnf -q repository-packages test info all"
-         Then the command stdout should match
+         Then the command stdout should match line by line regexp
               """
               Installed Packages
               Name         : TestA
@@ -35,7 +35,7 @@ Feature: DNF/Behave test Repository packages info
               Version      : 1
               Release      : 1
               Arch         : noarch
-              Size         : 6.1 k
+              Size         : [0-9.]+ k
               Source       : TestB-1-1.src.rpm
               Repo         : test
               Summary      : Empty
@@ -63,14 +63,14 @@ Feature: DNF/Behave test Repository packages info
 
     Scenario: Single repository package info
          When I successfully run "dnf -q repository-packages test info TestB"
-         Then the command stdout should match
+         Then the command stdout should match line by line regexp
               """
               Available Packages
               Name         : TestB
               Version      : 1
               Release      : 1
               Arch         : noarch
-              Size         : 6.1 k
+              Size         : [0-9.]+ k
               Source       : TestB-1-1.src.rpm
               Repo         : test
               Summary      : Empty
