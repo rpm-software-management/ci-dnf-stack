@@ -1,5 +1,4 @@
-Feature: Test for download command, options --destdir, --resolve
-         # --source should be added when there's support for .src.rpm in repos
+Feature: Test for download command, options --destdir, --resolve, --source
 
   @setup
   Scenario: Feature Setup
@@ -20,6 +19,11 @@ Feature: Test for download command, options --destdir, --resolve
        Then the command should fail
         And the command stderr should match regexp "No package.*available"
 
+  Scenario: dnf download --source (when there is no such pkg)
+       When I run "dnf download --source TestA"
+       Then the command should fail
+        And the command stderr should match regexp "No package.*available"
+
   Scenario: dnf download (when there is such pkg)
        When I enable repository "base"
         And I successfully run "dnf download TestA"
@@ -29,6 +33,14 @@ Feature: Test for download command, options --destdir, --resolve
         # check that downloaded .rpm is the same as the one in the repo
         And I successfully run "bash -c 'diff TestA-2-1.noarch.rpm /var/www/html/tmp*/TestA-2-1.noarch.rpm'"
 
+  Scenario: dnf download --source (when there is such pkg)
+       When I successfully run "dnf download --source TestA"
+       Then the command stdout should match regexp "TestA-2.*src.rpm" 
+        # check that the file has been downloaded into working directory
+        And I successfully run "stat TestA-2-1.src.rpm"
+        # check that downloaded .rpm is the same as the one in the repo
+        And I successfully run "bash -c 'diff TestA-2-1.src.rpm /var/www/html/tmp*-source/TestA-2-1.src.rpm'"
+
   # check also download --verbose, there were some problems with it 
   Scenario: dnf download --verbose (when there is such pkg)
        When I successfully run "rm -f TestA-2-1.noarch.rpm"
@@ -36,6 +48,13 @@ Feature: Test for download command, options --destdir, --resolve
        Then the command stdout should match regexp "TestA-2.*rpm" 
         And I successfully run "stat TestA-2-1.noarch.rpm"
         And I successfully run "bash -c 'diff TestA-2-1.noarch.rpm /var/www/html/tmp*/TestA-2-1.noarch.rpm'"
+
+  Scenario: dnf download --source --verbose (when there is such pkg)
+       When I successfully run "rm -f TestA-2-1.src.rpm"
+        And I successfully run "dnf download --source --verbose TestA"
+       Then the command stdout should match regexp "TestA-2.*src.rpm" 
+        And I successfully run "stat TestA-2-1.src.rpm"
+        And I successfully run "bash -c 'diff TestA-2-1.src.rpm /var/www/html/tmp*-source/TestA-2-1.src.rpm'"
 
   Scenario: dnf download --resolve (download also dependencies)
        When I successfully run "dnf download --resolve TestA"
@@ -48,6 +67,20 @@ Feature: Test for download command, options --destdir, --resolve
         And I successfully run "stat TestC-1-1.noarch.rpm"
         And I successfully run "bash -c 'diff TestC-1-1.noarch.rpm /var/www/html/tmp*/TestC-1-1.noarch.rpm'"
 
+"""
+# currently fails, see bug 1571251
+  Scenario: dnf download --source --resolve (download also dependencies)
+       When I successfully run "dnf download --source --resolve TestA"
+       Then the command stdout should match regexp "TestC-1.*src.rpm" 
+        And the command stdout should match regexp "TestE-1.*src.rpm" 
+        # TestA-2 has already been downloaded, it is not downloaded again
+        And the command stdout should match regexp "SKIPPED.*TestA-2"
+        And I successfully run "stat TestE-1-1.src.rpm"
+        And I successfully run "bash -c 'diff TestE-1-1.src.rpm /var/www/html/tmp*-source/TestE-1-1.src.rpm'"
+        And I successfully run "stat TestC-1-1.src.rpm"
+        And I successfully run "bash -c 'diff TestC-1-1.src.rpm /var/www/html/tmp*-source/TestC-1-1.src.rpm'"
+"""
+
   Scenario: dnf download --destdir (when there is such pkg)
        When I successfully run "mkdir -p /tmp/testrpms"
         And I successfully run "dnf download --destdir /tmp/testrpms TestA"
@@ -57,6 +90,14 @@ Feature: Test for download command, options --destdir, --resolve
         # check that downloaded .rpm is the same as the one in the repo
         And I successfully run "bash -c 'diff /tmp/testrpms/TestA-2-1.noarch.rpm /var/www/html/tmp*/TestA-2-1.noarch.rpm'"
 
+  Scenario: dnf download --source --destdir (when there is such pkg)
+       When I successfully run "dnf download --source --destdir /tmp/testrpms TestA"
+       Then the command stdout should match regexp "TestA-2.*src.rpm" 
+        # check that the file has been downloaded into working directory
+        And I successfully run "stat /tmp/testrpms/TestA-2-1.src.rpm"
+        # check that downloaded .rpm is the same as the one in the repo
+        And I successfully run "bash -c 'diff /tmp/testrpms/TestA-2-1.src.rpm /var/www/html/tmp*-source/TestA-2-1.src.rpm'"
+
   Scenario: dnf download --destdir --verbose (when there is such pkg)
        When I successfully run "bash -c 'rm -f /tmp/testrpms/TestA*'"
         And I successfully run "dnf download --verbose --destdir /tmp/testrpms TestA"
@@ -65,6 +106,15 @@ Feature: Test for download command, options --destdir, --resolve
         And I successfully run "stat /tmp/testrpms/TestA-2-1.noarch.rpm"
         # check that downloaded .rpm is the same as the one in the repo
         And I successfully run "bash -c 'diff /tmp/testrpms/TestA-2-1.noarch.rpm /var/www/html/tmp*/TestA-2-1.noarch.rpm'"
+
+  Scenario: dnf download --source --destdir --verbose (when there is such pkg)
+       When I successfully run "bash -c 'rm -f /tmp/testrpms/TestA*'"
+        And I successfully run "dnf download --source --verbose --destdir /tmp/testrpms TestA"
+       Then the command stdout should match regexp "TestA-2.*src.rpm" 
+        # check that the file has been downloaded into working directory
+        And I successfully run "stat /tmp/testrpms/TestA-2-1.src.rpm"
+        # check that downloaded .rpm is the same as the one in the repo
+        And I successfully run "bash -c 'diff /tmp/testrpms/TestA-2-1.src.rpm /var/www/html/tmp*-source/TestA-2-1.src.rpm'"
 
   Scenario: dnf download --resolve (download dependencies when some are installed)
        When I successfully run "bash -c 'rm -f Test*rpm'"
