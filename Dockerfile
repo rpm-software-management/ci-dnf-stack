@@ -31,8 +31,8 @@ RUN set -x && \
         dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
         dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     fi && \
-    # prevent installation of dnf-plugins-extras (versionlock, local, torproxy)
-    rm -vf /rpms/*dnf-plugin-versionlock*.rpm /rpms/*dnf-plugin-local*.rpm /rpms/*dnf-plugin-torproxy*.rpm && \
+    # prevent installation of dnf-plugins-extras (versionlock, local, torproxy, migrate)
+    rm -vf /rpms/*dnf-plugin-versionlock*.rpm /rpms/*dnf-plugin-local*.rpm /rpms/*dnf-plugin-torproxy*.rpm /rpms/python2-dnf-plugin-migrate*.rpm && \
     # update dnf
     dnf -y --best upgrade dnf && \
     if [ $type = "local" ]; then \
