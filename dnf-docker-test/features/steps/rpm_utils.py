@@ -71,13 +71,13 @@ def find_pkg(pkgs, pkg, only_by_name=False):
         name = pkg
 
     for p in pkgs:
-        if p.name != name:
+        if p.name.decode() != name:
             continue
         if only_by_name:
             return p
-        if (epoch is None or p.epoch == epoch) and \
-           (version is None or p.version == version) and \
-           (release is None or p.release == release):
+        if (epoch is None or p.epoch.decode() == epoch) and \
+           (version is None or p.version.decode() == version) and \
+           (release is None or p.release.decode() == release):
             return p
         else:
             logging.warning("Similar package to {!r}: {!r}".format(pkg, hdr2nevra(p)))
