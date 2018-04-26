@@ -14,7 +14,7 @@ def sack_rpm_comparator():
     """ Gets all installed packages in the system, compare rpm output with DNF sack, and return sack"""
     comparerpmver = shell_call(['rpm', '-qa', '--queryformat',
                                 '%{NAME}-%|epoch?{%{epoch}:}:{0:}|%{VERSION}-%{RELEASE}.%{ARCH}\n'])
-    comparerpmver = [p for p in comparerpmver.splitlines() if not p.decode().startswith('gpg-pubkey')]
+    comparerpmver = [p for p in comparerpmver.splitlines() if not p.startswith('gpg-pubkey')]
     set_comparerpmver = set(comparerpmver)
     assert len(comparerpmver) == len(set_comparerpmver), 'RPM found multiple packages with same nevra'
     sack = dnf.Base().fill_sack(load_available_repos=False)
