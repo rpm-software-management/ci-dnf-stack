@@ -93,7 +93,7 @@ done
 if [ "$action" = "run" ]; then
     TESTS=()
     for arg; do
-        tests=$( find $PROG_PATH/dnf-docker-test/features/ \( -name "$arg" -o -name "$arg.feature" \) -type f -printf "%f " )
+        tests=$( find $PROG_PATH/dnf-docker-test/features/ -maxdepth 1 \( -name "$arg" -o -name "$arg.feature" \) -type f -printf "%f " )
         if [ -z "$tests" ]; then
             echo "No test matching '$arg'"
             exit 1
