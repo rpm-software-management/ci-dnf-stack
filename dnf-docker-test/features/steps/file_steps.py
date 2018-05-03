@@ -214,4 +214,4 @@ def step_i_run_steps_from_file(ctx, filepath):
     # print the steps to ease the debugging
     sys.stdout.write('Running sub-steps from file %s:\n' % filepath)
     sys.stdout.write('%s\n' % steps)
-    ctx.execute_steps(unicode(steps))
+    ctx.execute_steps(six.text_type(steps))
