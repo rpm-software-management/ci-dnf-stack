@@ -64,6 +64,8 @@ RUN set -x && \
     sed -i 's:^SSLCertificateFile .*:SSLCertificateFile /etc/pki/tls/certs/testcerts/server/cert.pem:' /etc/httpd/conf.d/ssl.conf && \
     sed -i 's:^SSLCertificateKeyFile .*:SSLCertificateKeyFile /etc/pki/tls/certs/testcerts/server/key.pem:' /etc/httpd/conf.d/ssl.conf && \
     sed -i 's:.*SSLCACertificateFile .*:SSLCACertificateFile /etc/pki/tls/certs/testcerts/ca/cert.pem:' /etc/httpd/conf.d/ssl.conf && \
+    # configure ftpd
+    sed -i 's/anonymous_enable=.*/anonymous_enable=YES/' /etc/vsftpd/vsftpd.conf && \
     dnf -y clean all && \
     mkdir /tmp/repos.d && mv /etc/yum.repos.d/* /tmp/repos.d/ && \
     mkdir /repo && \
