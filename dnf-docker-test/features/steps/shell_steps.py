@@ -21,12 +21,12 @@ def step_i_run_dnf_shell_command(context, command):
     if command.strip() == 'quit' or command.strip() == 'exit':
         context.pexpect_session.expect(pexpect.EOF)
         # in the dnf shell command output we need to replace ^M characters added by pexpect
-        context.cmd_result.stdout = context.pexpect_session.before[len(command) + 2:].replace('\r\n', '\n')
-        sys.stdout.write(context.pexpect_session.before)
+        context.cmd_result.stdout = context.pexpect_session.before[len(command) + 2:].decode().replace('\r\n', '\n')
+        sys.stdout.write(context.pexpect_session.before.decode())
         context.pexpect_session = None
     else:
         # TODO: remove timeout ASAP
         context.pexpect_session.expect('\r\n[^ \r-]*> ', timeout=600)
         # in the dnf shell command output we need to replace ^M characters added by pexpect
-        context.cmd_result.stdout = context.pexpect_session.before[len(command) + 2:].replace('\r\n', '\n')
-        sys.stdout.write("{}{}".format(context.pexpect_session.before, context.pexpect_session.match.group()))
+        context.cmd_result.stdout = context.pexpect_session.before[len(command) + 2:].decode().replace('\r\n', '\n')
+        sys.stdout.write("{}{}".format(context.pexpect_session.before.decode(), context.pexpect_session.match.group()))

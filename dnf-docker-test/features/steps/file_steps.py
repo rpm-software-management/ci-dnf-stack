@@ -126,7 +126,7 @@ def step_an_ini_file_filepath_modified_with(ctx, filepath):
        of the respective record.
     """
     updates = table_utils.parse_skv_table(ctx, HEADINGS_INI)
-    sections = updates.keys()
+    sections = list(updates.keys())  # convert to list as py3 returns an iterator
     sections.sort()  # sort so we have removal first
     conf = configparser.ConfigParser()
     conf.read(filepath)
