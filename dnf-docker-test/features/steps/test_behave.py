@@ -250,10 +250,10 @@ def then_the_section(context, section, pkgs):
     pkgs = splitter(pkgs)
     lines = iter(context.cmd_output.split('\n'))
     try:
-        while not re.match('^{}:'.format(section), lines.next()):
+        while not re.match('^{}:'.format(section), next(lines)):
             pass
         while True:
-            pkg_line = lines.next()
+            pkg_line = next(lines)
             if not pkg_line.startswith(' '):
                 raise AssertionError('packages {} has not been found in {} section'.format(pkgs, section))
             pkg_name = pkg_line.split()[0]
