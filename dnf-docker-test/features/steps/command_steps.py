@@ -147,7 +147,10 @@ def step_the_command_stream_should_match_regexp_line_by_line(ctx, stream):
                         raise AssertionError("Not having a regexp to match line '%s'" % line)
                 else:
                     regexp = regexp[1:]
-            ctx.assertion.assertRegexpMatches(line, regexp)
+            if regexp:
+                ctx.assertion.assertRegexpMatches(line, regexp)
+            else:
+                ctx.assertion.assertEqual(line, "")
     if regexp_list:  # there are some unprocessed regexps
         raise AssertionError("No more line to match regexp '%s'" % regexp_list[0])
 
