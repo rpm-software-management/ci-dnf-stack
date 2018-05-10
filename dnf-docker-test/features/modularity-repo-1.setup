@@ -39,55 +39,26 @@ Given repository "modularityABDE" with packages
   And a file "modules.yaml" with type "modules" added into repository "modularityABDE"
       """
       ---
-      data:
-        artifacts:
-          rpms: [TestA-1-1.modA.noarch, TestB-1-1.modA.noarch, TestC-1-1.modA.noarch, TestD-1-1.modA.noarch]
-        components:
-          rpms:
-            TestA: {rationale: 'rationale for TestA'}
-            TestB: {rationale: 'rationale for TestB'}
-            TestC: {rationale: 'rationale for TestC'}
-            TestD: {rationale: 'rationale for TestD'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
-        description: Module ModuleA description
-        license:
-          module: [MIT]
-        name: ModuleA
-        profiles:
-          default:
-            rpms: [TestA, TestB, TestC]
-          minimal:
-            rpms: [TestA]
-          client:
-            rpms: [TestA, TestB]
-          server:
-            rpms: [TestA, TestC]
-          devel:
-            rpms: [TestD]
-        stream: f26
-        summary: Module ModuleA summary
-        version: 1
       document: modulemd
-      version: 1
-      ---
+      version: 2
       data:
+        name: ModuleA
+        stream: f26
+        version: 1
+        arch: noarch
+        summary: Module ModuleA summary
+        description: Module ModuleA description
         artifacts:
-          rpms: [TestA-1-2.modA.noarch, TestB-1-1.modA.noarch, TestC-1-2.modA.noarch, TestD-1-1.modA.noarch]
+          rpms: ["TestA-0:1-1.modA.noarch", "TestB-0:1-1.modA.noarch", "TestC-0:1-1.modA.noarch", "TestD-0:1-1.modA.noarch"]
         components:
           rpms:
             TestA: {rationale: 'rationale for TestA'}
             TestB: {rationale: 'rationale for TestB'}
             TestC: {rationale: 'rationale for TestC'}
             TestD: {rationale: 'rationale for TestD'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
-        description: Module ModuleA description
         license:
           module: [MIT]
-        name: ModuleA
+          content: [GPLv2+]
         profiles:
           default:
             rpms: [TestA, TestB, TestC]
@@ -99,28 +70,25 @@ Given repository "modularityABDE" with packages
             rpms: [TestA, TestC]
           devel:
             rpms: [TestD]
+      ---
+      document: modulemd
+      version: 2
+      data:
+        name: ModuleA
         stream: f26
-        summary: Module ModuleA summary
         version: 2
-      document: modulemd
-      version: 1
-      ---
-      data:
+        summary: Module ModuleA summary
+        description: Module ModuleA description
+        license:
+          module: [MIT]
         artifacts:
-          rpms: [TestA-2-1.modA.noarch, TestB-2-1.modA.noarch, TestC-2-1.modA.noarch, TestD-2-1.modA.noarch]
+          rpms: ["TestA-0:1-2.modA.noarch", "TestB-0:1-1.modA.noarch", "TestC-0:1-2.modA.noarch", "TestD-0:1-1.modA.noarch"]
         components:
           rpms:
             TestA: {rationale: 'rationale for TestA'}
             TestB: {rationale: 'rationale for TestB'}
             TestC: {rationale: 'rationale for TestC'}
             TestD: {rationale: 'rationale for TestD'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
-        description: Module ModuleA description
-        license:
-          module: [MIT]
-        name: ModuleA
         profiles:
           default:
             rpms: [TestA, TestB, TestC]
@@ -132,22 +100,46 @@ Given repository "modularityABDE" with packages
             rpms: [TestA, TestC]
           devel:
             rpms: [TestD]
-        stream: f27
-        summary: Module ModuleA summary
-        version: 1
-      document: modulemd
-      version: 1
       ---
+      document: modulemd
+      version: 2
+      data:
+        name: ModuleA
+        stream: f27
+        version: 1
+        summary: Module ModuleA summary
+        description: Module ModuleA description
+        license:
+          module: [MIT]
+        artifacts:
+          rpms: ["TestA-0:2-1.modA.noarch", "TestB-0:2-1.modA.noarch", "TestC-0:2-1.modA.noarch", "TestD-0:2-1.modA.noarch"]
+        components:
+          rpms:
+            TestA: {rationale: 'rationale for TestA'}
+            TestB: {rationale: 'rationale for TestB'}
+            TestC: {rationale: 'rationale for TestC'}
+            TestD: {rationale: 'rationale for TestD'}
+        profiles:
+          default:
+            rpms: [TestA, TestB, TestC]
+          minimal:
+            rpms: [TestA]
+          client:
+            rpms: [TestA, TestB]
+          server:
+            rpms: [TestA, TestC]
+          devel:
+            rpms: [TestD]
+      ---
+      document: modulemd
+      version: 2
       data:
         artifacts:
-          rpms: [TestG-1-1.modB.noarch, TestH-1-1.modB.noarch]
+          rpms: ["TestG-0:1-1.modB.noarch", "TestH-0:1-1.modB.noarch"]
         components:
           rpms:
             TestG: {rationale: 'rationale for TestG'}
             TestH: {rationale: 'rationale for TestH'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
         description: Module ModuleB description
         license:
           module: [MIT]
@@ -158,19 +150,14 @@ Given repository "modularityABDE" with packages
         stream: f26
         summary: Module ModuleB summary
         version: 1
-      document: modulemd
-      version: 1
       ---
       data:
         artifacts:
-          rpms: [TestG-1-2.modB.noarch, TestI-1-1.modB.noarch]
+          rpms: ["TestG-0:1-2.modB.noarch", "TestI-0:1-1.modB.noarch"]
         components:
           rpms:
             TestG: {rationale: 'rationale for TestG'}
             TestI: {rationale: 'rationale for TestI'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
         description: Module ModuleB description
         license:
           module: [MIT]
@@ -182,18 +169,15 @@ Given repository "modularityABDE" with packages
         summary: Module ModuleB summary
         version: 2
       document: modulemd
-      version: 1
+      version: 2
       ---
       data:
         artifacts:
-          rpms: [TestG-2-1.modB.noarch, TestH-2-1.modB.noarch]
+          rpms: ["TestG-0:2-1.modB.noarch", "TestH-0:2-1.modB.noarch"]
         components:
           rpms:
             TestG: {rationale: 'rationale for TestG'}
             TestH: {rationale: 'rationale for TestH'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
         description: Module ModuleB description
         license:
           module: [MIT]
@@ -205,17 +189,14 @@ Given repository "modularityABDE" with packages
         summary: Module ModuleB summary
         version: 1
       document: modulemd
-      version: 1
+      version: 2
       ---
       data:
         artifacts:
-          rpms: [TestM-1-1.modD.noarch]
+          rpms: ["TestM-0:1-1.modD.noarch"]
         components:
           rpms:
-            PkgA-ModuleD: {rationale: 'rationale for TestM'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
+            TestM: {rationale: 'rationale for TestM'}
         description: Module ModuleD description
         license:
           module: [MIT]
@@ -227,17 +208,17 @@ Given repository "modularityABDE" with packages
         summary: Module ModuleD summary
         version: 1
       document: modulemd
-      version: 1
+      version: 2
       ---
       data:
         artifacts:
-          rpms: [TestP-1-1.modE.noarch]
+          rpms: ["TestP-0:1-1.modE.noarch"]
         components:
           rpms:
             TestP: {rationale: 'rationale for TestP'}
         dependencies:
-          buildrequires: {}
-          requires: { ModuleD }
+          - requires:
+              ModuleD: []
         description: Module ModuleE description
         license:
           module: [MIT]
@@ -249,5 +230,5 @@ Given repository "modularityABDE" with packages
         summary: Module ModuleE summary
         version: 1
       document: modulemd
-      version: 1
+      version: 2
       """
