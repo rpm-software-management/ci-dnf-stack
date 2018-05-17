@@ -7,13 +7,10 @@ Given repository "modularityX" with packages
       ---
       data:
         artifacts:
-          rpms: [TestX-1-1.modX.noarch]
+          rpms: ["TestX-0:1-1.modX.noarch"]
         components:
           rpms:
             TestX: {rationale: 'rationale for TestX'}
-        dependencies:
-          buildrequires: {}
-          requires: {}
         description: Module ModuleX description
         license:
           module: [MIT]
@@ -25,5 +22,5 @@ Given repository "modularityX" with packages
         summary: Module ModuleX summary
         version: 1
       document: modulemd
-      version: 1
+      version: 2
       """
