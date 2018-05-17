@@ -41,3 +41,8 @@ Feature: Enabling module stream - error handling
             Error: No such module: NoSuchModule:f00
 
             """
+
+  Scenario: module enable without specifying a name gives an error
+        When I run "dnf module enable"
+        Then the command exit code is 1
+        And the command stderr should match regexp "Error: dnf module enable: too few arguments"
