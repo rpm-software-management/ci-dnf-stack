@@ -1,13 +1,14 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from behave import then
+from behave import use_step_matcher, then
 
 from file_steps import HEADINGS_INI
 from file_steps import step_an_ini_file_filepath_should_contain
 import table_utils
 
-@then('a module "{modulename}" config file should contain')
+use_step_matcher("re")
+@then('a module (?P<modulename>"?\w+"?) config file should contain')
 def step_a_module_modulename_should_contain(ctx, modulename):
     """
     Tests whether a module config file contain respective Key, Value
@@ -28,6 +29,7 @@ def step_a_module_modulename_should_contain(ctx, modulename):
                | Key    | Value |
                | locked | 1     |
     """
+    modulename = modulename.strip('"')
     skv_table = table_utils.convert_table_kv_to_skv(ctx.table, HEADINGS_INI, [modulename])
     ctx.table = skv_table
     filepath = '/etc/dnf/modules.d/{!s}.module'.format(modulename)
