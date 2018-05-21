@@ -1,41 +1,42 @@
 Given repository "modularityABDE" with packages
-     | Package       | Tag     | Value |
-     | modA/TestA    | Version | 1     |
-     |               | Release | 1     |
-     | modA/TestA r2 | Version | 1     |
-     |               | Release | 2     |
-     | modA/TestA v2 | Version | 2     |
-     |               | Release | 1     |
-     | modA/TestB    | Version | 1     |
-     |               | Release | 1     |
-     | modA/TestB v2 | Version | 2     |
-     |               | Release | 1     |
-     | modA/TestC    | Version | 1     |
-     |               | Release | 1     |
-     | modA/TestC r2 | Version | 1     |
-     |               | Release | 2     |
-     | modA/TestC v2 | Version | 2     |
-     |               | Release | 1     |
-     | modA/TestD    | Version | 1     |
-     |               | Release | 1     |
-     | modA/TestD v2 | Version | 2     |
-     |               | Release | 1     |
-     | modB/TestG    | Version | 1     |
-     |               | Release | 1     |
-     | modB/TestG r2 | Version | 1     |
-     |               | Release | 2     |
-     | modB/TestG v2 | Version | 2     |
-     |               | Release | 1     |
-     | modB/TestH    | Version | 1     |
-     |               | Release | 1     |
-     | modB/TestH v2 | Version | 2     |
-     |               | Release | 1     |
-     | modB/TestI    | Version | 1     |
-     |               | Release | 1     |
-     | modD/TestM    | Version | 1     |
-     |               | Release | 1     |
-     | modE/TestP    | Version | 1     |
-     |               | Release | 1     |
+     | Package       | Tag      | Value |
+     | modA/TestA    | Version  | 1     |
+     |               | Release  | 1     |
+     | modA/TestA r2 | Version  | 1     |
+     |               | Release  | 2     |
+     | modA/TestA v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modA/TestB    | Version  | 1     |
+     |               | Release  | 1     |
+     | modA/TestB v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modA/TestC    | Version  | 1     |
+     |               | Release  | 1     |
+     | modA/TestC r2 | Version  | 1     |
+     |               | Release  | 2     |
+     | modA/TestC v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modA/TestD    | Version  | 1     |
+     |               | Release  | 1     |
+     | modA/TestD v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modB/TestG    | Version  | 1     |
+     |               | Release  | 1     |
+     | modB/TestG r2 | Version  | 1     |
+     |               | Release  | 2     |
+     | modB/TestG v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modB/TestH    | Version  | 1     |
+     |               | Release  | 1     |
+     | modB/TestH v2 | Version  | 2     |
+     |               | Release  | 1     |
+     | modB/TestI    | Version  | 1     |
+     |               | Release  | 1     |
+     | modD/TestM    | Version  | 1     |
+     |               | Release  | 1     |
+     | modE/TestP    | Version  | 1     |
+     |               | Release  | 1     |
+     |               | Requires | TestM |
   And a file "modules.yaml" with type "modules" added into repository "modularityABDE"
       """
       ---
@@ -218,7 +219,7 @@ Given repository "modularityABDE" with packages
             TestP: {rationale: 'rationale for TestP'}
         dependencies:
           - requires:
-              ModuleD: []
+              ModuleD: ["f26"]
         description: Module ModuleE description
         license:
           module: [MIT]
