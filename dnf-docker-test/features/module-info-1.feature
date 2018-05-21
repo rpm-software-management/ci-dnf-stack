@@ -1,14 +1,139 @@
-Feature: Module profile info
+Feature: Module info
 
   @setup
   Scenario: Testing repository Setup
       Given I run steps from file "modularity-repo-1.setup"
+        And I run steps from file "modularity-repo-2.setup"
        When I enable repository "modularityABDE"
+        And I enable repository "modularityX"
         And I successfully run "dnf -y module enable ModuleA:f26"
+        And I successfully run "dnf -y module install ModuleA/client"
+        And I successfully run "dnf -y module enable ModuleX:f26"
+        And I successfully run "dnf -y module install ModuleX/default"
         And I successfully run "dnf makecache"
 
-  Scenario: I can get info for an enabled module profile
+  Scenario: Get info for an enabled stream, only module name specified
        When I successfully run "dnf module info ModuleA"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Name +: +ModuleA
+           Stream +: +f26
+           Version +: +2
+           Profiles +: +client default devel minimal server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           """
 
-  Scenario: I can get info for a disabled module profile when specifying stream
+  Scenario: Get info for an enabled stream, module name and stream specified
+       When I successfully run "dnf module info ModuleA:f26"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Name +: +ModuleA
+           Stream +: +f26
+           Version +: +2
+           Profiles +: +client default devel minimal server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           """
+  @xfail
+  # expected to fail, should be updated when bz1540189 will be resolved
+  Scenario: Get info for an installed profile, module name and profile specified
+       When I successfully run "dnf module info ModuleA/client"
+       Then the command stdout should match regexp "profile specific info or a warning"
+
+  @xfail
+  # expected to fail, should be updated when bz1540189 will be resolved
+  Scenario: Get info for an installed profile, module name, stream and profile specified
+       When I successfully run "dnf module info ModuleA:f26/client"
+       Then the command stdout should match regexp "profile specific info or a warning"
+
+  @xfail
+  # expected to fail, should be updated when bz1540189 will be resolved
+  Scenario: Get error message when info for non-existent profile is requested
+       When I run "dnf module info ModuleA:f26/non-existent-profile"
+       Then the command should fail
+
+  Scenario: Get error message when info for non-existent module is requested
+       When I run "dnf module info non-existent-module"
+       Then the command should fail
+        And the command stderr should match regexp "Error: No such module"
+
+  Scenario: Get info for a disabled stream, module name and stream specified
        When I successfully run "dnf module info ModuleB:f26"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Name +: +ModuleB
+           Stream +: +f26
+           Version +: +2
+           Profiles +: +default
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleB summary
+           Description +: +Module ModuleB description
+           Artifacts +: +TestG-0:1-2.modB.noarch
+            +: +TestI-0:1-1.modB.noarch
+           """
+
+  Scenario: Get error when info for a disabled stream is requested and only module name is specified
+       When I run "dnf module info ModuleB"
+       Then the command should fail
+        And the command stderr should match regexp "Error: No stream specified.*"
+
+  Scenario: Get info for two enabled modules from different repos
+       When I successfully run "dnf module info ModuleA ModuleX"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Name +: +ModuleA
+           Stream +: +f26
+           Version +: +2
+           Profiles +: +client default devel minimal server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           
+           Name +: +ModuleX
+           Stream +: +f26
+           Version +: +1
+           Profiles +: +default
+           Repo +: +modularityX
+           Summary +: +Module ModuleX summary
+           Description +: +Module ModuleX description
+           Artifacts +: +TestX-0:1-1.modX.noarch
+           """
+
+  @xfail
+  # expected to fail, should be updated when bz1541332 will be resolved
+  Scenario: Get info for two modules, one of them non-existent
+       When I run "dnf module info non-existent-module ModuleX"
+       Then the command should fail
+        And the command stderr should match regexp "Error: No such module"
+        And the command stdout should match regexp "Summary.*Module ModuleX summary"
+
+  @xfail
+  # expected to fail, should be updated when the issue will be resolved
+  Scenario: Run 'dnf module info' without further argument
+       When I run "dnf module info"
+       Then the command should fail
+        And the command stderr should match regexp "Error: dnf module info: too few arguments"
+        And the command stderr should match regexp "usage: dnf module info"
