@@ -1,4 +1,3 @@
-@xfail
 Feature: Module info
 
   @setup
@@ -26,10 +25,10 @@ Feature: Module info
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
-           Artifacts +: +TestA-1-2.modA.noarch
-            +: +TestB-1-1.modA.noarch
-            +: +TestC-1-2.modA.noarch
-            +: +TestD-1-1.modA.noarch
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
            """
 
   Scenario: Get info for an enabled stream, module name and stream specified
@@ -45,22 +44,24 @@ Feature: Module info
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
-           Artifacts +: +TestA-1-2.modA.noarch
-            +: +TestB-1-1.modA.noarch
-            +: +TestC-1-2.modA.noarch
-            +: +TestD-1-1.modA.noarch
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
            """
-
+  @xfail
   # expected to fail, should be updated when bz1540189 will be resolved
   Scenario: Get info for an installed profile, module name and profile specified
        When I successfully run "dnf module info ModuleA/client"
        Then the command stdout should match regexp "profile specific info or a warning"
 
+  @xfail
   # expected to fail, should be updated when bz1540189 will be resolved
   Scenario: Get info for an installed profile, module name, stream and profile specified
        When I successfully run "dnf module info ModuleA:f26/client"
        Then the command stdout should match regexp "profile specific info or a warning"
 
+  @xfail
   # expected to fail, should be updated when bz1540189 will be resolved
   Scenario: Get error message when info for non-existent profile is requested
        When I run "dnf module info ModuleA:f26/non-existent-profile"
@@ -84,29 +85,8 @@ Feature: Module info
            Repo +: +modularityABDE
            Summary +: +Module ModuleB summary
            Description +: +Module ModuleB description
-           Artifacts +: +TestG-1-2.modB.noarch
-            +: +TestI-1-1.modB.noarch
-           """
-
-  # expected to fail, should pass when bz1540165 will be resolved
-  Scenario: Get info for a disabled stream, when another stream of the same module is locked
-       When I successfully run "dnf module lock ModuleA:f26"
-        And I successfully run "dnf module info ModuleA:f27"
-       Then the command stdout should match line by line regexp
-           """
-           ?Last metadata expiration check
-           
-           Name +: +ModuleA
-           Stream +: +f27
-           Version +: +1
-           Profiles +: +client default devel minimal server
-           Repo +: +modularityABDE
-           Summary +: +Module ModuleA summary
-           Description +: +Module ModuleA description
-           Artifacts +: +TestA-2-1.modA.noarch
-            +: +TestB-2-1.modA.noarch
-            +: +TestC-2-1.modA.noarch
-            +: +TestD-2-1.modA.noarch
+           Artifacts +: +TestG-0:1-2.modB.noarch
+            +: +TestI-0:1-1.modB.noarch
            """
 
   Scenario: Get error when info for a disabled stream is requested and only module name is specified
@@ -127,10 +107,10 @@ Feature: Module info
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
-           Artifacts +: +TestA-1-2.modA.noarch
-            +: +TestB-1-1.modA.noarch
-            +: +TestC-1-2.modA.noarch
-            +: +TestD-1-1.modA.noarch
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
            
            Name +: +ModuleX
            Stream +: +f26
@@ -139,9 +119,10 @@ Feature: Module info
            Repo +: +modularityX
            Summary +: +Module ModuleX summary
            Description +: +Module ModuleX description
-           Artifacts +: +TestX-1-1.modX.noarch
+           Artifacts +: +TestX-0:1-1.modX.noarch
            """
 
+  @xfail
   # expected to fail, should be updated when bz1541332 will be resolved
   Scenario: Get info for two modules, one of them non-existent
        When I run "dnf module info non-existent-module ModuleX"
@@ -149,6 +130,7 @@ Feature: Module info
         And the command stderr should match regexp "Error: No such module"
         And the command stdout should match regexp "Summary.*Module ModuleX summary"
 
+  @xfail
   # expected to fail, should be updated when the issue will be resolved
   Scenario: Run 'dnf module info' without further argument
        When I run "dnf module info"
