@@ -1,0 +1,110 @@
+Given repository "modularityY" with packages
+     | Package         | Tag     | Value |
+     | modY/TestY      | Version | 1     |
+     |                 | Release | 1     |
+     | modY/TestY v1r2 | Version | 1     |
+     |                 | Release | 2     |
+     | modY/TestY v2r1 | Version | 2     |
+     |                 | Release | 1     |
+     | modY/TestY v2r2 | Version | 2     |
+     |                 | Release | 2     |
+     | modY/TestY v3r3 | Version | 3     |
+     |                 | Release | 3     |
+  And a file "modules.yaml" with type "modules" added into repository "modularityY"
+      """
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:1-1.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 1
+      document: modulemd
+      version: 2
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:1-2.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 1
+      document: modulemd
+      version: 2
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:2-1.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 2
+      document: modulemd
+      version: 2
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:2-2.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 2
+      document: modulemd
+      version: 2
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:3-3.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 3
+      document: modulemd
+      version: 2
+      """
