@@ -46,3 +46,10 @@ Feature: Enabling module stream - error handling
         When I run "dnf module enable"
         Then the command exit code is 1
         And the command stderr should match regexp "Error: dnf module enable: too few arguments"
+
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1581267
+  @xfail
+  Scenario: Enabling two streams for the same module gives an error
+       When I run "dnf module enable ModuleA:f26 ModuleA:f27 --assumeyes"
+       Then the command exit code is 1
+       # TODO: check also stderr output
