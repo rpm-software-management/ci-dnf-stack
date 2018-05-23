@@ -16,6 +16,8 @@ Given repository "modularityM" with packages
      |              | Requires | TestMY |
      | modM/TestMY  | Version  | 1      |
      |              | Release  | 1      |
+     | modM/TestMZ  | Version  | 1      |
+     |              | Release  | 1      |
   And a file "modules.yaml" with type "modules" added into repository "modularityM"
       """
       ---
@@ -102,6 +104,50 @@ Given repository "modularityM" with packages
         components:
           rpms:
             TestMY: {rationale: 'rationale for TestMY'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMZ
+        stream: f26
+        version: 1
+        summary: Module ModuleMZ summary
+        description: Module ModuleMZ description
+        license:
+          module: [MIT]
+        dependencies:
+          - requires:
+              ModuleM: [f26]
+        profiles:
+          default:
+            rpms: [TestMZ]
+        artifacts:
+          rpms: ["TestMZ-0:1-1.modM.noarch"]
+        components:
+          rpms:
+            TestMZ: {rationale: 'rationale for TestMZ'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMZ
+        stream: f27
+        version: 1
+        summary: Module ModuleMZ summary
+        description: Module ModuleMZ description
+        license:
+          module: [MIT]
+        dependencies:
+          - requires:
+              ModuleM: [f27]
+        profiles:
+          default:
+            rpms: [TestMZ]
+        artifacts:
+          rpms: ["TestMZ-0:1-1.modM.noarch"]
+        components:
+          rpms:
+            TestMZ: {rationale: 'rationale for TestMZ'}
       document: modulemd
       version: 2
       """
