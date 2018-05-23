@@ -1,4 +1,4 @@
-FROM fedora:26
+FROM fedora:27
 ENV LANG C
 ARG type=local
 
