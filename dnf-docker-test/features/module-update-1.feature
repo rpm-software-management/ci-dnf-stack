@@ -37,18 +37,6 @@ Feature: Updating module profiles
           | removed   | TestH/1-1.modB |
           | installed | TestI/1-1.modB |
 
-  Scenario: I can update a module profile to newer version, skipping one
-      Given I successfully run "dnf module enable ModuleY:f26"
-        And I successfully run "dnf module install -y ModuleY:f26:1"
-       When I save rpmdb
-        And I successfully run "dnf module update --assumeyes ModuleY"
-       Then a module ModuleY config file should contain
-          | Key     | Value |
-          | version | 3     |
-        And rpmdb changes are
-          | State    | Packages       |
-          | upgraded | TestY/3-3.modY |
-
   Scenario: I try to update a module when no update is available
       Given I successfully run "dnf module enable ModuleA:f26"
         And I successfully run "dnf module install -y ModuleA:f26:2/client"
