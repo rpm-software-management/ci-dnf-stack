@@ -28,9 +28,22 @@ def step_a_module_modulename_should_contain(ctx, modulename):
             Then a module ModuleA config file should contain
                | Key    | Value |
                | locked | 1     |
+
+         Scenario: Testing a module profile installation
+            When I successfully run "dnf -y module install ModuleA/minimal"
+             And I successfully run "dnf -y module install ModuleA/default"
+            Then a module ModuleA config file should contain
+               | Key      | Value                 |
+               | profiles | (set) minimal,default |
+
+    .. note::
+       The (set) here enables the extra value processing which tests than
+       value expected contains the same elements as actual, regardless of 
+       their order.
+
     """
     modulename = modulename.strip('"')
     skv_table = table_utils.convert_table_kv_to_skv(ctx.table, HEADINGS_INI, [modulename])
     ctx.table = skv_table
     filepath = '/etc/dnf/modules.d/{!s}.module'.format(modulename)
-    step_an_ini_file_filepath_should_contain(ctx, filepath)
+    step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processing = True)
