@@ -1,0 +1,345 @@
+Given repository "modularityConf" with packages
+     | Package                | Tag     | Value |
+     | modConfED1/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfED1/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+     | modConfED2/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfED2/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+     | modConfED3/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfED3/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND1/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND1/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND2/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND2/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND3/TestConfPRI | Version | 1     |
+     |                        | Release | 1     |
+     | modConfND3/TestConfALT | Version | 1     |
+     |                        | Release | 1     |
+  And a file "modules.yaml" with type "modules" added into repository "modularityConf"
+      """
+      ---
+      data:
+        name: ModuleConfED1
+        summary: Module ModuleConfED1 summary
+        description: >-
+          Module ModuleConfED1 description - empty default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED1.noarch", "TestConfALT-0:1-1.modConfED1.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED1
+        summary: Module ModuleConfED1 summary
+        description: >-
+          Module ModuleConfED1 description - empty default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED1.noarch", "TestConfALT-0:1-1.modConfED1.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED2
+        summary: Module ModuleConfED2 summary
+        description: >-
+          Module ModuleConfED2 description - empty default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED2.noarch", "TestConfALT-0:1-1.modConfED2.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED2
+        summary: Module ModuleConfED2 summary
+        description: >-
+          Module ModuleConfED2 description - empty default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED2.noarch", "TestConfALT-0:1-1.modConfED2.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED3
+        summary: Module ModuleConfED3 summary
+        description: >-
+          Module ModuleConfED3 description - empty default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED3.noarch", "TestConfALT-0:1-1.modConfED3.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED3
+        summary: Module ModuleConfED3 summary
+        description: >-
+          Module ModuleConfED3 description - empty default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfED3.noarch", "TestConfALT-0:1-1.modConfED3.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND1
+        summary: Module ModuleConfND1 summary
+        description: >-
+          Module ModuleConfND1 description - no default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND1.noarch", "TestConfALT-0:1-1.modConfND1.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND1
+        summary: Module ModuleConfND1 summary
+        description: >-
+          Module ModuleConfND1 description - no default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND1.noarch", "TestConfALT-0:1-1.modConfND1.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND2
+        summary: Module ModuleConfND2 summary
+        description: >-
+          Module ModuleConfND2 description - no default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND2.noarch", "TestConfALT-0:1-1.modConfND2.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND2
+        summary: Module ModuleConfND2 summary
+        description: >-
+          Module ModuleConfND2 description - no default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND2.noarch", "TestConfALT-0:1-1.modConfND2.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND3
+        summary: Module ModuleConfND3 summary
+        description: >-
+          Module ModuleConfND3 description - no default profile,
+          stream "s-default".
+        stream: s-default
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND3.noarch", "TestConfALT-0:1-1.modConfND3.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND3
+        summary: Module ModuleConfND3 summary
+        description: >-
+          Module ModuleConfND3 description - no default profile,
+          stream "s-alt".
+        stream: s-alt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          alt:
+            rpms: [TestConfALT]
+        artifacts:
+          rpms: ["TestConfPRI-0:1-1.modConfND3.noarch", "TestConfALT-0:1-1.modConfND3.noarch"]
+        components:
+          rpms:
+            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
+            TestConfALT: {rationale: 'rationale for TestConfALT'}
+      document: modulemd
+      version: 2
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfED2
+        stream: s-default
+        profiles:
+          s-default: [default]
+          s-alt: [alt]
+      ...
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfED3
+        stream: s-alt
+        profiles:
+          s-default: [default]
+          s-alt: [alt]
+      ...
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfND2
+        stream: s-default
+        profiles:
+          s-default: [default]
+          s-alt: [alt]
+      ...
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfND3
+        stream: s-alt
+        profiles:
+          s-default: [default]
+          s-alt: [alt]
+      ...
+      """
