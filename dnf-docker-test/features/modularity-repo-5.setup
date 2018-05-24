@@ -1,305 +1,797 @@
 Given repository "modularityConf" with packages
-     | Package                | Tag     | Value |
-     | modConfED1/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfED1/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
-     | modConfED2/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfED2/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
-     | modConfED3/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfED3/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND1/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND1/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND2/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND2/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND3/TestConfPRI | Version | 1     |
-     |                        | Release | 1     |
-     | modConfND3/TestConfALT | Version | 1     |
-     |                        | Release | 1     |
+     | Package              | Tag     | Value |
+     | modConfED1/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED1/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED1/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED2/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED2/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED2/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED3/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED3/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfED3/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND1/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND1/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND1/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND2/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND2/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND2/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND3/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND3/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfND3/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD1/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD1/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD1/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD2/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD2/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD2/TestConfC | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD3/TestConfA | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD3/TestConfB | Version | 1     |
+     |                      | Release | 1     |
+     | modConfPD3/TestConfC | Version | 1     |
+     |                      | Release | 1     |
   And a file "modules.yaml" with type "modules" added into repository "modularityConf"
       """
       ---
       data:
         name: ModuleConfED1
         summary: Module ModuleConfED1 summary
-        description: >-
-          Module ModuleConfED1 description - empty default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfED1 description - empty default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED1.noarch", "TestConfALT-0:1-1.modConfED1.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED1.noarch
+          - TestConfB-0:1-1.modConfED1.noarch
+          - TestConfC-0:1-1.modConfED1.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfED1
         summary: Module ModuleConfED1 summary
-        description: >-
-          Module ModuleConfED1 description - empty default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfED1 description - empty default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED1.noarch", "TestConfALT-0:1-1.modConfED1.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED1.noarch
+          - TestConfB-0:1-1.modConfED1.noarch
+          - TestConfC-0:1-1.modConfED1.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED1
+        summary: Module ModuleConfED1 summary
+        description: Module ModuleConfED1 description - empty default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfED1.noarch
+          - TestConfB-0:1-1.modConfED1.noarch
+          - TestConfC-0:1-1.modConfED1.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfED2
         summary: Module ModuleConfED2 summary
-        description: >-
-          Module ModuleConfED2 description - empty default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfED2 description - empty default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED2.noarch", "TestConfALT-0:1-1.modConfED2.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED2.noarch
+          - TestConfB-0:1-1.modConfED2.noarch
+          - TestConfC-0:1-1.modConfED2.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfED2
         summary: Module ModuleConfED2 summary
-        description: >-
-          Module ModuleConfED2 description - empty default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfED2 description - empty default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED2.noarch", "TestConfALT-0:1-1.modConfED2.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED2.noarch
+          - TestConfB-0:1-1.modConfED2.noarch
+          - TestConfC-0:1-1.modConfED2.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED2
+        summary: Module ModuleConfED2 summary
+        description: Module ModuleConfED2 description - empty default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfED2.noarch
+          - TestConfB-0:1-1.modConfED2.noarch
+          - TestConfC-0:1-1.modConfED2.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfED3
         summary: Module ModuleConfED3 summary
-        description: >-
-          Module ModuleConfED3 description - empty default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfED3 description - empty default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED3.noarch", "TestConfALT-0:1-1.modConfED3.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED3.noarch
+          - TestConfB-0:1-1.modConfED3.noarch
+          - TestConfC-0:1-1.modConfED3.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfED3
         summary: Module ModuleConfED3 summary
-        description: >-
-          Module ModuleConfED3 description - empty default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfED3 description - empty default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
           default:
             rpms: []
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfED3.noarch", "TestConfALT-0:1-1.modConfED3.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfED3.noarch
+          - TestConfB-0:1-1.modConfED3.noarch
+          - TestConfC-0:1-1.modConfED3.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfED3
+        summary: Module ModuleConfED3 summary
+        description: Module ModuleConfED3 description - empty default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: []
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfED3.noarch
+          - TestConfB-0:1-1.modConfED3.noarch
+          - TestConfC-0:1-1.modConfED3.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND1
         summary: Module ModuleConfND1 summary
-        description: >-
-          Module ModuleConfND1 description - no default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfND1 description - no default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND1.noarch", "TestConfALT-0:1-1.modConfND1.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND1.noarch
+          - TestConfB-0:1-1.modConfND1.noarch
+          - TestConfC-0:1-1.modConfND1.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND1
         summary: Module ModuleConfND1 summary
-        description: >-
-          Module ModuleConfND1 description - no default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfND1 description - no default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND1.noarch", "TestConfALT-0:1-1.modConfND1.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND1.noarch
+          - TestConfB-0:1-1.modConfND1.noarch
+          - TestConfC-0:1-1.modConfND1.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND1
+        summary: Module ModuleConfND1 summary
+        description: Module ModuleConfND1 description - no default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfND1.noarch
+          - TestConfB-0:1-1.modConfND1.noarch
+          - TestConfC-0:1-1.modConfND1.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND2
         summary: Module ModuleConfND2 summary
-        description: >-
-          Module ModuleConfND2 description - no default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfND2 description - no default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND2.noarch", "TestConfALT-0:1-1.modConfND2.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND2.noarch
+          - TestConfB-0:1-1.modConfND2.noarch
+          - TestConfC-0:1-1.modConfND2.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND2
         summary: Module ModuleConfND2 summary
-        description: >-
-          Module ModuleConfND2 description - no default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfND2 description - no default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND2.noarch", "TestConfALT-0:1-1.modConfND2.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND2.noarch
+          - TestConfB-0:1-1.modConfND2.noarch
+          - TestConfC-0:1-1.modConfND2.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND2
+        summary: Module ModuleConfND2 summary
+        description: Module ModuleConfND2 description - no default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfND2.noarch
+          - TestConfB-0:1-1.modConfND2.noarch
+          - TestConfC-0:1-1.modConfND2.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND3
         summary: Module ModuleConfND3 summary
-        description: >-
-          Module ModuleConfND3 description - no default profile,
-          stream "s-default".
-        stream: s-default
+        description: Module ModuleConfND3 description - no default profile, stream "salt".
+        stream: salt
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND3.noarch", "TestConfALT-0:1-1.modConfND3.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND3.noarch
+          - TestConfB-0:1-1.modConfND3.noarch
+          - TestConfC-0:1-1.modConfND3.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
       data:
         name: ModuleConfND3
         summary: Module ModuleConfND3 summary
-        description: >-
-          Module ModuleConfND3 description - no default profile,
-          stream "s-alt".
-        stream: s-alt
+        description: Module ModuleConfND3 description - no default profile, stream "pepper".
+        stream: pepper
         version: 1
         license:
           module: [MIT]
         profiles:
-          alt:
-            rpms: [TestConfALT]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
         artifacts:
-          rpms: ["TestConfPRI-0:1-1.modConfND3.noarch", "TestConfALT-0:1-1.modConfND3.noarch"]
+          rpms:
+          - TestConfA-0:1-1.modConfND3.noarch
+          - TestConfB-0:1-1.modConfND3.noarch
+          - TestConfC-0:1-1.modConfND3.noarch
         components:
           rpms:
-            TestConfPRI: {rationale: 'rationale for TestConfPRI'}
-            TestConfALT: {rationale: 'rationale for TestConfALT'}
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfND3
+        summary: Module ModuleConfND3 summary
+        description: Module ModuleConfND3 description - no default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfND3.noarch
+          - TestConfB-0:1-1.modConfND3.noarch
+          - TestConfC-0:1-1.modConfND3.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD1
+        summary: Module ModuleConfPD1 summary
+        description: Module ModuleConfPD1 description - populated default profile, stream "salt".
+        stream: salt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD1.noarch
+          - TestConfB-0:1-1.modConfPD1.noarch
+          - TestConfC-0:1-1.modConfPD1.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD1
+        summary: Module ModuleConfPD1 summary
+        description: Module ModuleConfPD1 description - populated default profile, stream "pepper".
+        stream: pepper
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD1.noarch
+          - TestConfB-0:1-1.modConfPD1.noarch
+          - TestConfC-0:1-1.modConfPD1.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD1
+        summary: Module ModuleConfPD1 summary
+        description: Module ModuleConfPD1 description - populated default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD1.noarch
+          - TestConfB-0:1-1.modConfPD1.noarch
+          - TestConfC-0:1-1.modConfPD1.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD2
+        summary: Module ModuleConfPD2 summary
+        description: Module ModuleConfPD2 description - populated default profile, stream "salt".
+        stream: salt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD2.noarch
+          - TestConfB-0:1-1.modConfPD2.noarch
+          - TestConfC-0:1-1.modConfPD2.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD2
+        summary: Module ModuleConfPD2 summary
+        description: Module ModuleConfPD2 description - populated default profile, stream "pepper".
+        stream: pepper
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD2.noarch
+          - TestConfB-0:1-1.modConfPD2.noarch
+          - TestConfC-0:1-1.modConfPD2.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD2
+        summary: Module ModuleConfPD2 summary
+        description: Module ModuleConfPD2 description - populated default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD2.noarch
+          - TestConfB-0:1-1.modConfPD2.noarch
+          - TestConfC-0:1-1.modConfPD2.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD3
+        summary: Module ModuleConfPD3 summary
+        description: Module ModuleConfPD3 description - populated default profile, stream "salt".
+        stream: salt
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD3.noarch
+          - TestConfB-0:1-1.modConfPD3.noarch
+          - TestConfC-0:1-1.modConfPD3.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD3
+        summary: Module ModuleConfPD3 summary
+        description: Module ModuleConfPD3 description - populated default profile, stream "pepper".
+        stream: pepper
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD3.noarch
+          - TestConfB-0:1-1.modConfPD3.noarch
+          - TestConfC-0:1-1.modConfPD3.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleConfPD3
+        summary: Module ModuleConfPD3 summary
+        description: Module ModuleConfPD3 description - populated default profile, stream "sugar".
+        stream: sugar
+        version: 1
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestConfA]
+          bacon:
+            rpms: [TestConfB]
+          eggs:
+            rpms: [TestConfC]
+        artifacts:
+          rpms:
+          - TestConfA-0:1-1.modConfPD3.noarch
+          - TestConfB-0:1-1.modConfPD3.noarch
+          - TestConfC-0:1-1.modConfPD3.noarch
+        components:
+          rpms:
+            TestConfA: {rationale: 'rationale for TestConfA'}
+            TestConfB: {rationale: 'rationale for TestConfB'}
+            restConfC: {rationale: 'rationale for TestConfC'}
       document: modulemd
       version: 2
       ---
@@ -307,39 +799,59 @@ Given repository "modularityConf" with packages
       version: 1
       data:
         module: ModuleConfED2
-        stream: s-default
+        stream: salt
         profiles:
-          s-default: [default]
-          s-alt: [alt]
+          salt: [default]
+          pepper: [bacon]
       ...
       ---
       document: modulemd-defaults
       version: 1
       data:
         module: ModuleConfED3
-        stream: s-alt
+        stream: pepper
         profiles:
-          s-default: [default]
-          s-alt: [alt]
+          salt: [default]
+          pepper: [bacon]
       ...
       ---
       document: modulemd-defaults
       version: 1
       data:
         module: ModuleConfND2
-        stream: s-default
+        stream: salt
         profiles:
-          s-default: [default]
-          s-alt: [alt]
+          salt: [default]
+          pepper: [bacon]
       ...
       ---
       document: modulemd-defaults
       version: 1
       data:
         module: ModuleConfND3
-        stream: s-alt
+        stream: pepper
         profiles:
-          s-default: [default]
-          s-alt: [alt]
+          salt: [default]
+          pepper: [bacon]
+      ...
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfPD2
+        stream: salt
+        profiles:
+          salt: [default]
+          pepper: [bacon]
+      ...
+      ---
+      document: modulemd-defaults
+      version: 1
+      data:
+        module: ModuleConfPD3
+        stream: pepper
+        profiles:
+          salt: [default]
+          pepper: [bacon]
       ...
       """
