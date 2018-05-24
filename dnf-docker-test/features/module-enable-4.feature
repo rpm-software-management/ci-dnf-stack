@@ -67,8 +67,8 @@ Feature: Enabling module stream with dependencies
           | stream  | f27   |
           | version | -1    |
         And rpmdb changes are
-          | State   | Packages                                                            |
-          | removed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modM |
+          | State   | Packages                                                             |
+          | removed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modMX |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581160
   @xfail
@@ -98,5 +98,5 @@ Feature: Enabling module stream with dependencies
           | stream  | f27   |
           | version | -1    |
         And rpmdb changes are
-          | State   | Packages                                                                             |
-          | removed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modM, TestMZ/1-1.modM |
+          | State   | Packages                                                                               |
+          | removed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modMX, TestMZ/1-1.modMZ |

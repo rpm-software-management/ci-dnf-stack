@@ -7,16 +7,16 @@ Given repository "modularityM" with packages
      | modM/TestMBX | Version  | 1      |
      |              | Release  | 1      |
      |              | Requires | TestMX |
-     | modM/TestMX  | Version  | 1      |
+     | modMX/TestMX | Version  | 1      |
      |              | Release  | 1      |
      | modM/TestMC  | Version  | 1      |
      |              | Release  | 1      |
      | modM/TestMCY | Version  | 1      |
      |              | Release  | 1      |
      |              | Requires | TestMY |
-     | modM/TestMY  | Version  | 1      |
+     | modMY/TestMY | Version  | 1      |
      |              | Release  | 1      |
-     | modM/TestMZ  | Version  | 1      |
+     | modMZ/TestMZ | Version  | 1      |
      |              | Release  | 1      |
   And a file "modules.yaml" with type "modules" added into repository "modularityM"
       """
@@ -81,7 +81,7 @@ Given repository "modularityM" with packages
           default:
             rpms: [TestMX]
         artifacts:
-          rpms: ["TestMX-0:1-1.modM.noarch"]
+          rpms: ["TestMX-0:1-1.modMX.noarch"]
         components:
           rpms:
             TestMX: {rationale: 'rationale for TestMX'}
@@ -100,7 +100,7 @@ Given repository "modularityM" with packages
           default:
             rpms: [TestMY]
         artifacts:
-          rpms: ["TestMY-0:1-1.modM.noarch"]
+          rpms: ["TestMY-0:1-1.modMY.noarch"]
         components:
           rpms:
             TestMY: {rationale: 'rationale for TestMY'}
@@ -122,7 +122,7 @@ Given repository "modularityM" with packages
           default:
             rpms: [TestMZ]
         artifacts:
-          rpms: ["TestMZ-0:1-1.modM.noarch"]
+          rpms: ["TestMZ-0:1-1.modMZ.noarch"]
         components:
           rpms:
             TestMZ: {rationale: 'rationale for TestMZ'}
@@ -144,7 +144,7 @@ Given repository "modularityM" with packages
           default:
             rpms: [TestMZ]
         artifacts:
-          rpms: ["TestMZ-0:1-1.modM.noarch"]
+          rpms: ["TestMZ-0:1-1.modMZ.noarch"]
         components:
           rpms:
             TestMZ: {rationale: 'rationale for TestMZ'}

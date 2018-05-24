@@ -21,7 +21,7 @@ Feature: Installing module profiles with dependencies
          # version  | 1     | # note: skip version check since module is only enabled, not installed
         And rpmdb changes are
          | State     | Packages                                                             |
-         | installed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modM  | 
+         | installed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modMX |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581160
   @xfail
@@ -47,6 +47,6 @@ Feature: Installing module profiles with dependencies
         And rpmdb changes are
          | State     | Packages                                            |
          | unchanged | TestMA/1-1.modM                                     |
-         | installed | TestMC/1-1.modM, TestMCY/1-1.modM, TestMY/1-1.modM  | 
-         | removed   | TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modM  | 
+         | installed | TestMC/1-1.modM, TestMCY/1-1.modM, TestMY/1-1.modMY |
+         | removed   | TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modMX |
 
