@@ -40,7 +40,6 @@ Feature: Use confirmation of enabling different module stream
           | Key    | Value |
           | stream | f27   |
 
-  @xfail
   # https://bugzilla.redhat.com/show_bug.cgi?id=1579792
   Scenario: Enablement of different module stream when profile installed
       Given I successfully run "dnf module enable ModuleA:f27 -y"
