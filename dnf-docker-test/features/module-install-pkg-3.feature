@@ -2,11 +2,6 @@ Feature: Installing package when default stream is defined
 
   @setup
   Scenario: Testing repository Setup
-      Given I run steps from file "modularity-repo-3.setup"
-       When I enable repository "modularityY"
-        And I successfully run "dnf makecache"
-
-  Scenario: I can install a specific package from a module not enabled when default stream is defined
       Given a file "/etc/dnf/modules.defaults.d/ModuleY.yaml" with
           """
           document: modulemd-defaults
@@ -17,6 +12,12 @@ Feature: Installing package when default stream is defined
             profiles:
               f26: [default]
           """
+        And I run steps from file "modularity-repo-3.setup"
+       When I enable repository "modularityY"
+        And I enable repository "ursineY"
+        And I successfully run "dnf makecache"
+
+  Scenario: a package from a non-enabled module is preferred when default stream is defined
        When I save rpmdb
         And I successfully run "dnf install -y TestY"
        Then rpmdb changes are
@@ -27,3 +28,16 @@ Feature: Installing package when default stream is defined
           | version | -1    |
           | enabled | 1     |
           | stream  | f26   |
+
+  @setup
+  Scenario: cleanup from previous scenario
+      Given I successfully run "dnf remove TestY -y"
+        And I successfully run "dnf module disable ModuleY"
+
+  Scenario: rpm from enabled stream is preferred regardless of NVRs
+      Given I successfully run "dnf module enable ModuleY:f27 -y"
+       When I save rpmdb
+        And I successfully run "dnf install -y TestY"
+       Then rpmdb changes are
+          | State     | Packages       |
+          | installed | TestY/1-2.modY |
