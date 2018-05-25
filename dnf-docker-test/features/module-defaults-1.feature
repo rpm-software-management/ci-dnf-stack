@@ -12,6 +12,7 @@ Feature: Modulemd defaults are followed by dnf module commands
             stream: f26
             profiles:
               f26: [minimal, devel]
+              f27: [minimal]
           """
        When I enable repository "modularityABDE"
         And I successfully run "dnf makecache"
@@ -39,14 +40,6 @@ Feature: Modulemd defaults are followed by dnf module commands
        When I run "dnf module info ModuleA"
        Then the command stdout should match regexp "Default profiles : devel minimal"
 
-  Scenario: Default stream and profile are used when installing a module with enabled profile
-       When I run "dnf module install ModuleA -y"
-       Then a module ModuleA config file should contain
-          | Key      | Value                |
-          | stream   | f26                  |
-          | profiles | (set) minimal, devel |
-          | version  | 2                    |
-
   Scenario: Default stream and profile are used when installing a module with no enabled profile
       Given I run "dnf module disable ModuleA -y"
        When I run "dnf module install ModuleA -y"
@@ -56,3 +49,12 @@ Feature: Modulemd defaults are followed by dnf module commands
           | profiles | (set) minimal, devel |
           | version  | 2                    |
 
+  Scenario: Default profile is used when installing a module with enabled stream
+      Given I run "dnf module disable ModuleA -y"
+        And I run "dnf module enable ModuleA:f27 -y"
+       When I run "dnf module install ModuleA -y"
+       Then a module ModuleA config file should contain
+          | Key      | Value         |
+          | stream   | f27           |
+          | profiles | (set) minimal |
+          | version  | 2             |
