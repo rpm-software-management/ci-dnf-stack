@@ -42,6 +42,12 @@ Feature: Module profile removal
           | version  | 2                   |
           | enabled  | 1                   |
 
+  @setup
+  Scenario: Setup due to previous xfail test.. please remove when the bug above is fixed
+      Given I successfully run "dnf module install -y ModuleA/minimal"
+        And I successfully run "dnf module remove -y ModuleA/minimal"
+        And I successfully run "dnf module install -y ModuleA/client ModuleA:f26/devel"
+
   Scenario: Removing of a non-installed profiles should fail
        When I save rpmdb
         And I run "dnf module remove --assumeyes ModuleA/server"
