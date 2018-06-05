@@ -7,6 +7,12 @@ if [ "$1" == "-r" -o "$1" == "-R" ]; then
     shift
 fi
 
+TAGS=""
+while [ "$1" == "--tags" ]; do
+    TAGS="$TAGS --tags $2"
+    shift 2
+done
+
 httpd -k start
 vsftpd
 rngd -r /dev/urandom -o /dev/random
@@ -20,7 +26,7 @@ if [ "$EXIT_STATUS" = 1 ]; then
 fi
 
 TEST_EXIT=0
-behave-2 --tags ~@backup --tags ~@restore -i $new_name -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/ || TEST_EXIT=$?
+behave-2 --tags ~@backup --tags ~@restore $TAGS -i $new_name -D dnf_cmd=$2 --junit --junit-directory /junit/ /behave/ || TEST_EXIT=$?
 
 if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
     bash || :
