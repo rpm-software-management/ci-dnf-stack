@@ -41,7 +41,7 @@ Feature: Testing specific dnf shell text output
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable TestRepo"
         And I run dnf shell command "group install NoSuchGroup"
-       Then the command stdout should match regexp "Warning: Group 'NoSuchGroup' does not exist\."
+       Then the command stdout should match regexp "Warning: Module or Group 'NoSuchGroup' does not exist\."
 
   Scenario: Removing a non-existent package group
       Given I have dnf shell session opened with parameters "-y"
