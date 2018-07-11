@@ -8,6 +8,10 @@ import logging
 
 import rpm
 
+INSTALLONLY_PACKAGES = {u'kernel', u'kernel-PAE', u'installonlypkg(kernel)',
+                        u'installonlypkg(kernel-module)', u'installonlypkg(vm)',
+                        u'multiversion(kernel)'}
+
 class State(enum.Enum):
     installed = "installed"
     removed = "removed"
@@ -120,3 +124,12 @@ def analyze_state(pre, post):
 
     # Most probably we just compare different packages
     assert False, "{!r} -> {!r}".format(pre_nevra, post_nevra)
+
+def is_installonly_pkg(pkg):
+    """
+    Returns True if the package is an installonly package, i.e. provides
+    a package from the defined set.
+    """
+    if INSTALLONLY_PACKAGES.intersection(pkg.provides):  # non-empty intersection
+        return True
+    return False
