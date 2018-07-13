@@ -17,7 +17,7 @@ Feature: Test for installonly packages upgrade
          | Package      | Tag      | Value     |
          | kernel-dummy | Version  | 5         |
          |              | Release  | 1         |
-	 |              | Provides | kernel = 5-1 |
+	     |              | Provides | kernel = 5-1 |
          | kernel-dummy-vm | Version  | 1         |
          |              | Release  | 1         |
          |              | Provides | installonlypkg(vm) |
@@ -33,7 +33,7 @@ Feature: Test for installonly packages upgrade
          | Package      | Tag      | Value     |
          | kernel-dummy | Version  | 5         |
          |              | Release  | 3         |
-	 |              | Provides | kernel = 5-3 |
+	     |              | Provides | kernel = 5-3 |
          | kernel-dummy-vm | Version  | 1         |
          |              | Release  | 3         |
          |              | Provides | installonlypkg(vm) |
@@ -41,7 +41,7 @@ Feature: Test for installonly packages upgrade
          | Package      | Tag      | Value     |
          | kernel-dummy | Version  | 5         |
          |              | Release  | 4         |
-	 |              | Provides | kernel = 5-4 |
+	     |              | Provides | kernel = 5-4 |
          | kernel-dummy-vm | Version  | 1         |
          |              | Release  | 4         |
          |              | Provides | installonlypkg(vm) |
@@ -52,7 +52,7 @@ Feature: Test for installonly packages upgrade
         And I successfully run "dnf -y install kernel-dummy-vm"
        Then rpmdb changes are
          | State     | Packages         |
-	 | installed | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
+	     | installed | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
 
   Scenario: run 'dnf upgrade' when there are no installonly upgrades available (installonly_limit not reached)
        When I save rpmdb
@@ -67,8 +67,8 @@ Feature: Test for installonly packages upgrade
        Then the command stderr should not match regexp "cannot install both kernel-dummy"
         And rpmdb changes are
          | State     | Packages         |
-	 | unchanged | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
-	 | installed | kernel-dummy/5-2,kernel-dummy-vm/1-2 |
+	     | unchanged | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
+	     | installed | kernel-dummy/5-2,kernel-dummy-vm/1-2 |
 
   Scenario: run 'dnf upgrade' when there are 2nd installonly upgrades available
        When I save rpmdb
@@ -77,8 +77,8 @@ Feature: Test for installonly packages upgrade
        Then the command stderr should not match regexp "cannot install both kernel-dummy"
         And rpmdb changes are
          | State     | Packages         |
-	 | unchanged | kernel-dummy/5-1,kernel-dummy/5-2,kernel-dummy-vm/1-1,kernel-dummy-vm/1-2 |
-	 | installed | kernel-dummy/5-3,kernel-dummy-vm/1-3 |
+	     | unchanged | kernel-dummy/5-1,kernel-dummy/5-2,kernel-dummy-vm/1-1,kernel-dummy-vm/1-2 |
+	     | installed | kernel-dummy/5-3,kernel-dummy-vm/1-3 |
 
   Scenario: run 'dnf upgrade' when there is 3rd kernel-dummy upgrade available (installonly_limit exceeded)
        When I save rpmdb
@@ -87,9 +87,9 @@ Feature: Test for installonly packages upgrade
        Then the command stderr should not match regexp "cannot install both kernel-dummy"
         And rpmdb changes are
          | State     | Packages         |
-	 | removed   | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
-	 | unchanged | kernel-dummy/5-2,kernel-dummy/5-3,kernel-dummy-vm/1-2,kernel-dummy-vm/1-3 |
-	 | installed | kernel-dummy/5-4,kernel-dummy-vm/1-4 |
+    	 | removed   | kernel-dummy/5-1,kernel-dummy-vm/1-1 |
+    	 | unchanged | kernel-dummy/5-2,kernel-dummy/5-3,kernel-dummy-vm/1-2,kernel-dummy-vm/1-3 |
+    	 | installed | kernel-dummy/5-4,kernel-dummy-vm/1-4 |
 
   Scenario: run 'dnf upgrade' when there are no installonly upgrades available (installonly_limit reached)
        When I save rpmdb
