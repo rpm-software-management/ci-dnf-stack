@@ -174,12 +174,7 @@
             fi
           popd
 
-          if [ "{name}" == "dnf" ] && [ -d dnf/dnf/module ]; then
-            overlay_dir="dnf-modular"
-            sed -i -e "/wip\/modularity/d" ci-dnf-stack/overlays/$overlay_dir/overlay.yml
-          else
-            overlay_dir="dnf-master"
-          fi
+          overlay_dir="dnf-master"
 
           rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/$overlay_dir rpm copr --chroot fedora-28-x86_64 --owner rpmsoftwaremanagement
           RPMS=`cat rpms | xargs`
