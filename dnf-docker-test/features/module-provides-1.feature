@@ -11,13 +11,13 @@ Feature: Module provides command
        Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
-           TestH-1-1.modB.noarch
+           TestH-0:1-1.modB.noarch
            Module   : ModuleB:f26:1
            Profiles : default
            Repo     : modularityABDE
            Summary  : Module ModuleB summary
 
-           TestH-2-1.modB.noarch
+           TestH-0:2-1.modB.noarch
            Module   : ModuleB:f27:1
            Profiles : default
            Repo     : modularityABDE
