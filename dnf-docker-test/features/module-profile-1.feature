@@ -81,10 +81,10 @@ Feature: Module profile command
            ?Last metadata expiration check
 
            Name +: ModuleD:f26:1
-           default +: TestM-1-1.modD
+           default +: TestM-0:1-1.modD
 
            Name +: ModuleE:f26:1
-           default +: TestP-1-1.modE
+           default +: TestP-0:1-1.modE
            """
 
   Scenario: Getting info about disabled module profile without default stream defined should raise an error
