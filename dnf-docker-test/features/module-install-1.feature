@@ -71,6 +71,7 @@ Feature: Installing module profiles
          | State     | Packages                       |
          | installed | TestA/1-2.modA, TestD/1-1.modA |
 
+  @xfail  #bz1609919 
   Scenario: I am given information about which module packages are being installed when installing a module profile
       Given I successfully run "dnf module remove -y ModuleA:f26"
        When I save rpmdb
@@ -98,6 +99,7 @@ Feature: Installing module profiles
         And the command stdout should match line by line regexp
             """
             ?Last metadata expiration check
-            Nothing to install. Enabled modules: ModuleA:f26.
+            Dependencies resolved.
+            Nothing to do.
+            Complete!
             """
-
