@@ -184,7 +184,7 @@ def step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processi
             value = settings[key]
             ini_value = conf.get(section, key)
             if not extra_value_processing:
-                ctx.assertion.assertEquals(value, ini_value)
+                ctx.assertion.assertEqual(value, ini_value)
             else:  # an extra processing is enabled
                 if value.startswith('(set)'):
                     # consider the value to be command or \n separated set of values
@@ -192,7 +192,7 @@ def step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processi
                     ini_value_set = map(str.strip, ini_value.replace("\n", ",").split(","))
                     ctx.assertion.assertCountEqual(value_set, ini_value_set)
                 else:  # fallback
-                    ctx.assertion.assertEquals(value, ini_value)
+                    ctx.assertion.assertEqual(value, ini_value)
 
 
 @given('I run steps from file "{filepath}"')
