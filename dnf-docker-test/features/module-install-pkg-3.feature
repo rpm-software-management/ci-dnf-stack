@@ -26,7 +26,7 @@ Feature: Installing package when default stream is defined
         And a module ModuleY config file should contain
           | Key     | Value |
           | version | -1    |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f26   |
 
   @setup

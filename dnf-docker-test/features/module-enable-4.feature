@@ -11,12 +11,12 @@ Feature: Enabling module stream with dependencies
         And I successfully run "dnf module enable ModuleM:f26 --assumeyes"
        Then a module ModuleM config file should contain
           | Key      | Value |
-          | enabled  | 1     |
+          | enabled  | True  |
           | stream   | f26   |
           | version  | -1    |
         And a module ModuleMX config file should contain
           | Key      | Value |
-          | enabled  | 1     |
+          | enabled  | True  |
           | stream   | f26   |
           | version  | -1    |
         And rpmdb does not change
@@ -29,7 +29,7 @@ Feature: Enabling module stream with dependencies
         And I successfully run "dnf module enable ModuleM:f27 --assumeyes"
        Then a module ModuleM config file should contain
           | Key      | Value |
-          | enabled  | 1     |
+          | enabled  | True  |
           | stream   | f27   |
           | version  | -1    |
         And a module ModuleMX config file should contain
@@ -39,7 +39,7 @@ Feature: Enabling module stream with dependencies
           | version  | -1    |
         And a module ModuleMY config file should contain
           | Key      | Value |
-          | enabled  | 1     |
+          | enabled  | True  |
           | stream   | f27   |
           | version  | -1    |
         And rpmdb does not change
@@ -53,7 +53,7 @@ Feature: Enabling module stream with dependencies
         And I successfully run "dnf module enable ModuleM:f27 --assumeyes"
        Then a module ModuleM config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
           | version | -1    |
         And a module ModuleMX config file should contain
@@ -63,7 +63,7 @@ Feature: Enabling module stream with dependencies
           | version | -1    |
         And a module ModuleMY config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
           | version | -1    |
         And rpmdb changes are
@@ -79,7 +79,7 @@ Feature: Enabling module stream with dependencies
         And I successfully run "dnf module enable ModuleMZ:f27 --assumeyes"
        Then a module ModuleM config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
           | version | -1    |
         And a module ModuleMX config file should contain
@@ -89,12 +89,12 @@ Feature: Enabling module stream with dependencies
           | version | -1    |
         And a module ModuleMY config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
           | version | -1    |
         And a module ModuleMZ config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
           | version | -1    |
         And rpmdb changes are

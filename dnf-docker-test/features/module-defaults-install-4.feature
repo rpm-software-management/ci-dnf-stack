@@ -44,7 +44,7 @@ Feature: On-disk modulemd data are merged with repodata
         And I successfully run "dnf -y module install ModuleConfPD2"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | pepper  |
          | version  | 1       |
          | profiles | eggs    |
@@ -63,7 +63,7 @@ Feature: On-disk modulemd data are merged with repodata
         And I successfully run "dnf -y module install ModuleConfPD2:sugar"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | sugar   |
          | version  | 1       |
          | profiles | bacon   |

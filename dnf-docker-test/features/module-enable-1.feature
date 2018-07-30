@@ -10,7 +10,7 @@ Feature: Enabling module stream
        When I successfully run "dnf module enable ModuleA:f26"
        Then a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f26   |
        And the command stdout should match regexp "'ModuleA:f26' is enabled"
 
@@ -18,7 +18,7 @@ Feature: Enabling module stream
        When I successfully run "dnf module enable ModuleB:f26:1"
        Then a module "ModuleB" config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f26   |
           # no version installed although enabled, so still -1
           | version | -1    |
@@ -28,7 +28,7 @@ Feature: Enabling module stream
        When I successfully run "dnf module enable ModuleA:f26"
        Then a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f26   |
        And the command stdout should match regexp "'ModuleA:f26' is enabled"
 
@@ -36,7 +36,7 @@ Feature: Enabling module stream
        When I successfully run "dnf module enable ModuleA:f27 --assumeyes"
        Then a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f27   |
        And the command stdout should match regexp "'ModuleA:f27' is enabled"
 
@@ -45,6 +45,6 @@ Feature: Enabling module stream
         And I successfully run "dnf -y module enable ModuleA:f26"
         Then a module ModuleA config file should contain
            | Key     | Value |
-           | enabled | 1     |
+           | enabled | True  |
            | stream  | f26   |
         And rpmdb does not change

@@ -91,7 +91,7 @@ Feature: Module profile command
        When I run "dnf module profile ModuleB"
        Then a module "ModuleB" config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
           | stream  |       |
         And the command exit code is 1
         And the command stderr should match exactly
