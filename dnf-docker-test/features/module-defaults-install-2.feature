@@ -11,7 +11,7 @@ Feature: Profile named ‘default’ is used when there are no modulemd defaults
         And I successfully run "dnf -y module install ModuleConfPD1:salt"
        Then a module ModuleConfPD1 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -30,7 +30,7 @@ Feature: Profile named ‘default’ is used when there are no modulemd defaults
         And I successfully run "dnf -y module install ModuleConfND1:salt"
        Then a module ModuleConfND1 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |

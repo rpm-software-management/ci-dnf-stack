@@ -11,7 +11,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED1:salt"
        Then a module ModuleConfED1 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -28,7 +28,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfND1:salt"
        Then a module ModuleConfND1 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -45,7 +45,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfPD1:salt"
        Then a module ModuleConfPD1 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -62,7 +62,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED2:salt"
        Then a module ModuleConfED2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -79,7 +79,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfND2:salt"
        Then a module ModuleConfND2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -96,7 +96,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfPD2:salt"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | salt    |
          | version  | 1       |
          | profiles | default |
@@ -113,7 +113,7 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED3:pepper"
        Then a module ModuleConfED3 config file should contain
          | Key      | Value  |
-         | enabled  | 1      |
+         | enabled  | True   |
          | stream   | pepper |
          | version  | 1      |
          | profiles | bacon  |

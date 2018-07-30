@@ -24,7 +24,7 @@ Feature: On-disk modulemd data are preferred over repodata in case of a conflict
         And I successfully run "dnf -y module install ModuleConfPD2"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | pepper  |
          | version  | 1       |
          | profiles | eggs    |
@@ -41,7 +41,7 @@ Feature: On-disk modulemd data are preferred over repodata in case of a conflict
         And I successfully run "dnf -y module install ModuleConfPD3"
        Then a module ModuleConfPD3 config file should contain
          | Key      | Value   |
-         | enabled  | 1       |
+         | enabled  | True    |
          | stream   | pepper  |
          | version  | 1       |
          | profiles | bacon   |

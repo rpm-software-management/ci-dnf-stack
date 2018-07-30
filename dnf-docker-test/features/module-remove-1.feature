@@ -24,7 +24,7 @@ Feature: Module profile removal
           | Key      | Value |
           | profiles |       |
           | version  | -1    |
-          | enabled  | 1     |
+          | enabled  | True  |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
   @xfail
@@ -40,7 +40,7 @@ Feature: Module profile removal
           # Other profiles are still installed
           | profiles | (set) client, devel |
           | version  | 2                   |
-          | enabled  | 1                   |
+          | enabled  | True                |
 
   @setup
   Scenario: Setup due to previous xfail test.. please remove when the bug above is fixed
@@ -57,7 +57,7 @@ Feature: Module profile removal
           | Key      | Value               |
           | profiles | (set) client, devel |
           | version  | 2                   |
-          | enabled  | 1                   |
+          | enabled  | True                |
         And the command stderr should match regexp "Error: Profile not installed: ModuleA/server"
 
   Scenario: I can remove multiple profiles
@@ -68,7 +68,7 @@ Feature: Module profile removal
           | removed | TestA/1-2.modA, TestB/1-1.modA, TestD/1-1.modA |
        And a module ModuleA config file should contain
           | Key      | Value |
-          | enabled  | 1     |
+          | enabled  | True  |
           | profiles |       |
           # The check below should be true, but it fails due to a known bug.
           # Since there is already a test covering it, let's ignore it here.

@@ -11,12 +11,12 @@ Feature: Installing module profiles with dependencies
         And I successfully run "dnf module install --assumeyes ModuleM:f26"
        Then a module ModuleM config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 1     |
         And a module ModuleMX config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          # version  | 1     | # note: skip version check since module is only enabled, not installed
         And rpmdb changes are
@@ -31,7 +31,7 @@ Feature: Installing module profiles with dependencies
         And I successfully run "dnf module install --assumeyes ModuleM:f27"
        Then a module ModuleM config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f27   |
          | version  | 1     |
         And a module ModuleMX config file should contain
@@ -41,7 +41,7 @@ Feature: Installing module profiles with dependencies
          # version  | -1    | # version irrelevant for disabled module
         And a module ModuleMY config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f27   |
          # version  | 1     | # note: skip version check since module is only enabled, not installed
         And rpmdb changes are

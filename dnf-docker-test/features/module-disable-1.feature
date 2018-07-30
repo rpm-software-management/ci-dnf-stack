@@ -14,7 +14,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleB' is disabled"
         And a module ModuleB config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   Scenario: I can disable a module when specifying stream
        When I successfully run "dnf module enable ModuleB:f26"
@@ -22,7 +22,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleB:f26' is disabled"
         And a module ModuleB config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   Scenario: I can disable a module when specifying both stream and correct version
        When I successfully run "dnf module enable ModuleB:f26"
@@ -30,14 +30,14 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleB:f26:1' is disabled"
         And a module ModuleB config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   Scenario: Disabling an already disabled module should pass
        When I successfully run "dnf module disable ModuleB:f26"
        Then the command stdout should match regexp "'ModuleB:f26' is disabled"
         And a module ModuleB config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   # DNF does not remove packages
   @xfail
@@ -47,7 +47,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleA' is disabled"
         And a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
         And rpmdb changes are
           | State   | Packages                       |
           | removed | TestA/1-2.modA, TestB/1-1.modA |
@@ -58,7 +58,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleA:f26' is disabled"
         And a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   Scenario: I can disable a module with installed profile when specifying both stream and correct version
        When I successfully run "dnf module enable ModuleA:f26"
@@ -66,7 +66,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleA:f26:2' is disabled"
         And a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   Scenario: I can disable a module with installed profile when specifying other valid stream
        When I successfully run "dnf module enable ModuleA:f26"
@@ -74,7 +74,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleA:f27' is disabled"
         And a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
 
   # DNF does not remove packages
   @xfail
@@ -85,7 +85,7 @@ Feature: Disabling module stream
        Then the command stdout should match regexp "'ModuleB:f26:2' is disabled"
         And a module ModuleB config file should contain
           | Key     | Value |
-          | enabled | 0     |
+          | enabled | False |
         And rpmdb changes are
           | State   | Packages                       |
           | removed | TestG/1-1.modB, TestH/1-1.modB |

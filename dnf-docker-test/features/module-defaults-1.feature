@@ -21,7 +21,7 @@ Feature: Modulemd defaults are followed by dnf module commands
        When I run "dnf module enable ModuleA -y"
        Then a module ModuleA config file should contain
           | Key     | Value |
-          | enabled | 1     |
+          | enabled | True  |
           | stream  | f26   |
 
   Scenario: The default streams are identified in the output of module list

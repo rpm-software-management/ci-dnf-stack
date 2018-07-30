@@ -25,7 +25,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA/minimal"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And rpmdb changes are
@@ -38,7 +38,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA:f26/minimal"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And rpmdb changes are
@@ -51,7 +51,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA:f26:2/minimal"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And rpmdb changes are
@@ -64,7 +64,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA/minimal ModuleA/devel"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And rpmdb changes are
@@ -77,7 +77,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA/default"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And the command stdout section "Installing module packages:" should match regexp "TestA.*1-2.modA"
@@ -91,7 +91,7 @@ Feature: Installing module profiles
         And I successfully run "dnf module install -y ModuleA:f26:2/minimal"
        Then a module "ModuleA" config file should contain
          | Key      | Value |
-         | enabled  | 1     |
+         | enabled  | True  |
          | stream   | f26   |
          | version  | 2     |
         And rpmdb does not change
