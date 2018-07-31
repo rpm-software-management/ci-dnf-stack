@@ -136,7 +136,7 @@ def step_the_command_stream_should_match_regexp_line_by_line(ctx, stream):
                 else:
                     regexp = regexp[1:]
             if regexp:
-                ctx.assertion.assertRegexpMatches(line, regexp)
+                ctx.assertion.assertRegex(line, regexp)
             else:
                 ctx.assertion.assertEqual(line, "")
     if regexp_list:  # there are some unprocessed regexps
@@ -145,12 +145,12 @@ def step_the_command_stream_should_match_regexp_line_by_line(ctx, stream):
 @then('the command {stream:stdout_stderr} should match regexp "{regexp}"')
 def step_the_command_stream_should_match_regexp(ctx, stream, regexp):
     text = getattr(ctx.cmd_result, stream)
-    ctx.assertion.assertRegexpMatches(text, regexp)
+    ctx.assertion.assertRegex(text, regexp)
 
 @then('the command {stream:stdout_stderr} should not match regexp "{regexp}"')
 def step_the_command_stream_should_not_match_regexp(ctx, stream, regexp):
     text = getattr(ctx.cmd_result, stream)
-    ctx.assertion.assertNotRegexpMatches(text, regexp)
+    ctx.assertion.assertNotRegex(text, regexp)
 
 @then('the command {stream:stdout_stderr} section "{section}" should match exactly')
 def step_the_command_stream_section_should_match_exactly(ctx, stream, section):
@@ -176,21 +176,21 @@ def step_the_command_stream_section_should_match_exactly(ctx, stream, section):
     ctx.assertion.assertIsNotNone(ctx.text, "Multiline text is not provided")
     text = getattr(ctx.cmd_result, stream)
     section_content = command_utils.extract_section_content_from_text(section, text)
-    ctx.assertion.assertRegexpMatches(section_content, ctx.text)
+    ctx.assertion.assertRegex(section_content, ctx.text)
 
 @then('the command {stream:stdout_stderr} section "{section}" should match regexp "{regexp}"')
 def step_the_command_stream_section_should_match_regexp(ctx, stream, section, regexp):
     """Compares the content of a particular section from the command output with a given regexp"""
     text = getattr(ctx.cmd_result, stream)
     section_content = command_utils.extract_section_content_from_text(section, text)
-    ctx.assertion.assertRegexpMatches(section_content, regexp)
+    ctx.assertion.assertRegex(section_content, regexp)
 
 @then('the command {stream:stdout_stderr} section "{section}" should not match regexp "{regexp}"')
 def step_the_command_stream_section_should_not_match_regexp(ctx, stream, section, regexp):
     """Compares the content of a particular section from the command output with a given regexp"""
     text = getattr(ctx.cmd_result, stream)
     section_content = command_utils.extract_section_content_from_text(section, text)
-    ctx.assertion.assertNotRegexpMatches(section_content, regexp)
+    ctx.assertion.assertNotRegex(section_content, regexp)
 
 @then('history should match "{cmd}" with "{act}" and "{alt}" package')
 @then('history should match "{cmd}" with "{act}" and "{alt}" packages')
