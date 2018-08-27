@@ -11,9 +11,8 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED1:salt"
        Then a module ModuleConfED1 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb does not change
 
@@ -21,33 +20,24 @@ Feature: Installing modules without cli profile specification, using profile ove
        When I successfully run "dnf -y module remove ModuleConfED1:salt"
         And I successfully run "dnf -y module disable ModuleConfED1:salt"
 
-  @xfail
   # https://bugzilla.redhat.com/show_bug.cgi?id=1568165
   Scenario: Install module, 'default' profile does not exist, no repo or system overrides, expecting 'default' profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfND1:salt"
        Then a module ModuleConfND1 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb does not change
-
-  @xfail
-  # due to previous scenario failure
-  Scenario: Cleanup from previous scenario
-       When I successfully run "dnf -y module remove ModuleConfND1:salt"
-        And I successfully run "dnf -y module disable ModuleConfND1:salt"
 
   Scenario: Install module, populated 'default' profile exists, no repo or system overrides, expecting 'default' profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfPD1:salt"
        Then a module ModuleConfPD1 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb changes are
          | State     | Packages                 |
@@ -62,9 +52,8 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED2:salt"
        Then a module ModuleConfED2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb does not change
 
@@ -79,9 +68,8 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfND2:salt"
        Then a module ModuleConfND2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb does not change
 
@@ -96,9 +84,8 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfPD2:salt"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | salt    |
-         | version  | 1       |
          | profiles | default |
         And rpmdb changes are
          | State     | Packages                 |
@@ -113,9 +100,8 @@ Feature: Installing modules without cli profile specification, using profile ove
         And I successfully run "dnf -y module install ModuleConfED3:pepper"
        Then a module ModuleConfED3 config file should contain
          | Key      | Value  |
-         | enabled  | True   |
+         | state    | enabled|
          | stream   | pepper |
-         | version  | 1      |
          | profiles | bacon  |
         And rpmdb changes are
          | State     | Packages                 |

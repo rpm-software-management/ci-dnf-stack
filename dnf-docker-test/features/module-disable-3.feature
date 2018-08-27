@@ -8,7 +8,7 @@ Feature: Installing and updating disabled module stream
 
   Scenario: Disabled but installed profile should not be receiving updates
       Given I successfully run "dnf module install -y ModuleB:f26:1/default"
-        And I successfully run "dnf module disable ModuleB"
+        And I successfully run "dnf module disable -y ModuleB"
        When I save rpmdb
         And I successfully run "dnf update --assumeyes"
        Then rpmdb does not change
