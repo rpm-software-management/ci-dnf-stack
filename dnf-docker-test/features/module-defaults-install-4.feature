@@ -44,9 +44,8 @@ Feature: On-disk modulemd data are merged with repodata
         And I successfully run "dnf -y module install ModuleConfPD2"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | pepper  |
-         | version  | 1       |
          | profiles | eggs    |
         And rpmdb changes are
          | State     | Packages                 |
@@ -56,22 +55,19 @@ Feature: On-disk modulemd data are merged with repodata
        When I successfully run "dnf -y module remove ModuleConfPD2:pepper"
         And I successfully run "dnf -y module disable ModuleConfPD2:pepper"
 
-  @xfail
   # https://bugzilla.redhat.com/show_bug.cgi?id=1582524
   Scenario: Local system modulemd defaults are merged and provide profile for additional stream
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfPD2:sugar"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | sugar   |
-         | version  | 1       |
          | profiles | bacon   |
         And rpmdb changes are
          | State     | Packages                 |
          | installed | TestConfB/1-1.modConfPD2 |
 
-  @xfail
   # due to previous scenario failure
   Scenario: Cleanup from previous scenario
        When I successfully run "dnf -y module remove ModuleConfPD2:sugar"
