@@ -24,15 +24,14 @@ Feature: Installing package when default stream is defined
           | State     | Packages       |
           | installed | TestY/1-1.modY |
         And a module ModuleY config file should contain
-          | Key     | Value |
-          | version | -1    |
-          | enabled | True  |
-          | stream  | f26   |
+          | Key     | Value  |
+          | state   |enabled |
+          | stream  | f26    |
 
   @setup
   Scenario: cleanup from previous scenario
       Given I successfully run "dnf remove TestY -y"
-        And I successfully run "dnf module disable ModuleY"
+        And I successfully run "dnf module disable ModuleY -y"
 
   Scenario: rpm from enabled stream is preferred regardless of NVRs
       Given I successfully run "dnf module enable ModuleY:f27 -y"

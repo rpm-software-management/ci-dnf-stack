@@ -24,9 +24,8 @@ Feature: On-disk modulemd data are preferred over repodata in case of a conflict
         And I successfully run "dnf -y module install ModuleConfPD2"
        Then a module ModuleConfPD2 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | pepper  |
-         | version  | 1       |
          | profiles | eggs    |
         And rpmdb changes are
          | State     | Packages                 |
@@ -41,15 +40,10 @@ Feature: On-disk modulemd data are preferred over repodata in case of a conflict
         And I successfully run "dnf -y module install ModuleConfPD3"
        Then a module ModuleConfPD3 config file should contain
          | Key      | Value   |
-         | enabled  | True    |
+         | state    | enabled |
          | stream   | pepper  |
-         | version  | 1       |
          | profiles | bacon   |
         And rpmdb changes are
          | State     | Packages                 |
          | installed | TestConfB/1-1.modConfPD3 |
-
-  Scenario: Cleanup from previous scenario
-       When I successfully run "dnf -y module remove ModuleConfPD3:pepper"
-        And I successfully run "dnf -y module disable ModuleConfPD3:pepper"
 

@@ -5,8 +5,8 @@ Feature: Show enabled streams information
       Given I run steps from file "modularity-repo-1.setup"
        When I enable repository "modularityABDE"
         And I successfully run "dnf makecache"
-        And I successfully run "dnf module enable ModuleA:f26"
-        And I successfully run "dnf module enable ModuleB:f27"
+        And I successfully run "dnf module enable ModuleA:f26 -y"
+        And I successfully run "dnf module enable ModuleB:f27 -y"
 
   Scenario: I can get list of enabled module streams
        When I successfully run "dnf module streams"
@@ -14,10 +14,11 @@ Feature: Show enabled streams information
            """
            ?Last metadata expiration check
            modularityABDE
-           Name *Stream *Version *Profiles
-           ModuleA *f26 \[e\] *1 *client, default, ...
-           ModuleA *f26 \[e\] *2 *client, default, ...
-           ModuleB *f27 \[e\] *1 *default
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client, default, devel, minimal, server, \. +Module +ModuleA summar
+           \.\. +y
+           ModuleB +f27 \[e\] default +Module +ModuleB summar
+            +y
            
            Hint:
            """
@@ -28,8 +29,8 @@ Feature: Show enabled streams information
            """
            ?Last metadata expiration check
            modularityABDE
-           Name *Stream *Version *Profiles
-           ModuleB *f27 \[e\] *1 *default
+           Name +Stream +Profiles +Summary
+           ModuleB +f27 \[e\] +default +Module +ModuleB summary
            
            Hint:
            """
