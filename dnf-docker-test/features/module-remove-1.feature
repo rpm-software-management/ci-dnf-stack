@@ -13,7 +13,6 @@ Feature: Module profile removal
         And I successfully run "dnf makecache"
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581609
-  @xfail
   Scenario: I can remove an installed module profile specifying stream name
        When I save rpmdb
         And I successfully run "dnf module remove --assumeyes ModuleB:f26"
@@ -21,13 +20,11 @@ Feature: Module profile removal
           | State   | Packages                       |
           | removed | TestG/1-2.modB, TestI/1-1.modB |
         And a module ModuleB config file should contain
-          | Key      | Value |
-          | profiles |       |
-          | version  | -1    |
-          | enabled  | True  |
+          | Key      | Value   |
+          | profiles |         |
+          | state    | enabled |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
-  @xfail
   Scenario: I can remove an installed module profile
        When I save rpmdb
         And I successfully run "dnf module remove -y ModuleA/minimal"
@@ -39,8 +36,7 @@ Feature: Module profile removal
           | Key      | Value               |
           # Other profiles are still installed
           | profiles | (set) client, devel |
-          | version  | 2                   |
-          | enabled  | True                |
+          | state    | enabled             |
 
   @setup
   Scenario: Setup due to previous xfail test.. please remove when the bug above is fixed
@@ -56,9 +52,8 @@ Feature: Module profile removal
         And a module ModuleA config file should contain
           | Key      | Value               |
           | profiles | (set) client, devel |
-          | version  | 2                   |
-          | enabled  | True                |
-        And the command stderr should match regexp "Error: Profile not installed: ModuleA/server"
+          | state    | enabled             |
+        And the command stderr should match regexp "Error: Specified profile not installed for ModuleA/server"
 
   Scenario: I can remove multiple profiles
        When I save rpmdb
@@ -67,9 +62,6 @@ Feature: Module profile removal
           | State   | Packages                                       |
           | removed | TestA/1-2.modA, TestB/1-1.modA, TestD/1-1.modA |
        And a module ModuleA config file should contain
-          | Key      | Value |
-          | enabled  | True  |
-          | profiles |       |
-          # The check below should be true, but it fails due to a known bug.
-          # Since there is already a test covering it, let's ignore it here.
-          #| version  | -1    |
+          | Key      | Value   |
+          | state    | enabled |
+          | profiles |         |

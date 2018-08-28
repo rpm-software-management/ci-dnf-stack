@@ -26,7 +26,7 @@ Feature: Installing module profiles -- error handling
 
   Scenario: I cannot install an RPM with same name as an RPM that belongs to enabled MODULE:STREAM
        When I enable repository "nonmodularX"
-        And I successfully run "dnf module enable ModuleX:f26"
+        And I successfully run "dnf module enable ModuleX:f26 -y"
         And I run "dnf install -y TestX-1-1.nonX"
        Then the command exit code is 1
         And the command stdout should match regexp "No match for argument: TestX-1-1.nonX"

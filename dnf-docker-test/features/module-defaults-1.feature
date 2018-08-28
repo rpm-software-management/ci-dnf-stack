@@ -20,9 +20,9 @@ Feature: Modulemd defaults are followed by dnf module commands
   Scenario: The default stream is used when enabling a module
        When I run "dnf module enable ModuleA -y"
        Then a module ModuleA config file should contain
-          | Key     | Value |
-          | enabled | True  |
-          | stream  | f26   |
+          | Key     | Value   |
+          | state   | enabled |
+          | stream  | f26     |
 
   Scenario: The default streams are identified in the output of module list
        When I run "dnf module list ModuleA"
@@ -30,12 +30,16 @@ Feature: Modulemd defaults are followed by dnf module commands
          """
          ?Last metadata expiration check:
          modularityABDE
-         Name +Stream +Version +Profiles
-         ModuleA +f26 \[d\]\[e\] +2 +client, default, ...
-         ModuleA +f27 +1 +client, default, ...
+         Name +Stream +Profiles +Summary
+         ModuleA +f26 \[d\]\[e\] +client, default, devel \[d\], minimal \[d\], serv +Module ModuleA
+          +er, \.\.\. +summary
+         ModuleA +f27 +client, default, devel \[d\], minimal \[d\], serv +Module ModuleA
+          +er, \.\.\. +summary
 
          Hint:
          """
+
+  @xfail  # bz 1618553
   Scenario: Default profiles are identified in the output of dnf info
        When I run "dnf module info ModuleA"
        Then the command stdout should match regexp "Default profiles : devel minimal"
@@ -47,15 +51,12 @@ Feature: Modulemd defaults are followed by dnf module commands
           | Key      | Value                |
           | stream   | f26                  |
           | profiles | (set) minimal, devel |
-          | version  | 2                    |
 
-  @xfail
-  Scenario: Default profile is used when installing a module with enabled stream
+  Scenario: Default profile(s) is used when installing a module with enabled stream
       Given I run "dnf module disable ModuleA -y"
         And I run "dnf module enable ModuleA:f27 -y"
        When I run "dnf module install ModuleA -y"
        Then a module ModuleA config file should contain
-          | Key      | Value         |
-          | stream   | f27           |
-          | profiles | (set) minimal |
-          | version  | 2             |
+          | Key      | Value                |
+          | stream   | f27                  |
+          | profiles | (set) minimal, devel |
