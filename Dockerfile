@@ -9,12 +9,11 @@ COPY rpms /rpms/
 COPY dnf-docker-test/x509certgen /usr/local/bin
 
 RUN set -x && \
-    echo -e "deltarpm=0\ntsflags=nodocs" >> /etc/dnf/dnf.conf && \
+    echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
     # httpd:        http-style repos
     # vsftpd:       ftp-style repos
     # behave:       core
     # six:          py2/py3
-    # enum34:       enum for py2, rpmdb.State
     # whichcraft:   shutil.which() for py2
     # jinja2:       rpmspec template
     # pexpect:      shell tests
@@ -25,24 +24,23 @@ RUN set -x && \
     # rng-tools:    to generate enough _random_ data for GPG keys
     # rpm-sign:     rpm signing
     # createrepo_c: building repos
-    dnf -y install httpd vsftpd python2-behave python2-six python-enum34 python2-whichcraft python-jinja2 python2-pexpect rpm-build openssl mod_ssl gnupg2 rng-tools rpm-sign createrepo_c && \
+    dnf -y install httpd vsftpd python3-behave python3-six python3-whichcraft python3-jinja2 python3-pexpect rpm-build openssl mod_ssl gnupg2 rng-tools rpm-sign createrepo_c && \
     if [ $type = "local" ]; then \
         # Allows to run test with rpms from only single component in rpms/
         dnf -y install dnf-plugins-core python3-dnf-plugins-core python2-dnf-plugins-core createrepo_c && \
-        dnf -y copr enable mhatina/dnf-modularity-nightly; \
+        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     fi && \
     # prevent installation of dnf-plugins-extras (versionlock, local, torproxy, migrate)
     rm -vf /rpms/*dnf-plugin-versionlock*.rpm /rpms/*dnf-plugin-local*.rpm /rpms/*dnf-plugin-torproxy*.rpm /rpms/python2-dnf-plugin-migrate*.rpm && \
     # update dnf
-    dnf -y --best upgrade dnf libdnf --exclude=libdnf-0.12.2 --enablerepo=updates-testing && \
+    dnf -y --best upgrade dnf && \
     if [ $type = "local" ]; then \
         # install all rpms if present
         if ls /rpms/*.rpm 1>/dev/null 2>&1; then dnf -y install /rpms/*.rpm; fi && \
         # workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1398272
         rpm -q dnf && \
         # some unknown thing
-        UNNEEDED=$(dnf repoquery --unneeded -q | grep -v '^Loading repositories' | xargs) && \
-        [ -z "$UNNEEDED" ] || dnf -y mark install $UNNEEDED; \
+        dnf -q repoquery --unneeded | xargs --no-run-if-empty dnf mark install; \
     else \
         dnf -y install /rpms/*.rpm && \
         dnf -y autoremove; \
