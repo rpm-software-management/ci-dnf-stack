@@ -21,7 +21,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26
            Version +: +2
-           Profiles +: +client default devel minimal server
+           Profiles +: +client\[i\], default, devel, minimal, server
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -29,6 +29,8 @@ Feature: Module info
             +: +TestB-0:1-1.modA.noarch
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
 
   Scenario: Get info for an enabled stream, module name and stream specified
@@ -40,7 +42,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26
            Version +: +2
-           Profiles +: +client default devel minimal server
+           Profiles +: +client\[i\], default, devel, minimal, server
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -48,29 +50,83 @@ Feature: Module info
             +: +TestB-0:1-1.modA.noarch
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
-  @xfail
-  # expected to fail, should be updated when bz1540189 will be resolved
+  # bz1540189
   Scenario: Get info for an installed profile, module name and profile specified
        When I successfully run "dnf module info ModuleA/client"
-       Then the command stdout should match regexp "profile specific info or a warning"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Ignoring unnecessary profile: 'ModuleA/client'
+           Name +: +ModuleA
+           Stream +: +f26 \[e\]
+           Version +: +2
+           Profiles +: +client\[i\], default, devel, minimal, server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           """
 
-  @xfail
-  # expected to fail, should be updated when bz1540189 will be resolved
+  # z1540189
   Scenario: Get info for an installed profile, module name, stream and profile specified
        When I successfully run "dnf module info ModuleA:f26/client"
-       Then the command stdout should match regexp "profile specific info or a warning"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Ignoring unnecessary profile: 'ModuleA/client'
+           Name +: +ModuleA
+           Stream +: +f26 \[e\]
+           Version +: +2
+           Profiles +: +client\[i\], default, devel, minimal, server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           """
 
-  @xfail
-  # expected to fail, should be updated when bz1540189 will be resolved
-  Scenario: Get error message when info for non-existent profile is requested
+  # bz1540189
+  Scenario: Non-existent profile is ignored for dnf module info
        When I run "dnf module info ModuleA:f26/non-existent-profile"
-       Then the command should fail
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           Ignoring unnecessary profile: 'ModuleA/non-existent-profile'
+           Name +: +ModuleA
+           Stream +: +f26 \[e\]
+           Version +: +2
+           Profiles +: +client\[i\], default, devel, minimal, server
+           Repo +: +modularityABDE
+           Summary +: +Module ModuleA summary
+           Description +: +Module ModuleA description
+           Artifacts +: +TestA-0:1-2.modA.noarch
+            +: +TestB-0:1-1.modA.noarch
+            +: +TestC-0:1-2.modA.noarch
+            +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           """
 
+  @xfail  #bz 1623535
   Scenario: Get error message when info for non-existent module is requested
        When I run "dnf module info non-existent-module"
        Then the command should fail
-        And the command stderr should match regexp "Error: No such module"
+        And the command stderr should match regexp "No such module: non-existent-module"
 
   Scenario: Get info for a disabled stream, module name and stream specified
        When I successfully run "dnf module info ModuleB:f26"
@@ -87,6 +143,8 @@ Feature: Module info
            Description +: +Module ModuleB description
            Artifacts +: +TestG-0:1-2.modB.noarch
             +: +TestI-0:1-1.modB.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
 
   Scenario: Get error when info for a disabled stream is requested and only module name is specified
@@ -103,7 +161,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26
            Version +: +2
-           Profiles +: +client default devel minimal server
+           Profiles +: +client\[i\], default, devel, minimal, server
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -111,6 +169,8 @@ Feature: Module info
             +: +TestB-0:1-1.modA.noarch
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            
            Name +: +ModuleX
            Stream +: +f26
@@ -120,20 +180,34 @@ Feature: Module info
            Summary +: +Module ModuleX summary
            Description +: +Module ModuleX description
            Artifacts +: +TestX-0:1-1.modX.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
 
   @xfail
-  # expected to fail, should be updated when bz1541332 will be resolved
+  # bz1623535
   Scenario: Get info for two modules, one of them non-existent
        When I run "dnf module info non-existent-module ModuleX"
        Then the command should fail
-        And the command stderr should match regexp "Error: No such module"
-        And the command stdout should match regexp "Summary.*Module ModuleX summary"
+        And the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           
+           No such module: non-existent-module
+           
+           Name +: +ModuleX
+           Stream +: +f26
+           Version +: +1
+           Profiles +: +default
+           Repo +: +modularityX
+           Summary +: +Module ModuleX summary
+           Description +: +Module ModuleX description
+           Artifacts +: +TestX-0:1-1.modX.noarch
+           
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           """
 
-  @xfail
-  # expected to fail, should be updated when the issue will be resolved
   Scenario: Run 'dnf module info' without further argument
        When I run "dnf module info"
        Then the command should fail
         And the command stderr should match regexp "Error: dnf module info: too few arguments"
-        And the command stderr should match regexp "usage: dnf module info"
