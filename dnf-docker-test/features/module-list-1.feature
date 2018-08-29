@@ -18,17 +18,24 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f26 \[e\] +2
-           ModuleA +f27 +1
-           ModuleB +f26 +2
-           ModuleB +f27 +1
-           ModuleD +f26 +1
-           ModuleE +f26 +1
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
+           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
+            +ary
+           ModuleB f26 +default +Module +ModuleB summ
+            +ary
+           ModuleB f27 +default +Module +ModuleB summ
+            +ary
+           ModuleD f26 +default +Module +ModuleD summ
+            +ary
+           ModuleE f26 +default +Module +ModuleE summ
+            +ary
 
            modularityX
-           Name +Stream +Version
-           ModuleX +f26 \[e\] +1
+           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
+            +ary
 
            Hint:
            """
@@ -39,13 +46,14 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f26 \[e\] +1
-           ModuleA +f26 \[e\] +2
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
 
            modularityX
-           Name +Stream +Version
-           ModuleX +f26 \[e\] +1
+           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
+            +ary
 
            Hint:
            """
@@ -56,12 +64,14 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f26 \[e\] +2
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
 
            modularityX
-           Name +Stream +Version
-           ModuleX +f26 \[e\] +1
+           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
+            +ary
 
            Hint:
            """
@@ -72,13 +82,17 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f27 +1
-           ModuleB +f26 +1
-           ModuleB +f26 +2
-           ModuleB +f27 +1
-           ModuleD +f26 +1
-           ModuleE +f26 +1
+           Name +Stream +Profiles +Summary
+           ModuleA +f27 +client, default, devel, minimal, server, .. +Module +ModuleA summar
+            +\. +y
+           ModuleB f26 +default +Module +ModuleB summar
+            +y
+           ModuleB f27 +default +Module +ModuleB summar
+            +y
+           ModuleD f26 +default +Module +ModuleD summar
+            +y
+           ModuleE f26 +default +Module +ModuleE summar
+            +y
 
            Hint:
            """
@@ -89,14 +103,18 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f26 \[e\] +2
-           ModuleA +f27 +1
-           ModuleE +f26 +1
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
+           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
+            +ary
+           ModuleE f26 +default +Module +ModuleE summ
+            +ary
 
            modularityX
-           Name +Stream +Version
-           ModuleX +f26 \[e\] +1
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
+            +ary
 
            Hint:
            """
@@ -105,8 +123,8 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityX
-           Name +Stream +Version
-           ModuleX +f26 \[e\] +1
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX summary
 
            Hint:
            """
@@ -115,9 +133,9 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleA +f26 \[e\] +1
-           ModuleA +f26 \[e\] +2
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
 
            Hint:
            """
@@ -126,31 +144,34 @@ Feature: Module listing
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version
-           ModuleB +f26 +1
-           ModuleB +f26 +2
-           ModuleB +f27 +1
-           ModuleD +f26 +1
+           Name +Stream +Profiles +Summary
+           ModuleB +f26 +default +Module +ModuleB summary
+           ModuleB +f27 +default +Module +ModuleB summary
+           ModuleD +f26 +default +Module +ModuleD summary
 
            Hint:
            """
 
-  Scenario: Following module details are listed: Name, Stream, Version, Profiles, Installed, Info
+  Scenario: Following module details are listed: Name, Stream, Profiles, Summary
        When I successfully run "dnf module list ModuleA ModuleE ModuleX"
        Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
            modularityABDE
-           Name +Stream +Version +Profiles +
-           ModuleA +f26 \[e\] +2 +client \[i\], default, ...
-           ModuleA +f27 +1 +client, default, ...
-           ModuleE +f26 +1 +default
+           Name +Stream +Profiles +Summary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+            +... +ary
+           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
+            +ary
+           ModuleE f26 +default +Module +ModuleE summ
+            +ary
 
            modularityX
-           Name +Stream +Version +Profiles +
-           ModuleX +f26 \[e\] +1 +default \[i\]
+           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
+           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
+            +ary
 
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled, \[l\]ocked
+           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
 
   Scenario: I can see only modules' packages, not modules themselves in the output of 'dnf list'
