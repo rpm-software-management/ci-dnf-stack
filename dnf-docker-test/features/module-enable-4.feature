@@ -1,4 +1,4 @@
-Feature: Enabling module stream with dependencies
+Feature: Lazy enabling module stream with dependencies
 
   @setup
   Scenario: Testing module dependency handling
@@ -7,17 +7,21 @@ Feature: Enabling module stream with dependencies
         And I successfully run "dnf makecache"
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1622566
-  @xfail
-  Scenario: Enabling a module and its dependencies
+  Scenario: Lazy enabling a module and its dependencies when installing
        When I save rpmdb
         And I successfully run "dnf module enable ModuleM:f26 --assumeyes"
        Then a module ModuleM config file should contain
           | Key      | Value   |
           | state    | enabled |
           | stream   | f26     |
-        And a module ModuleMX config file should contain
+        And a file "/etc/dnf/modules.d/ModuleMX.module" does not exist
+        And rpmdb does not change
+       When I save rpmdb
+        And I successfully run "dnf module install ModuleM -y"
+       Then a module ModuleMX config file should contain
           | Key      | Value   |
           | state    | enabled |
           | stream   | f26     |
-        And rpmdb does not change
-
+        And rpmdb changes are
+         | State     | Packages |
+         | installed | TestMA/1-1.modM, TestMB/1-1.modM, TestMBX/1-1.modM, TestMX/1-1.modMX |
