@@ -7,7 +7,7 @@ Feature: Module profile command
         And I successfully run "dnf makecache"
 
   Scenario: I can get the info about content of an enabled module stream
-       When I successfully run "dnf module enable ModuleA:f26"
+       When I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf module profile ModuleA"
        Then the command stdout should match line by line regexp
            """
@@ -25,12 +25,13 @@ Feature: Module profile command
            ? +: Test.*
            """
 
-  Scenario: I can get the info about content of all the profiles in enabled module stream
+  Scenario: Profile specification is ignored by dnf module profile
        When I successfully run "dnf module profile ModuleA/client"
        Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
 
+           Ignoring unnecessary profile: 'ModuleA/client'
            Name +: ModuleA:f26:2
            client +: Test.*
            ? +: Test.*
@@ -63,7 +64,7 @@ Feature: Module profile command
            """
 
   Scenario: I can get the info about content of disabled module stream
-       When I successfully run "dnf module disable ModuleB:f26"
+       When I successfully run "dnf module disable ModuleB:f26 -y"
         And I successfully run "dnf module profile ModuleB:f26"
        Then the command stdout should match line by line regexp
            """
@@ -90,9 +91,9 @@ Feature: Module profile command
   Scenario: Getting info about disabled module profile without default stream defined should raise an error
        When I run "dnf module profile ModuleB"
        Then a module "ModuleB" config file should contain
-          | Key     | Value |
-          | enabled | False |
-          | stream  |       |
+          | Key     | Value    |
+          | state   | disabled |
+          | stream  |          |
         And the command exit code is 1
         And the command stderr should match exactly
            """
