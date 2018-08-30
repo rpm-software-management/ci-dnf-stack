@@ -149,7 +149,7 @@ def step_an_ini_file_filepath_modified_with(ctx, filepath):
 
 
 @then('an INI file "{filepath}" should contain')
-def step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processing = False):
+def step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processing=False):
     """
     Tests whether an INI file contain respective Section, Key, Value
     triples.
