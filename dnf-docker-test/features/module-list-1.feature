@@ -19,23 +19,24 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
-           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
-            +ary
-           ModuleB f26 +default +Module +ModuleB summ
-            +ary
-           ModuleB f27 +default +Module +ModuleB summ
-            +ary
-           ModuleD f26 +default +Module +ModuleD summ
-            +ary
-           ModuleE f26 +default +Module +ModuleE summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, s.* +Module +ModuleA sum
+           ?^[^M]
+           ModuleA +f27 +client, default, devel, minimal, server.*Module +ModuleA sum
+           ?^[^M]
+           ModuleB +f26 +default +Module +ModuleB sum
+           ?^[^M]
+           ModuleB +f27 +default +Module +ModuleB sum
+           ?^[^M]
+           ModuleD +f26 +default +Module +ModuleD sum
+           ?^[^M]
+           ModuleE +f26 +default +Module +ModuleE sum
+           ?^[^M]
 
            modularityX
-           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
+           ?^[^M]
 
            Hint:
            """
@@ -47,13 +48,14 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
 
            modularityX
-           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
+           ?^[^M]
 
            Hint:
            """
@@ -65,13 +67,14 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
 
            modularityX
-           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
+           ?^[^M]
 
            Hint:
            """
@@ -83,16 +86,16 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f27 +client, default, devel, minimal, server, .. +Module +ModuleA summar
-            +\. +y
-           ModuleB f26 +default +Module +ModuleB summar
-            +y
-           ModuleB f27 +default +Module +ModuleB summar
-            +y
-           ModuleD f26 +default +Module +ModuleD summar
-            +y
-           ModuleE f26 +default +Module +ModuleE summar
-            +y
+           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleB +f26 +default +Module +ModuleB sum
+           ?^[^M]
+           ModuleB +f27 +default +Module +ModuleB sum
+           ?^[^M]
+           ModuleD +f26 +default +Module +ModuleD sum
+           ?^[^M]
+           ModuleE +f26 +default +Module +ModuleE sum
+           ?^[^M]
 
            Hint:
            """
@@ -104,17 +107,18 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
-           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
-            +ary
-           ModuleE f26 +default +Module +ModuleE summ
-            +ary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleE +f26 +default +Module +ModuleE sum
+           ?^[^M]
 
            modularityX
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
-            +ary
+           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleX +f26 \[e\] default\[i\] +Module +ModuleX sum
+           ?^[^M]
 
            Hint:
            """
@@ -134,8 +138,8 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
 
            Hint:
            """
@@ -159,17 +163,18 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-            +... +ary
-           ModuleA +f27 +client, default, devel, minimal, server, ... +Module +ModuleA summ
-            +ary
-           ModuleE f26 +default +Module +ModuleE summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleE +f26 +default +Module +ModuleE summ
+           ?^[^M]
 
            modularityX
-           ModuleA f26 \[e\] client\[i\], default, devel, minimal, server, +Module +ModuleA summ
-           ModuleX f26 \[e\] default\[i\] +Module +ModuleX summ
-            +ary
+           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ?^[^M]
+           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX summ
+           ?^[^M]
 
            Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
            """
