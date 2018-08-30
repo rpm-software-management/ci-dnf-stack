@@ -31,15 +31,15 @@ Feature: Modulemd defaults are followed by dnf module commands
          ?Last metadata expiration check:
          modularityABDE
          Name +Stream +Profiles +Summary
-         ModuleA +f26 \[d\]\[e\] +client, default, devel \[d\], minimal \[d\], serv +Module ModuleA
-          +er, \.\.\. +summary
-         ModuleA +f27 +client, default, devel \[d\], minimal \[d\], serv +Module ModuleA
-          +er, \.\.\. +summary
+         ModuleA +f26 \[d\]\[e\] +client, default, devel \[d\], minimal \[d\], s +Module ModuleA
+         ?[^M] +
+         ModuleA +f27 +client, default, devel \[d\], minimal \[d\], s +Module ModuleA
+         ?[^M] +
 
          Hint:
          """
 
-  @xfail  # bz 1618553
+  # bz 1618553
   Scenario: Default profiles are identified in the output of dnf info
        When I run "dnf module info ModuleA"
        Then the command stdout should match regexp "Default profiles : devel minimal"

@@ -15,10 +15,10 @@ Feature: Show enabled streams information
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client, default, devel, minimal, server, \. +Module +ModuleA summar
-           \.\. +y
-           ModuleB +f27 \[e\] default +Module +ModuleB summar
-            +y
+           ModuleA +f26 \[e\] +client, default, devel, minimal, server.*Module +ModuleA summar
+           ?\.\.
+           ModuleB +f27 \[e\] +default +Module +ModuleB summar
+           ?\.\.
            
            Hint:
            """
