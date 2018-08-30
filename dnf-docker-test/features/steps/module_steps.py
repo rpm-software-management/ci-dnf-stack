@@ -38,7 +38,7 @@ def step_a_module_modulename_should_contain(ctx, modulename):
 
     .. note::
        The (set) here enables the extra value processing which tests than
-       value expected contains the same elements as actual, regardless of 
+       value expected contains the same elements as actual, regardless of
        their order.
 
     """
@@ -46,4 +46,4 @@ def step_a_module_modulename_should_contain(ctx, modulename):
     skv_table = table_utils.convert_table_kv_to_skv(ctx.table, HEADINGS_INI, [modulename])
     ctx.table = skv_table
     filepath = '/etc/dnf/modules.d/{!s}.module'.format(modulename)
-    step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processing = True)
+    step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processing=True)
