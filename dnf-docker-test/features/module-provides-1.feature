@@ -6,6 +6,7 @@ Feature: Module provides command
        When I enable repository "modularityABDE"
         And I successfully run "dnf makecache"
 
+  # bz1623866
   Scenario: I can get list of modules providing specific package
        When I successfully run "dnf module provides TestH"
        Then the command stdout should match line by line regexp
