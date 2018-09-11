@@ -110,8 +110,6 @@ def when_action_command(context, type_of_command, command, result):
     cmd_output = subprocess.Popen(
             dnf_command_version, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     context.cmd_output, context.cmd_error = cmd_output.communicate()
-    # It overcome the problem when (dnf install ... && dnf remove ...)* causes inconsistency YUMDB - RPMDB
-    time.sleep(1)
     context.cmd_rc = cmd_output.returncode
     if context.cmd_error:
         print(context.cmd_error)
