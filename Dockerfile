@@ -9,7 +9,7 @@ COPY rpms /rpms/
 COPY dnf-docker-test/x509certgen /usr/local/bin
 
 RUN set -x && \
-    echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
+    echo -e "deltarpm=0\ntsflags=nodocs" >> /etc/dnf/dnf.conf && \
     # httpd:        http-style repos
     # vsftpd:       ftp-style repos
     # behave:       core
