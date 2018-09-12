@@ -188,8 +188,8 @@ def step_an_ini_file_filepath_should_contain(ctx, filepath, extra_value_processi
             else:  # an extra processing is enabled
                 if value.startswith('(set)'):
                     # consider the value to be command or \n separated set of values
-                    value_set = map(str.strip, value[5:].split(","))
-                    ini_value_set = map(str.strip, ini_value.replace("\n", ",").split(","))
+                    value_set = [v.strip() for v in value[5:].split(",")]
+                    ini_value_set = [v.strip() for v in ini_value.replace("\n", ",").split(",")]
                     ctx.assertion.assertCountEqual(value_set, ini_value_set)
                 else:  # fallback
                     ctx.assertion.assertEqual(value, ini_value)
