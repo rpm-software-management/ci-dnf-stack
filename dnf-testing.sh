@@ -166,11 +166,7 @@ run()
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
             feature=${feature%.feature}  # cut-off .feature suffix if present
-<<<<<<< HEAD
             for command in dnf-2 dnf-3; do
-=======
-            for command in dnf-3; do
->>>>>>> added --noxfail and --tags options to dnf-testing.sh script
                 printf "\nsudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
                 sudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
