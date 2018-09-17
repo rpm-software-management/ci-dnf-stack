@@ -25,6 +25,8 @@ Feature: Module profile removal
           | state    | enabled |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1629841
+  @xfail @bz1629841
   Scenario: I can remove an installed module profile
        When I save rpmdb
         And I successfully run "dnf module remove -y ModuleA/minimal"
@@ -44,16 +46,18 @@ Feature: Module profile removal
         And I successfully run "dnf module remove -y ModuleA/minimal"
         And I successfully run "dnf module install -y ModuleA/client ModuleA:f26/devel"
 
-  Scenario: Removing of a non-installed profiles should fail
+  @bz1629848
+  Scenario: Removing of a non-installed profiles would pass
        When I save rpmdb
         And I run "dnf module remove --assumeyes ModuleA/server"
-       Then the command exit code is 1
+       Then the command exit code is 0
         And rpmdb does not change
         And a module ModuleA config file should contain
           | Key      | Value               |
           | profiles | (set) client, devel |
           | state    | enabled             |
-        And the command stderr should match regexp "Error: Specified profile not installed for ModuleA/server"
+        And the command stdout should match regexp "Nothing to do."
+        And the command stderr should match regexp "Unable to match profile in argument ModuleA/server"
 
   Scenario: I can remove multiple profiles
        When I save rpmdb

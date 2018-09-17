@@ -15,7 +15,8 @@ Feature: Installing module profiles -- error handling
        Then the command exit code is 1
         And the command stderr should match exactly
             """
-            Error: No such module: NoSuchModule
+            Unable to resolve argument NoSuchModule
+            Error: No match for one or more arguments
 
             """
 

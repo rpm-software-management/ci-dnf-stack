@@ -1,3 +1,5 @@
+# needs porting to recent dnf behaviour but currently impossible due to bug 1629702
+@xfail @bz1629702
 Feature: Module listing
 
   @setup

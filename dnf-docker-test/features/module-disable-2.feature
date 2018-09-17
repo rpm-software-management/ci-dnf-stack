@@ -9,14 +9,14 @@ Feature: Enabling module stream - error handling
        When I successfully run "dnf module enable ModuleA:f26 -y"
         And I run "dnf module disable ModuleA:f26:999"
        Then the command exit code is 1
-        And the command stderr should match regexp "Error: No such module: ModuleA:f26:999"
+        And the command stderr should match regexp "Unable to resolve argument ModuleA:f26:999\nError: No match for one or more arguments"
 
   Scenario: Disabling a module by referring the wrong stream should fail
        When I run "dnf module disable ModuleA:f00 -y"
        Then the command exit code is 1
-        And the command stderr should match regexp "Error: No such module: ModuleA:f00"
+        And the command stderr should match regexp "Unable to resolve argument ModuleA:f00\nError: No match for one or more arguments"
 
   Scenario: Disabling a non-existing module should fail
        When I run "dnf module disable ModuleC -y"
        Then the command exit code is 1
-        And the command stderr should match regexp "Error: No such module: ModuleC"
+        And the command stderr should match regexp "Unable to resolve argument ModuleC\nError: No match for one or more arguments"

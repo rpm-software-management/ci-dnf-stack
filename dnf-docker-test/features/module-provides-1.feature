@@ -7,22 +7,38 @@ Feature: Module provides command
         And I successfully run "dnf makecache"
 
   # bz1623866
-  Scenario: I can get list of modules providing specific package
+  # bz1629667
+  @xfail @bz1629667
+  Scenario: I can get list of all modules providing specific package
        When I successfully run "dnf module provides TestH"
        Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
-           TestH-0:1-1.modB.noarch
+           TestH-1-1.modB.noarch
            Module   : ModuleB:f26:1
            Profiles : default
            Repo     : modularityABDE
            Summary  : Module ModuleB summary
 
-           TestH-0:2-1.modB.noarch
+           TestH-2-1.modB.noarch
            Module   : ModuleB:f27:1
            Profiles : default
            Repo     : modularityABDE
            Summary  : Module ModuleB summary
+           """
+
+  Scenario: I can get list of enabled modules providing specific package
+       When I successfully run "dnf module enable ModuleB:f26 -y"
+        And I successfully run "dnf module provides TestH"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           TestH-1-1.modB.noarch
+           Module   : ModuleB:f26:1
+           Profiles : default
+           Repo     : modularityABDE
+           Summary  : Module ModuleB summary
+
            """
 
   Scenario: There is not output when no module provides the package

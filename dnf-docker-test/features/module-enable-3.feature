@@ -11,34 +11,35 @@ Feature: Enabling module stream - error handling
        Then the command exit code is 1
         And the command stderr should match exactly
             """
-            Error: No stream specified for 'ModuleA', please specify stream
+            Cannot enable more streams from module 'ModuleA' at the same time
+            Unable to resolve argument ModuleA
+            Error: No match for one or more arguments
 
             """
 
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1629655
+  @xfail @bz1629655
   Scenario: Enabling a module stream by refering the wrong version should fail
        When I run "dnf module enable ModuleA:f26:99 -y"
        Then the command exit code is 1
         And the command stderr should match exactly
             """
-            Error: No such module: ModuleA:f26:99
+            Cannot find module profile ModuleA:f26:99
+            Unable to resolve argument ModuleA:f26:99
+            Error: No match for one or more arguments
 
             """
 
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1629655
+  @xfail @bz1629655
   Scenario: Enabling a non-existent module stream should fail
        When I run "dnf module enable ModuleA:f00 --assumeyes"
        Then the command exit code is 1
         And the command stderr should match exactly
             """
-            Error: No such module: ModuleA:f00
-
-            """
-
-  Scenario: Enabling a non-existent module:stream should fail
-       When I run "dnf module enable NoSuchModule:f00 --assumeyes"
-       Then the command exit code is 1
-        And the command stderr should match exactly
-            """
-            Error: No such module: NoSuchModule:f00
+            Cannot find module stream ModuleA:f00
+            Unable to resolve argument ModuleA:f00
+            Error: No match for one or more arguments
 
             """
 
@@ -48,7 +49,7 @@ Feature: Enabling module stream - error handling
         And the command stderr should match regexp "Error: dnf module enable: too few arguments"
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581267
-  @xfail
+  @xfail @bz1581267
   Scenario: Enabling two streams for the same module gives an error
        When I run "dnf module enable ModuleA:f26 ModuleA:f27 --assumeyes"
        Then the command exit code is 1

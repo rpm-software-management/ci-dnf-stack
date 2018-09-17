@@ -14,7 +14,7 @@ Feature: Use confirmation of enabling different module stream
         And the command stdout should match regexp "Switching module streams:"
         And the command stdout should match regexp "ModuleA *f26 -> f27"
         And the command stdout should match regexp "Is this ok \[y/N\]:"
-        And the command stderr should match regexp "Error: Operation aborted."
+        And the command stderr should match regexp "Operation aborted."
         And a module ModuleA config file should contain
           | Key    | Value |
           | stream | f26   |
@@ -22,7 +22,7 @@ Feature: Use confirmation of enabling different module stream
   Scenario: Enablement of a different stream can be cancelled by the user (--assumeno option)
        When I run "dnf module enable ModuleB:f27 --assumeno"
        Then the command exit code is 1
-        And the command stderr should match regexp "Error: Operation aborted."
+        And the command stderr should match regexp "Operation aborted."
         And a module ModuleB config file should contain
           | Key    | Value |
           | stream | f26   |
