@@ -24,16 +24,16 @@ Feature: Modulemd defaults are followed by dnf module commands
           | state   | enabled |
           | stream  | f26     |
 
+  # must be adjusted to match dnf behaviour bug failing
+  @xfail @bz1629702
   Scenario: The default streams are identified in the output of module list
-       When I run "dnf module list ModuleA"
+       When I run "dnf module list ModuleA:f27"
        Then the command stdout should match line by line regexp
          """
          ?Last metadata expiration check:
          modularityABDE
          Name +Stream +Profiles +Summary
-         ModuleA +f26 \[d\]\[e\] +client, default, devel \[d\], minimal \[d\], s +Module ModuleA
-         ?[^M] +
-         ModuleA +f27 +client, default, devel \[d\], minimal \[d\], s +Module ModuleA
+         ModuleA +f27 +client, default, devel, minimal \[d\], s +Module ModuleA
          ?[^M] +
 
          Hint:
@@ -46,17 +46,19 @@ Feature: Modulemd defaults are followed by dnf module commands
 
   Scenario: Default stream and profile are used when installing a module with no enabled profile
       Given I run "dnf module disable ModuleA -y"
+        And I run "dnf module reset ModuleA -y"
        When I run "dnf module install ModuleA -y"
        Then a module ModuleA config file should contain
           | Key      | Value                |
           | stream   | f26                  |
-          | profiles | (set) minimal, devel |
+          | profiles | (set) devel, minimal |
 
   Scenario: Default profile(s) is used when installing a module with enabled stream
       Given I run "dnf module disable ModuleA -y"
-        And I run "dnf module enable ModuleA:f27 -y"
+        And I run "dnf module reset ModuleA -y"
+       When I run "dnf module enable ModuleA:f27 -y"
        When I run "dnf module install ModuleA -y"
        Then a module ModuleA config file should contain
           | Key      | Value                |
           | stream   | f27                  |
-          | profiles | (set) minimal, devel |
+          | profiles | (set) minimal        |
