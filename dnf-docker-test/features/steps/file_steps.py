@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from behave import given
 from behave import step
+from behave import then
 from behave.model import Table
 import six
 from six.moves import configparser
