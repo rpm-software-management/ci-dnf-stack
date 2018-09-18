@@ -27,6 +27,7 @@ Feature: Module provides command
            Summary  : Module ModuleB summary
            """
 
+  @xfail @bz1623866
   Scenario: I can get list of enabled modules providing specific package
        When I successfully run "dnf module enable ModuleB:f26 -y"
         And I successfully run "dnf module provides TestH"
