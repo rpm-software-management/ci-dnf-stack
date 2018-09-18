@@ -15,9 +15,9 @@ Feature: Both ursine packages and modules are updated during dnf update
         And I enable repository "ursinePkgRepo"
         And I successfully run "dnf makecache"
 
-  @xfail  # bz#1583059
+  # bz#1583059
   Scenario: Both ursine packages and modules are updated during dnf update
-      Given I successfully run "dnf module enable ModuleA:f26"
+      Given I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf module install -y ModuleA:f26:1/client"
 	And I successfully run "dnf install -y TestU-1-1"
        When I save rpmdb
@@ -27,6 +27,3 @@ Feature: Both ursine packages and modules are updated during dnf update
           | upgraded  | TestA/1-2.modA, TestU/1-2 |
           | installed | TestV/1-1                 |
           | unchanged | TestB/1-1.modA            |
-        And a module ModuleA config file should contain
-          | Key     | Value |
-          | version | 2     |
