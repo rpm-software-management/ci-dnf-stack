@@ -78,7 +78,7 @@ Feature: Installing module profiles
          | stream   | f26   |
         And the command stdout section "Installing module profiles:" should match regexp "ModuleA/default"
 
-  @xfail   # bug 1622599
+  # bug 1622599
   Scenario: Installing a module profile with RPMs manually installed previously should do nothing
       Given I successfully run "dnf module remove -y ModuleA:f26"
        When I successfully run "dnf install -y TestA-1-2.modA"
@@ -93,6 +93,15 @@ Feature: Installing module profiles
             """
             ?Last metadata expiration check
             Dependencies resolved.
-            Nothing to do.
+            ================================================================================
+            Package           Arch             Version             Repository         Size
+            ================================================================================
+            Installing module profiles:
+            ModuleA/minimal
+
+            Transaction Summary
+            ================================================================================
+
             Complete!
+
             """

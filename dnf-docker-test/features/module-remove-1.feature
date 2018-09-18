@@ -26,7 +26,7 @@ Feature: Module profile removal
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
   # https://bugzilla.redhat.com/show_bug.cgi?id=1629841
-  @xfail @bz1629841
+  @bz1629841
   Scenario: I can remove an installed module profile
        When I save rpmdb
         And I successfully run "dnf module remove -y ModuleA/minimal"
