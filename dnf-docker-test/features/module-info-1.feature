@@ -20,7 +20,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26
            Version +: +1
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -32,7 +32,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -53,7 +53,7 @@ Feature: Module info
             +: +TestC-0:2-1.modA.noarch
             +: +TestD-0:2-1.modA.noarch
            
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   Scenario: Get info for an enabled stream, module name and stream specified
@@ -62,9 +62,9 @@ Feature: Module info
            """
            ?Last metadata expiration check
            Name +: +ModuleA
-           Stream +: +f26
+           Stream +: +f26 \[e\]
            Version +: +1
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -76,7 +76,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -85,7 +85,7 @@ Feature: Module info
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
            
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
   # bz1540189
   Scenario: Get info for an installed profile, module name and profile specified
@@ -95,9 +95,9 @@ Feature: Module info
            ?Last metadata expiration check
            Ignoring unnecessary profile: 'ModuleA/client'
            Name +: +ModuleA
-           Stream +: +f26
+           Stream +: +f26 \[e\]
            Version +: +1
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -109,7 +109,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -130,7 +130,7 @@ Feature: Module info
             +: +TestC-0:2-1.modA.noarch
             +: +TestD-0:2-1.modA.noarch
  
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   # z1540189
@@ -141,9 +141,9 @@ Feature: Module info
            ?Last metadata expiration check
            Ignoring unnecessary profile: 'ModuleA/client'
            Name +: +ModuleA
-           Stream +: +f26
+           Stream +: +f26 \[e\]
            Version +: +1
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -155,7 +155,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -164,7 +164,7 @@ Feature: Module info
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
  
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   # bz1540189
@@ -175,9 +175,9 @@ Feature: Module info
            ?Last metadata expiration check
            Ignoring unnecessary profile: 'ModuleA/non-existent-profile'
            Name +: +ModuleA
-           Stream +: +f26
+           Stream +: +f26 \[e\]
            Version +: +1
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -189,7 +189,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
-           Profiles +: +client, server, devel, minimal, default
+           Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
            Description +: +Module ModuleA description
@@ -198,7 +198,7 @@ Feature: Module info
             +: +TestC-0:1-2.modA.noarch
             +: +TestD-0:1-1.modA.noarch
  
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   #bz 1623535
@@ -234,7 +234,7 @@ Feature: Module info
            Description +: +Module ModuleX description
            Artifacts +: +TestX-0:1-1.modX.noarch
            
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   @xfail @bz1623535
@@ -256,7 +256,7 @@ Feature: Module info
            Description +: +Module ModuleX description
            Artifacts +: +TestX-0:1-1.modX.noarch
            
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   Scenario: Run 'dnf module info' without further argument
