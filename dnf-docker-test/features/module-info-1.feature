@@ -237,20 +237,19 @@ Feature: Module info
            Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
-  @xfail @bz1623535
+  @bz1623535
+  # Command "dnf module info" should behave like "dnf info" in case that only one argument cannot
+  # be resolved (success).
   Scenario: Get info for two modules, one of them non-existent
-       When I run "dnf module info non-existent-module ModuleX"
-       Then the command should fail
-        And the command stdout should match line by line regexp
+       When I successfully run "dnf module info non-existent-module ModuleX"
+       Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
-           
-           No such module: non-existent-module
-           
+           Unable to resolve argument non-existent-module
            Name +: +ModuleX
-           Stream +: +f26
+           Stream +: +f26 \[e\]
            Version +: +1
-           Profiles +: +default
+           Profiles +: +default \[i\]
            Repo +: +modularityX
            Summary +: +Module ModuleX summary
            Description +: +Module ModuleX description
