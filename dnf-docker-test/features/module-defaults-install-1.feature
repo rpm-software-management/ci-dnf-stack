@@ -6,42 +6,39 @@ Feature: Installing modules without cli profile specification, using profile ove
        When I enable repository "modularityConf"
         And I successfully run "dnf makecache"
 
-  Scenario: Install module, empty 'default' profile exists, no repo or system overrides, expecting 'default' profile selection
+  Scenario: Install module, empty 'default' profile exists, no repo or system overrides, expecting no profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfED1:salt"
        Then a module ModuleConfED1 config file should contain
          | Key      | Value   |
          | state    | enabled |
          | stream   | salt    |
-         | profiles | default |
+         | profiles |         |
         And rpmdb does not change
 
   Scenario: Cleanup from previous scenario
        When I successfully run "dnf -y module remove ModuleConfED1:salt"
         And I successfully run "dnf -y module disable ModuleConfED1:salt"
 
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1568165
-  Scenario: Install module, 'default' profile does not exist, no repo or system overrides, expecting 'default' profile selection
+  Scenario: Install module, 'default' profile does not exist, no repo or system overrides, expecting no profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfND1:salt"
        Then a module ModuleConfND1 config file should contain
          | Key      | Value   |
          | state    | enabled |
          | stream   | salt    |
-         | profiles | default |
+         | profiles |         |
         And rpmdb does not change
 
-  Scenario: Install module, populated 'default' profile exists, no repo or system overrides, expecting 'default' profile selection
+  Scenario: Install module, populated 'default' profile exists, no repo or system overrides, expecting no profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfPD1:salt"
        Then a module ModuleConfPD1 config file should contain
          | Key      | Value   |
          | state    | enabled |
          | stream   | salt    |
-         | profiles | default |
-        And rpmdb changes are
-         | State     | Packages                 |
-         | installed | TestConfA/1-1.modConfPD1 |
+         | profiles |         |
+        And rpmdb does not change
 
   Scenario: Cleanup from previous scenario
        When I successfully run "dnf -y module remove ModuleConfPD1:salt"

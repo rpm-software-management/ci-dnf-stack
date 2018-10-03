@@ -17,7 +17,7 @@ Feature: Lazy enabling module stream with dependencies
         And a file "/etc/dnf/modules.d/ModuleMX.module" does not exist
         And rpmdb does not change
        When I save rpmdb
-        And I successfully run "dnf module install ModuleM -y"
+        And I successfully run "dnf module install ModuleM/default -y"
        Then a module ModuleMX config file should contain
           | Key      | Value   |
           | state    | enabled |
