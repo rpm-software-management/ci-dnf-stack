@@ -8,7 +8,7 @@ Feature: Installing module profiles with dependencies
 
   Scenario: Installing a module and its dependencies
        When I save rpmdb
-        And I successfully run "dnf module install --assumeyes ModuleM:f26"
+        And I successfully run "dnf module install --assumeyes ModuleM:f26/default"
        Then a module ModuleM config file should contain
          | Key      | Value   |
          | state    | enabled |
