@@ -44,6 +44,7 @@ Options:
   -h, --help               Show this help
   -c, --container  IMAGE   Specified Image ID or name if do not want to run the last built image
   -d, --devel              Share local feature/ with docker
+  -p, --podman             Use podman instead of docker
   -r, --reserve            Keep bash shell session open after every single test executed
   -R, --reserveonfail      Keep bash shell session open upon test failure
   -t, --tags       TAG     Pass specific tag to the behave command when running tests
@@ -59,7 +60,7 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdrRc: -l help,devel,reserve,reserveonfail,noxfail,container:,tags: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdrpRc: -l help,devel,podman,reserve,reserveonfail,noxfail,container:,tags: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
@@ -67,6 +68,7 @@ IMAGE="dnf-bot/dnf-testing:latest"
 PARAM_RESERVE=""
 PARAM_TTY=""
 PARAM_TAGS=""
+DOCKER_BIN=docker;
 
 while :; do
     case "$1" in
@@ -74,6 +76,7 @@ while :; do
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
         -c|--container) IMAGE=$2; shift 2;;
+        -p|--podman) DOCKER_BIN=podman; shift;;
         -r|--reserve) set_reserve; shift;;
         -R|--reserveonfail) set_reserveR; shift;;
         -t|--tags) PARAM_TAGS="$PARAM_TAGS --tags $2"; shift 2;;
@@ -144,15 +147,24 @@ list()
 
 build()
 {
-    local output=($(sudo docker build --build-arg type="$type" --no-cache \
+    local output=($(sudo $DOCKER_BIN build --build-arg type="$type" --no-cache \
                     --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
-    if [ ${#output[@]} -eq 3 ] && \
-       [ "${output[0]}" = "Successfully" ] && 
-       [ "${output[1]}" = "built" ]; then
-        printf "%s\n" "${output[2]}"
+    RET=$?
+    if [ "$DOCKER_BIN" == "docker" ]; then
+        if [ ${#output[@]} -eq 3 ] && \
+       	   [ "${output[0]}" = "Successfully" ] && 
+           [ "${output[1]}" = "built" ]; then
+            printf "%s\n" "${output[2]}"
+        else
+            fatal "Failed to parse output."
+        fi
     else
-        fatal "Failed to parse output."
+        if [ $RET -eq 0 -a ${#output[@]} -eq 2 ]; then
+            printf "%s\n" "${output[1]}"
+        else
+            fatal "Failed to parse output"
+        fi
     fi
     exit 0
 }
@@ -167,8 +179,8 @@ run()
         for feature in "${TESTS[@]}"; do
             feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
-                printf "\nsudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                sudo docker run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
+                printf "\nsudo $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
+                sudo $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
@@ -176,8 +188,8 @@ run()
         for feature in "${TESTS[@]}"; do
             feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
-                printf "\nsudo docker run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                sudo docker run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
+                printf "\nsudo $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
+                sudo $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
@@ -192,11 +204,11 @@ run()
 shell()
 {
     if [ -z "$devel" ];then
-        printf "\nsudo docker run -it --rm "$IMAGE" bash\n"
-        sudo docker run -it --rm "$IMAGE" bash
+        printf "\nsudo $DOCKER_BIN run -it --rm "$IMAGE" bash\n"
+        sudo $DOCKER_BIN run -it --rm "$IMAGE" bash
     else
-        printf "\nsudo docker run -it --rm -v "$devel" "$IMAGE" bash\n"
-        sudo docker run -it --rm -v "$devel" "$IMAGE" bash
+        printf "\nsudo $DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash\n"
+        sudo $DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash
     fi
 }
 [ "$action" == "shell" ] && shell
