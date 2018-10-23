@@ -44,7 +44,7 @@ Options:
   -h, --help               Show this help
   -c, --container  IMAGE   Specified Image ID or name if do not want to run the last built image
   -d, --devel              Share local feature/ with docker
-  -p, --podman             Use podman instead of docker
+  -p, --podman             Force using podman instead of docker
   -r, --reserve            Keep bash shell session open after every single test executed
   -R, --reserveonfail      Keep bash shell session open upon test failure
   -t, --tags       TAG     Pass specific tag to the behave command when running tests
@@ -69,6 +69,7 @@ PARAM_RESERVE=""
 PARAM_TTY=""
 PARAM_TAGS=""
 DOCKER_BIN=docker;
+! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN=podman
 
 while :; do
     case "$1" in
