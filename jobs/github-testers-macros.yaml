@@ -15,7 +15,7 @@
 - defaults:
     name: github-testers-defaults
     description: |
-        Maintainer: <a href="mailto:ignatenko@redhat.com">Igor Gnatenko</a><br>
+        Maintainer: <a href="mailto:mblaha@redhat.com">Marek Blaha</a><br>
         Managed by Jenkins Job Builder. <strong>Do not edit via web.</strong<br>
     wrappers:
       - workspace-cleanup
