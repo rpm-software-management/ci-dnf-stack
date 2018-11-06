@@ -14,12 +14,12 @@ Feature: Testing specific dnf shell text output
   Scenario: Enabling a non-existent repository
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable NoSuchRepo"
-       Then the command stdout should match regexp "Error: Unknown repo: 'NoSuchRepo'"
+       Then the command stdout should match regexp "Error: Unknown repo: '.*NoSuchRepo.*'"
 
   Scenario: Disabling a non-existent repository
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository disable NoSuchRepo"
-       Then the command stdout should match regexp "Error: Unknown repo: 'NoSuchRepo'"
+       Then the command stdout should match regexp "Error: Unknown repo: '.*NoSuchRepo.*'"
 
   Scenario: Installing a package with no repos enabled
       Given I have dnf shell session opened with parameters "-y"
@@ -30,7 +30,7 @@ Feature: Testing specific dnf shell text output
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable TestRepo"
         And I run dnf shell command "install NoSuchPackage"
-       Then the command stdout should match regexp "No match for argument: NoSuchPackage"
+       Then the command stdout should match regexp "No match for argument: .*NoSuchPackage"
 
   Scenario: Removing a non-existent package
       Given I have dnf shell session opened with parameters "-y"
@@ -41,13 +41,13 @@ Feature: Testing specific dnf shell text output
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable TestRepo"
         And I run dnf shell command "group install NoSuchGroup"
-       Then the command stdout should match regexp "Warning: Module or Group 'NoSuchGroup' does not exist\."
+       Then the command stdout should match regexp "Warning: Module or Group '.*NoSuchGroup.*' does not exist\."
 
   Scenario: Removing a non-existent package group
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "repository enable TestRepo"
         And I run dnf shell command "group remove NoSuchGroup"
-       Then the command stdout should match regexp "Warning: Group 'NoSuchGroup' is not installed\."
+       Then the command stdout should match regexp "Warning: Group '.*NoSuchGroup.*' is not installed\."
 
   Scenario: Listing available commands when help command is issued
       Given I have dnf shell session opened with parameters "-y"
