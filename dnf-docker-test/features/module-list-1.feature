@@ -1,5 +1,5 @@
-# needs porting to recent dnf behaviour but currently impossible due to bug 1629702
-@xfail @bz1629702
+# contains workaround for bug 1637477, remove duplicate ModuleA lines once it is fixed
+@bz1637477
 Feature: Module listing
 
   @setup
@@ -21,24 +21,17 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, s.* +Module +ModuleA sum
-           ?^[^M]
-           ModuleA +f27 +client, default, devel, minimal, server.*Module +ModuleA sum
-           ?^[^M]
-           ModuleB +f26 +default +Module +ModuleB sum
-           ?^[^M]
-           ModuleB +f27 +default +Module +ModuleB sum
-           ?^[^M]
-           ModuleD +f26 +default +Module +ModuleD sum
-           ?^[^M]
-           ModuleE +f26 +default +Module +ModuleE sum
-           ?^[^M]
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f27 +client, server, devel, minimal.*
+           ModuleB +f26 +default.*
+           ModuleB +f27 +default.*
+           ModuleD +f26 +default.*
+           ModuleE +f26 +default.*
 
            modularityX
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
-           ?^[^M]
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default \[i\].*
 
            Hint:
            """
@@ -50,14 +43,12 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            modularityX
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
-           ?^[^M]
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default \[i\].*
 
            Hint:
            """
@@ -69,35 +60,38 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            modularityX
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX sum
-           ?^[^M]
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default \[i\].*
 
            Hint:
            """
+  @xfail @bz1647382
+  Scenario: An error is issued when there are no disabled modules to list
+       When I run "dnf module list --disabled"
+       Then the command should fail
+        And the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           """
+        And the command stderr should match line by line regexp
+           """
+           Error: No matching Modules to list
+           """
 
   Scenario: I can list disabled modules
-       When I successfully run "dnf module list --disabled"
+       When I successfully run "dnf -y module disable ModuleB"
+        And I run "dnf module list --disabled"
        Then the command stdout should match line by line regexp
            """
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleB +f26 +default +Module +ModuleB sum
-           ?^[^M]
-           ModuleB +f27 +default +Module +ModuleB sum
-           ?^[^M]
-           ModuleD +f26 +default +Module +ModuleD sum
-           ?^[^M]
-           ModuleE +f26 +default +Module +ModuleE sum
-           ?^[^M]
+           ModuleB +f26 \[x\] +default.*
+           ModuleB +f27 \[x\] +default.*
 
            Hint:
            """
@@ -109,18 +103,14 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleE +f26 +default +Module +ModuleE sum
-           ?^[^M]
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f27 +client, server, devel, minimal.*
+           ModuleE +f26 +default.*
 
            modularityX
-           ModuleA +f26 \[e\] client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleX +f26 \[e\] default\[i\] +Module +ModuleX sum
-           ?^[^M]
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default \[i\].*
 
            Hint:
            """
@@ -130,7 +120,7 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityX
            Name +Stream +Profiles +Summary
-           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX summary
+           ModuleX +f26 \[e\] +default \[i\].*
 
            Hint:
            """
@@ -140,8 +130,8 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            Hint:
            """
@@ -151,9 +141,8 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleB +f26 +default +Module +ModuleB summary
-           ModuleB +f27 +default +Module +ModuleB summary
-           ModuleD +f26 +default +Module +ModuleD summary
+           ModuleB +f26 \[x\] +default.*
+           ModuleB +f27 \[x\] +default.*
 
            Hint:
            """
@@ -165,20 +154,21 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*Module +ModuleA sum
            ?^[^M]
-           ModuleA +f27 +client, default, devel, minimal, ser.*Module +ModuleA sum
+           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*Module +ModuleA sum
+           ?^[^M]
+           ModuleA +f27 +client, server, devel, minimal.*Module +ModuleA sum
            ?^[^M]
            ModuleE +f26 +default +Module +ModuleE summ
            ?^[^M]
 
            modularityX
-           ModuleA +f26 \[e\] +client\[i\], default, devel, minimal, ser.*Module +ModuleA sum
-           ?^[^M]
-           ModuleX +f26 \[e\] +default\[i\] +Module +ModuleX summ
+           Name +Stream +Profiles +Summary
+           ModuleX +f26 \[e\] +default \[i\] +Module +ModuleX summ
            ?^[^M]
 
-           Hint: \[d\]efault, \[e\]nabled, \[i\]nstalled
+           Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled
            """
 
   Scenario: I can see only modules' packages, not modules themselves in the output of 'dnf list'
