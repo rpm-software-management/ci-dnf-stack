@@ -2,8 +2,8 @@ Given repository "modularityY" with packages
      | Package     | Tag      | Value       |
      | modY/TestY  | Version  | 1           |
      |             | Release  | 1           |
-     | modY/TestY 2| Version  | 1           |
-     |             | Release  | 2           |
+     | modY/TestY 2| Version  | 3           |
+     |             | Release  | 1           |
      | TestUrsine  | Version  | 1           |
      |             | Release  | 1           |
      |             | Requires | TestUrsine2 |
@@ -37,7 +37,7 @@ Given repository "modularityY" with packages
       ---
       data:
         artifacts:
-          rpms: ["TestY-0:1-2.modY.noarch"]
+          rpms: ["TestY-0:3-1.modY.noarch"]
         components:
           rpms:
             TestY: {rationale: 'rationale for TestY'}
