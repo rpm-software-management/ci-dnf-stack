@@ -1,0 +1,56 @@
+Given repository "modularityY" with packages
+     | Package     | Tag      | Value       |
+     | modY/TestY  | Version  | 1           |
+     |             | Release  | 1           |
+     | modY/TestY 2| Version  | 1           |
+     |             | Release  | 2           |
+     | TestUrsine  | Version  | 1           |
+     |             | Release  | 1           |
+     |             | Requires | TestUrsine2 |
+     | TestUrsine2 | Version  | 1           |
+     |             | Release  | 1           |
+  And repository "ursineY" with packages
+     | Package | Tag      | Value  |
+     | TestY 2 | Version  | 2      |
+     |         | Release  | 1      |
+  And a file "modules.yaml" with type "modules" added into repository "modularityY"
+      """
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:1-1.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f26
+        summary: Module ModuleY summary
+        version: 1
+      document: modulemd
+      version: 2
+      ---
+      data:
+        artifacts:
+          rpms: ["TestY-0:1-2.modY.noarch"]
+        components:
+          rpms:
+            TestY: {rationale: 'rationale for TestY'}
+        description: Module ModuleY description
+        license:
+          module: [MIT]
+        name: ModuleY
+        profiles:
+          default:
+            rpms: [TestY]
+        stream: f27
+        summary: Module ModuleY summary
+        version: 1
+      document: modulemd
+      version: 2
+      """
