@@ -67,7 +67,7 @@ Feature: Installing module profiles
          | State     | Packages                       |
          | installed | TestA/1-2.modA, TestD/1-1.modA |
 
-  #bz1609919 
+  @bz1609919 
   Scenario: I am given information about which module packages are being installed when installing a module profile
       Given I successfully run "dnf module remove -y ModuleA:f26"
        When I save rpmdb
@@ -76,9 +76,11 @@ Feature: Installing module profiles
          | Key      | Value |
          | state    | enabled |
          | stream   | f26   |
+        And the command stdout section "Installing group/module packages:" should match regexp "TestB +noarch +1-1.modA"
+        And the command stdout section "Installing group/module packages:" should match regexp "TestC +noarch +1-2.modA"
         And the command stdout section "Installing module profiles:" should match regexp "ModuleA/default"
 
-  # bug 1622599
+  @1622599
   Scenario: Installing a module profile with RPMs manually installed previously should do nothing
       Given I successfully run "dnf module remove -y ModuleA:f26"
        When I successfully run "dnf install -y TestA-1-2.modA"
