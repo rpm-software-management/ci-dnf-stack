@@ -25,7 +25,7 @@ Feature: Modulemd defaults are followed by dnf module commands
           | stream  | f26     |
 
   # must be adjusted to match dnf behaviour bug failing
-  @xfail @bz1629702
+  @bz1629702
   Scenario: The default streams are identified in the output of module list
        When I run "dnf module list ModuleA:f27"
        Then the command stdout should match line by line regexp
@@ -33,7 +33,7 @@ Feature: Modulemd defaults are followed by dnf module commands
          ?Last metadata expiration check:
          modularityABDE
          Name +Stream +Profiles +Summary
-         ModuleA +f27 +client, default, devel, minimal \[d\], s +Module ModuleA
+         ModuleA +f27 +client, server, devel, minimal \[d\].*Module
          ?[^M] +
 
          Hint:
