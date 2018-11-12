@@ -10,4 +10,4 @@ for file in $(find /tests -name *.feature -type f); do
         cp ${file} ${new}
     done
 done
-behave-3 --dry-run --no-summary -f json /behave/
+behave --dry-run --no-summary -f json /behave/
