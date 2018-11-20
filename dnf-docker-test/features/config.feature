@@ -47,7 +47,10 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
   When _deprecated I execute "dnf" command "install -y -c /test/dnf.conf TestD" with "fail"
   When _deprecated I execute "dnf" command "install -y --config test/dnf.conf TestD" with "fail"
 # TestA cannot be removed due to host exclude in dnf.conf
-  When _deprecated I execute "dnf" command "remove -y TestA" with "fail"
+  When I save rpmdb
+  And I successfully run "dnf remove -y TestA"
+  Then rpmdb does not change
+
 # TestB can be removed because excludes were disabled
   When _deprecated I execute "dnf" command "remove -y --disableexcludes=all TestB" with "success"
   Then _deprecated transaction changes are as follows
