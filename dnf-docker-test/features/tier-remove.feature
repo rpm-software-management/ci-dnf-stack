@@ -191,14 +191,16 @@ Feature: Tier tests for removing RPM
         And I enable repository "base"
         And I successfully run "dnf -y install TestA-1-1.noarch"
        Then the command should pass
-       When I run "dnf -y remove 'TestA-key10 = 9'"
-       Then the command exit code is 1
+       When I save rpmdb
+       And I successfully run "dnf -y remove 'TestA-key10 = 9'"
+       Then rpmdb does not change
+       When I save rpmdb
        When I successfully run "dnf -y remove 'TestA-key10 = 10'"
        Then the command should pass
         And a file "/usr/local/TestA/TestA-1-1.tmp" does not exist
         And rpmdb changes are
-          | State   | Packages  |
-          | absent  | TestA     |
+          | State    | Packages  |
+          | removed  | TestA     |
        When I disable repository "base"
         And I run "dnf list TestA"
        Then the command exit code is 1
@@ -214,14 +216,16 @@ Feature: Tier tests for removing RPM
         And I enable repository "base"
         And I successfully run "dnf -y install TestA-1-1.noarch"
        Then the command should pass
-       When I run "dnf -y remove 'TestA-key10 > 10'"
-       Then the command exit code is 1
+       When I save rpmdb
+       And I successfully run "dnf -y remove 'TestA-key10 > 10'"
+       Then rpmdb does not change
+       When I save rpmdb
        When I successfully run "dnf -y remove 'TestA-key10 > 9'"
        Then the command should pass
         And a file "/usr/local/TestA/TestA-1-1.tmp" does not exist
         And rpmdb changes are
           | State   | Packages  |
-          | absent  | TestA     |
+          | removed | TestA     |
        When I disable repository "base"
         And I run "dnf list TestA"
        Then the command exit code is 1
@@ -237,14 +241,16 @@ Feature: Tier tests for removing RPM
         And I enable repository "base"
         And I successfully run "dnf -y install TestA-1-1.noarch"
        Then the command should pass
-       When I run "dnf -y remove 'TestA-key10 >= 11'"
-       Then the command exit code is 1
+       When I save rpmdb
+       And I successfully run "dnf -y remove 'TestA-key10 >= 11'"
+       Then rpmdb does not change
+       When I save rpmdb
        When I successfully run "dnf -y remove 'TestA-key10 >= 10'"
        Then the command should pass
         And a file "/usr/local/TestA/TestA-1-1.tmp" does not exist
         And rpmdb changes are
           | State   | Packages  |
-          | absent  | TestA     |
+          | removed | TestA     |
        When I disable repository "base"
         And I run "dnf list TestA"
        Then the command exit code is 1
@@ -260,14 +266,16 @@ Feature: Tier tests for removing RPM
         And I enable repository "base"
         And I successfully run "dnf -y install TestA-1-1.noarch"
        Then the command should pass
-       When I run "dnf -y remove 'TestA-key10 <= 9'"
-       Then the command exit code is 1
+       When I save rpmdb
+       And I successfully run "dnf -y remove 'TestA-key10 <= 9'"
+       Then rpmdb does not change
+       When I save rpmdb
        When I successfully run "dnf -y remove 'TestA-key10 <= 10'"
        Then the command should pass
         And a file "/usr/local/TestA/TestA-1-1.tmp" does not exist
         And rpmdb changes are
           | State   | Packages  |
-          | absent  | TestA     |
+          | removed | TestA     |
        When I disable repository "base"
         And I run "dnf list TestA"
        Then the command exit code is 1
@@ -283,14 +291,16 @@ Feature: Tier tests for removing RPM
         And I enable repository "base"
         And I successfully run "dnf -y install TestA-1-1.noarch"
        Then the command should pass
-       When I run "dnf -y remove 'TestA-key10 < 10'"
-       Then the command exit code is 1
+       When I save rpmdb
+       And I successfully run "dnf -y remove 'TestA-key10 < 10'"
+       Then rpmdb does not change
+       When I save rpmdb
        When I successfully run "dnf -y remove 'TestA-key10 < 11'"
        Then the command should pass
         And a file "/usr/local/TestA/TestA-1-1.tmp" does not exist
         And rpmdb changes are
           | State   | Packages  |
-          | absent  | TestA     |
+          | removed | TestA     |
        When I disable repository "base"
         And I run "dnf list TestA"
        Then the command exit code is 1
