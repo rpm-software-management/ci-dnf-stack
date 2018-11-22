@@ -315,3 +315,16 @@ Feature: Filter RPMs by enabled and default module streams
        Then rpmdb changes are
            | State     | Packages                                             |
            | installed | TestA/1-1.modA, TestB/2-1.modB, TestC/1-2, TestD/1-2 |
+
+  Scenario: RPMs from non-active streams are not available
+       When I disable repository "RegularRepo"
+        And I run "dnf list --available TestA-2-1"
+       Then the command should fail
+       When I run "dnf list --available TestA-3-1"
+       Then the command should fail
+       When I run "dnf list --available TestB-1-1"
+       Then the command should fail
+       When I run "dnf list --available TestB-3-1"
+       Then the command should fail
+       When I run "dnf list --available TestC"
+       Then the command should fail
