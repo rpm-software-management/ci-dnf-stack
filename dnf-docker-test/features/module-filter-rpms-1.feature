@@ -309,7 +309,7 @@ Feature: Filter RPMs by enabled and default module streams
       And I successfully run "dnf module enable -y ModuleB:streamB"
       And I successfully run "dnf module disable -y ModuleC"
 
-  Scenario: RPMs are filtered by enabled module stream
+  Scenario: RPMs are filtered by active module stream
        When I save rpmdb
         And I successfully run "dnf -y install TestA TestB TestC TestD"
        Then rpmdb changes are
