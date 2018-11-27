@@ -26,7 +26,7 @@ Feature: Module profile removal
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
   # https://bugzilla.redhat.com/show_bug.cgi?id=1629841
-  @bz1629841
+  @bz1629841 @bz1581624
   Scenario: I can remove an installed module profile
        When I save rpmdb
         And I successfully run "dnf module remove -y ModuleA/minimal"
@@ -39,12 +39,6 @@ Feature: Module profile removal
           # Other profiles are still installed
           | profiles | (set) client, devel |
           | state    | enabled             |
-
-  @setup
-  Scenario: Setup due to previous xfail test.. please remove when the bug above is fixed
-      Given I successfully run "dnf module install -y ModuleA/minimal"
-        And I successfully run "dnf module remove -y ModuleA/minimal"
-        And I successfully run "dnf module install -y ModuleA/client ModuleA:f26/devel"
 
   @bz1629848
   Scenario: Removing of a non-installed profiles would pass
