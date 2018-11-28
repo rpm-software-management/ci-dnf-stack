@@ -53,6 +53,7 @@ Feature: Modulemd defaults are followed by dnf module commands
           | stream   | f26                  |
           | profiles | (set) devel, minimal |
 
+  @bz1582450
   Scenario: Default profile(s) is used when installing a module with enabled stream
       Given I run "dnf module disable ModuleA -y"
         And I run "dnf module reset ModuleA -y"
