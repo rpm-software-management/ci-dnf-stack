@@ -7,6 +7,7 @@ Feature: Install a module of which all packages and requires are already install
          | Section     | Key             | Value     |
          | modularityM | module_hotfixes | True      |
        When I enable repository "modularityM"
+        And I enable repository "ursineY"
         And I successfully run "dnf makecache"
         And I successfully run "dnf -y module enable ModuleM:f26"
         And I successfully run "dnf -y module enable ModuleMX:f26"
