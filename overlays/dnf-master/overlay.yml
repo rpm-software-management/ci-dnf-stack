@@ -17,12 +17,12 @@ components:
     git:
       src: github:rpm-software-management/librepo.git
 
-  - name: createrepo_c
-    git:
-      src: github:rpm-software-management/createrepo_c.git
-    distgit:
-      src: fedorapkgs:createrepo_c.git
-      patches: drop
+#  - name: createrepo_c
+#    git:
+#      src: github:rpm-software-management/createrepo_c.git
+#    distgit:
+#      src: fedorapkgs:createrepo_c.git
+#      patches: drop
 
   - name: libcomps
     git:
