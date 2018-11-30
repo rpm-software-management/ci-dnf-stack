@@ -7,8 +7,10 @@ Feature: hotfix repo content is not masked by a modular content
           | Package | Tag     | Value |
           | TestX   | Version | 2     |
           |         | Release | 1     |
+        And an INI file "/etc/yum.repos.d/hotfix.repo" modified with
+          | Section | Key             | Value |
+          | hotfix  | module_hotfixes | True  |
        When I enable repository "modularityX"
-        And I run "sh -c 'echo module_hotfixes = True >> /etc/yum.repos.d/hotfix.repo'"
         And I enable repository "hotfix"
         And I run "dnf makecache"
 
