@@ -45,12 +45,12 @@ Feature: Modulemd defaults are followed by dnf module commands
        Then the command stdout should match regexp "Default profiles : devel minimal"
 
   Scenario: Default stream and profile are used when installing a module with no enabled profile
-      Given I run "dnf module disable ModuleA -y"
-        And I run "dnf module reset ModuleA -y"
+      Given I run "dnf module reset ModuleA -y"
        When I run "dnf module install ModuleA -y"
        Then a module ModuleA config file should contain
           | Key      | Value                |
           | stream   | f26                  |
+          | state    | enabled              |
           | profiles | (set) devel, minimal |
 
   @bz1582450
