@@ -14,7 +14,7 @@ Feature: hotfix repo content is not masked by a modular content
         And I enable repository "hotfix"
         And I run "dnf makecache"
 
-  @xfail @bz1654738
+  @bz1654738
   Scenario: hotfix content updates are used when installing a module stream
       Given I successfully run "dnf -y module enable ModuleX:f26"
        When I save rpmdb
@@ -27,7 +27,7 @@ Feature: hotfix repo content is not masked by a modular content
           | State     | Packages  |
           | installed | TestX/2-1 |
 
-  @setup @xfail @bz1654738
+  @setup @bz1654738
   Scenario: cleanup from previous scenario
        When I save rpmdb
         And I successfully run "dnf -y module remove ModuleX"
