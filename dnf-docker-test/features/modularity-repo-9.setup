@@ -1,0 +1,169 @@
+Given repository "base" with packages
+         | Package    | Tag     | Value  |
+         | TestA      | Version | 1      |
+         |            | Release | 1      |
+         |            | Requires| TestMA |
+ And repository "modularityM" with packages
+     | Package      | Tag      | Value  |
+     | modM/TestMA  | Version  | 1      |
+     |              | Release  | 1      |
+     | modM/TestMB  | Version  | 1      |
+     |              | Release  | 1      |
+     | modMX/TestMX | Version  | 1      |
+     |              | Release  | 1      |
+     | modM/TestMC  | Version  | 1      |
+     |              | Release  | 1      |
+     | modMY/TestMY | Version  | 1      |
+     |              | Release  | 1      |
+     | modMZ/TestMZ | Version  | 1      |
+     |              | Release  | 1      |
+     | modMZ/TestMZB| Version  | 2      |
+     |              | Release  | 1      |
+     |              | Requires | TestMA |
+     | modMZ/TestMZC| Version  | 2      |
+     |              | Release  | 1      |
+     |              | Requires | TestMA |
+  And a file "modules.yaml" with type "modules" added into repository "modularityM"
+      """
+      ---
+      data:
+        name: ModuleM
+        stream: streamA
+        version: 1
+        summary: Module ModuleM summary
+        description: Module ModuleM description
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestMA, TestMB ]
+        artifacts:
+          rpms: ["TestMA-0:1-1.modM.noarch", "TestMB-0:1-1.modM.noarch"]
+        components:
+          rpms:
+            TestMA: {rationale: 'rationale for TestMA'}
+            TestMB: {rationale: 'rationale for TestMB'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleM
+        stream: streamB
+        version: 1
+        summary: Module ModuleM summary
+        description: Module ModuleM description
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestMA, TestMC]
+        artifacts:
+          rpms: ["TestMA-0:1-1.modM.noarch", "TestMC-0:1-1.modM.noarch" ]
+        components:
+          rpms:
+            TestMA: {rationale: 'rationale for TestMA'}
+            TestMC: {rationale: 'rationale for TestMC'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMX
+        stream: streamA
+        version: 1
+        summary: Module ModuleMX summary
+        description: Module ModuleMX description
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestMX]
+        artifacts:
+          rpms: ["TestMX-0:1-1.modMX.noarch"]
+        components:
+          rpms:
+            TestMX: {rationale: 'rationale for TestMX'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMY
+        stream: streamB
+        version: 1
+        summary: Module ModuleMY summary
+        description: Module ModuleMY description
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestMY]
+        artifacts:
+          rpms: ["TestMY-0:1-1.modMY.noarch"]
+        components:
+          rpms:
+            TestMY: {rationale: 'rationale for TestMY'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMZ
+        stream: streamA
+        version: 1
+        summary: Module ModuleMZ summary
+        description: Module ModuleMZ description
+        license:
+          module: [MIT]
+        dependencies:
+          - requires:
+              ModuleM: []
+        profiles:
+          default:
+            rpms: [TestMZ]
+        artifacts:
+          rpms: ["TestMZ-0:1-1.modMZ.noarch"]
+        components:
+          rpms:
+            TestMZ: {rationale: 'rationale for TestMZ'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMZ
+        stream: streamB
+        version: 1
+        summary: Module ModuleMZ summary
+        description: Module ModuleMZ description
+        license:
+          module: [MIT]
+        profiles:
+          default:
+            rpms: [TestMZB]
+        artifacts:
+          rpms: ["TestMZB-0:2-1.modMZ.noarch"]
+        components:
+          rpms:
+            TestMZB: {rationale: 'rationale for TestMZB'}
+      document: modulemd
+      version: 2
+      ---
+      data:
+        name: ModuleMZ
+        stream: streamC
+        version: 1
+        summary: Module ModuleMZ summary
+        description: Module ModuleMZ description
+        license:
+          module: [MIT]
+        dependencies:
+          - requires:
+              ModuleM: []
+        profiles:
+          default:
+            rpms: [TestMZC]
+        artifacts:
+          rpms: ["TestMZC-0:2-1.modMZ.noarch"]
+        components:
+          rpms:
+            TestMZC: {rationale: 'rationale for TestMZC'}
+      document: modulemd
+      version: 2
+      """
