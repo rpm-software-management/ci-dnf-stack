@@ -44,11 +44,11 @@ Feature: Use confirmation of enabling different module stream
           | stream | f27   |
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1579792
-  Scenario: Enablement of different module stream when profile installed
+  Scenario: Enablement of different module stream when profile installed (remove profile)
       Given I successfully run "dnf module enable ModuleA:f27 -y"
         And I successfully run "dnf module install ModuleA/minimal -y"
        When I successfully run "dnf module enable ModuleA:f26 -y"
        Then a module ModuleA config file should contain
           | Key      | Value   |
           | stream   | f26     |
-          | profiles | minimal |
+          | profiles |         |
