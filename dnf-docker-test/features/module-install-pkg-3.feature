@@ -27,6 +27,9 @@ Feature: Installing package when default stream is defined
           | Key     | Value  |
           | state   |enabled |
           | stream  | f26    |
+       When I run "dnf module list --installed ModuleY"
+       Then the command should fail
+        And the command stderr should match regexp "No matching Modules to list"
 
   @setup
   Scenario: cleanup from previous scenario
