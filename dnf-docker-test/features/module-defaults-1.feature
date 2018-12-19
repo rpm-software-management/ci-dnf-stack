@@ -63,3 +63,13 @@ Feature: Modulemd defaults are followed by dnf module commands
           | Key      | Value                |
           | stream   | f27                  |
           | profiles | (set) minimal        |
+
+  Scenario: Default profile is installed when installing a non-default stream with dnf module install module:stream
+      Given I run "dnf module disable ModuleA -y"
+        And I run "dnf module reset ModuleA -y"
+       When I run "dnf module install ModuleA:f27 -y"
+       Then a module ModuleA config file should contain
+          | Key      | Value                |
+          | stream   | f27                  |
+          | state    | enabled              |
+          | profiles | (set) minimal        |
