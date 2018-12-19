@@ -78,6 +78,7 @@ Given repository "modularityABDE" with packages
         name: ModuleA
         stream: f26
         version: 2
+        arch: noarch
         summary: Module ModuleA summary
         description: Module ModuleA description
         license:
@@ -108,6 +109,7 @@ Given repository "modularityABDE" with packages
         name: ModuleA
         stream: f27
         version: 1
+        arch: noarch
         summary: Module ModuleA summary
         description: Module ModuleA description
         license:
@@ -149,6 +151,7 @@ Given repository "modularityABDE" with packages
           default:
             rpms: [TestG, TestH]
         stream: f26
+        arch: noarch
         summary: Module ModuleB summary
         version: 1
       ---
@@ -167,6 +170,7 @@ Given repository "modularityABDE" with packages
           default:
             rpms: [TestG, TestI]
         stream: f26
+        arch: noarch
         summary: Module ModuleB summary
         version: 2
       document: modulemd
@@ -187,6 +191,7 @@ Given repository "modularityABDE" with packages
           default:
             rpms: [TestG, TestH]
         stream: f27
+        arch: noarch
         summary: Module ModuleB summary
         version: 1
       document: modulemd
@@ -206,6 +211,7 @@ Given repository "modularityABDE" with packages
           default:
             rpms: [TestM]
         stream: f26
+        arch: noarch
         summary: Module ModuleD summary
         version: 1
       document: modulemd
@@ -228,6 +234,7 @@ Given repository "modularityABDE" with packages
           default:
             rpms: [TestP]
         stream: f26
+        arch: noarch
         summary: Module ModuleE summary
         version: 1
       document: modulemd
