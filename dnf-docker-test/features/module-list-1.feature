@@ -1,5 +1,3 @@
-# contains workaround for bug 1637477, remove duplicate ModuleA lines once it is fixed
-@bz1637477
 Feature: Module listing
 
   @setup
@@ -22,7 +20,6 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Profiles +Summary
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
            ModuleA +f27 +client, server, devel, minimal.*
            ModuleB +f26 +default.*
            ModuleB +f27 +default.*
@@ -44,7 +41,6 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Profiles +Summary
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            modularityX
            Name +Stream +Profiles +Summary
@@ -60,7 +56,6 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            modularityX
@@ -104,7 +99,6 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Profiles +Summary
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
            ModuleA +f27 +client, server, devel, minimal.*
            ModuleE +f26 +default.*
 
@@ -131,7 +125,6 @@ Feature: Module listing
            modularityABDE
            Name +Stream +Profiles +Summary
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*
 
            Hint:
            """
@@ -154,8 +147,6 @@ Feature: Module listing
            ?Last metadata expiration check
            modularityABDE
            Name +Stream +Profiles +Summary
-           ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*Module +ModuleA sum
-           ?^[^M]
            ModuleA +f26 \[e\] +client \[i\], server, devel, minimal.*Module +ModuleA sum
            ?^[^M]
            ModuleA +f27 +client, server, devel, minimal.*Module +ModuleA sum
