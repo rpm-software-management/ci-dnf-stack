@@ -17,7 +17,7 @@ Feature: Default streams are properly switched to enabled
        When I enable repository "modularityM"
         And I successfully run "dnf makecache"
 
-  @xfail @bz1657213
+  @bz1657213
   Scenario: The default stream is enabled when requiring module is enabled
        When I run "dnf -y module enable ModuleMZ:streamA"
        Then a module ModuleM config file should contain

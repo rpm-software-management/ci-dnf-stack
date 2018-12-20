@@ -115,7 +115,7 @@ Feature: Default non-enabled streams can be overridden by dependency requests
        When I enable repository "modularityM"
         And I successfully run "dnf makecache"
 
-  @xfail @bz1657213
+  @xfail @bz1648839
   Scenario: A non-default stream is enabled when enabling another stream that requires it
        When I run "dnf -y module enable ModuleMX:streamA"
        Then a module ModuleM config file should contain
@@ -129,7 +129,7 @@ Feature: Default non-enabled streams can be overridden by dependency requests
        # cleanup
         And I successfully run "dnf -y module reset ModuleM ModuleMX"
 
-  @xfail @bz1657213
+  @xfail @bz1648839
   Scenario: A non-default stream is enabled when installing another stream that requires it
        When I save rpmdb
         And I run "dnf -y module install ModuleMY:streamB/default"
