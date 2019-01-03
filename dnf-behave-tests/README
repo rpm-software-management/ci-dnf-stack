@@ -1,0 +1,18 @@
+dnf-behave-tests
+----------------
+dnf-behave-tests is set of behavioral (black-box) tests for DNF project
+(https://github.com/rpm-software-management/dnf).
+
+
+Project layout
+--------------
+
+[project root directory]
+|-- features
+|   |-- environment.py          # environment settings
+|   |-- *.feature               # features and scenarios == actual tests
+|   `-- steps
+|       |-- *.py                # steps used in features
+|       `-- common              # shared code for the steps
+|-- fixtures                    # test data
+`-- [behave.ini|.behaverc|tox.ini|setup.cfg]
