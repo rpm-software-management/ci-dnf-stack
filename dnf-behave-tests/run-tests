@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export LANG=en_US
+
+# define user-specific data for the config.userdata dictionary. Example: -D foo=bar to store it in config.userdata["foo"].
+# -D NAME=VALUE, --define NAME=VALUE
+ENV=""
+ENV="$ENV -Ddnf_executable=dnf-3"
+
+TAGS=""
+
+# run only tier1 tests
+#TAGS="$TAGS --tags @tier1"
+
+# run only WIP tests
+#TAGS="$TAGS --wip"
+
+behave $ENV $TAGS features -v "$@"
