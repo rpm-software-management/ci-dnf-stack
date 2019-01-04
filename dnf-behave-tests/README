@@ -16,3 +16,19 @@ Project layout
 |       `-- common              # shared code for the steps
 |-- fixtures                    # test data
 `-- [behave.ini|.behaverc|tox.ini|setup.cfg]
+
+
+Test Packages
+-------------
+
+zstd-1.3.6-1.fc29.src.rpm
+    purpose:
+        A new package that wasn't available in the dnf-ci-fedora repo
+        and was introduced in dnf-ci-fedora-updates.
+    sub-packages:
+        zstd-1.3.6-1.fc29.x86_64.rpm
+        libzstd-1.3.6-1.fc29.x86_64.rpm
+        libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm
+        libzstd-devel-1.3.6-1.fc29.x86_64.rpm
+        zstd-debuginfo-1.3.6-1.fc29.x86_64.rpm
+        zstd-debugsource-1.3.6-1.fc29.x86_64.rpm
