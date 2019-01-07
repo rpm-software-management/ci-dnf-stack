@@ -66,6 +66,7 @@ def diff_rpm_lists(list_one, list_two):
         # use "unchanged" instead
         # "reinstalled": set(),
 
+        "changed": set(),
         "unchanged": set(),
         "present": set(),
         "absent": set(),
@@ -97,5 +98,6 @@ def diff_rpm_lists(list_one, list_two):
             result["unchanged"].add(rpm_two)
 
     result["present"] = set(list_two)
+    result["changed"] = result["present"] - result["unchanged"]
 
     return result
