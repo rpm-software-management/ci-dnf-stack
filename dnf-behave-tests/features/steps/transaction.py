@@ -12,10 +12,13 @@ def then_Transaction_is_following(context):
 
     context.dnf["rpmdb_post"] = get_rpmdb_rpms(context.dnf.installroot)
 
+    checked_rpmdb = {}
+
     # check changes in RPMDB
     rpmdb_transaction = diff_rpm_lists(context.dnf["rpmdb_pre"], context.dnf["rpmdb_post"])
     for action, nevras in context.table:
         for nevra in splitter(nevras):
+            checked_rpmdb.setdefault(action, set()).add(nevra)
             rpm = RPM(nevra)
             if action == "absent":
                 if rpm in rpmdb_transaction["present"]:
@@ -24,6 +27,17 @@ def then_Transaction_is_following(context):
             if rpm not in rpmdb_transaction[action]:
                 candidates = ", ".join([str(i) for i in sorted(rpmdb_transaction[action])])
                 raise AssertionError("[rpmdb] Package %s not '%s'; Possible candidates: %s" % (rpm, action, candidates))
+
+    for rpmdb_action in sorted(rpmdb_transaction):
+        if rpmdb_action in ["absent", "present", "unchanged"]:
+            continue
+        if rpmdb_action in ["downgraded", "upgraded"]:
+            continue
+        checked_nevras = checked_rpmdb.get(rpmdb_action, set())
+        rpmdb_nevras = set([str(i) for i in rpmdb_transaction[rpmdb_action]])
+        delta = rpmdb_nevras.difference(checked_nevras)
+        if delta:
+            raise AssertionError("Following packages weren't captured in the table for action '%s': %s" % (rpmdb_action, ", ".join(sorted(delta))))
 
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
