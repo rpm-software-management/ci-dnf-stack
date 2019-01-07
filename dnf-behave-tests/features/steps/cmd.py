@@ -1,3 +1,4 @@
+import re
 import sys
 
 import behave
@@ -28,3 +29,19 @@ def then_the_exit_code_is(context, exitcode):
     print(context.cmd_stdout)
     print(context.cmd_stderr, file=sys.stderr)
     raise AssertionError("Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd))
+
+
+@behave.then("stdout contains \"{text}\"")
+def then_stdout_contains(context, text):
+    if re.search(text, context.cmd_stdout):
+        return
+    print(context.cmd_stdout)
+    raise AssertionError("Stdout doesn't contain: %s" % text)
+
+
+@behave.then("stderr contains \"{text}\"")
+def then_stderr_contains(context, text):
+    if re.search(text, context.cmd_stderr):
+        return
+    print(context.cmd_stderr, file=sys.stderr)
+    raise AssertionError("Stderr doesn't contain: %s" % text)
