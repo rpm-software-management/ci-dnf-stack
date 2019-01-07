@@ -29,7 +29,7 @@ def then_Transaction_is_following(context):
                 raise AssertionError("[rpmdb] Package %s not '%s'; Possible candidates: %s" % (rpm, action, candidates))
 
     for rpmdb_action in sorted(rpmdb_transaction):
-        if rpmdb_action in ["absent", "present", "unchanged"]:
+        if rpmdb_action in ["absent", "present", "unchanged", "changed"]:
             continue
         if rpmdb_action in ["downgraded", "upgraded"]:
             continue
@@ -48,7 +48,7 @@ def then_Transaction_is_following(context):
     for action, nevras in context.table:
         for nevra in splitter(nevras):
             rpm = RPM(nevra)
-            if action in ["absent", "present", "unchanged"]:
+            if action in ["absent", "present", "unchanged", "changed"]:
                 continue
             if rpm not in dnf_transaction[action]:
                 candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
@@ -57,8 +57,11 @@ def then_Transaction_is_following(context):
 
 @behave.then("Transaction is empty")
 def then_transaction_is_empty(context):
+    if not "rpmdb_pre" in context.dnf:
+        raise ValueError("RPMDB snapshot wasn't created before running this step.")
+
     context.dnf["rpmdb_post"] = get_rpmdb_rpms(context.dnf.installroot)
     rpmdb_transaction = diff_rpm_lists(context.dnf["rpmdb_pre"], context.dnf["rpmdb_post"])
-    if rpmdb_transaction["present"]:
-        changes = ", ".join([str(i) for i in sorted(dnf_transaction["changed"])])
+    if rpmdb_transaction["changed"]:
+        changes = ", ".join([str(i) for i in sorted(rpmdb_transaction["changed"])])
         raise AssertionError("[rpmdb] Packages have changed: {}".format(changes))
