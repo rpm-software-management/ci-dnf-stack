@@ -61,7 +61,19 @@ def then_transaction_is_empty(context):
         raise ValueError("RPMDB snapshot wasn't created before running this step.")
 
     context.dnf["rpmdb_post"] = get_rpmdb_rpms(context.dnf.installroot)
+
+    # check changes in RPMDB
     rpmdb_transaction = diff_rpm_lists(context.dnf["rpmdb_pre"], context.dnf["rpmdb_post"])
     if rpmdb_transaction["changed"]:
         changes = ", ".join([str(i) for i in sorted(rpmdb_transaction["changed"])])
         raise AssertionError("[rpmdb] Packages have changed: {}".format(changes))
+
+    # check changes in DNF transaction table
+    lines = context.cmd_stdout.splitlines()
+    try:
+        dnf_transaction = parse_transaction_table(lines)
+    except RuntimeError:
+        dnf_transaction = {}
+    if dnf_transaction:
+        changes = ", ".join([str(i) for i in set().union(*dnf_transaction.values())])
+        raise AssertionError("[dnf] Packages have changed: {}".format(changes))
