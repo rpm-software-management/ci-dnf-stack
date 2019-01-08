@@ -46,7 +46,6 @@ Scenario: Install an RPM by provide that is lower than e:vr
         | install       | setup-0:2.12.1-1.fc29.noarch          |
 
 
-@wip
 Scenario: Install an RPM by provide that is lower or equal to e:vr
   Given I use the repository "dnf-ci-fedora"
     And I use the repository "dnf-ci-fedora-updates"
