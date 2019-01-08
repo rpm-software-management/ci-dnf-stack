@@ -16,3 +16,8 @@ def given_repo_condition(context, repo):
     if "repos" not in context.dnf:
         context.dnf["repos"] = []
     context.dnf["repos"].remove(repo)
+
+
+@behave.when("I enable the repository \"{repo}\"")
+def when_repo_condition(context, repo):
+    context.execute_steps("Given I use the repository \"{}\"".format(repo))
