@@ -17,6 +17,8 @@ def then_Transaction_is_following(context):
     # check changes in RPMDB
     rpmdb_transaction = diff_rpm_lists(context.dnf["rpmdb_pre"], context.dnf["rpmdb_post"])
     for action, nevras in context.table:
+        if action in ["broken"]:
+            continue
         for nevra in splitter(nevras):
             checked_rpmdb.setdefault(action, set()).add(nevra)
             rpm = RPM(nevra)
@@ -32,6 +34,8 @@ def then_Transaction_is_following(context):
         if rpmdb_action in ["absent", "present", "unchanged", "changed"]:
             continue
         if rpmdb_action in ["downgraded", "upgraded"]:
+            continue
+        if rpmdb_action in ["broken"]:
             continue
         checked_nevras = checked_rpmdb.get(rpmdb_action, set())
         rpmdb_nevras = set([str(i) for i in rpmdb_transaction[rpmdb_action]])
