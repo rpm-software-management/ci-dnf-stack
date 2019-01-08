@@ -3590,6 +3590,9 @@ The nss_hesiod Name Service Switch module uses the Domain Name System
 (DNS) as a source for user, group, and service information, following
 the Hesiod convention of Project Athena.
 
+%install
+mkdir -p %{buildroot}/var/db 
+
 %files -n compat-libpthread-nonshared
 
 %files

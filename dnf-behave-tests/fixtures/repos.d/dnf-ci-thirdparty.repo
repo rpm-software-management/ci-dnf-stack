@@ -1,0 +1,5 @@
+[dnf-ci-thirdparty]
+name=dnf-ci-thirdparty
+baseurl=fixtures/repos/dnf-ci-thirdparty
+enabled=1
+gpgcheck=0
