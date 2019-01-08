@@ -3593,6 +3593,8 @@ the Hesiod convention of Project Athena.
 %files -n compat-libpthread-nonshared
 
 %files
+%dir /var/db
+%ghost %config /etc/ld.so.conf
 
 %files all-langpacks
 

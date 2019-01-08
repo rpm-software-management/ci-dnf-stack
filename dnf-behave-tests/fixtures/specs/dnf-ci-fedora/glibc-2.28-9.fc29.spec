@@ -3576,6 +3576,8 @@ The nss_hesiod Name Service Switch module uses the Domain Name System
 the Hesiod convention of Project Athena.
 
 %files
+%dir /var/db
+%ghost %config /etc/ld.so.conf
 
 %files all-langpacks
 
