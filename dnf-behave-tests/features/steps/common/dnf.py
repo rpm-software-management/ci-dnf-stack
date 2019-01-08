@@ -6,6 +6,7 @@ from .rpm import RPM
 
 SEPARATOR_RE = re.compile(r"^=+$")
 ACTION_RE = re.compile(r"^([^ ].+):$")
+DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
 
 
@@ -19,6 +20,7 @@ ACTIONS_EN = {
     "Removing dependent packages": "remove",
     "Removing unused dependencies": "remove",
     "Downgrading": "downgrade",
+    "Skipping packages with broken dependencies": "broken",
 }
 
 
@@ -84,6 +86,12 @@ def parse_transaction_table(lines):
 
     while lines:
         line = lines.pop(0).rstrip()
+
+        # skip descriptions such as: (add '--best --allowerasing' to command line to force their upgrade):
+        match = DESCRIPTION_RE.match(line)
+        if match:
+            continue
+
         match = ACTION_RE.match(line)
         if not match:
             raise RuntimeError("Couldn't parse transaction table action: {}".format(line))

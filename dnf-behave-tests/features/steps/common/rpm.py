@@ -61,6 +61,7 @@ def diff_rpm_lists(list_one, list_two):
         "upgraded": set(),
         "downgrade": set(),
         "downgraded": set(),
+        "broken": set(),
 
         # it is not clear whether a RPM was reinstalled or not changed at all
         # use "unchanged" instead
