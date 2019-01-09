@@ -86,6 +86,7 @@ Feature: Non-default profiles can be installed when explicitly specified on comm
         And I successfully run "dnf -y module reset ModuleM"
         And I successfully run "dnf -y remove TestMA"
 
+  @bz1573831
   Scenario: I can install a non-default profile from a default stream using dnf module install module/profile
        When I save rpmdb
         And I run "dnf -y module install ModuleM/minimal"
