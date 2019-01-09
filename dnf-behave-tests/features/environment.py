@@ -28,6 +28,7 @@ class DNFContext(object):
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", None)
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
+        self.fixturesdir = FIXTURES_DIR
 
     def __del__(self):
         if self.delete_installroot:
