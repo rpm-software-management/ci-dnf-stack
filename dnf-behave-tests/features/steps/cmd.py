@@ -15,6 +15,14 @@ def when_I_execute_dnf_with_args(context, args):
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
 
+@behave.given("I enable plugin \"{plugin}\"")
+def given_enable_plugin(context, plugin):
+    if "plugins" not in context.dnf:
+        context.dnf["plugins"] = []
+    if plugin not in context.dnf["plugins"]:
+        context.dnf["plugins"].append(plugin)
+
+
 @behave.step("I execute \"{command}\" with args \"{args}\"")
 def when_I_execute_command_with_args(context, command, args):
     cmd = command + " " + args
