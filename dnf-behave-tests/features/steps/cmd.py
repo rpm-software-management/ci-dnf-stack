@@ -9,7 +9,7 @@ from common import *
 @behave.step("I execute dnf with args \"{args}\"")
 def when_I_execute_dnf_with_args(context, args):
     cmd = " ".join(context.dnf.get_cmd(context))
-    cmd += " " + args
+    cmd += " " + args.format(context=context)
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
     context.cmd = cmd
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
