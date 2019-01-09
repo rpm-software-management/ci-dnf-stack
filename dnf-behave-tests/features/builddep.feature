@@ -37,7 +37,6 @@ Scenario: Builddep with rich dependency
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@wip
 Scenario: Builddep with simple dependency (files-like provide)
     Given I use the repository "dnf-ci-fedora"
       And I enable plugin "builddep"
