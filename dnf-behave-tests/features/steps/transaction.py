@@ -2,9 +2,7 @@ import behave
 
 from common import *
 
-
-@behave.then("Transaction is following")
-def then_Transaction_is_following(context):
+def check_transaction(context, mode):
     check_context_table(context, ["Action", "Package"])
 
     if not "rpmdb_pre" in context.dnf:
@@ -28,20 +26,24 @@ def then_Transaction_is_following(context):
                 continue
             if rpm not in rpmdb_transaction[action]:
                 candidates = ", ".join([str(i) for i in sorted(rpmdb_transaction[action])])
-                raise AssertionError("[rpmdb] Package %s not '%s'; Possible candidates: %s" % (rpm, action, candidates))
+                raise AssertionError("[rpmdb] Package %s not '%s'; Possible candidates: %s" % (
+                                     rpm, action, candidates))
 
-    for rpmdb_action in sorted(rpmdb_transaction):
-        if rpmdb_action in ["absent", "present", "unchanged", "changed"]:
-            continue
-        if rpmdb_action in ["downgraded", "upgraded"]:
-            continue
-        if rpmdb_action in ["broken"]:
-            continue
-        checked_nevras = checked_rpmdb.get(rpmdb_action, set())
-        rpmdb_nevras = set([str(i) for i in rpmdb_transaction[rpmdb_action]])
-        delta = rpmdb_nevras.difference(checked_nevras)
-        if delta:
-            raise AssertionError("Following packages weren't captured in the table for action '%s': %s" % (rpmdb_action, ", ".join(sorted(delta))))
+    if mode == 'exact_match':
+        for rpmdb_action in sorted(rpmdb_transaction):
+            if rpmdb_action in ["absent", "present", "unchanged", "changed"]:
+                continue
+            if rpmdb_action in ["downgraded", "upgraded"]:
+                continue
+            if rpmdb_action in ["broken"]:
+                continue
+            checked_nevras = checked_rpmdb.get(rpmdb_action, set())
+            rpmdb_nevras = set([str(i) for i in rpmdb_transaction[rpmdb_action]])
+            delta = rpmdb_nevras.difference(checked_nevras)
+            if delta:
+                raise AssertionError(
+                    "Following packages weren't captured in the table for action '%s': %s" % (
+                        rpmdb_action, ", ".join(sorted(delta))))
 
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
@@ -56,7 +58,17 @@ def then_Transaction_is_following(context):
                 continue
             if rpm not in dnf_transaction[action]:
                 candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
-                raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (rpm, action, candidates))
+                raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (
+                                     rpm, action, candidates))
+
+
+@behave.then("Transaction is following")
+def then_Transaction_is_following(context):
+    check_transaction(context, 'exact_match')
+
+@behave.then("Transaction contains")
+def then_Transaction_contains(context):
+    check_transaction(context, 'contains')
 
 
 @behave.then("Transaction is empty")
