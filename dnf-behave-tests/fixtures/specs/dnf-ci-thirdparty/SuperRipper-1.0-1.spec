@@ -8,6 +8,7 @@ URL:            None
 
 Summary:        The made up package for autoremove testing.
 
+BuildRequires:  %{?buildrequires}%{?!buildrequires:lame-libs}
 Requires:       abcde
 
 %description
