@@ -93,22 +93,21 @@ Feature: Updating module profiles and default streams
         And I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf makecache"
 
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1582546
-  @xfail
+  @bz1582548 @bz1582546
   Scenario: default stream is used for new deps during an update
-      Given I successfully run "dnf module install ModuleA:f26:1 -y"
+      Given I successfully run "dnf module install ModuleA:f26:1/default -y"
        When I save rpmdb
         And I successfully run "dnf module update ModuleA -y"
        Then a module ModuleB config file should contain
           | Key     | Value         |
-          | enabled | 1             |
-          | stream  | (set) minimal |
-          | version | 1             |
+          | state   | enabled       |
+          | stream  | f26           |
         And a module ModuleA config file should contain
-          | Key     | Value |
-          | version | 2     |
-          | stream  | f26   |
+          | Key     | Value   |
+          | state   | enabled |
+          | stream  | f26     |
+          | profiles| default |
         And rpmdb changes are
-          | State     | Packages                             |
-          | updated   | TestA/2-1.modA                       |
-          | installed | TestB/1-1.modB, TestC/1-1, TestD/1-1 |
+          | State     | Packages         |
+          | updated   | TestA/2-1.modA   |
+          | installed | TestC/1-1        |
