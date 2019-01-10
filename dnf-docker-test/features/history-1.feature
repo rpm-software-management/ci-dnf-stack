@@ -89,14 +89,17 @@ Feature: DNF/Behave test Transaction history - base
          When I successfully run "dnf history"
          Then history should match "update -y" with "Upgrade" and "4" package
 
+    @bz1612885
     Scenario: Rollback update
          When I save rpmdb
           And I successfully run "dnf history rollback last-1 -y"
-         Then rpmdb changes are
+         Then the command stderr should not match regexp "Traceback"
+          And rpmdb changes are
            | State        | Packages                   |
            | downgraded   | TestA, TestB, TestC, TestD |
          When I save rpmdb
           And I successfully run "dnf history rollback last-3 -y"
-         Then rpmdb changes are
+         Then the command stderr should not match regexp "Traceback"
+          And rpmdb changes are
            | State        | Packages                          |
            | removed      | TestA, TestB, TestC, TestD, TestE |
