@@ -70,3 +70,23 @@ def then_stderr_is_empty(context):
     print(context.cmd_stderr, file=sys.stderr)
     raise AssertionError("Stderr is not empty, it contains: %s" % context.cmd_stderr)
 
+
+@behave.then("stdout is")
+def then_stdout_is(context):
+    if context.text.strip() == context.cmd_stdout.strip():
+        return
+    print(context.cmd_stdout)
+    raise AssertionError("Stdout is not: %s" % context.text)
+
+
+@behave.then("stdout contains lines")
+def then_stdout_contains_lines(context):
+    out_lines = context.cmd_stdout.split('\n')
+    test_lines = context.text.split('\n')
+    for line in test_lines:
+        for outline in out_lines:
+            if line == outline:
+                break
+        else:
+            print(context.cmd_stdout)
+            raise AssertionError("Stdout doesn't contain line: %s" % line)
