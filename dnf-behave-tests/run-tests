@@ -15,12 +15,4 @@ TAGS=""
 # run only WIP tests
 #TAGS="$TAGS --wip"
 
-while [ "$1" != "" ]; do
-    case "$1" in
-        -t|--tag) TAGS="$TAGS --tags $2"; shift 2;;
-        -w|--wip) TAGS="$TAGS --wip"; shift;;
-        *) fatal "Non-implemented option: $1"
-    esac
-done
-
 behave $ENV $TAGS features -v "$@"
