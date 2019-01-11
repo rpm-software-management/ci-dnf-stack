@@ -27,6 +27,7 @@ Scenario: Upgrade all RPMs from one repository
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
         | upgrade       | flac-0:1.3.3-2.fc29.x86_64                |
+        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
 
 
 Scenario: Upgrade all RPMs from one repository using '*'
@@ -39,3 +40,4 @@ Scenario: Upgrade all RPMs from one repository using '*'
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
         | upgrade       | flac-0:1.3.3-2.fc29.x86_64                |
+        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
