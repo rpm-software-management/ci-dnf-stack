@@ -16,3 +16,16 @@ Scenario: Remove RPMs while excluding another RPM
         | Action        | Package                               |
         | remove        | filesystem-0:3.9-2.fc29.x86_64        |
         | remove        | basesystem-0:11-6.fc29.noarch         |
+
+
+Scenario: Remove RPM which is required by excluded RPM
+  Given I use the repository "dnf-ci-fedora"
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install       | filesystem-0:3.9-2.fc29.x86_64        |
+   When I execute dnf with args "remove setup --exclude filesystem"
+   Then the exit code is 1
+    And Transaction is empty
