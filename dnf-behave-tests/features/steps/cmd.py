@@ -47,6 +47,14 @@ def then_stdout_contains(context, text):
     raise AssertionError("Stdout doesn't contain: %s" % text)
 
 
+@behave.then("stdout is empty")
+def then_stdout_contains(context):
+    if not context.cmd_stdout:
+        return
+    print(context.cmd_stdout)
+    raise AssertionError("Stdout is not empty, it contains: %s" % context.cmd_stdout)
+
+
 @behave.then("stderr contains \"{text}\"")
 def then_stderr_contains(context, text):
     if re.search(text, context.cmd_stderr):
