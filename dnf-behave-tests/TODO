@@ -1,0 +1,11 @@
+deplist-1.feature
+=================
+
+Originally this feature contained two more scenarios, which are not 
+available in turbo version:
+1. run yum instead of dnf (this depends on having yum compatible package
+   installed)
+   introduced by commit a9f62ed2
+2. run "sh -c 'dnf repoquery --deplist TestA'" - in fact, I'm not sure
+   what this test was supposed to test.
+   introduced by commit cac5697e
