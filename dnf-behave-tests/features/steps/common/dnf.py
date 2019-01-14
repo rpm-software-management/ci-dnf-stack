@@ -21,6 +21,9 @@ ACTIONS_EN = {
     "Removing unused dependencies": "remove",
     "Downgrading": "downgrade",
     "Skipping packages with broken dependencies": "broken",
+    "Installing group/module packages": "install",
+    "Installing Groups": "group-install",
+    "Removing Groups": "group-remove",
 }
 
 
@@ -103,6 +106,13 @@ def parse_transaction_table(lines):
                 break
 
             line = lines[0].rstrip()
+
+            if action.startswith('group-'):
+                lines.pop(0)
+                group = line.strip()
+                result.setdefault(action, set()).add(group)
+                break
+
             match = PACKAGE_RE.match(line)
 
             if not match:
