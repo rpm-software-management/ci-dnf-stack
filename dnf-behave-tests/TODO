@@ -9,3 +9,8 @@ available in turbo version:
 2. run "sh -c 'dnf repoquery --deplist TestA'" - in fact, I'm not sure
    what this test was supposed to test.
    introduced by commit cac5697e
+
+group-2.feature
+===============
+
+Missing testing --assumeno when installing a group. Is that necessary?
