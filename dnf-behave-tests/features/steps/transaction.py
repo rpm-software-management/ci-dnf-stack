@@ -19,6 +19,8 @@ def check_transaction(context, mode):
             continue
         for nevra in splitter(nevras):
             checked_rpmdb.setdefault(action, set()).add(nevra)
+            if action.startswith('group-'):
+                continue
             rpm = RPM(nevra)
             if action == "absent":
                 if rpm in rpmdb_transaction["present"]:
@@ -52,14 +54,21 @@ def check_transaction(context, mode):
     except RuntimeError:
         dnf_transaction = {}
     for action, nevras in context.table:
+        if action in ["absent", "present", "unchanged", "changed"]:
+            continue
         for nevra in splitter(nevras):
-            rpm = RPM(nevra)
-            if action in ["absent", "present", "unchanged", "changed"]:
-                continue
-            if rpm not in dnf_transaction[action]:
-                candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
-                raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (
-                                     rpm, action, candidates))
+            if action.startswith('group-'):
+                group = nevra
+                if group not in dnf_transaction[action]:
+                    candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
+                    raise AssertionError("[dnf] Group %s not %s; Possible candidates: %s" % (
+                                         group, action, candidates))
+            else:
+                rpm = RPM(nevra)
+                if rpm not in dnf_transaction[action]:
+                    candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
+                    raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (
+                                         rpm, action, candidates))
 
 
 @behave.then("Transaction is following")
