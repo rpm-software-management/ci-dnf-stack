@@ -42,4 +42,4 @@ Scenario: Upgrade two RPMs
         | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgrade       | flac-0:1.3.3-2.fc29.x86_64                |
+        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
