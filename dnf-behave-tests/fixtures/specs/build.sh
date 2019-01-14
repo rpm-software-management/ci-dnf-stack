@@ -8,6 +8,7 @@ set -e
 DIR=$(dirname $(readlink -f $0))
 ARCH="x86_64"
 REPODIR="$DIR/../repos"
+GROUPS_FILENAME="comps.xml"
 rm -rf "$REPODIR"
 mkdir -p "$REPODIR"
 
@@ -18,9 +19,14 @@ for path in $DIR/*/*.spec; do
 done
 
 for path in $REPODIR/*; do
+    REPO=$(basename $path)
     echo "Creating repo $path..."
     pushd $path
-    createrepo_c --no-database .
+    ARGS="--no-database"
+    if [ -f ../../specs/$REPO/$GROUPS_FILENAME ]; then
+        ARGS="$ARGS --groupfile ../../specs/$REPO/$GROUPS_FILENAME"
+    fi
+    createrepo_c $ARGS .
     popd
 done
 
