@@ -96,18 +96,23 @@ def after_step(context, step):
 
 
 def before_scenario(context, scenario):
-    context.dnf = DNFContext(context.config.userdata)
+    if not context.feature_global_dnf_context:
+        context.dnf = DNFContext(context.config.userdata)
 
 
 def after_scenario(context, scenario):
-    del context.dnf
+    if not context.feature_global_dnf_context:
+        del context.dnf
 
 
 def before_feature(context, feature):
-    pass
+    context.feature_global_dnf_context = 'global_dnf_context' in feature.tags
+    if context.feature_global_dnf_context:
+        context.dnf = DNFContext(context.config.userdata)
 
 def after_feature(context, feature):
-    pass
+    if context.feature_global_dnf_context:
+        del context.dnf
 
 
 def before_tag(context, tag):
