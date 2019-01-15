@@ -21,3 +21,8 @@ def given_repo_condition(context, repo):
 @behave.when("I enable the repository \"{repo}\"")
 def when_repo_condition(context, repo):
     context.execute_steps("Given I use the repository \"{}\"".format(repo))
+
+
+@behave.given("There are no repositories")
+def given_no_repos(context):
+    context.dnf["reposdir"] = "/dev/null"
