@@ -14,3 +14,9 @@ group-2.feature
 ===============
 
 Missing testing --assumeno when installing a group. Is that necessary?
+
+history-update.feature
+======================
+
+Dnf is not able to rollback the very first transaction in history. Needs
+investigation / fix.
