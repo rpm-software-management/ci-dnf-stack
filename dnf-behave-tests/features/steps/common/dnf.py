@@ -129,3 +129,23 @@ def parse_transaction_table(lines):
             result.setdefault(action, set()).add(rpm)
 
     return result
+
+
+def parse_history_list(lines):
+    result = []
+    labels = ('_line', 'id', 'command', 'date', 'action', 'altered')
+    for line in lines:
+        result.append(dict(zip(labels, [line] + [col.strip() for col in line.split('|')])))
+    return result
+
+
+def parse_history_info(lines):
+    result = dict()
+    key = None
+    for line in lines:
+        if ':' in line:
+            key, val = [s.strip() for s in line.split(':', 1)]
+        else:
+            val = line.strip()
+        result[key] = val
+    return result
