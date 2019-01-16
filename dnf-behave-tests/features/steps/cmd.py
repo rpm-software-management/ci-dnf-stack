@@ -117,3 +117,13 @@ def then_stderr_is_empty(context):
         return
     print(context.cmd_stderr, file=sys.stderr)
     raise AssertionError("Stderr is not empty, it contains: %s" % context.cmd_stderr)
+
+
+@behave.then('stdout section "{section}" contains "{regexp}"')
+def then_stdout_section_contains(context, section, regexp):
+    """Compares the content of a particular section from the command output with a given regexp"""
+    section_content = extract_section_content_from_text(section, context.cmd_stdout)
+    if re.search(regexp, section_content):
+        return
+    print(context.cmd_stdout, file=sys.stderr)
+    raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
