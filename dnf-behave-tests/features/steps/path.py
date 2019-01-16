@@ -20,10 +20,12 @@ def the_installroot_path_exists(context, path):
 
 
 @behave.then("file sha256 checksums are following")
-def then_Transaction_is_following(context):
+def then_file_sha256_checksums_are_following(context):
     check_context_table(context, ["Path", "sha256"])
 
     for path, checksum in context.table:
+        # allow {context.dnf.tempdir} substitution
+        path = path.format(context=context)
         file_checksum = sha256_checksum(open(path, "rb").read())
         if file_checksum != checksum:
             raise AssertionError("File sha256 checksum doesn't match (expected: %s, actual: %s): %s" % (checksum, file_checksum, path))
