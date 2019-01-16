@@ -141,11 +141,11 @@ def parse_history_list(lines):
 
 def parse_history_info(lines):
     result = dict()
-    key = None
+    result[None] = []
     for line in lines:
         if ':' in line:
             key, val = [s.strip() for s in line.split(':', 1)]
+            result[key] = val
         else:
-            val = line.strip()
-        result[key] = val
+            result[None].append(line.strip())
     return result
