@@ -25,7 +25,7 @@ def given_enable_plugin(context, plugin):
 
 @behave.step("I execute \"{command}\" with args \"{args}\"")
 def when_I_execute_command_with_args(context, command, args):
-    cmd = command + " " + args
+    cmd = command + " " + args.format(context=context)
     context.cmd = cmd
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
