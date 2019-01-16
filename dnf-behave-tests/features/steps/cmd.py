@@ -87,6 +87,14 @@ def then_stdout_is(context):
     raise AssertionError("Stdout is not: %s" % context.text)
 
 
+@behave.then("stderr is")
+def then_stderr_is(context):
+    if context.text.strip() == context.cmd_stderr.strip():
+        return
+    print(context.cmd_stderr, file=sys.stderr)
+    raise AssertionError("Stderr is not: %s" % context.text)
+
+
 @behave.then("stdout contains lines")
 def then_stdout_contains_lines(context):
     out_lines = context.cmd_stdout.split('\n')
