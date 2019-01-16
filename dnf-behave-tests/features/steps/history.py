@@ -2,8 +2,14 @@ import behave
 
 from common import *
 
-@behave.then("History is following")
-def step_impl(context):
+def parsed_history_info(context, spec):
+    cmd = " ".join(context.dnf.get_cmd(context) + ["history", "info", spec])
+    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
+    return parse_history_info(cmd_stdout.splitlines())
+
+@behave.then('History is following')
+@behave.then('History "{history_range}" is following')
+def step_impl(context, history_range=None):
     def history_equal(history, table):
         if table['Id'] and table['Id'] != history['id']:
             return False
@@ -14,16 +20,16 @@ def step_impl(context):
         if table['Command']:
             # command column in `history list` output is trimmed to limited space
             # to get full command, we need to ask `history info`
-            cmd = " ".join(context.dnf.get_cmd(context) + ["history", "info", history['id']])
-            _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
-            h_info = parse_history_info(cmd_stdout.splitlines())
+            h_info = parsed_history_info(context, history['id'])
             if not table['Command'] in h_info.get('Command Line', ''):
                 return False
         return True
 
+    if history_range is None:
+        history_range = "list"
     check_context_table(context, ["Id", "Command", "Action", "Altered"])
 
-    cmd = " ".join(context.dnf.get_cmd(context) + ["history", "list"])
+    cmd = " ".join(context.dnf.get_cmd(context) + ["history", history_range])
     _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
 
     stdout_lines = cmd_stdout.splitlines()[2:]
@@ -51,3 +57,38 @@ def step_impl(context):
         raise AssertionError(
             "[history] Following history lines not captured in the table:\n%s" % (
                 '\n'.join(stdout_lines[table_idx:])))
+
+
+@behave.then('History info should match')
+@behave.then('History info "{spec}" should match')
+def step_impl(context, spec=None):
+    IN = ['Command Line',]
+    ACTIONS = ['Install', 'Removed', 'Upgrade', 'Upgraded', 'Reinstall', 'Downgrade']
+    check_context_table(context, ["Key", "Value"])
+
+    if spec is None:
+        spec = ""
+    h_info = parsed_history_info(context, spec)
+
+    for key, value in context.table:
+        if key in h_info:
+            if key in IN and value in h_info[key]:
+                continue
+            elif value == h_info[key]:
+                continue
+            else:
+                raise AssertionError(
+                    '[history] {0} "{1}" not matched by "{2}".'.format(
+                        key, h_info[key], value))
+        elif key in ACTIONS:
+            for pkg in value.split(','):
+                for line in h_info[None]:
+                    if key in line and pkg in line:
+                        break
+                else:
+                    raise AssertionError(
+                        '[history] "{0}" not matched as "{1}".'.format(
+                            pkg, key))
+        else:
+            raise AssertionError('[history] key "{0}" not found.'.format(key))
+
