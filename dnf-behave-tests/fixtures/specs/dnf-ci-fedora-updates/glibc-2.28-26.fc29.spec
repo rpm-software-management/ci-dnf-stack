@@ -118,6 +118,7 @@ Conflicts:      kernel < 3.2
 Conflicts:      prelink < 0.4.2
 
 Obsoletes:      glibc-profile < 2.4
+Obsoletes:      glibc < 2.28-10.fc29
 
 Suggests:       glibc-all-langpacks = 2.28-26.fc29
 
