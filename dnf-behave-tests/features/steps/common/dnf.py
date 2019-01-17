@@ -9,6 +9,13 @@ ACTION_RE = re.compile(r"^([^ ].+):$")
 DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
 
+OBSOLETE_REPLACING_LABEL = {
+    'en_US': 'replacing',
+    'cs_CZ': 'nahrazování',
+}
+OBSOLETE_REPLACING = re.compile(r"^ +(?P<label>%s) +(?P<namearch>[^ ]*) +(?P<evr>.*)$" \
+    % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
+
 
 ACTIONS_EN = {
     "Installing": "install",
@@ -74,6 +81,12 @@ def find_transaction_table_end(lines):
     raise RuntimeError("Transaction table end not found")
 
 
+def normalize_epoch(evr):
+    if ":" not in evr:
+        # prepend "0:" if there's no epoch specified
+        return "0:" + evr
+    return evr
+
 def parse_transaction_table(lines):
     """
     Find and parse transaction table.
@@ -113,6 +126,20 @@ def parse_transaction_table(lines):
                 result.setdefault(action, set()).add(group)
                 break
 
+            # catch obsoletes lines in form "     replacing name.arch evr"
+            match = OBSOLETE_REPLACING.match(line)
+            if match:
+                lines.pop(0)
+                match_dict = match.groupdict()
+                match_dict["evr"] = normalize_epoch(match_dict["evr"])
+                parts = match_dict["namearch"].split('.')
+                match_dict["arch"] = parts[-1]
+                match_dict["name"] = '.'.join(parts[:-1])
+                nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
+                rpm = RPM(nevra)
+                result.setdefault('remove', set()).add(rpm)
+                continue
+
             match = PACKAGE_RE.match(line)
 
             if not match:
@@ -121,9 +148,7 @@ def parse_transaction_table(lines):
 
             lines.pop(0)
             match_dict = match.groupdict()
-            if ":" not in match_dict["evr"]:
-                # prepend "0:" if there's no epoch specified
-                match_dict["evr"] = "0:" + match_dict["evr"]
+            match_dict["evr"] = normalize_epoch(match_dict["evr"])
             nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
             rpm = RPM(nevra)
             result.setdefault(action, set()).add(rpm)
