@@ -127,19 +127,13 @@ def parse_transaction_table(lines):
                 result.setdefault(action, set()).add(group)
                 break
 
+            result_action = action
             # catch obsoletes lines in form "     replacing name.arch evr"
             match = OBSOLETE_REPLACING.match(line)
             if match:
-                lines.pop(0)
-                match_dict = match.groupdict()
-                match_dict["evr"] = normalize_epoch(match_dict["evr"])
-                nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
-                rpm = RPM(nevra)
-                result.setdefault('remove', set()).add(rpm)
-                continue
-
-            match = PACKAGE_RE.match(line)
-
+                result_action = 'remove'
+            else:
+                match = PACKAGE_RE.match(line)
             if not match:
                 # either next action or parsing error
                 break
@@ -149,7 +143,7 @@ def parse_transaction_table(lines):
             match_dict["evr"] = normalize_epoch(match_dict["evr"])
             nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
             rpm = RPM(nevra)
-            result.setdefault(action, set()).add(rpm)
+            result.setdefault(result_action, set()).add(rpm)
 
     return result
 
