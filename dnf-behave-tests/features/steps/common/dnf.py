@@ -13,8 +13,9 @@ OBSOLETE_REPLACING_LABEL = {
     'en_US': 'replacing',
     'cs_CZ': 'nahrazování',
 }
-OBSOLETE_REPLACING = re.compile(r"^ +(?P<label>%s) +(?P<namearch>[^ ]*) +(?P<evr>.*)$" \
-    % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
+OBSOLETE_REPLACING = re.compile(
+    r"^ +(?P<label>%s) +(?P<name>[^ ]*)\.(?P<arch>[^ ]+) +(?P<evr>.*)$" \
+        % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
 
 
 ACTIONS_EN = {
@@ -132,9 +133,6 @@ def parse_transaction_table(lines):
                 lines.pop(0)
                 match_dict = match.groupdict()
                 match_dict["evr"] = normalize_epoch(match_dict["evr"])
-                parts = match_dict["namearch"].split('.')
-                match_dict["arch"] = parts[-1]
-                match_dict["name"] = '.'.join(parts[:-1])
                 nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
                 rpm = RPM(nevra)
                 result.setdefault('remove', set()).add(rpm)
