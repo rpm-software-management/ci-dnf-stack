@@ -9,6 +9,7 @@ DIR=$(dirname $(readlink -f $0))
 ARCH="x86_64"
 REPODIR="$DIR/../repos"
 GROUPS_FILENAME="comps.xml"
+UPDATEINFO_FILENAME="updateinfo.xml"
 rm -rf "$REPODIR"
 mkdir -p "$REPODIR"
 
@@ -27,6 +28,10 @@ for path in $REPODIR/*; do
         ARGS="$ARGS --groupfile ../../specs/$REPO/$GROUPS_FILENAME"
     fi
     createrepo_c $ARGS .
+    if [ -f ../../specs/$REPO/$UPDATEINFO_FILENAME ]; then
+        ARGS="$ARGS --groupfile ../../specs/$REPO/$GROUPS_FILENAME"
+        modifyrepo ../../specs/$REPO/$UPDATEINFO_FILENAME ./repodata
+    fi
     popd
 done
 
