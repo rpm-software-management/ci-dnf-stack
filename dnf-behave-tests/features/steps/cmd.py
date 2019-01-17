@@ -75,7 +75,7 @@ def then_stdout_is(context):
 def then_stderr_is(context):
     if context.text.strip() == context.cmd_stderr.strip():
         return
-    print(context.cmd_stdout)
+    print(context.cmd_stderr, file=sys.stderr)
     raise AssertionError("Stderr is not: %s" % context.text)
 
 
