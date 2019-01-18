@@ -8,6 +8,9 @@ URL:            None
 
 Summary:        The made up package for autoremove testing.
 
+Provides:       CQRlib = 1.1.2-16.fc29
+Provides:       CQRlib(x86-64) = 1.1.2-16.fc29
+Provides:       libCQRlib.so.2()(64bit)  
 BuildRequires:  %{?buildrequires}%{?!buildrequires:lame-libs}
 Requires:       abcde
 
