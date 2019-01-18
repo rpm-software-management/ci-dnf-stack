@@ -30,6 +30,13 @@ def when_I_execute_command_with_args(context, command, args):
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
 
+@behave.step("I set config option \"{option}\" to \"{value}\"")
+def step_impl(context, option, value):
+    if "setopts" not in context.dnf:
+        context.dnf["setopts"] = {}
+    context.dnf["setopts"][option] = value
+
+
 @behave.then("the exit code is {exitcode}")
 def then_the_exit_code_is(context, exitcode):
     if context.cmd_exitcode == int(exitcode):
