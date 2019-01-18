@@ -50,7 +50,7 @@ Scenario: Install an RPM by name-epoch:version-release.arch
 
 
 Scenario: I can install an RPM by $pkgspec where $pkgspec is name.arch
-   When I enable the repository "dnf-ci-fedora-updates"
+  Given I use the repository "dnf-ci-fedora-updates"
     And I execute dnf with args "install flac.x86_64"
    Then the exit code is 0
     And Transaction is following
@@ -59,7 +59,7 @@ Scenario: I can install an RPM by $pkgspec where $pkgspec is name.arch
 
 
 Scenario: I can install an RPM by $pkgspec where $pkgspec contains name with dashes
-   When I enable the repository "dnf-ci-fedora-updates-testing"
+  Given I use the repository "dnf-ci-fedora-updates-testing"
     And I execute dnf with args "install CQRlib-devel"
    Then the exit code is 0
     And Transaction is following
@@ -69,7 +69,7 @@ Scenario: I can install an RPM by $pkgspec where $pkgspec contains name with das
 
 
 Scenario: I can install an RPM by $pkgspec where $pkgspec contains wildcards
-   When I enable the repository "dnf-ci-fedora-updates"
+  Given I use the repository "dnf-ci-fedora-updates"
     And I execute dnf with args "install flac-*.3-2.fc29.x86_64"
    Then the exit code is 0
     And Transaction is following
