@@ -84,6 +84,10 @@ class DNFContext(object):
         for plugin in plugins:
             result.append("--enableplugin='{0}'".format(plugin))
 
+        setopts = self._get(context, "setopts") or {}
+        for key,value in setopts.items():
+            result.append("--setopt={0}={1}".format(key, value))
+
         return result
 
 
