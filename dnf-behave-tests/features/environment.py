@@ -80,9 +80,9 @@ class DNFContext(object):
             result.append("--enablerepo='{0}'".format(repo))
 
         result.append("--disableplugin='*'")
-        repos = self._get(context, "plugins") or []
-        for repo in repos:
-            result.append("--enableplugin='{0}'".format(repo))
+        plugins = self._get(context, "plugins") or []
+        for plugin in plugins:
+            result.append("--enableplugin='{0}'".format(plugin))
 
         return result
 
