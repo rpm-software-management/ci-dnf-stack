@@ -4,6 +4,9 @@ import rpm
 
 
 NEVRA_RE = re.compile(r"^(.+)-([0-9]+):(.+)-(.+)\.(.+)$")
+INSTALLONLY_PROVIDES = {b'kernel', b'kernel-PAE', b'installonlypkg(kernel)',
+                        b'installonlypkg(kernel-module)', b'installonlypkg(vm)',
+                        b'multiversion(kernel)'}
 
 
 class RPM(object):
@@ -16,13 +19,14 @@ class RPM(object):
         result[1] = int(result[1])
         return result
 
-    def __init__(self, nevra):
+    def __init__(self, nevra, rpmheader=None):
         nevra_split = self.parse(nevra)
         self.name = nevra_split[0]
         self.epoch = nevra_split[1]
         self.version = nevra_split[2]
         self.release = nevra_split[3]
         self.arch = nevra_split[4]
+        self.rpmheader = rpmheader
 
     def __str__(self):
         return "%s-%d:%s-%s.%s" % (self.name, self.epoch, self.version, self.release, self.arch)
@@ -51,6 +55,18 @@ class RPM(object):
         two = (str(other.epoch), other.version, other.release)
         return rpm.labelCompare(one, two) <= -1
 
+    def is_installonly(self):
+        if not self.rpmheader:
+            raise ValueError("rpm header not available: %s" % str(self))
+        if INSTALLONLY_PROVIDES.intersection(self.rpmheader.provides):
+            return True
+        return False
+
+def normalize_epoch(evr):
+    if ":" not in evr:
+        # prepend "0:" if there's no epoch specified
+        return "0:" + evr
+    return evr
 
 def diff_rpm_lists(list_one, list_two):
     result = {
@@ -73,8 +89,8 @@ def diff_rpm_lists(list_one, list_two):
         "absent": set(),
     }
 
-    dict_one = {i.name: i for i in list_one}
-    dict_two = {i.name: i for i in list_two}
+    dict_one = {str(i) if i.is_installonly() else i.name: i for i in list_one}
+    dict_two = {str(i) if i.is_installonly() else i.name: i for i in list_two}
 
     names_one = set(dict_one.keys())
     names_two = set(dict_two.keys())
