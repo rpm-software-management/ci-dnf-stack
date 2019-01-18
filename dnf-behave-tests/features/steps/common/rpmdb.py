@@ -1,6 +1,7 @@
 import rpm
 
 from .cmd import run
+from .rpm import normalize_epoch
 from .rpm import RPM
 
 
@@ -8,18 +9,14 @@ def get_rpmdb_rpms(installroot="/"):
     """
     Read all installed RPMs from RPM database.
     """
-
-    cmd = [
-        "rpm",
-        "--root=%s" % installroot,
-        "-qa",
-        "--queryformat=%{name}-%|epoch?{%{epoch}:}:{0:}|%{version}-%{release}.%{arch}\n",
-    ]
-    _, stdout, _ = run(cmd, can_fail=False)
     result = set()
-    for nevra in stdout.splitlines():
-        if nevra.startswith("gpg-pubkey"):
+    ts = rpm.TransactionSet(installroot)
+    for hdr in ts.dbMatch():
+        decoded = dict(name=hdr["name"].decode(),
+                evr=normalize_epoch(hdr["evr"].decode()),
+                arch=hdr["arch"].decode())
+        if decoded["name"].startswith("gpg-pubkey"):
             continue
-        result.add(RPM(nevra))
+        result.add(RPM("{0[name]}-{0[evr]}.{0[arch]}".format(decoded), hdr))
     return result
 
