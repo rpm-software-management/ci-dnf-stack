@@ -1,6 +1,7 @@
 import re
 
 
+from .rpm import normalize_epoch
 from .rpm import RPM
 
 
@@ -81,12 +82,6 @@ def find_transaction_table_end(lines):
             return i
     raise RuntimeError("Transaction table end not found")
 
-
-def normalize_epoch(evr):
-    if ":" not in evr:
-        # prepend "0:" if there's no epoch specified
-        return "0:" + evr
-    return evr
 
 def parse_transaction_table(lines):
     """
