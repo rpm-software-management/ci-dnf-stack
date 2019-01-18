@@ -12,7 +12,7 @@ Scenario: Autoremoval of package which became non-required by others
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
         | install       | wget-0:1.19.5-5.fc29.x86_64       |
         | install       | FlacBetterEncoder-0:1.0-1.x86_64  |
-   When I enable the repository "dnf-ci-thirdparty-updates"
+   When I use the repository "dnf-ci-thirdparty-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
     And Transaction is following

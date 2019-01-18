@@ -86,7 +86,7 @@ Scenario: History info
 Scenario: History info in range - transaction merging
    When I execute dnf with args "install abcde"
    Then the exit code is 0
-   When I enable the repository "dnf-ci-fedora-updates"
+   When I use the repository "dnf-ci-fedora-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
     And History info should match
