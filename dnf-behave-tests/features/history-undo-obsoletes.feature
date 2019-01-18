@@ -12,7 +12,7 @@ Scenario: Undo with obsoletes
         | Action        | Package                                   |
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
 
-   When I enable the repository "dnf-ci-fedora"
+   When I use the repository "dnf-ci-fedora"
     And I execute dnf with args "install glibc-all-langpacks"
    Then the exit code is 0
     And Transaction is following
