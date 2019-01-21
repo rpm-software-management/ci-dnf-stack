@@ -40,3 +40,19 @@ Scenario: Using dnf shell, disable and enable repositories
     And stdout does not contain "dnf-ci-thirdparty"
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
+
+
+Scenario: Using dnf shell, fail to enable non-existent repository
+   When I open dnf shell session
+    And I execute in dnf shell "repo enable NoSuchRepo"
+   Then stdout contains "Error: Unknown repo: '.*NoSuchRepo.*'"
+   When I execute in dnf shell "exit"
+   Then stdout contains "Leaving Shell"
+
+
+Scenario: Using dnf shell, fail to disable non-existent repository
+   When I open dnf shell session
+    And I execute in dnf shell "repo disable NoSuchRepo"
+   Then stdout contains "Error: Unknown repo: '.*NoSuchRepo.*'"
+   When I execute in dnf shell "exit"
+   Then stdout contains "Leaving Shell"
