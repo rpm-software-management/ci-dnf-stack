@@ -33,6 +33,7 @@ ACTIONS_EN = {
     "Installing group/module packages": "install",
     "Installing Groups": "group-install",
     "Removing Groups": "group-remove",
+    "Upgrading Groups": "group-upgrade",
 }
 
 
