@@ -5,7 +5,7 @@ Feature: Deplist as commmand and option
       When I successfully run "dnf makecache"
 
   Scenario: Deplist as command
-       When I successfully run "yum deplist TestA"
+       When I successfully run "dnf deplist TestA"
        Then the command stdout should match exactly
             """
             package: TestA-1.0.0-1.noarch

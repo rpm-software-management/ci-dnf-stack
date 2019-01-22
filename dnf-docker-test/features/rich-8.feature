@@ -1,3 +1,4 @@
+@noRHEL7
 Feature: Richdeps/Behave test
  TestA `Requires: TestC if (TestB or TestD)`
 

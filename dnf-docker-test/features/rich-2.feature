@@ -1,3 +1,4 @@
+@noRHEL7
 Feature: Richdeps/Behave test
   TestA requires (TestB or TestC), TestA recommends TestC
   Install TestB first with RPM, then install TestA

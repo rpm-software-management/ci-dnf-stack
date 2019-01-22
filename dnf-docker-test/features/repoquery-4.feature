@@ -1,3 +1,4 @@
+@noRHEL7
 Feature: Test for repoquery weak deps related functionality,
   options --recommends, --supplements, --suggests, --enhances, 
   --whatrecommends, --whatsupplements, --whatsuggests, --whatenhances, --repo
