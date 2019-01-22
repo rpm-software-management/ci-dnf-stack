@@ -1,3 +1,4 @@
+@noRHEL7
 Feature: Autoremoval of unneeded packages
 
   @setup

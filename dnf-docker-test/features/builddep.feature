@@ -52,6 +52,7 @@ Feature: Builddep
          | State     | Packages |
          | installed | TestC    |
 
+  @noRHEL7
   Scenario: Builddep with rich dependency
        When I save rpmdb
         And I successfully run "dnf -y builddep /tmp/test.spec --define 'buildrequires (TestD and TestE)'"
