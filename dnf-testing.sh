@@ -60,7 +60,7 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdrpRc: -l help,devel,podman,reserve,reserveonfail,noxfail,container:,tags: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,container:,tags: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
