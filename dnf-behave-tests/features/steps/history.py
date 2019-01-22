@@ -87,8 +87,24 @@ def step_impl(context, spec=None):
                         break
                 else:
                     raise AssertionError(
-                        '[history] "{0}" not matched as "{1}".'.format(
-                            pkg, key))
+                        '[history] "{0}" not matched as "{1}".'.format(pkg, key))
         else:
             raise AssertionError('[history] key "{0}" not found.'.format(key))
 
+@then('history userinstalled should')
+def step_impl(context):
+    check_context_table(context, ["Action", "Package"])
+    cmd = " ".join(context.dnf.get_cmd(context) + ["history", "userinstalled"])
+    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=True)
+
+    for action, package in context.table:
+        if action == 'match':
+            if not package in cmd_stdout:
+                raise AssertionError(
+                    '[history] package "{0}" not matched as userinstalled.'.format(package))
+        elif action == 'not match':
+            if package in cmd_stdout:
+                raise AssertionError(
+                    '[history] package "{0}" matched as userinstalled.'.format(package))
+        else:
+            raise ValueError('Invalid action "{0}".'.format(action))
