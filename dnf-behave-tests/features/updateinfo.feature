@@ -105,14 +105,17 @@ Examples:
 
 Scenario: updateinfo list all security
   Given I use the repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+  Given I use the repository "dnf-ci-fedora-updates-testing"
+   Then I execute dnf with args "install glibc flac CQRlib"
    Then the exit code is 0
   Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list all bugfix"
+   When I execute dnf with args "updateinfo list all security"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2018-318f184000\s+bugfix\s+glibc-2.28-26.fc29.x86_64"
-   Then stdout does not contain "FEDORA-2018-318f184001\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-
+   Then stdout contains "FEDORA-2018-318f184113\s+Moderate/Sec.\s+CQRlib-1.1.2-16.fc29.x86_64"
+   Then stdout does not contain "i\s+FEDORA-2018-318f184112\s+enhancement\s+flac-1.4.0-1.fc29.x86_64"
+   Then stdout does not contain "\s+FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
+   Then stdout does not contain "FEDORA-2018-318f184000 \s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+                 
 
 Scenario: updateinfo list updates
   Given I use the repository "dnf-ci-fedora"
