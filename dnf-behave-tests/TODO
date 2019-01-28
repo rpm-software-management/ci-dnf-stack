@@ -20,3 +20,9 @@ history-update.feature
 
 Dnf is not able to rollback the very first transaction in history. Needs
 investigation / fix.
+
+rich-dependencies.feature
+=========================
+
+Docker tests used rpm to install some of the packages. Does it matter?
+rich-8.feature - I didn't get why it exists
