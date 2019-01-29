@@ -29,6 +29,7 @@ class DNFContext(object):
         self.module_platform_id = userdata.get("module_platform_id", None)
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
         self.fixturesdir = FIXTURES_DIR
+        self.disable_repos_option = "--disablerepo='*'"
 
     def __del__(self):
         if self.delete_installroot:
@@ -49,6 +50,9 @@ class DNFContext(object):
         if name in self:
             return self[name]
         return getattr(self, name, None)
+
+    def _set(self, name, value):
+        return setattr(self, name, value)
 
     def get_cmd(self, context):
         result = [self.dnf_command]
@@ -74,7 +78,7 @@ class DNFContext(object):
         if module_platform_id:
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
-        result.append("--disablerepo='*'")
+        result.append(self.disable_repos_option)
         repos = self._get(context, "repos") or []
         for repo in repos:
             result.append("--enablerepo='{0}'".format(repo))
