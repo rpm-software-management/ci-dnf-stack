@@ -134,6 +134,7 @@ Feature: Default non-enabled streams can be overridden by dependency requests
           | state   | enabled |
           | stream  | stream1 |
 
+  @bz1648839
   Scenario: Enabling a default stream depending on a non-default stream
       Given I successfully run "dnf -y module reset ModuleA ModuleR"
         And a file "/etc/dnf/modules.defaults.d/ModuleA.yaml" with
