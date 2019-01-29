@@ -90,6 +90,8 @@ def parse_transaction_table(lines):
     Return {action: set([rpms])}
     """
     result = {}
+    for action in ACTIONS.values():
+        result[action] = set()
 
     table_begin = find_transaction_table_begin(lines)
     lines = lines[table_begin:]
@@ -120,7 +122,7 @@ def parse_transaction_table(lines):
             if action.startswith('group-'):
                 lines.pop(0)
                 group = line.strip()
-                result.setdefault(action, set()).add(group)
+                result[action].add(group)
                 break
 
             result_action = action
@@ -139,7 +141,7 @@ def parse_transaction_table(lines):
             match_dict["evr"] = normalize_epoch(match_dict["evr"])
             nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
             rpm = RPM(nevra)
-            result.setdefault(result_action, set()).add(rpm)
+            result[result_action].add(rpm)
 
     return result
 
