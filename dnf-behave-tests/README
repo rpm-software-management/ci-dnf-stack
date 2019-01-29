@@ -21,6 +21,20 @@ Project layout
 Test repositories
 -----------------
 
+dnf-ci-fedora-updates-testing
+    purpose:
+        Additional new versions for packages and most importantly contains
+        identical package as dnf-ci-fedora-updates (CQRlib-1.1.2-16.fc29.spec)
+        created by symlink, which is needed by repo-packages-remove-or-reinstall
+        feature
+    packages:
+        CQRlib:
+            symlinked to CQRlib in dnf-ci-fedora-updates
+        flac:
+            additional new version
+        kernel:
+            additional new version
+
 dnf-ci-thirdparty
 dnf-ci-thirdparty-updates
     purpose:
