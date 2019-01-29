@@ -15,6 +15,11 @@ def when_I_execute_dnf_with_args(context, args):
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
 
+@behave.given("I do not disable all repos")
+def given_I_do_not_disable_all_repos(context):
+    context.dnf._set("disable_repos_option", "")
+
+
 @behave.given("I enable plugin \"{plugin}\"")
 def given_enable_plugin(context, plugin):
     if "plugins" not in context.dnf:
