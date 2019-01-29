@@ -9,6 +9,7 @@ URL:            None
 Summary:        The made up package for swap testing
 
 Requires:       CQRlib
+Enhances:       CQRlib-devel
 
 %description
 Package is named like this, so wild cards can be tested in swap tests
