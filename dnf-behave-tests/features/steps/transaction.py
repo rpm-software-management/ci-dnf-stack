@@ -2,6 +2,7 @@ import behave
 
 from common import *
 
+
 def check_transaction(context, mode):
     check_context_table(context, ["Action", "Package"])
 
@@ -31,22 +32,6 @@ def check_transaction(context, mode):
                 raise AssertionError("[rpmdb] Package %s not '%s'; Possible candidates: %s" % (
                                      rpm, action, candidates))
 
-    if mode == 'exact_match':
-        for rpmdb_action in sorted(rpmdb_transaction):
-            if rpmdb_action in ["absent", "present", "unchanged", "changed"]:
-                continue
-            if rpmdb_action in ["downgraded", "upgraded"]:
-                continue
-            if rpmdb_action in ["broken"]:
-                continue
-            checked_nevras = checked_rpmdb.get(rpmdb_action, set())
-            rpmdb_nevras = set([str(i) for i in rpmdb_transaction[rpmdb_action]])
-            delta = rpmdb_nevras.difference(checked_nevras)
-            if delta:
-                raise AssertionError(
-                    "Following packages weren't captured in the table for action '%s': %s" % (
-                        rpmdb_action, ", ".join(sorted(delta))))
-
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
     try:
@@ -69,6 +54,15 @@ def check_transaction(context, mode):
                     candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
                     raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (
                                          rpm, action, candidates))
+
+    if mode == 'exact_match':
+        context_table = parse_context_table(context)
+        for action, rpms in dnf_transaction.items():
+            delta = rpms.difference(context_table[action])
+            if delta:
+                raise AssertionError(
+                        "Following packages weren't captured in the table for action '%s': %s" % (
+                        action, ", ".join([str(rpm) for rpm in sorted(delta)])))
 
 
 @behave.then("Transaction is following")
