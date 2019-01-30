@@ -5,7 +5,7 @@ from .rpm import normalize_epoch
 from .rpm import RPM
 
 
-SEPARATOR_RE = re.compile(r"^=+$")
+SEPARATOR_RE = re.compile(r"^[> ]*=+$")
 ACTION_RE = re.compile(r"^([^ ].+):$")
 DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
