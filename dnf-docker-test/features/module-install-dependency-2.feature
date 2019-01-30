@@ -7,7 +7,7 @@ Feature: Install a module with modular dependencies
         And I enable repository "modularityY"
         And I successfully run "dnf makecache"
 
-  Scenario: Install a module that requires a module, specifying one stream
+  Scenario: Install a module that requires a module, specifying one stream in Requires
        When I successfully run "dnf -y module install ModuleYA:f26/default"
        Then a module ModuleYA config file should contain
            | Key      | Value    |
@@ -26,7 +26,7 @@ Feature: Install a module with modular dependencies
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1651701
   @bz1651701
-  Scenario: Install a module that requires a module, specifying multiple streams
+  Scenario: Install a module that requires a module, specifying multiple streams in Requires
        When I successfully run "dnf -y module install ModuleYB:f26/default"
        Then a module ModuleYB config file should contain
            | Key      | Value    |
@@ -42,7 +42,7 @@ Feature: Install a module with modular dependencies
         And I successfully run "dnf -y module remove ModuleX"
         And I successfully run "dnf -y module reset ModuleX"
 
-  Scenario: Install a module that requires a module, not specifying any stream
+  Scenario: Install a module that requires a module, not specifying any stream in Requires
        When I successfully run "dnf -y module install ModuleYC:f26/default"
        Then a module ModuleYC config file should contain
            | Key      | Value    |
@@ -58,7 +58,7 @@ Feature: Install a module with modular dependencies
         And I successfully run "dnf -y module remove ModuleX"
         And I successfully run "dnf -y module reset ModuleX"
 
-  Scenario: Install a module that requires a module, excluding one stream
+  Scenario: Install a module that requires a module, excluding one stream in Requires
        When I successfully run "dnf -y module install ModuleYD:f26/default"
        Then a module ModuleYD config file should contain
            | Key      | Value    |
@@ -74,7 +74,7 @@ Feature: Install a module with modular dependencies
         And I successfully run "dnf -y module remove ModuleX"
         And I successfully run "dnf -y module reset ModuleX"
 
-  Scenario: Install a module that requires a module, excluding multiple streams
+  Scenario: Install a module that requires a module, excluding multiple streams in Requires
        When I successfully run "dnf -y module install ModuleYE:f26/default"
        Then a module ModuleYE config file should contain
            | Key      | Value    |
@@ -91,17 +91,17 @@ Feature: Install a module with modular dependencies
         And I successfully run "dnf -y module remove ModuleX"
         And I successfully run "dnf -y module reset ModuleX"
 
-  Scenario: Install a module that requires a module, excluding all of the streams
+  Scenario: Install a module that requires a module, excluding all of the streams in Requires
        When I run "dnf -y module install ModuleYF:f26/default"
        Then the command should fail
         And the command stderr should match regexp "Problem: module ModuleYF:f26:1:-0.noarch requires module\(ModuleX\), but none of the providers can be installed"
 
-  Scenario: Install a module that requires a module, specifying nonexisting stream
+  Scenario: Install a module that requires a module, specifying nonexisting stream in Requires
        When I run "dnf -y module install ModuleYG:f26/default"
        Then the command should fail
         And the command stderr should match regexp "nothing provides module\(ModuleX:nonexistent\) needed by module ModuleYG:f26:1:-0.noarch"
 
-  Scenario: Install a module that requires a module, excluding nonexisting stream
+  Scenario: Install a module that requires a module, excluding nonexisting stream in Requires
        When I successfully run "dnf -y module install ModuleYH:f26/default"
        Then a module ModuleYH config file should contain
            | Key      | Value    |
