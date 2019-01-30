@@ -71,7 +71,7 @@ Scenario: Switch groups by swap command
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | remove        | CQRlib-extension-0:1.5-2.x86_64           |
         | install       | SuperRipper-extension-0:1.1-1.x86_64      |
         | install       | SuperRipper-0:1.0-1.x86_64                |
