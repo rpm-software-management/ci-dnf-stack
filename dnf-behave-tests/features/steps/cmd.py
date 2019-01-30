@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 
@@ -5,6 +6,18 @@ import behave
 
 from common import *
 
+
+@behave.step("I execute dnf with args \"{args}\" from repo \"{repo}\"")
+def when_I_execute_dnf_with_args_from_repo(context, repo, args):
+    repodir = os.path.join(context.dnf.repos_location, repo)
+
+    cmd = " ".join(context.dnf.get_cmd(context))
+    cmd += " " + args.format(context=context)
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+    context.cmd = cmd
+    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(
+        cmd, shell=True, cwd=repodir)
+    
 
 @behave.step("I execute dnf with args \"{args}\"")
 def when_I_execute_dnf_with_args(context, args):
