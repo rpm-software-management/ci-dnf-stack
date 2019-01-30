@@ -2,7 +2,7 @@ Feature: Check when there is a package with missing dependency
 
 
 Background: Force installation of an RPM without dependencies
-   When I execute "rpm" with args "-i --root={context.dnf.installroot} --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm"
+   When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm"
    Then the exit code is 0
 
 
