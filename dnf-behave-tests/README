@@ -21,6 +21,25 @@ Project layout
 Test repositories
 -----------------
 
+dnf-ci-scriptlets
+    purpose:
+        Packages to test DNFs reaction on lua scriptlets half failing
+        and half succeeding.
+    pakcages:
+        Package-pre-ok
+        Package-pre-fail
+        Package-pretrans-ok
+        Package-pretrans-fail
+        Package-post-ok
+        Package-post-fail
+        Package-posttrans-ok
+        Package-posttrans-fail
+        Package-preun-ok
+        Package-preun-fail
+        Package-postun-ok
+        Package-postun-fail
+        
+
 dnf-ci-fedora-updates-testing
     purpose:
         Additional new versions for packages and most importantly contains
