@@ -99,3 +99,21 @@ Feature: DNF/Behave test Repository packages info
               License      : Public Domain
               Description  : Empty.
               """
+
+    Scenario: Test repo-pkgs compatibility command - list test repo extras
+         When I successfully run "dnf -q repo-pkgs test info --extras"
+         Then the command stdout should match
+              """
+              Extra Packages
+              Name         : TestA
+              Version      : 1
+              Release      : 1
+              Arch         : noarch
+              Size         : 0.0
+              Source       : TestA-1-1.src.rpm
+              Repo         : @System
+              From repo    : test
+              Summary      : Empty
+              License      : Public Domain
+              Description  : Empty.
+              """
