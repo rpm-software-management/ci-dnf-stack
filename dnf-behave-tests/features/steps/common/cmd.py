@@ -1,7 +1,7 @@
 import subprocess
 
 
-def run(cmd, shell=False, can_fail=True):
+def run(cmd, shell=False, can_fail=True, cwd=None):
     """
     Run a command.
     Return exitcode, stdout, stderr
@@ -10,6 +10,7 @@ def run(cmd, shell=False, can_fail=True):
     proc = subprocess.Popen(
         cmd,
         shell=shell,
+        cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,

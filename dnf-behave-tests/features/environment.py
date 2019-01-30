@@ -8,6 +8,7 @@ FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fi
 DEFAULT_DNF_COMMAND = "dnf"
 DEFAULT_CONFIG = os.path.join(FIXTURES_DIR, "dnf.conf")
 DEFAULT_REPOSDIR = os.path.join(FIXTURES_DIR, "repos.d")
+DEFAULT_REPOS_LOCATION = os.path.join(FIXTURES_DIR, "repos")
 DEFAULT_RELEASEVER="29"
 
 
@@ -28,6 +29,7 @@ class DNFContext(object):
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", None)
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
+        self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
         self.disable_repos_option = "--disablerepo='*'"
 
