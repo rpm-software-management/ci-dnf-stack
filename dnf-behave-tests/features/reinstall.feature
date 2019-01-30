@@ -17,8 +17,7 @@ Scenario: Reinstall an RPM from the same repository
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-         #reinstalled
-        | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
 Scenario: Reinstall an RPM from different repository
@@ -27,8 +26,7 @@ Scenario: Reinstall an RPM from different repository
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-         #reinstalled
-        | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
 Scenario: Reinstall an RPM that is not available
