@@ -1,10 +1,9 @@
-Feature: Upgrade single RPMs
+Feature: Upgrade RPMs by pkgspec
 
 
-Background: Install RPMs
+Background: Install glibc
   Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
-   When I execute dnf with args "install glibc flac wget SuperRipper"
+   When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -14,17 +13,35 @@ Background: Install RPMs
         | install       | glibc-0:2.28-9.fc29.x86_64                |
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-        | install       | flac-0:1.3.2-8.fc29.x86_64                |
-        | install       | wget-0:1.19.5-5.fc29.x86_64               |
-        | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.2-1.fc29.noarch               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
 
+
+Scenario Outline: Upgrade an RPM by <pkgspec-type>
+  Given I use the repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade <pkgspec>"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
+        | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
+        | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 @tier1
-Scenario: Upgrade one RPM
+Examples: Name
+  | pkgspec-type                    | pkgspec                       |
+  | name                            | glibc                         |
+
+Examples: Other pkgspecs
+  | pkgspec-type                    | pkgspec                       |
+  | name-version                    | glibc-2.28                    |
+  | name-version-release            | glibc-2.28-26.fc29            |
+  | name-version-release.arch       | glibc-2.28-26.fc29.x86_64     |
+  | name-epoch:version-release.arch | glibc-0:2.28-26.fc29.x86_64   |
+  | name.arch                       | glibc.x86_64                  |
+
+
+Scenario: Upgrade an RPM by name containing dashes
   Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade glibc"
+   When I execute dnf with args "upgrade glibc-common"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -33,31 +50,12 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
-Scenario: Upgrade two RPMs
+Scenario: Upgrade an RPM by pkgspec contining wildcards
   Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade glibc flac"
+   When I execute dnf with args "upgrade glibc-*.x86_64"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
-
-
-@tier1
-Scenario: Upgrade all RPMs from multiple repositories
-  Given I use the repository "dnf-ci-fedora-updates"
-  Given I use the repository "dnf-ci-fedora-updates-testing"
-    And I use the repository "dnf-ci-thirdparty-updates"
-   When I execute dnf with args "upgrade"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                                   |
-        | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
-        | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
-        | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgrade       | flac-0:1.4.0-1.fc29.x86_64                |
-        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
-        | upgrade       | SuperRipper-0:1.2-1.x86_64                |
-        | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
