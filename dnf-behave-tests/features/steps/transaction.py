@@ -22,6 +22,8 @@ def check_transaction(context, mode):
             checked_rpmdb.setdefault(action, set()).add(nevra)
             if action.startswith('group-'):
                 continue
+            if action == "reinstall":
+                action = "unchanged"
             rpm = RPM(nevra)
             if action == "absent":
                 if rpm in rpmdb_transaction["present"]:
