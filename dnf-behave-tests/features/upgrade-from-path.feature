@@ -1,10 +1,9 @@
-Feature: Upgrade single RPMs
+Feature: Upgrade RPMs from path
 
 
-Background: Install RPMs
+Background: Install glibc
   Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
-   When I execute dnf with args "install glibc flac wget SuperRipper"
+   When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -14,17 +13,11 @@ Background: Install RPMs
         | install       | glibc-0:2.28-9.fc29.x86_64                |
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-        | install       | flac-0:1.3.2-8.fc29.x86_64                |
-        | install       | wget-0:1.19.5-5.fc29.x86_64               |
-        | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.2-1.fc29.noarch               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
 
 
-@tier1
-Scenario: Upgrade one RPM
+Scenario: Upgrade an RPM from absolute path on disk
   Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade glibc"
+   When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc-2.28-26.fc29.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -33,31 +26,22 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
-Scenario: Upgrade two RPMs
-  Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade glibc flac"
+Scenario: Upgrade an RPM from relative path on disk
+   When I execute dnf with args "upgrade x86_64/glibc-2.28-26.fc29.x86_64.rpm x86_64/glibc-common-2.28-26.fc29.x86_64.rpm x86_64/glibc-all-langpacks-2.28-26.fc29.x86_64.rpm" from repo "dnf-ci-fedora-updates"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@tier1
-Scenario: Upgrade all RPMs from multiple repositories
+Scenario: Upgrade an RPM from path on disk containing wildcards
   Given I use the repository "dnf-ci-fedora-updates"
-  Given I use the repository "dnf-ci-fedora-updates-testing"
-    And I use the repository "dnf-ci-thirdparty-updates"
-   When I execute dnf with args "upgrade"
+   When I execute dnf with args "upgrade x86_64/glibc*" from repo "dnf-ci-fedora-updates"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgrade       | flac-0:1.4.0-1.fc29.x86_64                |
-        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
-        | upgrade       | SuperRipper-0:1.2-1.x86_64                |
-        | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
