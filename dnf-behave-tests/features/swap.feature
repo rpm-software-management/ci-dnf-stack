@@ -61,6 +61,7 @@ Scenario: Switch groups by swap command
         | Action        | Package                                   |
         | install       | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | install       | CQRlib-extension-0:1.5-2.x86_64           |
+        | group-install | CQRlib-non-devel                          |
    When I execute dnf with args "install CQRlib-devel"
    Then the exit code is 0
     And Transaction is following
@@ -78,3 +79,5 @@ Scenario: Switch groups by swap command
         | install       | flac-0:1.3.3-3.fc29.x86_64                |
         | install       | wget-0:1.19.6-5.fc29.x86_64               |
         | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
+        | group-remove  | CQRlib-non-devel                          |
+        | group-install | SuperRipper-and-deps                      |
