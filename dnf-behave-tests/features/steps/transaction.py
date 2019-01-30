@@ -40,6 +40,8 @@ def check_transaction(context, mode):
         dnf_transaction = parse_transaction_table(lines)
     except RuntimeError:
         dnf_transaction = {}
+        for action in ACTIONS.values():
+            dnf_transaction[action] = set()
     for action, nevras in context.table:
         if action in ["absent", "present", "unchanged", "changed"]:
             continue
