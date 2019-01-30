@@ -13,7 +13,7 @@ Background: Force installation of an obsoleted RPM
         | install       | glibc-0:2.28-9.fc29.x86_64                |
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-   When I execute "rpm" with args "-i --root={context.dnf.installroot} --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/x86_64/glibc-profile-2.3.1-10.x86_64.rpm"
+   When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/x86_64/glibc-profile-2.3.1-10.x86_64.rpm"
    Then the exit code is 0
 
 

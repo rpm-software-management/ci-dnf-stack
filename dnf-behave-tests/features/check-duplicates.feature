@@ -8,7 +8,7 @@ Background: Force installation of two different versions of an RPM
     And Transaction is following
         | Action        | Package                          |
         | install       | flac-0:1.3.3-1.fc29.x86_64       |
-   When I execute "rpm" with args "-i --root={context.dnf.installroot} {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-3.fc29.x86_64.rpm"
+   When I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-3.fc29.x86_64.rpm"
    Then the exit code is 0
 
 

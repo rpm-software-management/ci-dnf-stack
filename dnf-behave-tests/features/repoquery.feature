@@ -2,7 +2,7 @@ Feature: Test for dnf repoquery, options --all, --installed, --available, --upgr
 
 # --extras: installed pkgs, not from known repos
 Scenario: dnf repoquery --extras (when there are such pkgs) Given I use the repository "dnf-ci-fedora"
- When I execute "rpm" with args "-i --root={context.dnf.installroot} --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
+ When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
  When I execute dnf with args "repoquery --extras"
  Then stdout contains "setup-0:2.12.1-1.fc29.noarch"
  Then stdout does not contain "\*system\*"
