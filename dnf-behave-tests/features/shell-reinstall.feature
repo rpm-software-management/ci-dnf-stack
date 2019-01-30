@@ -18,8 +18,7 @@ Scenario: Using dnf shell, reinstall an RPM
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                   |
-         #reinstalled
-        | unchanged     | flac-0:1.3.2-8.fc29.x86_64                |
+        | reinstall     | flac-0:1.3.2-8.fc29.x86_64                |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
@@ -30,10 +29,8 @@ Scenario: Using dnf shell, reinstall multiple RPMs
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                   |
-         #reinstalled
-        | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
-         #reinstalled
-        | unchanged     | flac-0:1.3.2-8.fc29.x86_64                |
+        | reinstall     | filesystem-0:3.9-2.fc29.x86_64            |
+        | reinstall     | flac-0:1.3.2-8.fc29.x86_64                |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 

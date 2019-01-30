@@ -16,8 +16,7 @@ Scenario: Reinstall a dependency, and then remove the main package
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-         #reinstalled
-        | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
    When I execute dnf with args "remove CQRlib-devel"
    Then the exit code is 0
     And Transaction is following

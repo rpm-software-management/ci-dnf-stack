@@ -29,8 +29,7 @@ Given I use the repository "dnf-ci-fedora-updates-testing"
       | remove        | filesystem-0:3.9-2.fc29.x86_64            |
       | remove        | setup-0:2.12.1-1.fc29.noarch              |
       | remove        | libzstd-0:1.3.6-1.fc29.x86_64             |
-       #reinstalled
-      | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+      | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
 Scenario: Remove single package from repository
@@ -59,5 +58,4 @@ Given I use the repository "dnf-ci-fedora-updates-testing"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                                   |
-       #reinstalled
-      | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+      | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
