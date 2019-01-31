@@ -9,6 +9,7 @@ SEPARATOR_RE = re.compile(r"^[> ]*=+$")
 ACTION_RE = re.compile(r"^([^ ].+):$")
 DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
+MODULE_LIST_HEADER_RE = re.compile(r"^(Name)\s+(Stream)\s+(Profiles)\s+(Summary)\s*$")
 
 OBSOLETE_REPLACING_LABEL = {
     'en_US': 'replacing',
@@ -163,4 +164,47 @@ def parse_history_info(lines):
             result[key] = val
         else:
             result[None].append(line.strip())
+    return result
+
+
+def parse_module_list(lines):
+    """
+    Parse `module list` command output.
+    Returns {repository: [{'name': module_name, 'stream': module_stream,
+                           'profiles': set([module profiles])}]}
+    """
+    def get_column(idx, columns, line):
+        if idx < (len(columns) - 1):
+            return line[columns[idx]:columns[idx+1]].strip()
+        else:
+            return line[columns[idx:]].strip()
+
+    result = dict()
+    idx = 0
+    repository = None
+    while idx < len(lines) - 2:
+        line1 = lines[idx].strip()
+        line2 = lines[idx + 1].strip()
+        if not line1:
+            # empty line separates the repositories
+            repository = None
+        match = MODULE_LIST_HEADER_RE.match(line2)
+        if match:
+            # table header for a new repository found
+            repository = line1
+            columns=[match.start(i+1) for i in range(4)]
+            result[repository] = []
+            idx += 2
+            continue
+        if repository:
+            # record module line for repository
+            module = dict()
+            module['repository'] = repository
+            module['name'] = get_column(0, columns, line1)
+            module['stream'] = get_column(1, columns, line1)
+            module['profiles'] = set(
+                [p.strip()
+                 for p in get_column(2, columns, line1).split(',')])
+            result[repository].append(module)
+        idx += 1
     return result

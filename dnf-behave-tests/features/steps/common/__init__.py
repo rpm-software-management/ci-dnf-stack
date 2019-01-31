@@ -3,9 +3,10 @@ from .behave_ext import parse_context_table
 from .cmd import run
 from .checksum import sha256_checksum
 from .dnf import ACTIONS
-from .dnf import parse_transaction_table
-from .dnf import parse_history_list
 from .dnf import parse_history_info
+from .dnf import parse_history_list
+from .dnf import parse_module_list
+from .dnf import parse_transaction_table
 from .rpm import RPM
 from .rpm import diff_rpm_lists
 from .rpmdb import get_rpmdb_rpms
