@@ -91,8 +91,8 @@ Feature: Test for installonly packages upgrade
          | unchanged | kernel-dummy/5-2,kernel-dummy/5-3,kernel-dummy-vm/1-2,kernel-dummy-vm/1-3 |
          | installed | kernel-dummy/5-4,kernel-dummy-vm/1-4 |
 
-  @bz1668256
-  Scenario: run 'dnf upgrade' when there are no installonly upgrades available (installonly_limit reached)
+  @bz1668256 @bz1616191 @bz1639429
+  Scenario: run 'dnf upgrade kernel-dummy' when there are no installonly upgrades available (installonly_limit reached)
        When I save rpmdb
         And I successfully run "dnf -y upgrade"
        Then the command stderr should not match regexp "cannot install both kernel-dummy"
