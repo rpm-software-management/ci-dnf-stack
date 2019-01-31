@@ -11,6 +11,7 @@ DIST=".fc29"
 REPODIR="$DIR/../repos"
 GROUPS_FILENAME="comps.xml"
 UPDATEINFO_FILENAME="updateinfo.xml"
+MODULES_FILENAME="modules.yaml"
 rm -rf "$REPODIR"
 mkdir -p "$REPODIR"
 
@@ -31,6 +32,9 @@ for path in $REPODIR/*; do
     createrepo_c $ARGS .
     if [ -f ../../specs/$REPO/$UPDATEINFO_FILENAME ]; then
         modifyrepo ../../specs/$REPO/$UPDATEINFO_FILENAME ./repodata
+    fi
+    if [ -f ../../specs/$REPO/$MODULES_FILENAME ]; then
+        modifyrepo --mdtype=modules ../../specs/$REPO/$MODULES_FILENAME ./repodata
     fi
     popd
 done
