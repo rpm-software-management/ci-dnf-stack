@@ -26,3 +26,8 @@ rich-dependencies.feature
 
 Docker tests used rpm to install some of the packages. Does it matter?
 rich-8.feature - I didn't get why it exists
+
+module-list-1.feature
+=====================
+
+Skipped strange test I can see only modules' packages, not modules themselves in the output of 'dnf list'
