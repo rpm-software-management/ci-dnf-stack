@@ -1,0 +1,121 @@
+Dummy repo                                      0.0  B/s |   0  B     00:00    
+Last metadata expiration check: 3:35:18 ago on Čt 31. ledna 2019, 07:17:45 CET.
+Fedora Modular 29 - x86_64
+Name             Stream         Profiles                                        Summary                                                                     
+ant              1.10           default [d]                                     Java build tool                                                             
+avocado          latest         minimal, default                                Framework with tools and libraries for Automated Testing                    
+avocado          stable         minimal, default                                Framework with tools and libraries for Automated Testing                    
+container-tools  2017.0         default                                         Common tools and dependencies for container runtimes                        
+container-tools  2018.0         default                                         Common tools and dependencies for container runtimes                        
+cri-o            1.11           default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+cri-o            2017.0         default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+cri-o            2018.0         default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+django           1.6            python2_development, default [d]                A high-level Python Web framework                                           
+docker           2017.0         default                                         Module for docker runtime and docker-distribution                           
+dwm              latest         user, default [d]                               Dynamic window manager for X                                                
+dwm              6.0            user, default [d]                               Dynamic window manager for X                                                
+dwm              6.1 [d]        user, default [d]                               Dynamic window manager for X                                                
+eog              master         default                                         Eye of GNOME Application Module                                             
+flatpak-runtime  f29            sdk-base, buildroot, sdk, runtime, runtime-base Flatpak Runtime                                                             
+gcsf             master         default                                         FUSE file system based on Google Drive                                      
+gimp             2.10           devel, default [d]                              GIMP                                                                        
+golang           1.10           default                                         The Go Programming Language                                                 
+golang-ecosystem 2017.0         default                                         The ecosystem of packages for the Go programming language                   
+golang-ecosystem 2018.0         default                                         The ecosystem of packages for the Go programming language                   
+hub              pre-release    default                                         A command-line wrapper for git with github shortcuts                        
+kubernetes       openshift-3.10 default                                         OpenShift Container Management                                              
+kubernetes       1.10           default                                         Container cluster management                                                
+libgit2          0.26                                                           Library implementation of Git                                               
+libgit2          0.27 [e]                                                       Library implementation of Git                                               
+lizardfs         devel                                                          Distributed, fault tolerant file system                                     
+mariadb          10.1           client, server, default                         MariaDB Module                                                              
+maven            3.5            default [d]                                     Java project management and project comprehension tool                      
+meson            master         default                                         The Meson Build system                                                      
+mongodb          3.4            client, server, default                         MongoDB Module                                                              
+mongodb          3.6            client, server, default                         MongoDB Module                                                              
+mysql            5.7            client, server, default                         MySQL Module                                                                
+ninja            master         default                                         Small build system with a focus on speed                                    
+nodejs           8 [e]          development, minimal, default [d]               Javascript runtime                                                          
+nodejs           10             development, minimal, default                   Javascript runtime                                                          
+perl             5.24           minimal, default                                Practical Extraction and Report Language                                    
+perl             5.26           minimal, default                                Practical Extraction and Report Language                                    
+perl-bootstrap   5.24                                                           Perl bootstrap module for bootrapping Perl module                           
+perl-bootstrap   5.26                                                           Perl bootstrap module for bootrapping Perl module                           
+pki              10.6           default                                         Dogtag PKI                                                                  
+postgresql       9.6            client, server, default                         PostgreSQL module                                                           
+reviewboard      2.5            server, default [d]                             A web-based code review tool                                                
+reviewboard      3.0            server, default [d]                             A web-based code review tool                                                
+ripgrep          master         default                                         Line oriented search tool using Rust's regex library                        
+scala            2.10           default                                         A hybrid functional/object-oriented language for the JVM                    
+stratis          master         default                                         Stratis Storage                                                             
+stratis          1 [d]          default [d]                                     Stratis Storage                                                             
+testmodule       master         default                                         A test module in all its beautiful beauty                                   
+
+Fedora Modular 29 - x86_64 - Updates
+Name             Stream         Profiles                                        Summary                                                                     
+ant              1.10           default [d]                                     Java build tool                                                             
+avocado          latest         minimal, default                                Framework with tools and libraries for Automated Testing                    
+avocado          stable         minimal, default                                Framework with tools and libraries for Automated Testing                    
+bat              latest [d]     default [d]                                     cat(1) clone with wings                                                     
+byteman          byteman        default                                         Java agent-based bytecode injection tool                                    
+container-tools  2017.0         default                                         Common tools and dependencies for container runtimes                        
+container-tools  2018.0         default                                         Common tools and dependencies for container runtimes                        
+cri-o            1.11           default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+cri-o            2017.0         default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+cri-o            2018.0         default                                         Kubernetes Container Runtime Interface for OCI-based containers             
+django           1.6            python2_development, default [d]                A high-level Python Web framework                                           
+docker           2017.0         default                                         Module for docker runtime and docker-distribution                           
+dwm              latest         user, default [d]                               Dynamic window manager for X                                                
+dwm              6.0            user, default [d]                               Dynamic window manager for X                                                
+dwm              6.1 [d]        user, default [d]                               Dynamic window manager for X                                                
+eog              master         default                                         Eye of GNOME Application Module                                             
+fish             3              default                                         Friendly interactive shell                                                  
+flatpak-runtime  f29            sdk-base, buildroot, sdk, runtime, runtime-base Flatpak Runtime                                                             
+gcsf             master         default                                         FUSE file system based on Google Drive                                      
+ghc              8.4            minimal, small, default                         Haskell GHC 8.4                                                             
+ghc              8.6            minimal, small, default                         Haskell GHC 8.6                                                             
+gimp             2.10           devel, default [d]                              GIMP                                                                        
+golang           1.10           default                                         The Go Programming Language                                                 
+golang-ecosystem 2017.0         default                                         The ecosystem of packages for the Go programming language                   
+golang-ecosystem 2018.0         default                                         The ecosystem of packages for the Go programming language                   
+hub              pre-release    default                                         A command-line wrapper for git with github shortcuts                        
+jmc              latest [d]     core, default [d]                               Java Mission Control is a profiling and diagnostics tool for the Hotspot JVM
+kubernetes       openshift-3.10 default                                         OpenShift Container Management                                              
+kubernetes       1.10           default                                         Container cluster management                                                
+libgit2          0.26                                                           Library implementation of Git                                               
+libgit2          0.27 [e]                                                       Library implementation of Git                                               
+lizardfs         devel                                                          Distributed, fault tolerant file system                                     
+mariadb          10.1           client, server, default                         MariaDB Module                                                              
+mariadb          10.4           devel, default                                  MariaDB: a very fast and robust SQL database server                         
+maven            3.5            default [d]                                     Java project management and project comprehension tool                      
+meson            latest         default                                         The Meson Build system                                                      
+meson            master         default                                         The Meson Build system                                                      
+mongodb          3.4            client, server, default                         MongoDB Module                                                              
+mongodb          3.6            client, server, default                         MongoDB Module                                                              
+mysql            5.7            client, server, default                         MySQL Module                                                                
+ninja            latest         default                                         Small build system with a focus on speed                                    
+ninja            master         default                                         Small build system with a focus on speed                                    
+nodejs           8 [e]          development, minimal, default [d]               Javascript runtime                                                          
+nodejs           10             development, minimal, default                   Javascript runtime                                                          
+nodejs           11             development, minimal, default                   Javascript runtime                                                          
+octave           4.4            buildroot, default                              A high-level language for numerical computations                            
+openmpi          2.1                                                            Open Message Passing Interface                                              
+perl             5.24           minimal, default                                Practical Extraction and Report Language                                    
+perl             5.26           minimal, default                                Practical Extraction and Report Language                                    
+perl-bootstrap   5.24                                                           Perl bootstrap module for bootrapping Perl module                           
+perl-bootstrap   5.26                                                           Perl bootstrap module for bootrapping Perl module                           
+pki              10.6           default                                         Dogtag PKI                                                                  
+postgresql       9.6            client, server, default                         PostgreSQL module                                                           
+postgresql       10             client, server, default                         PostgreSQL module                                                           
+postgresql       11             client, server, default                         PostgreSQL module                                                           
+reviewboard      2.5            server, default [d]                             A web-based code review tool                                                
+reviewboard      3.0            server, default [d]                             A web-based code review tool                                                
+ripgrep          latest         default                                         Line oriented search tool using Rust's regex library                        
+ripgrep          master         default                                         Line oriented search tool using Rust's regex library                        
+scala            2.10           default                                         A hybrid functional/object-oriented language for the JVM                    
+skychart         devel          additional-dso, additional-stars, full, default Planetarium software for the advanced amateur astronomer                    
+stratis          master         default                                         Stratis Storage                                                             
+stratis          1 [d]          default [d]                                     Stratis Storage                                                             
+testmodule       master         default                                         A test module in all its beautiful beauty                                   
+
+Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled
