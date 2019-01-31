@@ -17,6 +17,12 @@ REPOS = [
     "updates-testing",
     "updates-testing-debuginfo",
     "updates-testing-source",
+    "fedora-modular",
+    "fedora-modular-debuginfo",
+    "fedora-modular-source",
+    "updates-modular",
+    "updates-modular-debuginfo",
+    "updates-modular-source",
 ]
 
 
@@ -33,6 +39,14 @@ PACKAGES = [
     ["updates", "glibc", "dnf-ci-fedora-updates"],
     ["updates", "zchunk", "dnf-ci-fedora-updates"],
     ["fedora", "libzstd", "dnf-ci-fedora-updates"],
+
+    # dnf-ci-fedora-modular
+#    ["fedora-modular", "nodejs", "dnf-ci-fedora-modular"],
+#    ["fedora-modular", "postgresql", "dnf-ci-fedora-modular"],
+    
+    # dnf-ci-fedora-modular-updates
+    ["updates-modular", "nodejs", "dnf-ci-fedora-modular-updates"],
+    ["updates-modular", "postgresql", "dnf-ci-fedora-modular-updates"],
 ]
 
 cache_dir = os.path.abspath("_cache")

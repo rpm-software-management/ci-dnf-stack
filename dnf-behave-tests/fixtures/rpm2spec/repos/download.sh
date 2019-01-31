@@ -7,3 +7,7 @@ dnf reposync --repoid=fedora --repoid=fedora-debuginfo --repoid=fedora-source -x
 dnf reposync --repoid=updates --repoid=updates-debuginfo --repoid=updates-source -x '*' --destdir . --download-metadata
 
 dnf reposync --repoid=updates-testing --repoid=updates-testing-debuginfo --repoid=updates-testing-source -x '*' --destdir . --download-metadata
+
+dnf reposync --repoid=fedora-modular --repoid=fedora-modular-debuginfo --repoid=fedora-modular-source -x '*' --destdir . --download-metadata
+
+dnf reposync --repoid=updates-modular --repoid=updates-modular-debuginfo --repoid=updates-modular-source -x '*' --destdir . --download-metadata
