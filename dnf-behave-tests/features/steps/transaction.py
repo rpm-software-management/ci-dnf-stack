@@ -22,6 +22,8 @@ def check_transaction(context, mode):
             checked_rpmdb.setdefault(action, set()).add(nevra)
             if action.startswith('group-'):
                 continue
+            if action.startswith('module-'):
+                continue
             if action == "reinstall":
                 action = "unchanged"
             rpm = RPM(nevra)
@@ -46,12 +48,13 @@ def check_transaction(context, mode):
         if action in ["absent", "present", "unchanged", "changed"]:
             continue
         for nevra in splitter(nevras):
-            if action.startswith('group-'):
+            if action.startswith('group-') or action.startswith('module-'):
+                title = action.split('-')[0].capitalize()
                 group = nevra
                 if group not in dnf_transaction[action]:
                     candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
-                    raise AssertionError("[dnf] Group %s not %s; Possible candidates: %s" % (
-                                         group, action, candidates))
+                    raise AssertionError("[dnf] %s %s not %s; Possible candidates: %s" % (
+                        title, group, action, candidates))
             else:
                 rpm = RPM(nevra)
                 if rpm not in dnf_transaction[action]:
