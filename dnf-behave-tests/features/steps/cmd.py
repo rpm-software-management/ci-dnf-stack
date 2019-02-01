@@ -144,6 +144,14 @@ def then_stderr_contains(context, text):
     raise AssertionError("Stderr doesn't contain: %s" % text)
 
 
+@behave.then("stderr does not contain \"{text}\"")
+def then_stderr_contains(context, text):
+    if not re.search(text, context.cmd_stderr):
+        return
+    print(context.cmd_stderr, file=sys.stderr)
+    raise AssertionError("Stderr contains: %s" % text)
+
+
 @behave.then("stderr is empty")
 def then_stderr_is_empty(context):
     if not context.cmd_stderr:
