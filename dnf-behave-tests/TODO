@@ -31,3 +31,12 @@ module-list-1.feature
 =====================
 
 Skipped strange test I can see only modules' packages, not modules themselves in the output of 'dnf list'
+
+common/dnf.py
+=============
+ugly hack
+line = re.sub(r'(x86_64|noarch)(?! )', r'\1 ', line)
+as workaround of missing space between arch and version in transaction table. Seen in module-install.feature
+transaction table could contain an empty line - bug in dnf. When installing
+multiple module profiles, they are separated by empty line
+I'm not able to reproduce any of previous bugs outside of the behave environment.

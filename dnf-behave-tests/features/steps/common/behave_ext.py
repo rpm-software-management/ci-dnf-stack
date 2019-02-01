@@ -17,7 +17,7 @@ def parse_context_table(context):
     for action, nevras in context.table:
         if action not in result:
             continue
-        if action.startswith('group-'):
+        if action.startswith('group-') or action.startswith('module-'):
             for group in splitter(nevras):
                 result[action].add(group)
         else:

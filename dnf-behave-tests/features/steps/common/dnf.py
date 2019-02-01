@@ -10,6 +10,7 @@ ACTION_RE = re.compile(r"^([^ ].+):$")
 DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
 MODULE_LIST_HEADER_RE = re.compile(r"^(Name)\s+(Stream)\s+(Profiles)\s+(Summary)\s*$")
+MODULE_STREAM_RE = re.compile(r"(?P<module>[^ ]+) *(?P<stream>[^ ]+)$")
 
 OBSOLETE_REPLACING_LABEL = {
     'en_US': 'replacing',
@@ -35,6 +36,8 @@ ACTIONS_EN = {
     "Installing Groups": "group-install",
     "Removing Groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
+    "Installing module profiles": "module-profile-install",
+    "Enabling module streams": "module-stream-enable",
 }
 
 
@@ -78,6 +81,8 @@ def find_transaction_table_end(lines):
     """
     Find a DNF transaction table end: an empty line
     """
+    # XXX not always. Multiple module profiles installed are sometimes separated by empty
+    # line but I'm not able to reproduce this behavior outside of behave.
     for i, line in enumerate(lines):
         line = line.rstrip()
         if not line:
@@ -100,6 +105,16 @@ def parse_transaction_table(lines):
     table_end = find_transaction_table_end(lines)
     lines = lines[:table_end]
 
+    # lines in transaction table could be splitted, join them
+    if lines:
+        joined_lines = [lines[0]]
+        for line in lines[1:]:
+            if line.startswith('  '):
+                joined_lines[-1] = joined_lines[-1] + line
+            else:
+                joined_lines.append(line)
+        lines = joined_lines
+
     while lines:
         line = lines.pop(0).rstrip()
 
@@ -120,11 +135,19 @@ def parse_transaction_table(lines):
 
             line = lines[0].rstrip()
 
-            if action.startswith('group-'):
+            if action.startswith('group-') or action.startswith('module-'):
+                if ACTION_RE.match(line):
+                    break
                 lines.pop(0)
-                group = line.strip()
-                result[action].add(group)
-                break
+                if '-stream-' in action:
+                    match = MODULE_STREAM_RE.match(line.strip())
+                    if not match:
+                        raise ValueError("Couldn't parse module/stream: {}".format(line))
+                    result[action].add("{0[module]}:{0[stream]}".format(match.groupdict()))
+                else:
+                    group = line.strip()
+                    result[action].add(group)
+                continue
 
             result_action = action
             # catch obsoletes lines in form "     replacing name.arch evr"
@@ -132,6 +155,12 @@ def parse_transaction_table(lines):
             if match:
                 result_action = 'remove'
             else:
+                # XXX ugly hack
+                # bug in dnf output: sometimes there is no space
+                # between arch and version and matching fails,
+                # but I'm not able to reproduce this behavior outside of behave.
+                # module-install.feature
+                #line = re.sub(r'(x86_64|noarch)(?! )', r'\1 ', line)
                 match = PACKAGE_RE.match(line)
             if not match:
                 # either next action or parsing error
