@@ -30,9 +30,11 @@ def check_module_list(context):
                     name, stream, profiles_txt, repository))
     return modules
 
+
 @behave.then("module list contains")
 def step_impl(context):
     check_module_list(context)
+
 
 @behave.then("module list is")
 def step_impl(context):
@@ -48,3 +50,24 @@ def step_impl(context):
 
         raise AssertionError("Following modules were not captured in the table: %s" % (
             '\n'.join(modules)))
+
+
+@behave.then("modules state is following")
+def step_impl(context):
+    check_context_table(context, ["Module", "State", "Stream", "Profiles"])
+    modules_state = get_modules_state(context.dnf.installroot)
+    for t_module, t_state, t_stream, t_profiles in context.table:
+        module = modules_state.get(t_module, dict())
+        state = module.get('state', '')
+        if t_state != state:
+            raise AssertionError("Module '{}' state is '{}' and not '{}'".format(
+                t_module, state, t_state))
+        stream = module.get('stream', '')
+        if t_stream != stream:
+            raise AssertionError("Module '{}' stream is '{}' and not '{}'".format(
+                t_module, stream, t_stream))
+        profiles = module.get('profiles', set())
+        t_profiles = set([p.strip() for p in t_profiles.split(',') if p.strip()])
+        if t_profiles != profiles:
+            raise AssertionError("Module '{}' profiles are '{}' and not '{}'".format(
+                t_module, profiles, t_profiles))

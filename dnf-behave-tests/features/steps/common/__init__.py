@@ -7,6 +7,7 @@ from .dnf import parse_history_info
 from .dnf import parse_history_list
 from .dnf import parse_module_list
 from .dnf import parse_transaction_table
+from .module import get_modules_state
 from .rpm import RPM
 from .rpm import diff_rpm_lists
 from .rpmdb import get_rpmdb_rpms
