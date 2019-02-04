@@ -17,7 +17,7 @@ Scenario: I can install a module profile for an enabled module stream
         | Action                    | Package                                       |
         | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-profile-install    | nodejs/minimal                                |
-        
+
 
 @bz1609919
 Scenario: I can install a module profile by name:stream/profile
@@ -59,4 +59,14 @@ Scenario: Installing a module profile with RPMs manually installed previously sh
         | module-profile-install    | postgresql/client                             |
     And stderr does not contain "Package postgresql-9.6.8-1.module_1710+b535a823.x86_64 is already installed."
 
-    
+
+Scenario: Installing a module and its dependencies
+   When I execute dnf with args "module install meson:master/default"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                                       |
+        | install                   | meson-0:0.47.1-5.module_1993+7c0a4d1e.noarch  |
+        | install                   | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
+        | module-stream-enable      | meson:master                                  |
+        | module-stream-enable      | ninja:master                                  |
+        | module-profile-install    | meson/default                                 |
