@@ -46,20 +46,6 @@ Scenario: I can install multiple module profiles at the same time
 
 
 
-@1622599
-Scenario: Installing a module profile with RPMs manually installed previously should do nothing
-   When I execute dnf with args "module enable postgresql:9.6"
-   Then the exit code is 0
-   When I execute dnf with args "install postgresql"
-   Then the exit code is 0
-   When I execute dnf with args "module install postgresql:9.6/client"
-   Then the exit code is 0
-    And Transaction is following
-        | Action                    | Package                                       |
-        | module-profile-install    | postgresql/client                             |
-    And stderr does not contain "Package postgresql-9.6.8-1.module_1710+b535a823.x86_64 is already installed."
-
-
 Scenario: Installing a module and its dependencies
    When I execute dnf with args "module install meson:master/default"
    Then the exit code is 0
@@ -70,3 +56,26 @@ Scenario: Installing a module and its dependencies
         | module-stream-enable      | meson:master                                  |
         | module-stream-enable      | ninja:master                                  |
         | module-profile-install    | meson/default                                 |
+
+
+@bz1622599
+@bz1566078
+Scenario: Install a module of which all packages and requires are already installed
+   When I execute dnf with args "module enable meson:master"
+   Then the exit code is 0
+   When I execute dnf with args "module install ninja:master/default"
+   Then the exit code is 0
+   When I execute dnf with args "install meson"
+   Then the exit code is 0
+    And stdout contains "Installing\s+: meson.*"
+   When I execute dnf with args "module install meson:master/default"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package                                       |
+        | module-profile-install    | meson/default                                 |
+    And modules state is following
+        | Module    | State     | Stream    | Profiles  |
+        | ninja     | enabled   | master    | default   |
+        | meson     | enabled   | master    | default   |
+    And stderr does not contain "Package meson.* is already installed."
+
