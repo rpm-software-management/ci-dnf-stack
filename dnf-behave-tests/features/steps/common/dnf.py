@@ -79,14 +79,14 @@ def find_transaction_table_begin(lines):
 
 def find_transaction_table_end(lines):
     """
-    Find a DNF transaction table end: an empty line
+    Find a DNF transaction table end:
+    Transaction Summary
+    ===================
     """
-    # XXX not always. Multiple module profiles installed are sometimes separated by empty
-    # line but I'm not able to reproduce this behavior outside of behave.
     for i, line in enumerate(lines):
-        line = line.rstrip()
-        if not line:
-            return i
+        match = SEPARATOR_RE.match(line)
+        if match:
+            return i - 1
     raise RuntimeError("Transaction table end not found")
 
 
@@ -106,11 +106,16 @@ def parse_transaction_table(lines):
     lines = lines[:table_end]
 
     # lines in transaction table could be splitted, join them
+    # also remove empty lines
     if lines:
         joined_lines = [lines[0]]
         for line in lines[1:]:
-            if line.startswith('  '):
+            if OBSOLETE_REPLACING.match(line):
+                joined_lines.append(line)
+            elif line.startswith('  '):
                 joined_lines[-1] = joined_lines[-1] + line
+            elif line.rstrip() == "":
+                continue
             else:
                 joined_lines.append(line)
         lines = joined_lines
