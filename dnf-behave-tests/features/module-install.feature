@@ -46,7 +46,8 @@ Scenario: I can install multiple module profiles at the same time
 
 
 
-Scenario: Installing a module and its dependencies
+@bz1618421
+Scenario: Installing a module and its dependencies, non-modular dependency available
    When I execute dnf with args "module install meson:master/default"
    Then the exit code is 0
     And Transaction contains
@@ -56,6 +57,18 @@ Scenario: Installing a module and its dependencies
         | module-stream-enable      | meson:master                                  |
         | module-stream-enable      | ninja:master                                  |
         | module-profile-install    | meson/default                                 |
+
+
+@bz1618421
+Scenario: Installing a module and its dependencies, non-modular dependency is not available
+  Given I disable the repository "dnf-ci-fedora"
+   When I execute dnf with args "module install meson:master/default"
+   Then the exit code is 1
+    And stderr contains lines
+        """
+        Problem: package meson-0.47.1-5.module_1993+7c0a4d1e.noarch requires ninja-build, but none of the providers can be installed
+        - nothing provides rtld(GNU_HASH) needed by ninja-build-1.8.2-4.module_1991+4e5efe2f.x86_64
+        """
 
 
 @bz1622599

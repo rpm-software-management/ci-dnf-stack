@@ -176,7 +176,7 @@ def then_stdout_contains_lines(context):
     test_lines = context.text.split('\n')
     for line in test_lines:
         for outline in out_lines:
-            if line == outline:
+            if line.strip() == outline.strip():
                 break
         else:
             print(context.cmd_stderr, file=sys.stderr)
