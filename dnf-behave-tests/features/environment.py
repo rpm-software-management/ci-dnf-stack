@@ -22,7 +22,7 @@ class DNFContext(object):
             # never delete user defined installroot - this allows running tests on /
             self.delete_installroot = False
         else:
-            self.installroot = tempfile.mkdtemp(prefix="dnf_ci_")
+            self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
             self.delete_installroot = True
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
@@ -33,10 +33,15 @@ class DNFContext(object):
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
         self.disable_repos_option = "--disablerepo='*'"
+        self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
 
     def __del__(self):
+        if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
+            print("RMTREE", self.tempdir)
+            #shutil.rmtree(self.tempdir)
+
         if self.delete_installroot:
-            if self.installroot != "/":
+            if os.path.realpath(self.installroot) not in ["/"]:
                 print("RMTREE", self.installroot)
                 #shutil.rmtree(self.installroot)
 
