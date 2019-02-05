@@ -65,6 +65,7 @@ Scenario: Upgrade of obsoleted package if package specified by version with glob
         | upgrade       | PackageB-0:2.0-1.x86_64                   |
 
 
+@xfail @bz1672618
 Scenario: Keep reason of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
