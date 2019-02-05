@@ -58,6 +58,7 @@ def find_transaction_table_begin(lines):
         line1 = lines[i]
         line2 = lines[i + 1]
         line3 = lines[i + 2]
+        line4 = lines[i + 3]
         i += 1
 
         match = SEPARATOR_RE.match(line1)
@@ -70,7 +71,13 @@ def find_transaction_table_begin(lines):
 
         match = SEPARATOR_RE.match(line3)
         if not match:
-            continue
+            # sometimes line2 ("Package  Arch  Ver..") can be split to two lines
+            # which moves line3 to line4
+            match = SEPARATOR_RE.match(line4)
+            if not match:
+                continue
+            else:
+                return i + 3
 
         return i + 2
 
