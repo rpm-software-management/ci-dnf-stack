@@ -1,0 +1,10 @@
+[rpmsoftwaremanagement-dnf-nightly]
+name=Copr repo for dnf-nightly owned by rpmsoftwaremanagement
+baseurl=https://copr-be.cloud.fedoraproject.org/results/rpmsoftwaremanagement/dnf-nightly/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/rpmsoftwaremanagement/dnf-nightly/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
