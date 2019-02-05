@@ -1,3 +1,4 @@
+@bz1659390
 Feature: Print additional information about skipped packages after the transaction with best=0
 
   @setup
