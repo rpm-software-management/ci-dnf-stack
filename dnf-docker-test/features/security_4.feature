@@ -68,7 +68,7 @@ Feature: Test for upgrade and upgrade-minimal with bz and security options
 
   Scenario: Security plus three explicitly mentioned bzs upgrade-minimal
        When I save rpmdb
-        And I run "dnf -y --bz 123 --bz 234 --bz 345 --security upgrade-minimal"
+        And I run "dnf -y --bzs=123,234,345 --security upgrade-minimal"
        Then rpmdb changes are
          | State      | Packages           |
          | updated    | TestA/2,TestB/2    |
