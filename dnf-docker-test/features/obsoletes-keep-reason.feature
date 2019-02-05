@@ -15,6 +15,7 @@ Feature: DNF/Behave test Obsolete keep reason
            | State     | Packages |
            | installed | TestB    |
 
+    @xfail @bz1672618
     Scenario: Keep reason of obsolete package
          When I successfully run "dnf mark remove TestB"
          Then history userinstalled should
