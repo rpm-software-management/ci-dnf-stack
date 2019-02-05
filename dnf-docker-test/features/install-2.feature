@@ -8,8 +8,10 @@ Feature: Install installed pkg with just name or NEVR
          | State        | Packages      |
          | installed    | TestB-1.0.0-1, TestC-1.0.0-2, TestE-1.0.0-1   |
 
+  @bz1670776 @bz1671683
   Scenario: Install of installed package by name (upgrade available)
-      When _deprecated I execute "dnf" command "-y install TestB" with "success"
+      When _deprecated I execute "dnf" command "-y install TestB" with "fail"
+      When _deprecated I execute "dnf" command "-y install TestB --nobest" with "success"
       Then _deprecated transaction changes are as follows
         | State        | Packages              |
         | present      | TestB-1.0.0-1         |

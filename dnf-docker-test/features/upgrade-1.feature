@@ -16,6 +16,7 @@ Scenario: Upgrade package TestA from repository "upgrade_1"
    | upgraded     | TestA      |
    | present      | TestB      |
 
+@bz1670776 @bz1671683
 Scenario: Upgrade two packages from repository "upgrade_1"
  Given _deprecated I use the repository "upgrade_1"
  When _deprecated I execute "dnf" command "-y upgrade TestD TestF" with "success"
@@ -24,7 +25,8 @@ Scenario: Upgrade two packages from repository "upgrade_1"
    | upgraded     | TestD, TestE, TestF, TestG  |
    | present      | TestH                       |
 
- When _deprecated I execute "dnf" command "-y install TestI TestK" with "success"
+ When _deprecated I execute "dnf" command "-y install TestI TestK" with "fail"
+ When _deprecated I execute "dnf" command "-y install TestI TestK --nobest" with "success"
  Then _deprecated transaction changes are as follows
    | State        | Packages                    |
    | installed    | TestI, TestJ, TestK, TestM  |

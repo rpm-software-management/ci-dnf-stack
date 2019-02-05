@@ -9,9 +9,11 @@ Scenario: Install packages from repository "test-1"
    | absent       | TestC                                                          |
 
 
+@bz1670776 @bz1671683
 Scenario: Upgrade ALL from repository "upgrade_1"
  Given _deprecated I use the repository "upgrade_1"
- When _deprecated I execute "dnf" command "-y upgrade" with "success"
+ When _deprecated I execute "dnf" command "-y upgrade" with "fail"
+ When _deprecated I execute "dnf" command "-y upgrade --nobest" with "success"
  Then _deprecated transaction changes are as follows
    | State        | Packages                                                |
    | upgraded     | TestA, TestB, TestD, TestE, TestF, TestG, TestH, TestM  |
