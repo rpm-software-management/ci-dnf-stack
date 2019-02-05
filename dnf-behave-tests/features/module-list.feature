@@ -19,17 +19,18 @@ Scenario: I can list all available modules
    Then the exit code is 0
     And stdout contains "Javascript runtime"
     And module list is
-        | Repository                    | Name          | Stream    | Profiles                      |
+        | Repository                    | Name          | Stream    | Profiles                          |
         | dnf-ci-fedora-modular         | nodejs        | 8 [e]     | development, minimal [i], default |
-        | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default |
-        | dnf-ci-fedora-modular         | postgresql    | 9.6       | client, server, default       |
-        | dnf-ci-fedora-modular         | meson         | master    | default                       |
-        | dnf-ci-fedora-modular         | ninja         | master    | default                       |
+        | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default     |
+        | dnf-ci-fedora-modular         | postgresql    | 9.6       | client, server, default           |
+        | dnf-ci-fedora-modular         | meson         | master    | default                           |
+        | dnf-ci-fedora-modular         | ninja         | master    | default                           |
+        | dnf-ci-fedora-modular         | DnfCiModuleNoArtifacts | master    | default                  |
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [e]     | development, minimal [i], default |
-        | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default |
-        | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default |
-        | dnf-ci-fedora-modular-updates | postgresql    | 9.6       | client, server, default       |
-        | dnf-ci-fedora-modular-updates | postgresql    | 10        | client, server, default       |
+        | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default     |
+        | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default     |
+        | dnf-ci-fedora-modular-updates | postgresql    | 9.6       | client, server, default           |
+        | dnf-ci-fedora-modular-updates | postgresql    | 10        | client, server, default           |
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default       |
 
 
