@@ -79,3 +79,17 @@ Scenario: Install a module of which all packages and requires are already instal
         | meson     | enabled   | master    | default   |
     And stderr does not contain "Package meson.* is already installed."
 
+
+@bz1592408
+Scenario: Install a module of which all packages are non-modular
+   When I execute dnf with args "module install DnfCiModuleNoArtifacts:master/default"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package                           |
+        | install                   | wget-0:1.19.5-5.fc29.x86_64       |
+        | install                   | solveigs_song-0:1.0-1.x86_64      |
+        | module-profile-install    | DnfCiModuleNoArtifacts/default    |
+        | module-stream-enable      | DnfCiModuleNoArtifacts:master     |
+    And modules state is following
+        | Module                    | State     | Stream    | Profiles  |
+        | DnfCiModuleNoArtifacts    | enabled   | master    | default   |
