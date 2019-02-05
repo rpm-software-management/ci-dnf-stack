@@ -58,7 +58,7 @@ data:
     - nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
     - nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
     - nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
-    - npm-1:5.6.0-1.8.11.4.1.module_2030+42747d40.x86_64
+    - npm-1:8.11.4-1.module_2030+42747d40.x86_64
 ...
 ---
 document: modulemd
@@ -132,7 +132,7 @@ data:
     - nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
     - nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
     - nodejs-docs-1:10.11.0-1.module_2200+adbac02b.noarch
-    - npm-1:6.4.1-1.10.11.0.1.module_2200+adbac02b.x86_64
+    - npm-1:10.11.0-1.module_2200+adbac02b.x86_64
 ...
 ---
 document: modulemd
