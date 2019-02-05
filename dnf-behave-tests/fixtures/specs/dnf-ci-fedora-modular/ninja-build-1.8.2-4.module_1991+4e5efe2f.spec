@@ -12,6 +12,8 @@ Summary:        Ninja-build package
 
 Provides:       ninja-build = 0.47.1-4.module_1991+4e5efe2f
 
+Requires:       rtld(GNU_HASH)
+
 %description
 Description of ninja-build package.
 
