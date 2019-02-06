@@ -25,6 +25,7 @@ Scenario: I can list all available modules
         | dnf-ci-fedora-modular         | postgresql    | 9.6       | client, server, default           |
         | dnf-ci-fedora-modular         | meson         | master    | default                           |
         | dnf-ci-fedora-modular         | ninja         | master    | default                           |
+        | dnf-ci-fedora-modular         | ninja         | development | default                           |
         | dnf-ci-fedora-modular         | DnfCiModuleNoArtifacts | master    | default                  |
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [e]     | development, minimal [i], default |
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default     |
