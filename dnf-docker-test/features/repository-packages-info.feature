@@ -21,10 +21,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestA
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : 0.0
               Source       : TestA-1-1.src.rpm
-              Repo         : @System
+              Repository   : @System
               From repo    : test
               Summary      : Empty
               License      : Public Domain
@@ -34,10 +34,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestB
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : [0-9.]+ k
               Source       : TestB-1-1.src.rpm
-              Repo         : test
+              Repository   : test
               Summary      : Empty
               License      : Public Domain
               Description  : Empty.
@@ -51,10 +51,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestA
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : 0.0
               Source       : TestA-1-1.src.rpm
-              Repo         : @System
+              Repository   : @System
               From repo    : test
               Summary      : Empty
               License      : Public Domain
@@ -69,10 +69,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestB
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : [0-9.]+ k
               Source       : TestB-1-1.src.rpm
-              Repo         : test
+              Repository   : test
               Summary      : Empty
               License      : Public Domain
               Description  : Empty.
@@ -90,10 +90,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestA
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : 0.0
               Source       : TestA-1-1.src.rpm
-              Repo         : @System
+              Repository   : @System
               From repo    : test
               Summary      : Empty
               License      : Public Domain
@@ -108,10 +108,10 @@ Feature: DNF/Behave test Repository packages info
               Name         : TestA
               Version      : 1
               Release      : 1
-              Arch         : noarch
+              Architecture : noarch
               Size         : 0.0
               Source       : TestA-1-1.src.rpm
-              Repo         : @System
+              Repository   : @System
               From repo    : test
               Summary      : Empty
               License      : Public Domain
