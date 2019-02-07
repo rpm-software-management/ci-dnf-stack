@@ -3,14 +3,22 @@ Feature: Install installed pkg with just name or NEVR
   @setup
   Scenario: Feature Setup
       Given _deprecated I use the repository "upgrade_1"
-      When _deprecated I execute "dnf" command "-y install TestB-1.0.0-1  TestC-1.0.0-2 TestE-1.0.0-1" with "success"
+      When _deprecated I execute "dnf" command "-y install TestB-1.0.0-1  TestC-1.0.0-2 TestE-1.0.0-1 TestG-1.0.0-1" with "success"
       Then _deprecated transaction changes are as follows
          | State        | Packages      |
-         | installed    | TestB-1.0.0-1, TestC-1.0.0-2, TestE-1.0.0-1   |
+         | installed    | TestB-1.0.0-1, TestC-1.0.0-2, TestE-1.0.0-1, TestG-1.0.0-1 |
+
 
   @bz1670776 @bz1671683
-  Scenario: Install of installed package by name (upgrade available)
-      When _deprecated I execute "dnf" command "-y install TestB" with "fail"
+  Scenario: Install of installed package by name with best=True (default) (upgrade available)
+      When _deprecated I execute "dnf" command "-y install TestG" with "success"
+      Then _deprecated transaction changes are as follows
+        | State        | Packages              |
+        | upgraded     | TestG-1.0.0-2         |
+
+
+  @bz1670776 @bz1671683
+  Scenario: Install of installed package by name with --nobest (upgrade available)
       When _deprecated I execute "dnf" command "-y install TestB --nobest" with "success"
       Then _deprecated transaction changes are as follows
         | State        | Packages              |
