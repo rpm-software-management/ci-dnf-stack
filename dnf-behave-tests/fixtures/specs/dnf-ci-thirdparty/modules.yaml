@@ -23,12 +23,33 @@
       default:
         rpms:
         - arabian-dance
-    stream: master
-    summary: Testing module without artifacts
+    stream: stable
+    summary: Testing module without defaults
     version: 1
     artifacts:
       rpms:
       - arabian-dance-0:1.0-1.module.x86_64
+      - wget-0:1.18.5-5.module.x86_64
+  document: modulemd
+  version: 2
+...
+---
+  data:
+    description: Testing module without defaults defined
+    license:
+      module: [MIT]
+    name: DnfCiModuleNoDefaults
+    profiles:
+      default:
+        rpms:
+        - arabian-dance
+    stream: development
+    summary: Testing module without defaults
+    version: 1
+    artifacts:
+      rpms:
+      - arabian-dance-0:1.0-1.module.x86_64
+      - wget-0:1.20.5-5.module.x86_64
   document: modulemd
   version: 2
 ...
