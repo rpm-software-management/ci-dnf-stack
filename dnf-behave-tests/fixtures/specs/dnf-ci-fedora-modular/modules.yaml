@@ -258,7 +258,7 @@ data:
   - buildrequires:
       platform: [f29]
     requires:
-      ninja: [master]
+      ninja: []
       platform: [f29]
   references:
     community: https://mesonbuild.com/
