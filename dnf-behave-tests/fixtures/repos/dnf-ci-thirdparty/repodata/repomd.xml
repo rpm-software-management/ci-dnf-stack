@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
-  <revision>1549460555</revision>
+  <revision>1549529270</revision>
   <data type="primary">
-    <checksum type="sha256">ffd99522e4c185bdee29542d846f8f38b4d4df52741956e6b9461dba1368ea49</checksum>
-    <open-checksum type="sha256">1ba25566b43faf359a4442e97202814f48a6cdffc3e0e0503363a587b121c5a3</open-checksum>
-    <location href="repodata/ffd99522e4c185bdee29542d846f8f38b4d4df52741956e6b9461dba1368ea49-primary.xml.gz"/>
-    <timestamp>1549460555</timestamp>
-    <size>2364</size>
-    <open-size>13430</open-size>
+    <checksum type="sha256">800ee19a103a609630fb96823d168e4a73b1550bb43052bbb110c5d6808fd99e</checksum>
+    <open-checksum type="sha256">0a53af3caa1ee2421b0e8620fdf5f5da64c66a6edf5144a531c69469b036aea2</open-checksum>
+    <location href="repodata/800ee19a103a609630fb96823d168e4a73b1550bb43052bbb110c5d6808fd99e-primary.xml.gz"/>
+    <timestamp>1549529270</timestamp>
+    <size>2826</size>
+    <open-size>17299</open-size>
   </data>
   <data type="filelists">
-    <checksum type="sha256">b5373c3f9b7813004adafe4085fa8be0ba9e264fd2a56e85a8b20cb0a736f207</checksum>
-    <open-checksum type="sha256">ccd5ec9d0bf0a6a80724a4f3238e66904919b096f31ddc1e70c3ef247e6096c0</open-checksum>
-    <location href="repodata/b5373c3f9b7813004adafe4085fa8be0ba9e264fd2a56e85a8b20cb0a736f207-filelists.xml.gz"/>
-    <timestamp>1549460555</timestamp>
-    <size>801</size>
-    <open-size>2208</open-size>
+    <checksum type="sha256">08e323cdebe791eaba21b5f393833096c2cd1ca1369e00cc8ab927fa3b411118</checksum>
+    <open-checksum type="sha256">d4bdc0f16060778027d075a42708a8925a8a80040dda3368c28c412b4731a1fa</open-checksum>
+    <location href="repodata/08e323cdebe791eaba21b5f393833096c2cd1ca1369e00cc8ab927fa3b411118-filelists.xml.gz"/>
+    <timestamp>1549529270</timestamp>
+    <size>1023</size>
+    <open-size>2976</open-size>
   </data>
   <data type="other">
-    <checksum type="sha256">b94ef0689414da1ab10d31a0aab2f0b789e442b717a5edae09b26d083a598fc0</checksum>
-    <open-checksum type="sha256">40e6b77cce8c46d7f6b74b030385f81194a096a6a4e88705e3e12b33091c9f33</open-checksum>
-    <location href="repodata/b94ef0689414da1ab10d31a0aab2f0b789e442b717a5edae09b26d083a598fc0-other.xml.gz"/>
-    <timestamp>1549460555</timestamp>
-    <size>744</size>
-    <open-size>1996</open-size>
+    <checksum type="sha256">06405549597b60a04bfd3118ce45342a0e5e3a2bf3d2c214bac3c70ba90b73e7</checksum>
+    <open-checksum type="sha256">aff419c7e0b36afe552cbe9162121ae5e34a5fde0b907bacf43d32e81cb15e50</open-checksum>
+    <location href="repodata/06405549597b60a04bfd3118ce45342a0e5e3a2bf3d2c214bac3c70ba90b73e7-other.xml.gz"/>
+    <timestamp>1549529270</timestamp>
+    <size>951</size>
+    <open-size>2684</open-size>
   </data>
   <data type="group">
     <checksum type="sha256">2f84f3e90862a1cda74a473c0a4bd08031210f84b7ebaf4c0f8dd86959ba3354</checksum>
     <location href="repodata/2f84f3e90862a1cda74a473c0a4bd08031210f84b7ebaf4c0f8dd86959ba3354-comps.xml"/>
-    <timestamp>1549460555</timestamp>
+    <timestamp>1549529270</timestamp>
     <size>1706</size>
   </data>
   <data type="group_gz">
     <checksum type="sha256">37067e5961ba7501b5e0ace40cd81d1e520a58be21dad1dd397a9c9c268bb0e9</checksum>
     <open-checksum type="sha256">2f84f3e90862a1cda74a473c0a4bd08031210f84b7ebaf4c0f8dd86959ba3354</open-checksum>
     <location href="repodata/37067e5961ba7501b5e0ace40cd81d1e520a58be21dad1dd397a9c9c268bb0e9-comps.xml.gz"/>
-    <timestamp>1549460555</timestamp>
+    <timestamp>1549529270</timestamp>
     <size>477</size>
     <open-size>1706</open-size>
+  </data>
+  <data type="modules">
+    <checksum type="sha256">337f8e2a0944ac8a5b541bd9a9961acd0b352885527e0d9e365f25136b539f7f</checksum>
+    <open-checksum type="sha256">f455ecdc4afa425c8632c39c7210425804408079d40438ad97e6b45f64b85e55</open-checksum>
+    <location href="repodata/337f8e2a0944ac8a5b541bd9a9961acd0b352885527e0d9e365f25136b539f7f-modules.yaml.gz"/>
+    <timestamp>1549529270</timestamp>
+    <size>293</size>
+    <open-size>742</open-size>
   </data>
 </repomd>

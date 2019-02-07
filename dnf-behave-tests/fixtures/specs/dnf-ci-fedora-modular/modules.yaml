@@ -345,21 +345,6 @@ data:
     - ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64
 ...
 ---
-      data:
-        description: Testing module without artifacts depending only on ursine fedora packages
-        license:
-          module: [MIT]
-        name: DnfCiModuleNoArtifacts
-        profiles:
-          default:
-            rpms: [wget, solveigs_song]
-        stream: master
-        summary: Testing module without artifacts
-        version: 1
-      document: modulemd
-      version: 2
-...
----
 document: modulemd
 version: 2
 data:
@@ -407,17 +392,40 @@ data:
     - ninja-build-0:1.9.2-4.module_1991+4e5efe2f.x86_64
 ...
 ---
-      data:
-        description: Testing module without artifacts depending only on ursine fedora packages
-        license:
-          module: [MIT]
-        name: DnfCiModuleNoArtifacts
-        profiles:
-          default:
-            rpms: [wget, solveigs_song]
-        stream: master
-        summary: Testing module without artifacts
-        version: 1
-      document: modulemd
-      version: 2
+document: modulemd-defaults
+version: 1
+data:
+    module: nodejs
+    stream: 8
+    profiles:
+        8: [default]
+        10: [default]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: postgresql
+    stream: 9.6
+    profiles:
+      9.6: [default]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: meson
+    stream: master
+    profiles:
+      master: [default]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: ninja
+    stream: master
+    profiles:
+      master: [default]
+      development: [default]
 ...

@@ -1,0 +1,34 @@
+---
+  data:
+    description: Testing module without artifacts depending only on ursine fedora packages
+    license:
+      module: [MIT]
+    name: DnfCiModuleNoArtifacts
+    profiles:
+      default:
+        rpms: [wget, solveigs-song]
+    stream: master
+    summary: Testing module without artifacts
+    version: 1
+  document: modulemd
+  version: 2
+...
+---
+  data:
+    description: Testing module without defaults defined
+    license:
+      module: [MIT]
+    name: DnfCiModuleNoDefaults
+    profiles:
+      default:
+        rpms:
+        - arabian-dance
+    stream: master
+    summary: Testing module without artifacts
+    version: 1
+    artifacts:
+      rpms:
+      - arabian-dance-0:1.0-1.module.x86_64
+  document: modulemd
+  version: 2
+...
