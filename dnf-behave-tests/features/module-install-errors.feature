@@ -25,6 +25,8 @@ Scenario: A proper error message is displayed when I try to install a non-existe
 
 
 Scenario: I cannot install an RPM with same name as an RPM that belongs to enabled MODULE:STREAM
+   When I execute dnf with args "module disable ninja"
+   Then the exit code is 0
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 0
    When I execute dnf with args "remove ninja-build"
