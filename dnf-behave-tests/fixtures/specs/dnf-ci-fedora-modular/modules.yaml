@@ -389,7 +389,7 @@ data:
         ref: master
   artifacts:
     rpms:
-    - ninja-build-0:1.9.2-4.module_1991+4e5efe2f.x86_64
+    - ninja-build-0:1.8.2-1.module_1991+4e5efe2f.x86_64
 ...
 ---
 document: modulemd-defaults
