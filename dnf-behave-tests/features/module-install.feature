@@ -95,12 +95,13 @@ Scenario: Install a module of which all packages and requires are already instal
 
 @bz1592408
 Scenario: Install a module of which all packages are non-modular
+  Given I use the repository "dnf-ci-thirdparty"
    When I execute dnf with args "module install DnfCiModuleNoArtifacts:master/default"
    Then the exit code is 0
     And Transaction is following
         | Action                    | Package                           |
         | install                   | wget-0:1.19.5-5.fc29.x86_64       |
-        | install                   | solveigs_song-0:1.0-1.x86_64      |
+        | install                   | solveigs-song-0:1.0-1.x86_64      |
         | module-profile-install    | DnfCiModuleNoArtifacts/default    |
         | module-stream-enable      | DnfCiModuleNoArtifacts:master     |
     And modules state is following
