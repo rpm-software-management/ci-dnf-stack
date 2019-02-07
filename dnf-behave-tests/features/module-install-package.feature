@@ -29,7 +29,8 @@ Scenario: I cannot install a specific package from not enabled module when defau
 
 
 # module ninja:master [d] contains ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64
-# ninja:development contans ninja-build-1.8.2-1.module_1991+4e5efe2f.x86_64
+# ninja:legacy contains ninja-build-0:1.5.2-1.module_1991+4e5efe2f.x86_64
+# ninja:development contans ninja-build-1.9.2-1.module_1991+4e5efe2f.x86_64
 # ursine repo contains ninja-build-0:1.8.2-5.fc29.x86_64
 
 Scenario: module content masks ursine content - module not enabled, default stream exists
@@ -69,11 +70,10 @@ Scenario: a package from a non-enabled module is preferred when default stream i
 Scenario: rpm from enabled stream is preferred regardless of NVRs
   Given I use the repository "dnf-ci-fedora-modular"
     And I use the repository "dnf-ci-fedora"
-   When I execute dnf with args "module enable ninja:development"
+   When I execute dnf with args "module enable ninja:legacy"
    Then the exit code is 0
    When I execute dnf with args "install ninja-build"
    Then the exit code is 0
     And Transaction contains
         | Action                | Package                                           |
-        | install               | ninja-build-0:1.8.2-1.module_1991+4e5efe2f.x86_64 |
-
+        | install               | ninja-build-0:1.5.2-1.module_1991+4e5efe2f.x86_64 |
