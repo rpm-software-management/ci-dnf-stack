@@ -2,8 +2,8 @@
 
 Name:           nodejs
 Epoch:          1
-Version:        11.1.0
-Release:        1.module_2379+8d497405
+Version:        11.0.0
+Release:        1.module_2311+8d497411
 
 License:        MIT and ASL 2.0 and ISC and BSD
 URL:            http://nodejs.org/
@@ -13,22 +13,21 @@ Summary:        JavaScript runtime
 Provides:       bundled(c-ares) = 1.14.0
 Provides:       nodejs-punycode = 2.1.0
 Provides:       npm(punycode) = 2.1.0
-Provides:       nodejs = 1:11.1.0-1.module_2379+8d497405
-Provides:       nodejs(x86-64) = 1:11.1.0-1.module_2379+8d497405
+Provides:       nodejs = 1:11.0.0-1.module_2311+8d497411
+Provides:       nodejs(x86-64) = 1:11.0.0-1.module_2311+8d497411
 Provides:       bundled(icu) = 63.1
 Provides:       bundled(v8) = 7.0.276.32
-Provides:       nodejs(abi) = 11.1
-Provides:       nodejs(abi11) = 11.1
-Provides:       nodejs(engine) = 11.1.0
+Provides:       nodejs(abi) = 11.0
+Provides:       nodejs(abi11) = 11.0
+Provides:       nodejs(engine) = 11.0.0
 Provides:       nodejs(v8-abi) = 7.0
 Provides:       nodejs(v8-abi7) = 7.0
 
 Requires:       rtld(GNU_HASH)
-Requires:       wget
 
 Conflicts:      node <= 0.3.2-12
 
-Recommends:     npm = 1:6.4.1-1.11.1.0.1.module_2379+8d497405
+Recommends:     npm = 1:6.4.1-1.11.0.0.1.module_2311+8d497411
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -40,11 +39,11 @@ real-time applications that run across distributed devices.
 %package devel
 Summary:        JavaScript runtime - development headers
 
-Provides:       nodejs-devel = 1:11.1.0-1.module_2379+8d497405
-Provides:       nodejs-devel(x86-64) = 1:11.1.0-1.module_2379+8d497405
+Provides:       nodejs-devel = 1:11.0.0-1.module_2311+8d497411
+Provides:       nodejs-devel(x86-64) = 1:11.0.0-1.module_2311+8d497411
 
 Requires:       rtld(GNU_HASH)
-Requires:       nodejs(x86-64) = 1:11.1.0-1.module_2379+8d497405
+Requires:       nodejs(x86-64) = 1:11.0.0-1.module_2311+8d497411
 
 %description devel
 Development headers for the Node.js JavaScript runtime.
@@ -53,10 +52,10 @@ Development headers for the Node.js JavaScript runtime.
 Summary:        Node.js API documentation
 BuildArch:      noarch
 
-Provides:       nodejs-docs = 1:11.1.0-1.module_2379+8d497405
+Provides:       nodejs-docs = 1:11.0.0-1.module_2311+8d497411
 
-Conflicts:      nodejs < 1:11.1.0-1.module_2379+8d497405
-Conflicts:      nodejs > 1:11.1.0-1.module_2379+8d497405
+Conflicts:      nodejs < 1:11.0.0-1.module_2311+8d497411
+Conflicts:      nodejs > 1:11.0.0-1.module_2311+8d497411
 
 %description docs
 The API documentation for the Node.js JavaScript runtime.
@@ -442,10 +441,10 @@ Provides:       bundled(nodejs-yallist) = 2.1.2
 Provides:       bundled(nodejs-yallist) = 3.0.2
 Provides:       bundled(nodejs-yargs) = 11.0.0
 Provides:       bundled(nodejs-yargs-parser) = 9.0.2
-Provides:       npm = 1:6.4.1-1.11.1.0.1.module_2379+8d497405
-Provides:       npm(x86-64) = 1:6.4.1-1.11.1.0.1.module_2379+8d497405
+Provides:       npm = 1:6.4.1-1.11.0.0.1.module_2311+8d497411
+Provides:       npm(x86-64) = 1:6.4.1-1.11.0.0.1.module_2311+8d497411
 
-Requires:       nodejs = 1:11.1.0-1.module_2379+8d497405
+Requires:       nodejs = 1:11.0.0-1.module_2311+8d497411
 
 Obsoletes:      npm < 3.5.4-6
 
