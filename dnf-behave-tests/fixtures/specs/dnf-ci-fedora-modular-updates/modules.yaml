@@ -73,7 +73,7 @@ data:
     - nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
     - nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
     - nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
-    - npm-1:8.11.4-1.module_2030+42747d40.x86_64
+    - npm-1:8.14.0-1.module_2030+42747d41.x86_64
 ...
 ---
 document: modulemd
@@ -121,6 +121,7 @@ data:
       platform: [f29]
     requires:
       platform: [f29]
+      postgresql: [9.6]
   references:
     community: http://nodejs.org
     documentation: http://nodejs.org/en/docs
@@ -230,12 +231,11 @@ data:
     default:
       rpms:
       - nodejs
-      - npm
+      - nodejs-devel
     development:
       rpms:
       - nodejs
       - nodejs-devel
-      - npm
     minimal:
       rpms:
       - nodejs
@@ -243,7 +243,6 @@ data:
     rpms:
     - nodejs
     - nodejs-devel
-    - npm
   components:
     rpms:
       http-parser:
@@ -267,6 +266,12 @@ data:
         cache: https://src.fedoraproject.org/repo/pkgs/nodejs
         ref: 10
         buildorder: 10
+      nodejs-devel:
+        rationale: Javascript runtime and npm package manager.
+        repository: git+https://src.fedoraproject.org/rpms/nodejs
+        cache: https://src.fedoraproject.org/repo/pkgs/nodejs-devel
+        ref: 10
+        buildorder: 10
   artifacts:
     rpms:
     - http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
@@ -280,7 +285,6 @@ data:
     - nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
     - nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
     - nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
-    - npm-1:10.14.1-1.module_2533+7361f245.x86_64
 ...
 ---
 document: modulemd

@@ -16,6 +16,7 @@ Provides:       postgresql = 9.6.11-1.module_2689+ea8f147f
 Requires:       rtld(GNU_HASH)
 Requires:       libpq.so.5()(64bit)
 Requires:       postgresql-libs(x86-64) = 9.6.11-1.module_2689+ea8f147f
+Requires:       CQRlib-devel
 
 %description
 PostgreSQL is an advanced Object-Relational database management system (DBMS).
