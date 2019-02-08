@@ -40,3 +40,10 @@ as workaround of missing space between arch and version in transaction table. Se
 transaction table could contain an empty line - bug in dnf. When installing
 multiple module profiles, they are separated by empty line
 I'm not able to reproduce any of previous bugs outside of the behave environment.
+
+module-info.feature
+===================
+There is likely a bug (typo) in dnf output of "dnf module info nodejs"
+on the last line: "Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive]"
+There is additional square bracket ] at the end.
+
