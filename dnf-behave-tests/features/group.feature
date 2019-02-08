@@ -56,6 +56,8 @@ Scenario: Install and remove group with excluded package dependency
     And stderr contains "Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed"
 
 
+@xfail
+@bz1673851
 Scenario: Install condidional package if required package is about to be installed
   Given I use the repository "dnf-ci-thirdparty"
     And I use the repository "dnf-ci-fedora"
@@ -82,6 +84,8 @@ Scenario: Install condidional package if required package is about to be install
         | group-remove  | DNF-CI-Testgroup                          |
 
 
+@xfail
+@bz1673851
 Scenario: Install condidional package if required package has been installed
   Given I use the repository "dnf-ci-thirdparty"
     And I use the repository "dnf-ci-fedora"
