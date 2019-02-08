@@ -106,8 +106,8 @@ def then_stdout_is(context):
 
 @behave.then("stdout contains lines")
 def then_stdout_contains_lines(context):
-    out_lines = context.cmd_stdout.split('\n')
-    test_lines = context.text.split('\n')
+    out_lines = [l.strip() for l in context.cmd_stdout.split('\n')]
+    test_lines = [l.strip() for l in context.text.split('\n')]
     for line in test_lines:
         for outline in out_lines:
             if line == outline:
@@ -119,8 +119,8 @@ def then_stdout_contains_lines(context):
 
 @behave.then("stdout does not contain lines")
 def then_stdout_contains_lines(context):
-    out_lines = context.cmd_stdout.split('\n')
-    test_lines = context.text.split('\n')
+    out_lines = [l.strip() for l in context.cmd_stdout.split('\n')]
+    test_lines = [l.strip() for l in context.text.split('\n')]
     for line in test_lines:
         for outline in out_lines:
             if line == outline:
