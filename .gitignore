@@ -2,3 +2,4 @@ Dockerfile
 __pycache__/
 *.py[cod]
 *.swp
+dnf-behave-tests/fixtures/rpm2spec/*/
