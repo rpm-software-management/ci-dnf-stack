@@ -15,6 +15,10 @@ Scenario: The default stream is enabled when requiring module is enabled
         | ninja     | enabled   | master    |           |
 
 
+# package morning-mood is part of DnfCiModulePackageDep module and requires nodejs package (part of nodejs module)
+# DnfCiModulePackageDep:packagedep does not have any modular dependencies
+# DnfCiModulePackageDep:moduledep requires nodejs module
+
 Scenario Outline: The default stream is enabled when its package is required by installed package of another module <description>
   Given I use the repository "dnf-ci-thirdparty"
    When I execute dnf with args "module enable DnfCiModulePackageDep:<stream>"
