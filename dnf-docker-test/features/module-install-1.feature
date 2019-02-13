@@ -96,7 +96,7 @@ Feature: Installing module profiles
             ?Last metadata expiration check
             Dependencies resolved.
             ================================================================================
-            Package           Architecture     Version             Repository         Size
+            Package           Arch             Version             Repository         Size
             ================================================================================
             Installing module profiles:
             ModuleA/minimal
