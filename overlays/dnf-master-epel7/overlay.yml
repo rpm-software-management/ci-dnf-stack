@@ -6,12 +6,12 @@ aliases:
     url: https://src.fedoraproject.org/rpms/
 
 components:
-#  - name: libsolv
-#    git:
-#      src: github:openSUSE/libsolv.git
-#    distgit:
-#      src: fedorapkgs:libsolv.git
-#      patches: drop
+  - name: libsolv
+    git:
+      src: github:openSUSE/libsolv.git
+    distgit:
+      src: fedorapkgs:libsolv.git
+      patches: drop
 
   - name: librepo
     git:
