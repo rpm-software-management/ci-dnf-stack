@@ -58,24 +58,6 @@ Feature: Installing modules without cli profile specification, using profile ove
        When I successfully run "dnf -y module remove ModuleConfED2:salt"
         And I successfully run "dnf -y module disable ModuleConfED2:salt"
 
-  @xfail
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1568165
-  Scenario: Install module, 'default' profile does not exist, repo profile override is 'default', expecting 'default' profile selection
-       When I save rpmdb
-        And I successfully run "dnf -y module install ModuleConfND2:salt"
-       Then a module ModuleConfND2 config file should contain
-         | Key      | Value   |
-         | state    | enabled |
-         | stream   | salt    |
-         | profiles | default |
-        And rpmdb does not change
-
-  @xfail
-  # due to previous scenario failure
-  Scenario: Cleanup from previous scenario
-       When I successfully run "dnf -y module remove ModuleConfND2:salt"
-        And I successfully run "dnf -y module disable ModuleConfND2:salt"
-
   Scenario: Install module, populated 'default' profile exists, repo profile override is 'default', expecting 'default' profile selection
        When I save rpmdb
         And I successfully run "dnf -y module install ModuleConfPD2:salt"

@@ -6,8 +6,6 @@ Feature: Module provides command
        When I enable repository "modularityABDE"
         And I successfully run "dnf makecache"
 
-  # bz1623866
-  # bz1629667
   @xfail @bz1629667
   Scenario: I can get list of all modules providing specific package
        When I successfully run "dnf module provides TestH"
@@ -27,7 +25,7 @@ Feature: Module provides command
            Summary  : Module ModuleB summary
            """
 
-  @xfail @bz1623866
+  @bz1623866
   Scenario: I can get list of enabled modules providing specific package
        When I successfully run "dnf module enable ModuleB:f26 -y"
         And I successfully run "dnf module provides TestH"
