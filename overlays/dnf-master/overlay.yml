@@ -20,9 +20,6 @@ components:
   - name: createrepo_c
     git:
       src: github:rpm-software-management/createrepo_c.git
-#    distgit:
-#      src: fedorapkgs:createrepo_c.git
-#      patches: drop
 
   - name: libcomps
     git:
@@ -45,3 +42,10 @@ components:
   - name: dnf-plugins-extras
     git:
       src: github:rpm-software-management/dnf-plugins-extras.git
+
+#  - name: microdnf
+#    git:
+#      src: github:rpm-software-management/microdnf.git
+#    distgit:
+#      src: fedorapkgs:microdnf.git
+#      patches: drop
