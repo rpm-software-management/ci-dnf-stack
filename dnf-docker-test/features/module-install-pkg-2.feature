@@ -6,7 +6,7 @@ Feature: Installing package from module - error handling
        When I enable repository "modularityY"
         And I successfully run "dnf makecache"
 
-  Scenario: I cannot install a specific package from a disabled module when default stream is not defined
+  Scenario: I cannot install a specific package from a non-enabled module when default stream is not defined
        When I save rpmdb
        When I run "dnf install -y TestY"
        Then rpmdb does not change
@@ -27,13 +27,13 @@ Feature: Installing package from module - error handling
         """
        When I enable repository "ursineY"
 
-  Scenario: module content masks ursine content - disabled module
+  Scenario: module content masks ursine content - default stream
         When I run "dnf install TestY-2-1 -y"
         Then the command exit code is 1
          And the command stderr should match regexp "Error: Unable to find a match"
          And the command stdout should match regexp "No match for argument: TestY-2-1"
 
-  Scenario: module content masks ursine content - enabled module
+  Scenario: module content masks ursine content - enabled stream
        When I successfully run "dnf module enable ModuleY:f27 -y"
         And I run "dnf install TestY-2-1 -y"
        Then the command exit code is 1
