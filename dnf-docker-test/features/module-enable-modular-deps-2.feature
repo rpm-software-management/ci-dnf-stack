@@ -168,3 +168,11 @@ Feature: Dependency resolution must occur to determine the appropriate dependent
        When I run "dnf -y module enable ModuleA:stream1"
        Then the command should fail
         And the command stderr should match regexp "Modular dependency problems"
+
+  @bz1670496
+  Scenario: An error is printed when trying to install different context
+      Given I successfully run "dnf -y module reset ModuleR ModuleA"
+        And I successfully run "dnf -y module enable ModuleR:stream3"
+       When I run "dnf -y module install ModuleA:stream1/default"
+       Then the command should fail
+        And the command stderr should match regexp "Modular dependency problems"
