@@ -32,14 +32,15 @@ Feature: Enabling module stream
           | stream  | f26     |
        And the command stdout should match regexp "Nothing to do."
 
-  Scenario: I can enable a different stream of an already enabled module
-       When I successfully run "dnf module enable ModuleA:f27 --assumeyes"
-       Then a module ModuleA config file should contain
+  Scenario: I can't enable a different stream of an already enabled module
+       When I run "dnf module enable ModuleA:f27 --assumeyes"
+       Then the command should fail
+        And a module ModuleA config file should contain
           | Key     | Value   |
           | state   | enabled |
-          | stream  | f27     |
-       And the command stdout should match regexp "Switching module streams:"
-       And the command stdout should match regexp "ModuleA +f26 -> f27"
+          | stream  | f26     |
+       And the command stderr should match regexp "The operation would result in switching of module 'ModuleA' stream 'f26' to stream 'f27'"
+       And the command stderr should match regexp "Error: It is not possible to switch enabled streams of a module."
 
   Scenario: Enabling a module doesn't install any packages
         When I save rpmdb
