@@ -8,6 +8,8 @@ import parse
 import re
 import six
 
+import socket
+
 import command_utils
 import repo_utils
 import table_utils
@@ -302,3 +304,19 @@ def step_history_info(ctx, spec=""):
                     if pkg in line and key in line:
                         pkgs.remove(pkg)
             assert not pkgs, '"{}" not matched as "{}"'.format(pkgs[0], key)
+
+@step('I sniff packets expecting "{desired_header}"')
+def when_action_command(ctx, desired_header):
+    command = "dnf repoquery some-random-query-to-initiate-communication"
+    s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
+    s.settimeout(2)
+    ctx.cmd_result = command_utils.run(ctx, command)
+    try:
+        for x in range(1000):
+            packet = s.recv(1024)
+            if desired_header in str(packet):
+                return
+        raise AssertionError(desired_header + 'not found in last 1000 packets')
+    except socket.timeout:
+        raise AssertionError('"{}" not found in "{}" recieved packets and no new packets within 2 sec.'
+                             .format(desired_header, str(x)))
