@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
-  <revision>1549872506</revision>
+  <revision>1550000000</revision>
   <data type="primary">
-    <checksum type="sha256">818f1de1547d054edf045bb9483cc8f0684986d7fef9d8c592464597000d6635</checksum>
-    <open-checksum type="sha256">5d64abffae2d9224c1160956bda09ffe643ece28f8c4b7f740032807885567d6</open-checksum>
-    <location href="repodata/818f1de1547d054edf045bb9483cc8f0684986d7fef9d8c592464597000d6635-primary.xml.gz"/>
-    <timestamp>1549872506</timestamp>
-    <size>25463</size>
+    <checksum type="sha256">8f2a2afae5a302773a2ed00f7c38336016ef5bb1bedf29b008e6719d7a5ddadf</checksum>
+    <open-checksum type="sha256">29fb5ce32351f380347285bba4136a9ca56f5e3a770d388bf7b2c7d9212c0c7b</open-checksum>
+    <location href="repodata/primary.xml.gz"/>
+    <timestamp>1550000000</timestamp>
+    <size>25466</size>
     <open-size>426394</open-size>
   </data>
   <data type="filelists">
     <checksum type="sha256">a24f24b363cca85a10f883a2ef74ac2c9b133968594dab24f7fe6a5be745255d</checksum>
     <open-checksum type="sha256">87b1004a113d201050e65ddfcc36b2b274a201c9c498e19bb72635f46127eefd</open-checksum>
-    <location href="repodata/a24f24b363cca85a10f883a2ef74ac2c9b133968594dab24f7fe6a5be745255d-filelists.xml.gz"/>
-    <timestamp>1549872506</timestamp>
+    <location href="repodata/filelists.xml.gz"/>
+    <timestamp>1550000000</timestamp>
     <size>10419</size>
     <open-size>40219</open-size>
   </data>
   <data type="other">
     <checksum type="sha256">24d83badd93dddb0fba25a6be414f381bc70fb21481bf67d78dabe6d8a4ad7b8</checksum>
     <open-checksum type="sha256">59ff4018bbaf71af2e99ec1c9c08c159eff6e28119c5d813e3a4fe2d70137370</open-checksum>
-    <location href="repodata/24d83badd93dddb0fba25a6be414f381bc70fb21481bf67d78dabe6d8a4ad7b8-other.xml.gz"/>
-    <timestamp>1549872506</timestamp>
+    <location href="repodata/other.xml.gz"/>
+    <timestamp>1550000000</timestamp>
     <size>10287</size>
     <open-size>39979</open-size>
   </data>

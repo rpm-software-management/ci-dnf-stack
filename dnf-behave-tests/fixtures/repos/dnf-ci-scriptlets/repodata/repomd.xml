@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
-  <revision>1549872506</revision>
+  <revision>1550000000</revision>
   <data type="primary">
-    <checksum type="sha256">6acac3cb674c05b63815f8e64bea6bcf8fa8b487ef7b02a6ba4e0f3aa700304a</checksum>
-    <open-checksum type="sha256">62351a90675429880164eae0684999d3b01771fc2a8f7c633526ce4f0917fb7f</open-checksum>
-    <location href="repodata/6acac3cb674c05b63815f8e64bea6bcf8fa8b487ef7b02a6ba4e0f3aa700304a-primary.xml.gz"/>
-    <timestamp>1549872506</timestamp>
+    <checksum type="sha256">e603d15c36fd3cd5aa24e939e2ee27fff4d1a404421c144107587c5badfd0007</checksum>
+    <open-checksum type="sha256">ac1cc8db33ffd4b7a4b99b09c18e1af018392622fbda4d74ffd1fbbbae7a7a92</open-checksum>
+    <location href="repodata/primary.xml.gz"/>
+    <timestamp>1550000000</timestamp>
     <size>2360</size>
     <open-size>23154</open-size>
   </data>
   <data type="filelists">
     <checksum type="sha256">66a5ac3ad2c72db47efdf78fd1746110bbfa86c56664a903588d7e55ba097a43</checksum>
     <open-checksum type="sha256">2c80f92717bf81b9a0a085cda35f189a63ce22b3770e5bd7152d1b86e87c8fbf</open-checksum>
-    <location href="repodata/66a5ac3ad2c72db47efdf78fd1746110bbfa86c56664a903588d7e55ba097a43-filelists.xml.gz"/>
-    <timestamp>1549872506</timestamp>
+    <location href="repodata/filelists.xml.gz"/>
+    <timestamp>1550000000</timestamp>
     <size>1350</size>
     <open-size>4824</open-size>
   </data>
   <data type="other">
     <checksum type="sha256">24580407e263d7b6d16fa6bf220c0865833aab0d2f191808a9e03791731cf3ce</checksum>
     <open-checksum type="sha256">6e22949dc706c29fed5fe33b8c5120c804f73bc860c5595a81189199664b91c4</open-checksum>
-    <location href="repodata/24580407e263d7b6d16fa6bf220c0865833aab0d2f191808a9e03791731cf3ce-other.xml.gz"/>
-    <timestamp>1549872506</timestamp>
+    <location href="repodata/other.xml.gz"/>
+    <timestamp>1550000000</timestamp>
     <size>1271</size>
     <open-size>4282</open-size>
   </data>
