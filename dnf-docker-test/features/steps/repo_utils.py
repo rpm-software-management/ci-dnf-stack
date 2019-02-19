@@ -131,6 +131,17 @@ def build_updateinfo_xml_elem_update(update, pkg_details):
     cnt = doc.createTextNode(update.get('Collection', 'Default collection'))
     elem.appendChild(cnt)
     collection.appendChild(elem)
+    # add module info, value is in form name:stream:verson:context:arch
+    module_info = update.get('Module', None)
+    if module_info:
+        m_name, m_stream, m_version, m_context, m_arch = module_info.split(':')
+        module = doc.createElement("module")
+        module.setAttribute("name", m_name)
+        module.setAttribute("stream", m_stream)
+        module.setAttribute("version", m_version)
+        module.setAttribute("context", m_context)
+        module.setAttribute("arch", m_arch)
+        collection.appendChild(module)
     # now for every package I need to prepare this based on the details obtained from primary.xml
     # <package name="PKG_NAME" version="3.0.33" release="3.29.el5_5.1" epoch="0" arch="i386" src="samba-3.0.33-3.29.el5_5.1.src.rpm">
     # <filename>libsmbclient-3.0.33-3.29.el5_5.1.i386.rpm</filename>

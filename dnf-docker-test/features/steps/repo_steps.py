@@ -607,7 +607,8 @@ def step_updateinfo_defined_in_repository(ctx, repository):
     """
     HEADINGS_GROUP = ['Id', 'Tag', 'Value']
     UPDATEINFO_TAGS_REPEATING = ['Package', 'Reference']
-    UPDATEINFO_TAGS = ['Title', 'Type', 'Description', 'Solution', 'Summary', 'Severity', 'Rights', 'Issued', 'Updated'] + \
+    UPDATEINFO_TAGS = ['Title', 'Type', 'Description', 'Solution', 'Summary', 'Severity',
+                       'Rights', 'Issued', 'Updated', 'Module'] + \
                       UPDATEINFO_TAGS_REPEATING
     updateinfo_table = table_utils.parse_skv_table(ctx, HEADINGS_GROUP, UPDATEINFO_TAGS, UPDATEINFO_TAGS_REPEATING)
 
