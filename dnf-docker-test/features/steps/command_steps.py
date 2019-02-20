@@ -158,6 +158,13 @@ def step_the_command_stream_should_not_match_regexp(ctx, stream, regexp):
     else:
         ctx.assertion.assertNotRegex(text, regexp)
 
+@then('the command {stream:stdout_stderr} should match regexp output of "{command}"')
+def step_the_command_stream_should_match_output_of(ctx, stream, command):
+    cmd_result = command_utils.run(ctx, command)
+    regexp = getattr(cmd_result, stream)
+    text = getattr(ctx.cmd_result, stream)
+    six.assertRegex(ctx.assertion, text, regexp)
+
 @then('the command {stream:stdout_stderr} section "{section}" should match exactly')
 def step_the_command_stream_section_should_match_exactly(ctx, stream, section):
     """
