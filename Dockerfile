@@ -1,9 +1,10 @@
-FROM fedora:29
-ENV LANG C
-
-
+######################
+# DNF CI STACK IMAGE #
+######################
+#
 # Build types
 # -----------
+#
 # distro
 #       install distro packages
 # copr
@@ -14,7 +15,28 @@ ENV LANG C
 #       install also additional tools for debugging in the container
 #       then upgrade to packages from local rpms/ folder
 #
-# Example: docker build . --build-arg=TYPE=copr
+# Usage
+# -----
+#
+# $ docker build -t dnfci --build-arg=TYPE=copr .
+# $ docker run -it dnfci [behave-args]
+#
+#     or
+#
+# $ docker run -it --entrypoint bash dnfci
+# (container)# ./run-tests
+#
+#     or
+#
+# $ docker run -it dnfci \
+#     -Ddnf_executable=dnf-3 --junit --junit-directory=/opt/behave/junit/ \
+#     [--wip --no-skipped] /opt/behave/features
+# TODO: this doesn't work yet because repos have relative paths to workdir
+# probably need to change the relative paths to be relative to repo file or
+# replace relative with absolute paths
+
+FROM fedora:29
+ENV LANG C
 ARG TYPE=local
 
 
@@ -77,17 +99,7 @@ COPY ./dnf-behave-tests/ /opt/behave/
 
 
 VOLUME ["/opt/behave/junit"]
+WORKDIR /opt/behave
+ENTRYPOINT ["./run-tests"]
 
 
-# Run docker:
-#
-# $ docker run -it <hash> /bin/bash
-# $ cd /opt/behave
-# $ ./run-tests
-#
-# or
-#
-# $ docker run -it <hash> behave -Ddnf_executable=dnf-3 --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped] /opt/behave/features
-# TODO: this doesn't work yet because repos have relative paths to workdir
-# probably need to change the relative paths to be relative to repo file
-# or replace relative with absolute paths
