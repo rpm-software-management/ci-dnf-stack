@@ -8,6 +8,12 @@ Feature: Test for dnf list (including all documented suboptions and yum compatib
          | Package      | Tag      | Value     |
          | TestA        | Version  | 1         |
          | TestB        | Version  | 1         |
+      Given repository "long_names" with packages
+         | Package                                        | Tag      | Value                            |
+         | superMegaLongNameOfPackage                     | Version  | 1234567890.123456789101112131415 |
+         | purposeOfTheseNamesIsToBreakDNFOuput           | Version  | 2234567890.123123123123123123123 |
+         | whichIsKnownToBeVulnerableWhenPipedToGrep      | Version  | 3234567890.123123123123123123123 |
+         | forTestingPurposesWeEvenHaveReallyLongVersions | Version  | 1435347658326856238756823658aaaa |
         And repository "ext" with packages
          | Package      | Tag      | Value     |
          | XTest        | Version  | 2         |
@@ -176,3 +182,12 @@ Feature: Test for dnf list (including all documented suboptions and yum compatib
         And the command stdout section "Available Packages" should match regexp "TestA.*2-1"
         And the command stdout section "Available Packages" should match regexp "TestB.*2-1"
         And the command stdout should not match regexp "XTest"
+
+  @1550560
+  Scenario: dnf list available with long names piped to grep
+       When I enable repository "long_names"
+        And I successfully run "bash -c 'eval dnf list available | grep 1'"
+       Then the command stdout should match regexp "forTestingPurposesWeEvenHaveReallyLongVersions.noarch\s+1435347658326856238756823658aaaa-1\s+long_names"
+        And the command stdout should match regexp "purposeOfTheseNamesIsToBreakDNFOuput.noarch\s+2234567890.123123123123123123123-1\s+long_names"
+        And the command stdout should match regexp "superMegaLongNameOfPackage.noarch\s+1234567890.123456789101112131415-1\s+long_names"
+        And the command stdout should match regexp "whichIsKnownToBeVulnerableWhenPipedToGrep.noarch\s+3234567890.123123123123123123123-1\s+long_names"
