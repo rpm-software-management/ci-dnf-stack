@@ -101,5 +101,3 @@ COPY ./dnf-behave-tests/ /opt/behave/
 VOLUME ["/opt/behave/junit"]
 WORKDIR /opt/behave
 ENTRYPOINT ["./run-tests"]
-
-
