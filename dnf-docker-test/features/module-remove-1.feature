@@ -5,6 +5,7 @@ Feature: Module profile removal
       Given I run steps from file "modularity-repo-1.setup"
        When I enable repository "modularityABDE"
         And I successfully run "dnf -y module enable ModuleA:f26"
+        And I successfully run "dnf -y module install ModuleA/default"
         And I successfully run "dnf -y module install ModuleA/minimal"
         And I successfully run "dnf -y module install ModuleA/client"
         And I successfully run "dnf -y module install ModuleA/devel"
@@ -24,10 +25,26 @@ Feature: Module profile removal
           | profiles |         |
           | state    | enabled |
 
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1648264
+  @bz1648264
+  Scenario: I can remove an installed module profile using "remove @<module_spec>"
+       When I save rpmdb
+        And I successfully run "dnf remove -y @ModuleA/default"
+       Then rpmdb changes are
+          | State     | Packages                       |
+          # cannot remove TestA nor TestB because it's needed by other profiles
+          | unchanged | TestA/1-2.modA, TestB/1-1.modA |
+          | removed   | TestC/1-2.modA                 |
+        And a module ModuleA config file should contain
+          | Key       | Value                          |
+          # Other profiles are still installed
+          | profiles  | (set) minimal, client, devel   |
+          | state     | enabled                        |
+
   # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
   # https://bugzilla.redhat.com/show_bug.cgi?id=1629841
   @bz1629841 @bz1581624
-  Scenario: I can remove an installed module profile
+  Scenario: I can remove an installed module profile using "module remove"
        When I save rpmdb
         And I successfully run "dnf module remove -y ModuleA/minimal"
        Then rpmdb changes are
