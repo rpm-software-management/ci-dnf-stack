@@ -28,6 +28,9 @@ DEFAULT_PLATFORM_ID="platform:f29"
 # "destructive" to the system running it.
 DESTRUCTIVE_TAGS = [
     "destructive",
+    # This temporarily replaces /usr/lib/os-release and may not get to
+    # restoring the backup if something goes wrong (such as crashing).
+    "fixture.osrelease",
 ]
 
 
@@ -185,6 +188,27 @@ class DNFContext(object):
         return result
 
 
+class OSRelease(object):
+    """Represents the os-release(5) file."""
+    def __init__(self, path):
+        self._backup = '/tmp/os-release'
+        self._path = path
+        # Back up the original file
+        shutil.copyfile(path, self._backup)
+
+    def set(self, data):
+        """Store the given data in this file."""
+        content = ('%s=%s' % (k, v) for k, v in data.items())
+        with open(self._path, 'w') as f:
+            f.write('\n'.join(content))
+        self.data = data
+
+    def __del__(self):
+        # Restore the backup
+        shutil.copyfile(self._backup, self._path)
+        os.remove(self._backup)
+
+
 @fixture
 def httpd_context(context, *args, **kwargs):
     context.httpd = HttpServerContext(*args, **kwargs)
@@ -197,6 +221,13 @@ def ftpd_context(context):
     context.ftpd = FtpServerContext()
     yield context.ftpd
     context.ftpd.shutdown()
+
+
+@fixture
+def osrelease(context):
+    context.osrelease = OSRelease('/usr/lib/os-release')
+    yield context.osrelease
+    del context.osrelease
 
 
 def before_step(context, step):
@@ -244,6 +275,8 @@ def before_tag(context, tag):
                     logging=(len(parts) == 3 and parts[2] == 'log'))
     if tag == 'fixture.ftpd':
         use_fixture(ftpd_context, context)
+    elif tag == 'fixture.osrelease':
+        use_fixture(osrelease, context)
 
 
 def after_tag(context, tag):
