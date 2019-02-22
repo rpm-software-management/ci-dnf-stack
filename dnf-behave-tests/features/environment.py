@@ -125,12 +125,39 @@ class DNFContext(object):
         return result
 
 
+class OSRelease(object):
+    """Represents the os-release(5) file."""
+    def __init__(self, path):
+        self._backup = '/tmp/os-release'
+        self._path = path
+        # Back up the original file
+        os.rename(path, self._backup)
+
+    def set(self, data):
+        """Store the given data in this file."""
+        content = ('%s=%s' % (k, v) for k, v in data.items() if v is not None)
+        with open(self._path, 'w') as f:
+            f.write('\n'.join(content))
+        self.data = data
+
+    def __del__(self):
+        # Restore the backup
+        os.rename(self._backup, self._path)
+
+
 @fixture
 def httpd(context):
     context.httpd = HTTPServer('fixtures/repos/dnf-ci-http')
     context.httpd.serve()
     yield context.httpd
     context.httpd.shutdown()
+
+
+@fixture
+def osrelease(context):
+    context.osrelease = OSRelease('/etc/os-release')
+    yield context.osrelease
+    del context.osrelease
 
 
 def before_step(context, step):
@@ -165,6 +192,8 @@ def after_feature(context, feature):
 def before_tag(context, tag):
     if tag == 'fixture.httpd':
         use_fixture(httpd, context)
+    elif tag == 'fixture.osrelease':
+        use_fixture(osrelease, context)
 
 
 def after_tag(context, tag):
