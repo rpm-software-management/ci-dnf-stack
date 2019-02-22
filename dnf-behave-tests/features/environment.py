@@ -7,6 +7,9 @@ import os
 import shutil
 import tempfile
 
+from behave import fixture, use_fixture
+from steps.common.httpserv import HTTPServer
+
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
 
@@ -122,6 +125,14 @@ class DNFContext(object):
         return result
 
 
+@fixture
+def httpd(context):
+    context.httpd = HTTPServer('fixtures/repos/dnf-ci-http')
+    context.httpd.serve()
+    yield context.httpd
+    context.httpd.shutdown()
+
+
 def before_step(context, step):
     pass
 
@@ -152,7 +163,8 @@ def after_feature(context, feature):
 
 
 def before_tag(context, tag):
-    pass
+    if tag == 'fixture.httpd':
+        use_fixture(httpd, context)
 
 
 def after_tag(context, tag):

@@ -1,0 +1,5 @@
+[dnf-ci-http]
+name=dnf-ci-http
+baseurl=http://0.0.0.0:8000/
+enabled=1
+gpgcheck=0
