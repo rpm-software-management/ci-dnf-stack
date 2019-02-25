@@ -3,7 +3,7 @@ Feature: Profile installation errors
 # package FileConflict-1.0-1.x86_64 has file conflicts with
 # FileConflict-0:2.0.streamB-1.x86_64 from module test-module
 
-@xfail @bz1656782
+@xfail @bz1680684
 Scenario: Profile is not installed after its artifact failed to get installed
   Given _deprecated I use the repository "fileconflicts"
    When I save rpmdb
