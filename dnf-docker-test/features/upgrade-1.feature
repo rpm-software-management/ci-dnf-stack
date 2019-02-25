@@ -8,6 +8,7 @@ Scenario: Install packages from repository "test-1"
    | installed    | TestA, TestB, TestD, TestE, TestF, TestG, TestH  |
    | absent       | TestC                                            |
 
+@bz1649286
 Scenario: Upgrade package TestA from repository "upgrade_1"
  Given _deprecated I use the repository "upgrade_1"
  When _deprecated I execute "dnf" command "-y upgrade TestA" with "success"
@@ -15,6 +16,7 @@ Scenario: Upgrade package TestA from repository "upgrade_1"
    | State        | Packages   |
    | upgraded     | TestA      |
    | present      | TestB      |
+  And _deprecated line from "stdout" should "not start" with "Upgrade: TestA-1.0.0-2.noarch"
 
 @bz1670776 @bz1671683
 Scenario: Upgrade two packages from repository "upgrade_1"
