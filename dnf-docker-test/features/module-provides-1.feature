@@ -56,3 +56,39 @@ Feature: Module provides command
            Error: dnf module provides: too few arguments
            
            """
+
+  @bz1633151
+  Scenario: I see packages only once when they are availiable and installed
+      Given I successfully run "dnf module enable ModuleB:f26 -y"
+       When I save rpmdb
+        And I successfully run "dnf module provides TestI"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           TestI-1-1.modB.noarch
+           Module   : ModuleB:f26:2
+           Profiles : default
+           Repo     : modularityABDE
+           Summary  : Module ModuleB summary
+
+           """
+        And I successfully run "dnf module install -y ModuleB:f26/default"
+        Then a module "ModuleB" config file should contain
+          | Key      | Value |
+          | state    | enabled |
+          | stream   | f26   |
+        And rpmdb changes are
+         | State     | Packages       |
+         | installed | TestI/1-1.modB, TestG/1-2.modB |
+       When I save rpmdb
+        And I successfully run "dnf module provides TestI"
+       Then the command stdout should match line by line regexp
+           """
+           ?Last metadata expiration check
+           TestI-1-1.modB.noarch
+           Module   : ModuleB:f26:2
+           Profiles : default
+           Repo     : modularityABDE
+           Summary  : Module ModuleB summary
+
+           """
