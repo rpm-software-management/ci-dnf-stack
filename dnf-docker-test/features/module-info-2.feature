@@ -45,6 +45,45 @@ Feature: Module info --profile command
            ? +: Test.*
            """
 
+  @bz1571214
+  Scenario: I can get the info about content of existing module streams even if -q is set
+       When I successfully run "dnf -q module info --profile ModuleA"
+       Then the command stdout should match line by line regexp
+           """
+           Name +: ModuleA:f26:1::noarch
+           client +: Test.*
+           ? +: Test.*
+           server +: Test.*
+           ? +: Test.*
+           devel +: Test.*
+           minimal +: Test.*
+           default +: Test.*
+           ? +: Test.*
+           ? +: Test.*
+
+           Name +: ModuleA:f26:2::
+           client +: Test.*
+           ? +: Test.*
+           server +: Test.*
+           ? +: Test.*
+           devel +: Test.*
+           minimal +: Test.*
+           default +: Test.*
+           ? +: Test.*
+           ? +: Test.*
+ 
+           Name +: ModuleA:f27:1::
+           client +: Test.*
+           ? +: Test.*
+           server +: Test.*
+           ? +: Test.*
+           devel +: Test.*
+           minimal +: Test.*
+           default +: Test.*
+           ? +: Test.*
+           ? +: Test.*
+           """
+
   Scenario: Profile specification is ignored by dnf module info --profile
        When I successfully run "dnf module info --profile ModuleA/client"
        Then the command stdout should match line by line regexp
