@@ -22,7 +22,7 @@ Feature: Reset modules
        Then the command stdout should match regexp "ModuleM +f26 \[d\]\[x\]"
         And the command stdout should match regexp "ModuleM +f27 \[x\]"
        When I successfully run "dnf -y module reset ModuleM"
-       Then the command stdout should match regexp "Resetting module streams:"
+       Then the command stdout should match regexp "Resetting modules:"
         And the command stdout should match regexp "ModuleM"
        When I successfully run "dnf module list ModuleM"
        Then the command stdout should match regexp "ModuleM +f26 \[d\]"
@@ -34,7 +34,7 @@ Feature: Reset modules
        Then the command stdout should match regexp "ModuleMZ +f26 \[x\]"
         And the command stdout should match regexp "ModuleMZ +f27 \[x\]"
        When I successfully run "dnf -y module reset ModuleMZ"
-       Then the command stdout should match regexp "Resetting module streams:"
+       Then the command stdout should match regexp "Resetting modules:"
         And the command stdout should match regexp "ModuleMZ"
        When I successfully run "dnf module list ModuleMZ"
        Then the command stdout should match regexp "ModuleMZ +f26"
@@ -60,6 +60,7 @@ Feature: Reset modules
        Then the command stdout should match regexp "ModuleMZ +f26"
         And the command stdout should match regexp "ModuleMZ +f27"
 
+  @bz1677640
   # scenario different from the one in the relevant requirement!
   Scenario: I can reset an enabled default stream back to its non-enabled default state
        When I successfully run "dnf -y module enable ModuleM:f26"
@@ -67,8 +68,8 @@ Feature: Reset modules
        Then the command stdout should match regexp "ModuleM +f26 \[d\]\[e\]"
         And the command stdout should match regexp "ModuleM +f27"
        When I successfully run "dnf -y module reset ModuleM"
-       Then the command stdout should match regexp "Resetting module streams:"
-        And the command stdout should match regexp "ModuleM +f26"
+       Then the command stdout should match regexp "Resetting modules:"
+        And the command stdout should match regexp "ModuleM"
        When I successfully run "dnf module list ModuleM"
        Then the command stdout should match regexp "ModuleM +f26 \[d\]"
         And the command stdout should match regexp "ModuleM +f27"
@@ -80,8 +81,8 @@ Feature: Reset modules
        Then the command stdout should match regexp "ModuleMZ +f26 \[e\]"
         And the command stdout should match regexp "ModuleMZ +f27"
        When I successfully run "dnf -y module reset ModuleMZ"
-       Then the command stdout should match regexp "Resetting module streams:"
-        And the command stdout should match regexp "ModuleMZ +f26"
+       Then the command stdout should match regexp "Resetting modules:"
+        And the command stdout should match regexp "ModuleMZ"
        When I successfully run "dnf module list ModuleMZ"
        Then the command stdout should match regexp "ModuleMZ +f26"
         And the command stdout should match regexp "ModuleMZ +f27"

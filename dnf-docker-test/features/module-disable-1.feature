@@ -9,10 +9,11 @@ Feature: Disabling module stream
         And I successfully run "dnf -y module enable ModuleB:f26"
         And I successfully run "dnf makecache"
 
+  @bz1677640
   Scenario: I can disable a module when specifying module name
        When I successfully run "dnf module disable ModuleB -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleB *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleB"
         And a module ModuleB config file should contain
           | Key   | Value    |
           | state | disabled |
@@ -20,8 +21,8 @@ Feature: Disabling module stream
   Scenario: I can disable a module when specifying stream
        When I successfully run "dnf module enable ModuleB:f26 -y"
         And I successfully run "dnf module disable ModuleB:f26 -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleB *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleB"
         And a module ModuleB config file should contain
           | Key   | Value    |
           | state | disabled |
@@ -29,8 +30,8 @@ Feature: Disabling module stream
   Scenario: I can disable a module when specifying both stream and correct version
        When I successfully run "dnf module enable ModuleB:f26 -y"
         And I successfully run "dnf module disable ModuleB:f26:1 -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleB *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleB"
         And a module ModuleB config file should contain
           | Key   | Value    |
           | state | disabled |
@@ -45,8 +46,8 @@ Feature: Disabling module stream
   Scenario: I can disable a module with installed profile when specifying stream
        When I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf module disable ModuleA:f26 -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleA *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleA"
         And a module ModuleA config file should contain
           | Key   | Value    |
           | state | disabled |
@@ -54,8 +55,8 @@ Feature: Disabling module stream
   Scenario: I can disable a module with installed profile when specifying both stream and correct version
        When I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf module disable ModuleA:f26:2 -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleA *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleA"
         And a module ModuleA config file should contain
           | Key   | Value    |
           | state | disabled |
@@ -63,8 +64,8 @@ Feature: Disabling module stream
   Scenario: I can disable a module with installed profile when specifying other valid stream
        When I successfully run "dnf module enable ModuleA:f26 -y"
         And I successfully run "dnf module disable ModuleA:f27 -y"
-       Then the command stdout should match regexp "Disabling module streams:"
-        And the command stdout should match regexp "ModuleA *f26"
+       Then the command stdout should match regexp "Disabling modules:"
+        And the command stdout should match regexp "ModuleA"
         And a module ModuleA config file should contain
           | Key   | Value    |
           | state | disabled |
