@@ -3,3 +3,9 @@ name=dnf-ci-http
 baseurl=http://0.0.0.0:8000/
 enabled=1
 gpgcheck=0
+
+[dnf-ci-http-metalink]
+name=dnf-ci-http-metalink
+metalink=http://0.0.0.0:8000/metalink.xml
+enabled=1
+gpgcheck=0
