@@ -249,6 +249,30 @@ def step_userinstalled_match(ctx):
         for n in pkgs_split(notmatch):  # should not be matched
             assert n not in text, 'Package {} matched as userinstalled'.format(m)
 
+@then('history info rpmdb version did not change')
+def step_history_info_rpmdb_not_change(ctx, spec=""):
+    step_i_run_command(ctx, 'dnf history info ' + spec)
+
+    text = getattr(ctx.cmd_result, 'stdout')
+    lines = text.split('\n')
+    assert text and lines, 'No output'
+    brpmdb = None
+    erpmdb = None
+    for line in lines:
+        if 'Begin rpmdb' in line:
+            brpmdb = line.split(':')
+
+        if 'End rpmdb' in line:
+            erpmdb = line.split(':')
+
+        if brpmdb and erpmdb:
+            assert len(brpmdb) == len(erpmdb) == 3, 'Unexpected rpmdb version format'
+            break
+    assert brpmdb, 'Begin rpmdb version not found'
+    assert erpmdb, 'End rpmdb version not found'
+    assert brpmdb[1:] == erpmdb[1:], 'Begin and end rpmdb versions are different'
+
+
 @then('history info "{spec}" should match')
 @then('history info should match')
 def step_history_info(ctx, spec=""):
