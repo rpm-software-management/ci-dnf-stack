@@ -107,3 +107,28 @@ Scenario: Install a module of which all packages are non-modular
     And modules state is following
         | Module                    | State     | Stream    | Profiles  |
         | DnfCiModuleNoArtifacts    | enabled   | master    | default   |
+
+
+Scenario: I can install a module profile for a stream that was enabled as dependency
+  Given I use the repository "dnf-ci-fedora"
+    And I use the repository "dnf-ci-fedora-updates"
+    And I use the repository "dnf-ci-fedora-modular-updates"
+   When I execute dnf with args "module enable nodejs:11"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-stream-enable     | nodejs:11          |
+        | module-stream-enable     | postgresql:9.6     |
+    And modules state is following
+        | Module      | State     | Stream    | Profiles  |
+        | nodejs      | enabled   | 11        |           |
+        | postgresql  | enabled   | 9.6       |           |
+   When I execute dnf with args "module install postgresql/client"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                                                 |
+        | install                   | postgresql-0:9.6.11-1.module_2689+ea8f147f.x86_64       |
+        | install                   | postgresql-libs-0:9.6.11-1.module_2689+ea8f147f.x86_64  |
+        | install                   | CQRlib-devel-0:1.1.2-16.fc29.x86_64                     |
+        | install                   | CQRlib-0:1.1.2-16.fc29.x86_64                           |
+        | module-profile-install    | postgresql/client                                       |
