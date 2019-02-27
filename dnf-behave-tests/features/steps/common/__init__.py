@@ -8,6 +8,7 @@ from .dnf import parse_module_list
 from .dnf import parse_transaction_table
 from .file import ensure_directory_exists
 from .file import create_file_with_contents
+from .file import read_file_contents
 from .module import get_modules_state
 from .rpm import RPM
 from .rpm import diff_rpm_lists
