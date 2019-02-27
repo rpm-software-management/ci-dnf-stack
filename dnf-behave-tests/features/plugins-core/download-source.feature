@@ -42,4 +42,18 @@ Scenario: Download an existing --source RPM with --verbose option
         | setup-2.12.1-1.fc29.src.rpm           | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/src/setup-2.12.1-1.fc29.src.rpm  |
 
 
+@bz1649627
+Scenario: Download a specified source rpm
+  Given I enable plugin "download"
+    And I use the repository "dnf-ci-fedora"
+   When I execute dnf with args "download --destdir={context.dnf.tempdir} --source setup-2.12.1-1.fc29.src"
+   Then the exit code is 0
+    And stdout contains "setup-2.12.1-1.fc29.src.rpm"
+    And stdout does not contain "setup-2.12.1-1.fc29.noarch.rpm"
+    And file sha256 checksums are following
+        | Path                                                  | sha256                                                                                |
+        | {context.dnf.tempdir}/setup-2.12.1-1.fc29.src.rpm     | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/src/setup-2.12.1-1.fc29.src.rpm  |
+        | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm  | -                                                                                     |
+
+
 # TODO: --source --resolve doesn't work correctly; see see bug 1571251
