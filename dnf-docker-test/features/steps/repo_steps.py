@@ -782,3 +782,63 @@ def step_a_file_with_type_added_into_repository(ctx, filepath, mdtype, repositor
     cmd = "{} --mdtype={} {} {}".format(modifyrepo, mdtype, filepath, os.path.join(repodir, "repodata"))
     step_i_successfully_run_command(ctx, cmd)
     file_utils.set_dir_content_ownership(ctx, repodir)   # restore file ownership
+
+@when('I Update repository "{repository}" with packages')
+def then_update_repository_with_packages(ctx, repository):
+    """
+    Examples:
+
+       Feature: Working with repositories
+
+         Given I update http repository base with packages
+            | Package | Tag | Value |
+            | foo     |     |       |
+
+         Given I update http repository "updates" with packages
+            | Package | Tag     | Value |
+            | foo     | Version |  2.1  |
+            | foo v3  | Version |  3.1  |
+
+    """
+    packages = table_utils.parse_skv_table(ctx, HEADINGS_REPO,
+                                           PKG_TAGS, PKG_TAGS_REPEATING)
+
+    rpmbuild = which("rpmbuild")
+    ctx.assertion.assertIsNotNone(rpmbuild, "rpmbuild is required")
+    createrepo = which("createrepo_c")
+    ctx.assertion.assertIsNotNone(createrepo, "createrepo_c is required")
+
+    repodir = repo_utils.get_repo_dir(repository)
+    tmpdir = repodir
+    srpm_tmpdir = '{}-source'.format(tmpdir.rstrip('/'))
+    template = JINJA_ENV.from_string(PKG_TMPL)
+    for name, settings in packages.items():
+        name = name.split()[0]  # cut-off the pkg name _suffix_ to allow defining multiple package versions
+        disttag = ""
+        if '/' in name:  # using the module/pkgname notation, module would be placed to a disttag
+            (module, name) = name.split('/', 1)
+            disttag = ".{}".format(module)
+        # before processing the template
+        #   lower all characters
+        #   replace '%' in Tag name with '_'
+        #   replace '(' in Tag name with '_'
+        #   delete all ')' in Tag
+        settings = {k.lower().replace('%', '_').replace('(', '_').replace(')', ''): v for k, v in settings.items()}
+        ctx.text = template.render(name=name, disttag=disttag, **settings)
+        fname = "{!s}/{!s}.spec".format(tmpdir, name)
+        step_a_file_filepath_with(ctx, fname)
+        buildname = '%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm'
+        if 'arch' not in settings or settings['arch'] == 'noarch':
+            cmd = "{!s} --define '_rpmdir {!s}' --define '_srcrpmdir {!s}' \
+                   --define '_build_name_fmt {!s}' -ba {!s}" \
+                   .format(rpmbuild, tmpdir, srpm_tmpdir, buildname, fname)
+        else:
+            cmd = "setarch {!s} {!s} --define '_rpmdir {!s}' --define '_srcrpmdir {!s}' \
+                   --define '_build_name_fmt {!s}' --target {!s} -ba {!s}" \
+                   .format(settings['arch'], rpmbuild, tmpdir, srpm_tmpdir, buildname, settings['arch'], fname)
+        step_i_successfully_run_command(ctx, cmd)
+
+    file_utils.set_dir_content_ownership(ctx, repodir, 'root')   # change file ownership to root so we can change it
+    cmd = "{!s} --update {!s}".format(createrepo, repodir)
+    step_i_successfully_run_command(ctx, cmd)
+    file_utils.set_dir_content_ownership(ctx, repodir)   # restore file ownership
