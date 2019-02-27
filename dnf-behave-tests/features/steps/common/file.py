@@ -14,3 +14,9 @@ def create_file_with_contents(filename, contents, encoding="utf-8"):
         outstream.write(contents)
         outstream.flush()
     assert os.path.exists(filename), "ENSURE: file exists {!r}".format(filename)
+
+def read_file_contents(filename, encoding="utf-8"):
+    assert os.path.exists(filename), "ENSURE: file exists {!r}".format(filename)
+    with codecs.open(filename, "r", encoding) as outstream:
+        output = outstream.read()
+        return output
