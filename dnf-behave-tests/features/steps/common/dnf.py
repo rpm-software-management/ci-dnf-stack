@@ -37,6 +37,7 @@ ACTIONS_EN = {
     "Removing Groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
     "Installing module profiles": "module-profile-install",
+    "Removing module profiles": "module-profile-remove",
     "Enabling module streams": "module-stream-enable",
 }
 
