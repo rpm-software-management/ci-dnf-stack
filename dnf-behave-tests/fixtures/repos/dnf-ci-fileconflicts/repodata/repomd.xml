@@ -2,8 +2,8 @@
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
   <revision>1550000000</revision>
   <data type="primary">
-    <checksum type="sha256">d921b66080587b34306faf0034e8c34030fe4f6de741e4bdcb5340c97bf15173</checksum>
-    <open-checksum type="sha256">3788b6738a49aae53a2bd720452d2fefa544908c9abc47495b863e2ce1edb30f</open-checksum>
+    <checksum type="sha256">61c5e37e2f4e26a847e5006d96cca271d6ffcde1694f4369103f0bcce6e8e2a3</checksum>
+    <open-checksum type="sha256">9ae88c772b682b4cd88c7e5eab5d716c4c70dbeaa1d3c6d723490ecd3b702e6b</open-checksum>
     <location href="repodata/primary.xml.gz"/>
     <timestamp>1550000000</timestamp>
     <size>905</size>
@@ -29,7 +29,7 @@
     <checksum type="sha256">43e610d89ceb7705d3110b685b348de3da634030a7b5af0ae64cad7e6dc0704a</checksum>
     <open-checksum type="sha256">54bfe50af8c0da4f3fcb4df827bb32c8e4ebfdd8160a3c05c4cf17d0a0ab5064</open-checksum>
     <location href="repodata/43e610d89ceb7705d3110b685b348de3da634030a7b5af0ae64cad7e6dc0704a-modules.yaml.gz"/>
-    <timestamp>1551087983</timestamp>
+    <timestamp>1551347794</timestamp>
     <size>207</size>
     <open-size>301</open-size>
   </data>
