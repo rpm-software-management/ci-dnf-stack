@@ -61,7 +61,8 @@ Scenario: I can list installed modules
 Scenario: I can list disabled modules (when there are no disabled modules)
    When I execute dnf with args "module list --disabled"
    Then the exit code is 0
-    And stderr contains "No matching Modules to list"
+    And stderr is empty
+    And module list is empty
 
 
 Scenario: I can list disabled modules
