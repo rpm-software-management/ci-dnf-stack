@@ -31,6 +31,13 @@ def check_module_list(context):
     return modules
 
 
+@behave.then("module list is empty")
+def step_impl(context):
+    lines = context.cmd_stdout.splitlines()
+    modules = parse_module_list(lines)
+    assert not modules, 'Module list is not empty.'
+
+
 @behave.then("module list contains")
 def step_impl(context):
     check_module_list(context)
