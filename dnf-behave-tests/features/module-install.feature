@@ -132,3 +132,22 @@ Scenario: I can install a module profile for a stream that was enabled as depend
         | install                   | CQRlib-devel-0:1.1.2-16.fc29.x86_64                     |
         | install                   | CQRlib-0:1.1.2-16.fc29.x86_64                           |
         | module-profile-install    | postgresql/client                                       |
+
+
+Scenario: Installing a stream without a defined default profile enables the stream
+  Given I use the repository "dnf-ci-thirdparty"
+   When I execute dnf with args "module install DnfCiModulePackageDep:packagedep"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                            |
+        | module-stream-enable     | DnfCiModulePackageDep:packagedep   |
+
+
+Scenario: Installing a stream without a defined default profile enables the stream and its requires
+  Given I use the repository "dnf-ci-thirdparty"
+   When I execute dnf with args "module install DnfCiModulePackageDep:moduledep"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                            |
+        | module-stream-enable     | DnfCiModulePackageDep:moduledep    |
+        | module-stream-enable     | nodejs:8                           |
