@@ -29,6 +29,7 @@ Scenario: I can list all available modules
         | dnf-ci-fedora-modular | ninja     | master [d] | default [d]                          |
         | dnf-ci-fedora-modular | ninja     | development| default [d]                          |
         | dnf-ci-fedora-modular | ninja     | legacy     | default                              |
+        | dnf-ci-fedora-modular | dwm       | 6.0        | default                              |
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]     | development, minimal [i], default [d] |
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]     |
         | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default     |
