@@ -20,6 +20,28 @@ Feature: Installing module profiles -- error handling
 
             """
 
+  Scenario: A proper error message is displayed when I try to install a non-existant stream
+       When I run "dnf module install ModuleX:NoSuchStream"
+       Then the command exit code is 1
+        And the command stderr should match exactly
+            """
+            Error: Problems in request:
+            missing groups or modules: ModuleX:NoSuchStream
+
+            """
+
+  @bz1645167
+  Scenario: A proper error message is displayed when I try to install a non-existant profile
+       When I run "dnf module install ModuleX:f26/NoSuchProfile"
+       Then the command exit code is 1
+        And the command stderr should match exactly
+            """
+            Unable to match profile in argument ModuleX:f26/NoSuchProfile
+            Error: Problems in request:
+            missing groups or modules: ModuleX:f26/NoSuchProfile
+
+            """
+
   Scenario: A proper error message is displayed when I try to install a non-existant module using group syntax
        When I run "dnf install @NoSuchModule"
        Then the command exit code is 1
