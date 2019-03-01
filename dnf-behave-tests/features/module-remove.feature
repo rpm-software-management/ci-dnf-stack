@@ -38,7 +38,7 @@ Scenario: I can remove an installed module profile specifying stream name
       | Action                    | Package                                       |
       | remove                    | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | remove                    | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
-      | module-profile-remove     | nodejs/default                                |
+      | module-profile-disable    | nodejs/default                                |
 
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
@@ -62,7 +62,7 @@ Scenario: I can remove an installed module profile
       | unchanged                 | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       # cannot remove nodejs because it's needed by other profiles
       | unchanged                 | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | module-profile-remove     | nodejs/minimal                                      |
+      | module-profile-disable    | nodejs/minimal                                      |
   And file "/etc/dnf/modules.d/nodejs.module" contains lines
   """
   [nodejs]
@@ -93,6 +93,7 @@ Scenario: Removing of a non-installed profiles would pass
   And stderr contains "Unable to match profile in argument nodejs/development"
 
 
+@wip
 Scenario: I can remove multiple profiles
  When I execute dnf with args "module install nodejs/minimal"
  Then Transaction contains
@@ -112,8 +113,8 @@ Scenario: I can remove multiple profiles
       | Action                 | Package                                             |
       | remove                 | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | remove                 | npm-1:8.11.4-1.module_2030+42747d40.x86_64          |
-      | module-profile-remove  | nodejs/default                                      |
-      | module-profile-remove  | nodejs/development                                  |
+      | module-profile-disable | nodejs/default                                      |
+      | module-profile-disable | nodejs/development                                  |
   And file "/etc/dnf/modules.d/nodejs.module" contains lines
   """
   [nodejs]
