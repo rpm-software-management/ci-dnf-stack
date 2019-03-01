@@ -117,6 +117,20 @@ def then_stdout_contains_lines(context):
             raise AssertionError("Stdout doesn't contain line: %s" % line)
 
 
+@behave.then("stdout matches each line once")
+def then_stdout_matches_lines(context):
+    out_lines = context.cmd_stdout.split('\n')
+    test_lines = [l.strip() for l in context.text.split('\n')]
+    for line in test_lines:
+        for outline in out_lines:
+            if re.search(line, outline):
+                out_lines.remove(outline)
+                break
+        else:
+            print(context.cmd_stdout)
+            raise AssertionError("Stdout doesn't contain line: %s" % line)
+
+
 @behave.then("stdout does not contain lines")
 def then_stdout_contains_lines(context):
     out_lines = [l.strip() for l in context.cmd_stdout.split('\n')]
