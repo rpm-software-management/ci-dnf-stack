@@ -28,6 +28,17 @@ Given I use the repository "dnf-ci-fedora-modular-updates"
       | unchanged                 | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
 
 
+Scenario: Disabled but installed profile should not be receiving updates
+ When I execute dnf with args "module install nodejs:8/default"
+ Then the exit code is 0
+ When I execute dnf with args "module disable nodejs"
+ Then the exit code is 0
+Given I use the repository "dnf-ci-fedora-modular-updates"
+ When I execute dnf with args "module update nodejs/default"
+ Then the exit code is 0
+  And Transaction is empty
+
+
 Scenario: I try to update a module when no update is available
  When I execute dnf with args "module enable nodejs:8"
  Then the exit code is 0
