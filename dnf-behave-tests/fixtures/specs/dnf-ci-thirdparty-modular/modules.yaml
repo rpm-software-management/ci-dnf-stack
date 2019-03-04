@@ -246,3 +246,21 @@ data:
     - requires:
         ingredience: [-milk]
 ...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: ingredience
+    stream: orange
+    profiles:
+        default: [default]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: food-type
+    stream: fruit
+    profiles:
+        default: [default]
+...
