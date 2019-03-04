@@ -1,0 +1,5 @@
+[dnf-ci-pseudo-platform-modular]
+name=dnf-ci-pseudo-platform-modular
+baseurl=fixtures/repos/dnf-ci-pseudo-platform-modular
+enabled=1
+gpgcheck=0
