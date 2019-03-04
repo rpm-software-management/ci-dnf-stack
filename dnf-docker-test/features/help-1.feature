@@ -19,4 +19,4 @@ Scenario: Command help
   When _deprecated I execute "dnf" command "install --help" with "success"
   Then _deprecated line from "stdout" should "start" with "install a package or packages on your system"
   When _deprecated I execute "dnf" command "update --unknown-opt" with "fail"
-  Then _deprecated line from "stderr" should "start" with "dnf upgrade: error: unrecognized arguments: --unknown-opt"
+  Then _deprecated line from "stderr" should "contain" with "upgrade: error: unrecognized arguments: --unknown-opt"

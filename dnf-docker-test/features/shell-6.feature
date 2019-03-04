@@ -52,7 +52,7 @@ Feature: Testing specific dnf shell text output
   Scenario: Listing available commands when help command is issued
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "help"
-       Then the command stdout should match regexp "usage: dnf \[options\] COMMAND"
+       Then the command stdout should match regexp "usage: .+ \[options\] COMMAND"
         And the command stdout should match regexp "List of Main Commands:"
         And the command stdout should match regexp "List of Plugin Commands:"
         And the command stdout should match regexp "Optional arguments:"
