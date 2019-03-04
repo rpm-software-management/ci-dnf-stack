@@ -1,0 +1,248 @@
+---
+document: modulemd
+version: 2
+data:
+  name: ingredience
+  stream: chicken
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Made up module for dependency testing
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["chicken-1.0-1.x86_64"]
+  components:
+    rpms:
+      egg: {rationale: 'rationale for chicken'}
+  artifacts:
+    rpms: ["chicken-0:1.0-1.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: ingredience
+  stream: egg
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Made up module for dependency testing
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["egg-1.0-1.x86_64"]
+  components:
+    rpms:
+      egg: {rationale: 'rationale for egg'}
+  artifacts:
+    rpms: ["egg-0:1.0-1.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: ingredience
+  stream: orange
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Made up module for dependency testing
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["orange-1.0-1.x86_64"]
+  components:
+    rpms:
+      egg: {rationale: 'rationale for orange'}
+  artifacts:
+    rpms: ["orange-0:1.0-1.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: ingredience
+  stream: strawberry
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Made up module for dependency testing
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["strawberry-1.0-1.x86_64"]
+  components:
+    rpms:
+      egg: {rationale: 'rationale for strawberry'}
+  artifacts:
+    rpms: ["strawberry-0:1.0-1.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: meat
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - exactly one stream
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [chicken]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: fruit
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - multiple streams
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [orange,strawberry]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: edible
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - any stream
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: []
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: vegetarian
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - any stream except one
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [-chicken]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: vegan
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - any stream except some
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [-chicken,-egg]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: hungry
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - any stream except all
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [-chicken,-egg,-orange,-strawberry]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: dairy
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - nonexistent stream
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [milk]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: food-type
+  stream: lactose-free
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Depends on module "ingredience" - any stream except nonexistent one
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        ingredience: [-milk]
+...

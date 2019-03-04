@@ -68,6 +68,19 @@ dnf-ci-thirdparty-updates
             this package supplements super feature to the flac package. Used
             for testing of backward dependencies.
 
+dnf-ci-fedora-thirdparty-modular
+    purpose:
+        Home for packages made up for testing modular dependencies.
+    packages:
+        egg
+        ham
+        orange
+        strawberry
+    modules:
+        ingredience (streams: egg, ham, ...)
+        food-type (streams: meat, fruit, edible, vegetarian, ...)
+            each stream requires some streams of module "ingredience"
+
 
 Test Packages
 -------------
