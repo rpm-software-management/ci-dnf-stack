@@ -196,6 +196,7 @@ def then_package_state(context, exit_code):
 @then('_deprecated line from "{std_message}" should "{state}" with "{line_start}"')
 def then_package_state(context, std_message, state, line_start):
     counter = 0
+    contains = 0
     if std_message == 'stdout':
         message = context.cmd_output.split('\n')
     elif std_message == 'stderr':
@@ -206,10 +207,18 @@ def then_package_state(context, std_message, state, line_start):
     for line in message:
         if line.startswith(line_start):
             counter += 1
+            contains += 1
+        elif line_start in line:
+            contains += 1
+
     if state == 'start':
         assert counter > 0, 'The line starting with {!r} was not found in {!r}'.format(line_start, std_message)
     elif state == 'not start':
         assert counter == 0, 'The line starting with {!r} was found in {!r}, but should be absent'.format(line_start, std_message)
+    elif state == 'contain':
+        # line from "stderr" should "contain" with "foo" sounds terrible,
+        # but it was a minimal change without duplicating code
+        assert contains > 0, "Line containing '{!r}' wasn't found in {!r}".format(line_start, std_message)
     else:
         raise AssertionError('The state {!r} is not allowed option for Then statement (allowed start, not start)'
                              .format(state))
