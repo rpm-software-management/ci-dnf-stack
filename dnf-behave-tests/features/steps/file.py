@@ -11,6 +11,18 @@ def step_impl(context, filepath):
     create_file_with_contents(full_path, context.text)
 
 
+@behave.given('I delete file "{filepath}"')
+def step_delete_file(context, filepath):
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    delete_file(full_path)
+
+
+@behave.given('file "{filepath}" does not exist')
+def file_does_not_exist(context, filepath):
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    ensure_file_does_not_exist(full_path)
+
+
 @behave.step('file "{filepath}" contains lines')
 def file_contains(context, filepath):
     regexp_lines = context.text.split('\n')
