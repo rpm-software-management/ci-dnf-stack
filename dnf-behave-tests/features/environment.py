@@ -33,6 +33,7 @@ class DNFContext(object):
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
         self.disable_repos_option = "--disablerepo='*'"
+        self.assumeyes_option = "-y"
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
 
     def __del__(self):
@@ -64,7 +65,7 @@ class DNFContext(object):
 
     def get_cmd(self, context):
         result = [self.dnf_command]
-        result.append("-y")
+        result.append(self.assumeyes_option)
 
         # installroot can't be set via context for safety reasons
         if self.installroot:
