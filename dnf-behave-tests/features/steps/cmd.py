@@ -41,6 +41,11 @@ def given_I_do_not_disable_all_repos(context):
     context.dnf._set("disable_repos_option", "")
 
 
+@behave.given("I do not assume yes")
+def given_I_do_not_assumeyes(context):
+    context.dnf._set("assumeyes_option", "")
+
+
 @behave.given("I enable plugin \"{plugin}\"")
 def given_enable_plugin(context, plugin):
     if "plugins" not in context.dnf:
