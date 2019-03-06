@@ -11,6 +11,13 @@ def step_impl(context, filepath):
     create_file_with_contents(full_path, context.text)
 
 
+@behave.given('I create and substitute file "{filepath}" with')
+def step_impl(context, filepath):
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    ensure_directory_exists(os.path.dirname(full_path))
+    create_file_with_contents(full_path, context.text.format(context=context))
+
+
 @behave.given('I delete file "{filepath}"')
 def step_delete_file(context, filepath):
     full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
