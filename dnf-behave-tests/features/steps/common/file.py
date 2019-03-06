@@ -1,5 +1,6 @@
 import codecs
 import os
+import shutil
 
 def ensure_directory_exists(dirname):
     if not os.path.exists(dirname):
@@ -13,6 +14,10 @@ def ensure_file_does_not_exist(filename):
 def delete_file(filename):
     if os.path.exists(filename):
         os.remove(filename)
+
+def delete_directory(dirname):
+    if os.path.exists(dirname):
+        shutil.rmtree(dirname)
 
 def create_file_with_contents(filename, contents, encoding="utf-8"):
     if os.path.exists(filename):
