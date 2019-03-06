@@ -94,4 +94,4 @@ Scenario: It is possible to disable an enabled default stream
    Then the exit code is 0
     And module list contains
         | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]     | development, minimal [i], default [d]|
+        | dnf-ci-fedora-modular         | nodejs        | 8 [d][x]     | development, minimal, default [d]|
