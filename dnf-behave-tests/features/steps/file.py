@@ -4,6 +4,12 @@ import os
 
 from common import *
 
+@behave.given('I create directory "{dirpath}"')
+def step_impl(context, dirpath):
+    full_path = os.path.join(context.dnf.installroot, dirpath.lstrip("/"))
+    ensure_directory_exists(full_path)
+
+
 @behave.given('I create file "{filepath}" with')
 def step_impl(context, filepath):
     full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
@@ -22,6 +28,12 @@ def step_impl(context, filepath):
 def step_delete_file(context, filepath):
     full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
     delete_file(full_path)
+
+
+@behave.given('I delete directory "{dirpath}"')
+def step_delete_directory(context, dirpath):
+    full_path = os.path.join(context.dnf.installroot, dirpath.lstrip("/"))
+    delete_directory(full_path)
 
 
 @behave.given('file "{filepath}" does not exist')
