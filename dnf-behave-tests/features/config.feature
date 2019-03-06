@@ -70,7 +70,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
     And I create and substitute file "/etc/dnf/dnf.conf" with
     """
     [main]
-    reposdir={context.dnf.installroot}/testrepos
+    reposdir=/testrepos
     """
     And I create file "/testrepos/test.repo" with
     """
@@ -95,7 +95,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     And I create and substitute file "/testdnf.conf" with
     """
     [main]
-    reposdir={context.dnf.installroot}/testrepos
+    reposdir=/testrepos
     """
     And I create file "/testrepos/test.repo" with
     """
@@ -107,6 +107,36 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     """
     And I do not set reposdir
     And I set config file to "/testdnf.conf"
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | filesystem-0:3.9-2.fc29.x86_64    |
+        | install       | setup-0:2.12.1-1.fc29.noarch      |
+
+
+Scenario: Reposdir option in dnf.conf file with --config option in installroot is taken first from installroot then from host
+  Given I use the repository "testrepo"
+    And I create and substitute file "/testdnf.conf" with
+    """
+    [main]
+    reposdir={context.dnf.installroot}/testrepos,/othertestrepos
+    """
+    And I create file "/testrepos/test.repo" with
+    """
+    [testrepo]
+    name=testrepo
+    baseurl=$DNF0/repos/dnf-ci-fedora
+    enabled=1
+    gpgcheck=0
+    """
+    And I do not set reposdir
+    And I set config file to "/testdnf.conf"
+    And I create directory "/othertestrepos"
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 1
+    And stderr contains "Error: Unknown repo: 'testrepo'"
+  Given I delete directory "/othertestrepos"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
