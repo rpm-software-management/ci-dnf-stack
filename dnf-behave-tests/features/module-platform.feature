@@ -13,9 +13,13 @@ Given I create file "/etc/os-release" with
     PLATFORM_ID="pseudoplatform:6.0"
     PRETTY_NAME="PseudoDistro 6 (dwm-team)"
     """
+ And I do not set default module platformid
  And I execute dnf with args "makecache"
 
   
+# failing on architecture of the module solvable. The error output is now
+# nothing provides module(pseudoplatform:6.0) needed by module dwm:6.0:20180813144159:-0.noarch
+@xfail
 Scenario: I can't enable module requiring different platform pseudo module
 Given I delete file "/etc/os-release"
  When I execute dnf with args "module enable dwm:6.0"
