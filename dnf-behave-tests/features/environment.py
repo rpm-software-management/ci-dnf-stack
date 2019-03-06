@@ -36,6 +36,10 @@ class DNFContext(object):
         self.assumeyes_option = "-y"
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
 
+        # temporarily use DNF0 for substituting fixturesdir in repo files
+        # the future could be in named environment variable like DNF_VAR_FIXTURES_DIR
+        os.environ['DNF0'] = self.fixturesdir
+
     def __del__(self):
         if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
             print("RMTREE", self.tempdir)
