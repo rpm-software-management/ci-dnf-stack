@@ -97,3 +97,24 @@ Scenario: Autoremoval of obsoleted package
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     But Transaction is empty
+
+
+@bz1672947
+Scenario: Multilib obsoletes during distro-sync
+  Given I use the repository "dnf-ci-fedora"
+   When I execute dnf with args "install lz4-0:1.7.5-2.fc26.i686 lz4-0:1.7.5-2.fc26.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                       |
+        | install       | lz4-0:1.7.5-2.fc26.i686       |
+        | install       | lz4-0:1.7.5-2.fc26.x86_64     |
+  Given I use the repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "distro-sync"
+   Then the exit code is 0
+   Then stderr does not contain "TransactionItem not found for key: lz4"
+    And Transaction is following
+        | Action        | Package                               |
+        | upgrade       | lz4-0:1.8.2-2.fc29.x86_64             |
+        | install       | lz4-libs-0:1.8.2-2.fc29.i686          |
+        | install       | lz4-libs-0:1.8.2-2.fc29.x86_64        |
+        | remove        | lz4-0:1.7.5-2.fc26.i686               |
