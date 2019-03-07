@@ -62,6 +62,11 @@ class RPM(object):
             return True
         return False
 
+    @property
+    def na(self):
+        return "%s.%s" % (self.name, self.arch)
+
+
 def normalize_epoch(evr):
     if ":" not in evr:
         # prepend "0:" if there's no epoch specified
@@ -89,8 +94,8 @@ def diff_rpm_lists(list_one, list_two):
         "absent": set(),
     }
 
-    dict_one = {str(i) if i.is_installonly() else i.name: i for i in list_one}
-    dict_two = {str(i) if i.is_installonly() else i.name: i for i in list_two}
+    dict_one = {str(i) if i.is_installonly() else i.na: i for i in list_one}
+    dict_two = {str(i) if i.is_installonly() else i.na: i for i in list_two}
 
     names_one = set(dict_one.keys())
     names_two = set(dict_two.keys())
