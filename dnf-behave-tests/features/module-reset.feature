@@ -61,7 +61,7 @@ Scenario: I can reset an enabled default stream back to its non-enabled default 
  Then stdout contains "nodejs\s+11\s+de"
   And I execute dnf with args "module reset nodejs"
  Then stdout contains "Resetting modules:"
- Then stdout contains "nodejs\s+8"
+ Then stdout contains "nodejs"
  Then I execute dnf with args "module list nodejs" 
  Then stdout contains "nodejs\s+8\s+\[d\]\s+de"
  Then stdout contains "nodejs\s+10\s+de"
