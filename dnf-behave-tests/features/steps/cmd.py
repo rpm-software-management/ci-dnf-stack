@@ -62,6 +62,11 @@ def step_impl(context):
     context.dnf._set("reposdir", "")
 
 
+@behave.given("I do not disable plugins")
+def step_impl(context):
+    context.dnf._set("disable_plugins", False)
+
+
 @behave.given("I enable plugin \"{plugin}\"")
 def given_enable_plugin(context, plugin):
     if "plugins" not in context.dnf:
