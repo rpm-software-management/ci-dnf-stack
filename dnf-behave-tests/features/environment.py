@@ -32,6 +32,7 @@ class DNFContext(object):
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
+        self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
@@ -96,7 +97,9 @@ class DNFContext(object):
         for repo in repos:
             result.append("--enablerepo='{0}'".format(repo))
 
-        result.append("--disableplugin='*'")
+        disable_plugins = self._get(context, "disable_plugins")
+        if disable_plugins:
+            result.append("--disableplugin='*'")
         plugins = self._get(context, "plugins") or []
         for plugin in plugins:
             result.append("--enableplugin='{0}'".format(plugin))
