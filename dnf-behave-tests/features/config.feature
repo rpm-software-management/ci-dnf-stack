@@ -67,7 +67,7 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
 
 Scenario: Reposdir option in dnf.conf file in installroot
   Given I use the repository "testrepo"
-    And I create and substitute file "/etc/dnf/dnf.conf" with
+    And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -92,7 +92,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot
   Given I use the repository "testrepo"
-    And I create and substitute file "/testdnf.conf" with
+    And I create file "/testdnf.conf" with
     """
     [main]
     reposdir=/testrepos
