@@ -43,7 +43,7 @@
     <checksum type="sha256">de63956231b895a7ea4a972a81d90ea4de5d1392b7fe0440b0f3b1abef50c6d1</checksum>
     <open-checksum type="sha256">386f872cfaf03bcd4aed12875d4126142d03290d59c55f671e4153c139cdd903</open-checksum>
     <location href="repodata/de63956231b895a7ea4a972a81d90ea4de5d1392b7fe0440b0f3b1abef50c6d1-modules.yaml.gz"/>
-    <timestamp>1551707136</timestamp>
+    <timestamp>1551951584</timestamp>
     <size>535</size>
     <open-size>3216</open-size>
   </data>
