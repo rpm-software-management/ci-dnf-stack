@@ -36,6 +36,15 @@ def when_I_execute_rpm_with_args(context, args):
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
 
+@behave.step("I execute bash with args \"{args}\" in directory \"{cwd}\"")
+def step_impl(context, args, cwd):
+    cwd = cwd.format(context=context)
+    cmd = args.format(context=context)
+    context.cmd = cmd
+    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(
+        cmd, shell=True, can_fail=False, cwd=cwd)
+
+
 @behave.given("I do not disable all repos")
 def given_I_do_not_disable_all_repos(context):
     context.dnf._set("disable_repos_option", "")
