@@ -53,3 +53,11 @@ def file_contains(context, filepath):
             print("line: " + line + " not found")
             raise AssertionError("File %s contains: \n%s" % (filepath, read_str))
     return
+
+
+@behave.step('I copy directory "{source}" to "{destination}"')
+def step_impl(context, source, destination):
+    source = source.format(context=context)
+    destination = os.path.join(context.dnf.installroot, destination.lstrip("/"))
+    ensure_directory_exists(os.path.dirname(destination))
+    copy_tree(source, destination)
