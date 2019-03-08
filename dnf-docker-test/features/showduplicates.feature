@@ -20,7 +20,7 @@ Feature: Tests for --showduplicates cmdline option
        And I enable repository "ext2"
        And I successfully run "dnf makecache"
 
-  @xfail @bz1671731
+  @bz1671731
   Scenario: Test for list with --showduplicates when the package is installed
        When I run "dnf list --showduplicates TestA"
        Then the command stdout should match line by line regexp
