@@ -21,7 +21,7 @@ Feature: Disabling module stream
   @bz1649261
   Scenario: Inform about unneded information in module spec
        When I successfully run "dnf module disable ModuleB:f26 -y"
-       Then the command stdout should match regexp "Only module name required. Ignoring unneeded information in argument: 'ModuleB:f26'"
+       Then the command stdout should match regexp "Only module name is required. Ignoring unneeded information in argument: 'ModuleB:f26'"
         And the command stdout should match regexp "Nothing to do."
         And a module ModuleB config file should contain
           | Key   | Value    |
