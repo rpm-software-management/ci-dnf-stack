@@ -140,33 +140,6 @@ Feature: Tier tests for cleaning dnf cache
       When I successfully run "dnf -y remove TestA"
 """
 
-  Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
-  # CACHE-CLEAN-3
-  # it is checked that repoquery reflects expire-cache
-      When I successfully run "dnf makecache"
-       # remove TestC from repo "local", it will be only in dnf cache
-       And I successfully run "sh -c 'rm -f TestC*'" in repository "local"
-       And I successfully run "sh -c 'createrepo_c --update .'" in repository "local"
-       And I successfully run "dnf repoquery --available TestC"
-      Then the command stdout should match regexp "TestC-0:1-1.noarch"
-      When I successfully run "dnf clean expire-cache"
-       And I successfully run "dnf repoquery --available TestC"
-      Then the command stdout should not match regexp "TestC"
-
-  Scenario: Expire dnf cache and run repolist when a package has been removed meanwhile
-  # CACHE-CLEAN-3
-  # it is checked that repolist reflects expire-cache
-      When I successfully run "dnf makecache"
-       # remove TestD from repo "local", it will be only in dnf cache
-       And I successfully run "sh -c 'rm -f TestD*'" in repository "local"
-       And I successfully run "sh -c 'createrepo_c --update .'" in repository "local"
-       And I successfully run "dnf repolist"
-      Then the command stdout should match regexp "local.*local.*2"
-      When I successfully run "dnf clean expire-cache"
-       And I successfully run "dnf repolist"
-      # number of packages in the repo local should be updated
-      Then the command stdout should match regexp "local.*local.*1"
-
 """
   # currently commented out
   # note: dnf info still does not reflect expire-cache, see bug 1552576
