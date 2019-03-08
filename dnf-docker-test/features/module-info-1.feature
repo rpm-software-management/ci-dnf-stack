@@ -20,6 +20,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26
            Version +: +1
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -32,6 +33,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -44,6 +46,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f27
            Version +: +1
+           Architecture : noarch
            Profiles +: +client, server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -64,6 +67,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +1
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -76,6 +80,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -97,6 +102,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +1
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -109,6 +115,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -121,6 +128,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f27
            Version +: +1
+           Architecture : noarch
            Profiles +: +client, server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -143,6 +151,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +1
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -155,6 +164,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -177,6 +187,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +1
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -189,6 +200,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f26 \[e\]
            Version +: +2
+           Architecture : noarch
            Profiles +: +client \[i\], server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
@@ -216,6 +228,7 @@ Feature: Module info
            Name +: +ModuleA
            Stream +: +f27
            Version +: +1
+           Architecture : noarch
            Profiles +: +client, server, devel, minimal, default
            Repo +: +modularityABDE
            Summary +: +Module ModuleA summary
