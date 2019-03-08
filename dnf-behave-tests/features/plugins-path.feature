@@ -32,12 +32,34 @@ Scenario: Test default pluginsconfpath
   Given I do not disable plugins
    When I execute dnf with args "versionlock"
    Then the exit code is 0
+# create versionlock.conf inside the installroot
   Given I create file "/etc/dnf/plugins/versionlock.conf" with
     """
     [main]
     enabled = 0
     """
-    # pluginconfpath is not related to installroot, so versionlock is not disabled
+# pluginconfpath is not related to installroot, so versionlock is not disabled
    When I execute dnf with args "versionlock"
    Then the exit code is 0
+
+
+Scenario: Redirect pluginsconfpath in dnf.conf
+  Given I do not disable plugins
+   When I execute dnf with args "versionlock"
+   Then the exit code is 0
+  Given I do not set config file
+    And I create and substitute file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    pluginconfpath={context.dnf.installroot}/test/pluginconfpath
+    """
+  Given I create file "/test/pluginconfpath/versionlock.conf" with
+    """
+    [main]
+    enabled = 0
+    """
+    # pluginconfpath is now set in installroot, so versionlock is disabled
+   When I execute dnf with args "versionlock"
+   Then the exit code is 1
+    And stderr contains "No such command: versionlock."
 
