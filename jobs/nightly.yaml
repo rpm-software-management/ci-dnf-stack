@@ -25,19 +25,7 @@
     chroot:
       - epel-7-x86_64:
          overlay_dir: dnf-master-epel7
-      - fedora-27-x86_64
       - fedora-28-x86_64
       - fedora-29-x86_64
-      - fedora-rawhide-x86_64
-
-- project:
-    name: dnf-nightly-modular
-    jobs:
-      - "{name}-{chroot}"
-    overlay_dir: dnf-modular
-    repo: dnf-nightly-modular
-    chroot:
-      - fedora-27-x86_64
-      - fedora-28-x86_64
-      - fedora-29-x86_64
+      - fedora-30-x86_64
       - fedora-rawhide-x86_64
