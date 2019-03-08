@@ -21,9 +21,9 @@ components:
     git:
       src: github:rpm-software-management/createrepo_c.git
 
-#  - name: libcomps
-#    git:
-#      src: github:rpm-software-management/libcomps.git
+  - name: libcomps
+    git:
+      src: github:rpm-software-management/libcomps.git
 
   - name: libdnf
     git:
