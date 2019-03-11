@@ -14,16 +14,23 @@ DEFAULT_PLATFORM_ID="platform:f29"
 
 
 class DNFContext(object):
-    def __init__(self, userdata):
+    def __init__(self, userdata, tmp_installroot=False):
         self._scenario_data = {}
 
-        if "installroot" in userdata:
-            self.installroot = userdata["installroot"]
-            # never delete user defined installroot - this allows running tests on /
-            self.delete_installroot = False
-        else:
-            self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
+        self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
+        if tmp_installroot:
+            # some tests need to be run inside the installroot, it can be set
+            # per scenario by using @force_tmp_installroot decorator
+            self.installroot = tempfile.mkdtemp(dir=self.tempdir, prefix="tmp_installroot_")
             self.delete_installroot = True
+        else:
+            if "installroot" in userdata:
+                self.installroot = userdata["installroot"]
+                # never delete user defined installroot - this allows running tests on /
+                self.delete_installroot = False
+            else:
+                self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
+                self.delete_installroot = True
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
         self.config = userdata.get("config", DEFAULT_CONFIG)
@@ -35,7 +42,6 @@ class DNFContext(object):
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
-        self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
 
         # temporarily use DNF0 for substituting fixturesdir in repo files
         # the future could be in named environment variable like DNF_VAR_FIXTURES_DIR
@@ -121,7 +127,8 @@ def after_step(context, step):
 
 def before_scenario(context, scenario):
     if not context.feature_global_dnf_context:
-        context.dnf = DNFContext(context.config.userdata)
+        context.dnf = DNFContext(context.config.userdata,
+                                 tmp_installroot='force_tmp_installroot' in scenario.tags)
 
 
 def after_scenario(context, scenario):
