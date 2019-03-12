@@ -62,7 +62,6 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
 
 
-@wip
 @force_tmp_installroot
 Scenario: Remove package from installroot
   Given I use the repository "dnf-ci-install-remove"
@@ -79,3 +78,23 @@ Scenario: Remove package from installroot
         | Action        | Package                           |
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
+
+@force_tmp_installroot
+Scenario: Repolist command in installroot
+  Given I do not disable all repos
+   When I execute dnf with args "repolist"
+   Then the exit code is 0
+    And stdout contains "dnf-ci-install-remove"
+  Given I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
+    """
+    [dnf-ci-fedora]
+    name=dnf-ci-fedora
+    baseurl=$DNF0/repos/dnf-ci-fedora
+    enabled=1
+    gpgcheck=0
+    """
+    And I do not set reposdir
+   When I execute dnf with args "repolist"
+   Then the exit code is 0
+    And stdout does not contain "dnf-ci-install-remove"
+    And stdout contains "dnf-ci-fedora"
