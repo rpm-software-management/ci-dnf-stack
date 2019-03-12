@@ -98,3 +98,20 @@ Scenario: Repolist command in installroot
    Then the exit code is 0
     And stdout does not contain "dnf-ci-install-remove"
     And stdout contains "dnf-ci-fedora"
+
+
+@force_tmp_installroot
+Scenario: Upgrade package in installroot
+  Given I use the repository "dnf-ci-install-remove"
+   When I execute dnf with args "install sugar-1.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | sugar-0:1.0-1.x86_64              |
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | upgrade       | sugar-0:2.0-1.x86_64              |
+   When I execute rpm on host with args "-q sugar"
+   Then the exit code is 1
