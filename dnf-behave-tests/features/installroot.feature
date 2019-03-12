@@ -60,8 +60,22 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
    When I execute dnf with args "install -C water_still"
    Then the exit code is 0
-   When I execute dnf with args "remove water_still"
+
+
+@wip
+@force_tmp_installroot
+Scenario: Remove package from installroot
+  Given I use the repository "dnf-ci-install-remove"
+   When I execute dnf with args "install water_carbonated tea"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
-        | remove        | water_still-0:1.0-1.x86_64        |
+        | install       | water_carbonated-0:1.0-1.x86_64   |
+        | install       | tea-0:1.0-1.x86_64                |
+        | install       | water-0:1.0-1.x86_64              |
+   When I execute dnf with args "remove water_carbonated"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | remove        | water_carbonated-0:1.0-1.x86_64   |
+
