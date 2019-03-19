@@ -22,6 +22,7 @@ Scenario: I can install a non-default profile using dnf module install module:st
         | nodejs    | enabled   | 10        | minimal   |
 
 
+@bz1573831
 Scenario: I can install a non-default profile from a default stream using dnf module install module/profile
    When I execute dnf with args "module install nodejs/minimal"
    Then the exit code is 0
