@@ -47,7 +47,7 @@ Given I use the repository "dnf-ci-fedora"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"
 
 
-Scenario: List repo extras - installed from repo, but not available anymore
+Scenario Outline: List repo <extras alias> - installed from repo, but not available anymore
 # use temporary copy of repository dnf-ci-fedora for this test
 Given I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/temp-repo"
   And I create and substitute file "/etc/yum.repos.d/test.repo" with
@@ -73,7 +73,7 @@ Given I delete file "/temp-repos/temp-repo/src/setup-2.12.1-1.fc29.src.rpm"
  Then the exit code is 0
  When I execute dnf with args "clean expire-cache"
  Then the exit code is 0
- When I execute dnf with args "repository-packages testrepo info --extras"
+ When I execute dnf with args "repository-packages testrepo info <extras alias>"
  Then the exit code is 0
  Then stdout contains "testrepo"
  Then stdout contains "Extra Packages"
@@ -82,3 +82,9 @@ Given I delete file "/temp-repos/temp-repo/src/setup-2.12.1-1.fc29.src.rpm"
  Then stdout does not contain "basesystem"
  Then stdout does not contain "Available Packages"
  Then stdout does not contain "Installed Packages"
+
+Examples:
+    | extras alias   |
+    | extras         |
+    | --extras       |
+
