@@ -479,8 +479,9 @@ Scenario: Get info for an enabled stream, module name and stream specified
     And stderr contains "Error: dnf module info: too few arguments"
   
   
-  Scenario: I can get the info about content of existing module streams
-   When I execute dnf with args "module info --profile postgresql"
+  @bz1571214
+  Scenario Outline: I can get the info about content of existing module streams with <command>
+   When I execute dnf with args "<command>"
    Then the exit code is 0
    Then stdout matches each line once
    """
@@ -504,6 +505,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
    server\s+:\s+postgresql-server
    default\s+:\s+postgresql-server
    """
+
+Examples:
+    | command                               |
+    | module info --profile postgresql      |
+    | -q module info --profile postgresql   |
+
   
   
   Scenario: Profile specification is ignored by dnf module info --profile
