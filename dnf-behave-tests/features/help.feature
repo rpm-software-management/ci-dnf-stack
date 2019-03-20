@@ -19,10 +19,10 @@ Scenario: General help
 Scenario: Command help
    When I execute dnf with args "help install"
    Then the exit code is 0
-   And stdout contains "usage: dnf install"
+   And stdout contains "usage: .+ install"
    When I execute dnf with args "install --help"
    Then the exit code is 0
-    And stdout contains "usage: dnf install"
+    And stdout contains "usage: .+ install"
    When I execute dnf with args "install --unknown-option"
    Then the exit code is 2
-    And stderr contains "usage: dnf install"
+   And stderr contains ".+ install: err"
