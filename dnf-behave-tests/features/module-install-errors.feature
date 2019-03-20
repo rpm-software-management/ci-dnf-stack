@@ -47,6 +47,24 @@ Scenario: I cannot install an RPM with same name as an RPM that belongs to enabl
     No match for argument: ninja-build-0:1.8.2-5.fc29.x86_64
     """
 
+Scenario: A proper error message is displayed when I try to install a non-existent stream
+ When I execute dnf with args "module install ModuleX:NoSuchStream"
+ Then the exit code is 1
+  And stderr contains lines
+  """
+  Error: Problems in request:
+  missing groups or modules: ModuleX:NoSuchStream
+  """
+
+@bz1645167
+Scenario: A proper error message is displayed when I try to install a non-existent profile
+ When I execute dnf with args "module install ModuleX:f26/NoSuchStream"
+ Then the exit code is 1
+  And stderr contains lines
+  """
+  Error: Problems in request:
+  missing groups or modules: ModuleX:f26/NoSuchStream
+  """
 
 # package FileConflict-1.0-1.x86_64 has file conflicts with
 # FileConflict-0:2.0.streamB-1.x86_64 from module test-module
