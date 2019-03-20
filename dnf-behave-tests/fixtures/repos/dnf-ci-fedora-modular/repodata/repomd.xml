@@ -29,7 +29,7 @@
     <checksum type="sha256">8b8c876c8ef4f3a63a0323597ac773fa8c8b3fed4a02b0c9f5a9c8cee27bde2f</checksum>
     <open-checksum type="sha256">f6f21712c24bf523592a48e8463565a89faa76763c2ae3f14c56a531abe052fb</open-checksum>
     <location href="repodata/8b8c876c8ef4f3a63a0323597ac773fa8c8b3fed4a02b0c9f5a9c8cee27bde2f-modules.yaml.gz"/>
-    <timestamp>1553069443</timestamp>
+    <timestamp>1553082116</timestamp>
     <size>2565</size>
     <open-size>15500</open-size>
   </data>
