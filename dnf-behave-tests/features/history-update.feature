@@ -34,10 +34,12 @@ Scenario: History of update packages
         | 1      |                       | Install       | 1         |  
 
 
+@bz1612885
 Scenario: Rollback update
   Given I use the repository "dnf-ci-fedora"
    When I execute dnf with args "history rollback last-1"
    Then the exit code is 0
+   Then stderr does not contain "Traceback"
     And Transaction is following
         | Action        | Package                                   |
         | downgrade     | abcde-0:2.9.2-1.fc29.noarch               |
@@ -45,6 +47,7 @@ Scenario: Rollback update
         | downgrade     | wget-0:1.19.5-5.fc29.x86_64               |
    When I execute dnf with args "history rollback last-3"
    Then the exit code is 0
+   Then stderr does not contain "Traceback"
     And Transaction is following
         | Action        | Package                                   |
         | remove        | abcde-0:2.9.2-1.fc29.noarch               |
