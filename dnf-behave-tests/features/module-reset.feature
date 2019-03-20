@@ -53,6 +53,8 @@ Scenario: Resetting of a non-default non-enabled stream does nothing
  Then stdout contains "dwm\s+6.0\s+de"
  
 
+@bz1677640
+# scenario different from the one in the relevant requirement!
 Scenario: I can reset an enabled default stream back to its non-enabled default state
  When I execute dnf with args "module enable nodejs:8" 
  Then I execute dnf with args "module list nodejs" 
@@ -68,6 +70,7 @@ Scenario: I can reset an enabled default stream back to its non-enabled default 
  Then stdout contains "nodejs\s+11\s+de"
 
 
+# scenario different from the one in the relevant requirement!
 Scenario: I can reset an enabled non-default stream back to a non-enabled state
  When I execute dnf with args "module enable dwm:6.0/default" 
  Then I execute dnf with args "module list dwm" 
