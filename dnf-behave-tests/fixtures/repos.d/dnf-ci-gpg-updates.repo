@@ -1,0 +1,6 @@
+[dnf-ci-gpg-updates]
+name=dnf-ci-gpg-updates
+baseurl=fixtures/repos/dnf-ci-gpg-updates
+enabled=1
+gpgcheck=1
+gpgkey=../../gpgkeys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public
