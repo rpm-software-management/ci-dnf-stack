@@ -18,6 +18,28 @@ Project layout
 `-- [behave.ini|.behaverc|tox.ini|setup.cfg]
 
 
+Creating test data
+------------------
+
+1. Populate repositories (in fixtures/spec):
+   * Define RPM packages by .spec files
+   * Define groups in comps.xml
+   * Define updateinfo in updateinfo.xml
+   * Define modules in modules.yaml
+
+2. Define GPG keys and signed packages (in fixtures/gpgkeys):
+   * Create GPG key: # new_gpg_key.sh [key name]
+   * Define which packages will be signed in [key name]/signed-packages
+     (package paths must be relative to fixtures/repos)
+
+3. Define broken packages:
+   * Update script fixtures/spec/break-packages.sh
+
+4. Build: # fixtures/spec/build.sh
+
+5. Create repo files (in fixtured/repos.d)
+
+
 Test repositories
 -----------------
 

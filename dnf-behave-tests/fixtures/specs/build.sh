@@ -9,6 +9,7 @@ DIR=$(dirname $(readlink -f $0))
 ARCH="x86_64"
 DIST=".fc29"
 REPODIR="$DIR/../repos"
+GPGDIR="$DIR/../gpgkeys"
 GROUPS_FILENAME="comps.xml"
 UPDATEINFO_FILENAME="updateinfo.xml"
 MODULES_FILENAME="modules.yaml"
@@ -47,6 +48,9 @@ for path in $DIR/*/*.spec; do
     fi
 
 done
+
+${DIR}/break-packages.sh
+${GPGDIR}/sign.sh
 
 for path in $REPODIR/*; do
     REPO=$(basename $path)
