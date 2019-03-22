@@ -1,4 +1,4 @@
-Feature: Test for dnf repoquery, options --all, --installed, --available, --upgrades, --extras, --repo 
+Feature: Test for dnf repoquery, options --all, --installed, --available, --upgrades, --extras, --repo, --location
 
 # --extras: installed pkgs, not from known repos
 Scenario: dnf repoquery --extras (when there are such pkgs) Given I use the repository "dnf-ci-fedora"
@@ -139,3 +139,17 @@ Given I do not disable all repos
  Then stdout contains "filesystem-content-0:3.9-2.fc29.x86_64"
  Then stdout does not contain "glibc"
  Then stdout does not contain "setup"
+
+
+@bz1639827
+Scenario: dnf repoquery --location
+Given I use the repository "dnf-ci-fedora"
+Given I use the repository "dnf-ci-fedora-updates"
+Given I use the repository "dnf-ci-thirdparty"
+ When I execute dnf with args "repoquery SuperRipper --location"
+ Then the exit code is 0
+ Then stdout matches line by line
+ """
+ .+/fixtures/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm
+ .+/fixtures/repos/dnf-ci-thirdparty/x86_64/SuperRipper-1.0-1.x86_64.rpm
+ """
