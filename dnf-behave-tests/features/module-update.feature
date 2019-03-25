@@ -146,3 +146,26 @@ Given I use the repository "dnf-ci-thirdparty-updates"
        | unchanged                 | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
        | upgrade                   | CQRlib-extension-0:1.6-2.x86_64               |
        | install                   | SuperRipper-0:1.2-1.x86_64                    |
+
+
+@bz1647429
+Scenario: Update module packages even if no profiles are installed
+ When I execute dnf with args "module enable nodejs:11"
+ Then the exit code is 0
+ When I execute dnf with args "install nodejs-1:11.0.0-1.module_2311+8d497411.x86_64"
+ Then the exit code is 0
+  And Transaction contains
+      | Action                    | Package                                       |
+      | install                   | nodejs-1:11.0.0-1.module_2311+8d497411.x86_64 |
+  And modules state is following
+      | Module    | State     | Stream    | Profiles  |
+      | nodejs    | enabled   | 11        |           |
+Given I use the repository "dnf-ci-fedora-modular-updates"
+When I execute dnf with args "module update nodejs"
+ Then the exit code is 0
+  And Transaction contains
+      | Action                    | Package                                        |
+      | upgrade                   | nodejs-1:11.1.0-1.module_2379+8d497405.x86_64  |
+  And modules state is following
+      | Module    | State     | Stream    | Profiles  |
+      | nodejs    | enabled   | 11        |           |
