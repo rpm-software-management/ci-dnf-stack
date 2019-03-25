@@ -91,6 +91,13 @@ def step_impl(context, spec=None):
         else:
             raise AssertionError('[history] key "{0}" not found.'.format(key))
 
+@behave.then('History info rpmdb version did not change')
+def step_impl(context, spec=""):
+    h_info = parsed_history_info(context, spec)
+    assert (h_info['Begin rpmdb']), "End rpmdb version not found"
+    assert (h_info['End rpmdb']), "End rpmdb version not found"
+    assert (h_info['End rpmdb'] == h_info['Begin rpmdb']), "Begin and end rpmdb versions are different"
+
 @then('history userinstalled should')
 def step_impl(context):
     check_context_table(context, ["Action", "Package"])
