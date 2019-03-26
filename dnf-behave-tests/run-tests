@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export LANG=en_US
-# having LC_TIME set to "cs_CZ.UTF-8" breaks random shell scenarios at the moment
-export LC_TIME=en_US
+export LANG=en_US.utf8
+# having LC_TIME set to "cs_CZ.utf8" breaks random shell scenarios at the moment
+export LC_TIME=en_US.utf8
 
 # define user-specific data for the config.userdata dictionary. Example: -D foo=bar to store it in config.userdata["foo"].
 # -D NAME=VALUE, --define NAME=VALUE
