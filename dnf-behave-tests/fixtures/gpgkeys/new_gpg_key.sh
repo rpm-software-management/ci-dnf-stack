@@ -15,8 +15,9 @@ mkdir ${KEY_DIR}
 # create key (without password, without expire)
 HOME=${KEY_DIR} gpg2 --batch --passphrase '' --quick-gen-key ${KEY_NAME} default default 0
 
-# export public key
+# export public and private key
 HOME=${KEY_DIR} gpg2 --export -a ${KEY_NAME} > "${KEY_DIR}/${KEY_NAME}-public"
+HOME=${KEY_DIR} gpg2 --export-secret-keys -a ${KEY_NAME} > "${KEY_DIR}/${KEY_NAME}-private"
 
 # create .rpmmacros
 cat > "${KEY_DIR}/.rpmmacros" <<EOF

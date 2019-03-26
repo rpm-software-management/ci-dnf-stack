@@ -5,11 +5,15 @@ DIR=$(dirname $(readlink -f $0))
 REPODIR="$DIR/../repos"
 SPECS="$DIR/../specs"
 
-for KEY_DIR in $(ls -d ${DIR}/*/); do
+pushd ${DIR}
+for KEY_NAME in $(ls -d */ | sed 's#/##'); do
+    # import public and private key
+    HOME=${KEY_NAME} gpg2 --import "${KEY_NAME}/${KEY_NAME}-public"
+    HOME=${KEY_NAME} gpg2 --import "${KEY_NAME}/${KEY_NAME}-private"
 
     # sign packages
-    for package in $(cat "${KEY_DIR}signed-packages"); do
-        HOME=${KEY_DIR} rpm --addsign "${REPODIR}/${package}"
+    for package in $(cat "${KEY_NAME}/signed-packages"); do
+        HOME=${KEY_NAME} rpm --addsign "${REPODIR}/${package}"
     done
 done
 
