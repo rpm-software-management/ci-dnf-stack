@@ -1,3 +1,11 @@
+gpg-checksum.feature
+====================
+
+Skipped checking file "/var/cache/dnf/expired_repos.json" after fail to install
+package with incorrect checksum. A repo is probably appended to the file only
+if it's not local, so we should add this when we make tests for non-local
+repositories.
+
 deplist-1.feature
 =================
 
