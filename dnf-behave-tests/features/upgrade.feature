@@ -63,6 +63,7 @@ Scenario: Upgrade all RPMs from multiple repositories
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
         | broken        | SuperRipper-0:1.3-1.x86_64                |
 
+
 @bz1659390
 Scenario: Print information about skipped packages
   Given I use the repository "dnf-ci-thirdparty-updates"
@@ -76,3 +77,38 @@ Scenario: Print information about skipped packages
    Then stdout section "Skipping packages with broken dependencies:" contains "SuperRipper\s+x86_64\s+1.3-1\s+dnf-ci-thirdparty-updates"
    Then stdout section "Upgraded:" contains "SuperRipper-1.2-1.x86_64"
    Then stdout section "Skipped:" contains "SuperRipper-1.3-1.x86_64"
+
+
+@bz1585138
+Scenario Outline: Print correct number of available updates if update <type> is given
+  Given I execute dnf with args "install CQRlib-extension"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | CQRlib-extension-0:1.5-2.x86_64           |
+   Then I use the repository "dnf-ci-thirdparty-updates"
+   When I execute dnf with args "update <type>" 
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr contains "No security updates needed, but 2 updates available"
+
+Examples:
+        | type          |
+        | --security    |
+        | --bugfix      |
+        | --enhancement |
+
+
+@bz1585138
+Scenario Outline: Print correct number of available updates if update <type> is given and updateinfo is available
+  Given I use the repository "dnf-ci-fedora-updates"
+    And I use the repository "dnf-ci-thirdparty-updates"
+   When I execute dnf with args "update <type>" 
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr contains "No security updates needed, but 7 updates available"
+
+Examples:
+        | type          |
+        | --security    |
+        | --enhancement |
