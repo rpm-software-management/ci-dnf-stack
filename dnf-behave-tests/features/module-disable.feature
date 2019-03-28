@@ -43,7 +43,7 @@ Scenario Outline: I can disable a module when specifying <spec>
    Then the exit code is 0
    When I execute dnf with args "module disable <modulespec>"
    Then the exit code is 0
-    And stdout contains "Only module name required. Ignoring unneeded information in argument: '<modulespec>'"
+    And stdout contains "Only module name is required. Ignoring unneeded information in argument: '<modulespec>'"
     And Transaction is following
         | Action                    | Package           |
         | module-disable            | nodejs            |
@@ -62,7 +62,7 @@ Scenario Outline: I can disable a module with installed profile when specifying 
    Then the exit code is 0
    When I execute dnf with args "module disable <modulespec>"
    Then the exit code is 0
-    And stdout contains "Only module name required. Ignoring unneeded information in argument: '<modulespec>'"
+    And stdout contains "Only module name is required. Ignoring unneeded information in argument: '<modulespec>'"
     And Transaction is following
         | Action                    | Package           |
         | module-disable            | nodejs            |
