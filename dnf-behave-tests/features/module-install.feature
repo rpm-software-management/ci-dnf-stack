@@ -151,3 +151,24 @@ Scenario: Installing a stream without a defined default profile enables the stre
         | Action                   | Package                            |
         | module-stream-enable     | DnfCiModulePackageDep:moduledep    |
         | module-stream-enable     | nodejs:8                           |
+
+
+Scenario: Install a module profile of a disabled module
+   When I execute dnf with args "module disable nodejs"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package             |
+        | module-disable            | nodejs              |
+    And modules state is following
+        | Module      | State     | Stream    | Profiles  |
+        | nodejs      | disabled  |           |           |
+   When I execute dnf with args "module install nodejs:8/minimal"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                                       |
+        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | module-profile-install    | nodejs/minimal                                |
+        | module-stream-enable      | nodejs:8                                      |
+    And modules state is following
+        | Module      | State     | Stream    | Profiles  |
+        | nodejs      | enabled   | 8         | minimal   |
