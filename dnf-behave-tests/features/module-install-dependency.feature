@@ -30,7 +30,7 @@ Scenario: Install a module that requires a module, specifying multiple streams i
     And modules state is following
         | Module        | State     | Stream      | Profiles    |
         | food-type     | enabled   | fruit       | default     |
-        | ingredience   | enabled   | ?           |             |
+        | ingredience   | enabled   | orange      |             |
 
 
 Scenario: Install a module that requires a module, not specifying any stream in Requires
@@ -43,7 +43,7 @@ Scenario: Install a module that requires a module, not specifying any stream in 
     And modules state is following
         | Module        | State     | Stream       | Profiles   |
         | food-type     | enabled   | edible       | default    |
-        | ingredience   | enabled   | ?            |            |
+        | ingredience   | enabled   | orange       |            |
 
 
 Scenario: Install a module that requires a module, excluding one stream in Requires
@@ -56,7 +56,7 @@ Scenario: Install a module that requires a module, excluding one stream in Requi
     And modules state is following
         | Module        | State     | Stream       | Profiles   |
         | food-type     | enabled   | vegetarian   | default    |
-        | ingredience   | enabled   | ?            |            |
+        | ingredience   | enabled   | orange       |            |
 
 
 Scenario: Install a module that requires a module, excluding multiple streams in Requires
@@ -69,7 +69,7 @@ Scenario: Install a module that requires a module, excluding multiple streams in
     And modules state is following
         | Module        | State     | Stream       | Profiles   |
         | food-type     | enabled   | vegan        | default    |
-        | ingredience   | enabled   | ?            |            |
+        | ingredience   | enabled   | orange       |            |
 
 
 Scenario: Install a module that requires a module, excluding all of the streams in Requires
@@ -96,4 +96,4 @@ Scenario: Install a module that requires a module, excluding nonexisting stream 
     And modules state is following
         | Module        | State     | Stream       | Profiles   |
         | food-type     | enabled   | lactose-free | default    |
-        | ingredience   | enabled   | ?            |            |
+        | ingredience   | enabled   | orange       |            |
