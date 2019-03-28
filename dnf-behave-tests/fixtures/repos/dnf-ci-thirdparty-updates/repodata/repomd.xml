@@ -2,28 +2,28 @@
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
   <revision>1550000000</revision>
   <data type="primary">
-    <checksum type="sha256">6a89fe7a1fc8d15a4b696f12b849f56ea7ad52e059ae91d7ea855a7362e98b48</checksum>
-    <open-checksum type="sha256">a071382241921d58dee0c3253d6bc83621f815fa28755796de3ec08651653b8a</open-checksum>
+    <checksum type="sha256">b6f1137e178fb2693b1ee760f30bbeee008fe1ecce6aabcb4cd1d6e8729a4c5e</checksum>
+    <open-checksum type="sha256">8fa23bb48e48b87839deed7fb7d871fa56ba8f900bb77082197911530da1fc5f</open-checksum>
     <location href="repodata/primary.xml.gz"/>
     <timestamp>1550000000</timestamp>
-    <size>1052</size>
-    <open-size>4390</open-size>
+    <size>1303</size>
+    <open-size>6692</open-size>
   </data>
   <data type="filelists">
-    <checksum type="sha256">8bfe03ff430ca9b7fdb402cc19d3731639785993d84b1daadeb02c0c0ed47971</checksum>
-    <open-checksum type="sha256">998e44b361a1502d730544df13ebfeb84ad6ac79d5028ede67a23369b15f0908</open-checksum>
+    <checksum type="sha256">f9dfb3922414c84c2d3d9bd1bf78381a78b78010bf7b535e926dcd1919f715f1</checksum>
+    <open-checksum type="sha256">cc552d4111d388e7b748d4b8d03648ff593ac6901972e14db7f22aa73aa6bf6c</open-checksum>
     <location href="repodata/filelists.xml.gz"/>
     <timestamp>1550000000</timestamp>
-    <size>431</size>
-    <open-size>882</open-size>
+    <size>524</size>
+    <open-size>1253</open-size>
   </data>
   <data type="other">
-    <checksum type="sha256">a614a37a4397709a086e929d01ac6e12463e2202ef41979c590ab72b7a419657</checksum>
-    <open-checksum type="sha256">907d2e134d7a62db207f6f09712b736d88f4f58c65d148556a79a6ba8bd96afe</open-checksum>
+    <checksum type="sha256">4ce72dfd98320f83c2b3cb7d7648bb20c5d0432be30f6e5f839dee170d1a4569</checksum>
+    <open-checksum type="sha256">4628c1c1c388264ad4d9a58de77804bc2df523d94e18b2f9d3b426453f876620</open-checksum>
     <location href="repodata/other.xml.gz"/>
     <timestamp>1550000000</timestamp>
-    <size>400</size>
-    <open-size>797</open-size>
+    <size>487</size>
+    <open-size>1130</open-size>
   </data>
   <data type="group">
     <checksum type="sha256">b72c3bd4d19cd874088683237193847d8b457affcc68d69bf1280c406d3d4d20</checksum>
