@@ -577,3 +577,45 @@ Examples:
     Error: dnf module info: too few arguments
   
     """
+
+  @bz1636091
+  Scenario: The module stream context information is present
+   When I execute dnf with args "module info nodejs:11"
+   Then the exit code is 0
+   And stdout contains "Context\s+:\s+6c81f848"
+
+  @bz1636337
+  Scenario: I can get the module context of the active stream
+   When I execute dnf with args "module info nodejs:8"
+   Then stdout matches each line once
+      """
+        Name\s+:\s+nodejs
+        Stream\s+:\s+8
+        Version\s+:\s+20180816123422
+        Context\s+:\s+6c81f848
+        Profiles\s+:\s+(development|minimal|default \[d\])
+        Default profiles\s+:\s+default
+        Repo\s+:\s+dnf-ci-fedora-modular
+        Summary\s+:\s+Javascript runtime
+        Description\s+:\s+Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Artifacts\s+:\s+nodejs-1:8.11.4-1.module_2030\+42747d40.x86_64
+        \s+:\s+nodejs-devel-1:8.11.4-1.module_2030\+42747d40.x86_64
+        \s+:\s+nodejs-docs-1:8.11.4-1.module_2030\+42747d40.noarch
+        \s+:\s+npm-1:8.11.4-1.module_2030\+42747d40.x86_64
+
+        Name\s+:\s+nodejs
+        Stream\s+:\s+8 \[d\]\[e\]\[a\]
+        Version\s+:\s+20180816123422
+        Context\s+:\s+6c81f848
+        Profiles\s+:\s+(development|minimal|default \[d\])
+        Default profiles\s+:\s+default
+        Repo\s+:\s+dnf-ci-fedora-modular-updates
+        Summary\s+:\s+Javascript runtime
+        Description\s+:\s+Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Artifacts\s+:\s+nodejs-1:8.11.4-1.module_2030\+42747d40.x86_64
+        \s+:\s+nodejs-devel-1:8.11.4-1.module_2030\+42747d40.x86_64
+        \s+:\s+nodejs-docs-1:8.11.4-1.module_2030\+42747d40.noarch
+        \s+:\s+npm-1:8.14.0-1.module_2030\+42747d41.x86_64
+
+        Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled, \[a\]ctive
+      """
