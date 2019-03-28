@@ -61,3 +61,18 @@ Scenario: Upgrade all RPMs from multiple repositories
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
+        | broken        | SuperRipper-0:1.3-1.x86_64                |
+
+@bz1659390
+Scenario: Print information about skipped packages
+  Given I use the repository "dnf-ci-thirdparty-updates"
+   When I execute dnf with args "update --setopt 'best=0'"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | SuperRipper-0:1.2-1.x86_64                |
+        | broken        | SuperRipper-0:1.3-1.x86_64                |
+   Then stdout section "Upgrading:" contains "SuperRipper\s+x86_64\s+1.2-1\s+dnf-ci-thirdparty-updates"
+   Then stdout section "Skipping packages with broken dependencies:" contains "SuperRipper\s+x86_64\s+1.3-1\s+dnf-ci-thirdparty-updates"
+   Then stdout section "Upgraded:" contains "SuperRipper-1.2-1.x86_64"
+   Then stdout section "Skipped:" contains "SuperRipper-1.3-1.x86_64"
