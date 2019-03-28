@@ -75,15 +75,15 @@ def step_impl(context):
     for t_module, t_state, t_stream, t_profiles in context.table:
         module = modules_state.get(t_module, dict())
         state = module.get('state', '')
-        if t_state != state:
+        if t_state != state and t_state != '?':
             raise AssertionError("Module '{}' state is '{}' and not '{}'".format(
                 t_module, state, t_state))
         stream = module.get('stream', '')
-        if t_stream != stream:
+        if t_stream != stream and t_stream != '?':
             raise AssertionError("Module '{}' stream is '{}' and not '{}'".format(
                 t_module, stream, t_stream))
         profiles = module.get('profiles', set())
         t_profiles = set([p.strip() for p in t_profiles.split(',') if p.strip()])
-        if t_profiles != profiles:
+        if t_profiles != profiles and t_profiles != '?':
             raise AssertionError("Module '{}' profiles are '{}' and not '{}'".format(
                 t_module, profiles, t_profiles))
