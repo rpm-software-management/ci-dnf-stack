@@ -247,6 +247,80 @@ data:
         ingredience: [-milk]
 ...
 ---
+document: modulemd
+version: 2
+data:
+  name: fluid
+  stream: water
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream water
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+...
+---
+document: modulemd
+version: 2
+data:
+  name: fluid
+  stream: oil
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream oil
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+...
+---
+document: modulemd
+version: 2
+data:
+  name: beverage
+  stream: soda
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream soda
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        fluid: [water]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: beverage
+  stream: beer
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream beer
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        fluid: [water]
+...
+---
 document: modulemd-defaults
 version: 1
 data:
