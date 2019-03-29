@@ -50,7 +50,7 @@ Scenario: Upgrade all RPMs from multiple repositories
   Given I use the repository "dnf-ci-fedora-updates"
   Given I use the repository "dnf-ci-fedora-updates-testing"
     And I use the repository "dnf-ci-thirdparty-updates"
-   When I execute dnf with args "upgrade"
+   When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
