@@ -78,7 +78,6 @@ Scenario: Removing of a non-installed profiles would pass
   And stderr contains "Unable to match profile in argument nodejs/development"
 
 
-@wip
 Scenario: I can remove multiple profiles
  When I execute dnf with args "module install nodejs/minimal"
  Then Transaction contains
@@ -97,7 +96,6 @@ Scenario: I can remove multiple profiles
  Then Transaction is following
       | Action                 | Package                                             |
       | remove                 | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | remove                 | npm-1:8.11.4-1.module_2030+42747d40.x86_64          |
       | module-profile-disable | nodejs/default                                      |
       | module-profile-disable | nodejs/development                                  |
   And modules state is following
