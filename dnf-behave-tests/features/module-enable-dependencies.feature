@@ -5,8 +5,187 @@ Background:
   Given I use the repository "dnf-ci-thirdparty-modular"
 
 
+Scenario: Enabling a default stream depending on a default stream
+  Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: soda
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: water
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module enable beverage"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | beverage:soda          |
+        | module-stream-enable     | fluid:water            |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | beverage     | enabled   | soda       |           |
+        | fluid        | enabled   | water      |           |
+
+@bz1648839
+Scenario: Enabling a default stream depending on a non-default stream
+  Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: soda
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: oil
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module enable beverage"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | beverage:soda          |
+        | module-stream-enable     | fluid:water            |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | beverage     | enabled   | soda       |           |
+        | fluid        | enabled   | water      |           |
+
+Scenario: Enabling a non-default stream depending on a default stream
+  Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: beer
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: water
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module enable beverage:soda"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | beverage:soda          |
+        | module-stream-enable     | fluid:water            |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | beverage     | enabled   | soda       |           |
+        | fluid        | enabled   | water      |           |
+
+
+Scenario: Enabling a disabled stream depending on a default stream
+  Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: soda
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: water
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module disable beverage"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-disable           | beverage               |
+   When I execute dnf with args "module enable beverage:soda"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | beverage:soda          |
+        | module-stream-enable     | fluid:water            |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | beverage     | enabled   | soda       |           |
+        | fluid        | enabled   | water      |           |
+
+
+Scenario: Enabling a disabled stream depending on a non-default stream
+  Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: beer
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: oil
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module disable beverage"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-disable           | beverage               |
+   When I execute dnf with args "module enable beverage:soda"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | beverage:soda          |
+        | module-stream-enable     | fluid:water            |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | beverage     | enabled   | soda       |           |
+        | fluid        | enabled   | water      |           |
+
+
 @bz1622566
-Scenario: Enable a module and its dependencies
+Scenario: Enabling a non-default stream depending on a non-default stream
    When I execute dnf with args "module enable food-type:meat"
    Then the exit code is 0
     And Transaction is following
