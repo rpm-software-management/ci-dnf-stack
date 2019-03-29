@@ -97,3 +97,69 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
         broken groups or modules: nodejs:10
 
         """
+
+Scenario: Enabling a stream depending on other than enabled stream should fail
+  Given I use the repository "dnf-ci-thirdparty-modular"
+    And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: soda
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: oil
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module enable fluid"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | fluid:oil              |
+   When I execute dnf with args "module enable beverage:soda"
+   Then the exit code is 1
+    And stderr contains "Problem: conflicting requests"
+
+Scenario: Enabling a stream depending on a disabled stream should fail
+  Given I use the repository "dnf-ci-thirdparty-modular"
+    And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
+        """
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: beverage
+            stream: soda
+            profiles:
+                default: [default]
+        ...
+        ---
+        document: modulemd-defaults
+        version: 1
+        data:
+            module: fluid
+            stream: water
+            profiles:
+                default: [default]
+        ...
+        """
+   When I execute dnf with args "module disable fluid"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-disable           | fluid                  |
+   When I execute dnf with args "module enable beverage:soda"
+   Then the exit code is 1
+    And stderr contains "Problem: conflicting requests"
+    And stderr contains "module fluid:water:.* is disabled"
+
