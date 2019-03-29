@@ -24,13 +24,9 @@ Scenario: Remove group with "@"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | unchanged     | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
         | remove        | CQRlib-extension-0:1.5-2.x86_64           |
-        | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.3-1.fc29.noarch               |
-        | install       | flac-0:1.3.3-3.fc29.x86_64                |
-        | install       | wget-0:1.19.6-5.fc29.x86_64               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
         | group-remove  | CQRlib-non-devel                          |
 
 
@@ -39,7 +35,7 @@ Scenario: Remove group with "group" command
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | unchanged     | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
         | remove        | CQRlib-extension-0:1.5-2.x86_64           |
-        | remove        | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
         | group-remove  | CQRlib-non-devel                          |
