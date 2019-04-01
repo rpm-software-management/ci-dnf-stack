@@ -556,6 +556,89 @@ data:
     - dwm-0:6.0-1.module_1997+c375c79c.x86_64
 ...
 ---
+document: modulemd
+version: 2
+data:
+  name: postgresql
+  stream: 6
+  version: 20190329142114
+  context: 6c81f848
+  arch: x86_64
+  summary: PostgreSQL module
+  description: >-
+    PostgreSQL is an advanced Object-Relational database management system (DBMS).
+    The PostgreSQL server can be found in the postgresql-server sub-package.
+  license:
+    module:
+    - MIT
+    content:
+    - PostgreSQL
+  xmd:
+    mbs:
+      mse: TRUE
+      scmurl: https://src.fedoraproject.org/modules/postgresql.git?#8765a18f16976cfe6122319e337c27e9ec40206a
+      commit: 8765a18f16976cfe6122319e337c27e9ec40206a
+      buildrequires:
+        platform:
+          ref: f29
+          stream: f29
+          context: 00000000
+          version: 5
+          filtered_rpms: []
+      rpms:
+        postgresql:
+          ref: 3f21ecc4af44639c7cb40244f5db7a48936e3452
+  dependencies:
+  - buildrequires:
+      platform: [f29]
+    requires:
+      platform: [f29]
+  references:
+    community: https://docs.pagure.org/modularity/
+    documentation: https://www.postgresql.org/docs/
+    tracker: https://github.com/modularity-modules/postgresql
+  profiles:
+    client:
+      rpms:
+      - postgresql
+    default:
+      rpms:
+      - postgresql-server
+    server:
+      rpms:
+      - postgresql-server
+  api:
+    rpms:
+    - postgresql
+    - postgresql-server
+  buildopts:
+    rpms:
+      macros: |
+        %runselftest 0
+  components:
+    rpms:
+      postgresql:
+        rationale: main server component
+        repository: git://pkgs.fedoraproject.org/rpms/postgresql
+        cache: http://pkgs.fedoraproject.org/repo/pkgs/postgresql
+        ref: 3f21ecc4
+  artifacts:
+    rpms:
+    - postgresql-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-contrib-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-devel-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-docs-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-libs-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-plperl-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-plpython-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-plpython3-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-pltcl-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-server-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-static-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-test-0:6.1-1.module_2514+aa9aadc5.x86_64
+    - postgresql-upgrade-0:6.1-1.module_2514+aa9aadc5.x86_64
+...
+---
 document: modulemd-defaults
 version: 1
 data:
