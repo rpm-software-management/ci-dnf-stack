@@ -314,3 +314,29 @@ Scenario: Cannot enable a stream depending on a disabled module
         | Module       | State     | Stream     | Profiles  |
         | food-type    | disabled  |            |           |
         | ingredience  | disabled  |            |           |
+
+
+Scenario: Enable a module stream dependent on a module with a default stream
+   When I execute dnf with args "module enable food-type:edible"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                |
+        | module-stream-enable     | food-type:edible       |
+        | module-stream-enable     | ingredience:orange     |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | food-type    | enabled   | edible     |           |
+        | ingredience  | enabled   | orange     |           |
+
+
+Scenario: Enable a module stream dependent on a module without default stream
+  Given I use the repository "dnf-ci-fedora-modular-updates"
+   When I execute dnf with args "module enable nodejs:12"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                   | Package                |
+        | module-stream-enable     | nodejs:12              |
+    And modules state is following
+        | Module       | State     | Stream     | Profiles  |
+        | nodejs       | enabled   | 12         |           |
+        | postgresql   | enabled   | ?          |           |
