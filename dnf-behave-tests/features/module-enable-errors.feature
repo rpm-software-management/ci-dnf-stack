@@ -163,3 +163,23 @@ Scenario: Enabling a stream depending on a disabled stream should fail
     And stderr contains "Problem: conflicting requests"
     And stderr contains "module fluid:water:.* is disabled"
 
+
+# side-dish:chip requires fluid:oil
+# beverage:beer requires fluid:water
+Scenario: Enabling two modules both requiring different streams of another module
+  Given I use the repository "dnf-ci-thirdparty-modular"
+   When I execute dnf with args "module enable side-dish:chips beverage:beer"
+   Then the exit code is 1
+    And stderr contains "Modular dependency problems:"
+    And stderr contains "- conflicting requests"
+
+
+# beverage:beer requires fluid:water
+@bz1651280
+Scenario: Enabling module stream and another module requiring another stream
+  Given I use the repository "dnf-ci-thirdparty-modular"
+   When I execute dnf with args "module enable fluid:oil beverage:beer"
+   Then the exit code is 1
+    And stderr contains "Modular dependency problems:"
+    And stderr contains "Problem: conflicting requests"
+
