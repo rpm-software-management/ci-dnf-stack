@@ -34,6 +34,7 @@ Scenario: I can list all available modules
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]     |
         | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default         |
+        | dnf-ci-fedora-modular-updates | nodejs        | 12        | development, minimal, default         |
         | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d]   | client, server, default [d]           |
         | dnf-ci-fedora-modular-updates | postgresql    | 10        | client, server, default               |
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
@@ -92,6 +93,7 @@ Scenario: I can limit the scope through providing specific module names
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]     | development, minimal [i], default [d]|
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]|
         | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default |
+        | dnf-ci-fedora-modular-updates | nodejs        | 12        | development, minimal, default |
 
 
 Scenario: I can limit the scope of enabled modules through providing specific module names
