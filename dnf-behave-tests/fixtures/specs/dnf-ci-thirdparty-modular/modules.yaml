@@ -321,6 +321,103 @@ data:
         fluid: [water]
 ...
 ---
+document: modulemd
+version: 2
+data:
+  name: berry
+  stream: raspberry
+  version: 1
+  context: wood
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream raspberry
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["raspberry"]
+  dependencies:
+    - requires:
+        biotope: [wood]
+  artifacts:
+    rpms: ["raspberry-0:1.0-1.wood.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: berry
+  stream: raspberry
+  version: 1
+  context: garden
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream raspberry
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["raspberry"]
+  dependencies:
+    - requires:
+        biotope: [garden]
+  artifacts:
+    rpms: ["raspberry-0:1.0-1.garden.x86_64"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: biotope
+  stream: wood
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream wood
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+...
+---
+document: modulemd
+version: 2
+data:
+  name: biotope
+  stream: garden
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream garden
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+...
+---
+document: modulemd
+version: 2
+data:
+  name: biotope
+  stream: pond
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream pond
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+...
+---
 document: modulemd-defaults
 version: 1
 data:
