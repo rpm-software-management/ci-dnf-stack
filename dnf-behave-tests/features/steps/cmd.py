@@ -84,6 +84,11 @@ def step_impl(context):
     context.dnf._set("reposdir", "")
 
 
+@behave.given("I do not set releasever")
+def step_impl(context):
+    context.dnf._set("releasever", "")
+
+
 @behave.given("I do not disable plugins")
 def step_impl(context):
     context.dnf._set("disable_plugins", False)
