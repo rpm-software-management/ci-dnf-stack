@@ -50,6 +50,6 @@ Scenario: Builddep with simple dependency (files-like provide)
 Scenario: Builddep with simple dependency (non-existent)
     Given I use the repository "dnf-ci-fedora"
       And I enable plugin "builddep"
-      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires (flac=15)'"
+      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
-      And stderr contains "No matching package to install: '\(flac=15\)'"
+      And stderr contains "No matching package to install: 'flac = 15'"
