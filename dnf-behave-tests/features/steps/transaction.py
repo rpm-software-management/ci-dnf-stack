@@ -140,5 +140,5 @@ def then_DNF_transaction_is_empty(context):
 
 @behave.then("Transaction is empty")
 def then_transaction_is_empty(context):
-    context.execute_steps("Then RPMDB Transaction is empty")
-    context.execute_steps("Then DNF Transaction is empty")
+    context.execute_steps(u"Then RPMDB Transaction is empty")
+    context.execute_steps(u"Then DNF Transaction is empty")
