@@ -47,8 +47,8 @@ Scenario: Releasever is substituted in baseurl via a config file
 
 Scenario: Releasever is substituted in baseurl via a value detected from a fedora-release package
   Given I do not set releasever
-    And I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/fedora-release-30-1.noarch.rpm"
-    And I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f30"
+    And I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/fedora-release-29-1.noarch.rpm"
+    And I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f29"
     And I create and substitute file "/etc/yum.repos.d/test.repo" with
         """
         [testrepo]
