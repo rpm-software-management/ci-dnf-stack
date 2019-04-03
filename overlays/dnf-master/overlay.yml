@@ -11,6 +11,7 @@ components:
       src: github:openSUSE/libsolv.git
     distgit:
       src: fedorapkgs:libsolv.git
+      freeze: 335f469bf6e3109d4973e55a3a86a274adb0c21d
       patches: drop
 
   - name: librepo
