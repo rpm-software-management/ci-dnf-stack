@@ -46,10 +46,14 @@ Scenario: Upgrade two RPMs
 
 
 @tier1
+@bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories
   Given I use the repository "dnf-ci-fedora-updates"
   Given I use the repository "dnf-ci-fedora-updates-testing"
     And I use the repository "dnf-ci-thirdparty-updates"
+   When I execute dnf with args "upgrade"
+   Then the exit code is 1
+    And stderr contains "Problem: cannot install the best update candidate for package SuperRipper"
    When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
     And Transaction is following
