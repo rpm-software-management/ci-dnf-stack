@@ -8,6 +8,9 @@ def ensure_directory_exists(dirname):
     assert os.path.exists(dirname), "ENSURE: dir exists {!r}".format(dirname)
     assert os.path.isdir(dirname), "ENSURE: is a dir {!r}".format(dirname)
 
+def ensure_file_exists(filename):
+    assert os.path.exists(filename), "ENSURE: file exists {!r}".format(filename)
+
 def ensure_file_does_not_exist(filename):
     assert not os.path.exists(filename), "ENSURE: file does not exist {!r}".format(filename)
 

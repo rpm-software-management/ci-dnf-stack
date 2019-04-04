@@ -36,6 +36,12 @@ def step_delete_directory(context, dirpath):
     delete_directory(full_path)
 
 
+@behave.step('file "{filepath}" exists')
+def file_exists(context, filepath):
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    ensure_file_exists(full_path)
+
+
 @behave.given('file "{filepath}" does not exist')
 def file_does_not_exist(context, filepath):
     full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
