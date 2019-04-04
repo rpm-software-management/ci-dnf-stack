@@ -22,10 +22,12 @@ Background: Install RPMs
 
 
 @tier1
+@bz1649286
 Scenario: Upgrade one RPM
   Given I use the repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc"
    Then the exit code is 0
+    And stdout does not contain "Upgrade *: +glibc"
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
