@@ -42,8 +42,9 @@ Examples:
     | upgrade-minimal   | security_A-0:1.0-3.x86_64 |
 
 
+@wip
 Scenario Outline: Security <command> with bzs explicitly mentioned
-   When I execute dnf with args "<command> --security --bz 123 --bzs 234 --bzs 345"
+   When I execute dnf with args "<command> --security --bz 123 --bzs=234,345"
    Then the exit code is 0
     And Transaction contains
         | Action        | Package                   |
