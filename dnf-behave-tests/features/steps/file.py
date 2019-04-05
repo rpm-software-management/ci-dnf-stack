@@ -67,3 +67,14 @@ def step_impl(context, source, destination):
     destination = os.path.join(context.dnf.installroot, destination.lstrip("/"))
     ensure_directory_exists(os.path.dirname(destination))
     copy_tree(source, destination)
+
+
+@behave.step('the files "{first}" and "{second}" do not differ')
+def step_impl(context, first, second):
+    first = first.format(context=context)
+    second = second.format(context=context)
+    ensure_file_exists(first)
+    ensure_file_exists(second)
+    cmd = "diff {} {}".format(first, second)
+    exitcode, _, _ = run(cmd, shell=True)
+    assert exitcode == 0, 'Files "{}" and "{}" differ.'.format(first, second)
