@@ -24,6 +24,7 @@ Scenario: I can list all available modules
         | dnf-ci-fedora-modular | meson     | master [d] | default [d]                          |
         | dnf-ci-fedora-modular | nodejs    | 8 [d][e]   | development, minimal [i], default [d]|
         | dnf-ci-fedora-modular | nodejs    | 10         | development, minimal, default [d]    |
+        | dnf-ci-fedora-modular | nodejs    | 11         | development, minimal, default        |
         | dnf-ci-fedora-modular | postgresql| 9.6 [d]    | client, server, default [d]          |
         | dnf-ci-fedora-modular | ninja     | master [d] | default [d]                          |
         | dnf-ci-fedora-modular | ninja     | development| default [d]                          |
@@ -82,6 +83,7 @@ Scenario: I can limit the scope through providing specific module names
         | Repository                    | Name          | Stream    | Profiles                      |
         | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]     | development, minimal [i], default [d]|
         | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default [d]|
+        | dnf-ci-fedora-modular         | nodejs        | 11        | development, minimal, default |
         | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]     | development, minimal [i], default [d]|
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]|
         | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default |
