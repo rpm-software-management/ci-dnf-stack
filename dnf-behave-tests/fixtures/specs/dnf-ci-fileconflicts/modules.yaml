@@ -1,0 +1,19 @@
+---
+document: modulemd
+version: 2
+data:
+  name: test-module
+  stream: B
+  version: 1
+  context: 6c81f848
+  summary: Test module
+  description: >-
+      This is a test module
+  profiles:
+    default:
+      rpms:
+      - FileConflict
+  artifacts:
+    rpms:
+    - FileConflict-0:2.0.streamB-1.x86_64
+...

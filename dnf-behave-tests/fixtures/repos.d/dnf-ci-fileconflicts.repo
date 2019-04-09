@@ -1,0 +1,5 @@
+[dnf-ci-fileconflicts]
+name=dnf-ci-fileconflicts
+baseurl=fixtures/repos/dnf-ci-fileconflicts
+enabled=1
+gpgcheck=0
