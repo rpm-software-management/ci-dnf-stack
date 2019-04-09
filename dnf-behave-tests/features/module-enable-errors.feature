@@ -29,14 +29,10 @@ Scenario: Fail to enable a module stream when specifying only module
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr is
-        """
-        Cannot enable more streams from module 'nodejs' at the same time
-        Unable to resolve argument nodejs
-        Error: Problems in request:
-        broken groups or modules: nodejs
-
-        """
+    And stderr contains "Cannot enable more streams from module 'nodejs' at the same time"
+    And stderr contains "Unable to resolve argument nodejs"
+    And stderr contains "Error: Problems in request:"
+    And stderr contains "broken groups or modules: nodejs"
 
 
 @bz1629655
@@ -46,12 +42,8 @@ Scenario: Fail to enable a module stream when specifying wrong version
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr is
-        """
-        Error: Problems in request:
-        missing groups or modules: nodejs:8:99
-
-        """
+    And stderr contains "Error: Problems in request:"
+    And stderr contains "missing groups or modules: nodejs:8:99"
 
 
 @bz1629655
@@ -61,12 +53,8 @@ Scenario: Fail to enable a non-existent module stream
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr is
-        """
-        Error: Problems in request:
-        missing groups or modules: nodejs:1
-
-        """
+    And stderr contains "Error: Problems in request:"
+    And stderr contains "missing groups or modules: nodejs:1"
 
 
 Scenario: Fail to enable a module stream when not specifying anything
@@ -89,14 +77,11 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr is
-        """
-        Cannot enable multiple streams for module 'nodejs'
-        Unable to resolve argument nodejs:10
-        Error: Problems in request:
-        broken groups or modules: nodejs:10
+    And stderr contains "Cannot enable multiple streams for module 'nodejs'"
+    And stderr contains "Unable to resolve argument nodejs:10"
+    And stderr contains "Error: Problems in request:"
+    And stderr contains "broken groups or modules: nodejs:10"
 
-        """
 
 Scenario: Enabling a stream depending on other than enabled stream should fail
   Given I use the repository "dnf-ci-thirdparty-modular"
