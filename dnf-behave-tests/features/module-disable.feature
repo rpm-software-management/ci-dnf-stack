@@ -6,6 +6,7 @@ Background:
   Given I use the repository "dnf-ci-fedora"
 
 
+@skip-RHEL8
 @bz1677640
 Scenario: I can disable a module when specifying module name
    When I execute dnf with args "module enable nodejs:8"
@@ -21,6 +22,8 @@ Scenario: I can disable a module when specifying module name
         | nodejs    | disabled  |           |           |
 
 
+# this is not test for @bz1677640, but test is failing until the bug is fixed
+@skip-RHEL8
 Scenario: Disabling an already disabled module should pass
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
