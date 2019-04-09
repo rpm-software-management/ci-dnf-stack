@@ -20,42 +20,43 @@ Scenario: I can list all available modules
    Then the exit code is 0
     And stdout contains "Javascript runtime"
     And module list is
-        | Repository            | Name      | Stream     | Profiles                             |
-        | dnf-ci-fedora-modular | meson     | master [d] | default [d]                          |
-        | dnf-ci-fedora-modular | nodejs    | 8 [d][e]   | development, minimal [i], default [d]|
-        | dnf-ci-fedora-modular | nodejs    | 10         | development, minimal, default [d]    |
-        | dnf-ci-fedora-modular | nodejs    | 11         | development, minimal, default        |
-        | dnf-ci-fedora-modular | postgresql| 9.6 [d]    | client, server, default [d]          |
-        | dnf-ci-fedora-modular | ninja     | master [d] | default [d]                          |
-        | dnf-ci-fedora-modular | ninja     | development| default [d]                          |
-        | dnf-ci-fedora-modular | ninja     | legacy     | default                              |
-        | dnf-ci-fedora-modular | dwm       | 6.0        | default                              |
-        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]     | development, minimal [i], default [d] |
+        | Repository            | Name      | Stream     | Profiles                              |
+        | dnf-ci-fedora-modular | meson     | master [d] | default [d]                           |
+        | dnf-ci-fedora-modular | nodejs    | 8 [d][e]   | development, minimal [i], default [d] |
+        | dnf-ci-fedora-modular | nodejs    | 10         | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular | nodejs    | 11         | development, minimal, default         |
+        | dnf-ci-fedora-modular | postgresql| 9.6 [d]    | client, server, default [d]           |
+        | dnf-ci-fedora-modular | postgresql| 6          | client, server, default               |
+        | dnf-ci-fedora-modular | ninja     | master [d] | default [d]                           |
+        | dnf-ci-fedora-modular | ninja     | development| default [d]                           |
+        | dnf-ci-fedora-modular | ninja     | legacy     | default                               |
+        | dnf-ci-fedora-modular | dwm       | 6.0        | default                               |
+        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
         | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]     |
-        | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default     |
-        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d]       | client, server, default [d]           |
-        | dnf-ci-fedora-modular-updates | postgresql    | 10        | client, server, default           |
-        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default       |
+        | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default         |
+        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d]   | client, server, default [d]           |
+        | dnf-ci-fedora-modular-updates | postgresql    | 10        | client, server, default               |
+        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
 
 
 Scenario: I can list enabled modules
    When I execute dnf with args "module list --enabled"
    Then the exit code is 0
     And module list is
-        | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]  | development, minimal [i], default [d]|
-        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d]|
-        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default       |
+        | Repository                    | Name          | Stream    | Profiles                              |
+        | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
+        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
+        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
 
 
 Scenario: I can list installed modules
    When I execute dnf with args "module list --installed"
    Then the exit code is 0
     And module list is
-        | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]  | development, minimal [i], default [d]|
-        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d]|
-        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default       |
+        | Repository                    | Name          | Stream    | Profiles                              |
+        | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
+        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
+        | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
 
 
 @bz1647382
@@ -72,11 +73,12 @@ Scenario: I can list disabled modules
    When I execute dnf with args "module list --disabled"
    Then the exit code is 0
     And module list is
-        | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | postgresql    | 9.6 [d][x]   | client, server, default [d]      |
-        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d][x]   | client, server, default [d]      |
-        | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]    | client, server, default       |
-        | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]    | client, server, default       |
+        | Repository                    | Name          | Stream     | Profiles                    |
+        | dnf-ci-fedora-modular         | postgresql    | 9.6 [d][x] | client, server, default [d] |
+        | dnf-ci-fedora-modular         | postgresql    | 6 [x]      | client, server, default     |
+        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d][x] | client, server, default [d] |
+        | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]     | client, server, default     |
+        | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]     | client, server, default     |
 
 
 Scenario: I can limit the scope through providing specific module names
@@ -114,10 +116,11 @@ Scenario: I can limit the scope of disabled modules through providing specific m
    When I execute dnf with args "module list --disabled postgresql nodejs"
    Then the exit code is 0
     And module list is
-        | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | postgresql    | 9.6 [d][x]   | client, server, default [d]      |
-        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d][x]   | client, server, default [d]      |
-        | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]    | client, server, default       |
-        | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]    | client, server, default       |
+        | Repository                    | Name          | Stream     | Profiles                    |
+        | dnf-ci-fedora-modular         | postgresql    | 9.6 [d][x] | client, server, default [d] |
+        | dnf-ci-fedora-modular         | postgresql    | 6 [x]      | client, server, default     |
+        | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d][x] | client, server, default [d] |
+        | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]     | client, server, default     |
+        | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]     | client, server, default     |
 
 
