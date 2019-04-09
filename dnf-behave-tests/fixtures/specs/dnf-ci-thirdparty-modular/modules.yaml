@@ -324,6 +324,26 @@ data:
 document: modulemd
 version: 2
 data:
+  name: side-dish
+  stream: chips
+  version: 1
+  arch: x86_64
+  summary: Dependency testing module
+  description: Stream
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: []
+  dependencies:
+    - requires:
+        fluid: [oil]
+...
+---
+document: modulemd
+version: 2
+data:
   name: berry
   stream: raspberry
   version: 1
