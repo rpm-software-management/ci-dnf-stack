@@ -34,6 +34,7 @@ PACKAGES = [
     ["fedora", "filesystem", "dnf-ci-fedora"],
     ["fedora", "basesystem", "dnf-ci-fedora"],
     ["fedora", "glibc", "dnf-ci-fedora"],
+    ["fedora", "ninja-build", "dnf-ci-fedora"],
 
     # dnf-ci-fedora-updates
     ["updates", "glibc", "dnf-ci-fedora-updates"],
