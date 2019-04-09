@@ -3,3 +3,4 @@ name=dnf-ci-fedora
 baseurl=fixtures/repos/dnf-ci-fedora
 enabled=1
 gpgcheck=0
+skip_if_unavailable=0

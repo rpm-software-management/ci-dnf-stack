@@ -7,16 +7,16 @@ Background:
 
 Scenario: Cache only Repoquery without cache of available packages
   When I execute dnf with args "repoquery --available -C --queryformat %{{name}}-%{{version}}-%{{release}}"
-  Then the exit code is 0
+  Then the exit code is 1
   Then stdout is empty
-  Then stderr contains "^Cache-only enabled but no cache for"
+  Then stderr contains "Cache-only enabled but no cache for"
 
 
 Scenario: Quiet cache only Repoquery without cache of available packages
   When I execute dnf with args "repoquery --available -qC --queryformat %{{name}}-%{{version}}-%{{release}}"
-  Then the exit code is 0
+  Then the exit code is 1
   Then stdout is empty
-  Then stderr is empty
+  Then stderr contains "Cache-only enabled but no cache for"
 
 
 Scenario: Quiet cache only Repoquery with cache of available packages
