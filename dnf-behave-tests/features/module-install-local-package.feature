@@ -24,6 +24,8 @@ Scenario: Install a local RPM with different version available in enabled stream
         | install      | postgresql-0:9.6.5-1.fc29.x86_64          |
 
 
+# rely on merging bz1649261 fix
+@skip-RHEL8
 @bz1582105
 Scenario: Install a local RPM that belongs to a disabled module
    When I execute dnf with args "module disable postgresql"

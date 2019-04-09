@@ -37,6 +37,7 @@ Scenario: Disabling an already disabled module should pass
     And stdout contains "Nothing to do."
 
 
+@skip-RHEL8
 @bz1649261
 Scenario Outline: I can disable a module when specifying <spec>
    When I execute dnf with args "module enable nodejs:8"
@@ -57,6 +58,8 @@ Examples:
     | version           | nodejs:10:20180920144631  |
 
 
+@skip-RHEL8
+@bz1649261
 Scenario Outline: I can disable a module with installed profile when specifying <spec>
    When I execute dnf with args "module install nodejs:10/default"
    Then the exit code is 0
