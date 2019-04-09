@@ -1,0 +1,5 @@
+[dnf-ci-thirdparty-modular]
+name=dnf-ci-thirdparty-modular
+baseurl=fixtures/repos/dnf-ci-thirdparty-modular
+enabled=1
+gpgcheck=0

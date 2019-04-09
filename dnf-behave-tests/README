@@ -16,3 +16,111 @@ Project layout
 |       `-- common              # shared code for the steps
 |-- fixtures                    # test data
 `-- [behave.ini|.behaverc|tox.ini|setup.cfg]
+
+
+Creating test data
+------------------
+
+1. Populate repositories (in fixtures/spec):
+   * Define RPM packages by .spec files
+   * Define groups in comps.xml
+   * Define updateinfo in updateinfo.xml
+   * Define modules in modules.yaml
+
+2. Define GPG keys and signed packages (in fixtures/gpgkeys):
+   * Create GPG key: # new_gpg_key.sh [key name]
+   * Define which packages will be signed in [key name]/signed-packages
+     (package paths must be relative to fixtures/repos)
+
+3. Define broken packages:
+   * Update script fixtures/spec/break-packages.sh
+
+4. Build: # fixtures/spec/build.sh
+
+5. Create repo files (in fixtured/repos.d)
+
+
+Test repositories
+-----------------
+
+dnf-ci-scriptlets
+    purpose:
+        Packages to test DNFs reaction on lua scriptlets half failing
+        and half succeeding.
+    pakcages:
+        Package-pre-ok
+        Package-pre-fail
+        Package-pretrans-ok
+        Package-pretrans-fail
+        Package-post-ok
+        Package-post-fail
+        Package-posttrans-ok
+        Package-posttrans-fail
+        Package-preun-ok
+        Package-preun-fail
+        Package-postun-ok
+        Package-postun-fail
+        
+
+dnf-ci-fedora-updates-testing
+    purpose:
+        Additional new versions for packages and most importantly contains
+        identical package as dnf-ci-fedora-updates (CQRlib-1.1.2-16.fc29.spec)
+        created by symlink, which is needed by repo-packages-remove-or-reinstall
+        feature
+    packages:
+        CQRlib:
+            symlinked to CQRlib in dnf-ci-fedora-updates
+        flac:
+            additional new version
+        kernel:
+            additional new version
+
+dnf-ci-thirdparty
+dnf-ci-thirdparty-updates
+    purpose:
+        Home for packages made up just for tests and which are not part
+        of the Fedora.
+    packages:
+        SuperRipper:
+            in the dnf-ci-thirdparty version it requires the abcde. In
+            the dnf-ci-thirdparty-updates is this dependency dropped. Used
+            for testing of autoremove command.
+        FlacBetterEncoder:
+            this package supplements super feature to the flac package. Used
+            for testing of backward dependencies.
+
+dnf-ci-fedora-thirdparty-modular
+    purpose:
+        Home for packages made up for testing modular dependencies.
+    packages:
+        egg
+        ham
+        orange
+        strawberry
+    modules:
+        ingredience (streams: egg, ham, ...)
+        food-type (streams: meat, fruit, edible, vegetarian, ...)
+            each stream requires some streams of module "ingredience"
+
+
+Test Packages
+-------------
+
+abcde-2.9.2-1.fc29.src.rpm
+    purpose:
+        A package with all types of forward dependencies. It requires wget,
+        recommends flac and suggests lame.
+
+zstd-1.3.6-1.fc29.src.rpm
+    purpose:
+        A new package that wasn't available in the dnf-ci-fedora repo
+        and was introduced in dnf-ci-fedora-updates.
+    sub-packages:
+        zstd-1.3.6-1.fc29.x86_64.rpm
+        libzstd-1.3.6-1.fc29.x86_64.rpm
+        libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm
+        libzstd-devel-1.3.6-1.fc29.x86_64.rpm
+        zstd-debuginfo-1.3.6-1.fc29.x86_64.rpm
+        zstd-debugsource-1.3.6-1.fc29.x86_64.rpm
+
