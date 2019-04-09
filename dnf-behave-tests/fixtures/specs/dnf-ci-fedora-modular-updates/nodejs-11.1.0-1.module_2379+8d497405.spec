@@ -25,6 +25,7 @@ Provides:       nodejs(v8-abi7) = 7.0
 
 Requires:       rtld(GNU_HASH)
 Requires:       wget
+Requires:       postgresql
 
 Conflicts:      node <= 0.3.2-12
 
