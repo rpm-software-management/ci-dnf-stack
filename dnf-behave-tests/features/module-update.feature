@@ -148,6 +148,7 @@ Given I use the repository "dnf-ci-thirdparty-updates"
        | install                   | SuperRipper-0:1.2-1.x86_64                    |
 
 
+@skip-RHEL8
 @bz1647429
 Scenario: Update module packages even if no profiles are installed
  When I execute dnf with args "module enable nodejs:11"
