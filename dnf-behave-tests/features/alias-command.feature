@@ -9,6 +9,7 @@ Background:
 Scenario: Add alias
 
 
+@skip-RHEL8
 @bz1666325
 Scenario: List aliases
    When I execute dnf with args "alias list"
