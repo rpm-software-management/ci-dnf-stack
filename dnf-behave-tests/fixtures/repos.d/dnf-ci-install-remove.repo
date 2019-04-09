@@ -1,0 +1,5 @@
+[dnf-ci-install-remove]
+name=dnf-ci-install-remove
+baseurl=file://$DNF0/repos/dnf-ci-install-remove
+enabled=1
+gpgcheck=0

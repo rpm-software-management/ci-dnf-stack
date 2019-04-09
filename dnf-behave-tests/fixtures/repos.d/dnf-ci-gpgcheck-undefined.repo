@@ -1,0 +1,4 @@
+[dnf-ci-gpgcheck-undefined]
+name=dnf-ci-gpgcheck-undefined
+baseurl=fixtures/repos/dnf-ci-gpg
+enabled=1

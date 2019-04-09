@@ -1,0 +1,5 @@
+[dnf-ci-scriptlets]
+name=dnf-ci-scriptlets
+baseurl=fixtures/repos/dnf-ci-scriptlets
+enabled=1
+gpgcheck=0

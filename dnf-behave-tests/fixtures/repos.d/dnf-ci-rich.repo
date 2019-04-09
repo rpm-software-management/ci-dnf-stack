@@ -1,0 +1,5 @@
+[dnf-ci-rich]
+name=dnf-ci-rich
+baseurl=fixtures/repos/dnf-ci-rich
+enabled=1
+gpgcheck=0

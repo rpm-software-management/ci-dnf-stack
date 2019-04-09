@@ -1,0 +1,5 @@
+[dnf-ci-fedora-modular-updates]
+name=dnf-ci-fedora-modular-updates
+baseurl=fixtures/repos/dnf-ci-fedora-modular-updates
+enabled=1
+gpgcheck=0
