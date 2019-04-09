@@ -6,7 +6,6 @@ Background:
     And I use the repository "dnf-ci-fedora-modular-updates"
     And I use the repository "dnf-ci-fedora"
 
-@wip
 Scenario: I can list all available modules
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
