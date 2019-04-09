@@ -104,14 +104,6 @@ def then_stdout_is(context):
     raise AssertionError("Stdout is not: %s" % context.text)
 
 
-@behave.then("stderr is")
-def then_stderr_is(context):
-    if context.text.strip() == context.cmd_stderr.strip():
-        return
-    print(context.cmd_stderr, file=sys.stderr)
-    raise AssertionError("Stderr is not: %s" % context.text)
-
-
 @behave.then("stdout contains lines")
 def then_stdout_contains_lines(context):
     out_lines = context.cmd_stdout.split('\n')
@@ -134,6 +126,24 @@ def then_stdout_contains_lines(context):
             if line == outline:
                 print(context.cmd_stdout)
                 raise AssertionError("Stdout contains line: %s" % line)
+
+
+@behave.then('stdout section "{section}" contains "{regexp}"')
+def then_stdout_section_contains(context, section, regexp):
+    """Compares the content of a particular section from the command output with a given regexp"""
+    section_content = extract_section_content_from_text(section, context.cmd_stdout)
+    if re.search(regexp, section_content):
+        return
+    print(context.cmd_stdout, file=sys.stderr)
+    raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
+
+
+@behave.then("stderr is")
+def then_stderr_is(context):
+    if context.text.strip() == context.cmd_stderr.strip():
+        return
+    print(context.cmd_stderr, file=sys.stderr)
+    raise AssertionError("Stderr is not: %s" % context.text)
 
 
 @behave.then("stderr contains \"{text}\"")
@@ -160,11 +170,14 @@ def then_stderr_is_empty(context):
     raise AssertionError("Stderr is not empty, it contains: %s" % context.cmd_stderr)
 
 
-@behave.then('stdout section "{section}" contains "{regexp}"')
-def then_stdout_section_contains(context, section, regexp):
-    """Compares the content of a particular section from the command output with a given regexp"""
-    section_content = extract_section_content_from_text(section, context.cmd_stdout)
-    if re.search(regexp, section_content):
-        return
-    print(context.cmd_stdout, file=sys.stderr)
-    raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
+@behave.then("stderr contains lines")
+def then_stdout_contains_lines(context):
+    out_lines = context.cmd_stderr.split('\n')
+    test_lines = context.text.split('\n')
+    for line in test_lines:
+        for outline in out_lines:
+            if line == outline:
+                break
+        else:
+            print(context.cmd_stderr, file=sys.stderr)
+            raise AssertionError("Stderr doesn't contain line: %s" % line)
