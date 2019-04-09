@@ -5,6 +5,8 @@ Background:
 Given I use the repository "dnf-ci-fedora-modular"
 
 
+# rely on merging bz1677640 fix
+@skip-RHEL8
 Scenario: I can reset a disabled default stream back to its default state
  When I execute dnf with args "module disable nodejs"
   And I execute dnf with args "module list nodejs"
@@ -20,6 +22,8 @@ Scenario: I can reset a disabled default stream back to its default state
  Then stdout contains "nodejs\s+11\s+de"
 
 
+# rely on merging bz1677640 fix
+@skip-RHEL8
 Scenario: I can reset a disabled non-default stream back to a non-default state
  When I execute dnf with args "module disable dwm"
   And I execute dnf with args "module list" 
@@ -53,6 +57,7 @@ Scenario: Resetting of a non-default non-enabled stream does nothing
  Then stdout contains "dwm\s+6.0\s+de"
  
 
+@skip-RHEL8
 @bz1677640
 # scenario different from the one in the relevant requirement!
 Scenario: I can reset an enabled default stream back to its non-enabled default state
@@ -70,6 +75,8 @@ Scenario: I can reset an enabled default stream back to its non-enabled default 
  Then stdout contains "nodejs\s+11\s+de"
 
 
+# rely on merging bz1677640 fix
+@skip-RHEL8
 # scenario different from the one in the relevant requirement!
 Scenario: I can reset an enabled non-default stream back to a non-enabled state
  When I execute dnf with args "module enable dwm:6.0/default" 
