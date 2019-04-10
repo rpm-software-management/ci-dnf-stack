@@ -111,6 +111,7 @@ elif [ "$action" = "build" ]; then
         case "$arg" in
             jjb) type="jjb";;
             local) type="local";;
+            side-tag) type="side-tag";;
             "") type="local";;
             *) fatal "Unknown argument: $arg";;
         esac
@@ -134,7 +135,7 @@ list()
 
 build()
 {
-    local output=($($DOCKER_BIN build --build-arg type="$type" --no-cache \
+    local output=($($DOCKER_BIN build --build-arg TYPE="$type" --no-cache \
                     --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     RET=$?
