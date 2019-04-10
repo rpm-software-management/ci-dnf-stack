@@ -54,6 +54,8 @@ RUN set -x && \
         findutils \
         python3-behave \
         python3-pexpect \
+        rpm-build \
+        rpm-sign \
         # if TYPE == local, install debugging tools
         $(if [ "$TYPE" == "local" ]; then \
             echo \
@@ -74,26 +76,28 @@ RUN set -x && \
         dnf \
         dnf-plugins-core \
         dnf-utils \
+        # all plugins with the same version as dnf-utils
+        $(dnf repoquery dnf-utils --latest-limit=1 -q --qf="python*-dnf-plugin-*-%{version}-%{release}") \
         libdnf \
         microdnf
 
 
-# if TYPE == local, install local RPMs
+# install local RPMs if available
 COPY ./rpms/ /opt/behave/rpms/
-RUN if [ "$TYPE" == "local" -a -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf -y install /opt/behave/rpms/*.rpm \
-            -x '*-debuginfo' \
-            -x '*-debugsource' \
-            -x '*plugin-versionlock*' \
-            -x '*plugin-local*' \
-            -x '*plugin-torproxy*' \
-            -x '*plugin-migrate*' \
-            ; \
+RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+    if [ -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
+        dnf -y install /opt/behave/rpms/*.rpm; \
     fi
 
 
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/behave/
+
+
+# build test repos from sources
+RUN set -x && \
+    cd /opt/behave/fixtures/specs/ && \
+    ./build.sh
 
 
 VOLUME ["/opt/behave/junit"]
