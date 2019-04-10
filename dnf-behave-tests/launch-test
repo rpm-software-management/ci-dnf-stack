@@ -1,0 +1,32 @@
+#!/bin/bash
+set -xeuo pipefail
+
+
+RESERVE=0
+if [ "$1" == "-r" -o "$1" == "-R" ]; then
+    RESERVE="$1"
+    shift
+fi
+
+
+TAGS=""
+while [ "$1" == "--tags" ]; do
+    TAGS="$TAGS --tags $2"
+    shift 2
+done
+
+
+FEATURE_PATH="/opt/behave/features/$1"
+if [ ! -f "$FEATURE_PATH" ]; then
+    echo "Feature file not found: $FEATURE_PATH" >&2
+    exit 1
+fi
+
+
+TEST_EXIT=0
+behave $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH" || TEST_EXIT=$?
+
+if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
+    bash || :
+fi
+exit $TEST_EXIT

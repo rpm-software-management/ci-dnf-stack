@@ -102,12 +102,7 @@ done
 if [ "$action" = "run" ]; then
     TESTS=()
     for arg; do
-        tests=$( find $PROG_PATH/dnf-docker-test/features/ -maxdepth 1 \( -name "$arg" -o -name "$arg.feature" \) -type f -printf "%f " )
-        if [ -z "$tests" ]; then
-            echo "No test matching '$arg'"
-            exit 1
-        fi
-        TESTS+=( $tests )
+        TESTS+=( $arg )
         shift
     done
 elif [ "$action" = "build" ]; then
@@ -124,23 +119,14 @@ elif [ "$action" = "build" ]; then
 fi
 [ $# -eq 0 ] || fatal "Too many arguments."
 
-FEATURES=()
 gather_tests()
 {
-    local glob="$PROG_PATH/dnf-docker-test/features/*.feature"
-    local i=0
-    for f in $glob; do
-        if [ "$f" = "$glob" ]; then
-            fatal "Can't find behave features."
-        fi
-        local feature=$(basename "$f")
-        FEATURES+=("${feature%.feature}")
-    done
+    $DOCKER_BIN run --rm "$IMAGE" behave --dry-run | grep '^ *Feature:' | sed 's@.*# features/\(.*\):.*$@\1@'
 }
-gather_tests
 
 list()
 {
+    FEATURES=($(gather_tests))
     printf "%s\n" "${FEATURES[@]}"
     exit 0
 }
@@ -173,26 +159,21 @@ build()
 
 run()
 {
+    FEATURES=($(gather_tests))
     [ ${#TESTS[@]} -eq 0 ] && TESTS=("${FEATURES[@]}")
     local failed=0
     local failed_test_name='Failed test(s):'
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
-            feature=${feature%.feature}  # cut-off .feature suffix if present
-            for command in dnf-2 dnf-3; do
-                printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
-                if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
-            done
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
+            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     else
         for feature in "${TESTS[@]}"; do
-            feature=${feature%.feature}  # cut-off .feature suffix if present
-            for command in dnf-2 dnf-3; do
-                printf "\n$DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
-                if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
-            done
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
+            if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     fi
     if [ "$failed" != 0 ]; then
