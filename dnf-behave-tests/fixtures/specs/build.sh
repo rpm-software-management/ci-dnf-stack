@@ -56,7 +56,7 @@ for path in $REPODIR/*; do
     REPO=$(basename $path)
     echo "Creating repo $path..."
     pushd $path
-    ARGS="--no-database --simple-md-filenames --revision=1550000000 --set-timestamp-to-revision"
+    ARGS="--no-database --simple-md-filenames --revision=1550000000"
     if [ -f ../../specs/$REPO/$GROUPS_FILENAME ]; then
         ARGS="$ARGS --groupfile ../../specs/$REPO/$GROUPS_FILENAME"
     fi
