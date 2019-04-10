@@ -68,8 +68,8 @@ IMAGE="dnf-bot/dnf-testing:latest"
 PARAM_RESERVE=""
 PARAM_TTY=""
 PARAM_TAGS=""
-DOCKER_BIN=docker;
-! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN=podman
+DOCKER_BIN="sudo docker";
+! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN="podman"
 
 while :; do
     case "$1" in
@@ -77,7 +77,7 @@ while :; do
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
         -c|--container) IMAGE=$2; shift 2;;
-        -p|--podman) DOCKER_BIN=podman; shift;;
+        -p|--podman) DOCKER_BIN="podman"; shift;;
         -r|--reserve) set_reserve; shift;;
         -R|--reserveonfail) set_reserveR; shift;;
         -t|--tags) PARAM_TAGS="$PARAM_TAGS --tags $2"; shift 2;;
@@ -148,11 +148,11 @@ list()
 
 build()
 {
-    local output=($(sudo $DOCKER_BIN build --build-arg type="$type" --no-cache \
+    local output=($($DOCKER_BIN build --build-arg type="$type" --no-cache \
                     --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     RET=$?
-    if [ "$DOCKER_BIN" == "docker" ]; then
+    if [ "$DOCKER_BIN" == "sudo docker" ]; then
         if [ ${#output[@]} -eq 3 ] && \
        	   [ "${output[0]}" = "Successfully" ] && 
            [ "${output[1]}" = "built" ]; then
@@ -180,8 +180,8 @@ run()
         for feature in "${TESTS[@]}"; do
             feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
-                printf "\nsudo $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                sudo $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
+                printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
+                $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
@@ -189,8 +189,8 @@ run()
         for feature in "${TESTS[@]}"; do
             feature=${feature%.feature}  # cut-off .feature suffix if present
             for command in dnf-2 dnf-3; do
-                printf "\nsudo $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
-                sudo $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
+                printf "\n$DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command\n"
+                $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" $command >&2 || \
                 if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature-$command"; fi
             done
         done
@@ -205,11 +205,11 @@ run()
 shell()
 {
     if [ -z "$devel" ];then
-        printf "\nsudo $DOCKER_BIN run -it --rm "$IMAGE" bash\n"
-        sudo $DOCKER_BIN run -it --rm "$IMAGE" bash
+        printf "\n$DOCKER_BIN run -it --rm "$IMAGE" bash\n"
+        $DOCKER_BIN run -it --rm "$IMAGE" bash
     else
-        printf "\nsudo $DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash\n"
-        sudo $DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash
+        printf "\n$DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash\n"
+        $DOCKER_BIN run -it --rm -v "$devel" "$IMAGE" bash
     fi
 }
 [ "$action" == "shell" ] && shell
