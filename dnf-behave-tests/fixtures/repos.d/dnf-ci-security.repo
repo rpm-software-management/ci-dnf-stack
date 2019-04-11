@@ -1,5 +1,5 @@
 [dnf-ci-security]
 name=dnf-ci-security
-baseurl=fixtures/repos/dnf-ci-security
+baseurl=file://$DNF0/repos/dnf-ci-security
 enabled=1
 gpgcheck=0

@@ -1,6 +1,6 @@
 [dnf-ci-gpg]
 name=dnf-ci-gpg
-baseurl=fixtures/repos/dnf-ci-gpg
+baseurl=file://$DNF0/repos/dnf-ci-gpg
 enabled=1
 gpgcheck=1
-gpgkey=../../gpgkeys/dnf-ci-gpg/dnf-ci-gpg-public
+gpgkey=file:///$DNF0/gpgkeys/dnf-ci-gpg/dnf-ci-gpg-public
