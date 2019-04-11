@@ -1,6 +1,6 @@
 [dnf-ci-priority-1]
 name=dnf-ci-priority-1
-baseurl=fixtures/repos/dnf-ci-priority-1
+baseurl=file://$DNF0/repos/dnf-ci-priority-1
 enabled=1
 gpgcheck=0
 priority=1

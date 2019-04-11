@@ -1,5 +1,5 @@
 [dnf-ci-fedora-updates-testing]
 name=dnf-ci-fedora-updates-testing
-baseurl=fixtures/repos/dnf-ci-fedora-updates-testing
+baseurl=file://$DNF0/repos/dnf-ci-fedora-updates-testing
 enabled=1
 gpgcheck=0
