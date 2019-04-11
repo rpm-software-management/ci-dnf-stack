@@ -20,6 +20,7 @@ Scenario: Reposync with --newest-only option
     And stdout does not contain ": SuperRipper-1\.2-1\."
 
 
+@skip-RHEL8
 @bz1653126 @bz1676726
 Scenario: Reposync with --downloadcomps option
   Given I use the repository "dnf-ci-thirdparty-updates"
@@ -59,6 +60,7 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
     And stdout does not contain "comps.xml for repository dnf-ci-rich saved"
 
 
+@skip-RHEL8
 @bz1676726
 Scenario: Reposync with --downloadcomps and --metadata-path options
   Given I use the repository "dnf-ci-thirdparty-updates"
