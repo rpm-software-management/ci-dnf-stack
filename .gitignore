@@ -3,3 +3,4 @@ __pycache__/
 *.py[cod]
 *.swp
 dnf-behave-tests/fixtures/rpm2spec/*/
+dnf-behave-tests/fixtures/specs/*/*.spec.sha256
