@@ -174,3 +174,31 @@ Scenario: Install a module profile of a disabled module
     And modules state is following
         | Module      | State     | Stream    | Profiles  |
         | nodejs      | enabled   | 8         | minimal   |
+
+
+@bz1688823
+Scenario: Installing module in presence of a modular error
+   When I execute dnf with args "module enable meson"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-stream-enable     | meson:master       |
+        | module-stream-enable     | ninja:master       |
+   When I execute dnf with args "module disable ninja --skip-broken"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-disable           | ninja              |
+   When I execute dnf with args "install @nodejs:8"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                                       |
+        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | module-profile-install    | nodejs/default                                |
+        | module-stream-enable      | nodejs:8                                      |
+    And modules state is following
+        | Module      | State     | Stream    | Profiles  |
+        | nodejs      | enabled   | 8         | default   |
+        | meson       | enabled   | master    |           |
+    And stderr does not contain "Traceback"
+    And stderr contains "Modular dependency problem"
