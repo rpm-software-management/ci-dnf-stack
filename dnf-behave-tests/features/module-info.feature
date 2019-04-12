@@ -39,6 +39,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+10
     Version\s+:\s+20180920144631
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
     Default profiles\s+:\s+default
     Repo\s+:\s+dnf-ci-fedora-modular
@@ -53,6 +54,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+10
     Version\s+:\s+20190102201818
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
     Default profiles\s+:\s+default
     Repo\s+:\s+dnf-ci-fedora-modular
@@ -74,6 +76,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+8 \[d\]\[e\]
     Version\s+:\s+20180816123422
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
     Default profiles\s+:\s+default
     Repo\s+:\s+dnf-ci-fedora-modular
@@ -88,6 +91,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+8 \[d\]\[e\]\[a\]
     Version\s+:\s+20180816123422
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
     Default profiles\s+:\s+default
     Repo\s+:\s+dnf-ci-fedora-modular
@@ -102,6 +106,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+11
     Version\s+:\s+20180920144611
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default)
     Repo\s+:\s+dnf-ci-fedora-modular
     Summary\s+:\s+Javascript runtime
@@ -115,6 +120,7 @@ Scenario: Get info for a module, only module name specified
     Stream\s+:\s+11
     Version\s+:\s+20181102165620
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default)
     Repo\s+:\s+dnf-ci-fedora-modular
     Summary\s+:\s+Javascript runtime
@@ -143,6 +149,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
     Stream\s+:\s+11
     Version\s+:\s+20180920144611
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default)
     Repo\s+:\s+dnf-ci-fedora-modular
     Summary\s+:\s+Javascript runtime
@@ -156,6 +163,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
     Stream\s+:\s+11
     Version\s+:\s+20181102165620
     Context\s+:\s+6c81f848
+    Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default)
     Repo\s+:\s+dnf-ci-fedora-modular
     Summary\s+:\s+Javascript runtime
@@ -186,6 +194,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+10
       Version\s+:\s+20180920144631
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -200,6 +209,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+10
       Version\s+:\s+20190102201818
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -221,6 +231,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+8 \[d\]\[e\]
       Version\s+:\s+20180816123422
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -235,6 +246,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+8 \[d\]\[e\]\[a\]
       Version\s+:\s+20180816123422
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -249,6 +261,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20180920144611
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -262,6 +275,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20181102165620
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -292,6 +306,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20180920144611
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -305,6 +320,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20181102165620
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -335,6 +351,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20180920144611
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -348,6 +365,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+11
       Version\s+:\s+20181102165620
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default)
       Repo\s+:\s+dnf-ci-fedora-modular
       Summary\s+:\s+Javascript runtime
@@ -384,6 +402,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+8 \[d\]\[e\]
       Version\s+:\s+20180816123422
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -398,6 +417,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+8 \[d\]\[e\]\[a\]
       Version\s+:\s+20180816123422
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
       Repo\s+:\s+dnf-ci-fedora-modular
@@ -412,6 +432,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+10
       Version\s+:\s+20181211125304
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(client|server|default)
       Repo\s+:\s+dnf-ci-fedora-modular-updates
       Summary\s+:\s+PostgreSQL module
@@ -449,6 +470,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Stream\s+:\s+10
       Version\s+:\s+20181211125304
       Context\s+:\s+6c81f848
+      Architecture\s+:\s+x86_64
       Profiles\s+:\s+(client|server|default)
       Repo\s+:\s+dnf-ci-fedora-modular-updates
       Summary\s+:\s+PostgreSQL module
@@ -593,6 +615,7 @@ Examples:
         Stream\s+:\s+8
         Version\s+:\s+20180816123422
         Context\s+:\s+6c81f848
+        Architecture\s+:\s+x86_64
         Profiles\s+:\s+(development|minimal|default \[d\])
         Default profiles\s+:\s+default
         Repo\s+:\s+dnf-ci-fedora-modular
@@ -607,6 +630,7 @@ Examples:
         Stream\s+:\s+8 \[d\]\[e\]\[a\]
         Version\s+:\s+20180816123422
         Context\s+:\s+6c81f848
+        Architecture\s+:\s+x86_64
         Profiles\s+:\s+(development|minimal|default \[d\])
         Default profiles\s+:\s+default
         Repo\s+:\s+dnf-ci-fedora-modular-updates
