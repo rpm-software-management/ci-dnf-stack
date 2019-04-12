@@ -3,9 +3,12 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+from behave import fixture, use_fixture
 import os
 import shutil
 import tempfile
+
+from steps.fixtures.httpd import HttpServerContext
 
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
@@ -122,6 +125,13 @@ class DNFContext(object):
         return result
 
 
+@fixture
+def httpd_context(context):
+    context.httpd = HttpServerContext()
+    yield context.httpd
+    context.httpd.shutdown()
+
+
 def before_step(context, step):
     pass
 
@@ -146,13 +156,15 @@ def before_feature(context, feature):
     if context.feature_global_dnf_context:
         context.dnf = DNFContext(context.config.userdata)
 
+
 def after_feature(context, feature):
     if context.feature_global_dnf_context:
         del context.dnf
 
 
 def before_tag(context, tag):
-    pass
+    if tag == 'fixture.httpd':
+        use_fixture(httpd_context, context)
 
 
 def after_tag(context, tag):
