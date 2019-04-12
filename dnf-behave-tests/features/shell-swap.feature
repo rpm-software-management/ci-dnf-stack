@@ -56,7 +56,6 @@ Scenario: Switch groups by swap command
   And I execute in dnf shell "run"
   And Transaction is following
       | Action        | Package                                   |
-      | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
       | remove        | CQRlib-extension-0:1.5-2.x86_64           |
       | install       | SuperRipper-extension-0:1.1-1.x86_64      |
       | install       | SuperRipper-0:1.0-1.x86_64                |
