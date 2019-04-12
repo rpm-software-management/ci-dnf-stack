@@ -1,17 +1,19 @@
+@fixture.httpd
 Feature: dnf download command
 
 
-Scenario: Download an RPM that doesn't exist
+Background:
   Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
+    And I use the http repository based on "dnf-ci-fedora"
+
+
+Scenario: Download an RPM that doesn't exist
    When I execute dnf with args "download does-not-exist"
    Then the exit code is 1
     And stderr contains "No package does-not-exist available"
 
 
 Scenario: Download an existing RPM
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "download setup"
    Then the exit code is 0
     And stdout contains "setup-2.12.1-1.fc29.noarch.rpm"
@@ -21,8 +23,6 @@ Scenario: Download an existing RPM
 
 
 Scenario: Download an existing RPM with --verbose option
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "download setup --verbose"
    Then the exit code is 0
     And stdout contains "setup-2.12.1-1.fc29.noarch.rpm"
@@ -32,8 +32,6 @@ Scenario: Download an existing RPM with --verbose option
 
 
 Scenario: Download an existing RPM with dependencies
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "download filesystem --resolve"
    Then the exit code is 0
     And stdout contains "filesystem-3.9-2.fc29.x86_64.rpm"
@@ -45,8 +43,6 @@ Scenario: Download an existing RPM with dependencies
 
 
 Scenario: Download an existing RPM with dependencies into a --destdir
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "download filesystem --resolve --destdir={context.dnf.tempdir}"
    Then the exit code is 0
     And stdout contains "filesystem-3.9-2.fc29.x86_64.rpm"
@@ -58,8 +54,6 @@ Scenario: Download an existing RPM with dependencies into a --destdir
 
 
 Scenario: Download an existing RPM with dependencies into a --destdir where a dependency is installed
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
@@ -78,8 +72,6 @@ Scenario: Download an existing RPM with dependencies into a --destdir where a de
 
 
 Scenario: Download an existing RPM with dependencies into a --destdir where all packages are already installed
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
    When I execute dnf with args "install basesystem"
    Then the exit code is 0
     And Transaction is following
@@ -99,9 +91,7 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
         | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm          | -                                                                                             |
 
 Scenario: Download an existing RPM when there are multiple packages of the same NEVRA
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-gpg"
+  Given I use the repository "dnf-ci-gpg"
    When I execute dnf with args "download --destdir={context.dnf.installroot}/tmp/download setup filesystem wget"
    Then the exit code is 0
     And stdout contains "setup-2.12.1-1.fc29.noarch.rpm"
