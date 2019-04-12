@@ -1,17 +1,20 @@
+@fixture.httpd
 Feature: dnf download --debuginfo command
 
 
-Scenario: Download a debuginfo for an RPM that doesn't exist
+Background:
   Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
+
+
+Scenario: Download a debuginfo for an RPM that doesn't exist
+  Given I use the http repository based on "dnf-ci-fedora"
    When I execute dnf with args "download --debuginfo does-not-exist"
    Then the exit code is 1
     And stderr contains "No package does-not-exist available"
 
 
 Scenario: Download a debuginfo for an existing RPM
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use the http repository based on "dnf-ci-fedora-updates"
    When I execute dnf with args "download --debuginfo libzstd"
    Then the exit code is 0
     And stdout contains "libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm"
@@ -21,8 +24,7 @@ Scenario: Download a debuginfo for an existing RPM
 
 
 Scenario: Download a debuginfo for an existing RPM with a different name
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora"
+  Given I use the http repository based on "dnf-ci-fedora"
    When I execute dnf with args "download --debuginfo nscd"
    Then the exit code is 0
     And stdout contains "glibc-debuginfo-2.28-9.fc29.x86_64.rpm"
@@ -36,8 +38,7 @@ Scenario: Download a debuginfo for an existing RPM with a different name
 
 
 Scenario: Download an existing --debuginfo RPM with --verbose option
-  Given I enable plugin "download"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use the http repository based on "dnf-ci-fedora-updates"
    When I execute dnf with args "download --debuginfo libzstd --verbose"
    Then the exit code is 0
     And stdout contains "libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm"

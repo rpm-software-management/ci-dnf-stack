@@ -91,7 +91,7 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
         | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm          | -                                                                                             |
 
 Scenario: Download an existing RPM when there are multiple packages of the same NEVRA
-  Given I use the repository "dnf-ci-gpg"
+  Given I use the http repository based on "dnf-ci-gpg"
    When I execute dnf with args "download --destdir={context.dnf.installroot}/tmp/download setup filesystem wget"
    Then the exit code is 0
     And stdout contains "setup-2.12.1-1.fc29.noarch.rpm"
