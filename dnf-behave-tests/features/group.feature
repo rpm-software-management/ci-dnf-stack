@@ -107,6 +107,7 @@ Scenario: Install condidional package if required package has been installed
 
 
 # basesystem requires filesystem (part of DNF-CI-Testgroup)
+@not.with_os=rhel__eq__8
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use the repository "dnf-ci-thirdparty"
     And I use the repository "dnf-ci-fedora"
