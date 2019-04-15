@@ -177,6 +177,7 @@ Scenario: Install a module profile of a disabled module
 
 
 @bz1688823
+@not.with_os=rhel__eq__8
 Scenario: Installing module in presence of a modular error
    When I execute dnf with args "module enable meson"
    Then the exit code is 0
