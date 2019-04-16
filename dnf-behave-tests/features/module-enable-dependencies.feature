@@ -107,7 +107,7 @@ Scenario: Enabling a non-default stream depending on a default stream
 
 
 # rely on merging bz1649261 fix
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Enabling a disabled stream depending on a default stream
   Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
         """
@@ -148,7 +148,7 @@ Scenario: Enabling a disabled stream depending on a default stream
 
 
 # rely on merging bz1649261 fix
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Enabling a disabled stream depending on a non-default stream
   Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
         """
@@ -299,7 +299,7 @@ Scenario: Enable the default stream of a module and its dependencies
 #        | ingredience  | enabled   | chicken    |           |
 
 # rely on merging bz1649261 fix
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Cannot enable a stream depending on a disabled module
    When I execute dnf with args "module disable food-type:meat ingredience:chicken"
    Then the exit code is 0

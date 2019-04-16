@@ -116,7 +116,7 @@ Scenario: Enabling a stream depending on other than enabled stream should fail
     And stderr contains "Problem: conflicting requests"
 
 # rely on merging bz1649261 fix
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Enabling a stream depending on a disabled stream should fail
   Given I use the repository "dnf-ci-thirdparty-modular"
     And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with

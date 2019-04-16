@@ -83,7 +83,7 @@ Scenario: Install RPMs that are in includepkgs and NOT in excludepkgs in repo co
         | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
 
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Fail to install RPMs when there is a non-existent RPM in includedpkgs in main conf
   Given I use the repository "dnf-ci-fedora"
    When I execute dnf with args "install flac* --setopt=includepkgs=non-existent-pkg"

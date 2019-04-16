@@ -19,7 +19,7 @@ Given I use the repository "dnf-ci-fedora-modular"
 
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1581609
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 @bz1581609
 @bz1583596
 Scenario: I can remove an installed module profile specifying stream name
@@ -40,7 +40,7 @@ Scenario: I can remove an installed module profile specifying stream name
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1581621
 # https://bugzilla.redhat.com/show_bug.cgi?id=1629841
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 @bz1583596
 @bz1629841 @bz1581624
 Scenario: I can remove an installed module profile using "module remove <module_spec>"
@@ -82,7 +82,7 @@ Scenario: Removing of a non-installed profiles would pass
   And stderr contains "Unable to match profile in argument nodejs/development"
 
 
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 @bz1583596
 Scenario: I can remove multiple profiles
  When I execute dnf with args "module install nodejs/minimal"
@@ -110,7 +110,7 @@ Scenario: I can remove multiple profiles
 
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1648264
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 @bz1583596
 @bz1648264
 Scenario: I can remove an installed module profile using "remove @<module_spec>"

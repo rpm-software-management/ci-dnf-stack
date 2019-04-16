@@ -27,7 +27,7 @@ Scenario: Builddep with simple dependency (srpm)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@skip-RHEL7
+@not.with_os=rhel__eq__7
 Scenario: Builddep with rich dependency
     Given I use the repository "dnf-ci-fedora"
       And I enable plugin "builddep"
