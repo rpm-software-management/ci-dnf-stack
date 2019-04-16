@@ -1,5 +1,5 @@
 # rpm on RHEL7 does not support rich dependencies
-@skip-RHEL7
+@not.with_os=rhel__eq__7
 Feature: Rich dependencies testing
 
 

@@ -154,7 +154,7 @@ Scenario: Installing a stream without a defined default profile enables the stre
 
 
 # rely on merging bz1649261 fix
-@skip-RHEL8
+@not.with_os=rhel__eq__8
 Scenario: Install a module profile of a disabled module
    When I execute dnf with args "module disable nodejs"
    Then the exit code is 0
