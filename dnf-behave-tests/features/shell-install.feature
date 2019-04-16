@@ -14,12 +14,12 @@ Scenario: Using dnf shell, install an RPM
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
-
+@bz1658579
 Scenario: Using dnf shell, fail to install an RPM when no repositories are enabled
    When I open dnf shell session
     And I execute in dnf shell "install setup"
    Then Transaction is empty
-    And stdout contains "Error: There are no enabled repos\."
+    And stdout contains "Error: There are no enabled repositories in "/etc/yum.repos.d", "/etc/yum/repos.d", "/etc/distro.repos.d"\."
    When I execute in dnf shell "run"
    Then Transaction is empty
    When I execute in dnf shell "exit"
