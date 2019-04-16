@@ -21,10 +21,11 @@ Feature: Testing specific dnf shell text output
        When I run dnf shell command "repository disable NoSuchRepo"
        Then the command stdout should match regexp "Error: Unknown repo: '.*NoSuchRepo.*'"
 
+  @bz1658579
   Scenario: Installing a package with no repos enabled
       Given I have dnf shell session opened with parameters "-y"
        When I run dnf shell command "install NoSuchPackage"
-       Then the command stdout should match regexp "Error: There are no enabled repos\."
+       Then the command stdout should match regexp "Error: There are no enabled repositories in "/etc/yum.repos.d", "/etc/yum/repos.d", "/etc/distro.repos.d"\."
 
   Scenario: Installing a non-existent package
       Given I have dnf shell session opened with parameters "-y"
