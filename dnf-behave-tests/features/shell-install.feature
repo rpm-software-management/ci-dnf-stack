@@ -16,6 +16,7 @@ Scenario: Using dnf shell, install an RPM
 
 @bz1658579
 Scenario: Using dnf shell, fail to install an RPM when no repositories are enabled
+  Given I do not set reposdir
    When I open dnf shell session
     And I execute in dnf shell "install setup"
    Then Transaction is empty
