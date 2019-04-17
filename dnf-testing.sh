@@ -17,8 +17,7 @@ show_usage()
 
 set_devel()
 {
-    devel="$PROG_PATH/dnf-docker-test/features:/tests:Z"
-    devel_steps="$PROG_PATH/dnf-docker-test/features/steps:/behave/steps:Z"
+    devel="$PROG_PATH/dnf-behave-tests/features:/opt/behave/features:Z"
 }
 
 set_reserve()
@@ -172,8 +171,8 @@ run()
         done
     else
         for feature in "${TESTS[@]}"; do
-            printf "\n$DOCKER_BIN run $PARAM_TTY --rm -v "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
-            $DOCKER_BIN run $PARAM_TTY --rm -v "$devel" -v "$devel_steps" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     fi
