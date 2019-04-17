@@ -1,22 +1,20 @@
 #!/bin/bash
 set -xeuo pipefail
 
-
 RESERVE=0
-if [ "$1" == "-r" -o "$1" == "-R" ]; then
-    RESERVE="$1"
-    shift
-fi
-
-
 TAGS=""
-while [ "$1" == "--tags" ]; do
-    TAGS="$TAGS --tags $2"
-    shift 2
+FEATURE_PATH=""
+DEFINES=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -r|-R) RESERVE="$1"; shift;;
+        -t|--tag|--tags) TAGS="$TAGS --tags $2"; shift 2;;
+        -D) DEFINES="$DEFINES -D $2"; shift 2;;
+        *) FEATURE_PATH="$FEATURE_PATH /opt/behave/features/$1"; shift;;
+    esac
 done
 
-
-FEATURE_PATH="/opt/behave/features/$1"
 if [ ! -f "$FEATURE_PATH" ]; then
     echo "Feature file not found: $FEATURE_PATH" >&2
     exit 1
@@ -24,7 +22,7 @@ fi
 
 
 TEST_EXIT=0
-behave $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH" || TEST_EXIT=$?
+behave $DEFINES $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH" || TEST_EXIT=$?
 
 if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
     bash || :
