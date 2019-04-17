@@ -13,6 +13,27 @@ GPGDIR="$DIR/../gpgkeys"
 GROUPS_FILENAME="comps.xml"
 UPDATEINFO_FILENAME="updateinfo.xml"
 MODULES_FILENAME="modules.yaml"
+FORCE_REBUILD=
+
+fatal()
+{
+    printf >&2 "Error: %s\n" "$*"
+    exit 1
+}
+
+while [ "$1" != "" ]; do
+    case "$1" in
+        -f|--force-rebuild) FORCE_REBUILD="true"; shift;;
+        *) fatal "Non-implemented option: $1"
+    esac
+done
+
+if [ "$FORCE_REBUILD" = true ]; then
+    # remove all generated content
+    find $DIR -name *.sha256 -delete
+    rm -rf "$REPODIR"
+fi
+
 mkdir -p "$REPODIR"
 
 for path in $DIR/*/*.spec; do
