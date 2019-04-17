@@ -97,7 +97,7 @@ COPY ./dnf-behave-tests/ /opt/behave/
 # build test repos from sources
 RUN set -x && \
     cd /opt/behave/fixtures/specs/ && \
-    ./build.sh
+    ./build.sh --force-rebuild
 
 
 VOLUME ["/opt/behave/junit"]
