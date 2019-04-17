@@ -16,7 +16,7 @@ Scenario: update expired metadata on first dnf update
         | Package | Tag     | Value |
         | foo     | Version | 2     |
      #Ensure metadata are expired
-      And I successfully run "sleep 1s" 
+      And I successfully run "sleep 2s" 
       And I successfully run "dnf update"
       And I successfully run "dnf list all foo\*"
      Then the command stdout should match regexp "foo.noarch\s+2-1"
