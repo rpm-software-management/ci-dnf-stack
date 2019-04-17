@@ -27,14 +27,6 @@ Given I delete file "/etc/os-release"
   And stderr contains "nothing provides module\(pseudoplatform:6.0\) needed by module dwm:6.0:20180813144159:-0.x86_64"
 
 
-Scenario: Platform pseudo module name:stream is created based on /etc/os-release
- When I execute dnf with args "module enable dwm:6.0"
- Then the exit code is 0
-  And modules state is following
-      | Module    | State     | Stream    | Profiles  |
-      | dwm       | enabled   | 6.0       |           |
-
-
 Scenario: I can't see pseudo-module in module listing
  When I execute dnf with args "module enable dwm:6.0"
  Then the exit code is 0
