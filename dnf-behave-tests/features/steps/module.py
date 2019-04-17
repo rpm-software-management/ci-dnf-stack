@@ -35,6 +35,10 @@ def check_module_list(context):
                     name, stream, profiles_txt, repository))
     return modules
 
+@behave.given("I set default module platformid to \"{platformid}\"")
+def step_impl(context, platformid):
+    context.dnf._set("module_platform_id", platformid)
+
 @behave.given("I do not set default module platformid")
 def given_I_do_not_assumeyes(context):
     context.dnf._set("module_platform_id", "")
