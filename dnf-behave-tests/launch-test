@@ -11,7 +11,7 @@ while [[ $# -gt 0 ]]; do
         -r|-R) RESERVE="$1"; shift;;
         -t|--tag|--tags) TAGS="$TAGS --tags $2"; shift 2;;
         -D) DEFINES="$DEFINES -D $2"; shift 2;;
-        *) FEATURE_PATH="$FEATURE_PATH /opt/behave/features/$1"; shift;;
+        *) FEATURE_PATH="/opt/behave/features/$1"; shift;;
     esac
 done
 
@@ -19,7 +19,6 @@ if [ ! -f "$FEATURE_PATH" ]; then
     echo "Feature file not found: $FEATURE_PATH" >&2
     exit 1
 fi
-
 
 TEST_EXIT=0
 behave $DEFINES $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH" || TEST_EXIT=$?
