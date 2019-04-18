@@ -99,6 +99,7 @@ Scenario: Autoremoval of obsoleted package
     But Transaction is empty
 
 
+@xfail
 @bz1672947
 Scenario: Multilib obsoletes during distro-sync
   Given I use the repository "dnf-ci-fedora"
