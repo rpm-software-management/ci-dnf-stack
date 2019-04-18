@@ -10,6 +10,7 @@ ARCH="x86_64"
 DIST=".fc29"
 REPODIR="$DIR/../repos"
 GPGDIR="$DIR/../gpgkeys"
+CERTSDIR="$DIR/../certificates"
 GROUPS_FILENAME="comps.xml"
 UPDATEINFO_FILENAME="updateinfo.xml"
 MODULES_FILENAME="modules.yaml"
@@ -90,5 +91,7 @@ for path in $REPODIR/*; do
     fi
     popd
 done
+
+${CERTSDIR}/x509certgen
 
 echo "DONE: Test data created"

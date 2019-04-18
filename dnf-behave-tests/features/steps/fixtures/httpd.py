@@ -4,6 +4,7 @@ import contextlib
 import multiprocessing
 import os
 import socket
+import ssl
 import sys
 
 PY3 = sys.version_info.major >= 3
@@ -26,8 +27,8 @@ class HttpServerContext(object):
 
     Usage:
     ctx = HttpServerContext()
-    ctx.start_new_server('/path/to/directory/supposed/to/be/served')
-    ctx.start_new_server('/path/to/other_directory/supposed/to/be/served')
+    ctx.new_http_server('/path/to/directory/supposed/to/be/served')
+    ctx.new_http_server('/path/to/other_directory/supposed/to/be/served')
     do_stuff()
     ctx.shutdown()
     """
@@ -39,7 +40,18 @@ class HttpServerContext(object):
         httpd.serve_forever()
 
     @staticmethod
-    def _get_free_socket(host='127.0.0.1'):
+    def https_server(address, path, cacert, cert, key, client_verification=False):
+        os.chdir(path)
+        httpd = TCPServer(address, NoLogHttpHandler)
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=cacert)
+        context.load_cert_chain(certfile=cert, keyfile=key)
+        if client_verification:
+            context.verify_mode = ssl.CERT_REQUIRED
+        httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
+        httpd.serve_forever()
+
+    @staticmethod
+    def _get_free_socket(host='localhost'):
         with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((host, 0))
@@ -49,7 +61,7 @@ class HttpServerContext(object):
         # mapping path -> (address, server process)
         self.servers = dict()
 
-    def start_new_server(self, path):
+    def _start_server(self, path, target, *args):
         """
         Start a new http server for serving files from "path" directory.
         Returns (host, port) tupple of new running server.
@@ -57,10 +69,17 @@ class HttpServerContext(object):
         if path in self.servers:
             return self.get_address(path)
         address = self._get_free_socket()
-        process = multiprocessing.Process(target=self.http_server, args=(address, path))
+        process = multiprocessing.Process(target=target, args=(address, path) + args)
         process.start()
         self.servers[path] = (address, process)
         return address
+
+    def new_http_server(self, path):
+        return self._start_server(path, self.http_server)
+
+    def new_https_server(self, path, cacert, cert, key, client_verification):
+        return self._start_server(
+            path, self.https_server, cacert, cert, key, client_verification)
 
     def get_address(self, path):
         """
