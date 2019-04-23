@@ -628,8 +628,8 @@ Examples:
 
         Name\s+:\s+nodejs
         Stream\s+:\s+8 \[d\]\[e\]\[a\]
-        Version\s+:\s+20180816123422
-        Context\s+:\s+6c81f848
+        Version\s+:\s+20181216123422
+        Context\s+:\s+7f892346
         Architecture\s+:\s+x86_64
         Profiles\s+:\s+(development|minimal|default \[d\])
         Default profiles\s+:\s+default
