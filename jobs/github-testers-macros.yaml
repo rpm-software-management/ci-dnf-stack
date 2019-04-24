@@ -270,17 +270,11 @@
 
           COMMANDS=('dnf-2' 'dnf-3')
           for cmd in ${{COMMANDS[@]}}; do
-              mkdir -p "test-results/$cmd"
-              TEST_DIR=`readlink -f "test-results/$cmd"`
+              mkdir -p "test-results-$cmd"
+              TEST_DIR=`readlink -f "test-results-$cmd"`
               chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
-              parallel -j2 sudo docker run --rm --net none -v "$TEST_DIR":/junit "$CONTAINER" ./launch-test -D "dnf_command=$cmd" --tags ~@xfail "{{}}" ::: "${{TESTS[@]}}" || :
+              parallel -j2 sudo docker run --rm --net none -v "$TEST_DIR":/junit "$CONTAINER" ./launch-test --tags ~@xfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
           done
-          pushd test-results
-            for f in */*.xml; do
-                [ -f "$f" ] || continue
-                mv -v -- "$f" "$(dirname $f)-$(basename $f)"
-            done
-          popd
 
       # Analyze results
       - python: |
@@ -289,7 +283,7 @@
           import xunitparser
 
           all = [0, 0]
-          for xml in glob.glob("test-results/*/*.xml"):
+          for xml in glob.glob("test-results-*/*.xml"):
               with open(xml, "r") as test:
                   ts, result = xunitparser.parse(test)
               passed = result.wasSuccessful()
@@ -315,7 +309,9 @@
             property-file: GH_UPDATE.txt
             fail-on-missing: True
       - junit:
-          results: test-results/*.xml
+          results: test-results-dnf-2/*.xml
+      - junit:
+          results: test-results-dnf-3/*.xml
       - trigger-parameterized-builds:
           - project: "dnf-{name}-teardown"
             current-parameters: True
@@ -323,7 +319,8 @@
       - workspace-cleanup:
           exclude:
             - GH_UPDATE.txt
-            - test-results/*.xml
+            - test-results-dnf-2/*.xml
+            - test-results-dnf-3/*.xml
 
 ##############
 ## TEARDOWN ##

@@ -3,25 +3,36 @@ set -xeuo pipefail
 
 RESERVE=0
 TAGS=""
-FEATURE_PATH=""
+FEATURE_PATH="/opt/behave/features"
+FEATURE_FILE=""
 DEFINES=""
+DNFCOMMAND=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -r|-R) RESERVE="$1"; shift;;
         -t|--tag|--tags) TAGS="$TAGS --tags $2"; shift 2;;
+        --command) DNFCOMMAND="$2"; shift 2;;
         -D) DEFINES="$DEFINES -D $2"; shift 2;;
-        *) FEATURE_PATH="/opt/behave/features/$1"; shift;;
+        *) FEATURE_FILE="$1"; shift;;
     esac
 done
 
-if [ ! -f "$FEATURE_PATH" ]; then
-    echo "Feature file not found: $FEATURE_PATH" >&2
+if [ ! -f "$FEATURE_PATH/$FEATURE_FILE" ]; then
+    echo "Feature file not found: $FEATURE_PATH/$FEATURE_FILE" >&2
     exit 1
 fi
 
+if [ "$DNFCOMMAND" ]; then
+    # this copy is needed to distinguish dnf-2 and dnf-3 results in
+    # name attribute of junit *.xml results files
+    cp -fs "$FEATURE_PATH/$FEATURE_FILE" "$FEATURE_PATH/$DNFCOMMAND-$FEATURE_FILE"
+    FEATURE_FILE="$DNFCOMMAND-$FEATURE_FILE"
+    DEFINES="$DEFINES -D dnf_command=$DNFCOMMAND"
+fi
+
 TEST_EXIT=0
-behave $DEFINES $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH" || TEST_EXIT=$?
+echo "behave $DEFINES $TAGS --junit --junit-directory=/junit/ \"$FEATURE_PATH/$FEATURE_FILE\" || TEST_EXIT=$?"
 
 if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
     bash || :
