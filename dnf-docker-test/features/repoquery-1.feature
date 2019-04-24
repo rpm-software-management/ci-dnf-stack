@@ -2,11 +2,11 @@ Feature: DNF/Behave test (repoquery)
 
 Scenario: Repoquery formated output plus --available, --installed, -Cq, -qC options
   Given _deprecated I use the repository "test-1"
-  When _deprecated I execute "dnf" command "repoquery --available -C --queryformat %{name}-%{version}-%{release}" with "success"
+  When _deprecated I execute "dnf" command "repoquery --setopt='test-1.skip_if_unavailable=True' --available -C --queryformat %{name}-%{version}-%{release}" with "success"
   Then _deprecated line from "stdout" should "not start" with "TestB-1.0.0-1"
   Then _deprecated line from "stderr" should "not start" with "Last metadata expiration check"
   Then _deprecated line from "stderr" should "start" with "Cache-only enabled but no cache for"
-  When _deprecated I execute "dnf" command "repoquery --available -qC --queryformat %{name}-%{version}-%{release}" with "success"
+  When _deprecated I execute "dnf" command "repoquery --setopt='test-1.skip_if_unavailable=True' --available -qC --queryformat %{name}-%{version}-%{release}" with "success"
   Then _deprecated line from "stdout" should "not start" with "TestB-1.0.0-1"
   Then _deprecated line from "stderr" should "not start" with "Last metadata expiration check"
   Then _deprecated line from "stderr" should "not start" with "Cache-only enabled but no cache for"
