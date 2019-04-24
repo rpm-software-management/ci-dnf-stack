@@ -7,7 +7,7 @@ export LC_TIME=en_US.utf8
 # define user-specific data for the config.userdata dictionary. Example: -D foo=bar to store it in config.userdata["foo"].
 # -D NAME=VALUE, --define NAME=VALUE
 ENV=""
-ENV="$ENV -Ddnf_executable=dnf-3"
+ENV="$ENV -Ddnf_command=dnf-3"
 
 TAGS=""
 
