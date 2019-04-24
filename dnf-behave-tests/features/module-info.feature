@@ -89,12 +89,12 @@ Scenario: Get info for a module, only module name specified
 
     Name\s+:\s+nodejs
     Stream\s+:\s+8 \[d\]\[e\]\[a\]
-    Version\s+:\s+20180816123422
-    Context\s+:\s+6c81f848
+    Version\s+:\s+20181216123422
+    Context\s+:\s+7f892346
     Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
     Default profiles\s+:\s+default
-    Repo\s+:\s+dnf-ci-fedora-modular
+    Repo\s+:\s+dnf-ci-fedora-modular-updates
     Summary\s+:\s+Javascript runtime
     Description\s+:\s+Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
     Artifacts\s+:\s+nodejs-1:8.11.4-1.module_2030\+42747d40.x86_64
@@ -183,7 +183,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
   """
 
   
-  # bz1540189
+  @bz1540189
   Scenario: Get info for an installed profile, module name and profile specified
    When I execute dnf with args "module info nodejs/minimal"
    Then the exit code is 0
@@ -244,12 +244,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   
       Name\s+:\s+nodejs
       Stream\s+:\s+8 \[d\]\[e\]\[a\]
-      Version\s+:\s+20180816123422
-      Context\s+:\s+6c81f848
+      Version\s+:\s+20181216123422
+      Context\s+:\s+7f892346
       Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
-      Repo\s+:\s+dnf-ci-fedora-modular
+      Repo\s+:\s+dnf-ci-fedora-modular-updates
       Summary\s+:\s+Javascript runtime
       Description\s+:\s+Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Artifacts\s+:\s+nodejs-1:8.11.4-1.module_2030\+42747d40.x86_64
@@ -295,7 +295,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
     """
   
   
-  # bz1540189
+  @bz1540189
   Scenario: Get info for an installed profile, module name, stream and profile specified
    When I execute dnf with args "module info nodejs:11/minimal"
    Then the exit code is 0
@@ -340,7 +340,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
     """
   
   
-  # bz1540189
+  @bz1540189
   Scenario: Non-existent profile is ignored for dnf module info
    When I execute dnf with args "module info nodejs:11/non-existing-profile"
    Then the exit code is 0
@@ -385,7 +385,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
     """
   
   
-  # bz1623535
+  @bz1623535
   Scenario: Get error message when info for non-existent module is requested
    When I execute dnf with args "module info non-existing-module"
    Then the exit code is 1
@@ -415,8 +415,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
   
       Name\s+:\s+nodejs
       Stream\s+:\s+8 \[d\]\[e\]\[a\]
-      Version\s+:\s+20180816123422
-      Context\s+:\s+6c81f848
+      Version\s+:\s+20181216123422
+      Context\s+:\s+7f892346
       Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
       Default profiles\s+:\s+default
