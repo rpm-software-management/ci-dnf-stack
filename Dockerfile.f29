@@ -29,9 +29,11 @@ ARG TYPE=local
 
 
 # disable deltas and weak deps
+# enable fedora-updates-testing repo
 RUN set -x && \
     echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
-    echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf
+    echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf && \
+    sed -i '0,/enabled=.*$/s//enabled=1/' /etc/yum.repos.d/fedora-updates-testing.repo
 
 
 # if TYPE == copr or local, enable nightly copr
