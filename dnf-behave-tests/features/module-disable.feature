@@ -97,3 +97,22 @@ Scenario: It is possible to disable an enabled default stream
     And module list contains
         | Repository                    | Name          | Stream    | Profiles                      |
         | dnf-ci-fedora-modular         | nodejs        | 8 [d][x]     | development, minimal, default [d]|
+
+
+@bz1583596
+Scenario: User is informed about disabling installed profiles when disabling a module
+   When I execute dnf with args "module install nodejs:10/default nodejs:10/development"
+   Then the exit code is 0
+   When I execute dnf with args "module install postgresql:9.6/client"
+   Then the exit code is 0
+    And modules state is following
+        | Module    | State     | Stream    | Profiles              |
+        | nodejs    | enabled   | 10        | development, default  |
+        | postgresql| enabled   | 9.6       | client                |
+   When I execute dnf with args "module disable nodejs"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package               |
+        | module-disable            | nodejs                |
+        | module-profile-disable    | nodejs/default        |
+        | module-profile-disable    | nodejs/development    |
