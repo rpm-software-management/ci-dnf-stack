@@ -1,0 +1,6 @@
+[dnf-ci-gpg-nocheck]
+name=dnf-ci-gpg-nocheck
+baseurl=file://$DNF0/repos/dnf-ci-gpg
+enabled=1
+gpgcheck=0
+gpgkey=file:///$DNF0/gpgkeys/dnf-ci-gpg/dnf-ci-gpg-public
