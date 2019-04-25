@@ -73,38 +73,18 @@ Scenario: Fail to install signed package with incorrect checksum
     And RPMDB Transaction is empty
 
 
-Scenario: Install package with unsigned dependency if both are available in another repository with gpgcheck=0
-  Given I use the repository "dnf-ci-fedora"
-   When I execute dnf with args "install abcde"
+Scenario: Install signed, unsigned and signed with unknown key packages from repo with gpgcheck=0 in repofile
+  Given I use the repository "dnf-ci-gpg-nocheck"
+    And I disable the repository "dnf-ci-gpg"
+   # install signed package
+   When I execute dnf with args "install setup"
    Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                             |
-        | install       | wget-0:1.19.5-5.fc29.x86_64         |
-        | install       | abcde-0:2.9.2-1.fc29.noarch         |
-        | install       | flac-0:1.3.2-8.fc29.x86_64          |
-
-
-Scenario: Install package with incorrectly signed dependency (with key from different repository) if both are available in another repository with gpgcheck=0
-  Given I use the repository "dnf-ci-fedora"
-   When I execute dnf with args "install glibc"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | basesystem-0:11-6.fc29.noarch             |
-        | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-
-
-Scenario: Fail to install unsigned package from repositorory without gpgcheck set
-  Given I disable the repository "dnf-ci-gpg"
-    And I use the repository "dnf-ci-gpgcheck-undefined"
+   # install unsigned package
    When I execute dnf with args "install flac"
-   Then the exit code is 1
-      # DNF Transaction is not there at all
-    And RPMDB Transaction is empty
+   Then the exit code is 0
+   # install signed with unknown key package
+   When I execute dnf with args "install basesystem"
+   Then the exit code is 0
 
 
 Scenario: Install unsigned package from repositorory without gpgcheck set using option --nogpgcheck
