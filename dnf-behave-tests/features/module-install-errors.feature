@@ -38,9 +38,9 @@ Scenario: I cannot install an RPM with same name as an RPM that belongs to enabl
         | module-stream-enable      | ninja:master                                  |
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
-    And stderr contains lines 
+    And stderr contains lines
     """
-    Error: Unable to find a match
+    Error: Unable to find a match: ninja-build-0:1.8.2-5.fc29.x86_64
     """
     And stdout contains lines
     """
