@@ -39,6 +39,29 @@ Scenario: I can list all available modules
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
 
 
+Scenario: I can list modules by glob
+   When I execute dnf with args "module list node*"
+   Then the exit code is 0
+    And module list is
+        | Repository                    | Name          | Stream    | Profiles                              |
+        | dnf-ci-fedora-modular         | nodejs        | 8 [d]     | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular         | nodejs        | 11        | development, minimal, default         |
+        | dnf-ci-fedora-modular-updates | nodejs        | 8 [d]     | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular-updates | nodejs        | 11        | development, minimal, default         |
+        | dnf-ci-fedora-modular-updates | nodejs        | 12        | development, minimal, default         |
+
+
+Scenario: I can list modules by glob:glob
+   When I execute dnf with args "module list node*:*0"
+   Then the exit code is 0
+    And module list is
+        | Repository                    | Name          | Stream    | Profiles                              |
+        | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default [d]     |
+        | dnf-ci-fedora-modular-updates | nodejs        | 10        | development, minimal, default [d]     |
+
+
 Scenario: I can list enabled modules
    When I execute dnf with args "module list --enabled"
    Then the exit code is 0
@@ -124,5 +147,4 @@ Scenario: I can limit the scope of disabled modules through providing specific m
         | dnf-ci-fedora-modular-updates | postgresql    | 9.6 [d][x] | client, server, default [d] |
         | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]     | client, server, default     |
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]     | client, server, default     |
-
 
