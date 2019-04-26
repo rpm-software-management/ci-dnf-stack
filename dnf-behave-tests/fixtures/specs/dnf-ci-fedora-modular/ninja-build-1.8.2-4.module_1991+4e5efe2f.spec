@@ -10,7 +10,7 @@ URL:            http://martine.github.com/ninja/
 
 Summary:        Ninja-build package
 
-Provides:       ninja-build = 0.47.1-4.module_1991+4e5efe2f
+Provides:       ninja-build = 1.8.2-4.module_1991+4e5efe2f
 
 Requires:       rtld(GNU_HASH)
 
