@@ -95,3 +95,21 @@ class HttpServerContext(object):
         """
         for _, process in self.servers.values():
             process.terminate()
+
+
+if __name__ == '__main__':
+    import os
+    ctx = HttpServerContext()
+    certpath = '../../../fixtures/certificates/testcerts'
+    cacert = os.path.realpath(os.path.join(certpath, 'ca/cert.pem'))
+    host, port = ctx.new_https_server(
+        '../../../fixtures/repos/',
+        cacert,
+        os.path.realpath(os.path.join(certpath, 'server/cert.pem')),
+        os.path.realpath(os.path.join(certpath, 'server/key.pem')),
+        False)
+    curl = 'curl --cacert {} https://{}:{}/'.format(cacert, host, port)
+    #curl = 'wget --ca-certificate {} https://{}:{}/'.format(cacert, host, port)
+    print(curl)
+    print(os.system(curl))
+    ctx.shutdown()
