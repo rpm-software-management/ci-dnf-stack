@@ -19,6 +19,9 @@ Examples:
   | modulespec-type                 | modulespec                    |
   | module:stream                   | nodejs:8                      |
   | module:stream:version           | nodejs:8:20180816123422       |
+  | glob                            | node*                         |
+  | glob:glob                       | node*:*                       |
+  | glob:glob:glob                  | node*:*:*0816*                |
 
 
 Scenario: Enable a module stream that was already enabled
