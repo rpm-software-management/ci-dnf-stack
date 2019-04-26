@@ -63,7 +63,6 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
     And stdout does not contain "comps.xml for repository http-dnf-ci-rich saved"
 
 
-@wip
 @skip-RHEL8
 @bz1676726
 Scenario: Reposync with --downloadcomps and --metadata-path options
