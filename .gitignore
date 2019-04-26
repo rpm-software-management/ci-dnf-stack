@@ -2,5 +2,8 @@ Dockerfile
 __pycache__/
 *.py[cod]
 *.swp
+dnf-behave-tests/fixtures/certificates/testcerts
+dnf-behave-tests/fixtures/gpgkeys/*/.gnupg
+dnf-behave-tests/fixtures/repos
 dnf-behave-tests/fixtures/rpm2spec/*/
 dnf-behave-tests/fixtures/specs/*/*.spec.sha256
