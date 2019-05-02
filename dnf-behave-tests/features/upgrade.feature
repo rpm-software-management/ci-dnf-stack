@@ -64,7 +64,7 @@ Scenario: Upgrade all RPMs from multiple repositories
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
         | upgrade       | flac-0:1.4.0-1.fc29.x86_64                |
-        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
+        | upgrade       | wget-1:1.19.5-5.fc29.x86_64               |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
         | broken        | SuperRipper-0:1.3-1.x86_64                |
