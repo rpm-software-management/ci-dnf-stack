@@ -73,4 +73,27 @@ Examples:
   | wget-1.19.5-5.fc29.x86_64   | wget-1.19.5-5.fc29.src.rpm     |
 
 
+@xfail
+Scenario Outline: Download a source RPM when there are more epochs available
+  Given I use the http repository based on "dnf-ci-fedora-updates-testing"
+   When I execute dnf with args "download --destdir={context.dnf.tempdir} --source <pkgspec>"
+   Then the exit code is 0
+    And stdout contains "<srpm>"
+    And file sha256 checksums are following
+        | Path                          | sha256                                                    |
+        | {context.dnf.tempdir}/<srpm>  | file://{context.dnf.fixturesdir}/repos/<repo>/src/<srpm>  |
+
+Examples:
+  | pkgspec                     | repo                           | srpm                           |
+  | wget-0:1.19.5-5.fc29        | dnf-ci-fedora                  | wget-1.19.5-5.fc29.src.rpm     |
+  | wget-1:1.19.4-1.fc29        | dnf-ci-fedora-updates-testing  | wget-1.19.4-1.fc29.src.rpm     |
+  | wget-1:1.19.5-5.fc29        | dnf-ci-fedora-updates-testing  | wget-1.19.5-5.fc29.src.rpm     |
+  | wget-0:1.19.5-5.fc29.src    | dnf-ci-fedora                  | wget-1.19.5-5.fc29.src.rpm     |
+  | wget-1:1.19.4-1.fc29.src    | dnf-ci-fedora-updates-testing  | wget-1.19.4-1.fc29.src.rpm     |
+  | wget-1:1.19.5-5.fc29.src    | dnf-ci-fedora-updates-testing  | wget-1.19.5-5.fc29.src.rpm     |
+  | wget-0:1.19.5-5.fc29.x86_64 | dnf-ci-fedora                  | wget-1.19.5-5.fc29.src.rpm     |
+  | wget-1:1.19.4-1.fc29.x86_64 | dnf-ci-fedora-updates-testing  | wget-1.19.4-1.fc29.src.rpm     |
+  | wget-1:1.19.5-5.fc29.x86_64 | dnf-ci-fedora-updates-testing  | wget-1.19.5-5.fc29.src.rpm     |
+
+
 # TODO: --source --resolve doesn't work correctly; see see bug 1571251
