@@ -46,7 +46,7 @@ def then_file_sha256_checksums_are_following(context):
         if checksum.startswith("file://"):
             checksum_path = checksum[7:]
             checksum_path = checksum_path.format(context=context)
-            checksum = sha256_checksum(open(path, "rb").read())
+            checksum = sha256_checksum(open(checksum_path, "rb").read())
 
         if file_checksum != checksum:
             raise AssertionError("File sha256 checksum doesn't match (expected: %s, actual: %s): %s" % (checksum, file_checksum, path))
