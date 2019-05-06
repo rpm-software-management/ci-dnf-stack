@@ -147,3 +147,11 @@ Scenario: I can limit the scope of disabled modules through providing specific m
         | dnf-ci-fedora-modular-updates | postgresql    | 10 [x]     | client, server, default     |
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]     | client, server, default     |
 
+
+Scenario: Modules are ordered by repository then module name and stream name
+   When I execute dnf with args "module list"
+   Then the exit code is 0
+    And stdout section "dnf-ci-fedora-modular" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11"
+    And stdout section "dnf-ci-fedora-modular" contains "postgresql\s+6.*\n\s*postgresql\s+9.6"
+    And stdout section "dnf-ci-fedora-modular-updates" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11.*\n\s*nodejs\s+12"
+    And stdout section "dnf-ci-fedora-modular-updates" contains "postgresql\s+9.6.*\n\s*postgresql\s+10.*\n\s*postgresql\s+11"
