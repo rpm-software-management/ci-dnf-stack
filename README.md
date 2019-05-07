@@ -80,17 +80,17 @@ Local run
 
 Local test can be performed with dnf-testing.sh
 * Container build:
-** Put your RPMs into "dnf-docker-test/rpms" directory
-** Then run ``dnf-testing.sh build``
+  * Put your RPMs into "dnf-docker-test/rpms" directory
+  * Then run ``dnf-testing.sh build``
 * Run tests
-** Run all tests with last built container use command ``./dnf-testing.sh run``
-** Run all tests with specified container use command``./dnf-testing.sh run -c <CONTAINER>``
-** Run particular tests run: ``./dnf-testing.sh run TEST-A TEST-B ...``
+  * Run all tests with last built container use command ``./dnf-testing.sh run``
+  * Run all tests with specified container use command``./dnf-testing.sh run -c <CONTAINER>``
+  * Run particular tests run: ``./dnf-testing.sh run TEST-A TEST-B ...``
 * Run in devel mode
-** It shares local feature dir with description of tests and test steps with docker image, therefore you can develop CI stack on fly.
-** Use command ``./dnf-testing.sh run --devel $CONTAINER TEST-A``
+  * It shares local feature dir with description of tests and test steps with docker image, therefore you can develop CI stack on fly.
+  * Use command ``./dnf-testing.sh run --devel $CONTAINER TEST-A``
 * Get help
-** ./dnf-testing.sh --help
+  * ./dnf-testing.sh --help
 
 
 Describing a test
