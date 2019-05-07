@@ -85,7 +85,7 @@ Local test can be performed with dnf-testing.sh
 * Run tests
   * Run all tests with last built container use command ``./dnf-testing.sh run``
   * Run all tests with specified container use command``./dnf-testing.sh run -c <CONTAINER>``
-  * Run particular tests run: ``./dnf-testing.sh run TEST-A TEST-B ...``
+  * Run particular tests run: ``./dnf-testing.sh run TEST-A.feature TEST-B.feature ...``
 * Run in devel mode
   * It shares local feature dir with description of tests and test steps with docker image, therefore you can develop CI stack on fly.
   * Use command ``./dnf-testing.sh run --devel $CONTAINER TEST-A``
