@@ -80,7 +80,7 @@ Local run
 
 Local test can be performed with dnf-testing.sh
 * Container build:
-  * Put your RPMs into "dnf-docker-test/rpms" directory
+  * Put your RPMs into ``rpms`` directory
   * Then run ``dnf-testing.sh build``
 * Run tests
   * Run all tests with last built container use command ``./dnf-testing.sh run``
