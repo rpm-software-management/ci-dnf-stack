@@ -88,13 +88,10 @@ Scenario: Reposync with --download-metadata option
     And I do not set reposdir
     And I disable the repository "http-dnf-ci-thirdparty-updates"
     And I use the repository "testrepo"
-   When I execute dnf with args "makecache"
-   Then the exit code is 0
    When I execute dnf with args "group list"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout contains lines
    """
-   ?testrepo
    Available Groups:
    DNF-CI-Testgroup
    """
