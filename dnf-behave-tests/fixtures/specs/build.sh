@@ -84,10 +84,10 @@ for path in $REPODIR/*; do
     fi
     createrepo_c $ARGS .
     if [ -f ../../specs/$REPO/$UPDATEINFO_FILENAME ]; then
-        modifyrepo ../../specs/$REPO/$UPDATEINFO_FILENAME ./repodata
+        modifyrepo_c ../../specs/$REPO/$UPDATEINFO_FILENAME ./repodata
     fi
     if [ -f ../../specs/$REPO/$MODULES_FILENAME ]; then
-        modifyrepo --mdtype=modules ../../specs/$REPO/$MODULES_FILENAME ./repodata
+        modifyrepo_c --mdtype=modules ../../specs/$REPO/$MODULES_FILENAME ./repodata
     fi
     popd
 done
