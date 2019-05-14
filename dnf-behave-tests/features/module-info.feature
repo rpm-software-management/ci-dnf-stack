@@ -606,6 +606,7 @@ Examples:
    Then the exit code is 0
    And stdout contains "Context\s+:\s+6c81f848"
 
+  @bz1700250
   @bz1636337
   Scenario: I can get the module context of the active stream
    When I execute dnf with args "module info nodejs:8"
@@ -643,3 +644,4 @@ Examples:
 
         Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled, \[a\]ctive
       """
+     And stdout does not contain "\[a\]ctive\]"
