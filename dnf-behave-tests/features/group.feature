@@ -47,6 +47,21 @@ Scenario: Install and remove group with excluded package
         | remove        | filesystem-0:3.9-2.fc29.x86_64    |
         | group-remove  | DNF-CI-Testgroup                  |
 
+@bz1707624
+Scenario: Install installed group when group is not available
+  Given I use the repository "dnf-ci-thirdparty"
+    And I use the repository "dnf-ci-fedora"
+   When I execute dnf with args "group install --exclude=lame DNF-CI-Testgroup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | setup-0:2.12.1-1.fc29.noarch      |
+        | install       | filesystem-0:3.9-2.fc29.x86_64    |
+        | group-install | DNF-CI-Testgroup                  |
+   When I execute dnf with args "group install --disablerepo=dnf-ci-thirdparty DNF-CI-Testgroup"
+   Then the exit code is 1
+    And stderr contains "Warning: Module or Group 'DNF-CI-Testgroup' is not available."
+    And stderr does not contain "ValueError"
 
 Scenario: Install and remove group with excluded package dependency
   Given I use the repository "dnf-ci-thirdparty"
