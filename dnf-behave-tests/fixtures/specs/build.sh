@@ -71,8 +71,8 @@ for path in $DIR/*/*.spec; do
 
 done
 
-${DIR}/break-packages.sh
 ${GPGDIR}/sign.sh
+${DIR}/break-packages.sh
 
 for path in $REPODIR/*; do
     REPO=$(basename $path)
@@ -92,6 +92,6 @@ for path in $REPODIR/*; do
     popd
 done
 
-${CERTSDIR}/x509certgen
+${CERTSDIR}/generate_certificates.sh
 
 echo "DONE: Test data created"

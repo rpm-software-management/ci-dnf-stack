@@ -2719,26 +2719,3 @@ Hubert Kario <hkario@redhat.com>
 =back
 
 =cut
-
-#######################################################
-# This is an addition to the original certgen library #
-#######################################################
-
-# allow to call functions directly
-# while generating the certificates under testcerts
-PROG_PATH=$(dirname $(readlink -f -- $0))
-mkdir -p "$PROG_PATH/testcerts"
-pushd "$PROG_PATH/testcerts"
-x509KeyGen ca
-x509KeyGen server
-x509KeyGen client
-x509KeyGen ca2
-x509KeyGen server2
-x509KeyGen client2
-x509SelfSign -t ca ca
-x509SelfSign -t ca ca2
-x509CertSign -t webserver --CA ca server
-x509CertSign -t webclient --CA ca client
-x509CertSign -t webserver --CA ca2 server2
-x509CertSign -t webclient --CA ca2 client2
-popd
