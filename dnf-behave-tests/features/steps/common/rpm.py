@@ -12,6 +12,8 @@ NEVRA_RE = re.compile(r"^(.+)-([0-9]+):(.+)-(.+)\.(.+)$")
 INSTALLONLY_PROVIDES = {b'kernel', b'kernel-PAE', b'installonlypkg(kernel)',
                         b'installonlypkg(kernel-module)', b'installonlypkg(vm)',
                         b'multiversion(kernel)'}
+# newer rpm now returns unicode strings instead of bytes in headers
+INSTALLONLY_PROVIDES.update([p.decode() for p in INSTALLONLY_PROVIDES])
 
 
 class RPM(object):
