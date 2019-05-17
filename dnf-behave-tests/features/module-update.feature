@@ -170,3 +170,111 @@ When I execute dnf with args "module update nodejs"
   And modules state is following
       | Module    | State     | Stream    | Profiles  |
       | nodejs    | enabled   | 11        |           |
+
+
+@bz1647429
+Scenario: Update module packages and dependent packages when no profiles are installed
+  Given I use the repository "dnf-ci-thirdparty-modular"
+   When I execute dnf with args "module enable cookbook:1 ingredience:egg"
+   Then the exit code is 0
+   When I execute dnf with args "install axe egg blender whisk"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | axe-0:1.0-1.x86_64        |
+        | install                  | blender-0:1.0-1.x86_64    |
+        | install                  | egg-0:1.0-1.x86_64        |
+        | install                  | whisk-0:1.0-1.x86_64      |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         |               |
+  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+   When I execute dnf with args "module update cookbook"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | upgrade                  | axe-0:2.0-1.x86_64        |
+        | upgrade                  | blender-0:2.0-1.x86_64    |
+        | upgrade                  | egg-0:2.0-1.x86_64        |
+        | upgrade                  | whisk-0:2.0-1.x86_64      |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         |               |
+
+
+@bz1647429
+Scenario: Update module packages and dependent packages when some profiles are installed
+  Given I use the repository "dnf-ci-thirdparty-modular"
+   When I execute dnf with args "module enable cookbook:1 ingredience:egg"
+   Then the exit code is 0
+   When I execute dnf with args "module install cookbook:1/axe-soup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | axe-0:1.0-1.x86_64        |
+        | module-profile-install   | cookbook/axe-soup         |
+   When I execute dnf with args "module install cookbook:1/ham-and-eggs"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | egg-0:1.0-1.x86_64        |
+        | install                  | ham-0:1.0-1.x86_64        |
+        | install                  | spatula-0:1.0-1.x86_64    |
+        | module-profile-install   | cookbook/ham-and-eggs     |
+   When I execute dnf with args "install whisk"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | whisk-0:1.0-1.x86_64      |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs   |
+  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+   When I execute dnf with args "module update cookbook"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | upgrade                  | axe-0:2.0-1.x86_64        |
+        | upgrade                  | egg-0:2.0-1.x86_64        |
+        | upgrade                  | ham-0:2.0-1.x86_64        |
+        | upgrade                  | spatula-0:2.0-1.x86_64    |
+        | upgrade                  | whisk-0:2.0-1.x86_64      |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs  |
+
+
+@bz1647429
+Scenario: Update module profiles that contains non-modular packages and packages from different modules
+  Given I use the repository "dnf-ci-thirdparty-modular"
+   When I execute dnf with args "module enable cookbook:1 ingredience:egg"
+   Then the exit code is 0
+   When I execute dnf with args "module install cookbook:1/axe-soup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | axe-0:1.0-1.x86_64        |
+        | module-profile-install   | cookbook/axe-soup         |
+   When I execute dnf with args "module install cookbook:1/ham-and-eggs"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | install                  | egg-0:1.0-1.x86_64        |
+        | install                  | ham-0:1.0-1.x86_64        |
+        | install                  | spatula-0:1.0-1.x86_64    |
+        | module-profile-install   | cookbook/ham-and-eggs     |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs  |
+  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+   When I execute dnf with args "module update cookbook:1/axe-soup cookbook:1/ham-and-eggs"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package                   |
+        | upgrade                  | axe-0:2.0-1.x86_64        |
+        | upgrade                  | egg-0:2.0-1.x86_64        |
+        | upgrade                  | ham-0:2.0-1.x86_64        |
+        | upgrade                  | spatula-0:2.0-1.x86_64    |
+    And modules state is following
+        | Module      | State      | Stream    | Profiles      |
+        | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs  |
