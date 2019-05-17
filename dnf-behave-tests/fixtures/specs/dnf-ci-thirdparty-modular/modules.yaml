@@ -13,7 +13,7 @@ data:
     - MIT
   profiles:
     default:
-      rpms: ["chicken-1.0-1.x86_64"]
+      rpms: ["chicken"]
   components:
     rpms:
       egg: {rationale: 'rationale for chicken'}
@@ -35,7 +35,7 @@ data:
     - MIT
   profiles:
     default:
-      rpms: ["egg-1.0-1.x86_64"]
+      rpms: ["egg"]
   components:
     rpms:
       egg: {rationale: 'rationale for egg'}
@@ -57,7 +57,7 @@ data:
     - MIT
   profiles:
     default:
-      rpms: ["orange-1.0-1.x86_64"]
+      rpms: ["orange"]
   components:
     rpms:
       egg: {rationale: 'rationale for orange'}
@@ -79,7 +79,7 @@ data:
     - MIT
   profiles:
     default:
-      rpms: ["strawberry-1.0-1.x86_64"]
+      rpms: ["strawberry"]
   components:
     rpms:
       egg: {rationale: 'rationale for strawberry'}
