@@ -1,0 +1,5 @@
+[dnf-ci-thirdparty-modular-updates]
+name=dnf-ci-thirdparty-modular-updates
+baseurl=file://$DNF0/repos/dnf-ci-thirdparty-modular-updates
+enabled=1
+gpgcheck=0
