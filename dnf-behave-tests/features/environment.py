@@ -28,18 +28,24 @@ class VersionedActiveTagMatcher(ActiveTagMatcher):
     @staticmethod
     def version_compare_operator(tag_value_str, current_value_str, is_negated=False):
         tag_key, tag_oper, tag_value = tag_value_str.split("__", 2)
-        current_key, current_value = current_value_str.split("__", 1)
+        try:
+            current_key, current_value = current_value_str.split("__", 1)
+        except ValueError:
+            return is_negated
 
         # convert versions into list of integers for correct comparing
         tag_value = [int(i) for i in tag_value.split(".")]
-        current_value = [int(i) for i in current_value.split(".")]
+        try:
+            current_value = [int(i) for i in current_value.split(".")]
+        except:
+            return is_negated
 
         if tag_oper not in ["lt", "le", "eq", "ne", "ge", "gt"]:
             raise ValueError("Invalid operator in tag: %s" % tag_value_str)
 
         if tag_key != current_key:
             # always return false if keys do not match
-            return False
+            return is_negated
 
         op = getattr(operator, tag_oper)
         result = op(current_value, tag_value)
