@@ -438,6 +438,29 @@ data:
       rpms: []
 ...
 ---
+document: modulemd
+version: 2
+data:
+  name: cookbook
+  stream: 1
+  version: 1
+  arch: x86_64
+  summary: Module for testing module update independently on installed profiles
+  description: Contains profiles that depend on non-modular packages and packages from different modules
+  license:
+    module:
+    - MIT
+  profiles:
+    ham-and-eggs:
+      rpms: ["ham", "egg", "spatula"]
+    orange-juice:
+      rpms: ["orange", "blender"]
+    axe-soup:
+      rpms: ["axe"]
+  artifacts:
+    rpms: ["spatula-0:1.0-1.x86_64", "blender-0:1.0-1.x86_64", "whisk-0:1.0-1.x86_64"]
+...
+---
 document: modulemd-defaults
 version: 1
 data:
