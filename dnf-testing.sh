@@ -51,7 +51,7 @@ Options:
 
 Commands:
   list             List of available functional tests
-  build            Build container with functional tests
+  build [TYPE]     Build container with functional tests. The default TYPE is 'local'
   run [TEST...]    Run all tests. The set of tests can be optionally specified by [TEST...]
   shell            Run a bash shell session within the container
 
@@ -111,6 +111,7 @@ elif [ "$action" = "build" ]; then
             jjb) type="jjb";;
             local) type="local";;
             side-tag) type="side-tag";;
+            distro) type="distro";;
             "") type="local";;
             *) fatal "Unknown argument: $arg";;
         esac
