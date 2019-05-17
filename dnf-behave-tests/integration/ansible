@@ -1,0 +1,88 @@
+#!/bin/bash
+set -xeuo pipefail
+
+if hash python 2>/dev/null; then
+    # default python version
+    PYTHON_VERSION=$(python -c "import sys; print(sys.version_info.major)")
+elif hash python3 2>/dev/null; then
+    # RHEL 8 does not have python command, try python3 and python2
+    PYTHON_VERSION=3
+elif hash python2 2>/dev/null; then
+    PYTHON_VERSION=2
+else
+    echo >&2 "Error: python is required but it's not installed. Aborting."
+    exit 1
+fi
+ANSIBLE_SOURCE="upstream" # upstream/rhel
+ANSIBLE_BRANCH="devel"
+# on RHEL 8 we possibly can run also "yum" target using --target option
+TEST_TARGETS="dnf yum"
+JUNIT=0
+JUNIT_DIR="/junit"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--pythonversion) PYTHON_VERSION="$2"; shift 2;;
+        -s|--ansiblesource) ANSIBLE_SOURCE="$2"; shift 2;;
+        -b|--ansiblebranch) ANSIBLE_BRANCH="$2"; shift 2;;
+        --target) TEST_TARGETS="$TEST_TARGETS $2"; shift 2;;
+        --junit) JUNIT=1; shift;;
+        *) printf >&2  "Non-implemented option: $1"; exit 1;;
+    esac
+done
+
+# glibc-langpack-en: ansible-test sets locale to en_US.UTF-8
+dnf install --assumeyes \
+    glibc-langpack-en \
+    python${PYTHON_VERSION}-pip \
+    python${PYTHON_VERSION}-jinja2 \
+    python${PYTHON_VERSION}-pyyaml
+
+if [ $ANSIBLE_SOURCE = 'rhel' ]; then
+    dnf install -y rhpkg
+    TMP=$(mktemp -d)
+    rhpkg clone -a --branch=$ANSIBLE_BRANCH --depth 1 ansible $TMP
+    pushd $TMP
+        rhpkg prep
+        CLONEDIR="$TMP/$(rpm --define "name `rpm -q --qf '%{name}' --specfile ansible.spec`" --define "version `rpm -q --qf '%{version}' --specfile ansible.spec`" --eval '%name-%version')"
+    popd
+elif [ $ANSIBLE_SOURCE = 'upstream' ]; then
+    dnf install -y git
+    git clone -b ${ANSIBLE_BRANCH} --single-branch --depth 1 https://github.com/ansible/ansible ansible
+    CLONEDIR="ansible"
+else
+    printf "Unknown ansible source '$ANSIBLE_SOURCE'"
+    exit 1
+fi
+
+pushd $CLONEDIR
+    # intentionally break some tests
+    # sed -i 's/shell: rpm -q sos/shell: rpm -q sosxxx/' test/integration/targets/dnf/tasks/dnf.yml
+
+    # temporary fix for RHEL8 (there is no "default" stream of swig:3.0)
+    sed -i 's/@swig:3\.0\/default/@swig:3.0\/common/' test/integration/targets/dnf/tasks/modularity.yml
+
+    if [ $JUNIT = 1 ]; then
+        # set junit output in test/integration/integration.cfg
+        pip-${PYTHON_VERSION} install junit-xml
+        sed -i '/\[defaults\]/a stdout_callback = junit' test/integration/integration.cfg
+        sed -i '/\[defaults\]/a bin_ansible_callbacks = True' test/integration/integration.cfg
+    fi
+
+    # run dnf integration tests
+    COMMAND="python${PYTHON_VERSION} bin/ansible-test integration $TEST_TARGETS --allow-destructive"
+    TEST_EXIT=0
+
+    # regular way should be "source hacking/env-setup" but it have problem to run
+    # with non-standard python version. Setting PYTHONPATH variable is working though.
+    PYTHONPATH="$PWD/lib"
+    $COMMAND || TEST_EXIT=1
+
+    if [ $JUNIT = 1 ] && [ -d "$JUNIT_DIR" ]; then
+        # output is in test/results/junit/
+        cp test/results/junit/*.xml "$JUNIT_DIR"
+    fi
+
+popd
+
+exit $TEST_EXIT

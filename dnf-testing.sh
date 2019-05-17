@@ -55,6 +55,7 @@ Commands:
   build [TYPE]     Build container with functional tests. The default TYPE is 'local'
   run [TEST...]    Run all tests. The set of tests can be optionally specified by [TEST...]
   shell            Run a bash shell session within the container
+  ansible [SOURCE] Run ansible/dnf integration tests from source (upstream/rhel).
 
 EOF
     exit 0
@@ -95,6 +96,7 @@ for arg; do
         build) action="build";;
         run) action="run";;
         shell) action="shell";;
+        ansible) action="ansible";;
         *) fatal "Unknown argument: $arg";;
     esac
     shift
@@ -117,6 +119,16 @@ elif [ "$action" = "build" ]; then
             distro) type="distro";;
             "") type="local";;
             *) fatal "Unknown argument: $arg";;
+        esac
+        shift
+    done
+elif [ "$action" = "ansible" ]; then
+    ANSIBLE_SOURCE="upstream"
+    for arg; do
+        case "$arg" in
+            upstream) ANSIBLE_SOURCE="upstream";;
+            rhel) ANSIBLE_SOURCE="rhel";;
+            *) fatal "Unknown ansible source: $arg";;
         esac
         shift
     done
@@ -198,3 +210,17 @@ shell()
     fi
 }
 [ "$action" == "shell" ] && shell
+
+ansible()
+{
+    printf "Ansible tests"
+    if [ $ANSIBLE_SOURCE = 'upstream' ]; then
+        ANSIBLE_BRANCH="devel"
+    elif [ $ANSIBLE_SOURCE = 'rhel' ]; then
+        ANSIBLE_BRANCH="ansible-2.8-rhel-8"
+    fi
+    printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./integration/ansible --ansiblesource $ANSIBLE_SOURCE --ansiblebranch $ANSIBLE_BRANCH\n"
+    $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./integration/ansible --ansiblesource $ANSIBLE_SOURCE --ansiblebranch $ANSIBLE_BRANCH
+    exit $?
+}
+[ "$action" == "ansible" ] && ansible
