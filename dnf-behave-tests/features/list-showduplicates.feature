@@ -7,7 +7,6 @@ Given I use the repository "dnf-ci-fedora"
   And I use the repository "dnf-ci-fedora-updates-testing"
 
 
-@not.with_os=rhel__eq__8
 @bz1671731
 Scenario: Test for list with --showduplicates when the package is installed
  When I execute dnf with args "install flac-1.3.2"

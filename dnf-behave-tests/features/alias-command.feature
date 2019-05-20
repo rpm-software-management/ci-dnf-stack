@@ -9,7 +9,6 @@ Background:
 Scenario: Add alias
 
 
-@not.with_os=rhel__eq__8
 @bz1666325
 Scenario: List aliases
    When I execute dnf with args "alias list"

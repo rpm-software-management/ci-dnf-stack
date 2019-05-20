@@ -27,8 +27,6 @@ Given I use the repository "dnf-ci-fedora-modular-updates"
   And stdout contains "FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64"
 
 
-# This scenario is failing on upstream, but should pass on latest RHEL8
-@xfail
 @bz1622614
 Scenario: Updates for non enabled streams are hidden
  When I execute dnf with args "module install postgresql:6/default"

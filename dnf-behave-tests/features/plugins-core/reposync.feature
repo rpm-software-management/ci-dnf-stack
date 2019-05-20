@@ -23,7 +23,6 @@ Scenario: Reposync with --newest-only option
     And stdout does not contain ": SuperRipper-1\.2-1\."
 
 
-@not.with_os=rhel__eq__8
 @bz1653126 @bz1676726
 Scenario: Reposync with --downloadcomps option
   Given I use the http repository based on "dnf-ci-thirdparty-updates"
@@ -63,7 +62,6 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
     And stdout does not contain "comps.xml for repository http-dnf-ci-rich saved"
 
 
-@not.with_os=rhel__eq__8
 @bz1676726
 Scenario: Reposync with --downloadcomps and --metadata-path options
   Given I use the http repository based on "dnf-ci-thirdparty-updates"

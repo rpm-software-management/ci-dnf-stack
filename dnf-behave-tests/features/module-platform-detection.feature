@@ -4,7 +4,6 @@ Feature: Detecting proper modular platform
 Background:
   Given I use the repository "dnf-ci-pseudo-platform-modular"
 
-@not.with_os=rhel__eq__8
 Scenario: Platform pseudo module name:stream is created based on /usr/lib/os-release
   Given I do not set default module platformid
     And I create file "/usr/lib/os-release" with
@@ -52,7 +51,6 @@ Scenario: Platform pseudo module name:stream is created based on /etc/os-release
 
 
 
-@not.with_os=rhel__eq__8
 Scenario: Platform is detected using virtual provide of installed os-release package
   Given I do not set default module platformid
     And I create file "/etc/os-release" with
@@ -76,7 +74,6 @@ Scenario: Platform is detected using virtual provide of installed os-release pac
         | dwm       | enabled   | 6.0       |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Platform is detected using virtual provide of os-release package in enabled repo
   Given I do not set default module platformid
     And I use the repository "dnf-ci-pseudo-platform"

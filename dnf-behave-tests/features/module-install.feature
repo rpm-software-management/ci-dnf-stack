@@ -154,7 +154,6 @@ Scenario: Installing a stream without a defined default profile enables the stre
 
 
 # rely on merging bz1649261 fix
-@not.with_os=rhel__eq__8
 Scenario: Install a module profile of a disabled module
    When I execute dnf with args "module disable nodejs"
    Then the exit code is 0
@@ -177,7 +176,6 @@ Scenario: Install a module profile of a disabled module
 
 
 @bz1688823
-@not.with_os=rhel__eq__8
 Scenario: Installing module in presence of a modular error
    When I execute dnf with args "module enable meson"
    Then the exit code is 0

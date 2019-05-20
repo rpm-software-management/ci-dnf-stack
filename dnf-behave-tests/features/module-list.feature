@@ -82,7 +82,6 @@ Scenario: I can list installed modules
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [e]    | client [i], server, default           |
 
 
-@not.with_os=rhel__eq__8
 @bz1647382
 Scenario: I can list disabled modules (when there are no disabled modules)
    When I execute dnf with args "module list --disabled"

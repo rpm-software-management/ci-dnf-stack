@@ -35,7 +35,6 @@ Scenario: Switch packages and their subpackages by swap command (using wildcards
  Then stdout contains "Leaving Shell"
 
 
-@not.with_os=rhel__eq__8
 Scenario: Switch groups by swap command
  When I open dnf shell session
   And I execute in dnf shell "repo enable dnf-ci-fedora"

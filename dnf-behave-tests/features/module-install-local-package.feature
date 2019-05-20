@@ -25,7 +25,6 @@ Scenario: Install a local RPM with different version available in enabled stream
 
 
 # rely on merging bz1649261 fix
-@not.with_os=rhel__eq__8
 @bz1582105
 Scenario: Install a local RPM that belongs to a disabled module
    When I execute dnf with args "module disable postgresql"
