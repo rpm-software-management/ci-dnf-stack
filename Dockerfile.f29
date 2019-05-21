@@ -54,6 +54,7 @@ RUN set -x && \
     dnf -y install \
         # behave and test requirements
         findutils \
+        openssl \
         python3-behave \
         python3-pexpect \
         rpm-build \
