@@ -48,6 +48,7 @@ Options:
   -R, --reserveonfail      Keep bash shell session open upon test failure
   -t, --tags       TAG     Pass specific tag to the behave command when running tests
   --noxfail                Skip tests marked as @xfail (same as --tags ~@xfail)
+  --usecache               Use cache when building the image
 
 Commands:
   list             List of available functional tests
@@ -59,7 +60,7 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,container:,tags: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,usecache,container:,tags: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
@@ -67,6 +68,7 @@ IMAGE="dnf-bot/dnf-testing:latest"
 PARAM_RESERVE=""
 PARAM_TTY=""
 PARAM_TAGS=""
+BUILD_CACHE="--no-cache"
 DOCKER_BIN="sudo docker";
 ! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN="podman"
 
@@ -81,6 +83,7 @@ while :; do
         -R|--reserveonfail) set_reserveR; shift;;
         -t|--tags) PARAM_TAGS="$PARAM_TAGS --tags $2"; shift 2;;
         --noxfail) PARAM_TAGS="$PARAM_TAGS --tags ~@xfail"; shift;;
+        --usecache) BUILD_CACHE=""; shift;;
         *) fatal "Non-implemented option: $1"
     esac
 done
@@ -135,8 +138,8 @@ list()
 
 build()
 {
-    local output=($($DOCKER_BIN build --build-arg TYPE="$type" --no-cache \
-                    --force-rm -t "$IMAGE" "$PROG_PATH" | \
+    local output=($($DOCKER_BIN build --build-arg TYPE="$type" \
+                    ${BUILD_CACHE} --force-rm -t "$IMAGE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     RET=$?
     if [ "$DOCKER_BIN" == "sudo docker" ]; then
