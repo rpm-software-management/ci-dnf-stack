@@ -167,4 +167,14 @@ Scenario: Reposdir option set by --setopt
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
-        | install       | setup-0:2.12.1-1.fc29.noarch      |
+	| install       | setup-0:2.12.1-1.fc29.noarch      |
+
+
+@xfail @bz1512457
+Scenario: Test usage of not existing config file
+  Given I use the repository "dnf-ci-fedora"
+    And I set config file to "/etc/dnf/not_existing_dnf.conf"
+    And I delete file "/etc/dnf/not_existing_dnf.conf"
+   When I execute dnf with args "list"
+   Then the exit code is 1
+    And stderr contains "Config file.*does not exist"
