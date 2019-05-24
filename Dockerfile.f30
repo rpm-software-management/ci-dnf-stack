@@ -25,6 +25,7 @@
 FROM fedora:30
 ENV LANG C
 ARG TYPE=local
+ARG OSVERSION=fedora__30
 
 
 
@@ -93,6 +94,10 @@ RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/behave/
 
+# set os userdata for behave
+RUN echo -e "\
+[behave.userdata]\n\
+os=$OSVERSION" > /opt/behave/behave.ini
 
 # build test repos from sources
 RUN set -x && \

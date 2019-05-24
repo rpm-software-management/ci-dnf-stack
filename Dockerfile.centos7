@@ -25,6 +25,7 @@
 FROM centos:7
 ENV LANG C
 ARG TYPE=local
+ARG OSVERSION=centos__7
 
 
 # disable deltas and weak deps
@@ -106,6 +107,10 @@ RUN if [ "$TYPE" == "local" -a -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/behave/
 
+# set os userdata for behave
+RUN echo -e "\
+[behave.userdata]\n\
+os=$OSVERSION" > /opt/behave/behave.ini
 
 VOLUME ["/opt/behave/junit"]
 WORKDIR /opt/behave
