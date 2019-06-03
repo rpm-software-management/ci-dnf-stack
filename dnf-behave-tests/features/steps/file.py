@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+import glob
 import re
 import os
 
@@ -40,6 +41,13 @@ def step_impl(context, filepath):
 def step_delete_file(context, filepath):
     full_path = prepend_installroot(context, filepath)
     delete_file(full_path)
+
+
+@behave.given('I delete file "{filepath}" with globs')
+def step_delete_file_with_globs(context, filepath):
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    for path in glob.glob(full_path):
+        delete_file(path)
 
 
 @behave.given('I delete directory "{dirpath}"')
