@@ -93,3 +93,25 @@ Scenario: Reposync with --download-metadata option
    Available Groups:
    DNF-CI-Testgroup
    """
+
+
+@bz1714788
+Scenario: Reposync downloads packages from all streams of modular repository
+  Given I use the http repository based on "dnf-ci-fedora-modular"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-10.11.0-1.module_2200+adbac02b.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
+
+
+@bz1714788
+Scenario: Reposync downloads packages from all streams of modular repository even if the module is disabled
+  Given I use the http repository based on "dnf-ci-fedora-modular"
+   When I execute dnf with args "module disable nodejs"
+   Then the exit code is 0
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-10.11.0-1.module_2200+adbac02b.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
