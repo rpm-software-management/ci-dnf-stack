@@ -44,3 +44,7 @@ def read_file_contents(filename, encoding="utf-8"):
 def copy_tree(source, destination):
     shutil.copytree(source, destination)
     assert os.path.exists(destination), "copy_tree {} -> {} failed".format(source, destination)
+
+def copy_file(source, destination):
+    shutil.copyfile(source, destination)
+    assert os.path.exists(destination), "copy_tree {} -> {} failed".format(source, destination)

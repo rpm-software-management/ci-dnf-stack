@@ -82,6 +82,14 @@ def step_impl(context, source, destination):
     copy_tree(source, destination)
 
 
+@behave.step('I copy file "{source}" to "{destination}"')
+def copy_file_to(context, source, destination):
+    source = source.format(context=context)
+    destination = os.path.join(context.dnf.installroot, destination.lstrip("/"))
+    ensure_directory_exists(os.path.dirname(destination))
+    copy_file(source, destination)
+
+
 @behave.step('the files "{first}" and "{second}" do not differ')
 def step_impl(context, first, second):
     first = first.format(context=context)

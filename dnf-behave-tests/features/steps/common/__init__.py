@@ -7,6 +7,7 @@ from .dnf import parse_history_list
 from .dnf import parse_module_list
 from .dnf import parse_transaction_table
 from .file import ensure_directory_exists
+from .file import copy_file
 from .file import copy_tree
 from .file import create_file_with_contents
 from .file import read_file_contents
