@@ -62,7 +62,7 @@ def file_exists(context, filepath):
     ensure_file_exists(full_path)
 
 
-@behave.given('file "{filepath}" does not exist')
+@behave.step('file "{filepath}" does not exist')
 def file_does_not_exist(context, filepath):
     full_path = prepend_installroot(context, filepath)
     ensure_file_does_not_exist(full_path)
