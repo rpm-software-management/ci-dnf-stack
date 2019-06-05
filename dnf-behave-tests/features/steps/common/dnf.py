@@ -46,6 +46,7 @@ ACTIONS_EN = {
     "Disabling module profiles": "module-profile-disable",
     "Enabling module streams": "module-stream-enable",
     "Disabling modules": "module-disable",
+    "Resetting modules": "module-reset",
 }
 
 
