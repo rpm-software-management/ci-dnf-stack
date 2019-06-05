@@ -20,6 +20,12 @@ def print_cmd(context, cmd, stdout, stderr):
     if stderr:
         print(context.cmd_stderr, file=sys.stderr)
 
+
+@behave.step("I execute step \"{step}\"")
+def execute_step(context, step):
+    context.execute_steps(step)
+
+
 @behave.step("I execute dnf with args \"{args}\" from repo \"{repo}\"")
 def when_I_execute_dnf_with_args_from_repo(context, repo, args):
     repodir = os.path.join(context.dnf.repos_location, repo)
