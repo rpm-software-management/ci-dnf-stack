@@ -19,6 +19,7 @@ Scenario: The default streams are identified in the output of module list
    Then the exit code is 0
     And module list is
         | Repository            | Name      | Stream    | Profiles     |
+        | dnf-ci-fedora-modular | nodejs    | 5         | development, minimal, default |
         | dnf-ci-fedora-modular | nodejs    | 8 [d]     | development, minimal, default [d] |
         | dnf-ci-fedora-modular | nodejs    | 10        | development, minimal, default [d] |
         | dnf-ci-fedora-modular | nodejs    | 11        | development, minimal, default |

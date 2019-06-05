@@ -21,6 +21,7 @@ Scenario: I can list all available modules
     And module list is
         | Repository            | Name      | Stream     | Profiles                              |
         | dnf-ci-fedora-modular | meson     | master [d] | default [d]                           |
+        | dnf-ci-fedora-modular | nodejs    | 5          | development, minimal, default         |
         | dnf-ci-fedora-modular | nodejs    | 8 [d][e]   | development, minimal [i], default [d] |
         | dnf-ci-fedora-modular | nodejs    | 10         | development, minimal, default [d]     |
         | dnf-ci-fedora-modular | nodejs    | 11         | development, minimal, default         |
@@ -44,6 +45,7 @@ Scenario: I can list modules by glob
    Then the exit code is 0
     And module list is
         | Repository                    | Name          | Stream    | Profiles                              |
+        | dnf-ci-fedora-modular         | nodejs        | 5         | development, minimal, default         |
         | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]  | development, minimal [i], default [d] |
         | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default [d]     |
         | dnf-ci-fedora-modular         | nodejs        | 11        | development, minimal, default         |
@@ -109,6 +111,7 @@ Scenario: I can limit the scope through providing specific module names
    Then the exit code is 0
     And module list is
         | Repository                    | Name          | Stream    | Profiles                      |
+        | dnf-ci-fedora-modular         | nodejs        | 5         | development, minimal, default |
         | dnf-ci-fedora-modular         | nodejs        | 8 [d][e]     | development, minimal [i], default [d]|
         | dnf-ci-fedora-modular         | nodejs        | 10        | development, minimal, default [d]|
         | dnf-ci-fedora-modular         | nodejs        | 11        | development, minimal, default |
@@ -151,7 +154,7 @@ Scenario: I can limit the scope of disabled modules through providing specific m
 Scenario: Modules are ordered by repository then module name and stream name
    When I execute dnf with args "module list"
    Then the exit code is 0
-    And stdout section "dnf-ci-fedora-modular" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11"
+    And stdout section "dnf-ci-fedora-modular" contains "nodejs\s+5.*\n\s*nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11"
     And stdout section "dnf-ci-fedora-modular" contains "postgresql\s+6.*\n\s*postgresql\s+9.6"
     And stdout section "dnf-ci-fedora-modular-updates" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11.*\n\s*nodejs\s+12"
     And stdout section "dnf-ci-fedora-modular-updates" contains "postgresql\s+9.6.*\n\s*postgresql\s+10.*\n\s*postgresql\s+11"
