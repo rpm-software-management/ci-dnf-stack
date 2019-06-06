@@ -60,7 +60,7 @@ Scenario: Install installed group when group is not available
         | group-install | DNF-CI-Testgroup                  |
    When I execute dnf with args "group install --disablerepo=dnf-ci-thirdparty DNF-CI-Testgroup"
    Then the exit code is 1
-    And stderr contains "Warning: Module or Group 'DNF-CI-Testgroup' is not available."
+    And stderr contains "Module or Group 'DNF-CI-Testgroup' is not available."
     And stderr does not contain "ValueError"
 
 Scenario: Install and remove group with excluded package dependency
