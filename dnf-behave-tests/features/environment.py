@@ -104,6 +104,7 @@ class DNFContext(object):
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
+        self.preserve_temporary_dirs = True if userdata.get("preserve", "no") in ("yes", "y", "1", "true") else False
         self.fixturesdir = FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
@@ -114,14 +115,12 @@ class DNFContext(object):
         os.environ['DNF0'] = self.fixturesdir
 
     def __del__(self):
-        if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
-            print("RMTREE", self.tempdir)
-            #shutil.rmtree(self.tempdir)
+        if not self.preserve_temporary_dirs and os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
+            shutil.rmtree(self.tempdir)
 
-        if self.delete_installroot:
+        if not self.preserve_temporary_dirs and self.delete_installroot:
             if os.path.realpath(self.installroot) not in ["/"]:
-                print("RMTREE", self.installroot)
-                #shutil.rmtree(self.installroot)
+                shutil.rmtree(self.installroot)
 
     def __getitem__(self, name):
         return self._scenario_data[name]
