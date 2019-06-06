@@ -74,6 +74,19 @@ def file_contains(context, filepath):
     return
 
 
+@behave.step('file "{filepath}" does not contain lines')
+def file_does_not_contain(context, filepath):
+    regexp_lines = context.text.split('\n')
+    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    ensure_directory_exists(os.path.dirname(full_path))
+    read_str = read_file_contents(full_path)
+    for line in regexp_lines:
+        if re.search(line, read_str):
+            print("line: " + line + " found")
+            raise AssertionError("File %s contains: \n%s" % (filepath, read_str))
+    return
+
+
 @behave.step('I copy directory "{source}" to "{destination}"')
 def step_impl(context, source, destination):
     source = source.format(context=context)
