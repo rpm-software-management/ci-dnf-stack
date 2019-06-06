@@ -19,7 +19,7 @@ Scenario: A proper error message is displayed when I try to install a non-existe
    Then the exit code is 1
     And stderr contains lines 
     """
-    Warning: Module or Group 'NonExistentModule' does not exist.
+    Module or Group 'NonExistentModule' is not available.
     Error: Nothing to do.
     """
 
