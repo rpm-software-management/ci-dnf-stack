@@ -1,0 +1,5 @@
+[repoquery-main]
+name=repoquery: main test suite
+baseurl=file://$DNF0/repos/repoquery-main
+enabled=1
+gpgcheck=0
