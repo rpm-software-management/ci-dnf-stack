@@ -74,7 +74,7 @@ Scenario: Get info for a module, only module name specified
 
     Name\s+:\s+nodejs
     Stream\s+:\s+8 \[d\]\[e\]
-    Version\s+:\s+20180816123422
+    Version\s+:\s+20180801080000
     Context\s+:\s+6c81f848
     Architecture\s+:\s+x86_64
     Profiles\s+:\s+(development|minimal|default \[d\])
@@ -229,7 +229,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
   
       Name\s+:\s+nodejs
       Stream\s+:\s+8 \[d\]\[e\]
-      Version\s+:\s+20180816123422
+      Version\s+:\s+20180801080000
       Context\s+:\s+6c81f848
       Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
@@ -400,7 +400,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
    """
       Name\s+:\s+nodejs
       Stream\s+:\s+8 \[d\]\[e\]
-      Version\s+:\s+20180816123422
+      Version\s+:\s+20180801080000
       Context\s+:\s+6c81f848
       Architecture\s+:\s+x86_64
       Profiles\s+:\s+(development|minimal|default \[d\])
@@ -614,7 +614,7 @@ Examples:
       """
         Name\s+:\s+nodejs
         Stream\s+:\s+8
-        Version\s+:\s+20180816123422
+        Version\s+:\s+20180801080000
         Context\s+:\s+6c81f848
         Architecture\s+:\s+x86_64
         Profiles\s+:\s+(development|minimal|default \[d\])
