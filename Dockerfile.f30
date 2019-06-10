@@ -87,7 +87,7 @@ RUN set -x && \
 COPY ./rpms/ /opt/behave/rpms/
 RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf -y install /opt/behave/rpms/*.rpm; \
+        dnf -y install /opt/behave/rpms/*.rpm --disableplugin=local; \
     fi
 
 
