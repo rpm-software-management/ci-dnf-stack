@@ -3,8 +3,6 @@ Feature: Test for repoquery dependencies functionality
 
 Background:
   Given I use the repository "dnf-ci-fedora"
-  When I execute dnf with args "makecache"
-  Then the exit code is 0
 
 
 Scenario: Repoquery with --requires option

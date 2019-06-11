@@ -4,7 +4,6 @@ Feature: Module provides command
 Background:
 Given I use the repository "dnf-ci-fedora-modular"
   And I use the repository "dnf-ci-fedora"
-  And I execute dnf with args "makecache"
 
 
 @xfail @bz1629667
@@ -93,6 +92,8 @@ Summary\s+:\s+Javascript runtime
 
 
 Scenario: There is not output when no module provides the package
+ When I execute dnf with args "makecache"
+ Then the exit code is 0
  When I execute dnf with args "module provides NoSuchPackage"
  Then the exit code is 0
  Then stdout matches line by line
