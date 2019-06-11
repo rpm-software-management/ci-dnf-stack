@@ -14,7 +14,6 @@ Given I create file "/etc/os-release" with
     PRETTY_NAME="PseudoDistro 6 (dwm-team)"
     """
  And I do not set default module platformid
- And I execute dnf with args "makecache"
 
   
 Scenario: I can't enable module requiring different platform pseudo module
@@ -36,12 +35,13 @@ Scenario: I can't see pseudo-module in module listing
  Then stdout does not contain "pseudoplatform"
 
 
+@wip
 Scenario: I can't list info for the pseudo-module
  When I execute dnf with args "module info pseudoplatform"
  Then the exit code is 1
   And stdout matches line by line
    """
-   ?Last metadata
+   ^dnf-ci-pseudo-platform-modular\s+
    ^Unable to resolve argument pseudoplatform
    """
   And stderr is
@@ -96,6 +96,7 @@ Scenario: I can't remove pseudo-module
   And stdout matches line by line
   """
   ?Last metadata
+  ^dnf-ci-pseudo-platform-modular\s+
   ^Dependencies resolved.
   ^Nothing to do.
   ^Complete!

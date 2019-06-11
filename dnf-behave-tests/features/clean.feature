@@ -36,8 +36,6 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
     """
     And I do not set reposdir
     And I use the repository "testrepo"
-   When I execute dnf with args "makecache"
-   Then the exit code is 0
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
     And stdout contains "SuperRipper-0:1.2-1.x86_64"
@@ -67,8 +65,6 @@ Scenario: Expire dnf cache and run repolist when a package has been removed mean
     """
     And I do not set reposdir
     And I use the repository "testrepo"
-   When I execute dnf with args "makecache"
-   Then the exit code is 0
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout contains "testrepo\s+testrepo\s+6"
