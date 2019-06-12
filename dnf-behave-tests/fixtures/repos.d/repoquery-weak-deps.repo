@@ -1,0 +1,5 @@
+[repoquery-weak-deps]
+name=repoquery: weak-deps test suite
+baseurl=file://$DNF0/repos/repoquery-weak-deps
+enabled=1
+gpgcheck=0
