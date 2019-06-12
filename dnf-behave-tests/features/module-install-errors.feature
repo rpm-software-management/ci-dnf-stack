@@ -66,10 +66,10 @@ Scenario: A proper error message is displayed when I try to install a non-existe
   missing groups or modules: ModuleX:f26/NoSuchStream
   """
 
+
 # package FileConflict-1.0-1.x86_64 has file conflicts with
 # FileConflict-0:2.0.streamB-1.x86_64 from module test-module
-
-@xfail @bz1656782
+@bz1719679
 Scenario: Profile is not installed after its artifact failed to get installed
   Given I use repository "dnf-ci-fileconflicts"
    When I execute dnf with args "install FileConflict-1.0-1.x86_64"
@@ -79,9 +79,11 @@ Scenario: Profile is not installed after its artifact failed to get installed
         | install                   | FileConflict-0:1.0-1.x86_64  |
    When I execute dnf with args "module install test-module:B/default"
    Then the exit code is 1
-    And stderr contains "Error: Transaction check error:"
-    And stderr contains "file /usr/lib/FileConflict/a_dir from install of FileConflict-0:2.0.streamB-1.x86_64 conflicts with file from package FileConflict-0:1.0-1.x86_64"
+    And stderr is
+    """
+    Error: Transaction test error:
+      file /usr/lib/FileConflict/a_dir from install of FileConflict-0:2.0.streamB-1.x86_64 conflicts with file from package FileConflict-0:1.0-1.x86_64
+    """
     And modules state is following
         | Module        | State     | Stream    | Profiles  |
-        | test-module   | enabled   | B         |           |
-
+        | test-module   |           |           |           |
