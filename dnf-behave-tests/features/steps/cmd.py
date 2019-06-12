@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from datetime import datetime
+from itertools import zip_longest
 
 import behave
 
@@ -20,6 +21,25 @@ def print_cmd(context, cmd, stdout, stderr):
         print(context.cmd_stdout)
     if stderr:
         print(context.cmd_stderr, file=sys.stderr)
+
+
+def print_diff(expected, found):
+    expected_lines = expected.split('\n')
+    found_lines = found.split('\n')
+
+    left_width = len("expected")
+
+    # calculate the width of the left column
+    for line in expected_lines:
+        left_width = max(len(line), left_width)
+
+    print("{:{left_width}}  |  {}".format("expected", "found", left_width=left_width))
+
+    green, red, reset = "\033[1;32m", "\033[1;31m", "\033[0;0m"
+
+    for line in zip_longest(expected_lines, found_lines, fillvalue=""):
+        col = green if line[0] == line[1] else red
+        print("{}{:{left_width}}  |  {}{}".format(col, line[0], line[1], reset, left_width=left_width))
 
 
 @behave.step("I execute step \"{step}\"")
@@ -50,7 +70,7 @@ def when_I_execute_dnf_with_args_from_repo(context, repo, args):
     context.cmd = cmd
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(
         cmd, shell=True, cwd=repodir)
-    
+
 
 @behave.step("I execute dnf with args \"{args}\"")
 def when_I_execute_dnf_with_args(context, args):
@@ -179,9 +199,14 @@ def then_stdout_is_empty(context):
 
 @behave.then("stdout is")
 def then_stdout_is(context):
-    if context.text.strip() == context.cmd_stdout.strip():
+    expected = context.text.strip()
+    found = context.cmd_stdout.strip()
+    if expected == found:
         return
+
     print_cmd(context, True, True, False)
+    print_diff(expected, found)
+
     raise AssertionError("Stdout is not: %s" % context.text)
 
 
