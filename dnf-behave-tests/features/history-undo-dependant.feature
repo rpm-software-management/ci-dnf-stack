@@ -1,8 +1,5 @@
 Feature: Transaction history undo
 
-# scenario is expected to fail until dnf with
-# https://github.com/rpm-software-management/dnf/pull/1392 is released
-@not.with_os=rhel__eq__8
 @bz1700529
 Scenario: Undo module install with dependent userinstalled package
   Given I use the repository "dnf-ci-fedora"
