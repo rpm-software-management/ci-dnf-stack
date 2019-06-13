@@ -153,3 +153,18 @@ Given I use the repository "dnf-ci-thirdparty"
  .+/fixtures/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm
  .+/fixtures/repos/dnf-ci-thirdparty/x86_64/SuperRipper-1.0-1.x86_64.rpm
  """
+
+
+Scenario: dnf repoquery --querytags is working
+ When I execute dnf with args "repoquery --querytags"
+ Then the exit code is 0
+ And stdout is
+ """
+ Available query-tags: use --queryformat ".. %{tag} .."
+
+ name, arch, epoch, version, release, reponame (repoid), evr,
+ debug_name, source_name, source_debug_name,
+ installtime, buildtime, size, downloadsize, installsize,
+ provides, requires, obsoletes, conflicts, sourcerpm,
+ description, summary, license, url
+ """
