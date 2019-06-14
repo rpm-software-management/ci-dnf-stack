@@ -6,6 +6,7 @@ from __future__ import print_function
 import os
 import re
 import sys
+from datetime import datetime
 
 import behave
 
@@ -26,6 +27,19 @@ def execute_step(context, step):
     context.execute_steps(step)
 
 
+@behave.step("I move the clock {direction} to \"{when}\"")
+def faketime(context, direction, when):
+    if when == 'before boot-up':
+        stamp = get_boot_time() - 24 * 60 * 60  # 1 day before boot-up
+        time = datetime.utcfromtimestamp(stamp)
+        assert direction == 'backward', 'Boot time is always in the past'
+    elif when == 'the present':
+        context.faketime = None
+        return
+    else:
+        time = when
+    context.faketime = "faketime '%s' " % time
+
 @behave.step("I execute dnf with args \"{args}\" from repo \"{repo}\"")
 def when_I_execute_dnf_with_args_from_repo(context, repo, args):
     repodir = os.path.join(context.dnf.repos_location, repo)
@@ -43,6 +57,8 @@ def when_I_execute_dnf_with_args(context, args):
     cmd = " ".join(context.dnf.get_cmd(context))
     cmd += " " + args.format(context=context)
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+    if getattr(context, "faketime", None) is not None:
+        cmd = context.faketime + cmd
     context.cmd = cmd
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 

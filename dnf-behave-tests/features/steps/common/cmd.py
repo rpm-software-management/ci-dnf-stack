@@ -27,3 +27,13 @@ def run(cmd, shell=False, can_fail=True, cwd=None):
         raise RuntimeError("Running command failed: %s" % cmd)
 
     return proc.returncode, stdout, stderr
+
+
+def get_boot_time():
+    """Return the boot time of this system (as a timestamp)."""
+    key = 'btime '
+    with open('/proc/stat') as f:
+        for line in f:
+            if not line.startswith(key):
+                continue
+            return int(line[len(key):].strip())
