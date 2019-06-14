@@ -1,6 +1,7 @@
 from .behave_ext import check_context_table
 from .behave_ext import parse_context_table
 from .cmd import run
+from .cmd import get_boot_time
 from .checksum import sha256_checksum
 from .dnf import parse_history_info
 from .dnf import parse_history_list
