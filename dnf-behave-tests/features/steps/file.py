@@ -119,3 +119,10 @@ def step_impl(context, first, second):
     cmd = "diff {} {}".format(first, second)
     exitcode, _, _ = run(cmd, shell=True)
     assert exitcode == 0, 'Files "{}" and "{}" differ.'.format(first, second)
+
+
+@behave.step('size of file "{filepath}" is less than "{expected_size}"')
+def file_size_less_than(context, filepath, expected_size):
+    filepath = os.path.join(context.dnf.installroot, filepath)
+    size = os.path.getsize(filepath)
+    assert size <= int(expected_size), 'File "{}" has size "{}"'.format(filepath, size)
