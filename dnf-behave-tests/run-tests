@@ -11,6 +11,17 @@ ENV="$ENV -Ddnf_command=dnf-3"
 
 TAGS=""
 
+for opt in "$@"; do
+  shift
+  case $opt in
+    -p|--preserve)
+      ENV="$ENV -Dpreserve=yes"
+      continue
+      ;;
+  esac
+  set -- "$@" "$opt"
+done
+
 # run only tier1 tests
 #TAGS="$TAGS --tags @tier1"
 
