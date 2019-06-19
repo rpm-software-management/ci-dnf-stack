@@ -2,7 +2,7 @@ Feature: Tests for debuginfo symbols
 
 @bz1585137
 Scenario: debuginfo-install reports an error when debuginfo is not found
-Given I use the repository "dnf-ci-fedora"
+Given I use the repository "debuginfo-install"
   And I enable plugin "debuginfo-install"
  When I execute dnf with args "debuginfo-install non-existent-package"
  Then the exit code is 1

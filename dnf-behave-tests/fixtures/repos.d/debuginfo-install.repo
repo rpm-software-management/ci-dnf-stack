@@ -1,0 +1,5 @@
+[debuginfo-install]
+name=debuginfo-install: test repository
+baseurl=file://$DNF0/repos/debuginfo-install
+enabled=1
+gpgcheck=0
