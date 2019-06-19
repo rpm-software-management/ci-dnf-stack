@@ -80,23 +80,19 @@ active_tag_matcher = VersionedActiveTagMatcher(active_tag_value_provider)
 
 
 class DNFContext(object):
-    def __init__(self, userdata, tmp_installroot=False):
+    def __init__(self, userdata, force_installroot=False):
         self._scenario_data = {}
 
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
-        if tmp_installroot:
-            # some tests need to be run inside the installroot, it can be set
-            # per scenario by using @force_tmp_installroot decorator
-            self.installroot = tempfile.mkdtemp(dir=self.tempdir, prefix="tmp_installroot_")
-            self.delete_installroot = True
+        # some tests need to be run inside the installroot, it can be forced
+        # per scenario by using @force_installroot decorator
+        if "installroot" in userdata and not force_installroot:
+            self.installroot = userdata["installroot"]
+            # never delete user defined installroot - this allows running tests on /
+            self.delete_installroot = False
         else:
-            if "installroot" in userdata:
-                self.installroot = userdata["installroot"]
-                # never delete user defined installroot - this allows running tests on /
-                self.delete_installroot = False
-            else:
-                self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
-                self.delete_installroot = True
+            self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
+            self.delete_installroot = True
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
         self.config = userdata.get("config", DEFAULT_CONFIG)
@@ -202,7 +198,7 @@ def before_scenario(context, scenario):
         scenario.skip(reason="DISABLED ACTIVE-TAG")
     if not context.feature_global_dnf_context:
         context.dnf = DNFContext(context.config.userdata,
-                                 tmp_installroot='force_tmp_installroot' in scenario.tags)
+                                 force_installroot='force_installroot' in scenario.tags)
 
 
 def after_scenario(context, scenario):

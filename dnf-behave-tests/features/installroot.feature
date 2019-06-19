@@ -1,7 +1,7 @@
 Feature: Installroot test
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Install package from host repository into empty installroot
   Given I use the repository "dnf-ci-install-remove"
    When I execute dnf with args "install water_carbonated"
@@ -13,7 +13,7 @@ Scenario: Install package from host repository into empty installroot
    Then the exit code is 1
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Install package from installroot repository into installroot
   Given I use the repository "dnf-ci-install-remove"
     And I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
@@ -34,7 +34,7 @@ Scenario: Install package from installroot repository into installroot
    Then the exit code is 1
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Test metadata handling in installroot
   Given I use the repository "dnf-ci-install-remove"
     And I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
@@ -62,7 +62,7 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Remove package from installroot
   Given I use the repository "dnf-ci-install-remove"
    When I execute dnf with args "install water_carbonated tea"
@@ -79,7 +79,7 @@ Scenario: Remove package from installroot
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Repolist command in installroot
   Given I do not disable all repos
    When I execute dnf with args "repolist"
@@ -100,7 +100,7 @@ Scenario: Repolist command in installroot
     And stdout contains "dnf-ci-fedora"
 
 
-@force_tmp_installroot
+@force_installroot
 Scenario: Upgrade package in installroot
   Given I use the repository "dnf-ci-install-remove"
    When I execute dnf with args "install sugar-1.0"
