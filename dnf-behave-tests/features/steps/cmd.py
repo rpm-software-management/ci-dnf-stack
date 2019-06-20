@@ -279,9 +279,15 @@ def then_stdout_section_contains(context, section, regexp):
 
 @behave.then("stderr is")
 def then_stderr_is(context):
-    if context.text.strip() == context.cmd_stderr.strip():
+    expected = context.text.strip().split('\n')
+    found = context.cmd_stderr.strip().split('\n')
+
+    if expected == found:
         return
+
     print_cmd(context, True, False, True)
+    print_diff(expected, found)
+
     raise AssertionError("Stderr is not: %s" % context.text)
 
 
