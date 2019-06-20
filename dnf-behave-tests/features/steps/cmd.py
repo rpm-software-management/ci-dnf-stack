@@ -23,23 +23,21 @@ def print_cmd(context, cmd, stdout, stderr):
         print(context.cmd_stderr, file=sys.stderr)
 
 
-def print_diff(expected, found):
-    expected_lines = expected.split('\n')
-    found_lines = found.split('\n')
-
+def print_diff(expected, found, reposync_lines=0):
     left_width = len("expected")
 
     # calculate the width of the left column
-    for line in expected_lines:
+    for line in expected:
         left_width = max(len(line), left_width)
 
     print("{:{left_width}}  |  {}".format("expected", "found", left_width=left_width))
 
     green, red, reset = "\033[1;32m", "\033[1;31m", "\033[0;0m"
 
-    for line in zip_longest(expected_lines, found_lines, fillvalue=""):
-        col = green if line[0] == line[1] else red
+    for line in zip_longest(expected, found, fillvalue=""):
+        col = green if reposync_lines > 0 or line[0] == line[1] else red
         print("{}{:{left_width}}  |  {}{}".format(col, line[0], line[1], reset, left_width=left_width))
+        reposync_lines -= 1
 
 
 @behave.step("I execute step \"{step}\"")
@@ -199,13 +197,34 @@ def then_stdout_is_empty(context):
 
 @behave.then("stdout is")
 def then_stdout_is(context):
-    expected = context.text.strip()
-    found = context.cmd_stdout.strip()
+    expected = context.text.strip().split('\n')
+    found = context.cmd_stdout.strip().split('\n')
+
+    i = 0
+    sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
+    last_check_line = re.compile(r"Last metadata expiration check: .*")
+    if expected[0] == "<REPOSYNC>":
+        while i < len(found) and (
+                sync_line.fullmatch(found[i].strip())
+                or last_check_line.fullmatch(found[i].strip())):
+            i += 1
+
+        expected.pop(0)
+
+        found = found[i:]
+
     if expected == found:
         return
 
+    expected = context.text.strip().split('\n')
+    found = context.cmd_stdout.strip().split('\n')
+
+    # prepend empty lines to pad for the reposync lines
+    if i > 1:
+        expected = [""] * (i - 1) + expected
+
     print_cmd(context, True, True, False)
-    print_diff(expected, found)
+    print_diff(expected, found, reposync_lines=i)
 
     raise AssertionError("Stdout is not: %s" % context.text)
 
