@@ -1,6 +1,6 @@
 %undefine _debuginfo_subpackages
 
-Name:           foo
+Name:           kernel
 Version:        1.0
 Release:        1
 
@@ -9,21 +9,15 @@ URL:            None
 
 Summary:        Foo.
 
+Provides:       installonlypkg(kernel)
+
 %description
 Dummy.
 
 %files
 
-%package subpackage
-Summary:        Foo subpackage that doesn't have its own -debuginfo.
-
-%description subpackage
-Dummy.
-
-%files subpackage
-
 %package debuginfo
-Summary:        Debug information for foo.
+Summary:        Debug information for kernel.
 
 %description debuginfo
 Dummy.
@@ -31,7 +25,7 @@ Dummy.
 %files debuginfo
 
 %package debugsource
-Summary:        Debug sources for foo.
+Summary:        Debug sources for kernel.
 
 %description debugsource
 Dummy.

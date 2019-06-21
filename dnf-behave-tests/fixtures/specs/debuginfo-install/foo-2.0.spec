@@ -1,7 +1,7 @@
 %undefine _debuginfo_subpackages
 
 Name:           foo
-Version:        1.0
+Version:        2.0
 Release:        1
 
 License:        Public Domain

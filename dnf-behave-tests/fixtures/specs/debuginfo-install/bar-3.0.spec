@@ -1,7 +1,7 @@
 %undefine _debuginfo_subpackages
 
-Name:           foo
-Version:        1.0
+Name:           bar
+Version:        3.0
 Release:        1
 
 License:        Public Domain
@@ -13,14 +13,6 @@ Summary:        Foo.
 Dummy.
 
 %files
-
-%package subpackage
-Summary:        Foo subpackage that doesn't have its own -debuginfo.
-
-%description subpackage
-Dummy.
-
-%files subpackage
 
 %package debuginfo
 Summary:        Debug information for foo.
