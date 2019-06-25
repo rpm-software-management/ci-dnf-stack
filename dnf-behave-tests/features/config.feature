@@ -170,7 +170,7 @@ Scenario: Reposdir option set by --setopt
 	| install       | setup-0:2.12.1-1.fc29.noarch      |
 
 
-@xfail @bz1512457
+@bz1512457
 Scenario: Test usage of not existing config file
   Given I use the repository "dnf-ci-fedora"
     And I set config file to "/etc/dnf/not_existing_dnf.conf"
