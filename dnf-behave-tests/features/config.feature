@@ -178,3 +178,26 @@ Scenario: Test usage of not existing config file
    When I execute dnf with args "list"
    Then the exit code is 1
     And stderr contains "Config file.*does not exist"
+
+
+@not.with_os=rhel__eq__8
+@bz1722493
+Scenario: Lines that contain only whitespaces do not spoil previous config options
+  Given I enable plugin "config_manager"
+    And I do not set config file
+    And I create file "/etc/dnf/dnf.conf" with
+    # the "empty" line between gpgcheck and baseurl intentionally contains spaces
+    """
+    [main]
+    gpgcheck=0
+
+    [testingrepo]
+    gpgcheck=1
+         
+    baseurl=http://some.url/
+    """
+   When I execute dnf with args "config-manager testingrepo --dump"
+   Then stdout contains lines
+   """
+   gpgcheck = 1
+   """
