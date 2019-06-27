@@ -31,7 +31,7 @@ Scenario: Fail to install a different stream of an already enabled module
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
-   When I execute dnf with args "module install nodejs:10"
+   When I execute dnf with args "module install nodejs:10/minimal --skip-broken"
    Then the exit code is 1
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
@@ -50,7 +50,7 @@ Scenario: Fail to install a different stream of an already enabled module using 
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
-   When I execute dnf with args "install @nodejs:10"
+   When I execute dnf with args "install @nodejs:10/minimal --skip-broken"
    Then the exit code is 1
     And modules state is following
         | Module    | State     | Stream    | Profiles  |

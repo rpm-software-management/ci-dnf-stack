@@ -4,14 +4,19 @@ Feature: Installing modules without profile specification using defaults from re
 Background:
   Given I use the repository "dnf-ci-thirdparty"
 
-
+@bz1724564
 Scenario: Install module, no default profile defined, expecting no profile selection
    When I execute dnf with args "module install DnfCiModuleNoDefaults:stable"
-   Then the exit code is 0
+   Then the exit code is 1
     And modules state is following
         | Module                | State     | Stream    | Profiles  |
-        | DnfCiModuleNoDefaults | enabled   | stable    |           |
-
+        | DnfCiModuleNoDefaults |           |           |           |
+    And stderr is
+        """
+        No default profiles for module DnfCiModuleNoDefaults:stable. Available profiles: default
+        Error: Problems in request:
+        missing groups or modules: DnfCiModuleNoDefaults:stable
+        """
 
 Scenario: Install module, empty default profile exists, expecting default profile selection
    When I execute dnf with args "module install DnfCiModuleEmptyDefault:stable"
