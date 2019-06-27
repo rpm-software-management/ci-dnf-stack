@@ -134,25 +134,6 @@ Scenario: I can install a module profile for a stream that was enabled as depend
         | module-profile-install    | postgresql/client                                       |
 
 
-Scenario: Installing a stream without a defined default profile enables the stream
-  Given I use the repository "dnf-ci-thirdparty"
-   When I execute dnf with args "module install DnfCiModulePackageDep:packagedep"
-   Then the exit code is 0
-    And Transaction is following
-        | Action                   | Package                            |
-        | module-stream-enable     | DnfCiModulePackageDep:packagedep   |
-
-
-Scenario: Installing a stream without a defined default profile enables the stream and its requires
-  Given I use the repository "dnf-ci-thirdparty"
-   When I execute dnf with args "module install DnfCiModulePackageDep:moduledep"
-   Then the exit code is 0
-    And Transaction is following
-        | Action                   | Package                            |
-        | module-stream-enable     | DnfCiModulePackageDep:moduledep    |
-        | module-stream-enable     | nodejs:8                           |
-
-
 # rely on merging bz1649261 fix
 Scenario: Install a module profile of a disabled module
    When I execute dnf with args "module disable nodejs"
