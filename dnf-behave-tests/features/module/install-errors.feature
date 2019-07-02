@@ -58,12 +58,12 @@ Scenario: A proper error message is displayed when I try to install a non-existe
 
 @bz1645167
 Scenario: A proper error message is displayed when I try to install a non-existent profile
- When I execute dnf with args "module install ModuleX:f26/NoSuchStream"
+ When I execute dnf with args "module install ModuleX:f26/NoSuchProfile"
  Then the exit code is 1
   And stderr contains lines
   """
   Error: Problems in request:
-  missing groups or modules: ModuleX:f26/NoSuchStream
+  missing groups or modules: ModuleX:f26/NoSuchProfile
   """
 
 
