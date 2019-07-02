@@ -109,6 +109,20 @@ Scenario: Install a module of which all packages are non-modular
         | DnfCiModuleNoArtifacts    | enabled   | master    | default   |
 
 
+Scenario: Install a module profile without any packages
+  Given I use repository "dnf-ci-thirdparty"
+      # profile "default" is actually not default, but it's also empty
+   When I execute dnf with args "module install DnfCiModuleEmptyDefault:stable/default"
+   Then the exit code is 0
+    And modules state is following
+        | Module                    | State     | Stream    | Profiles  |
+        | DnfCiModuleEmptyDefault   | enabled   | stable    | default   |
+    And Transaction is following
+        | Action                    | Package                                       |
+        | module-stream-enable      | DnfCiModuleEmptyDefault:stable                |
+        | module-profile-install    | DnfCiModuleEmptyDefault/default               |
+
+
 Scenario: I can install a module profile for a stream that was enabled as dependency
   Given I use repository "dnf-ci-fedora-updates"
     And I use repository "dnf-ci-fedora-modular-updates"

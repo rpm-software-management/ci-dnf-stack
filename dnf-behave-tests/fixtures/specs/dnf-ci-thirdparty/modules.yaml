@@ -135,6 +135,21 @@
   version: 2
 ...
 ---
+  data:
+    description: Testing module without profiles
+    license:
+      module: [MIT]
+    name: DnfCiModuleNoProfiles
+    stream: master
+    summary: Testing module without profiles
+    version: 1
+    artifacts:
+      rpms:
+      - peer-gynt-0:1.0-1.module.x86_64
+  document: modulemd
+  version: 2
+...
+---
   document: modulemd-defaults
   version: 1
   data:

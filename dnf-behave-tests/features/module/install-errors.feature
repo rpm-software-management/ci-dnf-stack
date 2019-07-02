@@ -56,6 +56,22 @@ Scenario: A proper error message is displayed when I try to install a non-existe
   missing groups or modules: ModuleX:NoSuchStream
   """
 
+
+@bz1724564
+Scenario: Install module without any profiles
+   When I execute dnf with args "module install DnfCiModuleNoProfiles:master"
+   Then the exit code is 1
+    And Transaction is empty
+    And modules state is following
+        | Module                  | State     | Stream    | Profiles  |
+        | DnfCiModuleNoProfiles   |           |           |           |
+    And stderr is
+        """
+        Error: Problems in request:
+        missing groups or modules: DnfCiModuleNoProfiles:master
+        """
+
+
 @bz1645167
 Scenario: A proper error message is displayed when I try to install a non-existent profile
  When I execute dnf with args "module install ModuleX:f26/NoSuchProfile"
@@ -65,6 +81,17 @@ Scenario: A proper error message is displayed when I try to install a non-existe
   Error: Problems in request:
   missing groups or modules: ModuleX:f26/NoSuchProfile
   """
+
+
+Scenario: Install fails even when only one of the module specs cannot be installed
+   When I execute dnf with args "module install nodejs:8/minimal ModuleX:f26/NoSuchProfile"
+   Then the exit code is 1
+    And Transaction is empty
+    And stderr contains lines
+        """
+        Error: Problems in request:
+        missing groups or modules: ModuleX:f26/NoSuchProfile
+        """
 
 
 # package FileConflict-1.0-1.x86_64 has file conflicts with
