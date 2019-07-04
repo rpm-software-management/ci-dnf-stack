@@ -24,7 +24,7 @@ fi
 echo "Using $PRIMARYARCH, $SECONDARYARCH"
 
 # substitution in testing files
-sed -i "s/x86_64/$PRIMARYARCH/g" $( grep -l -R x86_64 fixtures dnf-behave-tests/features )
-sed -i "s/i686/$SECONDARYARCH/g" $( grep -l -R i686 fixtures dnf-behave-tests/features )
+sed -i "s/x86_64/$PRIMARYARCH/g" $( grep -l -R x86_64 fixtures features )
+sed -i "s/i686/$SECONDARYARCH/g" $( grep -l -R i686 fixtures features )
 
 echo "Done."
