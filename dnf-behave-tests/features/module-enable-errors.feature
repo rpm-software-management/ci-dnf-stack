@@ -39,6 +39,7 @@ Scenario: Fail to install a different stream of an already enabled module
     And stderr contains "The operation would result in switching of module 'nodejs' stream '8' to stream '10'"
     And stderr contains "Error: It is not possible to switch enabled streams of a module."
 
+@not.with_os=rhel__eq__8
 @bz1706215
 Scenario: Fail to install a different stream of an already enabled module using @module:stream syntax
    When I execute dnf with args "module enable nodejs:8"

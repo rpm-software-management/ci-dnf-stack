@@ -35,7 +35,6 @@ Scenario: I can't see pseudo-module in module listing
  Then stdout does not contain "pseudoplatform"
 
 
-@wip
 Scenario: I can't list info for the pseudo-module
  When I execute dnf with args "module info pseudoplatform"
  Then the exit code is 1

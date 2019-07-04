@@ -155,6 +155,8 @@ Given I use the repository "dnf-ci-thirdparty"
  """
 
 
+# the bug is missing, fixed in upstream
+@not.with_os=rhel__eq__8
 Scenario: dnf repoquery --querytags is working
  When I execute dnf with args "repoquery --querytags"
  Then the exit code is 0
