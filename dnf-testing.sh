@@ -163,6 +163,8 @@ build()
 
 run()
 {
+    printf "Packages installed in the container:\n"
+    $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" rpm -qa | sort
     FEATURES=($(gather_tests))
     [ ${#TESTS[@]} -eq 0 ] && TESTS=("${FEATURES[@]}")
     local failed=0

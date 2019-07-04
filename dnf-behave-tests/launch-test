@@ -23,8 +23,6 @@ if [ ! -f "$FEATURE_PATH/$FEATURE_FILE" ]; then
     exit 1
 fi
 
-rpm -qa
-
 if [ "$DNFCOMMAND" ]; then
     # this copy is needed to distinguish dnf-2 and dnf-3 results in
     # name attribute of junit *.xml results files
