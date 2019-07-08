@@ -151,10 +151,8 @@ build()
             fatal "Failed to parse output."
         fi
     else
-        if [ $RET -eq 0 -a ${#output[@]} -eq 2 ]; then
-            printf "%s\n" "${output[1]}"
-        else
-            fatal "Failed to parse output"
+        if [ $RET -ne 0 ]; then
+            fatal "Image build failed."
         fi
     fi
     exit 0
