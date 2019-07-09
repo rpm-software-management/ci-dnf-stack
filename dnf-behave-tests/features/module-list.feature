@@ -151,6 +151,7 @@ Scenario: I can limit the scope of disabled modules through providing specific m
         | dnf-ci-fedora-modular-updates | postgresql    | 11 [x]     | client, server, default     |
 
 
+@bz1590358
 Scenario: Modules are ordered by repository then module name and stream name
    When I execute dnf with args "module list"
    Then the exit code is 0
