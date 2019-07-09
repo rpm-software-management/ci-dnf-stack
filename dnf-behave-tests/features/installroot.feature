@@ -115,3 +115,14 @@ Scenario: Upgrade package in installroot
         | upgrade       | sugar-0:2.0-1.x86_64              |
    When I execute rpm on host with args "-q sugar"
    Then the exit code is 1
+
+
+@bz1658579
+Scenario: Installroot directory is listed when there are no repos
+  Given I execute "mkdir" with args "-p /tmp/alt-root/etc/yum.repos.d"
+    And I do not set reposdir
+   When I execute dnf with args "install sugar --installroot /tmp/alt-root --releasever=/"
+   Then the exit code is 1
+   And stderr contains "No repository match: *"
+    And stderr contains "Error: There are no enabled repositories in \"/tmp/alt-root/etc/yum.repos.d\", \"/tmp/alt-root/etc/yum/repos.d\", \"/tmp/alt-root/etc/distro.repos.d\""
+
