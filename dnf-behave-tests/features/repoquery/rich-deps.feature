@@ -32,6 +32,27 @@ Scenario: repoquery --whatrequires for "(a1-prov1 if b1)"
       """
 
 
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatrequires NAME for "(b1-prov2 >= 1.0 with b1-prov2 < 2.0)"
+ When I execute dnf with args "repoquery --whatrequires b1"
+ Then the exit code is 0
+  And stdout is
+      """
+      c1-0:1.0-1.x86_64
+      """
+
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatrequires PROVIDE_NAME = VERSION for "(b1-prov2 >= 1.0 with b1-prov2 < 2.0)"
+ When I execute dnf with args "repoquery --whatrequires 'b1-prov2 = 1.0'"
+ Then the exit code is 0
+  And stdout is
+      """
+      c1-0:1.0-1.x86_64
+      """
+
+
 # a1-1.0: Conflicts: ((b1 and x1) or c1)
 Scenario: repoquery --whatconflicts for "((b1 and x1) or c1)"
  When I execute dnf with args "repoquery --whatconflicts b1"
@@ -70,6 +91,26 @@ Given I successfully execute dnf with args "install x1"
   And stdout is
       """
       a1-0:1.0-1.x86_64
+      """
+
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatconflicts for "(d1-prov1 >= 1.0 with d1-prov1 < 2.0)"
+ When I execute dnf with args "repoquery --whatconflicts d1-1.0"
+ Then the exit code is 0
+  And stdout is
+      """
+      c1-0:1.0-1.x86_64
+      """
+
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatconflicts PROVIDE_NAME = VERSION for "(d1-prov1 >= 1.0 with d1-prov0 < 2.0)"
+ When I execute dnf with args "repoquery --whatconflicts 'd1-prov1 = 1.0'"
+ Then the exit code is 0
+  And stdout is
+      """
+      c1-0:1.0-1.x86_64
       """
 
 
@@ -114,6 +155,26 @@ Scenario: repoquery --whatsuggests for "((b1 with b1-prov2 > 1.7) or (c1 <= 1.0 
   And stdout is
       """
       a1-0:1.0-1.x86_64
+      """
+
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatsuggests for "(d1-prov1 >= 1.0 with d1-prov1 < 2.0)" - only d1-1.0 should match
+ When I execute dnf with args "repoquery --whatsuggests d1"
+ Then the exit code is 0
+  And stdout is
+      """
+      b1-0:1.0-1.x86_64
+      """
+
+@bz1534123
+@bz1698034
+Scenario: repoquery --whatsuggests with provide for "(d1-prov1 >= 1.0 with d1-prov1 < 2.0)" - only b1-1.0 should match
+        When I execute dnf with args "repoquery --whatsuggests 'd1-prov1 = 1.0'"
+ Then the exit code is 0
+  And stdout is
+      """
+      b1-0:1.0-1.x86_64
       """
 
 
