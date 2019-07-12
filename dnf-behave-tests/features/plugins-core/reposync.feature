@@ -142,3 +142,21 @@ Scenario: Reposync preserves remote timestamps of metadata files
    Then the exit code is 0
     And the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
     And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
+
+
+@not.with_os=rhel__eq__8
+@bz1686602
+Scenario: Reposync --urls switch
+  Given I use the http repository based on "dnf-ci-thirdparty-updates"
+   When I execute dnf with args "reposync --urls"
+   Then the exit code is 0
+    And stdout matches line by line
+    """
+    http-dnf-ci-thirdparty-updates\s+.*
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/src/CQRlib-extension-1\.6-2\.src\.rpm
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/src/SuperRipper-1\.2-1\.src\.rpm
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/x86_64/SuperRipper-1\.2-1\.x86_64\.rpm
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/src/SuperRipper-1\.3-1\.src\.rpm
+    http://localhost:[0-9]+/dnf-ci-thirdparty-updates/x86_64/SuperRipper-1\.3-1\.x86_64\.rpm
+    """
