@@ -42,3 +42,23 @@ Scenario: I can install an RPM from path, when specifying the RPM multiple times
     And Transaction is following
         | Action        | Package                                   |
         | install       | setup-0:2.12.1-1.fc29.noarch              |
+
+
+@fixture.httpd
+Scenario: I can install an RPM from url, where url is http address
+  Given I use the http repository based on "dnf-ci-fedora"
+  And I execute dnf with args "install http://localhost:{context.dnf.ports[http-dnf-ci-fedora]}/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | setup-0:2.12.1-1.fc29.noarch              |
+
+
+@fixture.ftpd
+Scenario: I can install an RPM from url, where url is ftp address
+  Given I use the ftp repository based on "dnf-ci-fedora"
+  And I execute dnf with args "install ftp://localhost:{context.dnf.ports[ftp-dnf-ci-fedora]}/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | setup-0:2.12.1-1.fc29.noarch              |
