@@ -12,6 +12,7 @@ from behave import fixture, use_fixture
 from behave.tag_matcher import ActiveTagMatcher
 
 from steps.fixtures.httpd import HttpServerContext
+from steps.fixtures.ftpd import FtpServerContext
 
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
@@ -185,6 +186,13 @@ def httpd_context(context):
     context.httpd.shutdown()
 
 
+@fixture
+def ftpd_context(context):
+    context.ftpd = FtpServerContext()
+    yield context.ftpd
+    context.ftpd.shutdown()
+
+
 def before_step(context, step):
     pass
 
@@ -220,6 +228,8 @@ def after_feature(context, feature):
 def before_tag(context, tag):
     if tag == 'fixture.httpd':
         use_fixture(httpd_context, context)
+    if tag == 'fixture.ftpd':
+        use_fixture(ftpd_context, context)
 
 
 def after_tag(context, tag):
