@@ -176,7 +176,7 @@
 
           overlay_dir="dnf-master"
 
-          rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/$overlay_dir rpm copr --chroot fedora-29-x86_64 --owner rpmsoftwaremanagement
+          rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/$overlay_dir rpm copr --chroot fedora-30-x86_64 --owner rpmsoftwaremanagement
           RPMS=`cat rpms | xargs`
           echo "RPMS=$RPMS" > props
     publishers:
@@ -268,7 +268,8 @@
 
           TESTS=(${{TESTS[@]}})
 
-          COMMANDS=('dnf-2' 'dnf-3')
+          #COMMANDS=('dnf-2' 'dnf-3')
+          COMMANDS=('dnf-3')
           for cmd in ${{COMMANDS[@]}}; do
               mkdir -p "test-results-$cmd"
               TEST_DIR=`readlink -f "test-results-$cmd"`
