@@ -79,6 +79,11 @@ def step_impl(context, rtype, repo):
     if not repos_path in current_reposdir:
         context.dnf._set("reposdir", "{},{}".format(current_reposdir, repos_path))
 
+    if not hasattr(context.dnf, "ports"):
+        context.dnf._set("ports", {})
+
+    context.dnf.ports[rtype + "-" + repo] = port
+
     # enable newly created http repo
     context.execute_steps('Given I use the repository "{}"'.format(repo_id))
 
