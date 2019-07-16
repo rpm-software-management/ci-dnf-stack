@@ -59,6 +59,7 @@ RUN set -x && \
         openssl \
         python3-behave \
         python3-pexpect \
+        python3-pyftpdlib \
         rpm-build \
         rpm-sign \
         # if TYPE == local, install debugging tools

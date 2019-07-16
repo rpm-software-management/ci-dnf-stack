@@ -26,18 +26,21 @@ def step_impl(context, client_cert, client_key):
     context.dnf["client_ssl"]["key"] = os.path.join(context.dnf.fixturesdir,
                                                     client_key)
 
-@parse.with_pattern(r"http|https")
+@parse.with_pattern(r"http|https|ftp")
 def parse_repo_type(text):
-    if text in ("http", "https"):
+    if text in ("http", "https", "ftp"):
         return text
     assert False
 behave.register_type(repo_type=parse_repo_type)
 
 @behave.step("I use the {rtype:repo_type} repository based on \"{repo}\"")
 def step_impl(context, rtype, repo):
-    assert hasattr(context, 'httpd'), 'Httpd fixture not set. Use @fixture.httpd tag.'
+    assert (hasattr(context, 'httpd') or hasattr(context, 'ftpd')), \
+        'Httpd or Ftpd fixture not set. Use @fixture.httpd or @fixture.ftpd tag.'
     if rtype == "http":
         host, port = context.httpd.new_http_server(context.dnf.repos_location)
+    elif rtype == "ftp":
+        host, port = context.ftpd.new_ftp_server(context.dnf.repos_location)
     else:
         cacert = os.path.join(context.dnf.fixturesdir,
                               'certificates/testcerts/ca/cert.pem')
