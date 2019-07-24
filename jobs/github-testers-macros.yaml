@@ -309,8 +309,8 @@
             condition: ALWAYS
             property-file: GH_UPDATE.txt
             fail-on-missing: True
-      - junit:
-          results: test-results-dnf-2/*.xml
+#      - junit:
+#          results: test-results-dnf-2/*.xml
       - junit:
           results: test-results-dnf-3/*.xml
       - trigger-parameterized-builds:
@@ -320,8 +320,8 @@
       - workspace-cleanup:
           exclude:
             - GH_UPDATE.txt
-            - test-results-dnf-2/*.xml
             - test-results-dnf-3/*.xml
+#            - test-results-dnf-2/*.xml
 
 ##############
 ## TEARDOWN ##
