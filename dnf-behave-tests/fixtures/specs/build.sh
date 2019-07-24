@@ -59,7 +59,7 @@ for path in $DIR/*/*.spec; do
         rpmbuild --quiet --target=$ARCH -ba --nodeps --define "_srcrpmdir $REPODIR/$REPO/src" --define "_rpmdir $REPODIR/$REPO" --define "dist $DIST" $path
 
         # make lz4 multilib
-        if [ "$SPEC_NAME" == "lz4-1.7.5-2.fc26.spec" -o "$SPEC_NAME" == "lz4-1.8.2-2.fc29.spec" ]; then
+        if [[ "$SPEC_NAME" =~ "multilib" ]]; then
             rpmbuild --quiet --target=i686 -ba --nodeps --define "_srcrpmdir $REPODIR/$REPO/src" --define "_rpmdir $REPODIR/$REPO" --define "dist $DIST" $path
         fi
 
