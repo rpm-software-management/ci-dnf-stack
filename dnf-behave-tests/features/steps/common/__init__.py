@@ -21,6 +21,5 @@ from .rpm import RPM
 from .rpm import diff_rpm_lists
 from .rpmdb import get_rpmdb_rpms
 from .shell import stdout_from_shell
-from .string import splitter
 from .string import extract_section_content_from_text
 from .string import lines_match_to_regexps_line_by_line

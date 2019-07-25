@@ -23,7 +23,7 @@ def check_rpmdb_transaction(context, mode):
     for action, nevras in context.table:
         if action in ["broken"]:
             continue
-        for nevra in splitter(nevras):
+        for nevra in nevras.split(", "):
             checked_rpmdb.setdefault(action, set()).add(nevra)
             if action.startswith('group-'):
                 continue
@@ -61,7 +61,7 @@ def check_dnf_transaction(context, mode):
     for action, nevras in context.table:
         if action in ["absent", "present", "unchanged", "changed"]:
             continue
-        for nevra in splitter(nevras):
+        for nevra in nevras.split(", "):
             if action.startswith('group-') or action.startswith('module-'):
                 title = action.split('-')[0].capitalize()
                 group = nevra
