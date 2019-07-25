@@ -3,18 +3,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
-import re
-
-
-SPLITTER_RE = re.compile(r", *")
-
-
-def splitter(text):
-    """
-    Split text by ", "
-    """
-    return SPLITTER_RE.split(text)
-
 
 def extract_section_content_from_text(section_header, text):
     SECTION_HEADERS = [

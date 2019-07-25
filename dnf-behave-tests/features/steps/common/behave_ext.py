@@ -5,7 +5,6 @@ from __future__ import print_function
 
 from .dnf import ACTIONS
 from .rpm import RPM
-from .string import splitter
 
 def check_context_table(context, headings):
     if not context.table:
@@ -23,10 +22,10 @@ def parse_context_table(context):
         if action not in result:
             continue
         if action.startswith('group-') or action.startswith('module-'):
-            for group in splitter(nevras):
+            for group in nevras.split(", "):
                 result[action].add(group)
         else:
-            for nevra in splitter(nevras):
+            for nevra in nevras.split(", "):
                 rpm = RPM(nevra)
                 result[action].add(rpm)
 
