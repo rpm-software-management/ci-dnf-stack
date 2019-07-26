@@ -19,9 +19,28 @@ else:
     from SocketServer import TCPServer
 
 
+class AccessRecord(object):
+    """Represents an HTTP request processed by a server instance."""
+
+    def __init__(self, handler):
+        self.command = handler.command
+        self.path = handler.path
+        self.headers = handler.headers
+
+    def __str__(self):
+        headers = ['%s: %s' % (k, v) for k, v in self.headers.items()]
+        return '\n%s %s\n%s' % (self.command, self.path, '\n'.join(headers))
+
+
 class NoLogHttpHandler(SimpleHTTPRequestHandler):
     def log_request(self, *args, **kwargs):
         pass
+
+
+class LoggingHttpHandler(SimpleHTTPRequestHandler):
+    def log_request(self, *args, **kwargs):
+        self.server._log.append(AccessRecord(self))
+
 
 class HttpServerContext(object):
     """
@@ -43,6 +62,13 @@ class HttpServerContext(object):
         httpd.serve_forever()
 
     @staticmethod
+    def http_logging_server(address, path, log):
+        os.chdir(path)
+        httpd = TCPServer(address, LoggingHttpHandler)
+        httpd._log = log
+        httpd.serve_forever()
+
+    @staticmethod
     def https_server(address, path, cacert, cert, key, client_verification=False):
         os.chdir(path)
         httpd = TCPServer(address, NoLogHttpHandler)
@@ -60,9 +86,13 @@ class HttpServerContext(object):
             s.bind((host, 0))
             return (host, s.getsockname()[1])
 
-    def __init__(self):
+    def __init__(self, logging=False):
         # mapping path -> (address, server process)
         self.servers = dict()
+        # whether to enable logging
+        self._logging = logging
+        # list of AccessRecord objects
+        self.logs = dict()
 
     def _start_server(self, path, target, *args):
         """
@@ -78,7 +108,14 @@ class HttpServerContext(object):
         return address
 
     def new_http_server(self, path):
-        return self._start_server(path, self.http_server)
+        target = self.http_server
+        args = []
+        if self._logging:
+            log = multiprocessing.Manager().list()
+            self.logs[path] = log
+            target = self.http_logging_server
+            args = [log]
+        return self._start_server(path, target, *args)
 
     def new_https_server(self, path, cacert, cert, key, client_verification):
         return self._start_server(
@@ -91,6 +128,22 @@ class HttpServerContext(object):
         if path in self.servers:
             return self.servers[path][0]
         return None
+
+    def get_log(self, path):
+        """
+        Get the log of http server bound to "path" directory
+
+        A "log" here is a list of AccessRecord objects.
+        """
+        if path in self.logs:
+            return self.logs[path]
+        return None
+
+    def clear_log(self, path):
+        """
+        Empty the log of http server bound to "path"
+        """
+        del self.logs[path][:]
 
     def shutdown(self):
         """
