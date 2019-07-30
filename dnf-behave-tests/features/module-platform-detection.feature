@@ -73,10 +73,13 @@ Scenario: Platform is detected using virtual provide of installed os-release pac
         | Module    | State     | Stream    | Profiles  |
         | dwm       | enabled   | 6.0       |           |
 
-
-Scenario: Platform is detected using virtual provide of os-release package in enabled repo
+@bz1709453
+Scenario: Platform is detected using virtual provide of os-release package in enabled repo but not from excluded package
   Given I do not set default module platformid
     And I use repository "dnf-ci-pseudo-platform"
+    And I use repository "module-platform-detection-excluded" with configuration
+        | key         | value |
+        | includepkgs | xget  |
     And I create file "/etc/os-release" with
         """
         NAME=PsedoDistro
