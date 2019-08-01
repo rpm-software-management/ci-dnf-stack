@@ -60,6 +60,19 @@ Scenario: Upgrade an RPM from the highest-priority repository
         | upgrade       | flac-0:1.3.3-2.fc29.x86_64                |
 
 
+@xfail
+@bz1733582
+Scenario: Do not upgrade installonly package from lower-priority repository
+   When I execute dnf with args "install kernel-core"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
+   When I execute dnf with args "update"
+   Then the exit code is 0
+    And Transaction is empty
+
+
 Scenario: Upgrade an RPM to specific version from lower-priority repository
    When I execute dnf with args "install flac"
    Then the exit code is 0
