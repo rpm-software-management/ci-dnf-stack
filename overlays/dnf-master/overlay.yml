@@ -27,6 +27,7 @@ components:
       src: github:rpm-software-management/libcomps.git
     distgit:
       src: fedorapkgs:libcomps.git
+      patches: drop
 
   - name: libdnf
     git:
