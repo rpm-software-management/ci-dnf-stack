@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+from fnmatch import fnmatch
 import os
 import parse
 
@@ -136,6 +137,11 @@ def step_remote_repo(context):
     context.execute_steps('when I use the http repository based on "dnf-ci-fedora"')
 
 
+@behave.step("I have enabled a remote metalink repository")
+def step_remote_metalink_repo(context):
+    context.execute_steps('when I use the metalink repository based on "dnf-ci-fedora"')
+
+
 @behave.step("{quantifier} HTTP {command} request should match")
 def step_check_http_log(context, quantifier, command):
     # Obtain the httpd log
@@ -172,6 +178,25 @@ def step_check_http_log(context, quantifier, command):
         matches = (row['value'] == h[row['header']]
                    for h in headers
                    for row in table)
+    elif 'path' in headings:
+        paths = (rec.path for rec in log)
+        matches = (fnmatch(p, row['path'])
+                   for p in paths
+                   for row in context.table)
 
     if quantifier == 'every':
         assert all(matches), 'Every request should match the table: ' + dump
+    elif quantifier == 'exactly one':
+        assert len([m for m in matches if m]) == 1, \
+            'Exactly one request should match the table: ' + dump
+    elif quantifier == 'no':
+        assert not any(matches), 'No request should match the table: ' + dump
+
+
+@behave.step("{quantifier} metalink request should include the countme flag")
+def step_countme(context, quantifier):
+    context.execute_steps("""
+        then {} HTTP GET request should match:
+        | path                     |
+        | */metalink.xml?countme=1 |
+    """.format(quantifier))
