@@ -27,9 +27,9 @@ def step_impl(context, client_cert, client_key):
     context.dnf["client_ssl"]["key"] = os.path.join(context.dnf.fixturesdir,
                                                     client_key)
 
-@parse.with_pattern(r"http|https|ftp")
+@parse.with_pattern(r"http|https|ftp|metalink")
 def parse_repo_type(text):
-    if text in ("http", "https", "ftp"):
+    if text in ("http", "https", "ftp", "metalink"):
         return text
     assert False
 behave.register_type(repo_type=parse_repo_type)
@@ -38,6 +38,12 @@ behave.register_type(repo_type=parse_repo_type)
 def step_impl(context, rtype, repo):
     assert (hasattr(context, 'httpd') or hasattr(context, 'ftpd')), \
         'Httpd or Ftpd fixture not set. Use @fixture.httpd or @fixture.ftpd tag.'
+
+    metalink = False
+    if rtype == "metalink":
+        rtype = "http"
+        metalink = True
+
     if rtype == "http":
         host, port = context.httpd.new_http_server(context.dnf.repos_location)
     elif rtype == "ftp":
@@ -58,9 +64,14 @@ def step_impl(context, rtype, repo):
             client_verification=bool(client_ssl))
     http_reposdir = "/http.repos.d"
     repo_id = '{}-{}'.format(rtype, repo)
+    key = "baseurl"
+    url = "{}://{}:{}/{}/".format(rtype, host, port, repo)
+    if metalink:
+        key = "metalink"
+        url += "metalink.xml"
     repocfg = ("[{repo_id}]\n"
         "name={repo_id}\n"
-        "baseurl={rtype}://{host}:{port}/{repo}/\n"
+        "{key}={url}\n"
         "enabled=1\n"
         "gpgcheck=0\n"
         )
@@ -69,6 +80,9 @@ def step_impl(context, rtype, repo):
         if client_ssl:
             repocfg += "sslclientcert={client_cert}\n"
             repocfg += "sslclientkey={client_key}\n"
+
+    data_path = os.path.join(context.dnf.repos_location, repo)
+    generate_metalink(data_path, (rtype, host, port))
 
     # generate repo file based on "repo" in /http.repos.d
     repos_path = os.path.join(context.dnf.installroot, http_reposdir.lstrip("/"))

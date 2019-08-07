@@ -18,6 +18,7 @@ from .file import delete_directory
 from .file import delete_file
 from .file import file_timestamp
 from .module import get_modules_state
+from .repo import generate_metalink
 from .rpm import RPM
 from .rpm import diff_rpm_lists
 from .rpmdb import get_rpmdb_rpms
