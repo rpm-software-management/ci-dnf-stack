@@ -47,6 +47,7 @@ def execute_step(context, step):
 
 @behave.step("I move the clock {direction} to \"{when}\"")
 def faketime(context, direction, when):
+    assert os.path.exists('/usr/bin/faketime'), 'Faketime binary must be installed'
     if when == 'before boot-up':
         stamp = get_boot_time() - 24 * 60 * 60  # 1 day before boot-up
         time = datetime.utcfromtimestamp(stamp)
