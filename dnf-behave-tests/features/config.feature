@@ -180,7 +180,6 @@ Scenario: Test usage of not existing config file
     And stderr contains "Config file.*does not exist"
 
 
-@not.with_os=rhel__eq__8
 @bz1722493
 Scenario: Lines that contain only whitespaces do not spoil previous config options
   Given I enable plugin "config_manager"
