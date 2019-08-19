@@ -3,6 +3,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import re
+
 import behave
 
 from common import *
@@ -120,3 +122,26 @@ def step_impl(context):
                     '[history] package "{0}" matched as userinstalled.'.format(package))
         else:
             raise ValueError('Invalid action "{0}".'.format(action))
+
+
+@then('reasons are following')
+def step_impl(context):
+    check_context_table(context, ["Reason", "Package"])
+    cmd = " ".join(context.dnf.get_cmd(context) + ["repoquery", "--installed", "--qf='NEVRA:%{name}-%{epoch}:%{version}-%{release}.%{arch} REASON:%{reason}'"])
+    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=True)
+
+    re_reason = re.compile(r"^NEVRA:(.*) REASON:(.*)$")
+    reasons = {}
+    for line in cmd_stdout.splitlines():
+        line = line.strip()
+        match = re_reason.match(line)
+        if not match:
+            continue
+        reasons[match.group(1)] = match.group(2)
+
+    for reason, package in context.table:
+        if package not in reasons:
+            raise AssertionError('Unable to find reason for package "{0}"'.format(package))
+        expected_reason = reasons[package]
+        if reason != expected_reason:
+            raise AssertionError('Package "{0}" has reason "{1}". Expected reason: "{2}"'.format(package, reason, expected_reason))

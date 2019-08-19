@@ -80,6 +80,9 @@ Scenario: Keep reason of obsoleted package
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | remove        | PackageB-0:1.0-1.x86_64                   |
+    And reasons are following
+        | Reason        | Package                                   |
+        | dependency    | PackageB-Obsoleter-0:1.0-1.x86_64         |
     And history userinstalled should
         | Action        | Package                                   |
         | not match     | PackageB-Obsoleter-1.0-1                  | 
