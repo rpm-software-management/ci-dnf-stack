@@ -4,7 +4,6 @@ Feature: Installing modules without profile specification using defaults from re
 Background:
   Given I use the repository "dnf-ci-thirdparty"
 
-@not.with_os=rhel__eq__8
 @bz1724564
 Scenario: Install module, no default profile defined, expecting no profile selection
    When I execute dnf with args "module install DnfCiModuleNoDefaults:stable"
