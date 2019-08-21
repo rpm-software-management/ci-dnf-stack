@@ -22,7 +22,7 @@ Scenario: Builddep installs non-modular build requirements
 # do not run on Fedora until issue fixed in libsolv
 # https://github.com/rpm-software-management/libsolv/pull/1
 @use.with_os=rhel__ge__8
-@1677583
+@bz1677583
 Scenario: Builddep preferes default stream over other streams / non-modular content even though the version is older
   Given I use the repository "dnf-ci-fedora-modular"
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-1.0-1.src.rpm"
@@ -34,7 +34,7 @@ Scenario: Builddep preferes default stream over other streams / non-modular cont
 
 
 @use.with_os=rhel__ge__8
-@1677583
+@bz1677583
 Scenario: Builddep preferes enabled stream over other streams / non-modular content even though the version is older
   Given I use the repository "dnf-ci-fedora-modular"
    When I execute dnf with args "module enable ninja:legacy"
@@ -63,7 +63,7 @@ Scenario: Builddep reports error where required package is available only in non
 # dnf-ci-fedora-modular: nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
 # dnf-ci-fedora-modular-hotfix: nodejs-1:8.11.5-1.module_2030+42747d40.x86_64
 @use.with_os=rhel__ge__8
-@1677583
+@bz1677583
 Scenario: Builddep preferes hotfix repo over the default stream
   Given I use the repository "dnf-ci-fedora-modular"
     And I use the repository "dnf-ci-fedora-modular-hotfix"
@@ -77,7 +77,7 @@ Scenario: Builddep preferes hotfix repo over the default stream
 
 
 @use.with_os=rhel__ge__8
-@1677583
+@bz1677583
 Scenario: Builddep preferes hotfix repo over the enabled stream
   Given I use the repository "dnf-ci-fedora-modular"
     And I use the repository "dnf-ci-fedora-modular-hotfix"
