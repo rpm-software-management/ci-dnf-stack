@@ -642,6 +642,5 @@ Examples:
         \s+:\s+nodejs-docs-1:8.11.4-1.module_2030\+42747d40.noarch
         \s+:\s+npm-1:8.14.0-1.module_2030\+42747d41.x86_64
 
-        Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled, \[a\]ctive
+        Hint: \[d\]efault, \[e\]nabled, \[x\]disabled, \[i\]nstalled, \[a\]ctive$
       """
-     And stdout does not contain "\[a\]ctive\]"
