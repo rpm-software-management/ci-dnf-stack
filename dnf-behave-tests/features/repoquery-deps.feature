@@ -37,7 +37,6 @@ Scenario: Repoquery with --whatrequires option
   Then stdout contains "filesystem-0:3.9-2.fc29.x86_64"
 
 
-@not.with_os=rhel__eq__8
 @bz1667898
 Scenario: Repoquery with --whatrequires option used multiple times
   When I execute dnf with args "-q repoquery --whatrequires setup --whatrequires nodejs"
@@ -51,7 +50,6 @@ Scenario: Repoquery with --whatprovides option
   Then stdout contains "setup-0:2.12.1-1.fc29.noarch"
 
 
-@not.with_os=rhel__eq__8
 @bz1667898
 Scenario: Repoquery with --whatprovides option used multiple times
   When I execute dnf with args "-q repoquery --whatprovides setup --whatprovides redhat-release"
@@ -59,7 +57,6 @@ Scenario: Repoquery with --whatprovides option used multiple times
    And stdout contains "fedora-release-0:29-1.noarch"
 
 
-@not.with_os=rhel__eq__8
 @bz1667898
 Scenario: Repoquery with --whatprovides option used with multiple arguments
   When I execute dnf with args "-q repoquery --whatprovides setup,redhat-release"
@@ -72,7 +69,6 @@ Scenario: Repoquery with --whatconflicts option
   Then stdout contains "setup-0:2.12.1-1.fc29.noarch"
 
 
-@not.with_os=rhel__eq__8
 @bz1667898
 Scenario: Repoquery with --whatconflicts option used multiple times
   When I execute dnf with args "-q repoquery --whatconflicts filesystem --whatconflicts 'xfsprogs < 4.3.0-1'"
@@ -86,7 +82,6 @@ Scenario: Repoquery with --whatobsoletes option
   Then stdout contains "glibc-0:2.28-9.fc29.x86_64"
 
 
-@not.with_os=rhel__eq__8
 @bz1667898
 Scenario: Repoquery with --whatobsoletes option used with multiple arguments
   When I execute dnf with args "-q repoquery --whatobsoletes 'glibc-profile,npm < 3.5.4-6'"
