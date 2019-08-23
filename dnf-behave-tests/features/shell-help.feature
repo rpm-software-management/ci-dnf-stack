@@ -1,7 +1,8 @@
 Feature: Shell help
 
 
-@bz1659328
+#@bz1659328  #ksrot: bug reference is not entirely correct, see #c7
+@not.with_os=rhel__eq__8
 Scenario: Using dnf shell, list available commands
    When I open dnf shell session
     And I execute in dnf shell "help"
