@@ -131,3 +131,38 @@ Scenario: I can remove an installed module profile using "remove @<module_spec>"
   And modules state is following
       | Module    | State     | Stream    | Profiles             |
       | nodejs    | enabled   | 8         | default, development |
+
+@bz1700529
+Scenario: Remove module profile when userinstalled package requires its package
+Given I use the repository "dnf-ci-fifthparty"
+  And I use the repository "dnf-ci-fifthparty-modular"
+   # install module that contains package luke
+   When I execute dnf with args "module install jedi:1/duo"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                |
+        | install                   | luke-0:1.0-1.x86_64    |
+        | install                   | obi-wan-0:1.0-1.x86_64 |
+        | module-profile-install    | jedi/duo               |
+   # install package leia that requires luke
+   When I execute dnf with args "install leia"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                |
+        | install                   | leia-0:1.0-1.x86_64    |
+   # remove the profile
+   When I execute dnf with args "module remove jedi"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                   | Package                 |
+        | remove                   | obi-wan-0:1.0-1.x86_64  |
+        | unchanged                | luke-0:1.0-1.x86_64     |
+        | module-profile-disable   | jedi/duo                |
+   # remove package leia, luke should be also removed due to having reason 'dep'
+   When I execute dnf with args "remove leia"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                |
+        | remove                    | leia-0:1.0-1.x86_64    |
+        | remove                    | luke-0:1.0-1.x86_64    |
+

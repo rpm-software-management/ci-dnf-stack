@@ -1,0 +1,5 @@
+[dnf-ci-fifthparty]
+name=dnf-ci-fifthparty
+baseurl=file://$DNF0/repos/dnf-ci-fifthparty
+enabled=1
+gpgcheck=0
