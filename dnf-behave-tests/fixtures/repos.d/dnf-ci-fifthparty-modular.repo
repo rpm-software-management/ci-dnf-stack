@@ -1,0 +1,5 @@
+[dnf-ci-fifthparty-modular]
+name=dnf-ci-fifthparty-modular
+baseurl=file://$DNF0/repos/dnf-ci-fifthparty-modular
+enabled=1
+gpgcheck=0
