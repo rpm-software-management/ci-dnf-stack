@@ -1,0 +1,6 @@
+[setopt-2]
+name=setopt-2
+baseurl=file://$DNF0/repos/setopt-2
+enabled=1
+gpgcheck=0
+skip_if_unavailable=0
