@@ -53,3 +53,30 @@ Scenario: Builddep with simple dependency (non-existent)
       When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
       And stderr contains "No matching package to install: 'flac = 15'"
+
+@bz1724668
+Scenario: Builddep on SPEC with non-available Source0
+ Given I create file "{context.dnf.installroot}/missingSource.spec" with
+   """
+   Name: dummy-pkg
+   Summary: dummy-pkg summary
+   Version: 1.0
+   Release: 1
+   License: GPL
+   Source0: no-such-archive.tar.gz
+   %description
+   This is a dummy-pkg description
+   %build
+   %files
+   %changelog
+   """
+   And I enable plugin "builddep"
+  When I execute dnf with args "builddep {context.dnf.installroot}/missingSource.spec"
+  Then the exit code is 1
+   And stderr matches line by line
+   """
+   RPM: error: Unable to open .*/missingSource.spec: No such file or directory
+   Failed to open: '.*/missingSource.spec', not a valid spec file: can't parse specfile
+
+   Error: Some packages could not be found.
+   """
