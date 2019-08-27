@@ -37,6 +37,14 @@ def step_impl(context, filepath):
     create_file_with_contents(full_path, context.text.format(context=context))
 
 
+@behave.given('I create symlink "{dst}" to file "{src}"')
+def step_impl(context, dst, src):
+    dst = prepend_installroot(context, dst)
+    src = prepend_installroot(context, src)
+    ensure_directory_exists(os.path.dirname(dst))
+    os.symlink(src, dst)
+
+
 @behave.given('I delete file "{filepath}"')
 def step_delete_file(context, filepath):
     full_path = prepend_installroot(context, filepath)
