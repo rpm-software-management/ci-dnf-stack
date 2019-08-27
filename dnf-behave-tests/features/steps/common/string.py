@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import re
 
 def extract_section_content_from_text(section_header, text):
     SECTION_HEADERS = [
