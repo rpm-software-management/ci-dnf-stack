@@ -2,7 +2,6 @@ Feature: Tests for installing RPM from paths
 
 
 Scenario Outline: I can install an RPM from path, where path is <path type>
-  Given I use the repository "dnf-ci-fedora"
    When I execute dnf with args "install <path>" from repo "dnf-ci-fedora"
    Then the exit code is 0
     And Transaction is following
