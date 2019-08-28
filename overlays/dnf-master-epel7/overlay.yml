@@ -13,6 +13,10 @@ components:
       src: fedorapkgs:libsolv.git
       patches: drop
 
+  - name: drpm
+    git:
+      src: github:rpm-software-management/drpm.git
+
   - name: librepo
     git:
       src: github:rpm-software-management/librepo.git

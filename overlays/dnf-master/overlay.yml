@@ -14,17 +14,20 @@ components:
 #      freeze: 335f469bf6e3109d4973e55a3a86a274adb0c21d
       patches: drop
 
+  - name: drpm
+    git:
+      src: github:rpm-software-management/drpm.git
+
   - name: librepo
     git:
       src: github:rpm-software-management/librepo.git
 
-#  - name: createrepo_c
-#    git:
-#      src: github:rpm-software-management/createrepo_c.git
-#      freeze: 2077ba104eae04bb819e9e0c906c8c835b62e7a6
-#    distgit:
-#      src: fedorapkgs:createrepo_c.git
-#      patches: drop
+  - name: createrepo_c
+    git:
+      src: github:rpm-software-management/createrepo_c.git
+    distgit:
+      src: fedorapkgs:createrepo_c.git
+      patches: drop
 
   - name: libcomps
     git:
