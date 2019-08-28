@@ -115,3 +115,32 @@ Scenario: Reposync downloads packages from all streams of modular repository eve
     And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-10.11.0-1.module_2200+adbac02b.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/http-dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
+
+
+Scenario: Reposync downloads packages and removes packages that are not part of repo anymore
+  Given I use the repository "setopt-2"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/wget-1.0-1.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/src/wget-1.0-1.fc29.src.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/flac-1.0-1.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/src/flac-1.0-1.fc29.src.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" exists
+
+  Given I create and substitute file "/etc/yum.repos.d/test.repo" with
+  """
+  [setopt-2]
+  name=setopt-2
+  baseurl=file://$DNF0/repos/setopt-1
+  enabled=1
+  gpgcheck=0
+  skip_if_unavailable=0
+  """
+    And I do not set reposdir
+  When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --refresh --delete"
+   Then the exit code is 0
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/wget-1.0-1.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/src/wget-1.0-1.fc29.src.rpm" exists
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/flac-1.0-1.fc29.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/setopt-2/src/flac-1.0-1.fc29.src.rpm" does not exist
+    And file "//{context.dnf.tempdir}/setopt-2/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" does not exist
