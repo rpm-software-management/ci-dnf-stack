@@ -201,6 +201,60 @@ Scenario: repoquery --arch ARCH (nonexisting arch)
   And stdout is empty
 
 
+# --cacheonly
+@not.with_os=rhel__eq__8
+Scenario: repoquery -C (without any cache)
+ When I execute dnf with args "repoquery --available -C"
+ Then the exit code is 1
+ Then stdout is empty
+ Then stderr is
+      """
+      Error: Cache-only enabled but no cache for 'repoquery-main'
+      """
+
+@not.with_os=rhel__eq__8
+Scenario: repoquery -Cq (without any cache)
+ When I execute dnf with args "repoquery --available -Cq"
+ Then the exit code is 1
+ Then stdout is empty
+ Then stderr is
+      """
+      Error: Cache-only enabled but no cache for 'repoquery-main'
+      """
+
+Scenario: repoquery -C (with cache)
+Given I successfully execute dnf with args "makecache"
+ When I execute dnf with args "repoquery -C mid*"
+ Then the exit code is 0
+ Then stdout is
+      """
+      mid-a1-1:1.0-1.src
+      mid-a1-1:1.0-1.x86_64
+      mid-a2-1:1.0-1.src
+      mid-a2-1:1.0-1.x86_64
+      """
+
+Scenario: repoquery -C (with cache, installed package)
+Given I successfully execute dnf with args "makecache"
+Given I successfully execute dnf with args "install bottom-a1"
+ Then Transaction is following
+      | Action        | Package                                   |
+      | install       | bottom-a1-1:2.0-1.noarch                  |
+ When I execute dnf with args "repoquery --installed -C"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom-a1-1:2.0-1.noarch
+      """
+
+Scenario: repoquery -C (with cache, but disabled repository)
+Given I successfully execute dnf with args "makecache"
+Given I disable the repository "repoquery-main"
+ When I execute dnf with args "repoquery --available -C"
+ Then the exit code is 0
+  And stdout is empty
+
+
 # --deplist
 Scenario: repoquery --deplist NAME
  When I execute dnf with args "repoquery --deplist top-a"
