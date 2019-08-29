@@ -7,7 +7,12 @@ import os
 import re
 import sys
 from datetime import datetime
-from itertools import zip_longest
+
+PY3 = sys.version_info.major >= 3
+if PY3:
+    from itertools import zip_longest
+else:
+    from itertools import izip_longest as zip_longest
 
 import behave
 
