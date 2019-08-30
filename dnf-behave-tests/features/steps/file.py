@@ -129,6 +129,21 @@ def step_impl(context, first, second):
     assert exitcode == 0, 'Files "{}" and "{}" differ.'.format(first, second)
 
 
+@behave.step('timestamps of the files "{first}" and "{second}" do not differ')
+def step_impl(context, first, second):
+    first = first.format(context=context)
+    second = second.format(context=context)
+    ensure_file_exists(first)
+    ensure_file_exists(second)
+    # strip the fractional part of timestamps as the precision of timestamps
+    # in http headers is only in seconds.
+    ts_first = int(file_timestamp(first))
+    ts_second = int(file_timestamp(second))
+    assert ts_first == ts_second, \
+        'Timestamps of files "{}": {} and "{}": {} are differt.'.format(
+            first, ts_first, second, ts_second)
+
+
 @behave.step('size of file "{filepath}" is less than "{expected_size}"')
 def file_size_less_than(context, filepath, expected_size):
     filepath = os.path.join(context.dnf.installroot, filepath)
