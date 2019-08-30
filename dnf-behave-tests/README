@@ -28,9 +28,12 @@ Creating test data
    * Define modules in modules.yaml
 
 2. Define GPG keys and signed packages (in fixtures/gpgkeys):
-   * For each GPG key, create a file containing list of package paths that are
-     to be signed
-   * The name of the GPG key will be the name of the file
+   * For each GPG key, create a directory with 2 files.
+      "packages": a file containing list of package paths that are to be signed
+      "config": a file containing GPG key specific configuration
+                USE_SIGN_SUBKEY=1 means to add a signing subkey and use it
+                                  to sign RPMs instead of master key.
+   * The name of the GPG key will be the name of the directory
    * Package paths must be relative to fixtures/repos
    * Resulting public key will be in fixtures/gpgkeys/keys/<name>/<name>-public
 
