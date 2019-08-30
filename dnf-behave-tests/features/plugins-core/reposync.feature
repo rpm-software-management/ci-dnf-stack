@@ -144,3 +144,25 @@ Scenario: Reposync downloads packages and removes packages that are not part of 
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-1.0-1.fc29.x86_64.rpm" does not exist
     And file "//{context.dnf.tempdir}/setopt.ext/src/flac-1.0-1.fc29.src.rpm" does not exist
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" does not exist
+
+
+Scenario: Reposync preserves remote timestamps of packages
+  Given I use the http repository based on "reposync"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --remote-time"
+   Then the exit code is 0
+    And stdout matches line by line
+    """
+    http-reposync .*
+    \(1/2\): wget-1\.0-1\.fc29\.src\.rpm .*
+    \(2/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*
+    """
+    And the files "{context.dnf.tempdir}/http-reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
+    And timestamps of the files "{context.dnf.tempdir}/http-reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
+
+
+Scenario: Reposync preserves remote timestamps of metadata files
+  Given I use the http repository based on "reposync"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --download-metadata --remote-time"
+   Then the exit code is 0
+    And the files "{context.dnf.tempdir}/http-reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
+    And timestamps of the files "{context.dnf.tempdir}/http-reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ

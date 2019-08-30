@@ -48,3 +48,6 @@ def copy_tree(source, destination):
 def copy_file(source, destination):
     shutil.copyfile(source, destination)
     assert os.path.exists(destination), "copy_tree {} -> {} failed".format(source, destination)
+
+def file_timestamp(filename):
+    return os.path.getmtime(filename)

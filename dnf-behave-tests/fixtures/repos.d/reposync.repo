@@ -1,0 +1,6 @@
+[reposync]
+name=reposync
+baseurl=file://$DNF0/repos/reposync
+enabled=1
+gpgcheck=0
+skip_if_unavailable=0

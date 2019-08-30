@@ -16,6 +16,7 @@ from .file import ensure_file_does_not_exist
 from .file import ensure_file_exists
 from .file import delete_directory
 from .file import delete_file
+from .file import file_timestamp
 from .module import get_modules_state
 from .rpm import RPM
 from .rpm import diff_rpm_lists
