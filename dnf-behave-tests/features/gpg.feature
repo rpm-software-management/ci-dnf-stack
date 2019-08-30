@@ -1,15 +1,16 @@
 Feature: Testing gpgcheck
 
 
-# Signed packages in repository dnf-ci-gpg:
+# Masterkey signed packages in repository dnf-ci-gpg:
 #     setup
-#     filesystem
-#     filesystem-content
 #     abcde
 #     broken-package
 #     glibc
 #     glibc-common
 #     glibc-all-langpacks
+# Subkey signed packages in repository dnf-ci-gpg:
+#     filesystem
+#     filesystem-content
 # Incorrectly signed packages:
 #     basesystem in dnf-ci-gpg is signed with key from dnf-ci-gpg-updates
 #     basesystem in dnf-ci-gpg-updates is signed with key from dnf-ci-gpg
@@ -25,7 +26,7 @@ Background: Add repository with gpgcheck=1
    Then the exit code is 1
 
 
-Scenario: Install signed package and check GPG key was imported
+Scenario: Install masterkey signed package and check GPG key was imported
    When I execute dnf with args "install setup -v"
    Then the exit code is 0
     And Transaction is following
@@ -38,7 +39,7 @@ Scenario: Install signed package and check GPG key was imported
     And stdout contains "gpg\(dnf-ci-gpg\)"
 
 
-Scenario: Install signed package with signed dependency
+Scenario: Install subkey signed package with masterkey signed dependency
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
@@ -48,6 +49,7 @@ Scenario: Install signed package with signed dependency
    When I execute rpm with args "-q gpg-pubkey --qf '%{{summary}}\n'"
    Then the exit code is 0
     And stdout contains "gpg\(dnf-ci-gpg\)"
+    And stdout contains "gpg\(dnf-ci-gpg-subkey\)"
 
 
 Scenario: Fail to install signed package with incorrectly signed dependency (with key from different repository)
@@ -73,16 +75,16 @@ Scenario: Fail to install signed package with incorrect checksum
     And RPMDB Transaction is empty
 
 
-Scenario: Install signed, unsigned and signed with unknown key packages from repo with gpgcheck=0 in repofile
+Scenario: Install masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
   Given I use the repository "dnf-ci-gpg-nocheck"
     And I disable the repository "dnf-ci-gpg"
-   # install signed package
+   # install masterkey signed package
    When I execute dnf with args "install setup"
    Then the exit code is 0
    # install unsigned package
    When I execute dnf with args "install flac"
    Then the exit code is 0
-   # install signed with unknown key package
+   # install master signed with unknown key package
    When I execute dnf with args "install basesystem"
    Then the exit code is 0
 

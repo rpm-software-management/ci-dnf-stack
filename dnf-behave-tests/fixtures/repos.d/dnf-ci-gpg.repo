@@ -3,4 +3,4 @@ name=dnf-ci-gpg
 baseurl=file://$DNF0/repos/dnf-ci-gpg
 enabled=1
 gpgcheck=1
-gpgkey=file:///$DNF0/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public
+gpgkey=file:///$DNF0/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public,file:///$DNF0/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public
