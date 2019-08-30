@@ -1,8 +1,6 @@
 dnf-ci-gpg/noarch/setup-2.12.1-1.fc29.noarch.rpm
 dnf-ci-gpg/noarch/abcde-2.9.2-1.fc29.noarch.rpm
 dnf-ci-gpg/noarch/broken-package-0.2.4-1.fc29.noarch.rpm
-dnf-ci-gpg/x86_64/filesystem-3.9-2.fc29.x86_64.rpm
-dnf-ci-gpg/x86_64/filesystem-content-3.9-2.fc29.x86_64.rpm
 dnf-ci-gpg/x86_64/glibc-2.28-9.fc29.x86_64.rpm
 dnf-ci-gpg/x86_64/glibc-common-2.28-9.fc29.x86_64.rpm
 dnf-ci-gpg/x86_64/glibc-all-langpacks-2.28-9.fc29.x86_64.rpm
