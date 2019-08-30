@@ -19,8 +19,13 @@ Scenario: Fail to enable a different stream of an already enabled module
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
-    And stderr contains "The operation would result in switching of module 'nodejs' stream '8' to stream '10'"
-    And stderr contains "Error: It is not possible to switch enabled streams of a module."
+    And stderr is
+        """
+        The operation would result in switching of module 'nodejs' stream '8' to stream '10'
+        Error: It is not possible to switch enabled streams of a module.
+        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
+        """
+
 
 Scenario: Fail to install a different stream of an already enabled module
    When I execute dnf with args "module enable nodejs:8"
@@ -36,8 +41,13 @@ Scenario: Fail to install a different stream of an already enabled module
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
-    And stderr contains "The operation would result in switching of module 'nodejs' stream '8' to stream '10'"
-    And stderr contains "Error: It is not possible to switch enabled streams of a module."
+    And stderr is
+        """
+        The operation would result in switching of module 'nodejs' stream '8' to stream '10'
+        Error: It is not possible to switch enabled streams of a module.
+        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
+        """
+
 
 @bz1706215
 Scenario: Fail to install a different stream of an already enabled module using @module:stream syntax
@@ -54,8 +64,13 @@ Scenario: Fail to install a different stream of an already enabled module using 
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
-    And stderr contains "The operation would result in switching of module 'nodejs' stream '8' to stream '10'"
-    And stderr contains "Error: It is not possible to switch enabled streams of a module."
+    And stderr is
+        """
+        The operation would result in switching of module 'nodejs' stream '8' to stream '10'
+        Error: It is not possible to switch enabled streams of a module.
+        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
+        """
+
 
 Scenario: Fail to enable a module stream when specifying only module
    When I execute dnf with args "module enable nodejs"
@@ -100,7 +115,6 @@ Scenario: Fail to enable a module stream when not specifying anything
     And stderr is
         """
         Error: dnf module enable: too few arguments
-
         """
 
 
