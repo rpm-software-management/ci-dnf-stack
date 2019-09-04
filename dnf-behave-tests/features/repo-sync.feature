@@ -1,4 +1,4 @@
-Feature: Test skip_if_unavailable default value and global/repo options
+Feature: Tests for the repository syncing functionality
 
 
 @bz1679509
