@@ -91,6 +91,11 @@ Scenario: I can list disabled modules (when there are no disabled modules)
     And stderr is empty
     And module list is empty
 
+@bz1647382
+Scenario: Get error message when list of non-existent module is requested
+   When I execute dnf with args "module list non-existing-module"
+   Then the exit code is 1
+    And stderr contains "Error: No matching Modules to list"
 
 Scenario: I can list disabled modules
    When I execute dnf with args "module disable postgresql"
