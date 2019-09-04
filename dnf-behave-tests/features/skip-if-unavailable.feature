@@ -24,8 +24,7 @@ Scenario: The default value of skip_if_unavailable is False
    Then the exit code is 1
     And stderr is
     """
-    Failed to download metadata for repo 'testrepo'
-    Error: Failed to download metadata for repo 'testrepo'
+    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
@@ -57,7 +56,7 @@ Scenario: There is global skip_if_unavailable option
     """
     And stderr is
     """
-    Failed to download metadata for repo 'testrepo'
+    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
 
@@ -89,7 +88,7 @@ Scenario: Per repo skip_if_unavailable configuration
     """
     And stderr is
     """
-    Failed to download metadata for repo 'testrepo'
+    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
 
@@ -118,6 +117,5 @@ Scenario: The repo configuration takes precedence over the global one
    Then the exit code is 1
     And stderr is
     """
-    Failed to download metadata for repo 'testrepo'
-    Error: Failed to download metadata for repo 'testrepo'
+    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """

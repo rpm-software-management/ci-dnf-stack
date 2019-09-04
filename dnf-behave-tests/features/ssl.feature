@@ -36,4 +36,7 @@ Scenario: Instaling a package using untrusted client cert should fail
     And I use the https repository based on "dnf-ci-fedora"
    When I execute dnf with args "install filesystem -v"
    Then the exit code is 1
-    And stdout contains "Cannot download repomd\.xml"
+    And stderr is
+    """
+    Error: Failed to download metadata for repo 'https-dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    """
