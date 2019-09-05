@@ -33,3 +33,28 @@ Given I create file "/plugins/test.py" with
  When I execute dnf with args "install setup filesystem"
  Then stdout contains "Plugin has access to installed pkg: setup\+2.12.1\+1.fc29\+noarch"
  Then stdout contains "Plugin has access to installed pkg: filesystem\+3.9\+2.fc29\+x86_64"
+
+
+@bz1626093
+@fixture.httpd.log
+Scenario: Plugins can edit http headers
+Given I create file "/plugins/test.py" with
+  """
+  import dnf
+
+  class Test(dnf.Plugin):
+    name = "testHttpHeader"
+    def __init__(self, base, cli):
+        super(Test, self).__init__(base, cli)
+
+    def config(self):
+        for repoid, repo in self.base.repos.items():
+            repo.set_http_headers([
+                "custom_user_key20190218: custom_user_value",
+            ])
+  """
+  And I have enabled a remote repository
+ When I execute dnf with args "makecache"
+ Then every HTTP GET request should match:
+    | header                  | value             |
+    | custom_user_key20190218 | custom_user_value |
