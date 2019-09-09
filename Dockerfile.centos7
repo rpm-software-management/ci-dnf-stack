@@ -83,6 +83,7 @@ RUN set -x && \
         # install dnf stack
         createrepo_c \
         dnf \
+        nextgen-yum4 \
         dnf-plugins-core \
         # dnf-utils are disabled in the latest builds
         # dnf-utils \
