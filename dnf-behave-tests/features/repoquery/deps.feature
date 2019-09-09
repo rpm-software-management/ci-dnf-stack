@@ -1,5 +1,5 @@
 Feature: Tests for the basic repoquery dependencies functionality:
-    --requires, --provides, --conflicts, --obsoletes
+    --requires, --provides, --conflicts, --obsoletes, --requires-pre
     --whatrequires, --whatprovides, --whatconflicts, --whatobsoletes
 
 Background:
@@ -119,6 +119,30 @@ Scenario: repoquery --requires NAMEGLOB-VERSION NAME
       bottom2 = 1:1.0-1
       bottom3
       bottom3-prov1
+      """
+
+Scenario: repoquery --requires with requires(pre/post/preun/postun)
+ When I execute dnf with args "repoquery --requires middle3-1.0-1"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom1-prov1
+      bottom3-prov1
+      bottom4-prov1
+      bottom5-prov1
+      """
+
+# Using --qf .. is a diffrent code path in repoquery
+Scenario: repoquery --requires with requires(pre/post/preun/postun)
+ When I execute dnf with args "repoquery --qf '%{{requires}}' middle3-1.0-1"
+ Then the exit code is 0
+  And stdout is
+      """
+
+      bottom1-prov1
+      bottom3-prov1
+      bottom4-prov1
+      bottom5-prov1
       """
 
 
@@ -264,6 +288,7 @@ Scenario: repoquery --whatrequires NAME (file provide)
   And stdout is
       """
       middle1-1:2.0-1.x86_64
+      middle3-1:1.0-1.x86_64
       """
 
 Scenario: repoquery --whatrequires PROVIDE_NAME
@@ -568,4 +593,28 @@ Scenario: repoquery --whatobsoletes NAME, NAME = VERSION
       bottom3-1:1.0-1.x86_64
       middle2-1:1.0-1.x86_64
       middle2-1:2.0-1.x86_64
+      """
+
+
+# --requires-pre
+Scenario: repoquery --requires-pre
+ When I execute dnf with args "repoquery --requires-pre middle3"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom1-prov1
+      bottom3-prov1
+      """
+
+Scenario: repoquery --requires-pre with installed pkg show all %pre, %post, %preun, %postun deps
+Given I successfully execute dnf with args "install middle3"
+  And I drop repository "repoquery-deps"
+ When I execute dnf with args "repoquery --installed --requires-pre middle3"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom1-prov1
+      bottom3-prov1
+      bottom4-prov1
+      bottom5-prov1
       """
