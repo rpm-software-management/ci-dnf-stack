@@ -37,9 +37,6 @@ components:
     git:
       src: github:rpm-software-management/dnf-plugins-core.git
 
-#  - name: microdnf
-#    git:
-#      src: github:rpm-software-management/microdnf.git
-#    distgit:
-#      src: fedorapkgs:microdnf.git
-#      patches: drop
+  - name: microdnf
+    git:
+      src: github:rpm-software-management/microdnf.git
