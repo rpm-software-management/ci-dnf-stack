@@ -79,6 +79,7 @@ RUN set -x && \
         # install dnf stack
         createrepo_c \
         dnf \
+        dnf-yum \
         dnf-plugins-core \
         dnf-utils \
         # all plugins with the same version as dnf-utils
