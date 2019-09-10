@@ -124,15 +124,16 @@ Scenario: The repo configuration takes precedence over the global one
 @not.with_os=rhel__eq__8
 @bz1741442
 Scenario: Test repo_gpgcheck=1 error if repomd.xml.asc is not present
-Given I create file "/etc/dnf/dnf.conf" with
+Given I use the repository "testrepo"
+  And I create file "/etc/dnf/dnf.conf" with
       """
       [main]
       reposdir=/testrepos
       """
-      And I create and substitute file "/testrepos/test.repo" with
+  And I create and substitute file "/testrepos/test.repo" with
       """
-      [dnf-ci-fedora]
-      name=dnf-ci-fedora
+      [testrepo]
+      name=testrepo
       baseurl={context.dnf.repos_location}/dnf-ci-fedora
       enabled=1
       gpgcheck=0
@@ -142,7 +143,4 @@ Given I create file "/etc/dnf/dnf.conf" with
   And I do not set config file
  When I execute dnf with args "makecache"
  Then the exit code is 1
-  And stderr is
-      """
-      Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error (37): Couldn't read a file:// file for file:///home/lu/dev/ci-dnf-stack/dnf-behave-tests/fixtures/repos/dnf-ci-fedora/repodata/repomd.xml.asc [Couldn't open file /home/lu/dev/ci-dnf-stack/dnf-behave-tests/fixtures/repos/dnf-ci-fedora/repodata/repomd.xml.asc]
-      """
+  And stderr contains "Error: Failed to download metadata for repo 'testrepo': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file"
