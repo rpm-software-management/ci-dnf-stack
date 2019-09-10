@@ -23,6 +23,23 @@ def print_cmd(context, cmd, stdout, stderr):
         print(context.cmd_stderr, file=sys.stderr)
 
 
+def handle_reposync(expected, found):
+    if expected[0] == "<REPOSYNC>":
+        sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
+        last_check_line = re.compile(r"Last metadata expiration check: .*")
+        i = 0
+
+        while i < len(found) and (
+                sync_line.fullmatch(found[i].strip())
+                or last_check_line.fullmatch(found[i].strip())):
+            i += 1
+
+        expected = expected[1:]
+        found = found[i:]
+
+    return expected, found
+
+
 @behave.step("I execute step \"{step}\"")
 def execute_step(context, step):
     context.execute_steps(step)
@@ -195,31 +212,26 @@ def then_stdout_is(context):
     expected = context.text.strip().split('\n')
     found = context.cmd_stdout.strip().split('\n')
 
-    i = 0
-    sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
-    last_check_line = re.compile(r"Last metadata expiration check: .*")
-    if expected[0] == "<REPOSYNC>":
-        while i < len(found) and (
-                sync_line.fullmatch(found[i].strip())
-                or last_check_line.fullmatch(found[i].strip())):
-            i += 1
+    clean_expected, clean_found = handle_reposync(expected, found)
 
-        expected.pop(0)
-
-        found = found[i:]
-
-    if expected == found:
+    if clean_expected == clean_found:
         return
 
-    expected = context.text.strip().split('\n')
-    found = context.cmd_stdout.strip().split('\n')
-
-    # prepend empty lines to pad for the reposync lines
-    if i > 1:
-        expected = [""] * (i - 1) + expected
+    rs_offset = 0
+    if len(clean_expected) < len(expected):
+        if len(clean_found) == len(found):
+            rs_offset = 1
+            # reposync was not in found, prepend a single line to pad for the
+            # <REPOSYNC> line in expected
+            found = [""] + found
+        else:
+            rs_offset = len(found) - len(clean_found)
+            # prepend empty lines to expected to pad for multiple reposync
+            # lines in found
+            expected = [""] * (rs_offset - 1) + expected
 
     print_cmd(context, True, True, False)
-    print_lines_diff(expected, found, num_lines_equal=i)
+    print_lines_diff(expected, found, num_lines_equal=rs_offset)
 
     raise AssertionError("Stdout is not: %s" % context.text)
 
