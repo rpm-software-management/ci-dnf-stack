@@ -48,6 +48,7 @@ Options:
   -R, --reserveonfail      Keep bash shell session open upon test failure
   -t, --tags       TAG     Pass specific tag to the behave command when running tests
   --noxfail                Skip tests marked as @xfail (same as --tags ~@xfail)
+  --command        COMMAND DNF command to be used in tests
   --usecache               Use cache when building the image
 
 Commands:
@@ -60,7 +61,7 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,usecache,container:,tags: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,usecache,container,command:,tags: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
@@ -68,6 +69,7 @@ IMAGE="dnf-bot/dnf-testing:latest"
 PARAM_RESERVE=""
 PARAM_TTY=""
 PARAM_TAGS=""
+PARAM_DNFCOMMAND=""
 BUILD_CACHE="--no-cache"
 DOCKER_BIN="sudo docker";
 ! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN="podman"
@@ -83,6 +85,7 @@ while :; do
         -R|--reserveonfail) set_reserveR; shift;;
         -t|--tags) PARAM_TAGS="$PARAM_TAGS --tags $2"; shift 2;;
         --noxfail) PARAM_TAGS="$PARAM_TAGS --tags ~@xfail"; shift;;
+        --command) PARAM_DNFCOMMAND="--command $2"; shift 2;;
         --usecache) BUILD_CACHE=""; shift;;
         *) fatal "Non-implemented option: $1"
     esac
@@ -169,14 +172,14 @@ run()
     local failed_test_name='Failed test(s):'
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
-            printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
-            $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     else
         for feature in "${TESTS[@]}"; do
-            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature"\n"
-            $DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS "$feature" >&2 || \
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     fi
