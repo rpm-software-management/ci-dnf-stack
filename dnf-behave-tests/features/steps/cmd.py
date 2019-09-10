@@ -209,6 +209,12 @@ def then_stdout_is_empty(context):
 
 @behave.then("stdout is")
 def then_stdout_is(context):
+    """
+    Checks for the exact match of the test's stdout. Supports the <REPOSYNC>
+    placeholder on the first line, which will match against the repository
+    synchronization lines (i.e. the "Last metadata expiration check:" line as
+    well as the individual repo download lines) in the test's output.
+    """
     expected = context.text.strip().split('\n')
     found = context.cmd_stdout.strip().split('\n')
 
