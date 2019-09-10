@@ -5,6 +5,40 @@ from __future__ import print_function
 
 import re
 
+import sys
+PY3 = sys.version_info.major >= 3
+if PY3:
+    from itertools import zip_longest
+else:
+    from itertools import izip_longest as zip_longest
+
+
+def print_lines_diff(expected, found, num_lines_equal=0):
+    """ Prints a colored diff of two lists of strings.
+
+    Parameters:
+        expected: list of strings expected to find
+        found: list of strings found
+        num_lines_equal: a number that says how many strings at the beginning
+            treat as equal even if they differ; a hack for correctly diffing
+            outputs with repository syncing
+    """
+    left_width = len("expected")
+
+    # calculate the width of the left column
+    for line in expected:
+        left_width = max(len(line), left_width)
+
+    print("{:{left_width}}  |  {}".format("expected", "found", left_width=left_width))
+
+    green, red, reset = "\033[1;32m", "\033[1;31m", "\033[0;0m"
+
+    for line in zip_longest(expected, found, fillvalue=""):
+        col = green if num_lines_equal > 0 or line[0] == line[1] else red
+        print("{}{:{left_width}}  |  {}{}".format(col, line[0], line[1], reset, left_width=left_width))
+        num_lines_equal -= 1
+
+
 def extract_section_content_from_text(section_header, text):
     SECTION_HEADERS = [
             'Installing:', 'Upgrading:', 'Removing:', 'Downgrading:', 'Installing dependencies:',

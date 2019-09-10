@@ -8,15 +8,10 @@ import re
 import sys
 from datetime import datetime
 
-PY3 = sys.version_info.major >= 3
-if PY3:
-    from itertools import zip_longest
-else:
-    from itertools import izip_longest as zip_longest
-
 import behave
 
 from common import *
+from common.string import print_lines_diff
 
 
 def print_cmd(context, cmd, stdout, stderr):
@@ -26,23 +21,6 @@ def print_cmd(context, cmd, stdout, stderr):
         print(context.cmd_stdout)
     if stderr:
         print(context.cmd_stderr, file=sys.stderr)
-
-
-def print_diff(expected, found, reposync_lines=0):
-    left_width = len("expected")
-
-    # calculate the width of the left column
-    for line in expected:
-        left_width = max(len(line), left_width)
-
-    print("{:{left_width}}  |  {}".format("expected", "found", left_width=left_width))
-
-    green, red, reset = "\033[1;32m", "\033[1;31m", "\033[0;0m"
-
-    for line in zip_longest(expected, found, fillvalue=""):
-        col = green if reposync_lines > 0 or line[0] == line[1] else red
-        print("{}{:{left_width}}  |  {}{}".format(col, line[0], line[1], reset, left_width=left_width))
-        reposync_lines -= 1
 
 
 @behave.step("I execute step \"{step}\"")
@@ -241,7 +219,7 @@ def then_stdout_is(context):
         expected = [""] * (i - 1) + expected
 
     print_cmd(context, True, True, False)
-    print_diff(expected, found, reposync_lines=i)
+    print_lines_diff(expected, found, num_lines_equal=i)
 
     raise AssertionError("Stdout is not: %s" % context.text)
 
@@ -303,7 +281,7 @@ def then_stderr_is(context):
         return
 
     print_cmd(context, True, False, True)
-    print_diff(expected, found)
+    print_lines_diff(expected, found)
 
     raise AssertionError("Stderr is not: %s" % context.text)
 
