@@ -212,6 +212,9 @@ def then_stdout_is(context):
     expected = context.text.strip().split('\n')
     found = context.cmd_stdout.strip().split('\n')
 
+    if found == [""]:
+        found = []
+
     clean_expected, clean_found = handle_reposync(expected, found)
 
     if clean_expected == clean_found:
