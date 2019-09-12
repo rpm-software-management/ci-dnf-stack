@@ -1,4 +1,3 @@
-@global_dnf_context
 Feature: Transaction history userinstalled, list and info
 
 Background:
@@ -24,44 +23,10 @@ Scenario: List userinstalled packages
         | not match     | setup-2.12.1-1.fc29.noarch                |
         | not match     | filesystem-3.9-2.fc29.x86_64              |
 
-Scenario: History list range
-   When I execute dnf with args "install glibc"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                                   |
-        | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-   When I execute dnf with args "remove setup"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                                   |
-        | remove        | glibc-0:2.28-9.fc29.x86_64                |
-        | remove        | glibc-common-0:2.28-9.fc29.x86_64         |
-        | remove        | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-        | remove        | basesystem-0:11-6.fc29.noarch             |
-        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
-        | remove        | setup-0:2.12.1-1.fc29.noarch              |
-    And History "list last-1..last" is following
-        | Id     | Command       | Action        | Altered   |
-        | 3      |               | Removed       | 6         |  
-        | 2      |               | Install       | 3         |  
-    And History "last" is following
-        | Id     | Command       | Action        | Altered   |
-        | 3      |               | Removed       | 6         |  
-
-
-Scenario: History list package
-   When I execute dnf with args "install setup"
-   Then the exit code is 0
-    And History "setup" is following
-        | Id     | Command       | Action        | Altered   |
-        | 4      |               | Install       |           |  
-        | 3      |               | Removed       |           |  
-        | 1      |               | Install       |           |  
-
 
 Scenario: History info
+  Given I successfully execute dnf with args "install abcde"
+   When I execute dnf with args "install setup"
    Then History info should match
         | Key           | Value                         |
         | Command Line  | install setup                 |
@@ -79,8 +44,9 @@ Scenario: History info
 
 
 Scenario: History info in range - transaction merging
-   When I execute dnf with args "install abcde"
-   Then the exit code is 0
+  Given I successfully execute dnf with args "install abcde"
+  Given I successfully execute dnf with args "remove abcde"
+  Given I successfully execute dnf with args "install abcde"
    When I use the repository "dnf-ci-fedora-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
@@ -117,10 +83,10 @@ Scenario: History info in range - transaction merging
 
 
 Scenario: History info of package
+  Given I successfully execute dnf with args "install abcde"
+  Given I successfully execute dnf with args "remove abcde"
    Then History info "abcde" should match
         | Key           | Value                     |
         | Return-Code   | Success                   |
         | Install       | abcde-2.9.2-1.fc29.noarch |
         | Removed       | abcde-2.9.2-1.fc29.noarch |
-        | Upgraded      | abcde-2.9.2-1.fc29.noarch |
-        | Upgrade       | abcde-2.9.3-1.fc29.noarch |

@@ -1,0 +1,194 @@
+Feature: history list
+
+Background:
+Given I use the repository "dnf-ci-fedora"
+  # create some history to start with
+  And I successfully execute dnf with args "install abcde basesystem"
+  And I successfully execute dnf with args "remove abcde"
+  And I successfully execute dnf with args "install nodejs"
+
+
+Scenario: history list
+ When I execute dnf with args "history list"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+Scenario: history
+ When I execute dnf with args "history"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+
+# single item tests
+Scenario: history list 2
+ When I execute dnf with args "history list 2"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+
+Scenario: history list last
+ When I execute dnf with args "history list last"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+
+Scenario: history last
+ When I execute dnf with args "history last"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+
+Scenario: history list last-1
+ When I execute dnf with args "history list last-1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+
+Scenario: history last-1
+ When I execute dnf with args "history last-1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+
+
+# range tests
+Scenario: history 1..last-1
+ When I execute dnf with args "history 1..last-1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+Scenario: history 1..last-2
+ When I execute dnf with args "history 1..last-2"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+
+Scenario: history 1..last-2
+ When I execute dnf with args "history 1..last-2"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+
+Scenario: history list 1..-1
+ When I execute dnf with args "history 1..-1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+Scenario: history list 1..-2
+ When I execute dnf with args "history 1..-2"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+
+Scenario: history 2..3
+ When I execute dnf with args "history 2..3"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+      | 2  |         | Removed | 3       |
+
+Scenario: history 10..11
+ When I execute dnf with args "history 10..11"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+
+Scenario: history last..11
+ When I execute dnf with args "history last..11"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+
+
+# "invalid" range tests
+Scenario: history 3..2
+ When I execute dnf with args "history 3..2"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+      | 2  |         | Removed | 3       |
+
+Scenario: history last-1..1
+ When I execute dnf with args "history last-1..1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+Scenario: history 11..last-1
+ When I execute dnf with args "history 11..last-1"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         | Install | 5       |
+      | 2  |         | Removed | 3       |
+
+Scenario: history last-1..aaa
+ When I execute dnf with args "history last-1..aaa"
+ Then the exit code is 1
+  And stderr is
+      """
+      Can't convert 'aaa' to transaction ID.
+      Use '<number>', 'last', 'last-<number>'.
+      """
+
+Scenario: history 12a..bc
+ When I execute dnf with args "history 12a..bc"
+ Then the exit code is 1
+  And stderr is
+      """
+      Can't convert '12a' to transaction ID.
+      Use '<number>', 'last', 'last-<number>'.
+      """
+
+
+# package name tests
+Scenario: history abcde
+ When I execute dnf with args "history abcde"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+      | 1  |         | Install | 6       |
+
+Scenario: history filesystem
+ When I execute dnf with args "history filesystem"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+
+@not.with_os=rhel__eq__8
+Scenario: history lame (no transaction with such package)
+ When I execute dnf with args "history lame"
+ Then the exit code is 0
+  And stdout is
+      """
+      No transaction which manipulates package 'lame' was found.
+      """
