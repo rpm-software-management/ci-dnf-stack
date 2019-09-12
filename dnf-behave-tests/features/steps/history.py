@@ -12,9 +12,8 @@ def parsed_history_info(context, spec):
     _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
     return parse_history_info(cmd_stdout.splitlines())
 
-@behave.then('History is following')
-@behave.then('History "{history_range}" is following')
-def step_impl(context, history_range=None):
+
+def assert_history_list(context, cmd_stdout):
     def history_equal(history, table):
         if table['Id'] and table['Id'] != history['id']:
             return False
@@ -30,12 +29,7 @@ def step_impl(context, history_range=None):
                 return False
         return True
 
-    if history_range is None:
-        history_range = "list"
     check_context_table(context, ["Id", "Command", "Action", "Altered"])
-
-    cmd = " ".join(context.dnf.get_cmd(context) + ["history", history_range])
-    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
 
     stdout_lines = cmd_stdout.splitlines()[2:]
     history = parse_history_list(stdout_lines)
@@ -62,6 +56,23 @@ def step_impl(context, history_range=None):
         raise AssertionError(
             "[history] Following history lines not captured in the table:\n%s" % (
                 '\n'.join(stdout_lines[table_idx:])))
+
+
+@behave.then('stdout is history list')
+def step_impl(context):
+    assert_history_list(context, context.cmd_stdout)
+
+
+@behave.then('History is following')
+@behave.then('History "{history_range}" is following')
+def step_impl(context, history_range=None):
+    if history_range is None:
+        history_range = "list"
+
+    cmd = " ".join(context.dnf.get_cmd(context) + ["history", history_range])
+    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
+
+    assert_history_list(context, cmd_stdout)
 
 
 @behave.then('History info should match')
