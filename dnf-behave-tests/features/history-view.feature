@@ -90,3 +90,24 @@ Scenario: History info of package
         | Return-Code   | Success                   |
         | Install       | abcde-2.9.2-1.fc29.noarch |
         | Removed       | abcde-2.9.2-1.fc29.noarch |
+
+
+@not.with_os=rhel__eq__8
+Scenario: history info aaa (nonexistent package)
+   When I execute dnf with args "history info aaa"
+   Then the exit code is 0
+    And stdout is
+        """
+        No transaction which manipulates package 'aaa' was found.
+        """
+
+
+@not.with_os=rhel__eq__8
+Scenario: history info aaa (nonexistent package)
+  Given I successfully execute dnf with args "install abcde"
+   When I execute dnf with args "history info aaa"
+   Then the exit code is 0
+    And stdout is
+        """
+        No transaction which manipulates package 'aaa' was found.
+        """
