@@ -6,7 +6,8 @@ Given I use repository "dnf-ci-fedora-modular"
   And I use repository "dnf-ci-fedora"
 
 
-@xfail @bz1629667
+@bz1629667
+@not.with_os=rhel__eq__8
 Scenario: I can get list of all modules providing specific package
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
@@ -40,6 +41,7 @@ Scenario: I can get list of all modules providing specific package
 
 
 @bz1623866
+@not.with_os=rhel__eq__8
 Scenario: I can get list of enabled modules providing specific package
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
@@ -47,6 +49,24 @@ Given I successfully execute dnf with args "module enable nodejs:8"
   And stdout is
       """
       <REPOSYNC>
+      nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
+      Module   : nodejs:10:20180920144631:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+      Module   : nodejs:11:20180920144611:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
+      Module   : nodejs:5:20150811143428:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
       Profiles : development
@@ -56,6 +76,7 @@ Given I successfully execute dnf with args "module enable nodejs:8"
 
 
 @bz1633151
+@not.with_os=rhel__eq__8
 Scenario: I see packages only once when they are availiable and installed
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
@@ -63,6 +84,24 @@ Given I successfully execute dnf with args "module enable nodejs:8"
   And stdout is
       """
       <REPOSYNC>
+      nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
+      Module   : nodejs:10:20180920144631:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+      Module   : nodejs:11:20180920144611:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
+      Module   : nodejs:5:20150811143428:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
       Profiles : development
@@ -80,6 +119,24 @@ Given I successfully execute dnf with args "module enable nodejs:8"
   And stdout is
       """
       <REPOSYNC>
+      nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
+      Module   : nodejs:10:20180920144631:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+      Module   : nodejs:11:20180920144611:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
+      nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
+      Module   : nodejs:5:20150811143428:6c81f848:x86_64
+      Profiles : development
+      Repo     : dnf-ci-fedora-modular
+      Summary  : Javascript runtime
+
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
       Profiles : development
