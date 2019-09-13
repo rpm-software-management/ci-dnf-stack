@@ -10,7 +10,7 @@ Given I use the repository "dnf-ci-fedora-modular"
 Scenario: I can get list of all modules providing specific package
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
- Then stdout is
+  And stdout is
       """
       <REPOSYNC>
       nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
@@ -41,14 +41,10 @@ Scenario: I can get list of all modules providing specific package
 
 @bz1623866
 Scenario: I can get list of enabled modules providing specific package
- When I execute dnf with args "module enable nodejs:8"
- Then the exit code is 0
-  And modules state is following
-      | Module    | State     | Stream    | Profiles  |
-      | nodejs    | enabled   | 8         |           |
+Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
- Then stdout is
+  And stdout is
       """
       <REPOSYNC>
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -61,14 +57,10 @@ Scenario: I can get list of enabled modules providing specific package
 
 @bz1633151
 Scenario: I see packages only once when they are availiable and installed
- When I execute dnf with args "module enable nodejs:8"
+Given I successfully execute dnf with args "module enable nodejs:8"
+ When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
-  And modules state is following
-      | Module    | State     | Stream    | Profiles  |
-      | nodejs    | enabled   | 8         |           |
- Then I execute dnf with args "module provides nodejs-devel"
-  And the exit code is 0
- Then stdout is
+  And stdout is
       """
       <REPOSYNC>
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -77,14 +69,14 @@ Scenario: I see packages only once when they are availiable and installed
       Repo     : dnf-ci-fedora-modular
       Summary  : Javascript runtime
       """
- Then I execute dnf with args "module install nodejs:8/development"
-  And the exit code is 0
+ When I execute dnf with args "module install nodejs:8/development"
+ Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                             |
       | install                   | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | module-profile-install    | nodejs/development                                  |
- Then I execute dnf with args "module provides nodejs-devel"
-  And the exit code is 0
+ When I execute dnf with args "module provides nodejs-devel"
+ Then the exit code is 0
   And stdout is
       """
       <REPOSYNC>
@@ -97,11 +89,10 @@ Scenario: I see packages only once when they are availiable and installed
 
 
 Scenario: There is not output when no module provides the package
- When I execute dnf with args "makecache"
- Then the exit code is 0
+Given I successfully execute dnf with args "makecache"
  When I execute dnf with args "module provides NoSuchPackage"
  Then the exit code is 0
- Then stdout is
+  And stdout is
       """
       <REPOSYNC>
       """
