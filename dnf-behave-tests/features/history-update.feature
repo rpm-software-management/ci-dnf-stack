@@ -1,8 +1,9 @@
-@global_dnf_context
 Feature: History of update
 
-Scenario: History of update packages
+Background:
   Given I use the repository "dnf-ci-fedora"
+
+Scenario: History of update packages
    # `install setup` step added so that `install abcde` was not the first
    # transaction in history. Dnf due to some error is not able to
    # rollback the very first transaction.
@@ -29,14 +30,17 @@ Scenario: History of update packages
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
     And History is following
         | Id     | Command               | Action        | Altered   |
-        | 3      | update                | Upgrade       | 3         |  
-        | 2      |                       | Install       | 3         |  
-        | 1      |                       | Install       | 1         |  
+        | 3      | update                | Upgrade       | 3         |
+        | 2      |                       | Install       | 3         |
+        | 1      |                       | Install       | 1         |
 
 
 @bz1612885
 Scenario: Rollback update
-  Given I use the repository "dnf-ci-fedora"
+  Given I successfully execute dnf with args "install setup"
+    And I execute dnf with args "install abcde"
+    And I use the repository "dnf-ci-fedora-updates"
+    And I successfully execute dnf with args "update"
    When I execute dnf with args "history rollback last-1"
    Then the exit code is 0
    Then stderr does not contain "Traceback"
