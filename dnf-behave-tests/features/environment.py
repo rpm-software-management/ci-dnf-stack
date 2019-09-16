@@ -247,25 +247,20 @@ def before_scenario(context, scenario):
             context.config.userdata.get('destructive', 'no') == 'yes'):
         scenario.skip(reason="DESTRUCTIVE")
 
-    if not context.feature_global_dnf_context:
-        context.dnf = DNFContext(context.config.userdata,
-                                 force_installroot='force_installroot' in scenario.tags)
+    context.dnf = DNFContext(context.config.userdata,
+                             force_installroot='force_installroot' in scenario.tags)
 
 
 def after_scenario(context, scenario):
-    if not context.feature_global_dnf_context:
-        del context.dnf
+    del context.dnf
 
 
 def before_feature(context, feature):
-    context.feature_global_dnf_context = 'global_dnf_context' in feature.tags
-    if context.feature_global_dnf_context:
-        context.dnf = DNFContext(context.config.userdata)
+    pass
 
 
 def after_feature(context, feature):
-    if context.feature_global_dnf_context:
-        del context.dnf
+    pass
 
 
 def before_tag(context, tag):
