@@ -1,20 +1,15 @@
-@global_dnf_context
 Feature: Modules listing
 
 Background:
   Given I use the repository "dnf-ci-fedora-modular"
     And I use the repository "dnf-ci-fedora-modular-updates"
     And I use the repository "dnf-ci-fedora"
+    And I successfully execute dnf with args "module enable nodejs:8"
+    And I successfully execute dnf with args "module install nodejs:8/minimal"
+    And I successfully execute dnf with args "module enable postgresql:11"
+    And I successfully execute dnf with args "module install postgresql:11/client"
 
 Scenario: I can list all available modules
-   When I execute dnf with args "module enable nodejs:8"
-   Then the exit code is 0
-   When I execute dnf with args "module install nodejs:8/minimal"
-   Then the exit code is 0
-   When I execute dnf with args "module enable postgresql:11"
-   Then the exit code is 0
-   When I execute dnf with args "module install postgresql:11/client"
-   Then the exit code is 0
    When I execute dnf with args "module list"
    Then the exit code is 0
     And stdout contains "Javascript runtime"
@@ -98,8 +93,7 @@ Scenario: Get error message when list of non-existent module is requested
     And stderr contains "Error: No matching Modules to list"
 
 Scenario: I can list disabled modules
-   When I execute dnf with args "module disable postgresql"
-   Then the exit code is 0
+  Given I successfully execute dnf with args "module disable postgresql"
    When I execute dnf with args "module list --disabled"
    Then the exit code is 0
     And module list is
@@ -145,6 +139,7 @@ Scenario: I can limit the scope of installed modules through providing specific 
 
 
 Scenario: I can limit the scope of disabled modules through providing specific module names
+  Given I successfully execute dnf with args "module disable postgresql"
    When I execute dnf with args "module list --disabled postgresql nodejs"
    Then the exit code is 0
     And module list is
