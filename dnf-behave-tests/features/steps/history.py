@@ -9,8 +9,8 @@ from common import *
 
 def parsed_history_info(context, spec):
     cmd = " ".join(context.dnf.get_cmd(context) + ["history", "info", spec])
-    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
-    return parse_history_info(cmd_stdout.splitlines())
+    run_in_context(context, cmd)
+    return parse_history_info(context.cmd_stdout.splitlines())
 
 
 def assert_history_list(context, cmd_stdout):
@@ -70,9 +70,9 @@ def step_impl(context, history_range=None):
         history_range = "list"
 
     cmd = " ".join(context.dnf.get_cmd(context) + ["history", history_range])
-    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=False)
+    run_in_context(context, cmd)
 
-    assert_history_list(context, cmd_stdout)
+    assert_history_list(context, context.cmd_stdout)
 
 
 @behave.then('History info should match')
@@ -118,15 +118,15 @@ def step_impl(context, spec=""):
 def step_impl(context):
     check_context_table(context, ["Action", "Package"])
     cmd = " ".join(context.dnf.get_cmd(context) + ["history", "userinstalled"])
-    _, cmd_stdout, _ = run(cmd, shell=True, can_fail=True)
+    run_in_context(context, cmd)
 
     for action, package in context.table:
         if action == 'match':
-            if not package in cmd_stdout:
+            if package not in context.cmd_stdout:
                 raise AssertionError(
                     '[history] package "{0}" not matched as userinstalled.'.format(package))
         elif action == 'not match':
-            if package in cmd_stdout:
+            if package in context.cmd_stdout:
                 raise AssertionError(
                     '[history] package "{0}" matched as userinstalled.'.format(package))
         else:

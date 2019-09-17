@@ -31,15 +31,6 @@ def handle_reposync(expected, found):
     return expected, found
 
 
-def run_in_context(context, cmd, **run_args):
-    if getattr(context, "faketime", None) is not None:
-        cmd = context.faketime + cmd
-    context.cmd = cmd
-    if context.dnf.working_dir and 'cwd' not in run_args:
-        run_args['cwd'] = context.dnf.working_dir
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, **run_args)
-
-
 @behave.step("I execute step \"{step}\"")
 def execute_step(context, step):
     context.execute_steps(step)
@@ -73,7 +64,7 @@ def when_I_execute_dnf_with_args(context, args):
     cmd = " ".join(context.dnf.get_cmd(context))
     cmd += " " + args.format(context=context)
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
-    run_in_context(context, cmd, shell=True)
+    run_in_context(context, cmd, can_fail=True)
 
 
 @behave.step("I execute dnf with args \"{args}\" {times} times")
@@ -86,30 +77,24 @@ def when_I_execute_dnf_with_args_times(context, args, times):
 def when_I_execute_rpm_with_args(context, args):
     cmd = "rpm --root=" + context.dnf.installroot
     cmd += " " + args.format(context=context)
-    run_in_context(context, cmd, shell=True)
+    run_in_context(context, cmd, can_fail=True)
 
 
 @behave.step("I execute rpm on host with args \"{args}\"")
 def when_I_execute_rpm_on_host_with_args(context, args):
     cmd = "rpm"
     cmd += " " + args.format(context=context)
-    run_in_context(context, cmd, shell=True)
+    run_in_context(context, cmd, can_fail=True)
 
 
 @behave.step("I execute \"{command}\" in \"{directory}\"")
 def when_I_execute_command_in_directory(context, command, directory):
-    run_in_context(
-        context,
-        command.format(context=context),
-        cwd=directory.format(context=context),
-        shell=True,
-        can_fail=False
-    )
+    run_in_context(context, command.format(context=context), cwd=directory.format(context=context))
 
 
 @behave.step("I execute \"{command}\"")
 def when_I_execute_command(context, command):
-    run_in_context(context, command.format(context=context), shell=True, can_fail=False)
+    run_in_context(context, command.format(context=context))
 
 
 @behave.given("I do not disable all repos")
