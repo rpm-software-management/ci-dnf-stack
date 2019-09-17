@@ -390,6 +390,46 @@ data:
 document: modulemd
 version: 2
 data:
+  name: berry-source
+  stream: garden
+  version: 1
+  context: garden
+  arch: x86_64
+  summary: Source rpm testing module
+  description: Stream garden
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["berry"]
+  artifacts:
+    rpms: ["berry-0:1.0-1.garden.x86_64", "berry-0:1.0-1.garden.src"]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: berry-source
+  stream: wood
+  version: 1
+  context: garden
+  arch: x86_64
+  summary: Source rpm testing module
+  description: Stream wood
+  license:
+    module:
+    - MIT
+  profiles:
+    default:
+      rpms: ["berry"]
+  artifacts:
+    rpms: ["berry-0:1.0-1.wood.x86_64", "berry-0:1.0-1.wood.src"]
+...
+---
+document: modulemd
+version: 2
+data:
   name: biotope
   stream: wood
   version: 1
