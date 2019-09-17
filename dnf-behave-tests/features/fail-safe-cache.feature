@@ -60,7 +60,7 @@ Scenario: Fail-safe modulemd copy is created for every enabled stream and nothin
         | nodejs         | enabled   | 5         |           |
         | postgresql     | enabled   | 10        |           |
    Then file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
@@ -81,7 +81,7 @@ Scenario: Fail-safe modulemd copy is created ONLY for the stream of the highest 
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 8         |           |
    Then file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:8:x86_64.yaml
@@ -96,7 +96,7 @@ Scenario: Fail-safe modulemd copy is created ONLY for the stream of the highest 
         """
    When I disable the repository "dnf-ci-fedora-modular-updates"
     And I execute dnf with args "install wget"
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:8:x86_64.yaml
@@ -111,7 +111,7 @@ Scenario: Fail-safe modulemd copy is created ONLY for the stream of the highest 
         """
    When I use the repository "dnf-ci-fedora-modular-updates"
     And I execute dnf with args "reinstall wget"
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:8:x86_64.yaml
@@ -138,7 +138,7 @@ Scenario: Fail-safe modulemd copy is NOT updated when there is no change
     And modules state is following
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 8         |           |
-   When I execute "stat" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/nodejs:8:x86_64.yaml | grep Modify > {context.dnf.installroot}/temp-stat-before"
+   When I execute "stat {context.dnf.installroot}/var/lib/dnf/modulefailsafe/nodejs:8:x86_64.yaml | grep Modify > {context.dnf.installroot}/temp-stat-before"
     And I execute dnf with args "install wget"
     And I execute dnf with args "swap wget flac"
     And I execute dnf with args "module reset postgresql"
@@ -146,7 +146,7 @@ Scenario: Fail-safe modulemd copy is NOT updated when there is no change
     And I execute dnf with args "module disable postgresql"
     And I execute dnf with args "remove flac"
     And I execute dnf with args "module enable postgresql"
-    And I execute "stat" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/nodejs:8:x86_64.yaml | grep Modify > {context.dnf.installroot}/temp-stat-after"
+    And I execute "stat {context.dnf.installroot}/var/lib/dnf/modulefailsafe/nodejs:8:x86_64.yaml | grep Modify > {context.dnf.installroot}/temp-stat-after"
    Then the files "{context.dnf.installroot}/temp-stat-before" and "{context.dnf.installroot}/temp-stat-after" do not differ
 
 
@@ -164,7 +164,7 @@ Scenario Outline: Fail-safe modulemd copy is NOT deleted after 'dnf clean all' o
         | nodejs         | enabled   | 5         |           |
         | postgresql     | enabled   | 10        |           |
    Then file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
@@ -174,7 +174,7 @@ Scenario Outline: Fail-safe modulemd copy is NOT deleted after 'dnf clean all' o
   Given I execute step "<step>"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
@@ -205,7 +205,7 @@ Scenario Outline: Fail-safe modulemd copy is deleted after module disable/reset
         | nodejs         | enabled   | 5         |           |
         | postgresql     | enabled   | 10        |           |
    Then file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
@@ -215,7 +215,7 @@ Scenario Outline: Fail-safe modulemd copy is deleted after module disable/reset
     And I execute dnf with args "module <action> nodejs"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         postgresql:10:x86_64.yaml
@@ -240,28 +240,28 @@ Scenario: Fail-safe modulemd copy is created during transaction (module enable, 
     And modules state is following
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 5         |           |
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
         """
-   When I execute "rm" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
+   When I execute "rm {context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
    Then file "/var/lib/dnf/modulefailsafe/" does not exist
    When I execute dnf with args "install wget"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
         """
-   When I execute "rm" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
+   When I execute "rm {context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
    Then file "/var/lib/dnf/modulefailsafe/" does not exist
    When I use the repository "dnf-ci-fedora-updates"
     And I execute dnf with args "upgrade wget"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
-   When I execute "ls" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
         nodejs:5:x86_64.yaml
@@ -280,7 +280,7 @@ Scenario: When modular RPM is installed and the modular repo is disabled and fai
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I disable the repository "dnf-ci-fedora-modular"
     And I execute dnf with args "clean all"
-    And I execute "rm" with args "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
+    And I execute "rm {context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
     And I use the repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0
@@ -301,7 +301,7 @@ Scenario: When modular RPM is installed and the modular repo is disabled and '/v
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I disable the repository "dnf-ci-fedora-modular"
     And I execute dnf with args "clean all"
-    And I execute "rm" with args "{context.dnf.installroot}/var/cache/dnf {context.dnf.installroot}/var/cache/yum -r"
+    And I execute "rm {context.dnf.installroot}/var/cache/dnf {context.dnf.installroot}/var/cache/yum -rf"
     And I use the repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0

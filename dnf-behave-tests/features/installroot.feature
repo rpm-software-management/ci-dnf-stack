@@ -48,7 +48,7 @@ Scenario: Test metadata handling in installroot
     And I do not set reposdir
    When I execute dnf with args "install water_carbonated"
    Then the exit code is 0
-   When I execute bash with args "rm -rf {context.dnf.installroot}/var/cache/dnf" in directory "{context.dnf.installroot}"
+   When I execute "rm -rf {context.dnf.installroot}/var/cache/dnf" in "{context.dnf.installroot}"
    Then the exit code is 0
    When I execute dnf with args "install -C water_still"
    Then the exit code is 1
@@ -119,7 +119,7 @@ Scenario: Upgrade package in installroot
 
 @bz1658579
 Scenario: Installroot directory is listed when there are no repos
-  Given I execute "mkdir" with args "-p /tmp/alt-root/etc/yum.repos.d"
+  Given I execute "mkdir -p /tmp/alt-root/etc/yum.repos.d"
     And I do not set reposdir
    When I execute dnf with args "install sugar --installroot /tmp/alt-root --releasever=/"
    Then the exit code is 1

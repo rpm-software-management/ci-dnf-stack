@@ -30,7 +30,7 @@ Scenario: Reposync with --downloadcomps option
    Then the exit code is 0
     And stdout contains "comps.xml for repository http-dnf-ci-thirdparty-updates saved"
     And the files "{context.dnf.tempdir}/http-dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
-   When I execute bash with args "createrepo_c --no-database --simple-md-filenames --groupfile comps.xml ." in directory "{context.dnf.tempdir}/http-dnf-ci-thirdparty-updates"
+   When I execute "createrepo_c --no-database --simple-md-filenames --groupfile comps.xml ." in "{context.dnf.tempdir}/http-dnf-ci-thirdparty-updates"
    Then the exit code is 0
   Given I create and substitute file "/etc/yum.repos.d/test.repo" with
   """

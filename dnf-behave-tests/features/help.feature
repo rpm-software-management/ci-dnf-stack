@@ -33,7 +33,7 @@ Scenario: Command help
 @use.with_os=fedora__ge__30
 @use.with_os=fedora__lt__30
 Scenario Outline: Help should refer to yum/dnf depending on what command was used
-   When I execute "<command>" with args "<args>"
+   When I execute "<command> <args>"
    Then the exit code is 0
     And stdout contains "usage: <command>"
 
@@ -51,7 +51,7 @@ Examples:
 @use.with_os=centos__eq__7
 @xfail
 Scenario Outline: Help should refer to yum4/dnf depending on what command was used
-   When I execute "<command>" with args "<args>"
+   When I execute "<command> <args>"
    Then the exit code is 0
     And stdout contains "usage: <command>"
 

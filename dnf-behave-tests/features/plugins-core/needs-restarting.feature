@@ -42,5 +42,5 @@ Scenario: Long option form
 # in CI the tests are run in docker with --net none option
 @xfail
 Scenario: KB link sanity check
-     When I execute "curl" with args "-sI https://access.redhat.com/solutions/27943"
+     When I execute "curl -sI https://access.redhat.com/solutions/27943"
      Then stdout contains "HTTP/2 200"

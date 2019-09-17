@@ -40,7 +40,7 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
    Then the exit code is 0
     And stdout contains "SuperRipper-0:1.2-1.x86_64"
   Given I delete file "/temp-repos/temp-repo/x86_64/SuperRipper-1.2-1.x86_64.rpm"
-    And I execute bash with args "createrepo_c --update ." in directory "{context.dnf.installroot}/temp-repos/temp-repo"
+    And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
     And stdout contains "SuperRipper-0:1.2-1.x86_64"
@@ -69,7 +69,7 @@ Scenario: Expire dnf cache and run repolist when a package has been removed mean
    Then the exit code is 0
     And stdout contains "testrepo\s+testrepo\s+6"
   Given I delete file "/temp-repos/temp-repo/x86_64/SuperRipper-1.2-1.x86_64.rpm"
-    And I execute bash with args "createrepo_c --update ." in directory "{context.dnf.installroot}/temp-repos/temp-repo"
+    And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout contains "testrepo\s+testrepo\s+6"

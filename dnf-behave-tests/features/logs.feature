@@ -10,7 +10,7 @@ Scenario: dnf.rpm.log doesn't contain duplicate entries ()
     And I execute dnf with args "downgrade flac"
     And I execute dnf with args "upgrade flac"
     And I execute dnf with args "remove flac"
-   When I execute "cat" with args "{context.dnf.installroot}/var/log/dnf.rpm.log"
+   When I execute "cat {context.dnf.installroot}/var/log/dnf.rpm.log"
    Then stdout matches line by line
         """
         .* INFO --- logging initialized ---
