@@ -38,9 +38,3 @@ Scenario: Update non-core packages only
 Scenario: Long option form
      When I execute dnf with args "needs-restarting --reboothint"
      Then the exit code is 0
-
-# in CI the tests are run in docker with --net none option
-@xfail
-Scenario: KB link sanity check
-     When I execute "curl -sI https://access.redhat.com/solutions/27943"
-     Then stdout contains "HTTP/2 200"
