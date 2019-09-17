@@ -9,7 +9,7 @@ Scenario: Report all missing dependencies
 
 @bz1599774
 Scenario: Report error when installing empty file
-   Given I execute bash with args "touch empty.rpm" in directory "{context.dnf.installroot}/"
+   Given I execute "touch empty.rpm" in "{context.dnf.installroot}/"
     When I execute dnf with args "install empty.rpm"
     Then the exit code is 1
      And stderr is

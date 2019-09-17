@@ -44,7 +44,7 @@ def run_in_context(context, cmd, **run_args):
     if getattr(context, "faketime", None) is not None:
         cmd = context.faketime + cmd
     context.cmd = cmd
-    if context.dnf.working_dir:
+    if context.dnf.working_dir and 'cwd' not in run_args:
         run_args['cwd'] = context.dnf.working_dir
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, **run_args)
 
@@ -105,17 +105,20 @@ def when_I_execute_rpm_on_host_with_args(context, args):
     run_in_context(context, cmd, shell=True)
 
 
-@behave.step("I execute bash with args \"{args}\" in directory \"{cwd}\"")
-def step_impl(context, args, cwd):
-    cwd = cwd.format(context=context)
-    cmd = args.format(context=context)
-    run_in_context(context, cmd, shell=True, can_fail=False, cwd=cwd)
+@behave.step("I execute \"{command}\" in \"{directory}\"")
+def when_I_execute_command_in_directory(context, command, directory):
+    run_in_context(
+        context,
+        command.format(context=context),
+        cwd=directory.format(context=context),
+        shell=True,
+        can_fail=False
+    )
 
 
-@behave.step("I execute \"{command}\" with args \"{args}\"")
-def when_I_execute_command_with_args(context, command, args):
-    cmd = command + " " + args.format(context=context)
-    run_in_context(context, cmd, shell=True)
+@behave.step("I execute \"{command}\"")
+def when_I_execute_command(context, command):
+    run_in_context(context, command.format(context=context), shell=True, can_fail=False)
 
 
 @behave.given("I do not disable all repos")
