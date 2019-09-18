@@ -19,7 +19,7 @@ def get_rpmdb_rpms(installroot="/"):
     """
     Read all installed RPMs from RPM database.
     """
-    result = set()
+    result = []
     ts = rpm.TransactionSet(installroot)
     for hdr in ts.dbMatch():
         name = _str(hdr["name"])
@@ -28,5 +28,5 @@ def get_rpmdb_rpms(installroot="/"):
         if name.startswith("gpg-pubkey"):
             continue
         evr = normalize_epoch(evr)
-        result.add(RPM("%s-%s.%s" % (name, evr, arch), hdr))
+        result.append(RPM("%s-%s.%s" % (name, evr, arch), hdr))
     return result

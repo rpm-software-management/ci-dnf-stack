@@ -80,53 +80,123 @@ def normalize_epoch(evr):
         return "0:" + evr
     return evr
 
+
 def diff_rpm_lists(list_one, list_two):
     result = {
         # actions
-        "install": set(),
-        "remove": set(),
-        "upgrade": set(),
-        "upgraded": set(),
-        "downgrade": set(),
-        "downgraded": set(),
-        "broken": set(),
+        "install": [],
+        "remove": [],
+        "upgrade": [],
+        "upgraded": [],
+        "downgrade": [],
+        "downgraded": [],
+        "broken": [],
 
         # it is not clear whether a RPM was reinstalled or not changed at all
         # use "unchanged" instead
-        # "reinstalled": set(),
+        "reinstall": [],
+        "obsoleted": [],
 
-        "changed": set(),
-        "unchanged": set(),
-        "present": set(),
-        "absent": set(),
+        "changed": [],
+        "unchanged": [],
+        "present": [],
+        "absent": [],
     }
 
-    dict_one = {str(i) if i.is_installonly() else i.na: i for i in list_one}
-    dict_two = {str(i) if i.is_installonly() else i.na: i for i in list_two}
+    list_one = sorted(list_one)
+    list_two = sorted(list_two)
 
-    names_one = set(dict_one.keys())
-    names_two = set(dict_two.keys())
+    names_one = set([i.na for i in list_one if not i.is_installonly()])
+    names_two = set([i.na for i in list_two if not i.is_installonly()])
 
-    for name in names_two - names_one:
-        result["install"].add(dict_two[name])
+    # INSTALL
+    to_install = []
+    for pkg in list_two:
+        # installonly pkgs get always installed
+        if pkg.is_installonly():
+            to_install.append(pkg)
+            continue
+        # detect upgrades/downgrades etc.
+        if pkg.na in names_one:
+            continue
+        to_install.append(pkg)
+    for pkg in to_install:
+        result["install"].append(pkg)
+        list_two.remove(pkg)
 
-    for name in names_one - names_two:
-        result["remove"].add(dict_one[name])
-        result["absent"].add(dict_one[name])
+    # REMOVE
+    to_remove = []
+    for pkg in list_one:
+        # installonly pkgs get always removed
+        if pkg.is_installonly():
+            to_remove.append(pkg)
+            continue
+        # detect upgrades/downgrades etc.
+        if pkg.na in names_two:
+            continue
+        to_remove.append(pkg)
+    for pkg in to_remove:
+        result["remove"].append(pkg)
+        result["absent"].append(pkg)
+        list_one.remove(pkg)
 
-    for name in names_one & names_two:
-        rpm_one = dict_one[name]
-        rpm_two = dict_two[name]
-        if rpm_one < rpm_two:
-            result["upgraded"].add(rpm_one)
-            result["upgrade"].add(rpm_two)
-        elif rpm_one > rpm_two:
-            result["downgraded"].add(rpm_one)
-            result["downgrade"].add(rpm_two)
+    names_one = set([i.na for i in list_one if not i.is_installonly()])
+    names_two = set([i.na for i in list_two if not i.is_installonly()])
+    assert names_one == names_two
+
+    # UNCHANGED / REINSTALLED
+    unchanged_reinstalled = set()
+    for pkg_two in list_two:
+        if pkg_two in list_one:
+            unchanged_reinstalled.add(pkg_two)
+
+    # remove all 'unchanged' packages from both lists
+    list_one = [i for i in list_one if i not in unchanged_reinstalled]
+    list_two = [i for i in list_two if i not in unchanged_reinstalled]
+    unchanged_names = set([i.na for i in unchanged_reinstalled])
+    reinstall_names = set()
+
+    # ASSUMPTION: An 'unchanged' package is 'reinstall'
+    # if there's another action for the same package name.
+    # This happens mainly if rpmdb is broken, containing duplicates
+    # and dnf enforces reinstall in these cases.
+
+    for name in unchanged_names.copy():
+        for pkg_one in list_one:
+            if pkg_one.na != name:
+                continue
+            result["obsoleted"].append(pkg_one)
+            result["absent"].append(pkg_one)
+            list_one.remove(pkg_one)
+            if name in unchanged_names:
+                unchanged_names.remove(name)
+                reinstall_names.add(name)
+
+    for pkg in unchanged_reinstalled:
+        if pkg.na in unchanged_names:
+            result["unchanged"].append(pkg)
         else:
-            result["unchanged"].add(rpm_two)
+            result["reinstall"].append(pkg)
 
-    result["present"] = set(list_two)
-    result["changed"] = result["present"] - result["unchanged"]
+    for pkg_one in list_one:
+        if pkg_one.na in unchanged_names:
+            reinstall_names.add(pkg_one.na)
+            unchanged_names.add(pkg_one.na)
+            result["reinstall"].append(pkg_one)
+        else:
+            result["unchanged"].append(pkg_one)
+
+    for pkg_one in list_one:
+        for pkg_two in list_two:
+            if pkg_one.name != pkg_two.name:
+                continue
+            if pkg_one < pkg_two:
+                result["upgraded"].append(pkg_one)
+                result["upgrade"].append(pkg_two)
+            elif pkg_one > pkg_two:
+                result["downgraded"].append(pkg_one)
+                result["downgrade"].append(pkg_two)
+            else:
+                result["unchanged"].append(pkg_two)
 
     return result
