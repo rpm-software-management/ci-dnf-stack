@@ -8,6 +8,7 @@ import os
 import parse
 
 from common import *
+from common.rpmdb import get_rpmdb_rpms
 
 
 @behave.step("I use the repository \"{repo}\"")
@@ -101,3 +102,62 @@ def step_repo_condition(context, repo):
 @behave.given("There are no repositories")
 def given_no_repos(context):
     context.dnf["reposdir"] = "/dev/null"
+
+
+@behave.step("I am running a system identified as the \"{system}\"")
+def given_system(context, system):
+    data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
+    context.osrelease.set(data)
+
+
+@behave.given("I am using {package} of the version X.Y.Z")
+def given_package_version(context, package):
+    rpms = [rpm for rpm in get_rpmdb_rpms() if rpm.name == package]
+    assert len(rpms) == 1, 'There should be exactly one %s installed' % package
+    context.versions = {package: rpms[0].version}
+
+
+@behave.step("I have enabled a remote repository")
+def step_remote_repo(context):
+    context.execute_steps('when I use the http repository based on "dnf-ci-fedora"')
+
+
+@behave.step("{quantifier} HTTP {command} request should match")
+def step_check_http_log(context, quantifier, command):
+    # Obtain the httpd log
+    path = context.dnf.repos_location
+    log = context.httpd.get_log(path)
+    assert log is not None, 'Logging should be enabled on the HTTP server'
+    log = [rec for rec in log if rec.command == command]
+    context.httpd.clear_log(path)
+    assert log, 'Some HTTP requests should have been received'
+
+    # A log dump, printed on failures for convenience
+    dump = '\n' + '\n'.join(map(str, log)) + '\n'
+
+    # Requests matching the table
+    matches = []
+
+    # Detect what kind of data we have in the table
+    headings = context.table.headings
+    if 'header' in headings:
+        # Expand any X.Y.Z version strings in the User-Agent header (we need to
+        # copy the context table for that)
+        table = []
+        for row in context.table:
+            header, value = row['header'], row['value']
+            version = None
+            if header == 'User-Agent' and hasattr(context, 'versions'):
+                package = value.split('/')[0]
+                version = context.versions.get(package)
+                if version is not None:
+                    value = value.replace('X.Y.Z', version)
+            table.append({'header': header, 'value': value})
+
+        headers = (rec.headers for rec in log)
+        matches = (row['value'] == h[row['header']]
+                   for h in headers
+                   for row in table)
+
+    if quantifier == 'every':
+        assert all(matches), 'Every request should match the table: ' + dump
