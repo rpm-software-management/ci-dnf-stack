@@ -29,9 +29,11 @@ def check_rpmdb_transaction(context, mode):
                 continue
             if action.startswith('module-'):
                 continue
-            if action == "reinstall":
-                action = "unchanged"
             rpm = RPM(nevra)
+            if action == "reinstall" and rpm not in rpmdb_transaction["reinstall"]:
+                action = "unchanged"
+            if action == "remove" and rpm not in rpmdb_transaction["remove"] and rpm in rpmdb_transaction["obsoleted"]:
+                action = "obsoleted"
             if action == "absent":
                 if rpm in rpmdb_transaction["present"]:
                     raise AssertionError("[rpmdb] Package %s not '%s'" % (rpm, action))
@@ -44,10 +46,17 @@ def check_rpmdb_transaction(context, mode):
     if mode == 'exact_match':
         context_table = parse_context_table(context)
         for action in ["install", "remove", "upgrade", "downgrade"]:
-            delta = rpmdb_transaction[action].difference(context_table[action])
+            delta = []
+            for nevra in context_table[action].copy():
+                if nevra in rpmdb_transaction[action]:
+                    rpmdb_transaction[action].remove(nevra)
+                elif action == "remove": # and nevra in rpmdb_transaction["obsolete"]:
+                    rpmdb_transaction["obsoleted"].remove(nevra)
+                else:
+                    delta.append(nevra)
             if delta:
                 raise AssertionError(
-                    "Following packages weren't captured in the table for action '%s': %s" % (
+                    "[rpmdb] Following packages weren't captured in the table for action '%s': %s" % (
                     action, ", ".join([str(rpm) for rpm in sorted(delta)])))
 
 
@@ -82,7 +91,7 @@ def check_dnf_transaction(context, mode):
             delta = rpms.difference(context_table[action])
             if delta:
                 raise AssertionError(
-                        "Following packages weren't captured in the table for action '%s': %s" % (
+                        "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
                         action, ", ".join([str(rpm) for rpm in sorted(delta)])))
 
 

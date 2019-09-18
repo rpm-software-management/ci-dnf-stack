@@ -114,6 +114,7 @@ def parse_transaction_table(lines):
     result = {}
     for action in ACTIONS.values():
         result[action] = set()
+    result["obsoleted"] = set()
 
     table_begin = find_transaction_table_begin(lines)
     lines = lines[table_begin:]
@@ -174,7 +175,7 @@ def parse_transaction_table(lines):
             # catch obsoletes lines in form "     replacing name.arch evr"
             match = OBSOLETE_REPLACING.match(line)
             if match:
-                result_action = 'remove'
+                result_action = 'obsoleted'
             else:
                 # XXX ugly hack
                 # bug in dnf output: sometimes there is no space
