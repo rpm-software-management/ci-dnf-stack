@@ -18,6 +18,10 @@ for opt in "$@"; do
       ENV="$ENV -Dpreserve=yes"
       continue
       ;;
+    -d|--destructive)
+      ENV="$ENV -Ddestructive=yes"
+      continue
+      ;;
   esac
   set -- "$@" "$opt"
 done
