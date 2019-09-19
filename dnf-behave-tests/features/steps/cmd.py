@@ -40,10 +40,22 @@ def handle_reposync(expected, found):
     return expected, found
 
 
+def run_in_context(context, cmd, **run_args):
+    if getattr(context, "faketime", None) is not None:
+        cmd = context.faketime + cmd
+    context.cmd = cmd
+    if context.dnf.working_dir:
+        run_args['cwd'] = context.dnf.working_dir
+    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, **run_args)
+
+
 @behave.step("I execute step \"{step}\"")
 def execute_step(context, step):
     context.execute_steps(step)
 
+@behave.step("I set working directory to \"{working_dir}\"")
+def i_set_working_directory(context, working_dir):
+    context.dnf.working_dir = working_dir.format(context=context)
 
 @behave.step("I move the clock {direction} to \"{when}\"")
 def faketime(context, direction, when):
@@ -82,10 +94,7 @@ def when_I_execute_dnf_with_args(context, args):
     cmd = " ".join(context.dnf.get_cmd(context))
     cmd += " " + args.format(context=context)
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
-    if getattr(context, "faketime", None) is not None:
-        cmd = context.faketime + cmd
-    context.cmd = cmd
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
+    run_in_context(context, cmd, shell=True)
 
 
 @behave.step("I execute dnf with args \"{args}\" {times} times")
@@ -98,25 +107,27 @@ def when_I_execute_dnf_with_args_times(context, args, times):
 def when_I_execute_rpm_with_args(context, args):
     cmd = "rpm --root=" + context.dnf.installroot
     cmd += " " + args.format(context=context)
-    context.cmd = cmd
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
+    run_in_context(context, cmd, shell=True)
 
 
 @behave.step("I execute rpm on host with args \"{args}\"")
 def when_I_execute_rpm_on_host_with_args(context, args):
     cmd = "rpm"
     cmd += " " + args.format(context=context)
-    context.cmd = cmd
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
+    run_in_context(context, cmd, shell=True)
 
 
 @behave.step("I execute bash with args \"{args}\" in directory \"{cwd}\"")
 def step_impl(context, args, cwd):
     cwd = cwd.format(context=context)
     cmd = args.format(context=context)
-    context.cmd = cmd
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(
-        cmd, shell=True, can_fail=False, cwd=cwd)
+    run_in_context(context, cmd, shell=True, can_fail=False, cwd=cwd)
+
+
+@behave.step("I execute \"{command}\" with args \"{args}\"")
+def when_I_execute_command_with_args(context, command, args):
+    cmd = command + " " + args.format(context=context)
+    run_in_context(context, cmd, shell=True)
 
 
 @behave.given("I do not disable all repos")
@@ -173,13 +184,6 @@ def given_i_successfully_execute_dnf_with_args(context, args):
 def given_i_successfully_execute_rpm_with_args(context, args):
     context.execute_steps(u"Given I execute rpm with args \"{args}\"".format(args=args))
     then_the_exit_code_is(context, 0)
-
-
-@behave.step("I execute \"{command}\" with args \"{args}\"")
-def when_I_execute_command_with_args(context, command, args):
-    cmd = command + " " + args.format(context=context)
-    context.cmd = cmd
-    context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, shell=True)
 
 
 @behave.step("I set config option \"{option}\" to \"{value}\"")

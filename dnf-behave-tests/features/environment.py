@@ -115,6 +115,7 @@ class DNFContext(object):
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
+        self.working_dir = None
 
         # temporarily use DNF0 for substituting fixturesdir in repo files
         # the future could be in named environment variable like DNF_VAR_FIXTURES_DIR
