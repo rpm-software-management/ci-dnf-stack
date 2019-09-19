@@ -24,6 +24,12 @@ DEFAULT_REPOS_LOCATION = os.path.join(FIXTURES_DIR, "repos")
 DEFAULT_RELEASEVER="29"
 DEFAULT_PLATFORM_ID="platform:f29"
 
+# If a test is marked with any of these tags, it will be considered
+# "destructive" to the system running it.
+DESTRUCTIVE_TAGS = [
+    "destructive",
+]
+
 
 class VersionedActiveTagMatcher(ActiveTagMatcher):
     @staticmethod
@@ -204,6 +210,12 @@ def after_step(context, step):
 def before_scenario(context, scenario):
     if active_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip(reason="DISABLED ACTIVE-TAG")
+
+    # Skip if destructive and not explicitly allowed by the user
+    if ((set(scenario.effective_tags) & set(DESTRUCTIVE_TAGS)) and not
+            context.config.userdata.get('destructive', 'no') == 'yes'):
+        scenario.skip(reason="DESTRUCTIVE")
+
     if not context.feature_global_dnf_context:
         context.dnf = DNFContext(context.config.userdata,
                                  force_installroot='force_installroot' in scenario.tags)

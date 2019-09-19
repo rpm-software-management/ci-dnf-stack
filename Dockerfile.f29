@@ -103,6 +103,7 @@ COPY ./dnf-behave-tests/ /opt/behave/
 # set os userdata for behave
 RUN echo -e "\
 [behave.userdata]\n\
+destructive=yes\n\
 os=$OSVERSION" > /opt/behave/behave.ini
 
 # build test repos from sources
