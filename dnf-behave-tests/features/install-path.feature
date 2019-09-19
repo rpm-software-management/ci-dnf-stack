@@ -2,7 +2,8 @@ Feature: Tests for installing RPM from paths
 
 
 Scenario Outline: I can install an RPM from path, where path is <path type>
-   When I execute dnf with args "install <path>" from repo "dnf-ci-fedora"
+  Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora"
+   When I execute dnf with args "install <path>"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -17,7 +18,7 @@ Examples:
 
 
 Scenario: I can install an RPM from path, when specifying the RPM multiple times
-   When I execute dnf with args "install noarch/setup-2.12.1-1.fc29.noarch.rpm noarch/setup-2.12.1-1.fc29.noarch.rpm" from repo "dnf-ci-fedora"
+   When I execute dnf with args "install {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -26,7 +27,8 @@ Scenario: I can install an RPM from path, when specifying the RPM multiple times
 
 @xfail
 Scenario: I can install an RPM from path, when specifying the RPM multiple times using different paths
-   When I execute dnf with args "install noarch/setup-2.12.1-1.fc29.noarch.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm" from repo "dnf-ci-fedora"
+  Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora"
+   When I execute dnf with args "install noarch/setup-2.12.1-1.fc29.noarch.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
