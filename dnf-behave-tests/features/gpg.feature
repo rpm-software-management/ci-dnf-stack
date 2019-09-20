@@ -34,7 +34,7 @@ Scenario: Install masterkey signed package and check GPG key was imported
         | install       | setup-0:2.12.1-1.fc29.noarch        |
       # There is now one imported gpg key in RPM db
       # (the braces are doubled because there is .format() used for the string)
-   When I execute rpm with args "-q gpg-pubkey --qf '%{{summary}}\n'"
+   When I execute rpm with args "-q gpg-pubkey --qf 'gpg(%{{packager}})\n'"
    Then the exit code is 0
     And stdout contains "gpg\(dnf-ci-gpg\)"
 
@@ -46,7 +46,7 @@ Scenario: Install subkey signed package with masterkey signed dependency
         | Action        | Package                             |
         | install       | setup-0:2.12.1-1.fc29.noarch        |
         | install       | filesystem-0:3.9-2.fc29.x86_64      |
-   When I execute rpm with args "-q gpg-pubkey --qf '%{{summary}}\n'"
+   When I execute rpm with args "-q gpg-pubkey --qf 'gpg(%{{packager}})\n'"
    Then the exit code is 0
     And stdout contains "gpg\(dnf-ci-gpg\)"
     And stdout contains "gpg\(dnf-ci-gpg-subkey\)"
