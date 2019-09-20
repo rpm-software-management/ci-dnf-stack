@@ -5,7 +5,7 @@
 #
 # Run
 # ---
-# $ podman run -it dnf-bot/ci-dnf-stack:f29 behave -Ddnf_executable=dnf --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped]
+# $ podman run -it dnf-bot/ci-dnf-stack:f29 behave -Ddnf_executable=dnf -t~xfail --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped]
 #
 #
 # Build types
