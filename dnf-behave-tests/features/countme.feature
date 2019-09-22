@@ -105,6 +105,25 @@ Feature: Better user counting
             | */metalink.xml?countme=1 |
 
     @fixture.httpd
+    Scenario: Countme flag is not sent repeatedly on retries
+        Given I set config option "countme" to "1"
+          And I copy repository "dnf-ci-fedora" for modification
+          And I use repository "dnf-ci-fedora" as http
+          And I set up metalink for repository "dnf-ci-fedora"
+          # This triggers the retry mechanism in librepo, 4 retries by default
+          And the server starts responding with HTTP status code 503
+          And I start capturing outbound HTTP requests
+         When I execute dnf with args "makecache" 4 times
+         # 48 = 4 * makecache = 4 * (3 metalink attempts * 4 low-level retries)
+         # See librepo commits 15adfb31 and 12d0b4ad for details
+         Then exactly 48 HTTP GET requests should match:
+            | path            |
+            | */metalink.xml* |
+          And exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=1 |
+
+    @fixture.httpd
     Scenario: Countme feature is disabled
         Given I set config option "countme" to "0"
           And I copy repository "dnf-ci-fedora" for modification

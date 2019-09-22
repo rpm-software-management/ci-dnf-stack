@@ -317,6 +317,7 @@ def given_package_version(context, package):
 
 
 @behave.step("{quantifier} HTTP {command} request should match")
+@behave.step("{quantifier} HTTP {command} requests should match")
 def step_check_http_log(context, quantifier, command):
     # Obtain the httpd log
     path = context.dnf.repos_location
