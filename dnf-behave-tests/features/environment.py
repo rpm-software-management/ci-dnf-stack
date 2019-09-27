@@ -94,6 +94,8 @@ class DNFContext(object):
     def __init__(self, userdata, force_installroot=False):
         self._scenario_data = {}
 
+        self.repos = {}
+
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
         # per scenario by using @force_installroot decorator
