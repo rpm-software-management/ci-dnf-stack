@@ -12,6 +12,100 @@ from common import *
 from common.rpmdb import get_rpmdb_rpms
 
 
+class RepoInfo(object):
+    def __init__(self, context, name):
+        self.active = False
+        self.path = os.path.join(context.dnf.repos_location, name)
+        self.config = {
+            "name": name + " test repository",
+            "baseurl": "file://" + self.path,
+            "enabled": "1",
+            "gpgcheck": "0",
+        }
+
+    def update_config(self, new_conf):
+        self.config.update(new_conf)
+
+
+def get_repo_info(context, repo):
+    return context.dnf.repos.setdefault(repo, RepoInfo(context, repo))
+
+
+def create_repo_conf(context, repo):
+    repo_info = get_repo_info(context, repo)
+
+    repo_info.active = True
+
+    conf_text = "[%s]\n" % repo
+    for key, value in repo_info.config.items():
+        if value:
+            conf_text += ("%s=%s\n" % (key, value)).format(repo=repo, context=context)
+
+    path = os.path.join(context.dnf.installroot, "etc/yum.repos.d/", repo + ".repo")
+    create_file_with_contents(path, conf_text)
+
+
+@behave.step("I use repository \"{repo}\"")
+def step_use_repository(context, repo):
+    """
+    Creates the repository's config file at /etc/yum.repos.d/ (inside installroot).
+    """
+    create_repo_conf(context, repo)
+
+
+@behave.step("I configure repository \"{repo}\" with")
+def step_configure_repository(context, repo):
+    """
+    Sets the repository configuration (i.e. the contents of its config file).
+    If the repository is used, overwrites its config file with the new
+    configuration.
+    """
+    check_context_table(context, ["key", "value"])
+
+    repo_info = get_repo_info(context, repo)
+    repo_info.update_config(dict(context.table))
+    if repo_info.active:
+        create_repo_conf(context, repo)
+
+
+@behave.step("I use repository \"{repo}\" with configuration")
+def step_use_repository_with_config(context, repo):
+    """
+    Sets the repository configuration (i.e. the contents of its config file)
+    and creates its config file at /etc/yum.repos.d/ (inside installroot).
+    """
+    check_context_table(context, ["key", "value"])
+
+    get_repo_info(context, repo).update_config(dict(context.table))
+    create_repo_conf(context, repo)
+
+
+@behave.step("I drop repository \"{repo}\"")
+def step_drop_repository(context, repo):
+    """
+    Deletes the repository's config file from /etc/yum.repos.d/ (inside installroot).
+    """
+    assert repo in context.dnf.repos, 'Repository "%s" was never used.' % repo
+
+    delete_file(os.path.join(context.dnf.installroot, "etc/yum.repos.d/", repo + ".repo"))
+    get_repo_info(context, repo).active = False
+
+
+@behave.step("I copy repository \"{repo}\" for modification")
+def step_copy_repository(context, repo):
+    """
+    Copies the whole contents of the repository directory (i.e. the packages
+    and repodata) to a temp directory of the current scenario. Use this if you
+    need to modify the data of this directory, so that the original repository
+    data stay unchanged for the other tests.
+    """
+    repo_info = get_repo_info(context, repo)
+    dst = os.path.join(context.dnf.tempdir, "repos", repo)
+    copy_tree(repo_info.path, dst)
+    repo_info.path = dst
+    repo_info.update_config({"baseurl": dst})
+
+
 @behave.step("I use the repository \"{repo}\"")
 def step_repo_condition(context, repo):
     if "repos" not in context.dnf:
