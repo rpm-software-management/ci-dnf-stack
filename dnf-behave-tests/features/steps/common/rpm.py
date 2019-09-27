@@ -100,7 +100,6 @@ def diff_rpm_lists(list_one, list_two):
         "changed": [],
         "unchanged": [],
         "present": [],
-        "absent": [],
     }
 
     list_one = sorted(list_one)
@@ -146,7 +145,6 @@ def diff_rpm_lists(list_one, list_two):
         to_remove.append(pkg)
     for pkg in to_remove:
         result["remove"].append(pkg)
-        result["absent"].append(pkg)
         list_one.remove(pkg)
 
     names_one = set([i.na for i in list_one if not i.is_installonly()])
@@ -175,7 +173,6 @@ def diff_rpm_lists(list_one, list_two):
             if pkg_one.na != name:
                 continue
             result["obsoleted"].append(pkg_one)
-            result["absent"].append(pkg_one)
             list_one.remove(pkg_one)
             if name in unchanged_names:
                 unchanged_names.remove(name)
