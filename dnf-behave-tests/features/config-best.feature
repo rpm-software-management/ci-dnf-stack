@@ -49,9 +49,15 @@ Scenario: When installing with option --nobest, install a package from repo with
 
 
 @bz1670776 @bz1671683
-Scenario: When installing with best=1 (default), fail on broken packages, and advise to use --nobest
+Scenario: When installing with best=1 set in dnf.conf, fail on broken packages, and advise to use --nobest
   Given I use the repository "dnf-ci-fedora"
-  Given I use the repository "dnf-ci-fedora-updates"
+    And I use the repository "dnf-ci-fedora-updates"
+    And I do not set config file
+    And I create file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    best=True
+    """
    When I execute dnf with args "install glibc -x glibc-common-0:2.28-26.fc29.x86_64"
    Then the exit code is 1
     And stdout contains "try to add .*'--nobest' to use not only best candidate packages"
