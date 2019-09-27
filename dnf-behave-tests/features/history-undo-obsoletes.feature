@@ -23,7 +23,7 @@ Scenario: Undo with obsoletes
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | filesystem-0:3.9-2.fc29.x86_64            |
         | install       | basesystem-0:11-6.fc29.noarch             |
-        | remove        | glibc-profile-0:2.3.1-10.x86_64           |
+        | obsoleted     | glibc-profile-0:2.3.1-10.x86_64           |
 
    When I execute dnf with args "history undo last"
    Then the exit code is 0
