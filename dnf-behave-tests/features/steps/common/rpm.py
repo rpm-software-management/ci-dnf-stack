@@ -106,6 +106,15 @@ def diff_rpm_lists(list_one, list_two):
     list_one = sorted(list_one)
     list_two = sorted(list_two)
 
+    # PRESENT PACKAGES AND UNCHANGED INSTALLONLY PACKAGES
+    for pkg in list_two:
+        result["present"].append(pkg)
+        if (pkg in list_one) and pkg.is_installonly():
+            result["unchanged"].append(pkg)
+    for pkg in result["unchanged"]:
+        list_one.remove(pkg)
+        list_two.remove(pkg)
+
     names_one = set([i.na for i in list_one if not i.is_installonly()])
     names_two = set([i.na for i in list_two if not i.is_installonly()])
 
