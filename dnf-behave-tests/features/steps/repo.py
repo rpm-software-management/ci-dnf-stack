@@ -354,9 +354,12 @@ def step_check_http_log(context, quantifier, command):
 
     if quantifier == 'every':
         assert all(matches), 'Every request should match the table: ' + dump
-    elif quantifier == 'exactly one':
-        assert len([m for m in matches if m]) == 1, \
-            'Exactly one request should match the table: ' + dump
+    elif quantifier.startswith('exactly '):
+        num = quantifier.split(' ')[1]
+        if num == 'one':
+            num = 1
+        assert len([m for m in matches if m]) == int(num), \
+            'Exactly %s requests should match the table: %s' % (quantifier, dump)
     elif quantifier == 'no':
         assert not any(matches), 'No request should match the table: ' + dump
 
