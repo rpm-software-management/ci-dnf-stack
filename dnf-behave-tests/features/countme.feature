@@ -82,23 +82,20 @@ Feature: Better user counting
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
-          # The countme feature only activates when refreshing the metalink so
-          # we need one first.
-          And I execute dnf with args "makecache"
           And I start capturing outbound HTTP requests
          # One in the first 4 requests is randomly chosen to include the flag
          # (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
-         When I execute dnf with args "check-update --refresh" 4 times
+         When I execute dnf with args "makecache" 4 times
          Then exactly one metalink request should include the countme flag
          # Same week
          When today is Friday, August 09, 2019
           And I forget any HTTP requests captured so far
-          And I execute dnf with args "check-update --refresh" 4 times
+          And I execute dnf with args "makecache" 4 times
          Then no metalink request should include the countme flag
          # Next week
          When today is Tuesday, August 13, 2019
           And I forget any HTTP requests captured so far
-          And I execute dnf with args "check-update --refresh" 4 times
+          And I execute dnf with args "makecache" 4 times
          Then exactly one metalink request should include the countme flag
 
     @fixture.httpd
@@ -107,7 +104,6 @@ Feature: Better user counting
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
-          And I execute dnf with args "makecache"
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "check-update --refresh" 4 times
+         When I execute dnf with args "makecache" 4 times
          Then no metalink request should include the countme flag
