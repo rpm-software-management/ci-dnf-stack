@@ -79,10 +79,12 @@ Feature: Better user counting
          Then exactly one metalink request should include the countme flag
          # Same week
          When today is Friday, August 09, 2019
+          And I forget any HTTP requests captured so far
           And I execute dnf with args "check-update --refresh" 4 times
          Then no metalink request should include the countme flag
          # Next week
          When today is Tuesday, August 13, 2019
+          And I forget any HTTP requests captured so far
           And I execute dnf with args "check-update --refresh" 4 times
          Then exactly one metalink request should include the countme flag
 
