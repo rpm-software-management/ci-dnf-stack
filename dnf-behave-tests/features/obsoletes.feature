@@ -49,7 +49,7 @@ Scenario: Upgrade of obsoleted package
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
-        | remove        | PackageB-0:1.0-1.x86_64                   |
+        | obsoleted     | PackageB-0:1.0-1.x86_64                   |
 
 
 Scenario: Upgrade of obsoleted package if package specified by version with glob (no obsoletes applied)
@@ -93,7 +93,7 @@ Scenario: Autoremoval of obsoleted package
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
-        | remove        | PackageB-0:1.0-1.x86_64                   |
+        | obsoleted     | PackageB-0:1.0-1.x86_64                   |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     But Transaction is empty
