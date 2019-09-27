@@ -32,8 +32,12 @@ def check_rpmdb_transaction(context, mode):
             rpm = RPM(nevra)
             if action == "reinstall" and rpm not in rpmdb_transaction["reinstall"]:
                 action = "unchanged"
-            if action == "remove" and rpm not in rpmdb_transaction["remove"] and rpm in rpmdb_transaction["obsoleted"]:
+            if (action == "remove" and rpm not in rpmdb_transaction["remove"]
+                and rpm in rpmdb_transaction["obsoleted"]):
                 action = "obsoleted"
+            elif (action == "obsoleted" and rpm not in rpmdb_transaction["obsoleted"]
+                  and rpm in rpmdb_transaction["remove"]):
+                action = "remove"
             if action == "absent":
                 if rpm in rpmdb_transaction["present"]:
                     raise AssertionError("[rpmdb] Package %s not '%s'" % (rpm, action))
