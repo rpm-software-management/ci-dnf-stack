@@ -293,6 +293,11 @@ def step_impl(context, client_cert, client_key):
                                                     client_key)
 
 
+@behave.step("I forget any HTTP requests captured so far")
+def step_clear_http_logs(context):
+    context.httpd.clear_log()
+
+
 @behave.step("I am running a system identified as the \"{system}\"")
 def given_system(context, system):
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
@@ -313,7 +318,6 @@ def step_check_http_log(context, quantifier, command):
     log = context.httpd.get_log()
     assert log is not None, 'Logging should be enabled on the HTTP server'
     log = [rec for rec in log if rec.command == command]
-    context.httpd.clear_log()
     assert log, 'Some HTTP requests should have been received'
 
     # A log dump, printed on failures for convenience
