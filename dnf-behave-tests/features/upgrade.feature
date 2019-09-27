@@ -49,13 +49,55 @@ Scenario: Upgrade two RPMs
 
 @tier1
 @bz1670776 @bz1671683
-Scenario: Upgrade all RPMs from multiple repositories
+Scenario: Upgrade all RPMs from multiple repositories with best=False
   Given I use the repository "dnf-ci-fedora-updates"
   Given I use the repository "dnf-ci-fedora-updates-testing"
     And I use the repository "dnf-ci-thirdparty-updates"
+    And I do not set config file
+    And I create file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    best=False
+    """
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And stderr is
+    """
+    Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+    """
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
+        | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
+        | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
+        | upgrade       | flac-0:1.4.0-1.fc29.x86_64                |
+        | upgrade       | wget-1:1.19.5-5.fc29.x86_64               |
+        | upgrade       | SuperRipper-0:1.2-1.x86_64                |
+        | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
+        | broken        | SuperRipper-0:1.3-1.x86_64                |
+
+
+@tier1
+@bz1670776 @bz1671683
+Scenario: Upgrade all RPMs from multiple repositories with best=True
+  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use the repository "dnf-ci-fedora-updates-testing"
+    And I use the repository "dnf-ci-thirdparty-updates"
+    And I do not set config file
+    And I create file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    best=True
+    """
    When I execute dnf with args "upgrade"
    Then the exit code is 1
-    And stderr contains "Problem: cannot install the best update candidate for package SuperRipper"
+    And stderr is
+    """
+    Error: 
+     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+    """
    When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
     And Transaction is following
