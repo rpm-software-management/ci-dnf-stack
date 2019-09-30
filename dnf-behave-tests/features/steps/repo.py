@@ -56,7 +56,7 @@ def step_impl(context, rtype, repo):
                             'certificates/testcerts/server/cert.pem')
         key = os.path.join(context.dnf.fixturesdir,
                            'certificates/testcerts/server/key.pem')
-        client_ssl = context.dnf._get(context, "client_ssl")
+        client_ssl = context.dnf._get("client_ssl")
         if client_ssl:
             client_cert = client_ssl["certificate"]
             client_key = client_ssl["key"]
@@ -94,7 +94,7 @@ def step_impl(context, rtype, repo):
         repocfg.format(**locals()))
 
     # add /http.repos.d to reposdir
-    current_reposdir = context.dnf._get(context, "reposdir")
+    current_reposdir = context.dnf._get("reposdir")
     if not repos_path in current_reposdir:
         context.dnf._set("reposdir", "{},{}".format(current_reposdir, repos_path))
 

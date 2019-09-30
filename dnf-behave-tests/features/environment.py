@@ -161,7 +161,7 @@ class DNFContext(object):
     def __contains__(self, name):
         return name in self._scenario_data
 
-    def _get(self, context, name):
+    def _get(self, name):
         if name in self:
             return self[name]
         return getattr(self, name, None)
@@ -177,35 +177,35 @@ class DNFContext(object):
         if self.installroot:
             result.append("--installroot={0}".format(self.installroot))
 
-        config = self._get(context, "config")
+        config = self._get("config")
         if config:
             result.append("--config={0}".format(config))
 
-        reposdir = self._get(context, "reposdir")
+        reposdir = self._get("reposdir")
         if reposdir:
             result.append("--setopt=reposdir={0}".format(reposdir))
 
-        releasever = self._get(context, "releasever")
+        releasever = self._get("releasever")
         if releasever:
             result.append("--releasever={0}".format(releasever))
 
-        module_platform_id = self._get(context, "module_platform_id")
+        module_platform_id = self._get("module_platform_id")
         if module_platform_id:
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
         result.append(self.disable_repos_option)
-        repos = self._get(context, "repos") or []
+        repos = self._get("repos") or []
         for repo in repos:
             result.append("--enablerepo='{0}'".format(repo))
 
-        disable_plugins = self._get(context, "disable_plugins")
+        disable_plugins = self._get("disable_plugins")
         if disable_plugins:
             result.append("--disableplugin='*'")
-        plugins = self._get(context, "plugins") or []
+        plugins = self._get("plugins") or []
         for plugin in plugins:
             result.append("--enableplugin='{0}'".format(plugin))
 
-        setopts = self._get(context, "setopts") or {}
+        setopts = self._get("setopts") or {}
         for key,value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
 
