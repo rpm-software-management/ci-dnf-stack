@@ -57,6 +57,9 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
+    gpgcheck=1
+    installonly_limit=3
+    clean_requirements_on_remove=True
     best=False
     """
    When I execute dnf with args "upgrade"
@@ -88,6 +91,9 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
+    gpgcheck=1
+    installonly_limit=3
+    clean_requirements_on_remove=True
     best=True
     """
    When I execute dnf with args "upgrade"
