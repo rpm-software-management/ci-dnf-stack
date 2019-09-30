@@ -1,7 +1,7 @@
 Feature: repository-packages info
 
 Scenario: List info of all packages from repository
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install filesystem"
  Then the exit code is 0
   And Transaction is following
@@ -26,7 +26,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: List all installed packages from repository
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
  Then the exit code is 0
  When I execute dnf with args "repository-packages dnf-ci-fedora info installed"
@@ -37,7 +37,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: Single repository package info
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
  Then the exit code is 0
  When I execute dnf with args "repository-packages dnf-ci-fedora info setup"
@@ -49,33 +49,24 @@ Given I use the repository "dnf-ci-fedora"
 
 Scenario Outline: List repo <extras alias> - installed from repo, but not available anymore
 # use temporary copy of repository dnf-ci-fedora for this test
-Given I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/temp-repo"
-  And I create and substitute file "/etc/yum.repos.d/test.repo" with
-  """
-  [testrepo]
-  name=testrepo
-  baseurl={context.dnf.installroot}/temp-repos/temp-repo
-  enabled=1
-  gpgcheck=0
-  """
-  And I do not set reposdir
-  And I use the repository "testrepo"
+Given I copy repository "dnf-ci-fedora" for modification
+  And I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |
-Given I delete file "/temp-repos/temp-repo/noarch/setup-2.12.1-1.fc29.noarch.rpm"
+Given I delete file "/{context.dnf.repos[dnf-ci-fedora].path}/noarch/setup-2.12.1-1.fc29.noarch.rpm"
  Then the exit code is 0
-Given I delete file "/temp-repos/temp-repo/src/setup-2.12.1-1.fc29.src.rpm"
+Given I delete file "/{context.dnf.repos[dnf-ci-fedora].path}/src/setup-2.12.1-1.fc29.src.rpm"
  Then the exit code is 0
-  And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
+  And I execute "createrepo_c --update ." in "/{context.dnf.repos[dnf-ci-fedora].path}"
  Then the exit code is 0
  When I execute dnf with args "clean expire-cache"
  Then the exit code is 0
- When I execute dnf with args "repository-packages testrepo info <extras alias>"
+ When I execute dnf with args "repository-packages dnf-ci-fedora info <extras alias>"
  Then the exit code is 0
- Then stdout contains "testrepo"
+ Then stdout contains "dnf-ci-fedora"
  Then stdout contains "Extra Packages"
  Then stdout contains "Source\s+:\s+setup-2.12.1-1.fc29.src.rpm"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"

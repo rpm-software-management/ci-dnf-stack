@@ -4,8 +4,7 @@ Feature: Tests for the repository syncing functionality
 @bz1679509
 @bz1692452
 Scenario: The default value of skip_if_unavailable is False
-  Given I use the repository "testrepo"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -18,7 +17,6 @@ Scenario: The default value of skip_if_unavailable is False
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 1
@@ -30,8 +28,7 @@ Scenario: The default value of skip_if_unavailable is False
 
 @bz1689931
 Scenario: There is global skip_if_unavailable option
-  Given I use the repository "testrepo"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -45,7 +42,6 @@ Scenario: There is global skip_if_unavailable option
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 0
@@ -62,8 +58,7 @@ Scenario: There is global skip_if_unavailable option
 
 
 Scenario: Per repo skip_if_unavailable configuration
-  Given I use the repository "testrepo"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -77,7 +72,6 @@ Scenario: Per repo skip_if_unavailable configuration
     gpgcheck=0
     skip_if_unavailable=True
     """
-    And I do not set reposdir
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 0
@@ -95,8 +89,7 @@ Scenario: Per repo skip_if_unavailable configuration
 
 @bz1689931
 Scenario: The repo configuration takes precedence over the global one
-  Given I use the repository "testrepo"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -111,7 +104,6 @@ Scenario: The repo configuration takes precedence over the global one
     gpgcheck=0
     skip_if_unavailable=False
     """
-    And I do not set reposdir
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 1
@@ -124,23 +116,9 @@ Scenario: The repo configuration takes precedence over the global one
 @not.with_os=rhel__eq__8
 @bz1741442
 Scenario: Test repo_gpgcheck=1 error if repomd.xml.asc is not present
-Given I use the repository "testrepo"
-  And I create file "/etc/dnf/dnf.conf" with
-      """
-      [main]
-      reposdir=/testrepos
-      """
-  And I create and substitute file "/testrepos/test.repo" with
-      """
-      [testrepo]
-      name=testrepo
-      baseurl={context.dnf.repos_location}/dnf-ci-fedora
-      enabled=1
-      gpgcheck=0
-      repo_gpgcheck=1
-      """
-  And I do not set reposdir
-  And I do not set config file
+Given I use repository "dnf-ci-fedora" with configuration
+      | key           | value |
+      | repo_gpgcheck | 1     |
  When I execute dnf with args "makecache"
  Then the exit code is 1
-  And stderr contains "Error: Failed to download metadata for repo 'testrepo': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file"
+  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file"

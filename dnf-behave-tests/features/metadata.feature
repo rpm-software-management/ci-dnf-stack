@@ -12,8 +12,6 @@ Given I create directory "/temp-repos/temp-repo"
   gpgcheck=0
   metadata_expire=1s
   """
-  And I do not set reposdir
-  And I use the repository "testrepo"
   And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
  Then the exit code is 0
  When I execute dnf with args "list all"
