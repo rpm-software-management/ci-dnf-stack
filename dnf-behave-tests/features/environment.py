@@ -14,6 +14,7 @@ from behave.formatter.ansi_escapes import escapes
 
 from steps.fixtures.httpd import HttpServerContext
 from steps.fixtures.ftpd import FtpServerContext
+from steps.common.file import ensure_directory_exists
 
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
@@ -106,6 +107,9 @@ class DNFContext(object):
             self.delete_installroot = False
         else:
             self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
+            # if we're creating installroot, ensure /etc/yum.repos.d exists,
+            # otherwise dnf picks repo configs from the host
+            ensure_directory_exists(os.path.join(self.installroot, "etc/yum.repos.d"))
             self.delete_installroot = True
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
