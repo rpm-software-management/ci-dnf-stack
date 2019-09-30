@@ -10,6 +10,7 @@ import tempfile
 
 from behave import fixture, use_fixture
 from behave.tag_matcher import ActiveTagMatcher
+from behave.formatter.ansi_escapes import escapes
 
 from steps.fixtures.httpd import HttpServerContext
 from steps.fixtures.ftpd import FtpServerContext
@@ -122,12 +123,24 @@ class DNFContext(object):
         os.environ['DNF0'] = self.fixturesdir
 
     def __del__(self):
-        if not self.preserve_temporary_dirs and os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
-            shutil.rmtree(self.tempdir)
+        preserved_dirs = []
+        if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
+            if self.preserve_temporary_dirs:
+                preserved_dirs.append(self.tempdir)
+            else:
+                shutil.rmtree(self.tempdir)
 
-        if not self.preserve_temporary_dirs and self.delete_installroot:
-            if os.path.realpath(self.installroot) not in ["/"]:
+        if self.delete_installroot and os.path.realpath(self.installroot) not in ["/"]:
+            if self.preserve_temporary_dirs:
+                preserved_dirs.append(self.installroot)
+            else:
                 shutil.rmtree(self.installroot)
+
+        if preserved_dirs:
+            print(escapes["undefined"] + "Temporary directories have been preserved for your browsing pleasure:")
+            for d in preserved_dirs:
+                print("   " + d)
+            print(escapes["reset"])
 
     def __getitem__(self, name):
         return self._scenario_data[name]
