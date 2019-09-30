@@ -14,15 +14,6 @@ from common import *
 from common.string import print_lines_diff
 
 
-def print_cmd(context, cmd, stdout, stderr):
-    if cmd:
-        print('Command: DNF0={} {}\n'.format(context.dnf.fixturesdir, context.cmd))
-    if stdout:
-        print(context.cmd_stdout)
-    if stderr:
-        print(context.cmd_stderr, file=sys.stderr)
-
-
 def handle_reposync(expected, found):
     if expected[0] == "<REPOSYNC>":
         sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
@@ -188,7 +179,6 @@ def step_impl(context, option, value):
 def then_the_exit_code_is(context, exitcode):
     if context.cmd_exitcode == int(exitcode):
         return
-    print_cmd(context, True, True, True)
     raise AssertionError("Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd))
 
 
@@ -196,14 +186,12 @@ def then_the_exit_code_is(context, exitcode):
 def then_stdout_contains(context, text):
     if re.search(text, context.cmd_stdout):
         return
-    print_cmd(context, True, True, False)
     raise AssertionError("Stdout doesn't contain: %s" % text)
 
 @behave.then("stdout does not contain \"{text}\"")
 def then_stdout_does_not_contain(context, text):
     if not re.search(text, context.cmd_stdout):
         return
-    print_cmd(context, True, True, False)
     raise AssertionError("Stdout contains: %s" % text)
 
 
@@ -211,7 +199,6 @@ def then_stdout_does_not_contain(context, text):
 def then_stdout_is_empty(context):
     if not context.cmd_stdout:
         return
-    print_cmd(context, True, True, False)
     raise AssertionError("Stdout is not empty, it contains: %s" % context.cmd_stdout)
 
 
@@ -247,7 +234,6 @@ def then_stdout_is(context):
             # lines in found
             expected = [""] * (rs_offset - 1) + expected
 
-    print_cmd(context, True, True, False)
     print_lines_diff(expected, found, num_lines_equal=rs_offset)
 
     raise AssertionError("Stdout is not: %s" % context.text)
@@ -262,7 +248,6 @@ def then_stdout_contains_lines(context):
             if line == outline:
                 break
         else:
-            print_cmd(context, True, True, False)
             raise AssertionError("Stdout doesn't contain line: %s" % line)
 
 
@@ -273,7 +258,6 @@ def then_stdout_contains_lines(context):
     for line in test_lines:
         for outline in out_lines:
             if line == outline:
-                print_cmd(context, True, True, False)
                 raise AssertionError("Stdout contains line: %s" % line)
 
 
@@ -283,7 +267,6 @@ def then_stdout_section_contains(context, section, regexp):
     section_content = extract_section_content_from_text(section, context.cmd_stdout)
     if re.search(regexp, section_content):
         return
-    print_cmd(context, True, True, False)
     raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
 
 
@@ -295,7 +278,6 @@ def then_stderr_is(context):
     if expected == found:
         return
 
-    print_cmd(context, True, False, True)
     print_lines_diff(expected, found)
 
     raise AssertionError("Stderr is not: %s" % context.text)
@@ -305,7 +287,6 @@ def then_stderr_is(context):
 def then_stderr_contains(context, text):
     if re.search(text, context.cmd_stderr):
         return
-    print_cmd(context, True, False, True)
     raise AssertionError("Stderr doesn't contain: %s" % text)
 
 
@@ -313,7 +294,6 @@ def then_stderr_contains(context, text):
 def then_stderr_contains(context, text):
     if not re.search(text, context.cmd_stderr):
         return
-    print_cmd(context, True, False, True)
     raise AssertionError("Stderr contains: %s" % text)
 
 
@@ -321,7 +301,6 @@ def then_stderr_contains(context, text):
 def then_stderr_is_empty(context):
     if not context.cmd_stderr:
         return
-    print_cmd(context, True, False, True)
     raise AssertionError("Stderr is not empty, it contains: %s" % context.cmd_stderr)
 
 
@@ -334,7 +313,6 @@ def then_stdout_contains_lines(context):
             if line.strip() == outline.strip():
                 break
         else:
-            print_cmd(context, True, False, True)
             raise AssertionError("Stderr doesn't contain line: %s" % line)
 
 
