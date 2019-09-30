@@ -1,24 +1,13 @@
 Feature: Tests for the correct creation and usage of the modulefailsafe file
 
 
-Background: Copy the dnf-ci-fedora modular repository (to allow modulemd removal and so on) and enable nodejs:5 (containing the oldest nodejs package) -> this makes fail-safe copy of nodejs:5
-  Given I copy directory "{context.dnf.repos_location}/dnf-ci-fedora-modular" to "/temp-repos/dnf-ci-fedora-modular"
-   And I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora-modular.repo" with
-       """
-       [dnf-ci-fedora-modular]
-       name=dnf-ci-fedora-modular
-       baseurl={context.dnf.installroot}/temp-repos/dnf-ci-fedora-modular
-       enabled=1
-       gpgcheck=0
-       skip_if_unavailable=1
-       """
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora.repo" to "/etc/yum.repos.d/dnf-ci-fedora.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-modular-updates.repo" to "/etc/yum.repos.d/dnf-ci-fedora-modular-updates.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-updates.repo" to "/etc/yum.repos.d/dnf-ci-fedora-updates.repo"
-    And I do not set reposdir
-    And I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-    And I use the repository "dnf-ci-fedora"
+Background: Copy the dnf-ci-fedora modular repository (to allow modulemd removal and so on)
+  Given I copy repository "dnf-ci-fedora-modular" for modification
+    And I use repository "dnf-ci-fedora-modular" with configuration
+        | key                 | value |
+        | skip_if_unavailable | 1     |
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I use repository "dnf-ci-fedora"
 
 
 # nodejs RPMs in used repositories (+ info about module streams):
@@ -94,8 +83,7 @@ Scenario: Fail-safe modulemd copy is created ONLY for the stream of the highest 
         """
         version: 20180801080000
         """
-   When I disable the repository "dnf-ci-fedora-modular-updates"
-    And I execute dnf with args "install wget"
+    And I execute dnf with args "install wget --disablerepo dnf-ci-fedora-modular-updates"
    When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
         """
@@ -109,7 +97,6 @@ Scenario: Fail-safe modulemd copy is created ONLY for the stream of the highest 
         """
         version: 20181216123422
         """
-   When I use the repository "dnf-ci-fedora-modular-updates"
     And I execute dnf with args "reinstall wget"
    When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
    Then stdout is
@@ -171,6 +158,7 @@ Scenario Outline: Fail-safe modulemd copy is NOT deleted after 'dnf clean all' o
         postgresql:10:x86_64.yaml
         """
    When I copy directory "{context.dnf.installroot}/var/lib/dnf/modulefailsafe/" to "/temp-modulefailsafe"
+  # TODO this is weird, the steps used in this Given don't seem to have any impact on the rest of the scenario
   Given I execute step "<step>"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
@@ -186,7 +174,6 @@ Scenario Outline: Fail-safe modulemd copy is NOT deleted after 'dnf clean all' o
 Examples:
     | step                                                                                       |
     | Given I execute dnf with args "clean all"                                                  |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
     | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
     | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
 
@@ -257,7 +244,7 @@ Scenario: Fail-safe modulemd copy is created during transaction (module enable, 
         """
    When I execute "rm {context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
    Then file "/var/lib/dnf/modulefailsafe/" does not exist
-   When I use the repository "dnf-ci-fedora-updates"
+   When I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "upgrade wget"
    Then the exit code is 0
     And file "/var/lib/dnf/modulefailsafe/" exists
@@ -271,18 +258,15 @@ Scenario: Fail-safe modulemd copy is created during transaction (module enable, 
 @bz1616167
 @bz1623128
 Scenario: When modular RPM is installed and the modular repo is disabled and fail-safe modulemd copy is deleted, the RPM can be upgraded to a non-modular RPM
-   When I disable the repository "dnf-ci-fedora-modular-updates"
-   When I execute dnf with args "module enable nodejs:5"
+  Given I successfully execute dnf with args "module enable nodejs:5"
    When I execute dnf with args "install nodejs-5*"
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                            |
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
-  Given I disable the repository "dnf-ci-fedora-modular"
-    And I execute dnf with args "clean all"
+  Given I execute dnf with args "clean all"
     And I execute "rm {context.dnf.installroot}/var/lib/dnf/modulefailsafe/ -r"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-   When I execute dnf with args "upgrade nodejs"
+   When I execute dnf with args "upgrade nodejs --disablerepo dnf-ci-fedora-modular"
    Then the exit code is 0
     And Transaction is following
         | Action                    | Package                                            |
@@ -292,17 +276,14 @@ Scenario: When modular RPM is installed and the modular repo is disabled and fai
 @bz1616167
 @bz1623128
 Scenario: When modular RPM is installed and the modular repo is disabled and '/var/cache/dnf' and '/var/cache/yum' are deleted, the RPM can't be upgraded to a non-modular RPM
-   When I disable the repository "dnf-ci-fedora-modular-updates"
-   When I execute dnf with args "module enable nodejs:5"
+  Given I successfully execute dnf with args "module enable nodejs:5"
    When I execute dnf with args "install nodejs"
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                            |
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
-  Given I disable the repository "dnf-ci-fedora-modular"
-    And I execute dnf with args "clean all"
+  Given I execute dnf with args "clean all"
     And I execute "rm {context.dnf.installroot}/var/cache/dnf {context.dnf.installroot}/var/cache/yum -rf"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-   When I execute dnf with args "upgrade nodejs"
+   When I execute dnf with args "upgrade nodejs --disablerepo dnf-ci-fedora-modular"
    Then the exit code is 0
     And Transaction is empty

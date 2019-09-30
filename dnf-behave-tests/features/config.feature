@@ -66,21 +66,19 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
 
 
 Scenario: Reposdir option in dnf.conf file in installroot
-  Given I use the repository "testrepo"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
     """
-    And I create file "/testrepos/test.repo" with
+    And I create and substitute file "/testrepos/test.repo" with
     """
     [testrepo]
     name=testrepo
-    baseurl=$DNF0/repos/dnf-ci-fedora
+    baseurl={context.dnf.repos_location}/dnf-ci-fedora
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
     And I do not set config file
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -91,21 +89,19 @@ Scenario: Reposdir option in dnf.conf file in installroot
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot
-  Given I use the repository "testrepo"
-    And I create file "/testdnf.conf" with
+  Given I create file "/testdnf.conf" with
     """
     [main]
     reposdir=/testrepos
     """
-    And I create file "/testrepos/test.repo" with
+    And I create and substitute file "/testrepos/test.repo" with
     """
     [testrepo]
     name=testrepo
-    baseurl=$DNF0/repos/dnf-ci-fedora
+    baseurl={context.dnf.repos_location}/dnf-ci-fedora
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
     And I set config file to "/testdnf.conf"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -116,26 +112,24 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot is taken first from installroot then from host
-  Given I use the repository "testrepo"
-    And I create and substitute file "/testdnf.conf" with
+  Given I create and substitute file "/testdnf.conf" with
     """
     [main]
     reposdir={context.dnf.installroot}/testrepos,/othertestrepos
     """
-    And I create file "/testrepos/test.repo" with
+    And I create and substitute file "/testrepos/test.repo" with
     """
     [testrepo]
     name=testrepo
-    baseurl=$DNF0/repos/dnf-ci-fedora
+    baseurl={context.dnf.repos_location}/dnf-ci-fedora
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
     And I set config file to "/testdnf.conf"
     And I create directory "/othertestrepos"
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
-    And stderr contains "Error: Unknown repo: 'testrepo'"
+    And stderr contains "Error: There are no enabled repositories in "
   Given I delete directory "/othertestrepos"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -146,16 +140,14 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
 
 
 Scenario: Reposdir option set by --setopt
-  Given I use the repository "testrepo"
-    And I create file "/testrepos/test.repo" with
+  Given I create and substitute file "/testrepos/test.repo" with
     """
     [testrepo]
     name=testrepo
-    baseurl=$DNF0/repos/dnf-ci-fedora
+    baseurl={context.dnf.repos_location}/dnf-ci-fedora
     enabled=1
     gpgcheck=0
     """
-    And I do not set reposdir
    # fail due to unavailable repository
    When I execute dnf with args "install filesystem"
    Then the exit code is 1

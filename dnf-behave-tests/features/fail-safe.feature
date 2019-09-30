@@ -2,26 +2,17 @@ Feature: Fail-safe
 
 
 Background: Copy the dnf-ci-fedora-modular repo (to allow modulemd removal and so on), and enable nodejs:5 (containing the oldest nodejs package) -> this makes fail-safe copy of nodejs:5
-  Given I copy directory "{context.dnf.repos_location}/dnf-ci-fedora-modular" to "/temp-repos/dnf-ci-fedora-modular"
-   And I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora-modular.repo" with
-       """
-       [dnf-ci-fedora-modular]
-       name=dnf-ci-fedora-modular
-       baseurl={context.dnf.installroot}/temp-repos/dnf-ci-fedora-modular
-       enabled=1
-       gpgcheck=0
-       skip_if_unavailable=1
-       """
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora.repo" to "/etc/yum.repos.d/dnf-ci-fedora.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-updates.repo" to "/etc/yum.repos.d/dnf-ci-fedora-updates.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-modular-updates.repo" to "/etc/yum.repos.d/dnf-ci-fedora-modular-updates.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-modular-hotfix.repo" to "/etc/yum.repos.d/dnf-ci-fedora-modular-hotfix.repo"
-    And I copy file "{context.dnf.reposdir}/dnf-ci-fourthparty-modular.repo" to "/etc/yum.repos.d/dnf-ci-fourthparty-modular.repo"
-    And I copy file "{context.dnf.reposdir}/fail-safe-hotfix.repo" to "/etc/yum.repos.d/fail-safe-hotfix.repo"
-    And I do not set reposdir
-    And I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
-
+  Given I copy repository "dnf-ci-fedora-modular" for modification
+    And I use repository "dnf-ci-fedora-modular" with configuration
+        | key                 | value |
+        | skip_if_unavailable | 1     |
+    And I configure repository "dnf-ci-fedora-modular-hotfix" with
+        | key             | value |
+        | module_hotfixes | 1     |
+    And I configure repository "fail-safe-hotfix" with
+        | key             | value |
+        | module_hotfixes | 1     |
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "module enable nodejs:5"
    Then the exit code is 0
     And Transaction contains
@@ -64,7 +55,7 @@ Background: Copy the dnf-ci-fedora-modular repo (to allow modulemd removal and s
 @bz1616167
 @bz1623128
 Scenario: When modulemd is available, 'module list' does NOT show fail-safe modules
-   When I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module enable postgresql:10"
    Then the exit code is 0
     And Transaction contains
@@ -101,7 +92,7 @@ Scenario: When modulemd is available, 'module list' does NOT show fail-safe modu
 @bz1616167
 @bz1623128
 Scenario Outline: When modulemd is not available, 'module list' shows fail-safe modules
-   When I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module enable postgresql:10"
    Then the exit code is 0
     And Transaction contains
@@ -127,10 +118,10 @@ Scenario Outline: When modulemd is not available, 'module list' shows fail-safe 
         | @modulefailsafe               | nodejs        | 5 [e]     | development, default, minimal |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -144,10 +135,10 @@ Scenario Outline: When modulemd is not available, 'module info' can show details
     And stdout contains "Stream.*5"
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -160,10 +151,10 @@ Scenario Outline: When modulemd is not available, module profile from enabled st
     And Transaction is empty
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -176,10 +167,10 @@ Scenario Outline: When modulemd is not available, module profile from non-enable
     And Transaction is empty
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -205,10 +196,10 @@ Scenario Outline: When modulemd is not available, module profile from enabled st
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -216,8 +207,8 @@ Examples:
 Scenario Outline: When modulemd is not available, repoquery doesn't show RPMs with the same name as in the enabled stream (non-modular or from different streams or modules), only from hotfix repos
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-    And I use the repository "dnf-ci-fourthparty-modular"
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I use repository "dnf-ci-fourthparty-modular"
    When I execute dnf with args "repoquery nodejs.x86_64"
    Then the exit code is 0
     And stdout is empty
@@ -229,10 +220,10 @@ Scenario Outline: When modulemd is not available, repoquery doesn't show RPMs wi
     And stdout contains "nodejs-1:8.11.5-1.module_2030\+42747d40.x86_64"
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -245,8 +236,8 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-    And I use the repository "dnf-ci-fourthparty-modular"
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I use repository "dnf-ci-fourthparty-modular"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0
     And Transaction is empty
@@ -255,10 +246,10 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -271,7 +262,7 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-modular-hotfix"
+    And I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0
     And Transaction is following
@@ -283,10 +274,10 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -299,7 +290,7 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "fail-safe-hotfix"
+    And I use repository "fail-safe-hotfix"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0
     And Transaction is following
@@ -311,10 +302,10 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -337,10 +328,10 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -353,8 +344,8 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | install                   | http-parser-0:2.4.0-1.fc29.x86_64                  |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-    And I use the repository "dnf-ci-fourthparty-modular"
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I use repository "dnf-ci-fourthparty-modular"
    When I execute dnf with args "upgrade http-parser"
    Then the exit code is 0
     And Transaction is empty
@@ -363,10 +354,10 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -379,7 +370,7 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | install                   | http-parser-0:2.4.0-1.fc29.x86_64                  |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-modular-hotfix"
+    And I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "upgrade http-parser"
    Then the exit code is 0
     And Transaction is following
@@ -390,10 +381,10 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -416,10 +407,10 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | nodejs         | enabled   | 5         |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -443,10 +434,10 @@ Scenario Outline: When modulemd is not available, non-modular RPMs can be instal
         | upgrade               | wget-0:1.19.6-5.fc29.x86_64        |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -464,10 +455,10 @@ Scenario Outline: When modulemd is not available, the enabled module can be disa
         | nodejs         | disabled  |           |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -485,10 +476,10 @@ Scenario Outline: When modulemd is not available, the enabled module can be rese
         | nodejs         |           |           |           |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -515,7 +506,9 @@ Scenario Outline: When modulemd is not available, RPM from the enabled stream ca
         gpgcheck=0
         skip_if_unavailable=0
         """
-    And I use the repository "short-modular-updates"
+      # since we're configuring the repo ourselves, force generation of repodata by using and unusing it
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I drop repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "install nodejs"
    Then the exit code is 0
     And Transaction contains
@@ -523,10 +516,10 @@ Scenario Outline: When modulemd is not available, RPM from the enabled stream ca
         | install        | nodejs-1:10.14.1-1.module_2533+7361f245.x86_64   |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |
 
 
 @bz1616167
@@ -549,7 +542,7 @@ Scenario Outline: When modulemd is not available, RPM from the enabled stream ca
         | remove         | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64     |
 
 Examples:
-    | step                                                                                       |
-    | Given I disable the repository "dnf-ci-fedora-modular"                                     |
-    | Given I delete directory "/temp-repos/dnf-ci-fedora-modular"                               |
-    | Given I delete file "/temp-repos/dnf-ci-fedora-modular/repodata/*modules.yaml*" with globs |
+    | step                                                                                                      |
+    | Given I drop repository "dnf-ci-fedora-modular"                                                           |
+    | Given I delete directory "/{context.dnf.repos[dnf-ci-fedora-modular].path}"                               |
+    | Given I delete file "/{context.dnf.repos[dnf-ci-fedora-modular].path}/repodata/*modules.yaml*" with globs |

@@ -2,7 +2,9 @@ Feature: Testing dnf clean command
 
 
 Scenario: Ensure that metadata are unavailable after "dnf clean all"
-  Given I use the repository "dnf-ci-rich"
+  Given I use repository "dnf-ci-rich" with configuration
+        | key                 | value |
+        | skip_if_unavailable | 1     |
    When I execute dnf with args "makecache"
    Then the exit code is 0
    When I execute dnf with args "install -C cream"
@@ -24,23 +26,13 @@ Scenario: Ensure that metadata are unavailable after "dnf clean all"
 
 @tier1
 Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
-  # use temporary copy of repository dnf-ci-thirdparty-updates for this test
-  Given I copy directory "{context.dnf.repos_location}/dnf-ci-thirdparty-updates" to "/temp-repos/temp-repo"
-    And I create and substitute file "/etc/yum.repos.d/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl={context.dnf.installroot}/temp-repos/temp-repo
-    enabled=1
-    gpgcheck=0
-    """
-    And I do not set reposdir
-    And I use the repository "testrepo"
+  Given I copy repository "dnf-ci-thirdparty-updates" for modification
+    And I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
     And stdout contains "SuperRipper-0:1.2-1.x86_64"
-  Given I delete file "/temp-repos/temp-repo/x86_64/SuperRipper-1.2-1.x86_64.rpm"
-    And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
+  Given I delete file "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}/x86_64/SuperRipper-1.2-1.x86_64.rpm"
+    And I execute "createrepo_c --update ." in "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}"
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
     And stdout contains "SuperRipper-0:1.2-1.x86_64"
@@ -53,29 +45,30 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
 
 @tier1
 Scenario: Expire dnf cache and run repolist when a package has been removed meanwhile
-  # use temporary copy of repository dnf-ci-thirdparty-updates for this test
-  Given I copy directory "{context.dnf.repos_location}/dnf-ci-thirdparty-updates" to "/temp-repos/temp-repo"
-    And I create and substitute file "/etc/yum.repos.d/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl={context.dnf.installroot}/temp-repos/temp-repo
-    enabled=1
-    gpgcheck=0
-    """
-    And I do not set reposdir
-    And I use the repository "testrepo"
+  Given I copy repository "dnf-ci-thirdparty-updates" for modification
+    And I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "testrepo\s+testrepo\s+6"
-  Given I delete file "/temp-repos/temp-repo/x86_64/SuperRipper-1.2-1.x86_64.rpm"
-    And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
+    And stdout is
+        """
+        repo id                      repo name                                    status
+        dnf-ci-thirdparty-updates    dnf-ci-thirdparty-updates test repository    6
+        """
+  Given I delete file "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}/x86_64/SuperRipper-1.2-1.x86_64.rpm"
+    And I execute "createrepo_c --update ." in "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}"
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "testrepo\s+testrepo\s+6"
+    And stdout is
+        """
+        repo id                      repo name                                    status
+        dnf-ci-thirdparty-updates    dnf-ci-thirdparty-updates test repository    6
+        """
    When I execute dnf with args "clean expire-cache"
    Then the exit code is 0
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "testrepo\s+testrepo\s+5"
-
+    And stdout is
+        """
+        repo id                      repo name                                    status
+        dnf-ci-thirdparty-updates    dnf-ci-thirdparty-updates test repository    5
+        """
