@@ -56,6 +56,9 @@ Scenario: When installing with best=1 set in dnf.conf, fail on broken packages, 
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
+    gpgcheck=1
+    installonly_limit=3
+    clean_requirements_on_remove=True
     best=True
     """
    When I execute dnf with args "install glibc -x glibc-common-0:2.28-26.fc29.x86_64"

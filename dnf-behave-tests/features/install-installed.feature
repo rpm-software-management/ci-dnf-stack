@@ -30,6 +30,9 @@ Scenario: Install installed RPM when upgrade is available with best=True (in dnf
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
+    gpgcheck=1
+    installonly_limit=3
+    clean_requirements_on_remove=True
     best=True
     """
    When I execute dnf with args "install glibc"
@@ -59,7 +62,10 @@ Scenario: Install installed RPM when upgrade is available with best=False (in dn
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
-    best=True
+    gpgcheck=1
+    installonly_limit=3
+    clean_requirements_on_remove=True
+    best=False
     """
    When I execute dnf with args "install glibc"
    Then the exit code is 0
@@ -72,7 +78,7 @@ Scenario: Install installed RPM when upgrade is available with best=False (in dn
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
   Given I use the repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "install glibc --nobest"
+   When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is empty
 
