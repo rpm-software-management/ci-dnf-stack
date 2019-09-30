@@ -276,7 +276,24 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
-    context.dnf.scenario_failed = scenario.status == model.Status.failed
+    if scenario.status == model.Status.failed:
+        context.dnf.scenario_failed = True
+
+        if getattr(context, "cmd", ""):
+            print(
+                "%sLast Command: %sDNF0=%s %s" %
+                (escapes["failed"], escapes["failed_arg"], context.dnf.fixturesdir, context.cmd)
+            )
+            print(escapes["reset"])
+        if getattr(context, "cmd_stdout", ""):
+            print("%sLast Command stdout:%s" % (escapes['outline_arg'], escapes['executing']))
+            print(context.cmd_stdout.strip())
+            print(escapes["reset"])
+        if getattr(context, "cmd_stderr", ""):
+            print("%sLast Command stderr:%s" % (escapes['outline_arg'], escapes['executing']))
+            print(context.cmd_stderr.strip())
+            print(escapes["reset"])
+
     del context.dnf
 
 
