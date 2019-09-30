@@ -193,6 +193,9 @@ def step_repo_condition(context, repo):
     if repo not in context.dnf["repos"]:
         context.dnf["repos"].append(repo)
 
+    context.dnf.use_repo_args = True
+
+
 @behave.step('I require client certificate verification with certificate "{client_cert}" and key "{client_key}"')
 def step_impl(context, client_cert, client_key):
     if "client_ssl" not in context.dnf:

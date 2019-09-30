@@ -188,10 +188,6 @@ class DNFContext(object):
         if config:
             result.append("--config={0}".format(config))
 
-        reposdir = self._get("reposdir")
-        if reposdir:
-            result.append("--setopt=reposdir={0}".format(reposdir))
-
         releasever = self._get("releasever")
         if releasever:
             result.append("--releasever={0}".format(releasever))
@@ -200,10 +196,15 @@ class DNFContext(object):
         if module_platform_id:
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
-        result.append(self.disable_repos_option)
-        repos = self._get("repos") or []
-        for repo in repos:
-            result.append("--enablerepo='{0}'".format(repo))
+        if self._get("use_repo_args"):
+            reposdir = self._get("reposdir")
+            if reposdir:
+                result.append("--setopt=reposdir={0}".format(reposdir))
+
+            result.append(self.disable_repos_option)
+            repos = self._get("repos") or []
+            for repo in repos:
+                result.append("--enablerepo='{0}'".format(repo))
 
         disable_plugins = self._get("disable_plugins")
         if disable_plugins:
