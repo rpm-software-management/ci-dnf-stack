@@ -1,7 +1,7 @@
 Feature: Fail-safe
 
 
-Background: Copy the dnf-ci-fedora-modular repo (to allow modulemd removal and so on), create new dnf-ci-fedora-hotfix repo, and enable nodejs:5 (containing the oldest nodejs package) -> this makes fail-safe copy of nodejs:5
+Background: Copy the dnf-ci-fedora-modular repo (to allow modulemd removal and so on), and enable nodejs:5 (containing the oldest nodejs package) -> this makes fail-safe copy of nodejs:5
   Given I copy directory "{context.dnf.repos_location}/dnf-ci-fedora-modular" to "/temp-repos/dnf-ci-fedora-modular"
    And I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora-modular.repo" with
        """
@@ -17,16 +17,7 @@ Background: Copy the dnf-ci-fedora-modular repo (to allow modulemd removal and s
     And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-modular-updates.repo" to "/etc/yum.repos.d/dnf-ci-fedora-modular-updates.repo"
     And I copy file "{context.dnf.reposdir}/dnf-ci-fedora-modular-hotfix.repo" to "/etc/yum.repos.d/dnf-ci-fedora-modular-hotfix.repo"
     And I copy file "{context.dnf.reposdir}/dnf-ci-fourthparty-modular.repo" to "/etc/yum.repos.d/dnf-ci-fourthparty-modular.repo"
-    And I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora-hotfix.repo" with
-        """
-        [dnf-ci-fedora-hotfix]
-        name=dnf-ci-fedora-hotfix
-        baseurl={context.dnf.repos_location}/dnf-ci-fedora
-        enabled=1
-        gpgcheck=0
-        skip_if_unavailable=0
-        module_hotfixes=1
-        """
+    And I copy file "{context.dnf.reposdir}/fail-safe-hotfix.repo" to "/etc/yum.repos.d/fail-safe-hotfix.repo"
     And I do not set reposdir
     And I use the repository "dnf-ci-fedora-modular"
     And I use the repository "dnf-ci-fedora"
@@ -230,7 +221,7 @@ Scenario Outline: When modulemd is not available, repoquery doesn't show RPMs wi
    When I execute dnf with args "repoquery nodejs.x86_64"
    Then the exit code is 0
     And stdout is empty
-   When I use the repository "dnf-ci-fedora-hotfix"
+   When I use the repository "fail-safe-hotfix"
     And I use the repository "dnf-ci-fedora-modular-hotfix"
     And I execute dnf with args "repoquery nodejs.x86_64"
    Then the exit code is 0
@@ -308,7 +299,7 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-    And I use the repository "dnf-ci-fedora-hotfix"
+    And I use the repository "fail-safe-hotfix"
    When I execute dnf with args "upgrade nodejs"
    Then the exit code is 0
     And Transaction is following

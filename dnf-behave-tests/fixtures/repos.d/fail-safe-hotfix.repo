@@ -1,0 +1,7 @@
+[fail-safe-hotfix]
+name=fail-safe-hotfix
+baseurl=file://$DNF0/repos/fail-safe-hotfix
+enabled=1
+gpgcheck=0
+skip_if_unavailable=0
+module_hotfixes=1
