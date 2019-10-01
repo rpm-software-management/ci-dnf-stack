@@ -8,7 +8,7 @@ import os
 import shutil
 import tempfile
 
-from behave import fixture, use_fixture
+from behave import fixture, use_fixture, model
 from behave.tag_matcher import ActiveTagMatcher
 from behave.formatter.ansi_escapes import escapes
 
@@ -111,12 +111,20 @@ class DNFContext(object):
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
         self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
-        self.preserve_temporary_dirs = True if userdata.get("preserve", "no") in ("yes", "y", "1", "true") else False
         self.fixturesdir = FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
         self.working_dir = None
+
+        self.preserve_temporary_dirs = "none"
+        preserve = userdata.get("preserve", "no")
+        if preserve in ("yes", "y", "1", "true"):
+            self.preserve_temporary_dirs = "all"
+        elif preserve in ("failed", "fail", "f"):
+            self.preserve_temporary_dirs = "failed"
+
+        self.scenario_failed = False
 
         # temporarily use DNF0 for substituting fixturesdir in repo files
         # the future could be in named environment variable like DNF_VAR_FIXTURES_DIR
@@ -125,13 +133,15 @@ class DNFContext(object):
     def __del__(self):
         preserved_dirs = []
         if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
-            if self.preserve_temporary_dirs:
+            if (self.preserve_temporary_dirs == "all"
+                    or (self.preserve_temporary_dirs == "failed" and self.scenario_failed)):
                 preserved_dirs.append(self.tempdir)
             else:
                 shutil.rmtree(self.tempdir)
 
         if self.delete_installroot and os.path.realpath(self.installroot) not in ["/"]:
-            if self.preserve_temporary_dirs:
+            if (self.preserve_temporary_dirs == "all"
+                    or (self.preserve_temporary_dirs == "failed" and self.scenario_failed)):
                 preserved_dirs.append(self.installroot)
             else:
                 shutil.rmtree(self.installroot)
@@ -266,6 +276,7 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
+    context.dnf.scenario_failed = scenario.status == model.Status.failed
     del context.dnf
 
 
