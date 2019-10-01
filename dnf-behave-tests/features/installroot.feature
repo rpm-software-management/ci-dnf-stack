@@ -3,8 +3,18 @@ Feature: Installroot test
 
 @force_installroot
 Scenario: Install package from host repository into empty installroot
-  Given I use the repository "dnf-ci-install-remove"
-   When I execute dnf with args "install water_carbonated"
+  # The following two steps generate repodata for the repository without configuring it
+  Given I use repository "dnf-ci-install-remove"
+  Given I drop repository "dnf-ci-install-remove"
+    And I create and substitute file "//{context.dnf.tempdir}/repos.d/insideinstallroot.repo" with
+    """
+    [dnf-ci-install-remove]
+    name=dnf-ci-install-remove
+    baseurl={context.dnf.repos_location}/dnf-ci-install-remove
+    enabled=1
+    gpgcheck=0
+    """
+    When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d install water_carbonated"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -15,16 +25,7 @@ Scenario: Install package from host repository into empty installroot
 
 @force_installroot
 Scenario: Install package from installroot repository into installroot
-  Given I use the repository "dnf-ci-install-remove"
-    And I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
-    """
-    [dnf-ci-install-remove]
-    name=dnf-ci-install-remove
-    baseurl=$DNF0/repos/dnf-ci-install-remove
-    enabled=1
-    gpgcheck=0
-    """
-    And I do not set reposdir
+  Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "install water_carbonated"
    Then the exit code is 0
     And Transaction is following
@@ -36,16 +37,7 @@ Scenario: Install package from installroot repository into installroot
 
 @force_installroot
 Scenario: Test metadata handling in installroot
-  Given I use the repository "dnf-ci-install-remove"
-    And I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
-    """
-    [dnf-ci-install-remove]
-    name=dnf-ci-install-remove
-    baseurl=$DNF0/repos/dnf-ci-install-remove
-    enabled=1
-    gpgcheck=0
-    """
-    And I do not set reposdir
+  Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "install water_carbonated"
    Then the exit code is 0
    When I execute "rm -rf {context.dnf.installroot}/var/cache/dnf" in "{context.dnf.installroot}"
@@ -55,16 +47,12 @@ Scenario: Test metadata handling in installroot
    When I execute dnf with args "makecache"
    Then the exit code is 0
    When I execute dnf with args "install -C water_still"
-   Then the exit code is 1
-   When I execute dnf with args "install --downloadonly water_still"
-   Then the exit code is 0
-   When I execute dnf with args "install -C water_still"
    Then the exit code is 0
 
 
 @force_installroot
 Scenario: Remove package from installroot
-  Given I use the repository "dnf-ci-install-remove"
+  Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "install water_carbonated tea"
    Then the exit code is 0
     And Transaction is following
@@ -80,29 +68,35 @@ Scenario: Remove package from installroot
 
 
 @force_installroot
-Scenario: Repolist command in installroot
-  Given I do not disable all repos
+Scenario: Repolist command in installroot and with a reposdir specified
+  Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "dnf-ci-install-remove"
-  Given I create and substitute file "/etc/yum.repos.d/insideinstallroot.repo" with
-    """
-    [dnf-ci-fedora]
-    name=dnf-ci-fedora
-    baseurl=$DNF0/repos/dnf-ci-fedora
-    enabled=1
-    gpgcheck=0
-    """
-    And I do not set reposdir
-   When I execute dnf with args "repolist"
+    And stdout is
+        """
+        repo id                      repo name                                    status
+        dnf-ci-install-remove        dnf-ci-install-remove test repository        20
+        """
+  Given I create and substitute file "/{context.dnf.tempdir}/repos.d/testrepo.repo" with
+        """
+        [testrepo]
+        name=test repo
+        baseurl={context.dnf.repos_location}/dnf-ci-install-remove
+        enabled=1
+        gpgcheck=0
+        """
+   When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d repolist"
    Then the exit code is 0
-    And stdout does not contain "dnf-ci-install-remove"
-    And stdout contains "dnf-ci-fedora"
+    And stdout is
+        """
+        repo id                             repo name                             status
+        testrepo                            test repo                             20
+        """
 
 
 @force_installroot
 Scenario: Upgrade package in installroot
-  Given I use the repository "dnf-ci-install-remove"
+  Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "install sugar-1.0"
    Then the exit code is 0
     And Transaction is following
@@ -119,10 +113,6 @@ Scenario: Upgrade package in installroot
 
 @bz1658579
 Scenario: Installroot directory is listed when there are no repos
-  Given I execute "mkdir -p /tmp/alt-root/etc/yum.repos.d"
-    And I do not set reposdir
-   When I execute dnf with args "install sugar --installroot /tmp/alt-root --releasever=/"
+   When I execute dnf with args "install sugar"
    Then the exit code is 1
-   And stderr contains "No repository match: *"
-    And stderr contains "Error: There are no enabled repositories in \"/tmp/alt-root/etc/yum.repos.d\", \"/tmp/alt-root/etc/yum/repos.d\", \"/tmp/alt-root/etc/distro.repos.d\""
-
+    And stderr contains "Error: There are no enabled repositories in \"{context.dnf.installroot}/etc/yum.repos.d\", \"{context.dnf.installroot}/etc/yum/repos.d\", \"{context.dnf.installroot}/etc/distro.repos.d\""
