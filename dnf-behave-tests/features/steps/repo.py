@@ -106,6 +106,86 @@ def step_copy_repository(context, repo):
     repo_info.update_config({"baseurl": dst})
 
 
+@parse.with_pattern(r"http|https|ftp")
+def parse_repo_type(text):
+    if text in ("http", "https", "ftp"):
+        return text
+    assert False
+behave.register_type(repo_type=parse_repo_type)
+
+
+@behave.step("I use repository \"{repo}\" as {rtype:repo_type}")
+def step_use_repository_as(context, rtype, repo):
+    """
+    Starts a new HTTP/FTP server at the repository's location and then
+    configures the repository's baseurl with the server's url.
+    """
+    assert (hasattr(context, 'httpd') or hasattr(context, 'ftpd')), \
+        'Httpd or Ftpd fixture not set. Use @fixture.httpd or @fixture.ftpd tag.'
+
+    repo_info = get_repo_info(context, repo)
+    server_dir = os.path.dirname(repo_info.path)
+
+    if rtype == "http":
+        host, port = context.httpd.new_http_server(server_dir)
+    elif rtype == "ftp":
+        host, port = context.ftpd.new_ftp_server(server_dir)
+    elif rtype == "https":
+        cacert = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/ca/cert.pem')
+        cert = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/cert.pem')
+        key = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/key.pem')
+
+        client_ssl = context.dnf._get("client_ssl")
+        if client_ssl:
+            client_cert = client_ssl["certificate"]
+            client_key = client_ssl["key"]
+
+        host, port = context.httpd.new_https_server(
+            server_dir, cacert, cert, key,
+            client_verification=bool(client_ssl))
+
+    config = {
+        "baseurl": "{}://{}:{}/{}/".format(rtype, host, port, repo)
+    }
+
+    if rtype == "https":
+        config["sslcacert"] = cacert
+        if client_ssl:
+            config["sslclientcert"] = client_cert
+            config["sslclientkey"] = client_key
+
+    context.dnf.ports[repo] = port
+
+    repo_info.update_config(config)
+    create_repo_conf(context, repo)
+
+
+@behave.step("I set up metalink for repository \"{repo}\"")
+def step_set_up_metalink_for_repository(context, repo):
+    """
+    Generates a metalink for a repository and configures the repository with
+    the 'metalink' config option, which points to the newly created file.
+
+    Note that you need to copy the repository using the "I copy repository for
+    modification" step beforehand and if you're using a HTTP server, the
+    sequence of steps needs to be this:
+      I copy repository "foo" for modification
+      I use repository "foo" as http
+      I set up metalink for repository "foo"
+    """
+    repo_info = get_repo_info(context, repo)
+    assert repo_info.path.startswith(context.dnf.tempdir), \
+        "Creating a metalink needs to be done on a repo that was copied for modification."
+
+    url = repo_info.config['baseurl']
+    generate_metalink(repo_info.path, url)
+    repo_info.update_config({
+        "baseurl": "",
+        "metalink": url + "metalink.xml",
+    })
+    create_repo_conf(context, repo)
+
+
 @behave.step("I use the repository \"{repo}\"")
 def step_repo_condition(context, repo):
     if "repos" not in context.dnf:
@@ -122,12 +202,6 @@ def step_impl(context, client_cert, client_key):
     context.dnf["client_ssl"]["key"] = os.path.join(context.dnf.fixturesdir,
                                                     client_key)
 
-@parse.with_pattern(r"http|https|ftp|metalink")
-def parse_repo_type(text):
-    if text in ("http", "https", "ftp", "metalink"):
-        return text
-    assert False
-behave.register_type(repo_type=parse_repo_type)
 
 @behave.step("I use the {rtype:repo_type} repository based on \"{repo}\"")
 def step_impl(context, rtype, repo):
