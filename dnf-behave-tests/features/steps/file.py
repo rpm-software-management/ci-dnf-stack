@@ -53,8 +53,7 @@ def step_delete_file(context, filepath):
 
 @behave.given('I delete file "{filepath}" with globs')
 def step_delete_file_with_globs(context, filepath):
-    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
-    for path in glob.glob(full_path):
+    for path in glob.glob(prepend_installroot(context, filepath)):
         delete_file(path)
 
 
