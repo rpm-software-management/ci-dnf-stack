@@ -242,7 +242,10 @@ def parse_module_list(lines):
         match = MODULE_LIST_HEADER_RE.match(line2)
         if match:
             # table header for a new repository found
-            repository = line1
+            # FIXME line1 contains the repository name, while what we need here
+            # is the id. This assumes the id is the first word of the name,
+            # which happens to be the case for repos generated for the tests.
+            repository = line1.split(" ")[0]
             columns=[match.start(i+1) for i in range(4)]
             result[repository] = []
             idx += 2
