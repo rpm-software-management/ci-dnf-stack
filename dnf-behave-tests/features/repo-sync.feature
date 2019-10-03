@@ -17,6 +17,8 @@ Scenario: The default value of skip_if_unavailable is False
    Then the exit code is 1
     And stderr is
     """
+    Errors during downloading metadata for repository 'testrepo':
+      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
@@ -42,6 +44,8 @@ Scenario: There is global skip_if_unavailable option
     """
     And stderr is
     """
+    Errors during downloading metadata for repository 'testrepo':
+      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
@@ -67,6 +71,8 @@ Scenario: Per repo skip_if_unavailable configuration
     """
     And stderr is
     """
+    Errors during downloading metadata for repository 'testrepo':
+      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
@@ -89,6 +95,8 @@ Scenario: The repo configuration takes precedence over the global one
    Then the exit code is 1
     And stderr is
     """
+    Errors during downloading metadata for repository 'testrepo':
+      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
@@ -101,4 +109,6 @@ Given I use repository "dnf-ci-fedora" with configuration
       | repo_gpgcheck | 1     |
  When I execute dnf with args "makecache"
  Then the exit code is 1
-  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file"
+  And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
+  And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
+  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
