@@ -1,7 +1,7 @@
 Feature: Glob tests for expanding all the various glob patterns.
 
 Background:
- Given I use the repository "repoquery-globs"
+ Given I use repository "repoquery-globs"
 
 
 # <name> globs

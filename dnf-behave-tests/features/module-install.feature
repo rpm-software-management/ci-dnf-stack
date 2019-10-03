@@ -1,8 +1,8 @@
 Feature: Installing module profiles
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 
 Scenario: I can install a module profile for an enabled module stream
@@ -61,7 +61,7 @@ Scenario: Installing a module and its dependencies, non-modular dependency avail
 
 @bz1618421
 Scenario: Installing a module and its dependencies, non-modular dependency is not available
-  Given I disable the repository "dnf-ci-fedora"
+  Given I drop repository "dnf-ci-fedora"
    When I execute dnf with args "module install meson:master/default"
    Then the exit code is 1
     And stderr contains lines
@@ -95,7 +95,7 @@ Scenario: Install a module of which all packages and requires are already instal
 
 @bz1592408
 Scenario: Install a module of which all packages are non-modular
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "module install DnfCiModuleNoArtifacts:master/default"
    Then the exit code is 0
     And Transaction is following
@@ -110,9 +110,8 @@ Scenario: Install a module of which all packages are non-modular
 
 
 Scenario: I can install a module profile for a stream that was enabled as dependency
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
-    And I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module enable nodejs:11"
    Then the exit code is 0
     And Transaction is following

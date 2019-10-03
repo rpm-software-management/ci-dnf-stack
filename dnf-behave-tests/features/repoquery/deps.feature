@@ -3,7 +3,7 @@ Feature: Tests for the basic repoquery dependencies functionality:
     --whatrequires, --whatprovides, --whatconflicts, --whatobsoletes
 
 Background:
- Given I use the repository "repoquery-deps"
+ Given I use repository "repoquery-deps"
 
 
 # --requires

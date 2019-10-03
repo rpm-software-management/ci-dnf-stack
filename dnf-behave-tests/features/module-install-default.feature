@@ -2,7 +2,7 @@ Feature: Installing modules without profile specification using defaults from re
 
 
 Background:
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
 
 @bz1724564
 Scenario: Install module, no default profile defined, expecting no profile selection

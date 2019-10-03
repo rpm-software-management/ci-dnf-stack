@@ -20,7 +20,7 @@ Scenario Outline: Upgrade does not reinstall package with the same NEVRA and dif
    Then the exit code is 0
     And Transaction is empty
    # try to update from remote repository
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction is empty

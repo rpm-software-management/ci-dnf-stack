@@ -2,7 +2,7 @@ Feature: Shell distro-sync
 
 
 Background: Install glibc, flac, and CQRlib
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc flac CQRlib"
    Then the exit code is 0
     And Transaction is following
@@ -18,7 +18,7 @@ Background: Install glibc, flac, and CQRlib
 
 
 Scenario: Using dnf shell, make distro-sync for an RPM
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
     And I execute in dnf shell "distro-sync glibc"
     And I execute in dnf shell "run"
@@ -32,7 +32,7 @@ Scenario: Using dnf shell, make distro-sync for an RPM
 
 
 Scenario: Using dnf shell, make distro-sync for mutiple RPMs
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
     And I execute in dnf shell "distro-sync setup filesystem flac CQRlib"
     And I execute in dnf shell "run"
@@ -45,8 +45,8 @@ Scenario: Using dnf shell, make distro-sync for mutiple RPMs
 
 
 Scenario: Using dnf shell, fail to make distro-sync when no upgrade is available
-  Given I use the repository "dnf-ci-fedora-updates"
-    And I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "distro-sync setup filesystem"
    When I execute in dnf shell "run"
@@ -57,7 +57,7 @@ Scenario: Using dnf shell, fail to make distro-sync when no upgrade is available
 
 
 Scenario: Using dnf shell, fail to make distro-sync for non-existent RPM
-  Given I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "distro-sync non-existent"
    Then Transaction is empty

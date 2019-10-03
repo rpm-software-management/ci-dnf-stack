@@ -2,7 +2,7 @@ Feature: Enabling module streams - error handling
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-modular-updates"
 
 
 Scenario: Fail to enable a different stream of an already enabled module
@@ -132,7 +132,7 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
 
 
 Scenario: Enabling a stream depending on other than enabled stream should fail
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
     And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
         """
         ---
@@ -166,7 +166,7 @@ Scenario: Enabling a stream depending on other than enabled stream should fail
 
 
 Scenario: Enabling a stream depending on a disabled stream should fail
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
     And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
         """
         ---
@@ -203,7 +203,7 @@ Scenario: Enabling a stream depending on a disabled stream should fail
 # side-dish:chip requires fluid:oil
 # beverage:beer requires fluid:water
 Scenario: Enabling two modules both requiring different streams of another module
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable side-dish:chips beverage:beer"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"
@@ -214,7 +214,7 @@ Scenario: Enabling two modules both requiring different streams of another modul
 # beverage:beer requires fluid:water
 @bz1651280
 Scenario: Enabling module stream and another module requiring another stream
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable fluid:oil beverage:beer"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"

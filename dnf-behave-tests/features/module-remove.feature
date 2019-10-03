@@ -2,8 +2,8 @@ Feature: Module profile removal
 
 
 Background:
-Given I use the repository "dnf-ci-fedora-modular"
-  And I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora-modular"
+  And I use repository "dnf-ci-fedora"
  When I execute dnf with args "module enable nodejs:8"
  Then the exit code is 0
   And modules state is following
@@ -134,8 +134,8 @@ Scenario: I can remove an installed module profile using "remove @<module_spec>"
 
 @bz1700529
 Scenario: Remove module profile when userinstalled package requires its package
-Given I use the repository "dnf-ci-fifthparty"
-  And I use the repository "dnf-ci-fifthparty-modular"
+Given I use repository "dnf-ci-fifthparty"
+  And I use repository "dnf-ci-fifthparty-modular"
    # install module that contains package luke
    When I execute dnf with args "module install jedi:1/duo"
    Then the exit code is 0

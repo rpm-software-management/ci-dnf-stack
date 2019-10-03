@@ -2,8 +2,8 @@ Feature: Module info
 
 
 Background:
-Given I use the repository "dnf-ci-fedora"
-Given I use the repository "dnf-ci-fedora-modular"
+Given I use repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora-modular"
  When I execute dnf with args "module enable nodejs:8"
  Then the exit code is 0
   And modules state is following
@@ -16,7 +16,7 @@ Given I use the repository "dnf-ci-fedora-modular"
       | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module enable postgresql:11"
  Then the exit code is 0
  When I execute dnf with args "module install postgresql/client"

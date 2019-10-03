@@ -2,8 +2,8 @@ Feature: Updating module profiles
 
 
 Background:
-Given I use the repository "dnf-ci-fedora-modular"
-  And I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora-modular"
+  And I use repository "dnf-ci-fedora"
   
 
 Scenario: I can update a module profile to a newer version
@@ -19,7 +19,7 @@ Scenario: I can update a module profile to a newer version
       | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs/default"
  Then the exit code is 0
   And Transaction is following
@@ -33,7 +33,7 @@ Scenario: Disabled but installed profile should not be receiving updates
  Then the exit code is 0
  When I execute dnf with args "module disable nodejs"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs/default"
  Then the exit code is 0
   And Transaction is empty
@@ -74,7 +74,7 @@ Scenario: I can update a module profile with package changes
       | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64 |
       | install                   | npm-1:10.11.0-1.module_2200+adbac02b.x86_64    |
       | module-profile-install    | nodejs/default                                 |
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs/default"
  Then the exit code is 0
  And Transaction contains
@@ -98,7 +98,7 @@ Scenario: default stream is used for new deps during an update
       | install                   | nodejs-1:11.0.0-1.module_2311+8d497411.x86_64 |
       | install                   | npm-1:11.0.0-1.module_2311+8d497411.x86_64    |
       | module-profile-install    | nodejs/default                                |
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs"
  Then the exit code is 0
   And Transaction is following
@@ -122,7 +122,7 @@ Scenario: Both ursine packages and modules are updated during dnf update
   And modules state is following
       | Module    | State     | Stream    | Profiles  |
       | nodejs    | enabled   | 8         |           |
-Given I use the repository "dnf-ci-thirdparty"
+Given I use repository "dnf-ci-thirdparty"
  When I execute dnf with args "install CQRlib CQRlib-extension"
  Then the exit code is 0
   And Transaction is following
@@ -136,8 +136,8 @@ Given I use the repository "dnf-ci-thirdparty"
       | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
-Given I use the repository "dnf-ci-fedora-modular-updates"
-Given I use the repository "dnf-ci-thirdparty-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-thirdparty-updates"
  When I execute dnf with args "update"
  Then the exit code is 0
    And Transaction is following
@@ -160,7 +160,7 @@ Scenario: Update module packages even if no profiles are installed
   And modules state is following
       | Module    | State     | Stream    | Profiles  |
       | nodejs    | enabled   | 11        |           |
-Given I use the repository "dnf-ci-fedora-modular-updates"
+Given I use repository "dnf-ci-fedora-modular-updates"
 When I execute dnf with args "module update nodejs"
  Then the exit code is 0
   And Transaction contains
@@ -173,7 +173,7 @@ When I execute dnf with args "module update nodejs"
 
 @bz1647429
 Scenario: Update module packages and dependent packages when no profiles are installed
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable cookbook:1 ingredience:egg"
    Then the exit code is 0
    When I execute dnf with args "install axe egg blender whisk"
@@ -187,7 +187,7 @@ Scenario: Update module packages and dependent packages when no profiles are ins
     And modules state is following
         | Module      | State      | Stream    | Profiles      |
         | cookbook    | enabled    | 1         |               |
-  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+  Given I use repository "dnf-ci-thirdparty-modular-updates"
    When I execute dnf with args "module update cookbook"
    Then the exit code is 0
     And Transaction is following
@@ -203,7 +203,7 @@ Scenario: Update module packages and dependent packages when no profiles are ins
 
 @bz1647429
 Scenario: Update module packages and dependent packages when some profiles are installed
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable cookbook:1 ingredience:egg"
    Then the exit code is 0
    When I execute dnf with args "module install cookbook:1/axe-soup"
@@ -228,7 +228,7 @@ Scenario: Update module packages and dependent packages when some profiles are i
     And modules state is following
         | Module      | State      | Stream    | Profiles      |
         | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs   |
-  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+  Given I use repository "dnf-ci-thirdparty-modular-updates"
    When I execute dnf with args "module update cookbook"
    Then the exit code is 0
     And Transaction is following
@@ -245,7 +245,7 @@ Scenario: Update module packages and dependent packages when some profiles are i
 
 @bz1647429
 Scenario: Update module profiles that contains non-modular packages and packages from different modules
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable cookbook:1 ingredience:egg"
    Then the exit code is 0
    When I execute dnf with args "module install cookbook:1/axe-soup"
@@ -265,7 +265,7 @@ Scenario: Update module profiles that contains non-modular packages and packages
     And modules state is following
         | Module      | State      | Stream    | Profiles      |
         | cookbook    | enabled    | 1         | axe-soup, ham-and-eggs  |
-  Given I use the repository "dnf-ci-thirdparty-modular-updates"
+  Given I use repository "dnf-ci-thirdparty-modular-updates"
    When I execute dnf with args "module update cookbook:1/axe-soup cookbook:1/ham-and-eggs"
    Then the exit code is 0
     And Transaction is following

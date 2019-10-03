@@ -3,8 +3,8 @@ Feature: repo-packages remove
 
   Scenario: Remove packages from available repository, also remove their 
     dependencies and packages that depend on them (even from other repositories)
-Given I use the repository "dnf-ci-fedora"
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "install CQRlib-devel libzstd"
  Then the exit code is 0
   And Transaction is following

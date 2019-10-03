@@ -2,8 +2,8 @@ Feature: Installing package from module
 
 
 Scenario: I can install a specific package from a module
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
     And I execute dnf with args "module enable ninja:master"
    When I execute dnf with args "install ninja-build"
    Then the exit code is 0
@@ -13,7 +13,7 @@ Scenario: I can install a specific package from a module
 
 
 Scenario: I can install a package from modular repo not belonging to a module
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install solveigs-song"
    Then the exit code is 0
     And Transaction is following
@@ -22,7 +22,7 @@ Scenario: I can install a package from modular repo not belonging to a module
 
 
 Scenario: I cannot install a specific package from not enabled module when default stream is not defined
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install arabian-dance"
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
@@ -34,8 +34,8 @@ Scenario: I cannot install a specific package from not enabled module when defau
 # ursine repo contains ninja-build-0:1.8.2-5.fc29.x86_64
 
 Scenario: module content masks ursine content - module not enabled, default stream exists
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
@@ -43,8 +43,8 @@ Scenario: module content masks ursine content - module not enabled, default stre
 
 
 Scenario: module content masks ursine content - non-default stream enabled
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "module enable ninja:development"
    Then the exit code is 0
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
@@ -54,8 +54,8 @@ Scenario: module content masks ursine content - non-default stream enabled
 
 
 Scenario: a package from a non-enabled module is preferred when default stream is defined
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install ninja-build"
    Then the exit code is 0
     And Transaction contains
@@ -68,8 +68,8 @@ Scenario: a package from a non-enabled module is preferred when default stream i
 
 
 Scenario: rpm from enabled stream is preferred regardless of NVRs
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "module enable ninja:legacy"
    Then the exit code is 0
    When I execute dnf with args "install ninja-build"

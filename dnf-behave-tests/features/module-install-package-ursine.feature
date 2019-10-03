@@ -1,8 +1,8 @@
 Feature: Installing package from ursine repo
 
 Background: Enable repositories
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
 
 
 @bz1636390

@@ -1,7 +1,7 @@
 Feature: history list
 
 Background:
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
   # create some history to start with
   And I successfully execute dnf with args "install abcde basesystem"
   And I successfully execute dnf with args "remove abcde"

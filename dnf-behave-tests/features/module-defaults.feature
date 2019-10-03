@@ -1,8 +1,8 @@
 Feature: Modulemd defaults are followed by dnf module commands
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 
 Scenario: The default stream is used when enabling a module

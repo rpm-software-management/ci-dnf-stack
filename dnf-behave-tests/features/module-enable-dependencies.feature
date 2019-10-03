@@ -2,7 +2,7 @@ Feature: Enable module streams with modular dependencies
 
 
 Background:
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
 
 
 Scenario: Enabling a default stream depending on a default stream
@@ -333,7 +333,7 @@ Scenario: Enable a module stream dependent on a module with a default stream
 
 
 Scenario: Enable a module stream dependent on a module without default stream
-  Given I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module enable nodejs:12"
    Then the exit code is 0
     And Transaction contains

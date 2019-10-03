@@ -2,7 +2,7 @@ Feature: Tests for report nonexisting plugin
 
 Background: Enable builddep plugin
   Given I enable plugin "builddep"
-    And I use the repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora"
 
 @bz1673289 @bz1467304
 Scenario: Report nonexisting plugin to disable

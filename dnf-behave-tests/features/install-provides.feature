@@ -2,7 +2,7 @@ Feature: Install RPMs by provides
 
 
 Scenario: Install an RPM by provide that equals to e:v-r
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem = 0:3.9-2.fc29'"
    Then the exit code is 0
     And Transaction is following
@@ -12,7 +12,7 @@ Scenario: Install an RPM by provide that equals to e:v-r
 
 
 Scenario: Install an RPM by provide that is greater than e:vr
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem > 0:3.9-2'"
    Then the exit code is 0
     And Transaction is following
@@ -22,7 +22,7 @@ Scenario: Install an RPM by provide that is greater than e:vr
 
 
 Scenario: Install an RPM by provide that is greater or equal to e:vr
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem >= 0:3.9-2'"
    Then the exit code is 0
     And Transaction is following
@@ -32,8 +32,8 @@ Scenario: Install an RPM by provide that is greater or equal to e:vr
 
 
 Scenario: Install an RPM by provide that is lower than e:vr
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install 'glibc < 0:2.28-26.fc29'"
    Then the exit code is 0
     And Transaction is following
@@ -47,8 +47,8 @@ Scenario: Install an RPM by provide that is lower than e:vr
 
 
 Scenario: Install an RPM by provide that is lower or equal to e:vr
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install 'glibc <= 0:2.28-26.fc29'"
    Then the exit code is 0
     And Transaction is following
@@ -62,7 +62,7 @@ Scenario: Install an RPM by provide that is lower or equal to e:vr
 
 
 Scenario: I can install an RPM by $provide where $provide is key
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install webclient"
    Then the exit code is 0
     And Transaction is following
@@ -71,7 +71,7 @@ Scenario: I can install an RPM by $provide where $provide is key
 
 
 Scenario Outline: I can install an RPM by <provide type>
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install <provide> "
  Then the exit code is 0
   And Transaction is following

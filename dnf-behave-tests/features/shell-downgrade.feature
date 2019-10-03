@@ -2,8 +2,8 @@ Feature: Shell downgrade
 
 
 Background: Install glibc and flac
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
     And Transaction is following

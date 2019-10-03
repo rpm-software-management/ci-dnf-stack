@@ -7,8 +7,8 @@ Feature: Testing group mark
 #   conditional: wget, requires filesystem-content
 
 Scenario: Mark group as installed
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group list DNF-CI-Testgroup"
    Then the exit code is 0
     And stdout contains "Available Groups"
@@ -31,8 +31,8 @@ Scenario: Mark group as installed
 
 
 Scenario: unMark group as installed
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group mark install DNF-CI-Testgroup"
    Then the exit code is 0
     And Transaction is following

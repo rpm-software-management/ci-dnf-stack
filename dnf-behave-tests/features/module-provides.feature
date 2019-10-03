@@ -2,8 +2,8 @@ Feature: Module provides command
 
 
 Background:
-Given I use the repository "dnf-ci-fedora-modular"
-  And I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora-modular"
+  And I use repository "dnf-ci-fedora"
 
 
 @xfail @bz1629667

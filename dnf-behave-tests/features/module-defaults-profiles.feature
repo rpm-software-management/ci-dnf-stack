@@ -2,8 +2,8 @@ Feature: Non-default profiles can be installed when explicitly specified on comm
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 # module nodejs:
 #   streams: 8 [d], 10

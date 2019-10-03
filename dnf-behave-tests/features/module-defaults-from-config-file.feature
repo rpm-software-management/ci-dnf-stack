@@ -9,8 +9,8 @@ Feature: On-disk modulemd data are preferred over repodata in case of a conflict
 #    found in repodata, but never delete stream profiles.
 
 Background: Setup local module defaults
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
     And I create file "/etc/dnf/modules.defaults.d/local_defaults_a.yaml" with
         """
         ---

@@ -1,7 +1,7 @@
 Feature: History of update
 
 Background:
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
 
 Scenario: History of update packages
    # `install setup` step added so that `install abcde` was not the first
@@ -20,7 +20,7 @@ Scenario: History of update packages
         | install       | abcde-0:2.9.2-1.fc29.noarch               |
         | install       | flac-0:1.3.2-8.fc29.x86_64                |
         | install       | wget-0:1.19.5-5.fc29.x86_64               |
-   When I use the repository "dnf-ci-fedora-updates"
+   When I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
     And Transaction is following
@@ -39,7 +39,7 @@ Scenario: History of update packages
 Scenario: Rollback update
   Given I successfully execute dnf with args "install setup"
     And I execute dnf with args "install abcde"
-    And I use the repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates"
     And I successfully execute dnf with args "update"
    When I execute dnf with args "history rollback last-1"
    Then the exit code is 0

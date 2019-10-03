@@ -3,11 +3,11 @@ Feature: Reboot hint
 
 Background:
     Given I enable plugin "needs_restarting"
-      And I use the repository "dnf-ci-fedora"
+      And I use repository "dnf-ci-fedora"
       And I move the clock backward to "before boot-up"
       And I execute dnf with args "install lame kernel basesystem glibc wget"
       And I move the clock forward to "the present"
-      And I use the repository "dnf-ci-fedora-updates"
+      And I use repository "dnf-ci-fedora-updates"
 
 Scenario: Update core packages
     Given I execute dnf with args "upgrade kernel basesystem"

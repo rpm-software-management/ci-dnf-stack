@@ -2,7 +2,7 @@ Feature: Install different version of installed RPMs
 
 
 Scenario: Install higher versions of installed RPMs
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
@@ -13,7 +13,7 @@ Scenario: Install higher versions of installed RPMs
         | install       | glibc-0:2.28-9.fc29.x86_64                 |
         | install       | glibc-common-0:2.28-9.fc29.x86_64          |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc-2.28-26.fc29"
    Then the exit code is 0
     And Transaction is following
@@ -24,8 +24,8 @@ Scenario: Install higher versions of installed RPMs
 
 
 Scenario: Install lower versions of installed RPMs
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following

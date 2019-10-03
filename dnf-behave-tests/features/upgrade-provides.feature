@@ -2,7 +2,7 @@ Feature: Upgrade RPMs by provides
 
 
 Background: Install glibc
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
@@ -16,7 +16,7 @@ Background: Install glibc
 
 
 Scenario Outline: Upgrade an RPM by provide <operator> e:v-r
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade 'glibc <operator> <e:v-r>'"
    Then the exit code is 0
     And Transaction is following
@@ -36,7 +36,7 @@ Examples:
 
 
 Scenario: Upgrade an RPM by provide
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade 'libm.so.6()(64bit)'"
    Then the exit code is 0
     And Transaction is following
@@ -47,7 +47,7 @@ Scenario: Upgrade an RPM by provide
 
 
 Scenario: Upgrade an RPM by file provide
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /etc/ld.so.conf"
    Then the exit code is 0
     And Transaction is following
@@ -58,7 +58,7 @@ Scenario: Upgrade an RPM by file provide
 
 
 Scenario: Upgrade an RPM by file provide that is directory
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /var/db"
    Then the exit code is 0
     And Transaction is following
@@ -69,7 +69,7 @@ Scenario: Upgrade an RPM by file provide that is directory
 
 
 Scenario: Upgrade an RPM by file provide containing wildcards
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /etc/ld*.conf"
    Then the exit code is 0
     And Transaction is following

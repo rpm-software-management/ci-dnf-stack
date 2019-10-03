@@ -1,7 +1,7 @@
 Feature: Transaction history undo
 
 Background:
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
 
 Scenario: Undoing transactions
   Given I successfully execute dnf with args "install filesystem"
@@ -50,8 +50,8 @@ Scenario: Handle missing packages required for undoing the transaction
          | Action        | Package                      |
          | install       | wget-0:1.19.5-5.fc29.x86_64  |
          | install       | flac-0:1.3.2-8.fc29.x86_64   |
-   When I disable the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+   When I drop repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "update"
     Then the exit code is 0
      And Transaction is following

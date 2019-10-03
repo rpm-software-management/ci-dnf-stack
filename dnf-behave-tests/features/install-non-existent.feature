@@ -3,7 +3,7 @@ Feature: Test for installation of non-existent rpm or package
 
 @bz1578369
 Scenario: Try to install a non-existent rpm
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install non-existent.rpm"
    Then the exit code is 1
     And stderr contains "Can not load RPM file"
@@ -11,7 +11,7 @@ Scenario: Try to install a non-existent rpm
 
 
 Scenario: Try to install a non-existent package
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install non-existent-package"
    Then the exit code is 1
     And stdout contains "No match for argument"
@@ -20,7 +20,7 @@ Scenario: Try to install a non-existent package
 
 @bz1717429
 Scenario: Install an existent and an non-existent package
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup non-existent-package"
    Then the exit code is 1
     And stdout contains "No match for argument: non-existent-package"
@@ -29,7 +29,7 @@ Scenario: Install an existent and an non-existent package
 
 @bz@1717429
 Scenario: Install an existent and an non-existent package with --skip-broken
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup non-existent-package --skip-broken"
    Then the exit code is 0
     And stdout contains "No match for argument: non-existent-package"

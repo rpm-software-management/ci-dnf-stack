@@ -2,7 +2,7 @@ Feature: Test for dnf list (including all documented suboptions and yum compatib
 
 
 Background: Enable dnf-ci-fedora repository
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
 
 
 Scenario: dnf list nonexistentpkg
@@ -24,7 +24,7 @@ Scenario: List all packages available
 Scenario Outline: dnf list <extras alias> (installed pkgs, not from known repos)
  When I execute dnf with args "install setup"
  Then the exit code is 0
-Given I disable the repository "dnf-ci-fedora"
+Given I drop repository "dnf-ci-fedora"
   And I execute dnf with args "list <extras alias>"
  Then the exit code is 0
  Then stdout section "Extra Packages" contains "setup.noarch\s+2.12.1-1.fc29\s+@dnf-ci-fedora"
@@ -38,7 +38,7 @@ Examples:
 Scenario: dnf list setup (when setup is installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
-Given I disable the repository "dnf-ci-fedora"
+Given I drop repository "dnf-ci-fedora"
  When I execute dnf with args "list setup"
  Then stdout section "Installed Packages" contains "setup.noarch\s+2.12.1-1.fc29\s+@dnf-ci-fedora"
  Then stdout does not contain "Available Packages"
@@ -53,7 +53,7 @@ Scenario: dnf list setup (when setup is not installed but it is available)
 Scenario Outline: dnf list <installed alias> setup (when setup is installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
-Given I disable the repository "dnf-ci-fedora"
+Given I drop repository "dnf-ci-fedora"
  When I execute dnf with args "list <installed alias> setup"
  Then stdout section "Installed Packages" contains "setup.noarch\s+2.12.1-1.fc29\s+@dnf-ci-fedora"
  Then stdout does not contain "Available Packages"
@@ -138,7 +138,7 @@ Scenario: dnf list setup basesystem (when both are installed)
 Scenario: dnf list glibc\* 
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list glibc\*"
  Then stdout section "Installed Packages" contains "glibc.x86_64\s+2.28-9.fc29\s+@dnf-ci-fedora"
  Then stdout section "Installed Packages" contains "glibc-common.x86_64\s+2.28-9.fc29\s+@dnf-ci-fedora"
@@ -150,7 +150,7 @@ Given I use the repository "dnf-ci-fedora-updates"
 Scenario Outline: dnf list <upgrades alias>
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list <upgrades alias>"
  Then the exit code is 0
  Then stdout section "Available Upgrades" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
@@ -165,7 +165,7 @@ Examples:
         
 
 Scenario: dnf list upgrades glibc (when glibc is not installed)
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list upgrades glibc"
  Then the exit code is 1
  Then stderr contains "No matching Packages"
@@ -175,7 +175,7 @@ Given I use the repository "dnf-ci-fedora-updates"
 Scenario Outline: dnf list <obsoletes alias>
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list <obsoletes alias>"
  Then the exit code is 0
  Then stdout section "Obsoleting Packages" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
@@ -198,7 +198,7 @@ Scenario: dnf list obsoletes setup (when setup is not obsoleted)
 Scenario Outline: dnf list <all alias> glibc\*
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list <all alias>"
  Then the exit code is 0
  Then stdout section "Installed Packages" contains "glibc.x86_64\s+2.28-9.fc29\s+@dnf-ci-fedora"

@@ -1,8 +1,8 @@
 Feature: Installing module profiles - error handling
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 
 Scenario: A proper error message is displayed when I try to install a non-existent module
@@ -71,7 +71,7 @@ Scenario: A proper error message is displayed when I try to install a non-existe
 
 @xfail @bz1656782
 Scenario: Profile is not installed after its artifact failed to get installed
-  Given I use the repository "dnf-ci-fileconflicts"
+  Given I use repository "dnf-ci-fileconflicts"
    When I execute dnf with args "install FileConflict-1.0-1.x86_64"
    Then the exit code is 0
     And Transaction is following

@@ -2,8 +2,8 @@ Feature: RPMs can be installed locally regardless the modular content
 
 
 Background: Enable dnf-ci-fedora and dnf-ci-fedora-modular
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-modular"
 
 
 @bz1582105

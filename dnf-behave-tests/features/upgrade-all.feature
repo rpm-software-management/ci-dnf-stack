@@ -2,7 +2,7 @@ Feature: Upgrade all RPMs
 
 
 Background: Install some RPMs from one repository
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc flac wget"
    Then the exit code is 0
     And Transaction is following
@@ -18,7 +18,7 @@ Background: Install some RPMs from one repository
 
 
 Scenario: Upgrade all RPMs from one repository
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction is following
@@ -31,7 +31,7 @@ Scenario: Upgrade all RPMs from one repository
 
 
 Scenario: Upgrade all RPMs from one repository using '*'
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade '*'"
    Then the exit code is 0
     And Transaction is following

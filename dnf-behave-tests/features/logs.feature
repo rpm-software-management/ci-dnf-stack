@@ -4,7 +4,7 @@ Feature: Logs
 @not.with_os=rhel__eq__8
 @bz1739457
 Scenario: dnf.rpm.log doesn't contain duplicate entries ()
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "install flac"
     And I execute dnf with args "reinstall flac"
     And I execute dnf with args "downgrade flac"

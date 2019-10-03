@@ -2,7 +2,7 @@ Feature: Enabling module streams
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora-modular"
 
 
 Scenario Outline: Enable a module stream by <modulespec-type>

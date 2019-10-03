@@ -6,7 +6,7 @@ Feature: Obsoleted packages
 # PackageA-Provider which provides PackageA in versin 4.0
 
 Background: Use dnf-ci-obsoletes repository
-  Given I use the repository "dnf-ci-obsoletes"
+  Given I use repository "dnf-ci-obsoletes"
 
 
 Scenario: Install of obsoleted package, but higher version than obsoleted present
@@ -102,14 +102,14 @@ Scenario: Autoremoval of obsoleted package
 @xfail
 @bz1672947
 Scenario: Multilib obsoletes during distro-sync
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lz4-0:1.7.5-2.fc26.i686 lz4-0:1.7.5-2.fc26.x86_64"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                       |
         | install       | lz4-0:1.7.5-2.fc26.i686       |
         | install       | lz4-0:1.7.5-2.fc26.x86_64     |
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "distro-sync"
    Then the exit code is 0
    Then stderr does not contain "TransactionItem not found for key: lz4"

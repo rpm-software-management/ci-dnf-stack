@@ -4,7 +4,7 @@ Feature: Transaction history undo with obsoletes
 # Package glibc obsoletes glibc-profile < 2.4
 
 Scenario: Undo with obsoletes
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
 
    When I execute dnf with args "install glibc-profile"
    Then the exit code is 0
@@ -12,7 +12,7 @@ Scenario: Undo with obsoletes
         | Action        | Package                                   |
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
 
-   When I use the repository "dnf-ci-fedora"
+   When I use repository "dnf-ci-fedora"
     And I execute dnf with args "install glibc-all-langpacks"
    Then the exit code is 0
     And Transaction is following

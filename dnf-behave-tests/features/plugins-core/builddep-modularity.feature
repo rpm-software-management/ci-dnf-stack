@@ -2,7 +2,7 @@ Feature: Tests for builddep command on modular system
 
 Background: Enable builddep plugin
   Given I enable plugin "builddep"
-    And I use the repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora"
 
 # dnf-ci-fedora-modular repo:
 #   module ninja:master [d] contains ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64
@@ -24,7 +24,7 @@ Scenario: Builddep installs non-modular build requirements
 @use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes default stream over other streams / non-modular content even though the version is older
-  Given I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora-modular"
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-1.0-1.src.rpm"
    Then the exit code is 0
     And Transaction contains
@@ -36,7 +36,7 @@ Scenario: Builddep preferes default stream over other streams / non-modular cont
 @use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes enabled stream over other streams / non-modular content even though the version is older
-  Given I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora-modular"
    When I execute dnf with args "module enable ninja:legacy"
    Then the exit code is 0
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-1.0-1.src.rpm"
@@ -49,7 +49,7 @@ Scenario: Builddep preferes enabled stream over other streams / non-modular cont
 # build-requires-ninja-build-0.5-1.src.rpm build requires ninja-build < 1.8
 @1677583
 Scenario: Builddep reports error where required package is available only in non-enabled non-default stream
-  Given I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora-modular"
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-0.5-1.src.rpm"
    Then the exit code is 1
     And stderr contains lines
@@ -65,8 +65,8 @@ Scenario: Builddep reports error where required package is available only in non
 @use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the default stream
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-nodejs-1.0-1.src.rpm"
    Then the exit code is 0
     And Transaction contains
@@ -79,8 +79,8 @@ Scenario: Builddep preferes hotfix repo over the default stream
 @use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the enabled stream
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-nodejs-1.0-1.src.rpm"

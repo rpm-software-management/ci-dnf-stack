@@ -1,7 +1,7 @@
 Feature: The common repoquery tests, core functionality, odds and ends.
 
 Background:
- Given I use the repository "repoquery-main"
+ Given I use repository "repoquery-main"
 
 
 # simple nevra matching tests
@@ -249,7 +249,7 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 Scenario: repoquery -C (with cache, but disabled repository)
 Given I successfully execute dnf with args "makecache"
-Given I disable the repository "repoquery-main"
+Given I drop repository "repoquery-main"
  When I execute dnf with args "repoquery --available -C"
  Then the exit code is 0
   And stdout is empty
@@ -401,7 +401,7 @@ Scenario: repoquery --location NAME
 @fixture.httpd
 Scenario: repoquery --location NAME (in an HTTP repo)
 Given I use the https repository based on "repoquery-main"
-  And I disable the repository "repoquery-main"
+  And I drop repository "repoquery-main"
  When I execute dnf with args "repoquery --location top-a-2.0"
  Then the exit code is 0
   And stdout matches line by line

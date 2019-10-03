@@ -9,7 +9,7 @@ Feature: Tests for rich (boolean) dependencies:
  unless else - same as above but requires the third operand to be fulfilled if the second is
 
 Background:
-Given I use the repository "repoquery-rich-deps"
+Given I use repository "repoquery-rich-deps"
 
 
 Scenario: repoquery --recommends NAME

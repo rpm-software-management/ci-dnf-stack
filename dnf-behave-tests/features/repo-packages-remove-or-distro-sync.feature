@@ -2,7 +2,7 @@ Feature: repo-packages remove-or-distro-sync
 
 
 Scenario: Sync package to latest version in available repositories
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
@@ -13,7 +13,7 @@ Scenario: Sync package to latest version in available repositories
         | install       | basesystem-0:11-6.fc29.noarch         |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
         | install       | setup-0:2.12.1-1.fc29.noarch          |
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repo-packages dnf-ci-fedora remove-or-distro-sync glibc"
    Then the exit code is 0
     And Transaction is following
@@ -24,14 +24,14 @@ Scenario: Sync package to latest version in available repositories
 
 
 Scenario: Remove repository package because it's not available in other repositories
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
         | install       | setup-0:2.12.1-1.fc29.noarch          |
   # following line is not necessary - the package isn't available in the repo anyway
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repo-packages dnf-ci-fedora remove-or-distro-sync setup"
    Then the exit code is 0
     And Transaction is following
@@ -40,8 +40,8 @@ Scenario: Remove repository package because it's not available in other reposito
 
 
 Scenario: Remove and distro-sync packages from a repository
-  Given I use the repository "dnf-ci-fedora"
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc libzstd"
    Then the exit code is 0
     And Transaction is following
@@ -64,7 +64,7 @@ Scenario: Remove and distro-sync packages from a repository
 
 
 Scenario: Fail on no package installed from the repo
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
@@ -76,6 +76,6 @@ Scenario: Fail on no package installed from the repo
 
 
 Scenario: Fail on a non-existent package
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "repo-packages dnf-ci-fedora remove-or-distro-sync pkg-does-not-exist"
    Then the exit code is 1

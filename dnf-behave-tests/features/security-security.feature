@@ -2,7 +2,7 @@ Feature: Test security options for update
 
 
 Background: Use repository with advisories
-  Given I use the repository "dnf-ci-security"
+  Given I use repository "dnf-ci-security"
    When I execute dnf with args "install security_A-1.0-1 security_B-1.0-1"
    Then the exit code is 0
     And Transaction is following
@@ -12,8 +12,8 @@ Background: Use repository with advisories
 
 
 Scenario: Security check-update when there are no such updates
-  Given I disable the repository "dnf-ci-security"
-    And I use the repository "dnf-ci-fedora"
+  Given I drop repository "dnf-ci-security"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "check-update --security"
    Then the exit code is 0
     And stdout does not contain "security_A"

@@ -2,8 +2,8 @@ Feature: Disabling module - error handling
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora"
 
 
 Scenario Outline: Disabling a module by referring the <spec> should fail

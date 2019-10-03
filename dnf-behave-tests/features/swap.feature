@@ -2,9 +2,9 @@ Feature: Test for swap command
 
 
 Background: Enable repositories
-  Given I use the repository "dnf-ci-fedora"
-  Given I use the repository "dnf-ci-fedora-updates"
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-thirdparty"
 
 
 Scenario: Switch packages by swap command

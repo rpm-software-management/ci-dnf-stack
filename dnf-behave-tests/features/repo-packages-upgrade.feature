@@ -2,7 +2,7 @@ Feature: repo-packages upgrade
 
 
 Scenario: upgrade packages from not enabled repo
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
   And Transaction is following
@@ -23,7 +23,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: upgrade packages from enabled repo
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
   And Transaction is following
@@ -34,7 +34,7 @@ Given I use the repository "dnf-ci-fedora"
       | install       | glibc-0:2.28-9.fc29.x86_64                |
       | install       | glibc-common-0:2.28-9.fc29.x86_64         |
       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "repository-packages dnf-ci-fedora-updates upgrade"
  Then the exit code is 0
   And Transaction is following

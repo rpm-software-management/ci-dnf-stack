@@ -7,7 +7,7 @@ Feature: DNF config files testing
 # Scenario: Reposdir option in dnf conf.file in host
 
 Scenario: Test removal of dependency when clean_requirements_on_remove=false
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I do not set config file
     And I create file "/etc/dnf/dnf.conf" with
     """
@@ -29,7 +29,7 @@ Scenario: Test removal of dependency when clean_requirements_on_remove=false
 
 
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I do not set config file
     And I create file "/etc/dnf/dnf.conf" with
     """
@@ -43,7 +43,7 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
 
 
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I create file "/etc/dnf/dnf.conf" with
     """
     [main]
@@ -172,7 +172,7 @@ Scenario: Reposdir option set by --setopt
 
 @bz1512457
 Scenario: Test usage of not existing config file
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I set config file to "/etc/dnf/not_existing_dnf.conf"
     And I delete file "/etc/dnf/not_existing_dnf.conf"
    When I execute dnf with args "list"

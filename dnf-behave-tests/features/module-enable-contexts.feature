@@ -1,7 +1,7 @@
 Feature: Dependency resolution must occur to determine the appropriate dependent stream+context to use
 
 Background:
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
 
 Scenario: Appropriate context is selected depending on the enabled required module stream
    When I execute dnf with args "module enable biotope:wood"

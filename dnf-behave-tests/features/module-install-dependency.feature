@@ -2,7 +2,7 @@ Feature: Installing modules with modular dependencies
 
 
 Background:
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
 
 
 Scenario: Install a module that requires a module, specifying one stream in Requires

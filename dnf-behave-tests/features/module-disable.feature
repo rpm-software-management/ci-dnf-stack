@@ -2,8 +2,8 @@ Feature: Disabling module stream
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora"
 
 
 @bz1677640
