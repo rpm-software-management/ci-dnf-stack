@@ -7,8 +7,8 @@ Feature: Testing groups
 #   conditional: wget, requires filesystem-content
 
 Scenario: Install and remove group
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install DNF-CI-Testgroup"
    Then the exit code is 0
     And Transaction is following
@@ -30,8 +30,8 @@ Scenario: Install and remove group
 
 
 Scenario: Install and remove group with excluded package
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install --exclude=lame DNF-CI-Testgroup"
    Then the exit code is 0
     And Transaction is following
@@ -49,8 +49,8 @@ Scenario: Install and remove group with excluded package
 
 @bz1707624
 Scenario: Install installed group when group is not available
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install --exclude=lame DNF-CI-Testgroup"
    Then the exit code is 0
     And Transaction is following
@@ -64,8 +64,8 @@ Scenario: Install installed group when group is not available
     And stderr does not contain "ValueError"
 
 Scenario: Install and remove group with excluded package dependency
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install --exclude=setup DNF-CI-Testgroup"
    Then the exit code is 1
     And stderr contains "Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed"
@@ -74,8 +74,8 @@ Scenario: Install and remove group with excluded package dependency
 @xfail
 @bz1673851
 Scenario: Install condidional package if required package is about to be installed
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install @DNF-CI-Testgroup filesystem-content"
    Then the exit code is 0
     And Transaction is following
@@ -102,8 +102,8 @@ Scenario: Install condidional package if required package is about to be install
 @xfail
 @bz1673851
 Scenario: Install condidional package if required package has been installed
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem-content"
    Then the exit code is 0
     And Transaction is following
@@ -123,8 +123,8 @@ Scenario: Install condidional package if required package has been installed
 
 # basesystem requires filesystem (part of DNF-CI-Testgroup)
 Scenario: Group remove does not remove packages required by user installed packages
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install DNF-CI-Testgroup"
    Then the exit code is 0
     And Transaction is following
@@ -160,8 +160,8 @@ Scenario: Group remove does not remove packages required by user installed packa
 
 
 Scenario: Group remove does not remove user installed packages
-  Given I use the repository "dnf-ci-thirdparty"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following

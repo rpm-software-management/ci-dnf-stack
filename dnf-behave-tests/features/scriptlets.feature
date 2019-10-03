@@ -2,7 +2,7 @@ Feature: Test for successful and failing rpm scriptlets
 
 
 Background: Enable repository
-  Given I use the repository "dnf-ci-scriptlets"
+  Given I use repository "dnf-ci-scriptlets"
 
 
 Scenario Outline: Install a pkg with a successful scriptlet

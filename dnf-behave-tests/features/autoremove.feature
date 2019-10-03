@@ -1,8 +1,8 @@
 Feature: Autoremoval of unneeded packages
 
 Scenario: Autoremoval of package which became non-required by others
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install SuperRipper"
    Then the exit code is 0
     And Transaction is following
@@ -12,7 +12,7 @@ Scenario: Autoremoval of package which became non-required by others
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
         | install       | wget-0:1.19.5-5.fc29.x86_64       |
         | install       | FlacBetterEncoder-0:1.0-1.x86_64  |
-   When I use the repository "dnf-ci-thirdparty-updates"
+   When I use repository "dnf-ci-thirdparty-updates"
     And I execute dnf with args "update --nobest"
    Then the exit code is 0
     And Transaction is following

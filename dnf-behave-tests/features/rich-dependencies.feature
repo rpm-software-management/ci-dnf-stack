@@ -4,7 +4,7 @@ Feature: Rich dependencies testing
 
 
 Background: Use dnf-ci-rich repository
-    Given I use the repository "dnf-ci-rich"
+    Given I use repository "dnf-ci-rich"
 
 
 # pancake

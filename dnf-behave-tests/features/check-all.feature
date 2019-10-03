@@ -2,7 +2,7 @@ Feature: Check when there are multiple problems
 
 
 Background: Force installation of an RPM that will cause problems with dependencies, duplicates and obsoletes
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following

@@ -3,11 +3,11 @@ Feature: Filter RPMs by enabled and default module streams
 
 
 Background:
-Given I use the repository "dnf-ci-fedora-modular"
+Given I use repository "dnf-ci-fedora-modular"
 
 
 Scenario: default from module is preferred over ursine pkg
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install ninja-build"
  Then the exit code is 0
   And Transaction is following
@@ -23,7 +23,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: enabled module is preferred over ursine pkg
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module enable ninja" 
  Then the exit code is 0
  When I execute dnf with args "install ninja-build"
@@ -40,7 +40,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: disabled module is not used
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module disable ninja" 
  Then the exit code is 0
  When I execute dnf with args "install ninja-build"
@@ -51,7 +51,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: ursine pkg is preferred over module without default
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install dwm"
  Then the exit code is 0
   And Transaction is following

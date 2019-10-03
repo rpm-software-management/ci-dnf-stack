@@ -29,7 +29,7 @@ Given I create file "/plugins/test.py" with
                    pkg.name + "+" + pkg.version + "+" + pkg.release + "+" + pkg.arch)
 
   """
-  And I use the repository "dnf-ci-fedora"
+  And I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup filesystem"
  Then stdout contains "Plugin has access to installed pkg: setup\+2.12.1\+1.fc29\+noarch"
  Then stdout contains "Plugin has access to installed pkg: filesystem\+3.9\+2.fc29\+x86_64"

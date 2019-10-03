@@ -2,7 +2,7 @@ Feature: Remove RPMs with --exclude
 
 
 Scenario: Remove RPMs while excluding another RPM
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install basesystem"
    Then the exit code is 0
     And Transaction is following
@@ -19,7 +19,7 @@ Scenario: Remove RPMs while excluding another RPM
 
 
 Scenario: Remove RPM which is required by excluded RPM
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following

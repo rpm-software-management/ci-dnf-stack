@@ -2,7 +2,7 @@ Feature: Install an obsoleted RPM
 
 
 Scenario: Install an obsoleted RPM
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install glibc-profile"
    Then the exit code is 0
     And Transaction is following
@@ -11,8 +11,8 @@ Scenario: Install an obsoleted RPM
 
 
 Scenario: Install an obsoleted RPM when the obsoleting RPM is available
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install glibc-profile"
    Then the exit code is 0
     And Transaction is following

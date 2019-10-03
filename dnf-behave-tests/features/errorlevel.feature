@@ -2,7 +2,7 @@ Feature: Tests for --errorlevel / -e cmdline option
 
 
 Background: Enable dnf-ci-thirdparty-updates
-Given I use the repository "dnf-ci-thirdparty-updates"
+Given I use repository "dnf-ci-thirdparty-updates"
 
 
 Scenario: Test for errorlevel 0
@@ -19,7 +19,7 @@ Scenario: Test for errorlevel 1
 
 
 Scenario: Test for errorlevel 5
-Given I use the repository "dnf-ci-thirdparty"
+Given I use repository "dnf-ci-thirdparty"
  When I execute dnf with args "-e=5 install CQRlib-extension"
  Then the exit code is 1
   And stderr contains "package.*but none of the providers can be installed"

@@ -38,7 +38,7 @@ Scenario: Remove a duplicate RPM and reinstall an existing RPM when a copy is av
    Then the exit code is 0
   Given I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-3.fc29.x86_64.rpm"
    Then the exit code is 0
-    And I use the repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "remove --duplicates"
    Then the exit code is 0
     And Transaction is following

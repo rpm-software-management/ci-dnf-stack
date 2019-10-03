@@ -2,7 +2,7 @@ Feature: Reset modules
 
 
 Background:
-Given I use the repository "dnf-ci-fedora-modular"
+Given I use repository "dnf-ci-fedora-modular"
 
 
 # rely on merging bz1677640 fix

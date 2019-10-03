@@ -2,7 +2,7 @@
 Feature: Detecting proper modular platform
 
 Background:
-  Given I use the repository "dnf-ci-pseudo-platform-modular"
+  Given I use repository "dnf-ci-pseudo-platform-modular"
 
 Scenario: Platform pseudo module name:stream is created based on /usr/lib/os-release
   Given I do not set default module platformid
@@ -76,7 +76,7 @@ Scenario: Platform is detected using virtual provide of installed os-release pac
 
 Scenario: Platform is detected using virtual provide of os-release package in enabled repo
   Given I do not set default module platformid
-    And I use the repository "dnf-ci-pseudo-platform"
+    And I use repository "dnf-ci-pseudo-platform"
     And I create file "/etc/os-release" with
         """
         NAME=PsedoDistro
@@ -94,7 +94,7 @@ Scenario: Platform is detected using virtual provide of os-release package in en
 
 
 Scenario: Platform is detected from command line --setopt option
-  Given I use the repository "dnf-ci-pseudo-platform"
+  Given I use repository "dnf-ci-pseudo-platform"
     And I set default module platformid to "cmdline_pseudoplatform:6.0"
    When I execute dnf with args "module enable dwm:6.0"
    Then the exit code is 1

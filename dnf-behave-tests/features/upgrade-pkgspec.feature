@@ -2,7 +2,7 @@ Feature: Upgrade RPMs by pkgspec
 
 
 Background: Install glibc
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following
@@ -16,7 +16,7 @@ Background: Install glibc
 
 
 Scenario Outline: Upgrade an RPM by <pkgspec-type>
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade <pkgspec>"
    Then the exit code is 0
     And Transaction is following
@@ -40,7 +40,7 @@ Examples: Other pkgspecs
 
 
 Scenario: Upgrade an RPM by name containing dashes
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc-common"
    Then the exit code is 0
     And Transaction is following
@@ -51,7 +51,7 @@ Scenario: Upgrade an RPM by name containing dashes
 
 
 Scenario: Upgrade an RPM by pkgspec contining wildcards
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc-*.x86_64"
    Then the exit code is 0
     And Transaction is following

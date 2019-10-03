@@ -221,8 +221,8 @@ Scenario Outline: When modulemd is not available, repoquery doesn't show RPMs wi
    When I execute dnf with args "repoquery nodejs.x86_64"
    Then the exit code is 0
     And stdout is empty
-   When I use the repository "fail-safe-hotfix"
-    And I use the repository "dnf-ci-fedora-modular-hotfix"
+   When I use repository "fail-safe-hotfix"
+    And I use repository "dnf-ci-fedora-modular-hotfix"
     And I execute dnf with args "repoquery nodejs.x86_64"
    Then the exit code is 0
     And stdout contains "nodejs-1:5.12.1-1.fc29.x86_64"
@@ -435,7 +435,7 @@ Scenario Outline: When modulemd is not available, non-modular RPMs can be instal
     And modules state is following
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 5         |           |
-    And I use the repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade wget"
    Then the exit code is 0
     And Transaction is following

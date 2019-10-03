@@ -2,7 +2,7 @@ Feature: Test upgrade-minimal with advisory, cve, secseverity
 
 
 Background: Use repository with advisories
-  Given I use the repository "dnf-ci-security"
+  Given I use repository "dnf-ci-security"
    When I execute dnf with args "install advisory_A-1.0-1 advisory_B-1.0-1"
    Then the exit code is 0
     And Transaction is following

@@ -2,7 +2,7 @@ Feature: Protected packages
 
 
 Background: Use dnf-ci-fedora repository
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following

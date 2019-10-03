@@ -2,7 +2,7 @@ Feature: Shell upgrade-minimal
 
 
 Background: Install glibc, flac, and CQRlib
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc flac CQRlib"
    Then the exit code is 0
     And Transaction is following
@@ -18,7 +18,7 @@ Background: Install glibc, flac, and CQRlib
 
 
 Scenario: Using dnf shell, make upgrade-minimal --bugfix
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
     And I execute in dnf shell "upgrade-minimal --bugfix glibc"
     And I execute in dnf shell "run"
@@ -32,7 +32,7 @@ Scenario: Using dnf shell, make upgrade-minimal --bugfix
 
 
 Scenario: Using dnf shell, make upgrade-minimal --security
-  Given I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "upgrade-minimal --security CQRlib"
     And I execute in dnf shell "run"
@@ -44,8 +44,8 @@ Scenario: Using dnf shell, make upgrade-minimal --security
 
 
 Scenario Outline: Using dnf shell, fail to upgrade-minimal <update> when no such upgrade is available
-  Given I use the repository "dnf-ci-fedora-updates"
-    And I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "upgrade-minimal <update> flac"
    Then Transaction is empty
@@ -62,7 +62,7 @@ Examples:
 
 
 Scenario Outline: Using dnf shell, fail upgrade-minimal <update> for non-existent RPM
-  Given I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "upgrade-minimal <update> non-existent"
    Then Transaction is empty

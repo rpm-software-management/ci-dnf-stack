@@ -2,8 +2,8 @@ Feature: Upgrade single RPMs
 
 
 Background: Install RPMs
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install glibc flac wget SuperRipper"
    Then the exit code is 0
     And Transaction is following
@@ -24,7 +24,7 @@ Background: Install RPMs
 @tier1
 @bz1649286
 Scenario: Upgrade one RPM
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc"
    Then the exit code is 0
     And stdout does not contain "Upgrade *: +glibc"
@@ -36,7 +36,7 @@ Scenario: Upgrade one RPM
 
 
 Scenario: Upgrade two RPMs
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc flac"
    Then the exit code is 0
     And Transaction is following
@@ -50,9 +50,9 @@ Scenario: Upgrade two RPMs
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=False
-  Given I use the repository "dnf-ci-fedora-updates"
-  Given I use the repository "dnf-ci-fedora-updates-testing"
-    And I use the repository "dnf-ci-thirdparty-updates"
+  Given I use repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates-testing"
+    And I use repository "dnf-ci-thirdparty-updates"
     And I do not set config file
     And I create file "/etc/dnf/dnf.conf" with
     """
@@ -84,9 +84,9 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=True
-  Given I use the repository "dnf-ci-fedora-updates"
-  Given I use the repository "dnf-ci-fedora-updates-testing"
-    And I use the repository "dnf-ci-thirdparty-updates"
+  Given I use repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates-testing"
+    And I use repository "dnf-ci-thirdparty-updates"
     And I do not set config file
     And I create file "/etc/dnf/dnf.conf" with
     """
@@ -120,7 +120,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
 
 @bz1659390
 Scenario: Print information about skipped packages
-  Given I use the repository "dnf-ci-thirdparty-updates"
+  Given I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "update --setopt 'best=0'"
    Then the exit code is 0
     And Transaction is following
@@ -140,7 +140,7 @@ Scenario Outline: Print correct number of available updates if update <type> is 
     And Transaction is following
         | Action        | Package                                   |
         | install       | CQRlib-extension-0:1.5-2.x86_64           |
-   Then I use the repository "dnf-ci-thirdparty-updates"
+   Then I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "update <type>" 
    Then the exit code is 0
     And Transaction is empty
@@ -155,8 +155,8 @@ Examples:
 
 @bz1585138
 Scenario Outline: Print correct number of available updates if update <type> is given and updateinfo is available
-  Given I use the repository "dnf-ci-fedora-updates"
-    And I use the repository "dnf-ci-thirdparty-updates"
+  Given I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "update <type>" 
    Then the exit code is 0
     And Transaction is empty

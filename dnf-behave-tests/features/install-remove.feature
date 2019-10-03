@@ -1,7 +1,7 @@
 Feature: Install remove test
 
 Background: Use install-remove repository
-  Given I use the repository "dnf-ci-install-remove"
+  Given I use repository "dnf-ci-install-remove"
 
 # tea requires water and provides hot-beverage
 Scenario Outline: Install remove <spec type> that requires only name

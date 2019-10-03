@@ -2,7 +2,7 @@ Feature: Upgrade RPMs from path
 
 
 Background: Install glibc, wget
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc wget"
    Then the exit code is 0
     And Transaction is following
@@ -17,7 +17,7 @@ Background: Install glibc, wget
 
 
 Scenario: Upgrade an RPM from absolute path on disk
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc-2.28-26.fc29.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
@@ -39,7 +39,7 @@ Scenario: Upgrade an RPM from relative path on disk
 
 
 Scenario: Upgrade an RPM from path on disk containing wildcards
-  Given I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc*"
    Then the exit code is 0
     And Transaction is following

@@ -1,7 +1,7 @@
 Feature: Tests for the debuginfo-install plugin
 
 Background:
-Given I use the repository "debuginfo-install"
+Given I use repository "debuginfo-install"
   And I enable plugin "debuginfo-install"
 
 

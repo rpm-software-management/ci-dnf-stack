@@ -1,8 +1,8 @@
 Feature: Default streams are properly switched to enabled 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 
 @bz1657213
@@ -20,7 +20,7 @@ Scenario: The default stream is enabled when requiring module is enabled
 # DnfCiModulePackageDep:moduledep requires nodejs module
 
 Scenario Outline: The default stream is enabled when its package is required by installed package of another module <description>
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "module enable DnfCiModulePackageDep:<stream>"
    Then the exit code is 0
    When I execute dnf with args "install morning-mood"
@@ -41,7 +41,7 @@ Scenario Outline: The default stream is enabled when its package is required by 
 
 
 Scenario: The default stream is enabled when its package is required by installed non-modular package
-  Given I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install anitras-dance"
    Then the exit code is 0
     And Transaction contains

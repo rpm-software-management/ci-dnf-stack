@@ -3,7 +3,7 @@ Feature: Enable module requires confirmation
 
 Background: Do not assume yes
   Given I do not assume yes
-    And I use the repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora-modular"
 
 
 Scenario: Enable a module stream with --assumeyes

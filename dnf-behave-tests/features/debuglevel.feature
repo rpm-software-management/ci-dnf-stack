@@ -2,7 +2,7 @@ Feature: Tests for --debuglevel / -d cmdline option
 
 
 Background: Enable repo
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
 
 
 Scenario: Test for debuglevel 0

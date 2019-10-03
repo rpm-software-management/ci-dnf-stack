@@ -2,8 +2,8 @@ Feature: Installing module profiles with globs
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
 
 
 Scenario: Install a module profile with glob in name
@@ -27,7 +27,7 @@ Scenario: Install a module profile with glob in name and stream
 
 
 Scenario: Install a module profile with glob in version
-  Given I use the repository "dnf-ci-fedora-modular-updates"
+  Given I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module install nodejs:10:20180920*"
    # By selecting module version that is not the latest,
    # older nodejs package from dnf-ci-fedora-modular gets installed.

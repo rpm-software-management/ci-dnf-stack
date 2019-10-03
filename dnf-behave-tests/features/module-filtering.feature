@@ -1,7 +1,7 @@
 Feature: Modular filtering must provide onlu relevant source packages
 
 Background:
-  Given I use the repository "dnf-ci-thirdparty-modular"
+  Given I use repository "dnf-ci-thirdparty-modular"
 
 @bz1702729
 Scenario: Check that only module packages including src are available

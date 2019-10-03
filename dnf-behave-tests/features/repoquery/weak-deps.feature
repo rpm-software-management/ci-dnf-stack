@@ -20,7 +20,7 @@ Feature: Tests for repoquery weak deps related functionality:
 #   +-----------------------------------------------+
 
 Background:
-Given I use the repository "repoquery-weak-deps"
+Given I use repository "repoquery-weak-deps"
 
 
 # --recommends

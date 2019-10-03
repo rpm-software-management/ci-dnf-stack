@@ -2,8 +2,8 @@ Feature: Transaction history undo
 
 @bz1700529
 Scenario: Undo module install with dependent userinstalled package
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-modular"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-modular"
    # install module that contains postgresql-server
    When I execute dnf with args "module install postgresql/server"
    Then the exit code is 0

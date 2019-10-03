@@ -2,8 +2,8 @@ Feature: --setopt option
 
 
 Background: Use repos setopt and setopt.ext
-  Given I use the repository "setopt"
-    And I use the repository "setopt.ext"
+  Given I use repository "setopt"
+    And I use repository "setopt.ext"
 
 
 # setopt repo contains: wget

@@ -2,7 +2,7 @@ Feature: repository-packages list installed packages from repository
 
 
 Scenario: List related packages to repo "dnf-ci-fedora"
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install basesystem"
  Then the exit code is 0
  When I execute dnf with args "repository-packages -q dnf-ci-fedora list"
@@ -16,7 +16,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: List installed packages from repo "dnf-ci-fedora"
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
  When I execute dnf with args "repository-packages -q dnf-ci-fedora list --installed"
@@ -27,7 +27,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: List available packages from repo "dnf-ci-fedora"
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "repository-packages -q dnf-ci-fedora list --available"
  Then the exit code is 0
  Then stdout section "Available Packages" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
@@ -38,10 +38,10 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: List packages from repo "dnf-ci-fedora-updates" that obsolete some installed packages
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "repository-packages -q dnf-ci-fedora-updates list --obsoletes"
  Then the exit code is 0
  Then stdout section "Obsoleting Packages" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
@@ -49,10 +49,10 @@ Given I use the repository "dnf-ci-fedora-updates"
 
 
 Scenario: List packages from repo "dnf-ci-fedora-updates" that upgrade some installed packages
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "repository-packages -q dnf-ci-fedora-updates list --upgrades"
  Then the exit code is 0
  Then stdout section "Available Upgrades" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"

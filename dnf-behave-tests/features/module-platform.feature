@@ -3,7 +3,7 @@ Feature: platform pseudo-module based on /etc/os-release
 
 
 Background: allow repo
-Given I use the repository "dnf-ci-pseudo-platform-modular"
+Given I use repository "dnf-ci-pseudo-platform-modular"
 Given I create file "/etc/os-release" with
     """
     NAME=PsedoDistro

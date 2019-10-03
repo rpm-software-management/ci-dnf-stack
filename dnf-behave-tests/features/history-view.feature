@@ -1,7 +1,7 @@
 Feature: Transaction history userinstalled, list and info
 
 Background:
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
 
 Scenario: List userinstalled packages
    When I execute dnf with args "install abcde basesystem"
@@ -47,7 +47,7 @@ Scenario: History info in range - transaction merging
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
   Given I successfully execute dnf with args "install abcde"
-   When I use the repository "dnf-ci-fedora-updates"
+   When I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
     And History info should match

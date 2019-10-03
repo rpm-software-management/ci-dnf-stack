@@ -1,8 +1,8 @@
 Feature: Autoremoval of unneeded packages
 
 Scenario: Remove with --setopt=clean_requirements_on_remove=True
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
     When I execute dnf with args "install abcde"
    Then the exit code is 0
     And Transaction is following
@@ -21,8 +21,8 @@ Scenario: Remove with --setopt=clean_requirements_on_remove=True
         | remove        | FlacBetterEncoder-0:1.0-1.x86_64  |
 
 Scenario: Remove with --setopt=clean_requirements_on_remove=False
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
     When I execute dnf with args "install abcde"
    Then the exit code is 0
     And Transaction is following

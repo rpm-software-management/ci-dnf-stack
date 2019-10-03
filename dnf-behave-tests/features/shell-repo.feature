@@ -14,8 +14,8 @@ Scenario: Using dnf shell, enable repositories
 
 
 Scenario: Using dnf shell, disable repositories
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
     And I execute in dnf shell "repo disable dnf-ci-fedora-updates"
     And I execute in dnf shell "repolist"
@@ -27,9 +27,9 @@ Scenario: Using dnf shell, disable repositories
 
 
 Scenario: Using dnf shell, disable and enable repositories
-  Given I use the repository "dnf-ci-fedora"
-    And I use the repository "dnf-ci-fedora-updates"
-    And I use the repository "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
     And I execute in dnf shell "repo disable dnf-ci-fedora-updates*"
     And I execute in dnf shell "repo enable dnf-ci-fedora-updates"

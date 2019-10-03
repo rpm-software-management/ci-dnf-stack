@@ -2,7 +2,7 @@ Feature: Check when there is a package that obsoletes another installed package
 
 
 Background: Force installation of an obsoleted RPM
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
    Then the exit code is 0
     And Transaction is following

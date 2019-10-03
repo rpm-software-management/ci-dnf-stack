@@ -3,7 +3,7 @@ Feature: Log rotation
 
 @bz1702690
 Scenario: Size and number of log files respects log_size and log_rotate options
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "--setopt=log_size=512 --setopt=log_rotate=2 install glibc"
     And I execute dnf with args "--setopt=log_size=512 --setopt=log_rotate=2 remove glibc"
     And I execute dnf with args "--setopt=log_size=512 --setopt=log_rotate=2 install glibc"
