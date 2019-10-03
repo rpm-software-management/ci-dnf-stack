@@ -8,14 +8,14 @@ Background:
 
 
 Scenario: Download a debuginfo for an RPM that doesn't exist
-  Given I use the http repository based on "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora" as http
    When I execute dnf with args "download --debuginfo does-not-exist"
    Then the exit code is 1
     And stderr contains "No package does-not-exist available"
 
 
 Scenario: Download a debuginfo for an existing RPM
-  Given I use the http repository based on "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates" as http
    When I execute dnf with args "download --debuginfo libzstd"
    Then the exit code is 0
     And stdout contains "libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm"
@@ -25,7 +25,7 @@ Scenario: Download a debuginfo for an existing RPM
 
 
 Scenario: Download a debuginfo for an existing RPM with a different name
-  Given I use the http repository based on "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora" as http
    When I execute dnf with args "download --debuginfo nscd"
    Then the exit code is 0
     And stdout contains "glibc-debuginfo-2.28-9.fc29.x86_64.rpm"
@@ -39,7 +39,7 @@ Scenario: Download a debuginfo for an existing RPM with a different name
 
 
 Scenario: Download an existing --debuginfo RPM with --verbose option
-  Given I use the http repository based on "dnf-ci-fedora-updates"
+  Given I use repository "dnf-ci-fedora-updates" as http
    When I execute dnf with args "download --debuginfo libzstd --verbose"
    Then the exit code is 0
     And stdout contains "libzstd-debuginfo-1.3.6-1.fc29.x86_64.rpm"

@@ -5,7 +5,7 @@ Feature: Better user counting
     Scenario: User-Agent header is sent
         Given I am running a system identified as the "Fedora 30 server"
           And I am using libdnf of the version X.Y.Z
-          And I have enabled a remote repository
+          And I use repository "dnf-ci-fedora" as http
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
             | header     | value                                          |
@@ -16,7 +16,7 @@ Feature: Better user counting
     Scenario: User-Agent header is sent (missing variant)
         Given I am running a system identified as the "Fedora 31"
           And I am using libdnf of the version X.Y.Z
-          And I have enabled a remote repository
+          And I use repository "dnf-ci-fedora" as http
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
             | header     | value                                           |
@@ -27,7 +27,7 @@ Feature: Better user counting
     Scenario: User-Agent header is sent (unknown variant)
         Given I am running a system identified as the "Fedora 31 myspin"
           And I am using libdnf of the version X.Y.Z
-          And I have enabled a remote repository
+          And I use repository "dnf-ci-fedora" as http
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
             | header     | value                                           |
@@ -38,7 +38,7 @@ Feature: Better user counting
     Scenario: Shortened User-Agent value on a non-Fedora system
         Given I am running a system identified as the "OpenSUSE 15.1 desktop"
           And I am using libdnf of the version X.Y.Z
-          And I have enabled a remote repository
+          And I use repository "dnf-ci-fedora" as http
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
             | header     | value        |
@@ -46,7 +46,7 @@ Feature: Better user counting
 
     @fixture.httpd.log
     Scenario: Custom User-Agent value
-        Given I have enabled a remote repository
+        Given I use repository "dnf-ci-fedora" as http
           And I set config option "user_agent" to "'Agent 007'"
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
@@ -57,7 +57,9 @@ Feature: Better user counting
     Scenario: Countme flag is sent once per week
         Given I set config option "countme" to "1"
           And today is Wednesday, August 07, 2019
-          And I have enabled a remote metalink repository
+          And I copy repository "dnf-ci-fedora" for modification
+          And I use repository "dnf-ci-fedora" as http
+          And I set up metalink for repository "dnf-ci-fedora"
           # The countme feature only activates when refreshing the metalink so
           # we need one first.
           And I execute dnf with args "makecache"
@@ -77,7 +79,9 @@ Feature: Better user counting
     @fixture.httpd.log
     Scenario: Countme feature is disabled
         Given I set config option "countme" to "0"
-          And I have enabled a remote metalink repository
+          And I copy repository "dnf-ci-fedora" for modification
+          And I use repository "dnf-ci-fedora" as http
+          And I set up metalink for repository "dnf-ci-fedora"
           And I execute dnf with args "makecache"
          When I execute dnf with args "check-update --refresh" 4 times
          Then no metalink request should include the countme flag

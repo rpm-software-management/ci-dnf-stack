@@ -3,10 +3,10 @@ Feature: SSL related tests
 
 @fixture.httpd
 Scenario: Installing a package from https repository
-  Given I use the https repository based on "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "https-dnf-ci-fedora\s+https-dnf-ci-fedora"
+    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
    When I execute dnf with args "install filesystem -v"
    Then the exit code is 0
     And Transaction is following
@@ -18,10 +18,10 @@ Scenario: Installing a package from https repository
 @fixture.httpd
 Scenario: Installing a package from https repository with client verification
   Given I require client certificate verification with certificate "certificates/testcerts/client/cert.pem" and key "certificates/testcerts/client/key.pem"
-    And I use the https repository based on "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "https-dnf-ci-fedora\s+https-dnf-ci-fedora"
+    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
    When I execute dnf with args "install filesystem -v"
    Then the exit code is 0
     And Transaction is following
@@ -33,10 +33,10 @@ Scenario: Installing a package from https repository with client verification
 @fixture.httpd
 Scenario: Instaling a package using untrusted client cert should fail
   Given I require client certificate verification with certificate "certificates/testcerts/client2/cert.pem" and key "certificates/testcerts/client2/key.pem"
-    And I use the https repository based on "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "install filesystem -v"
    Then the exit code is 1
     And stderr is
     """
-    Error: Failed to download metadata for repo 'https-dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
