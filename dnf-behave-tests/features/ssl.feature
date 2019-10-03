@@ -31,12 +31,14 @@ Scenario: Installing a package from https repository with client verification
 
 
 @fixture.httpd
-Scenario: Instaling a package using untrusted client cert should fail
+Scenario: Installing a package using untrusted client cert should fail
   Given I require client certificate verification with certificate "certificates/testcerts/client2/cert.pem" and key "certificates/testcerts/client2/key.pem"
     And I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "install filesystem -v"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
+    Errors during downloading metadata for repository 'dnf-ci-fedora':
+      - Curl error \(56\): Failure when receiving data from the peer for https://localhost:[0-9]+/repodata/repomd.xml \[OpenSSL SSL_read: error:14094418:SSL routines:ssl3_read_bytes:tlsv1 alert unknown ca, errno 0\]
     Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
