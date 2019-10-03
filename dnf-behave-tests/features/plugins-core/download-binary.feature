@@ -4,7 +4,7 @@ Feature: dnf download command
 
 Background:
   Given I enable plugin "download"
-    And I use the http repository based on "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora" as http
     And I set working directory to "{context.dnf.tempdir}"
 
 
@@ -92,7 +92,7 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
         | {context.dnf.tempdir}/downloaddir/setup-2.12.1-1.fc29.noarch.rpm      | -                                                                                             |
 
 Scenario: Download an existing RPM when there are multiple packages of the same NEVRA
-  Given I use the http repository based on "dnf-ci-gpg"
+  Given I use repository "dnf-ci-gpg" as http
    When I execute dnf with args "download --destdir={context.dnf.installroot}/tmp/download setup filesystem wget"
    Then the exit code is 0
     And stdout contains "setup-2.12.1-1.fc29.noarch.rpm"

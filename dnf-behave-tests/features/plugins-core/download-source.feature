@@ -4,7 +4,7 @@ Feature: dnf download --source command
 
 Background:
   Given I enable plugin "download"
-    And I use the http repository based on "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora" as http
     And I set working directory to "{context.dnf.tempdir}"
 
 
@@ -55,7 +55,7 @@ Scenario: Download a specified source rpm
 
 @bz1649627
 Scenario Outline: Download a source RPM when there are more versions available
-  Given I use the http repository based on "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates-testing" as http
    When I execute dnf with args "download --source <pkgspec>"
    Then the exit code is 0
     And stdout contains "<srpm>"
@@ -76,7 +76,7 @@ Examples:
 
 @xfail
 Scenario Outline: Download a source RPM when there are more epochs available
-  Given I use the http repository based on "dnf-ci-fedora-updates-testing"
+  Given I use repository "dnf-ci-fedora-updates-testing" as http
    When I execute dnf with args "download --source <pkgspec>"
    Then the exit code is 0
     And stdout contains "<srpm>"

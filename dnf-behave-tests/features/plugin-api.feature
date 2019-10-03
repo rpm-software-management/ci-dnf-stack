@@ -53,7 +53,7 @@ Given I create file "/plugins/test.py" with
                 "custom_user_key20190218: custom_user_value",
             ])
   """
-  And I have enabled a remote repository
+  And I use repository "dnf-ci-fedora" as http
  When I execute dnf with args "makecache"
  Then every HTTP GET request should match:
     | header                  | value             |

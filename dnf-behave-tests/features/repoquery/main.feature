@@ -400,8 +400,7 @@ Scenario: repoquery --location NAME
 
 @fixture.httpd
 Scenario: repoquery --location NAME (in an HTTP repo)
-Given I use the https repository based on "repoquery-main"
-  And I drop repository "repoquery-main"
+Given I use repository "repoquery-main" as https
  When I execute dnf with args "repoquery --location top-a-2.0"
  Then the exit code is 0
   And stdout matches line by line
