@@ -1,9 +1,9 @@
 Feature: Modules listing
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora-modular-updates"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora-modular-updates"
+    And I use repository "dnf-ci-fedora"
     And I successfully execute dnf with args "module enable nodejs:8"
     And I successfully execute dnf with args "module install nodejs:8/minimal"
     And I successfully execute dnf with args "module enable postgresql:11"
@@ -155,7 +155,7 @@ Scenario: I can limit the scope of disabled modules through providing specific m
 Scenario: Modules are ordered by repository then module name and stream name
    When I execute dnf with args "module list"
    Then the exit code is 0
-    And stdout section "dnf-ci-fedora-modular" contains "nodejs\s+5.*\n\s*nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11"
-    And stdout section "dnf-ci-fedora-modular" contains "postgresql\s+6.*\n\s*postgresql\s+9.6"
-    And stdout section "dnf-ci-fedora-modular-updates" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11.*\n\s*nodejs\s+12"
-    And stdout section "dnf-ci-fedora-modular-updates" contains "postgresql\s+9.6.*\n\s*postgresql\s+10.*\n\s*postgresql\s+11"
+    And stdout section "dnf-ci-fedora-modular test repository" contains "nodejs\s+5.*\n\s*nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11"
+    And stdout section "dnf-ci-fedora-modular test repository" contains "postgresql\s+6.*\n\s*postgresql\s+9.6"
+    And stdout section "dnf-ci-fedora-modular-updates test repository" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11.*\n\s*nodejs\s+12"
+    And stdout section "dnf-ci-fedora-modular-updates test repository" contains "postgresql\s+9.6.*\n\s*postgresql\s+10.*\n\s*postgresql\s+11"

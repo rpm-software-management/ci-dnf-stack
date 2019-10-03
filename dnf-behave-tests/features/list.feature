@@ -215,7 +215,8 @@ Examples:
 
 @1550560
 Scenario: dnf list available pkgs with long names piped to grep
+Given I use repository "dnf-ci-thirdparty"
  When I execute dnf with args "clean all"
- When I execute "eval dnf -y --setopt=reposdir={context.dnf.reposdir} --disablerepo='*' --enablerepo='dnf-ci-thirdparty' --releasever={context.dnf.releasever} --installroot={context.dnf.installroot} --config={context.dnf.config} --setopt=module_platform_id={context.dnf.module_platform_id} --disableplugin='*' list available | grep 1" in "{context.dnf.installroot}"
+ When I execute "eval dnf -y --releasever={context.dnf.releasever} --installroot={context.dnf.installroot} --config={context.dnf.config} --setopt=module_platform_id={context.dnf.module_platform_id} --disableplugin='*' list available | grep 1" in "{context.dnf.installroot}"
  Then the exit code is 0
  Then stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions.x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty"
