@@ -92,7 +92,7 @@ class HttpServerContext(object):
         # whether to enable logging
         self._logging = logging
         # list of AccessRecord objects
-        self.logs = dict()
+        self.log = None
 
     def _start_server(self, path, target, *args):
         """
@@ -111,10 +111,9 @@ class HttpServerContext(object):
         target = self.http_server
         args = []
         if self._logging:
-            log = multiprocessing.Manager().list()
-            self.logs[path] = log
+            self.log = multiprocessing.Manager().list()
             target = self.http_logging_server
-            args = [log]
+            args = [self.log]
         return self._start_server(path, target, *args)
 
     def new_https_server(self, path, cacert, cert, key, client_verification):
@@ -129,21 +128,19 @@ class HttpServerContext(object):
             return self.servers[path][0]
         return None
 
-    def get_log(self, path):
+    def get_log(self):
         """
-        Get the log of http server bound to "path" directory
+        Get the log of the http server
 
         A "log" here is a list of AccessRecord objects.
         """
-        if path in self.logs:
-            return self.logs[path]
-        return None
+        return self.log
 
-    def clear_log(self, path):
+    def clear_log(self):
         """
-        Empty the log of http server bound to "path"
+        Empty the log of the http server
         """
-        del self.logs[path][:]
+        del self.log[:]
 
     def shutdown(self):
         """
