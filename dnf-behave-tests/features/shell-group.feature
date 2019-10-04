@@ -16,8 +16,9 @@ Feature: Shell group
 
 
 Scenario: Using dnf shell, install a package group
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora dnf-ci-thirdparty"
     And I execute in dnf shell "group install DNF-CI-Testgroup"
     And I execute in dnf shell "run"
    Then Transaction is following
@@ -32,8 +33,15 @@ Scenario: Using dnf shell, install a package group
 
 
 Scenario Outline: Using dnf shell, upgrade a package group using alias <upgrade alias>
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora-updates" with configuration
+        | key     | value |
+        | enabled | 0     |
+    And I use repository "dnf-ci-thirdparty-updates" with configuration
+        | key     | value |
+        | enabled | 0     |
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora dnf-ci-thirdparty"
     And I execute in dnf shell "group install DNF-CI-Testgroup"
     And I execute in dnf shell "run"
    Then Transaction is following
@@ -66,8 +74,9 @@ Examples:
 
 
 Scenario: Using dnf shell, remove a package group
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora dnf-ci-thirdparty"
     And I execute in dnf shell "group install DNF-CI-Testgroup"
     And I execute in dnf shell "run"
    Then Transaction is following
@@ -91,8 +100,8 @@ Scenario: Using dnf shell, remove a package group
 
 
 Scenario: Using dnf shell, fail to install a non-existent package group
+  Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora"
     And I execute in dnf shell "group install NoSuchGroup"
    Then stdout contains "Module or Group '.*NoSuchGroup.*' is not available\."
     And I execute in dnf shell "run"
@@ -102,8 +111,8 @@ Scenario: Using dnf shell, fail to install a non-existent package group
 
 
 Scenario: Using dnf shell, fail to remove a non-existent package group
+  Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora"
     And I execute in dnf shell "group remove NoSuchGroup"
    Then stdout contains "Group '.*NoSuchGroup.*' is not installed\."
     And I execute in dnf shell "run"

@@ -2,8 +2,8 @@ Feature: Shell install
 
 
 Scenario: Using dnf shell, install an RPM
+  Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora"
     And I execute in dnf shell "install filesystem wget"
     And I execute in dnf shell "run"
    Then Transaction is following
@@ -16,11 +16,10 @@ Scenario: Using dnf shell, install an RPM
 
 @bz1658579
 Scenario: Using dnf shell, fail to install an RPM when no repositories are enabled
-  Given I do not set reposdir
    When I open dnf shell session
     And I execute in dnf shell "install setup"
    Then Transaction is empty
-    And stdout contains "Error: There are no enabled repositories in "/etc/yum.repos.d", "/etc/yum/repos.d", "/etc/distro.repos.d"\."
+    And stdout contains "Error: There are no enabled repositories in ".*/etc/yum.repos.d", ".*/etc/yum/repos.d", ".*/etc/distro.repos.d"\."
    When I execute in dnf shell "run"
    Then Transaction is empty
    When I execute in dnf shell "exit"
@@ -28,8 +27,8 @@ Scenario: Using dnf shell, fail to install an RPM when no repositories are enabl
 
 
 Scenario: Using dnf shell, fail to install a non-existent RPM
+  Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora"
     And I execute in dnf shell "install NoSuchPackage"
    Then Transaction is empty
     And stdout contains "No match for argument: .*NoSuchPackage"

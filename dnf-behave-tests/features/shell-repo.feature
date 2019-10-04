@@ -2,6 +2,15 @@ Feature: Shell repo
 
 
 Scenario: Using dnf shell, enable repositories
+  Given I use repository "dnf-ci-fedora" with configuration
+        | key     | value |
+        | enabled | 0     |
+    And I use repository "dnf-ci-fedora-updates" with configuration
+        | key     | value |
+        | enabled | 0     |
+    And I use repository "dnf-ci-fedora-updates-testing" with configuration
+        | key     | value |
+        | enabled | 0     |
    When I open dnf shell session
     And I execute in dnf shell "repo enable dnf-ci-fedora*"
     And I execute in dnf shell "repolist"

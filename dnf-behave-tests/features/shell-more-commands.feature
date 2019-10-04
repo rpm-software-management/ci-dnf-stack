@@ -2,8 +2,8 @@ Feature: Execute more commands in one transaction in dnf shell
 
 
 Scenario: Using dnf shell, install and remove RPMs in one transaction
+  Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-fedora"
     And I execute in dnf shell "install flac"
     And I execute in dnf shell "run"
    Then Transaction is following
@@ -22,8 +22,9 @@ Scenario: Using dnf shell, install and remove RPMs in one transaction
 
 
 Scenario: Using dnf shell, switch conflicting RPMs using install and remove
+  Given I use repository "dnf-ci-thirdparty"
+  Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
-    And I execute in dnf shell "repo enable dnf-ci-thirdparty dnf-ci-fedora-updates"
     And I execute in dnf shell "install CQRlib CQRlib-extension SuperRipper"
     And I execute in dnf shell "run"
    Then Transaction is following

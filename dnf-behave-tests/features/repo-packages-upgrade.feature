@@ -13,6 +13,9 @@ Given I use repository "dnf-ci-fedora"
       | install       | glibc-0:2.28-9.fc29.x86_64                |
       | install       | glibc-common-0:2.28-9.fc29.x86_64         |
       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+      | key     | value |
+      | enabled | 0     |
  When I execute dnf with args "repository-packages dnf-ci-fedora-updates upgrade"
  Then the exit code is 0
   And Transaction is following

@@ -1,5 +1,10 @@
 Feature: Repolist when all repositories are disabled
 
+Background:
+  Given I use repository "dnf-ci-fedora" with configuration
+        |key      | value |
+        | enabled | 0     |
+
 
 Scenario: Repolist without arguments
    When I execute dnf with args "repolist"
@@ -17,15 +22,11 @@ Scenario: Repolist with "disabled"
    When I execute dnf with args "repolist disabled"
    Then the exit code is 0
     And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
-    And stdout contains "dnf-ci-fedora-updates\s+dnf-ci-fedora-updates"
-    And stdout contains "dnf-ci-thirdparty\s+dnf-ci-thirdparty"
-    And stdout contains "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
 
 
 Scenario: Repolist with "all"
+  Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repolist all"
    Then the exit code is 0
-    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora\s+disabled"
-    And stdout contains "dnf-ci-fedora-updates\s+dnf-ci-fedora-updates\s+disabled"
-    And stdout contains "dnf-ci-thirdparty\s+dnf-ci-thirdparty\s+disabled"
-    And stdout contains "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates\s+disabled"
+    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora test repository\s+disabled"
+    And stdout contains "dnf-ci-fedora-updates\s+dnf-ci-fedora-updates test repository\s+enabled"

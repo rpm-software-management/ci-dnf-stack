@@ -2,7 +2,7 @@ Feature: repo-packages check-update
 
 
 Scenario: check for updates - not available
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install basesystem"
  Then the exit code is 0
   And Transaction is following
@@ -16,7 +16,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: check for updates in not enabled repo - available
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
   And Transaction is following
@@ -27,6 +27,9 @@ Given I use the repository "dnf-ci-fedora"
       | install       | glibc-0:2.28-9.fc29.x86_64                |
       | install       | glibc-common-0:2.28-9.fc29.x86_64         |
       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+      | key     | value |
+      | enabled | 0     |
  When I execute dnf with args "repository-packages dnf-ci-fedora-updates check-update"
  Then the exit code is 100
  Then stdout contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
@@ -35,7 +38,7 @@ Given I use the repository "dnf-ci-fedora"
 
 
 Scenario: check for updates in enabled repo - available
-Given I use the repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
  Then the exit code is 0
   And Transaction is following
@@ -46,7 +49,7 @@ Given I use the repository "dnf-ci-fedora"
       | install       | glibc-0:2.28-9.fc29.x86_64                |
       | install       | glibc-common-0:2.28-9.fc29.x86_64         |
       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-Given I use the repository "dnf-ci-fedora-updates"
+Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "repository-packages dnf-ci-fedora-updates check-update"
  Then the exit code is 100
  Then stdout contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"

@@ -1,11 +1,12 @@
 Feature: Shell swap
 
+Background:
+Given I use repository "dnf-ci-fedora"
+  And I use repository "dnf-ci-fedora-updates"
+  And I use repository "dnf-ci-thirdparty"
 
 Scenario: Switch packages and their subpackages by swap command (using wildcards)
  When I open dnf shell session
-  And I execute in dnf shell "repo enable dnf-ci-fedora"
-  And I execute in dnf shell "repo enable dnf-ci-fedora-updates"
-  And I execute in dnf shell "repo enable dnf-ci-thirdparty"
   And I execute in dnf shell "install CQRlib-devel CQRlib CQRlib-extension"
   And I execute in dnf shell "run"
  Then Transaction is following
@@ -37,9 +38,6 @@ Scenario: Switch packages and their subpackages by swap command (using wildcards
 
 Scenario: Switch groups by swap command
  When I open dnf shell session
-  And I execute in dnf shell "repo enable dnf-ci-fedora"
-  And I execute in dnf shell "repo enable dnf-ci-fedora-updates"
-  And I execute in dnf shell "repo enable dnf-ci-thirdparty"
   And I execute in dnf shell "groupinstall CQRlib-non-devel"
   And I execute in dnf shell "run"
  Then Transaction is following
