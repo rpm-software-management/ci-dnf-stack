@@ -21,7 +21,6 @@ FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fi
 
 DEFAULT_DNF_COMMAND = "dnf"
 DEFAULT_CONFIG = os.path.join(FIXTURES_DIR, "dnf.conf")
-DEFAULT_REPOSDIR = os.path.join(FIXTURES_DIR, "repos.d")
 DEFAULT_REPOS_LOCATION = os.path.join(FIXTURES_DIR, "repos")
 DEFAULT_RELEASEVER="29"
 DEFAULT_PLATFORM_ID="platform:f29"
@@ -116,7 +115,6 @@ class DNFContext(object):
         self.config = userdata.get("config", DEFAULT_CONFIG)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
-        self.reposdir = userdata.get("reposdir", DEFAULT_REPOSDIR)
         self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
         self.disable_plugins = True
@@ -132,10 +130,6 @@ class DNFContext(object):
             self.preserve_temporary_dirs = "failed"
 
         self.scenario_failed = False
-
-        # temporarily use DNF0 for substituting fixturesdir in repo files
-        # the future could be in named environment variable like DNF_VAR_FIXTURES_DIR
-        os.environ['DNF0'] = self.fixturesdir
 
     def __del__(self):
         preserved_dirs = []
@@ -195,16 +189,6 @@ class DNFContext(object):
         module_platform_id = self._get("module_platform_id")
         if module_platform_id:
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
-
-        if self._get("use_repo_args"):
-            reposdir = self._get("reposdir")
-            if reposdir:
-                result.append("--setopt=reposdir={0}".format(reposdir))
-
-            result.append(self.disable_repos_option)
-            repos = self._get("repos") or []
-            for repo in repos:
-                result.append("--enablerepo='{0}'".format(repo))
 
         disable_plugins = self._get("disable_plugins")
         if disable_plugins:
@@ -289,8 +273,8 @@ def after_scenario(context, scenario):
 
         if getattr(context, "cmd", ""):
             print(
-                "%sLast Command: %sDNF0=%s %s" %
-                (escapes["failed"], escapes["failed_arg"], context.dnf.fixturesdir, context.cmd)
+                "%sLast Command: %s%s" %
+                (escapes["failed"], escapes["failed_arg"], context.cmd)
             )
             print(escapes["reset"])
         if getattr(context, "cmd_stdout", ""):
