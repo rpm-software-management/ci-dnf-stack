@@ -2,8 +2,11 @@ Feature: hotfix repo content is not masked by a modular content
 
 
 Background:
-  Given I use the repository "dnf-ci-fedora-modular"
-    And I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
+    And I configure repository "dnf-ci-fedora-modular-hotfix" with
+        | key             | value |
+        | module_hotfixes | 1     |
 
 
 # dnf-ci-fedora-modular:        nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -11,7 +14,7 @@ Background:
 
 @bz1654738
 Scenario: hotfix content updates are used when installing a module stream
-  Given I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module install nodejs:8/minimal"
    Then the exit code is 0
     And Transaction contains
@@ -22,7 +25,7 @@ Scenario: hotfix content updates are used when installing a module stream
 
 
 Scenario: hotfix content update is used when installing a package
-  Given I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
     And Transaction is following
@@ -41,7 +44,7 @@ Scenario: hotfix content updates are used for updating a module
     And Transaction contains
         | Action                    | Package                                       |
         | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-  Given I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module update nodejs"
    Then the exit code is 0
     And Transaction contains
@@ -52,7 +55,7 @@ Scenario: hotfix content updates are used for updating a module
 Scenario: hotfix content is used when listing available updates
    When I execute dnf with args "module install nodejs:8/minimal"
    Then the exit code is 0
-  Given I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "check-update"
    Then the exit code is 100
     And stdout contains "nodejs\.x86_64\s+1:8\.11\.5-1\.module_2030\+42747d40\s+dnf-ci-fedora-modular-hotfix"
@@ -61,7 +64,7 @@ Scenario: hotfix content is used when listing available updates
 Scenario: hotfix content updates are used for updating a system
    When I execute dnf with args "module install nodejs:8/minimal"
    Then the exit code is 0
-  Given I use the repository "dnf-ci-fedora-modular-hotfix"
+  Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction contains

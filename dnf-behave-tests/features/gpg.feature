@@ -17,7 +17,10 @@ Feature: Testing gpgcheck
 
 
 Background: Add repository with gpgcheck=1
-  Given I use the repository "dnf-ci-gpg"
+  Given I use repository "dnf-ci-gpg" with configuration
+        | key      | value                                                                                                                                                               |
+        | gpgcheck | 1                                                                                                                                                                   |
+        | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public,file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public |
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout contains "dnf-ci-gpg\s+dnf-ci-gpg"
@@ -76,8 +79,10 @@ Scenario: Fail to install signed package with incorrect checksum
 
 
 Scenario: Install masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
-  Given I use the repository "dnf-ci-gpg-nocheck"
-    And I disable the repository "dnf-ci-gpg"
+  Given I configure repository "dnf-ci-gpg" with
+        | key      | value                                                                      |
+        | gpgcheck | 0                                                                          |
+        | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public |
    # install masterkey signed package
    When I execute dnf with args "install setup"
    Then the exit code is 0
@@ -90,8 +95,10 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
 
 
 Scenario: Install unsigned package from repositorory without gpgcheck set using option --nogpgcheck
-  Given I disable the repository "dnf-ci-gpg"
-    And I use the repository "dnf-ci-gpgcheck-undefined"
+  Given I configure repository "dnf-ci-gpg" with
+        | key      | value |
+        | gpgcheck |       |
+        | gpgkey   |       |
    When I execute dnf with args "install flac --nogpgcheck"
    Then the exit code is 0
     And Transaction is following
@@ -101,8 +108,10 @@ Scenario: Install unsigned package from repositorory without gpgcheck set using 
 
 @bz1314405
 Scenario: Fail to install package with incorrect checksum when gpgcheck=0
-  Given I disable the repository "dnf-ci-gpg"
-    And I use the repository "dnf-ci-gpgcheck-undefined"
+  Given I configure repository "dnf-ci-gpg" with
+        | key      | value |
+        | gpgcheck |       |
+        | gpgkey   |       |
    When I execute dnf with args "install broken-package --nogpgcheck"
    Then the exit code is 1
     And DNF Transaction is following
