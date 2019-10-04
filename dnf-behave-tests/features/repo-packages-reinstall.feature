@@ -23,8 +23,8 @@ Given I use repository "dnf-ci-fedora"
       | reinstall     | glibc-0:2.28-9.fc29.x86_64               |
       | reinstall     | glibc-common-0:2.28-9.fc29.x86_64        |
       | reinstall     | glibc-all-langpacks-0:2.28-9.fc29.x86_64 |
-        
-        
+
+
 Scenario: fail reinstall-old packages from non existing repository
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
@@ -37,6 +37,6 @@ Given I use repository "dnf-ci-fedora"
       | install       | glibc-0:2.28-9.fc29.x86_64               |
       | install       | glibc-common-0:2.28-9.fc29.x86_64        |
       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64 |
-Given There are no repositories
+Given I drop repository "dnf-ci-fedora"
  When I execute dnf with args "repo-packages dnf-ci-fedora reinstall-old"
  Then the exit code is 1
