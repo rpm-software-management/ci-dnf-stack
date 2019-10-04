@@ -146,10 +146,10 @@ def step_remote_metalink_repo(context):
 def step_check_http_log(context, quantifier, command):
     # Obtain the httpd log
     path = context.dnf.repos_location
-    log = context.httpd.get_log(path)
+    log = context.httpd.get_log()
     assert log is not None, 'Logging should be enabled on the HTTP server'
     log = [rec for rec in log if rec.command == command]
-    context.httpd.clear_log(path)
+    context.httpd.clear_log()
     assert log, 'Some HTTP requests should have been received'
 
     # A log dump, printed on failures for convenience
