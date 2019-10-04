@@ -1,6 +1,0 @@
-[dnf-ci-fourthparty-modular]
-name=dnf-ci-fourthparty-modular
-baseurl=file://$DNF0/repos/dnf-ci-fourthparty-modular
-enabled=1
-gpgcheck=0
-skip_if_unavailable=0

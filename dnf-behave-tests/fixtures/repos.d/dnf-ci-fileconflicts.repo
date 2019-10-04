@@ -1,5 +1,0 @@
-[dnf-ci-fileconflicts]
-name=dnf-ci-fileconflicts
-baseurl=file://$DNF0/repos/dnf-ci-fileconflicts
-enabled=1
-gpgcheck=0

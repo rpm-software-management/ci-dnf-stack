@@ -1,7 +1,0 @@
-[dnf-ci-priority-3]
-name=dnf-ci-priority-3
-baseurl=file://$DNF0/repos/dnf-ci-priority-3
-enabled=1
-gpgcheck=0
-priority=3
-

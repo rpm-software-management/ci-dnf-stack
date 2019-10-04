@@ -1,5 +1,0 @@
-[dnf-ci-fedora-updates]
-name=dnf-ci-fedora-updates
-baseurl=file://$DNF0/repos/dnf-ci-fedora-updates
-enabled=1
-gpgcheck=0

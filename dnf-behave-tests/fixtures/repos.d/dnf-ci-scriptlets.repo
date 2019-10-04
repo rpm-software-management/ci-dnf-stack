@@ -1,5 +1,0 @@
-[dnf-ci-scriptlets]
-name=dnf-ci-scriptlets
-baseurl=file://$DNF0/repos/dnf-ci-scriptlets
-enabled=1
-gpgcheck=0

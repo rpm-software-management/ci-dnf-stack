@@ -1,5 +1,0 @@
-[dnf-ci-pseudo-platform]
-name=dnf-ci-pseudo-platform
-baseurl=file://$DNF0/repos/dnf-ci-pseudo-platform
-enabled=1
-gpgcheck=0

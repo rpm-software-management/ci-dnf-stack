@@ -1,5 +1,0 @@
-[repoquery-rich-deps]
-name=repoquery: rich-deps test suite
-baseurl=file://$DNF0/repos/repoquery-rich-deps
-enabled=1
-gpgcheck=0
