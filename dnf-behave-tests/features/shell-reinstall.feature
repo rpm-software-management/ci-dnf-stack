@@ -2,7 +2,10 @@ Feature: Shell reinstall
 
 
 Background: Install flac and filesystem
-  Given I use the repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates" with configuration
+        | key     | value |
+        | enabled | 0     |
    When I execute dnf with args "install flac filesystem"
    Then the exit code is 0
     And Transaction is following

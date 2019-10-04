@@ -5,7 +5,10 @@ Feature: Execute dnf shell commands from file
 #   repo enable dnf-ci-fedora
 #   install flac
 #   run
-
+Background:
+ Given I use repository "dnf-ci-fedora" with configuration
+       | key     | value |
+       | enabled | 0     |
 
 Scenario: Execute dnf shell with file as argument
   When I execute dnf with args "shell {context.dnf.fixturesdir}/scripts/shell-commands"
