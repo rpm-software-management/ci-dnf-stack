@@ -1,5 +1,0 @@
-[repoquery-deps]
-name=repoquery: deps test suite
-baseurl=file://$DNF0/repos/repoquery-deps
-enabled=1
-gpgcheck=0

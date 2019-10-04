@@ -1,5 +1,0 @@
-[dnf-ci-obsoletes]
-name=dnf-ci-obsoletes
-baseurl=file://$DNF0/repos/dnf-ci-obsoletes
-enabled=1
-gpgcheck=0

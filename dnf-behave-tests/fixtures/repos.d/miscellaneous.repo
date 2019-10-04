@@ -1,7 +1,0 @@
-[miscellaneous]
-# use this when you need an additional repository with arbitrary packages you
-# don't care much about
-name=Miscellaneous Packages
-baseurl=file://$DNF0/repos/miscellaneous
-enabled=1
-gpgcheck=0

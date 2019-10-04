@@ -1,5 +1,0 @@
-[repoquery-globs]
-name=repoquery: globs test suite
-baseurl=file://$DNF0/repos/repoquery-globs
-enabled=1
-gpgcheck=0

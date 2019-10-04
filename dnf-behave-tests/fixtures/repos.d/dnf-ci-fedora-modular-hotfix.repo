@@ -1,6 +1,0 @@
-[dnf-ci-fedora-modular-hotfix]
-name=dnf-ci-fedora-modular-hotfix
-baseurl=file://$DNF0/repos/dnf-ci-fedora-modular-hotfix
-enabled=1
-gpgcheck=0
-module_hotfixes=1

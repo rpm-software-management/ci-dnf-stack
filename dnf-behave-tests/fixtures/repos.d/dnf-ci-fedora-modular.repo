@@ -1,5 +1,0 @@
-[dnf-ci-fedora-modular]
-name=dnf-ci-fedora-modular
-baseurl=file://$DNF0/repos/dnf-ci-fedora-modular
-enabled=1
-gpgcheck=0
