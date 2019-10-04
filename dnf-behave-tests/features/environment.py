@@ -219,6 +219,10 @@ class OSRelease(object):
             f.write('\n'.join(content))
         self.data = data
 
+    def delete(self):
+        """Delete the file."""
+        os.remove(self._path)
+
     def __del__(self):
         # Restore the backup
         shutil.copyfile(self._backup, self._path)
