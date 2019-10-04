@@ -304,6 +304,11 @@ def given_system(context, system):
     context.osrelease.set(data)
 
 
+@behave.step("I remove the os-release file")
+def given_no_osrelease(context):
+    context.osrelease.delete()
+
+
 @behave.given("I am using {package} of the version X.Y.Z")
 def given_package_version(context, package):
     rpms = [rpm for rpm in get_rpmdb_rpms() if rpm.name == package]

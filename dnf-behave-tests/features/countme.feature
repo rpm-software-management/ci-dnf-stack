@@ -52,6 +52,19 @@ Feature: Better user counting
             | header     | value        |
             | User-Agent | libdnf/X.Y.Z |
 
+    @fixture.osrelease
+    @fixture.httpd
+    Scenario: No os-release file installed
+        Given I remove the os-release file
+          And I am using libdnf of the version X.Y.Z
+          And I use repository "dnf-ci-fedora" as http
+          And I start capturing outbound HTTP requests
+         When I execute dnf with args "makecache"
+         Then the exit code is 0
+          And every HTTP GET request should match:
+            | header     | value        |
+            | User-Agent | libdnf/X.Y.Z |
+
     @fixture.httpd
     Scenario: Custom User-Agent value
         Given I use repository "dnf-ci-fedora" as http
