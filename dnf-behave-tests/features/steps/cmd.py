@@ -97,11 +97,6 @@ def when_I_execute_command(context, command):
     run_in_context(context, command.format(context=context))
 
 
-@behave.given("I do not disable all repos")
-def given_I_do_not_disable_all_repos(context):
-    context.dnf._set("disable_repos_option", "")
-
-
 @behave.given("I do not assume yes")
 def given_I_do_not_assumeyes(context):
     context.dnf._set("assumeyes_option", "")
@@ -116,11 +111,6 @@ def step_impl(context):
 def step_impl(context, configfile):
     full_path = os.path.join(context.dnf.installroot, configfile.lstrip("/"))
     context.dnf._set("config", full_path)
-
-
-@behave.given("I do not set reposdir")
-def step_impl(context):
-    context.dnf._set("reposdir", "")
 
 
 @behave.given("I do not set releasever")
