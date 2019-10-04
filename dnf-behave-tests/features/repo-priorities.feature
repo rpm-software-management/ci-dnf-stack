@@ -2,9 +2,15 @@ Feature: Repositories with priorities
 
 
 Background: Use repositories with priorities 1, 2, and 3
-  Given I use the repository "dnf-ci-priority-1"
-    And I use the repository "dnf-ci-priority-2"
-    And I use the repository "dnf-ci-priority-3"
+  Given I use repository "dnf-ci-priority-1" with configuration
+        | key      | value |
+        | priority | 1     |
+    And I use repository "dnf-ci-priority-2" with configuration
+        | key      | value |
+        | priority | 2     |
+    And I use repository "dnf-ci-priority-3" with configuration
+        | key      | value |
+        | priority | 3     |
 
 
 Scenario: Install an RPM from the highest-priority repository
@@ -97,7 +103,7 @@ Scenario: Upgrade RPMs from different highest-priority repositories
         | install       | glibc-0:2.28-9.fc29.x86_64                |
         | install       | glibc-common-0:2.28-9.fc29.x86_64         |
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-   When I disable the repository "dnf-ci-priority-1"
+   When I drop repository "dnf-ci-priority-1"
    When I execute dnf with args "upgrade setup glibc"
    Then the exit code is 0
     And Transaction is following
