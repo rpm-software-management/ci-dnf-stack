@@ -43,6 +43,15 @@ class LoggingHttpHandler(SimpleHTTPRequestHandler):
             return
         self.server._log.append(AccessRecord(self))
 
+    def do_GET(self):
+        # Respond with the specific status code if configured, otherwise just
+        # process the request as usual.
+        if 'status' in self.server._conf:
+            self.send_response(self.server._conf['status'])
+            self.end_headers()
+            return
+        super(LoggingHttpHandler, self).do_GET()
+
 
 class HttpServerContext(object):
     """
