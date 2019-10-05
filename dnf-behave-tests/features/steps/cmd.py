@@ -169,13 +169,13 @@ def then_the_exit_code_is(context, exitcode):
 
 @behave.then("stdout contains \"{text}\"")
 def then_stdout_contains(context, text):
-    if re.search(text, context.cmd_stdout):
+    if re.search(text.format(context=context), context.cmd_stdout):
         return
     raise AssertionError("Stdout doesn't contain: %s" % text)
 
 @behave.then("stdout does not contain \"{text}\"")
 def then_stdout_does_not_contain(context, text):
-    if not re.search(text, context.cmd_stdout):
+    if not re.search(text.format(context=context), context.cmd_stdout):
         return
     raise AssertionError("Stdout contains: %s" % text)
 
@@ -195,7 +195,7 @@ def then_stdout_is(context):
     synchronization lines (i.e. the "Last metadata expiration check:" line as
     well as the individual repo download lines) in the test's output.
     """
-    expected = context.text.strip().split('\n')
+    expected = context.text.format(context=context).strip().split('\n')
     found = context.cmd_stdout.strip().split('\n')
 
     if found == [""]:
@@ -257,7 +257,7 @@ def then_stdout_section_contains(context, section, regexp):
 
 @behave.then("stderr is")
 def then_stderr_is(context):
-    expected = context.text.strip().split('\n')
+    expected = context.text.format(context=context).strip().split('\n')
     found = context.cmd_stderr.strip().split('\n')
 
     if expected == found:
@@ -270,14 +270,14 @@ def then_stderr_is(context):
 
 @behave.then("stderr contains \"{text}\"")
 def then_stderr_contains(context, text):
-    if re.search(text, context.cmd_stderr):
+    if re.search(text.format(context=context), context.cmd_stderr):
         return
     raise AssertionError("Stderr doesn't contain: %s" % text)
 
 
 @behave.then("stderr does not contain \"{text}\"")
 def then_stderr_contains(context, text):
-    if not re.search(text, context.cmd_stderr):
+    if not re.search(text.format(context=context), context.cmd_stderr):
         return
     raise AssertionError("Stderr contains: %s" % text)
 
