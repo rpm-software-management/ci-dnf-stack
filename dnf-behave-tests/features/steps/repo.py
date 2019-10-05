@@ -273,6 +273,11 @@ def step_set_up_metalink_for_repository(context, repo):
     create_repo_conf(context, repo)
 
 
+@behave.step("the server starts responding with HTTP status code {code}")
+def step_server_down(context, code):
+    context.httpd.configure('status', int(code))
+
+
 @behave.step("I start capturing outbound HTTP requests")
 def step_start_http_capture(context):
     context.httpd.configure('logging', True)
