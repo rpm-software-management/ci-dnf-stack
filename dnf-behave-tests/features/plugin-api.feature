@@ -36,7 +36,7 @@ Given I create file "/plugins/test.py" with
 
 
 @bz1626093
-@fixture.httpd.log
+@fixture.httpd
 Scenario: Plugins can edit http headers
 Given I create file "/plugins/test.py" with
   """
@@ -54,6 +54,7 @@ Given I create file "/plugins/test.py" with
             ])
   """
   And I use repository "dnf-ci-fedora" as http
+  And I start capturing outbound HTTP requests
  When I execute dnf with args "makecache"
  Then every HTTP GET request should match:
     | header                  | value             |

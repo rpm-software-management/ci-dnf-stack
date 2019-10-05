@@ -226,8 +226,8 @@ class OSRelease(object):
 
 
 @fixture
-def httpd_context(context, *args, **kwargs):
-    context.httpd = HttpServerContext(*args, **kwargs)
+def httpd_context(context):
+    context.httpd = HttpServerContext()
     yield context.httpd
     context.httpd.shutdown()
 
@@ -298,10 +298,8 @@ def after_feature(context, feature):
 
 
 def before_tag(context, tag):
-    if tag.startswith('fixture.httpd'):
-        parts = tag.split('.')
-        use_fixture(httpd_context, context,
-                    logging=(len(parts) == 3 and parts[2] == 'log'))
+    if tag == 'fixture.httpd':
+        use_fixture(httpd_context, context)
     if tag == 'fixture.ftpd':
         use_fixture(ftpd_context, context)
     elif tag == 'fixture.osrelease':

@@ -39,6 +39,8 @@ class NoLogHttpHandler(SimpleHTTPRequestHandler):
 
 class LoggingHttpHandler(SimpleHTTPRequestHandler):
     def log_request(self, *args, **kwargs):
+        if not self.server._conf.get('logging', False):
+            return
         self.server._log.append(AccessRecord(self))
 
 
@@ -56,16 +58,11 @@ class HttpServerContext(object):
     """
 
     @staticmethod
-    def http_server(address, path):
-        os.chdir(path)
-        httpd = TCPServer(address, NoLogHttpHandler)
-        httpd.serve_forever()
-
-    @staticmethod
-    def http_logging_server(address, path, log):
+    def http_server(address, path, log, conf):
         os.chdir(path)
         httpd = TCPServer(address, LoggingHttpHandler)
         httpd._log = log
+        httpd._conf = conf
         httpd.serve_forever()
 
     @staticmethod
@@ -86,13 +83,12 @@ class HttpServerContext(object):
             s.bind((host, 0))
             return (host, s.getsockname()[1])
 
-    def __init__(self, logging=False):
+    def __init__(self):
         # mapping path -> (address, server process)
         self.servers = dict()
-        # whether to enable logging
-        self._logging = logging
         # list of AccessRecord objects
         self.log = None
+        self.conf = None
 
     def _start_server(self, path, target, *args):
         """
@@ -108,13 +104,9 @@ class HttpServerContext(object):
         return address
 
     def new_http_server(self, path):
-        target = self.http_server
-        args = []
-        if self._logging:
-            self.log = multiprocessing.Manager().list()
-            target = self.http_logging_server
-            args = [self.log]
-        return self._start_server(path, target, *args)
+        self.log = multiprocessing.Manager().list()
+        self.conf = multiprocessing.Manager().dict()
+        return self._start_server(path, self.http_server, self.log, self.conf)
 
     def new_https_server(self, path, cacert, cert, key, client_verification):
         return self._start_server(
@@ -141,6 +133,14 @@ class HttpServerContext(object):
         Empty the log of the http server
         """
         del self.log[:]
+
+    def configure(self, key, value):
+        """
+        Configure the http server bound to "path".
+
+        Sets the given key=value pair on the server instance.
+        """
+        self.conf[key] = value
 
     def shutdown(self):
         """
