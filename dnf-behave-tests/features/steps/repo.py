@@ -273,6 +273,11 @@ def step_set_up_metalink_for_repository(context, repo):
     create_repo_conf(context, repo)
 
 
+@behave.step("I start capturing outbound HTTP requests")
+def step_start_http_capture(context):
+    context.httpd.configure('logging', True)
+
+
 @behave.step('I require client certificate verification with certificate "{client_cert}" and key "{client_key}"')
 def step_impl(context, client_cert, client_key):
     if "client_ssl" not in context.dnf:
