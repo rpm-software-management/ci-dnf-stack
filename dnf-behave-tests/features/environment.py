@@ -317,6 +317,8 @@ def before_all(context):
     if os:
         active_tag_value_provider["os"] = os
 
+    context.repos = {}
+
 
 def after_all(context):
     pass

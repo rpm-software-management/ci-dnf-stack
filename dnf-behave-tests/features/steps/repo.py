@@ -45,11 +45,39 @@ def create_repo_conf(context, repo):
     create_file_with_contents(path, conf_text)
 
 
+def generate_repodata(context, repo):
+    if repo in context.repos:
+        return
+
+    args = "--no-database --simple-md-filenames --revision=1550000000"
+
+    groups_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "comps.xml")
+    if os.path.isfile(groups_filename):
+        args += " --groupfile " + groups_filename
+
+    target_path = os.path.join(context.dnf.repos_location, repo)
+
+    run_in_context(context, "createrepo_c %s %s" % (args, target_path))
+
+    repodata_path = os.path.join(target_path, "repodata")
+
+    updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "updateinfo.xml")
+    if os.path.isfile(updateinfo_filename):
+        run_in_context(context, "modifyrepo_c %s %s" % (updateinfo_filename, repodata_path))
+
+    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "modules.yaml")
+    if os.path.isfile(modules_filename):
+        run_in_context(context, "modifyrepo_c --mdtype=modules %s %s" % (modules_filename, repodata_path))
+
+    context.repos[repo] = True
+
+
 @behave.step("I use repository \"{repo}\"")
 def step_use_repository(context, repo):
     """
     Creates the repository's config file at /etc/yum.repos.d/ (inside installroot).
     """
+    generate_repodata(context, repo)
     create_repo_conf(context, repo)
 
 
@@ -76,6 +104,7 @@ def step_use_repository_with_config(context, repo):
     """
     check_context_table(context, ["key", "value"])
 
+    generate_repodata(context, repo)
     get_repo_info(context, repo).update_config(dict(context.table))
     create_repo_conf(context, repo)
 
@@ -99,6 +128,7 @@ def step_copy_repository(context, repo):
     need to modify the data of this directory, so that the original repository
     data stay unchanged for the other tests.
     """
+    generate_repodata(context, repo)
     repo_info = get_repo_info(context, repo)
     dst = os.path.join(context.dnf.tempdir, "repos", repo)
     copy_tree(repo_info.path, dst)
@@ -157,6 +187,7 @@ def step_use_repository_as(context, rtype, repo):
     context.dnf.ports[repo] = port
 
     repo_info.update_config(config)
+    generate_repodata(context, repo)
     create_repo_conf(context, repo)
 
 
