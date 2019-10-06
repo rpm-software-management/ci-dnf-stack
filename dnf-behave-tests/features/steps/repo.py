@@ -367,12 +367,3 @@ def step_check_http_log(context, quantifier, command):
             'Exactly %s requests should match the table: %s' % (quantifier, dump)
     elif quantifier == 'no':
         assert not any(matches), 'No request should match the table: ' + dump
-
-
-@behave.step("{quantifier} metalink request should include the countme flag")
-def step_countme(context, quantifier):
-    context.execute_steps("""
-        then {} HTTP GET request should match:
-        | path                     |
-        | */metalink.xml?countme=1 |
-    """.format(quantifier))
