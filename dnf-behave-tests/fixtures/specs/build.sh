@@ -73,25 +73,6 @@ done
 
 ${GPGDIR}/sign.sh
 ${DIR}/break-packages.sh
-
-for path in $REPODIR/*; do
-    REPO=$(basename $path)
-    echo "Creating repo $path..."
-    pushd $path
-    ARGS="--no-database --simple-md-filenames --revision=1550000000"
-    if [ -f ../../specs/$REPO/$GROUPS_FILENAME ]; then
-        ARGS="$ARGS --groupfile ../../specs/$REPO/$GROUPS_FILENAME"
-    fi
-    createrepo_c $ARGS .
-    if [ -f ../../specs/$REPO/$UPDATEINFO_FILENAME ]; then
-        modifyrepo_c ../../specs/$REPO/$UPDATEINFO_FILENAME ./repodata
-    fi
-    if [ -f ../../specs/$REPO/$MODULES_FILENAME ]; then
-        modifyrepo_c --mdtype=modules ../../specs/$REPO/$MODULES_FILENAME ./repodata
-    fi
-    popd
-done
-
 ${CERTSDIR}/generate_certificates.sh
 
 echo "DONE: Test data created"
