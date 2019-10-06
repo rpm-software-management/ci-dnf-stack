@@ -83,26 +83,48 @@ Feature: Better user counting
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
-         # One in the first 4 requests is randomly chosen to include the flag
-         # (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
+         # First week (bucket 1)
+         # Note: One in the first 4 requests is randomly chosen to include the
+         # flag (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
          When I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
             | path                     |
             | */metalink.xml?countme=1 |
-         # Same week
+         # Same week (should not be sent)
          When today is Friday, August 09, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then no HTTP GET request should match:
             | path                     |
-            | */metalink.xml?countme=1 |
-         # Next week
+            | */metalink.xml?countme=* |
+         # Next week (bucket 1)
          When today is Tuesday, August 13, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
             | path                     |
             | */metalink.xml?countme=1 |
+         # Next week (bucket 2)
+         When today is Tuesday, August 21, 2019
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=2 |
+         # 1 month later (bucket 3)
+         When today is Tuesday, September 16, 2019
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=3 |
+         # 6 months later (bucket 4)
+         When today is Tuesday, March 15, 2020
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=4 |
 
     @fixture.httpd
     Scenario: Countme flag is not sent repeatedly on retries
