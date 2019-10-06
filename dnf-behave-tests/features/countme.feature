@@ -86,17 +86,23 @@ Feature: Better user counting
          # One in the first 4 requests is randomly chosen to include the flag
          # (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
          When I execute dnf with args "makecache" 4 times
-         Then exactly one metalink request should include the countme flag
+         Then exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=1 |
          # Same week
          When today is Friday, August 09, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
-         Then no metalink request should include the countme flag
+         Then no HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=1 |
          # Next week
          When today is Tuesday, August 13, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
-         Then exactly one metalink request should include the countme flag
+         Then exactly one HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=1 |
 
     @fixture.httpd
     Scenario: Countme feature is disabled
@@ -106,4 +112,6 @@ Feature: Better user counting
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache" 4 times
-         Then no metalink request should include the countme flag
+         Then no HTTP GET request should match:
+            | path                     |
+            | */metalink.xml?countme=1 |
