@@ -16,6 +16,7 @@ Scenario: Remove a duplicate RPM
 
 
 @bz1674296
+@bz1647345
 Scenario: Remove multiple duplicate RPMs
   Given I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-1.fc29.x86_64.rpm"
    Then the exit code is 0
