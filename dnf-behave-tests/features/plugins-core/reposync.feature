@@ -148,12 +148,8 @@ Scenario: Reposync preserves remote timestamps of packages
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --remote-time"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    reposync .*
-    \(1/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*
-    \(2/2\): wget-1\.0-1\.fc29\.src\.rpm .*
-    """
+    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*"
+    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.src\.rpm .*"
     And the files "{context.dnf.tempdir}/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
     And timestamps of the files "{context.dnf.tempdir}/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
 
