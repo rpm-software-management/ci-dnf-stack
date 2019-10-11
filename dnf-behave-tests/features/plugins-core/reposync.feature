@@ -32,14 +32,9 @@ Scenario: Reposync with --downloadcomps option
     And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
    When I execute "createrepo_c --no-database --simple-md-filenames --groupfile comps.xml ." in "{context.dnf.tempdir}/dnf-ci-thirdparty-updates"
    Then the exit code is 0
-  Given I create and substitute file "/etc/yum.repos.d/test.repo" with
-  """
-  [testrepo]
-  name=testrepo
-  baseurl={context.dnf.tempdir}/dnf-ci-thirdparty-updates
-  enabled=1
-  gpgcheck=0
-  """
+  Given I configure a new repository "testrepo" with
+        | key             | value                                           |
+        | baseurl         | {context.dnf.tempdir}/dnf-ci-thirdparty-updates |
     And I drop repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "group list"
    Then the exit code is 0
@@ -73,14 +68,9 @@ Scenario: Reposync with --download-metadata option
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --download-metadata"
    Then the exit code is 0
-  Given I create and substitute file "/etc/yum.repos.d/test.repo" with
-  """
-  [testrepo]
-  name=testrepo
-  baseurl={context.dnf.tempdir}/dnf-ci-thirdparty-updates
-  enabled=1
-  gpgcheck=0
-  """
+  Given I configure a new repository "testrepo" with
+        | key             | value                                           |
+        | baseurl         | {context.dnf.tempdir}/dnf-ci-thirdparty-updates |
     And I drop repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "group list"
    Then the exit code is 0
@@ -122,16 +112,9 @@ Scenario: Reposync downloads packages and removes packages that are not part of 
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/setopt.ext/src/flac-1.0-1.fc29.src.rpm" exists
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" exists
-  Given I create and substitute file "/etc/yum.repos.d/test.repo" with
-  """
-  [setopt.ext]
-  name=setopt.ext
-  baseurl={context.dnf.repos_location}/setopt
-  enabled=1
-  gpgcheck=0
-  skip_if_unavailable=0
-  """
-    And I drop repository "setopt.ext"
+  Given I configure repository "setopt.ext" with
+        | key             | value                               |
+        | baseurl         | {context.dnf.repos_location}/setopt |
     # The following two steps generate repodata for the repository without configuring it
     And I use repository "setopt"
     And I drop repository "setopt"

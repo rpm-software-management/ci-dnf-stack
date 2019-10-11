@@ -12,16 +12,32 @@ from common import *
 from common.rpmdb import get_rpmdb_rpms
 
 
+def repo_config(repo, new={}):
+    config = {
+        "name": repo + " test repository",
+        "enabled": "1",
+        "gpgcheck": "0",
+    }
+    config.update(new)
+    return config
+
+
+def write_repo_config(context, repo, config, path=None):
+    path = path or os.path.join(context.dnf.installroot, "etc/yum.repos.d/")
+
+    conf_text = "[%s]\n" % repo
+    for key, value in config.items():
+        if value:
+            conf_text += ("%s=%s\n" % (key, value)).format(repo=repo, context=context)
+
+    create_file_with_contents(os.path.join(path, repo + ".repo"), conf_text)
+
+
 class RepoInfo(object):
-    def __init__(self, context, name):
+    def __init__(self, context, repo):
         self.active = False
-        self.path = os.path.join(context.dnf.repos_location, name)
-        self.config = {
-            "name": name + " test repository",
-            "baseurl": "file://" + self.path,
-            "enabled": "1",
-            "gpgcheck": "0",
-        }
+        self.path = os.path.join(context.dnf.repos_location, repo)
+        self.config = repo_config(repo, {"baseurl": "file://" + self.path})
 
     def update_config(self, new_conf):
         self.config.update(new_conf)
@@ -33,16 +49,9 @@ def get_repo_info(context, repo):
 
 def create_repo_conf(context, repo):
     repo_info = get_repo_info(context, repo)
-
     repo_info.active = True
 
-    conf_text = "[%s]\n" % repo
-    for key, value in repo_info.config.items():
-        if value:
-            conf_text += ("%s=%s\n" % (key, value)).format(repo=repo, context=context)
-
-    path = os.path.join(context.dnf.installroot, "etc/yum.repos.d/", repo + ".repo")
-    create_file_with_contents(path, conf_text)
+    write_repo_config(context, repo, repo_info.config)
 
 
 def generate_repodata(context, repo):
@@ -134,6 +143,31 @@ def step_copy_repository(context, repo):
     copy_tree(repo_info.path, dst)
     repo_info.path = dst
     repo_info.update_config({"baseurl": dst})
+
+
+@behave.step("I configure a new repository \"{repo}\" in \"{path}\" with")
+def step_configure_new_repository_in(context, repo, path):
+    """
+    Creates a new repository config at `path` with the default values overriden
+    with what is in the context table.
+    """
+    check_context_table(context, ["key", "value"])
+    path = path.format(context=context)
+    ensure_directory_exists(path)
+
+    write_repo_config(context, repo, repo_config(repo, dict(context.table)), path)
+
+
+@behave.step("I configure a new repository \"{repo}\" with")
+def step_configure_new_repository(context, repo):
+    """
+    Creates a new repository config at the default location (/etc/yum.repos.d/
+    inside installroot) with the default values overriden with what is in the
+    context table.
+    """
+    check_context_table(context, ["key", "value"])
+
+    write_repo_config(context, repo, repo_config(repo, dict(context.table)))
 
 
 @parse.with_pattern(r"http|https|ftp")
