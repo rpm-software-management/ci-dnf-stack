@@ -9,14 +9,9 @@ Scenario: The default value of skip_if_unavailable is False
     [main]
     reposdir=/testrepos
     """
-    And I create file "/testrepos/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl=/non/existent/repo
-    enabled=1
-    gpgcheck=0
-    """
+    And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
+        | key             | value              |
+        | baseurl         | /non/existent/repo |
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 1
@@ -34,14 +29,9 @@ Scenario: There is global skip_if_unavailable option
     reposdir=/testrepos
     skip_if_unavailable=True
     """
-    And I create file "/testrepos/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl=/non/existent/repo
-    enabled=1
-    gpgcheck=0
-    """
+    And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
+        | key             | value              |
+        | baseurl         | /non/existent/repo |
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 0
@@ -63,15 +53,10 @@ Scenario: Per repo skip_if_unavailable configuration
     [main]
     reposdir=/testrepos
     """
-    And I create file "/testrepos/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl=/non/existent/repo
-    enabled=1
-    gpgcheck=0
-    skip_if_unavailable=True
-    """
+    And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
+        | key                 | value              |
+        | baseurl             | /non/existent/repo |
+        | skip_if_unavailable | True               |
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 0
@@ -95,15 +80,10 @@ Scenario: The repo configuration takes precedence over the global one
     reposdir=/testrepos
     skip_if_unavailable=True
     """
-    And I create file "/testrepos/test.repo" with
-    """
-    [testrepo]
-    name=testrepo
-    baseurl=/non/existent/repo
-    enabled=1
-    gpgcheck=0
-    skip_if_unavailable=False
-    """
+    And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
+        | key                 | value              |
+        | baseurl             | /non/existent/repo |
+        | skip_if_unavailable | False              |
     And I do not set config file
    When I execute dnf with args "makecache"
    Then the exit code is 1

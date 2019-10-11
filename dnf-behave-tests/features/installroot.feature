@@ -6,14 +6,9 @@ Scenario: Install package from host repository into empty installroot
   # The following two steps generate repodata for the repository without configuring it
   Given I use repository "dnf-ci-install-remove"
   Given I drop repository "dnf-ci-install-remove"
-    And I create and substitute file "//{context.dnf.tempdir}/repos.d/insideinstallroot.repo" with
-    """
-    [dnf-ci-install-remove]
-    name=dnf-ci-install-remove
-    baseurl={context.dnf.repos_location}/dnf-ci-install-remove
-    enabled=1
-    gpgcheck=0
-    """
+    And I configure a new repository "outside-installroot" in "{context.dnf.tempdir}/repos.d" with
+        | key     | value                                              |
+        | baseurl | {context.dnf.repos_location}/dnf-ci-install-remove |
     When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d install water_carbonated"
    Then the exit code is 0
     And Transaction is following
@@ -77,20 +72,15 @@ Scenario: Repolist command in installroot and with a reposdir specified
         repo id                      repo name                                    status
         dnf-ci-install-remove        dnf-ci-install-remove test repository        20
         """
-  Given I create and substitute file "/{context.dnf.tempdir}/repos.d/testrepo.repo" with
-        """
-        [testrepo]
-        name=test repo
-        baseurl={context.dnf.repos_location}/dnf-ci-install-remove
-        enabled=1
-        gpgcheck=0
-        """
+  Given I configure a new repository "testrepo" in "{context.dnf.tempdir}/repos.d" with
+        | key     | value                                              |
+        | baseurl | {context.dnf.repos_location}/dnf-ci-install-remove |
    When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d repolist"
    Then the exit code is 0
     And stdout is
         """
-        repo id                             repo name                             status
-        testrepo                            test repo                             20
+        repo id                      repo name                                    status
+        testrepo                     testrepo test repository                     20
         """
 
 

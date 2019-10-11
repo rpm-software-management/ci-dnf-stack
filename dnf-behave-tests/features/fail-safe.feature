@@ -497,15 +497,9 @@ Scenario Outline: When modulemd is not available, RPM from the enabled stream ca
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
       # Workaround for a bug - when the repo id is too log and nodejs is installed later on, the output from transaction is formatted incorrectly (no space between "Arch" and "Version")
-    And I create and substitute file "/etc/yum.repos.d/short-modular-updates.repo" with
-        """
-        [short-modular-updates]
-        name=short-modular-updates
-        baseurl={context.dnf.repos_location}/dnf-ci-fedora-modular-updates
-        enabled=1
-        gpgcheck=0
-        skip_if_unavailable=0
-        """
+    And I configure a new repository "short-modular-updates" with
+        | key     | value                                                      |
+        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora-modular-updates |
       # since we're configuring the repo ourselves, force generation of repodata by using and unusing it
     And I use repository "dnf-ci-fedora-modular-updates"
     And I drop repository "dnf-ci-fedora-modular-updates"
