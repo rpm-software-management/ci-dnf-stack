@@ -1,69 +1,60 @@
 Feature: Better user counting
 
-    @xfail
     @fixture.osrelease
     @fixture.httpd
     Scenario: User-Agent header is sent
         Given I am running a system identified as the "Fedora 30 server"
-          And I am using libdnf of the version X.Y.Z
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
-            | header     | value                                          |
-            | User-Agent | libdnf/X.Y.Z (Fedora 30; server; Linux.x86_64) |
+            | header     | value                                    |
+            | User-Agent | libdnf (Fedora 30; server; Linux.x86_64) |
 
-    @xfail
     @fixture.osrelease
     @fixture.httpd
     Scenario: User-Agent header is sent (missing variant)
         Given I am running a system identified as the "Fedora 31"
-          And I am using libdnf of the version X.Y.Z
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
-            | header     | value                                           |
-            | User-Agent | libdnf/X.Y.Z (Fedora 31; generic; Linux.x86_64) |
+            | header     | value                                     |
+            | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
-    @xfail
     @fixture.osrelease
     @fixture.httpd
     Scenario: User-Agent header is sent (unknown variant)
         Given I am running a system identified as the "Fedora 31 myspin"
-          And I am using libdnf of the version X.Y.Z
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
-            | header     | value                                           |
-            | User-Agent | libdnf/X.Y.Z (Fedora 31; generic; Linux.x86_64) |
+            | header     | value                                     |
+            | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
-    @xfail
     @fixture.osrelease
     @fixture.httpd
     Scenario: Shortened User-Agent value on a non-Fedora system
         Given I am running a system identified as the "OpenSUSE 15.1 desktop"
-          And I am using libdnf of the version X.Y.Z
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
-            | header     | value        |
-            | User-Agent | libdnf/X.Y.Z |
+            | header     | value  |
+            | User-Agent | libdnf |
 
     @fixture.osrelease
     @fixture.httpd
     Scenario: No os-release file installed
         Given I remove the os-release file
-          And I am using libdnf of the version X.Y.Z
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then the exit code is 0
           And every HTTP GET request should match:
-            | header     | value        |
-            | User-Agent | libdnf/X.Y.Z |
+            | header     | value  |
+            | User-Agent | libdnf |
 
     @fixture.httpd
     Scenario: Custom User-Agent value

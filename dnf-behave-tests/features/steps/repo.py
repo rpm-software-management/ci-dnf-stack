@@ -309,13 +309,6 @@ def given_no_osrelease(context):
     context.osrelease.delete()
 
 
-@behave.given("I am using {package} of the version X.Y.Z")
-def given_package_version(context, package):
-    rpms = [rpm for rpm in get_rpmdb_rpms() if rpm.name == package]
-    assert len(rpms) == 1, 'There should be exactly one %s installed' % package
-    context.versions = {package: rpms[0].version}
-
-
 @behave.step("{quantifier} HTTP {command} request should match")
 @behave.step("{quantifier} HTTP {command} requests should match")
 def step_check_http_log(context, quantifier, command):
@@ -332,23 +325,10 @@ def step_check_http_log(context, quantifier, command):
     # Detect what kind of data we have in the table
     headings = context.table.headings
     if 'header' in headings:
-        # Expand any X.Y.Z version strings in the User-Agent header (we need to
-        # copy the context table for that)
-        table = []
-        for row in context.table:
-            header, value = row['header'], row['value']
-            version = None
-            if header == 'User-Agent' and hasattr(context, 'versions'):
-                package = value.split('/')[0]
-                version = context.versions.get(package)
-                if version is not None:
-                    value = value.replace('X.Y.Z', version)
-            table.append({'header': header, 'value': value})
-
         headers = (rec.headers for rec in log)
         matches = (row['value'] == h[row['header']]
                    for h in headers
-                   for row in table)
+                   for row in context.table)
     elif 'path' in headings:
         paths = (rec.path for rec in log)
         matches = (fnmatch(p, row['path'])
