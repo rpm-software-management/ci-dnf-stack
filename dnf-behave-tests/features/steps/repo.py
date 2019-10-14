@@ -275,12 +275,12 @@ def step_set_up_metalink_for_repository(context, repo):
 
 @behave.step("the server starts responding with HTTP status code {code}")
 def step_server_down(context, code):
-    context.httpd.configure('status', int(code))
+    context.httpd.conf['status'] = int(code)
 
 
 @behave.step("I start capturing outbound HTTP requests")
 def step_start_http_capture(context):
-    context.httpd.configure('logging', True)
+    context.httpd.conf['logging'] = True
 
 
 @behave.step('I require client certificate verification with certificate "{client_cert}" and key "{client_key}"')
@@ -320,10 +320,7 @@ def given_package_version(context, package):
 @behave.step("{quantifier} HTTP {command} requests should match")
 def step_check_http_log(context, quantifier, command):
     # Obtain the httpd log
-    path = context.dnf.repos_location
-    log = context.httpd.get_log()
-    assert log is not None, 'Logging should be enabled on the HTTP server'
-    log = [rec for rec in log if rec.command == command]
+    log = [rec for rec in context.httpd.log if rec.command == command]
     assert log, 'Some HTTP requests should have been received'
 
     # A log dump, printed on failures for convenience

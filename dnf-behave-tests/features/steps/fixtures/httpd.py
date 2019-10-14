@@ -96,8 +96,8 @@ class HttpServerContext(object):
         # mapping path -> (address, server process)
         self.servers = dict()
         # list of AccessRecord objects
-        self.log = None
-        self.conf = None
+        self._log = None
+        self._conf = None
 
     def _start_server(self, path, target, *args):
         """
@@ -113,9 +113,9 @@ class HttpServerContext(object):
         return address
 
     def new_http_server(self, path):
-        self.log = multiprocessing.Manager().list()
-        self.conf = multiprocessing.Manager().dict()
-        return self._start_server(path, self.http_server, self.log, self.conf)
+        self._log = multiprocessing.Manager().list()
+        self._conf = multiprocessing.Manager().dict()
+        return self._start_server(path, self.http_server, self._log, self._conf)
 
     def new_https_server(self, path, cacert, cert, key, client_verification):
         return self._start_server(
@@ -129,13 +129,11 @@ class HttpServerContext(object):
             return self.servers[path][0]
         return None
 
-    def get_log(self):
-        """
-        Get the log of the http server
-
-        A "log" here is a list of AccessRecord objects.
-        """
-        return self.log
+    @property
+    def log(self):
+        if self._log is None:
+            raise Exception('No HTTP server was started yet')
+        return self._log
 
     def clear_log(self):
         """
@@ -143,13 +141,11 @@ class HttpServerContext(object):
         """
         del self.log[:]
 
-    def configure(self, key, value):
-        """
-        Configure the http server bound to "path".
-
-        Sets the given key=value pair on the server instance.
-        """
-        self.conf[key] = value
+    @property
+    def conf(self):
+        if self._conf is None:
+            raise Exception('No HTTP server was started yet')
+        return self._conf
 
     def shutdown(self):
         """
