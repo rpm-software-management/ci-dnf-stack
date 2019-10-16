@@ -81,6 +81,25 @@ def generate_repodata(context, repo):
     context.repos[repo] = True
 
 
+def start_server_based_on_type(context, server_dir, rtype, certs=None):
+    if rtype == "http":
+        assert (hasattr(context, 'httpd')), 'Httpd fixture not set. Use @fixture.httpd tag.'
+        host, port = context.httpd.new_http_server(server_dir)
+    elif rtype == "ftp":
+        assert (hasattr(context, 'ftpd')), 'Ftpd fixture not set. Use @fixture.ftpd tag.'
+        host, port = context.ftpd.new_ftp_server(server_dir)
+    elif rtype == "https":
+        assert (hasattr(context, 'httpd')), 'Httpd fixture not set. Use @fixture.httpd tag.'
+
+        host, port = context.httpd.new_https_server(
+            server_dir, certs["cacert"], certs["cert"], certs["key"],
+            client_verification=bool(context.dnf._get("client_ssl")))
+    else:
+        raise AssertionError("Unknown server type: %s" % rtype)
+
+    return host, port
+
+
 @behave.step("I use repository \"{repo}\"")
 def step_use_repository(context, repo):
     """
@@ -178,45 +197,48 @@ def parse_repo_type(text):
 behave.register_type(repo_type=parse_repo_type)
 
 
+@behave.step("I make packages from repository \"{repo}\" accessible via {rtype:repo_type}")
+def make_repo_packages_accessible(context, repo, rtype):
+    """
+    Starts a new HTTP/FTP server at the repository's location and saves
+    its port to context.
+    """
+    repo_info = get_repo_info(context, repo)
+    server_dir = repo_info.path
+    host, port = start_server_based_on_type(context, server_dir, rtype)
+    context.dnf.ports[repo] = port
+
+
 @behave.step("I use repository \"{repo}\" as {rtype:repo_type}")
-def step_use_repository_as(context, rtype, repo):
+def step_use_repository_as(context, repo, rtype):
     """
     Starts a new HTTP/FTP server at the repository's location and then
     configures the repository's baseurl with the server's url.
     """
-    assert (hasattr(context, 'httpd') or hasattr(context, 'ftpd')), \
-        'Httpd or Ftpd fixture not set. Use @fixture.httpd or @fixture.ftpd tag.'
-
     repo_info = get_repo_info(context, repo)
-    server_dir = os.path.dirname(repo_info.path)
+    server_dir = repo_info.path
 
-    if rtype == "http":
-        host, port = context.httpd.new_http_server(server_dir)
-    elif rtype == "ftp":
-        host, port = context.ftpd.new_ftp_server(server_dir)
-    elif rtype == "https":
-        cacert = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/ca/cert.pem')
-        cert = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/cert.pem')
-        key = os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/key.pem')
-
-        client_ssl = context.dnf._get("client_ssl")
-        if client_ssl:
-            client_cert = client_ssl["certificate"]
-            client_key = client_ssl["key"]
-
-        host, port = context.httpd.new_https_server(
-            server_dir, cacert, cert, key,
-            client_verification=bool(client_ssl))
+    if rtype == "https":
+        certs = {
+            "cacert": os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/ca/cert.pem'),
+            "cert": os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/cert.pem'),
+            "key": os.path.join(context.dnf.fixturesdir, 'certificates/testcerts/server/key.pem'),
+        }
+        host, port = start_server_based_on_type(context, server_dir, rtype, certs)
+    else:
+        host, port = start_server_based_on_type(context, server_dir, rtype)
 
     config = {
-        "baseurl": "{}://{}:{}/{}/".format(rtype, host, port, repo)
+        "baseurl": "{}://{}:{}/".format(rtype, host, port)
     }
 
     if rtype == "https":
-        config["sslcacert"] = cacert
+        client_ssl = context.dnf._get("client_ssl")
+
+        config["sslcacert"] = certs["cacert"]
         if client_ssl:
-            config["sslclientcert"] = client_cert
-            config["sslclientkey"] = client_key
+            config["sslclientcert"] = client_ssl["certificate"]
+            config["sslclientkey"] = client_ssl["key"]
 
     context.dnf.ports[repo] = port
 
