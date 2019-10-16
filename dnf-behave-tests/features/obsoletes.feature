@@ -119,3 +119,35 @@ Scenario: Multilib obsoletes during distro-sync
         | install       | lz4-libs-0:1.8.2-2.fc29.i686          |
         | install       | lz4-libs-0:1.8.2-2.fc29.x86_64        |
         | remove        | lz4-0:1.7.5-2.fc26.i686               |
+
+
+# PackageD-0:2.0-1.x86_64 obsoletes PackageC < 2
+# PackageD-0:1.0-1.x86_64 does not obsolete anything
+@bz1761137
+Scenario: Obsoleted package is not installed when group contains both obsoleter and obsoleted packages
+   When I execute dnf with args "group install obsoleter-obsoleted"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | PackageD-0:2.0-1.x86_64               |
+        | group-install | Obsoleter and obsoleted               |
+    And stderr is
+    """
+    """
+
+
+@bz1761137
+Scenario: Both packages are installed when group contains both obsoleter and obsoleted packages and obsoletes are switched off
+   When I execute dnf with args "group install obsoleter-obsoleted --setopt=obsoletes=False"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | PackageC-0:1.0-1.x86_64               |
+        | install       | PackageD-0:1.0-1.x86_64               |
+        | group-install | Obsoleter and obsoleted               |
+    And stderr is
+    """
+    Problem: package PackageD-2.0-1.x86_64 obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64
+      - cannot install the best candidate for the job
+      - conflicting requests
+    """
