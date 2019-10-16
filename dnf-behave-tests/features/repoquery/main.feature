@@ -405,10 +405,10 @@ Given I use repository "repoquery-main" as https
  Then the exit code is 0
   And stdout matches line by line
       """
-      https://localhost:[0-9]+/repoquery-main/src/top-a-2.0-1.src.rpm$
-      https://localhost:[0-9]+/repoquery-main/src/top-a-2.0-2.src.rpm$
-      https://localhost:[0-9]+/repoquery-main/x86_64/top-a-2.0-1.x86_64.rpm$
-      https://localhost:[0-9]+/repoquery-main/x86_64/top-a-2.0-2.x86_64.rpm$
+      https://localhost:[0-9]+/src/top-a-2.0-1.src.rpm$
+      https://localhost:[0-9]+/src/top-a-2.0-2.src.rpm$
+      https://localhost:[0-9]+/x86_64/top-a-2.0-1.x86_64.rpm$
+      https://localhost:[0-9]+/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
 Scenario: repoquery --location NAME (no such package)
