@@ -13,7 +13,6 @@ from .file import copy_file
 from .file import copy_tree
 from .file import create_file_with_contents
 from .file import read_file_contents
-from .file import ensure_file_does_not_exist
 from .file import ensure_file_exists
 from .file import delete_directory
 from .file import delete_file

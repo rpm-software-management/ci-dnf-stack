@@ -66,13 +66,19 @@ def step_delete_directory(context, dirpath):
 @behave.step('file "{filepath}" exists')
 def file_exists(context, filepath):
     full_path = prepend_installroot(context, filepath)
-    ensure_file_exists(full_path)
+    result = glob.glob(full_path)
+    if len(result) > 1:
+        raise AssertionError("File path %s matches multiple files: \n%s" % (filepath, '\n'.join(result)))
+    elif len(result) < 1:
+        raise AssertionError("File path %s doesn't match any file." % (filepath))
 
 
 @behave.step('file "{filepath}" does not exist')
 def file_does_not_exist(context, filepath):
     full_path = prepend_installroot(context, filepath)
-    ensure_file_does_not_exist(full_path)
+    result = glob.glob(full_path)
+    if len(result) > 0:
+        raise AssertionError("Filepath %s matches existing files: \n%s" % (full_path, '\n'.join(result)))
 
 
 @behave.step('file "{filepath}" contains lines')
