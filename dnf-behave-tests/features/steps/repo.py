@@ -312,36 +312,44 @@ def given_no_osrelease(context):
 @behave.step("{quantifier} HTTP {command} request should match")
 @behave.step("{quantifier} HTTP {command} requests should match")
 def step_check_http_log(context, quantifier, command):
-    # Obtain the httpd log
-    log = [rec for rec in context.httpd.log if rec.command == command]
-    assert log, 'Some HTTP requests should have been received'
+    # Obtain the httpd log for this command
+    log = [record
+           for record in context.httpd.log
+           if record.command == command]
+    assert log, 'No HTTP requests have been received!'
 
-    # A log dump, printed on failures for convenience
-    dump = '\n' + '\n'.join(map(str, log)) + '\n'
+    # Find matches
+    if 'header' in context.table.headings:
+        good = [record
+                for record in log
+                for row in context.table
+                if record.headers[row['header']] == row['value']]
+    elif 'path' in context.table.headings:
+        good = [record
+                for record in log
+                for row in context.table
+                if fnmatch(record.path, row['path'])]
+    else:
+        assert False, 'No supported column heading found in the table'
 
-    # Requests matching the table
-    matches = []
+    bad = [record for record in log if record not in good]
 
-    # Detect what kind of data we have in the table
-    headings = context.table.headings
-    if 'header' in headings:
-        headers = (rec.headers for rec in log)
-        matches = (row['value'] == h[row['header']]
-                   for h in headers
-                   for row in context.table)
-    elif 'path' in headings:
-        paths = (rec.path for rec in log)
-        matches = (fnmatch(p, row['path'])
-                   for p in paths
-                   for row in context.table)
+    def dump(log):
+        return '\n' + '\n'.join(map(str, log)) + '\n'
 
     if quantifier == 'every':
-        assert all(matches), 'Every request should match the table: ' + dump
+        assert not bad, \
+            '%i requests did not match:%s' \
+            % (len(bad), dump(bad))
     elif quantifier.startswith('exactly '):
         num = quantifier.split(' ')[1]
         if num == 'one':
             num = 1
-        assert len([m for m in matches if m]) == int(num), \
-            'Exactly %s requests should match the table: %s' % (quantifier, dump)
+        num = int(num)
+        assert len(good) == num, \
+            'Expected %i matches but got %i instead, full log:%s' \
+            % (num, len(good), dump(log))
     elif quantifier == 'no':
-        assert not any(matches), 'No request should match the table: ' + dump
+        assert not good, \
+            'Expected no matches but got %i:%s' \
+            % (len(good), dump(good))
