@@ -66,7 +66,7 @@ def step_impl(context):
         modules = ["{}:{}/{} in repository '{}'".format(m['name'], m['stream'],
                                                         m['profiles'],
                                                         m['repository'])
-                   for m in modules]
+                   for m in remained]
 
         raise AssertionError("Following modules were not captured in the table: %s" % (
             '\n'.join(modules)))
