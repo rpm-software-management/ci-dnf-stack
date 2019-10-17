@@ -1,5 +1,6 @@
 Feature: Better user counting
 
+    @xfail
     @fixture.osrelease
     @fixture.httpd.log
     Scenario: User-Agent header is sent
@@ -11,6 +12,7 @@ Feature: Better user counting
             | header     | value                                          |
             | User-Agent | libdnf/X.Y.Z (Fedora 30; server; Linux.x86_64) |
 
+    @xfail
     @fixture.osrelease
     @fixture.httpd.log
     Scenario: User-Agent header is sent (missing variant)
@@ -22,6 +24,7 @@ Feature: Better user counting
             | header     | value                                           |
             | User-Agent | libdnf/X.Y.Z (Fedora 31; generic; Linux.x86_64) |
 
+    @xfail
     @fixture.osrelease
     @fixture.httpd.log
     Scenario: User-Agent header is sent (unknown variant)
@@ -33,6 +36,7 @@ Feature: Better user counting
             | header     | value                                           |
             | User-Agent | libdnf/X.Y.Z (Fedora 31; generic; Linux.x86_64) |
 
+    @xfail
     @fixture.osrelease
     @fixture.httpd.log
     Scenario: Shortened User-Agent value on a non-Fedora system
