@@ -69,8 +69,9 @@ Scenario: Repolist command in installroot and with a reposdir specified
    Then the exit code is 0
     And stdout is
         """
-        repo id                      repo name                                    status
-        dnf-ci-install-remove        dnf-ci-install-remove test repository        20
+        repo id                         repo name
+        dnf-ci-install-remove           dnf-ci-install-remove test repository
+
         """
   Given I configure a new repository "testrepo" in "{context.dnf.tempdir}/repos.d" with
         | key     | value                                              |
@@ -79,8 +80,8 @@ Scenario: Repolist command in installroot and with a reposdir specified
    Then the exit code is 0
     And stdout is
         """
-        repo id                      repo name                                    status
-        testrepo                     testrepo test repository                     20
+        repo id                         repo name
+        testrepo                        testrepo test repository
         """
 
 
