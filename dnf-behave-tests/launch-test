@@ -32,6 +32,14 @@ if [ "$DNFCOMMAND" ]; then
     DEFINES="$DEFINES -D dnf_command=$DNFCOMMAND"
 fi
 
+if [ "$RESERVE" == "-r" ]; then
+    # preserve all temporary directories
+    DEFINES="$DEFINES -D preserve=1"
+elif [ "$RESERVE" == "-R" ]; then
+    # preserve temporary directories of failing tests
+    DEFINES="$DEFINES -D preserve=f"
+fi
+
 TEST_EXIT=0
 behave $DEFINES $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH/$FEATURE_FILE" || TEST_EXIT=$?
 
