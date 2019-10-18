@@ -30,17 +30,36 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
     And I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
-    And stdout contains "SuperRipper-0:1.2-1.x86_64"
+    And stdout is
+        """
+        SuperRipper-0:1.2-1.src
+        SuperRipper-0:1.2-1.x86_64
+        SuperRipper-0:1.3-1.src
+        SuperRipper-0:1.3-1.x86_64
+
+        """
   Given I delete file "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}/x86_64/SuperRipper-1.2-1.x86_64.rpm"
     And I execute "createrepo_c --update ." in "/{context.dnf.repos[dnf-ci-thirdparty-updates].path}"
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
-    And stdout contains "SuperRipper-0:1.2-1.x86_64"
+    And stdout is
+        """
+        SuperRipper-0:1.2-1.src
+        SuperRipper-0:1.2-1.x86_64
+        SuperRipper-0:1.3-1.src
+        SuperRipper-0:1.3-1.x86_64
+
+        """
    When I execute dnf with args "clean expire-cache"
    Then the exit code is 0
    When I execute dnf with args "repoquery --available SuperRipper"
    Then the exit code is 0
-    And stdout does not contain "SuperRipper-0:1.2-1.x86_64"
+    And stdout is
+        """
+        SuperRipper-0:1.2-1.src
+        SuperRipper-0:1.3-1.src
+        SuperRipper-0:1.3-1.x86_64
+        """
 
 
 @tier1
