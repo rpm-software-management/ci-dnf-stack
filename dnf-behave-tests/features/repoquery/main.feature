@@ -354,6 +354,39 @@ Scenario: repoquery --extras NAME (package is not installed)
  Then the exit code is 0
   And stdout is empty
 
+   # --extras: installed pkgs, different NEVRA in available repository
+Scenario: dnf repoquery --extras (when there are such pkgs with different NEVRA in repository)
+Given I drop repository "repoquery-main"
+ When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/x86_64/mid-a1-1.0-1.x86_64.rpm"
+ Then the exit code is 0
+ When I execute dnf with args "repoquery --installed"
+ Then stdout is
+ """
+ mid-a1-1:1.0-1.x86_64
+ """
+Given I use repository "repoquery-main"
+ When I execute dnf with args "repoquery --extras"
+ Then stdout is empty
+
+  # --extras: installed pkgs, no NA in available repository
+Scenario: dnf repoquery --extras (no NA in available repository)
+ When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/i686/mid-a1-1.0-1.i686.rpm"
+ Then the exit code is 0
+ When I execute dnf with args "repoquery --installed"
+ Then stdout is
+ """
+ mid-a1-1:1.0-1.i686
+ """
+ When I execute dnf with args "repoquery --extras"
+ Then the exit code is 0
+  And stdout is
+ """
+ mid-a1-1:1.0-1.i686
+ """
+Given I use repository "repoquery-main-multilib"
+ When I execute dnf with args "repoquery --extras"
+ Then the exit code is 0
+  And stdout is empty
 
 # --installed: list only installed packages
 Scenario: repoquery --installed
