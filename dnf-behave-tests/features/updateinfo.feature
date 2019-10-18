@@ -1,10 +1,13 @@
 Feature: Listing available updates using the dnf updateinfo command
 
 
-Scenario: Listing available updates
+Background:
   Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
-    And Transaction is following
+
+
+Scenario: Listing available updates
+   When I execute dnf with args "install glibc flac"
+   Then Transaction is following
         | Action        | Package                                  |
         | install       | setup-0:2.12.1-1.fc29.noarch             |
         | install       | basesystem-0:11-6.fc29.noarch            |
@@ -13,24 +16,27 @@ Scenario: Listing available updates
         | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64 |
         | install       | glibc-common-0:2.28-9.fc29.x86_64        |
         | install       | flac-0:1.3.2-8.fc29.x86_64               |
-   Then the exit code is 0
+    And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "updateinfo list"
-   Then the exit code is 0
-   Then stdout contains "FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-   Then stdout contains "FEDORA-2018-318f184000\s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+    And the exit code is 0
+    And stdout is
+    """
+     <REPOSYNC>
+    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
+    FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
+    """
 
 
 Scenario Outline: updateinfo <summary alias> (when there's nothing to report)
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
    When I execute dnf with args "updateinfo summary"
    Then the exit code is 0
-   Then stdout does not contain "Updates Infomation"
-   Then stdout does not contain "Summary"
-   Then stdout does not contain "1 Bugfix notice"
-   Then stdout does not contain "1 Enhancement notice"
+    And stdout is
+    """
+     <REPOSYNC>
+    """
 
 Examples: 
         | summary alias |
@@ -39,15 +45,18 @@ Examples:
  
 
 Scenario Outline: updateinfo <summary alias> available (when there is an available update)
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo <summary alias> available"
    Then the exit code is 0
-   Then stdout contains "Updates Information Summary: available"
-   Then stdout contains "1 Bugfix notice"
-   Then stdout contains "1 Enhancement notice"
+    And stdout is
+    """
+     <REPOSYNC>
+    Updates Information Summary: available
+        1 Bugfix notice(s)
+        1 Enhancement notice(s)
+    """
 
 Examples: 
         | summary alias |
@@ -56,20 +65,35 @@ Examples:
 
 
 Scenario Outline: updateinfo info
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo <info alias> available"
    Then the exit code is 0
-   Then stdout contains "\s+flac enhacements"
-   Then stdout contains "Update ID:\sFEDORA-2999:002-02"
-   Then stdout contains "Type:\senhancement"
-   Then stdout contains "Description:\sEnhance some stuff"
-   Then stdout contains "glibc bug fix"
-   Then stdout contains "Update ID:\sFEDORA-2018-318f184000"
-   Then stdout contains "Type:\sbugfix"
-   Then stdout contains "Severity:\snone"
+    And stdout is
+    """
+     <REPOSYNC>
+    ===============================================================================
+      flac enhacements
+    ===============================================================================
+      Update ID: FEDORA-2999:002-02
+           Type: enhancement
+        Updated: 2019-01-17 01:00:00
+    Description: Enhance some stuff
+       Severity: Moderate
+
+    ===============================================================================
+      glibc bug fix
+    ===============================================================================
+      Update ID: FEDORA-2018-318f184000
+           Type: bugfix
+        Updated: 2019-01-17 01:00:00
+           Bugs: 222 - 222
+           CVEs: 2999
+           : CVE-2999
+    Description: Fix some stuff
+       Severity: none
+    """
 
 Examples: 
         | info alias |
@@ -78,24 +102,29 @@ Examples:
          
 
 Scenario: updateinfo info security (when there's nothing to report)
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo info security"
    Then the exit code is 0
-   Then stdout does not contain "Update ID"
+   And stdout is
+   """
+    <REPOSYNC>
+   """
 
 
 Scenario Outline: updateinfo <list alias>
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo <list alias>"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-   Then stdout contains "FEDORA-2018-318f184000\s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
+    FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
+    """
 
 Examples:
         | list alias |
@@ -104,102 +133,141 @@ Examples:
 
 
 Scenario: updateinfo list all security
-  Given I use repository "dnf-ci-fedora"
   Given I use repository "dnf-ci-fedora-updates-testing"
-   Then I execute dnf with args "install glibc flac CQRlib"
+   When I execute dnf with args "install glibc flac CQRlib"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo list all security"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2018-318f184113\s+Moderate/Sec.\s+CQRlib-1.1.2-16.fc29.x86_64"
-   Then stdout does not contain "i\s+FEDORA-2018-318f184112\s+enhancement\s+flac-1.4.0-1.fc29.x86_64"
-   Then stdout does not contain "\s+FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-   Then stdout does not contain "FEDORA-2018-318f184000 \s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    i FEDORA-2018-318f184113 Moderate/Sec. CQRlib-1.1.2-16.fc29.x86_64
+    """
                  
 
 Scenario: updateinfo list updates
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "update glibc flac"
-   Then the exit code is 0
+    And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "updateinfo list updates"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-   Then stdout contains "FEDORA-2018-318f184112\s+enhancement\s+flac-1.4.0-1.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
+    FEDORA-2018-318f184112 enhancement flac-1.4.0-1.fc29.x86_64
+    """
 
 
 Scenario: updateinfo list installed
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "update glibc flac"
-   Then the exit code is 0
+    And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "updateinfo list installed"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2018-318f184000\sbugfix\sglibc-2.28-26.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
+    """
 
 
 Scenario: updateinfo list available enhancement
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "updateinfo list available enhancement"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2999:002-02\s+enhancement\s+flac-1.3.3-8.fc29.x86_64"
-   Then stdout contains "FEDORA-2018-318f184112\s+enhancement\s+flac-1.4.0-1.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
+    FEDORA-2018-318f184112 enhancement flac-1.4.0-1.fc29.x86_64
+    """
 
 
 Scenario: updateinfo list all bugfix
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo list all bugfix"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2018-318f184000\s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+      FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
+    """
 
 
 Scenario Outline: updateinfo list updates plus <option>
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "<option> <value> updateinfo list updates"
    Then the exit code is 0
-   Then stdout contains "FEDORA-2018-318f184000\s+bugfix\s+glibc-2.28-26.fc29.x86_64"
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
+    """
 
 Examples:
         | option      | value                  |
         | --bz        | 222                    |
         | --cve       | 2999                   |
+        | --cve       | CVE-2999               |
         | --advisory  | FEDORA-2018-318f184000 |
 
 
 Scenario: updateinfo info <advisory>
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo info FEDORA-2018-318f184000"
-   Then stdout contains "Update\s+ID:\s+FEDORA-2018-318f184000"
-   Then stdout contains "\s+glibc\s+bug\s+fix"
-   Then stdout contains "Type:\s+bugfix"
-   Then stdout does not contain "flac"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    ===============================================================================
+      glibc bug fix
+    ===============================================================================
+      Update ID: FEDORA-2018-318f184000
+           Type: bugfix
+        Updated: 2019-01-17 01:00:00
+           Bugs: 222 - 222
+           CVEs: 2999
+           : CVE-2999
+    Description: Fix some stuff
+       Severity: none
+    """
         
 
 Scenario: updateinfo info <advisory-with-respin-suffix>
-  Given I use repository "dnf-ci-fedora"
-   Then I execute dnf with args "install glibc flac"
+   When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo info FEDORA-2999:002-02"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    ===============================================================================
+      flac enhacements
+    ===============================================================================
+      Update ID: FEDORA-2999:002-02
+           Type: enhancement
+        Updated: 2019-01-17 01:00:00
+    Description: Enhance some stuff
+       Severity: Moderate
+    """
    Then stdout contains "Update\s+ID:\s+FEDORA-2999:002-02"
-   Then stdout contains "Type:\s+enhancement"
-   Then stdout does not contain "glibc"
+    And stdout contains "Type:\s+enhancement"
+    And stdout does not contain "glibc"

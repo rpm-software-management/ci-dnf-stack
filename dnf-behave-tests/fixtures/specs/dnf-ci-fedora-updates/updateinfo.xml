@@ -11,6 +11,7 @@
     <references>
         <reference href="https://foobar/foobarupdate_1" id="222" type="bugzilla" title="222"/>
         <reference href="https://foobar/foobarupdate_1" id="2999" type="cve" title="CVE-2999"/>
+        <reference href="https://foobar/foobarupdate_1" id="CVE-2999" type="cve" title="CVE-2999"/>
     </references>
     <pkglist>
       <collection short="named collection">
