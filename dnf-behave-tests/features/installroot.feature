@@ -71,7 +71,6 @@ Scenario: Repolist command in installroot and with a reposdir specified
         """
         repo id                         repo name
         dnf-ci-install-remove           dnf-ci-install-remove test repository
-
         """
   Given I configure a new repository "testrepo" in "{context.dnf.tempdir}/repos.d" with
         | key     | value                                              |
