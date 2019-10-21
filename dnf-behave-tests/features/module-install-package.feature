@@ -77,3 +77,17 @@ Scenario: rpm from enabled stream is preferred regardless of NVRs
     And Transaction contains
         | Action                | Package                                           |
         | install               | ninja-build-0:1.5.2-1.module_1991+4e5efe2f.x86_64 |
+
+@bz1762314
+Scenario: I can install a specific package from a module and enable all module dependencies
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
+    And I execute dnf with args "install meson-doc"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                                           |
+        | install                   | meson-doc-0:0.47.1-5.module_1993+7c0a4d1e.noarch |
+    And modules state is following
+        | Module   | State     | Stream    | Profiles  |
+        | meson    | enabled   | master    |           |
+        | ninja    | enabled   | master    |           |
