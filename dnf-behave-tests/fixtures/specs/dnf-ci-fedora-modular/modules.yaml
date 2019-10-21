@@ -417,6 +417,7 @@ data:
   artifacts:
     rpms:
     - meson-0:0.47.1-5.module_1993+7c0a4d1e.noarch
+    - meson-doc-0:0.47.1-5.module_1993+7c0a4d1e.noarch
 ...
 ---
 document: modulemd
