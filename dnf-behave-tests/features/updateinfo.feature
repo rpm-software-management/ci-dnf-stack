@@ -90,7 +90,7 @@ Scenario Outline: updateinfo info
         Updated: 2019-01-17 01:00:00
            Bugs: 222 - 222
            CVEs: 2999
-           : CVE-2999
+               : CVE-2999
     Description: Fix some stuff
        Severity: none
     """
@@ -244,7 +244,7 @@ Scenario: updateinfo info <advisory>
         Updated: 2019-01-17 01:00:00
            Bugs: 222 - 222
            CVEs: 2999
-           : CVE-2999
+               : CVE-2999
     Description: Fix some stuff
        Severity: none
     """
@@ -271,3 +271,44 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
    Then stdout contains "Update\s+ID:\s+FEDORA-2999:002-02"
     And stdout contains "Type:\s+enhancement"
     And stdout does not contain "glibc"
+
+
+@bz1750528
+Scenario Outline: updateinfo lists advisories referencing CVE
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "updateinfo <options>"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    2999     bugfix glibc-2.28-26.fc29.x86_64
+    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64
+    """
+
+Examples:
+    | options             |
+    | --list --with-cve   |
+    # yum compatibility
+    | list cves           |
+    | list --with-cve     |
+    | --list cves         |
+
+
+Scenario Outline: updateinfo lists advisories referencing bugzilla
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "updateinfo <options>"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    222 bugfix glibc-2.28-26.fc29.x86_64
+    """
+
+Examples:
+    | options             |
+    | --list --with-bz    |
+    # yum compatibility
+    | list bugzillas      |
+    | list bzs            |
