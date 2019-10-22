@@ -96,8 +96,8 @@ class HttpServerContext(object):
         # mapping path -> (address, server process)
         self.servers = dict()
         # list of AccessRecord objects
-        self._log = None
-        self._conf = None
+        self._log = multiprocessing.Manager().list()
+        self._conf = multiprocessing.Manager().dict()
 
     def _start_server(self, path, target, *args):
         """
@@ -113,8 +113,6 @@ class HttpServerContext(object):
         return address
 
     def new_http_server(self, path):
-        self._log = multiprocessing.Manager().list()
-        self._conf = multiprocessing.Manager().dict()
         return self._start_server(path, self.http_server, self._log, self._conf)
 
     def new_https_server(self, path, cacert, cert, key, client_verification):
