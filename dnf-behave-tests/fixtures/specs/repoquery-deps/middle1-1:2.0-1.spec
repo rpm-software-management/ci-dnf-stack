@@ -8,7 +8,6 @@ URL:            None
 
 Provides:       middle1-prov1 = 2.0
 
-Requires:       bottom1-prov1
 Requires:       bottom1-prov2 >= 2.0
 Requires:       bottom2 = 1:1.0-1
 Requires:       /a/bottom4-file
