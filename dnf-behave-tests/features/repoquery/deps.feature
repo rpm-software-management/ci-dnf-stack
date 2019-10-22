@@ -85,7 +85,7 @@ Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
       """
       top1-1:2.0-1.src
       top1-1:2.0-1.x86_64
-       \_ middle1-1:2.0-1.x86_64 [4: bottom1-prov1, /a/bottom4-file, bottom2 = 1:1.0-1, bottom1-prov2 >= 2.0]
+       \_ middle1-1:2.0-1.x86_64 [3: /a/bottom4-file, bottom2 = 1:1.0-1, bottom1-prov2 >= 2.0]
        |   \_ bottom1-1:2.0-1.x86_64 [0: ]
        |   \_ bottom2-1:1.0-1.x86_64 [0: ]
        |   \_ bottom4-1:1.0-1.x86_64 [0: ]
@@ -264,7 +264,7 @@ Scenario: repoquery --whatrequires NAME (file provide)
       """
 
 Scenario: repoquery --whatrequires PROVIDE_NAME
- When I execute dnf with args "repoquery --whatrequires bottom1-prov1"
+ When I execute dnf with args "repoquery --whatrequires bottom1-prov2"
  Then the exit code is 0
   And stdout is
       """
@@ -281,7 +281,7 @@ Scenario: repoquery --whatrequires PROVIDE_NAME = VERSION
       """
 
 Scenario: repoquery --whatrequires --recursive PROVIDE_NAME
- When I execute dnf with args "repoquery --recursive --whatrequires bottom1-prov1"
+ When I execute dnf with args "repoquery --recursive --whatrequires bottom1-prov2"
  Then the exit code is 0
   And stdout is
       """
