@@ -34,7 +34,7 @@ Scenario: Installing a package from https repository with client verification
 Scenario: Installing a package using untrusted client cert should fail
   Given I require client certificate verification with certificate "certificates/testcerts/client2/cert.pem" and key "certificates/testcerts/client2/key.pem"
     And I use repository "dnf-ci-fedora" as https
-   When I execute dnf with args "install filesystem -v"
+   When I execute dnf with args "install filesystem"
    Then the exit code is 1
     And stderr matches line by line
     """
