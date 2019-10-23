@@ -129,8 +129,6 @@ class HttpServerContext(object):
 
     @property
     def log(self):
-        if self._log is None:
-            raise Exception('No HTTP server was started yet')
         return self._log
 
     def clear_log(self):
@@ -141,8 +139,6 @@ class HttpServerContext(object):
 
     @property
     def conf(self):
-        if self._conf is None:
-            raise Exception('No HTTP server was started yet')
         return self._conf
 
     def shutdown(self):
