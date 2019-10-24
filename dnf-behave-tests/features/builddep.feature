@@ -80,3 +80,60 @@ Scenario: Builddep on SPEC with non-available Source0
 
    Error: Some packages could not be found.
    """
+
+@bz1758459
+Scenario: I exclude the highest verion of a package and call dnf builddep with --best
+  Given I use repository "dnf-ci-fedora-updates"
+    And I enable plugin "builddep"
+  Given I create file "dummy-pkg.spec" with
+   """
+   Name: dummy-pkg
+   Summary: dummy-pkg summary
+   Version: 1.0
+   Release: 1
+   License: GPL
+   BuildRequires: flac
+   %description
+   This is a dummy-pkg description
+   %build
+   %files
+   %changelog
+   """
+   When I execute dnf with args "builddep {context.dnf.installroot}/dummy-pkg.spec --exclude flac-1.3.3-3.fc29 --best"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                | Package                    |
+        | install               | flac-0:1.3.3-2.fc29.x86_64 |
+
+@bz1758459
+Scenario: I call dnf builddep with --best on a spec file with a modular dependency (tests handling modular excludes)
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
+    And I enable plugin "builddep"
+  Given I create file "dummy-pkg.spec" with
+   """
+   Name: dummy-pkg
+   Summary: dummy-pkg summary
+   Version: 1.0
+   Release: 1
+   License: GPL
+   BuildRequires: nodejs
+   %description
+   This is a dummy-pkg description
+   %build
+   %files
+   %changelog
+   """
+   When I execute dnf with args "builddep {context.dnf.installroot}/dummy-pkg.spec --best"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                 | Package                                       |
+        | install                | setup-0:2.12.1-1.fc29.noarch                  |
+        | install                | filesystem-0:3.9-2.fc29.x86_64                |
+        | install                | basesystem-0:11-6.fc29.noarch                 |
+        | install                | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | install                | glibc-common-0:2.28-9.fc29.x86_64             |
+        | install                | glibc-0:2.28-9.fc29.x86_64                    |
+        | install                | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+        | install                | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | module-stream-enable   | nodejs:8                                      |
