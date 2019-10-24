@@ -38,12 +38,11 @@ Scenario: Reposync with --downloadcomps option
     And I drop repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "group list"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
    """
-   ?Last metadata expiration check
-   ?testrepo
+   <REPOSYNC>
    Available Groups:
-   DNF-CI-Testgroup
+      DNF-CI-Testgroup
    """
 
 
