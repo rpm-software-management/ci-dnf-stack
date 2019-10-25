@@ -185,3 +185,69 @@ Scenario: Group remove does not remove user installed packages
         | group-remove  | DNF-CI-Testgroup                          |
         | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
+
+@bz1706382
+Scenario: Group list
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group list"
+  Then the exit code is 0
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup
+       CQRlib-non-devel
+       SuperRipper-and-deps
+    """
+
+@bz1706382
+Scenario: Group list --ids
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group list --ids"
+  Then the exit code is 0
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup (dnf-ci-testgroup)
+       CQRlib-non-devel (cqrlib-non-devel)
+       SuperRipper-and-deps (superripper-and-deps)
+    """
+
+@bz1706382
+Scenario: Group list --ids with arg
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group list --ids dnf-ci-testgroup"
+  Then the exit code is 0
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup (dnf-ci-testgroup)
+    """
+
+@bz1706382
+Scenario: Group list ids => yum compatibility
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group list ids"
+  Then the exit code is 0
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup (dnf-ci-testgroup)
+       CQRlib-non-devel (cqrlib-non-devel)
+       SuperRipper-and-deps (superripper-and-deps)
+    """
+
+@bz1706382
+Scenario: Group list ids with arg => yum compatibility
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group list ids dnf-ci-testgroup"
+  Then the exit code is 0
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup (dnf-ci-testgroup)
+    """
