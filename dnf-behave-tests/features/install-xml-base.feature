@@ -15,7 +15,6 @@ Given I copy repository "dnf-ci-fedora" for modification
   And file "/var/cache/dnf/dnf-ci-fedora_with_baseurl*/packages/setup*" does not exist
 
 
-@not.with_os=rhel__eq__8
 @fixture.httpd
 Scenario: Install from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
@@ -45,7 +44,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
 
-@not.with_os=rhel__eq__8
 @fixture.httpd
 Scenario: Install from local repodata with xml:base pointing to remote packages doesn't delete unused local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http

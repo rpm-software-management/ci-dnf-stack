@@ -92,7 +92,6 @@ Scenario: History info of package
         | Removed       | abcde-2.9.2-1.fc29.noarch |
 
 
-@not.with_os=rhel__eq__8
 Scenario: history info aaa (nonexistent package)
    When I execute dnf with args "history info aaa"
    Then the exit code is 0
@@ -102,7 +101,6 @@ Scenario: history info aaa (nonexistent package)
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: history info aaa (nonexistent package)
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "history info aaa"

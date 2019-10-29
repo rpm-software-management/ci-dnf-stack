@@ -5,7 +5,6 @@ Background:
   Given I enable plugin "download"
 
 
-@not.with_os=rhel__eq__8
 Scenario: Download packages from local repository with local xml:base
 Given I copy repository "dnf-ci-fedora" for modification
   And I use repository "dnf-ci-fedora"
@@ -20,7 +19,6 @@ Given I copy repository "dnf-ci-fedora" for modification
       | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm |
 
 
-@not.with_os=rhel__eq__8
 @fixture.httpd
 Scenario: Download from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http

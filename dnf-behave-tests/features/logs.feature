@@ -1,7 +1,6 @@
 Feature: Logs
 
 
-@not.with_os=rhel__eq__8
 @bz1739457
 Scenario: dnf.rpm.log doesn't contain duplicate entries ()
   Given I use repository "dnf-ci-fedora-updates"
