@@ -184,7 +184,6 @@ Scenario: history filesystem
       | Id | Command | Action  | Altered |
       | 1  |         | Install | 6       |
 
-@not.with_os=rhel__eq__8
 Scenario: history lame (no transaction with such package)
  When I execute dnf with args "history lame"
  Then the exit code is 0

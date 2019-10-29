@@ -202,7 +202,6 @@ Scenario: repoquery --arch ARCH (nonexisting arch)
 
 
 # --cacheonly
-@not.with_os=rhel__eq__8
 Scenario: repoquery -C (without any cache)
  When I execute dnf with args "repoquery --available -C"
  Then the exit code is 1
@@ -212,7 +211,6 @@ Scenario: repoquery -C (without any cache)
       Error: Cache-only enabled but no cache for 'repoquery-main'
       """
 
-@not.with_os=rhel__eq__8
 Scenario: repoquery -Cq (without any cache)
  When I execute dnf with args "repoquery --available -Cq"
  Then the exit code is 1
@@ -560,7 +558,6 @@ Scenario: repoquery --queryformat NVR
       bottom-a1-2.0-1
       """
 
-@not.with_os=rhel__eq__8
 # note: %{{installtime}}, %{{buildtime}}, %{{size}}, %{{downloadsize}}, %{{installsize}} untested as they vary
 Scenario: repoquery --queryformat EVERYTHING
  When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}}' top*"
@@ -585,7 +582,6 @@ Scenario: repoquery --queryformat EVERYTHING
 
 
 # --querytags
-@not.with_os=rhel__eq__8
 @bz1744073
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"
