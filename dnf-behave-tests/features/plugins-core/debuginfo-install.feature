@@ -4,38 +4,6 @@ Background:
 Given I use repository "debuginfo-install"
   And I enable plugin "debuginfo-install"
 
-
-@use.with_os=rhel__eq__8
-@bz1585137
-Scenario: reports an error for a non-existent package
- When I execute dnf with args "debuginfo-install non-existent-package"
- Then the exit code is 1
-  And stdout is
-      """
-      <REPOSYNC>
-      No match for argument: non-existent-package
-      No debuginfo packages available to install
-      """
-  And stderr is
-      """
-      Error: Unable to find a match: non-existent-package
-      """
-
-@use.with_os=rhel__eq__8
-Scenario: reports an error for a package without debuginfo
- When I execute dnf with args "debuginfo-install nodebug"
- Then the exit code is 0
-  And stdout is
-      """
-      <REPOSYNC>
-      Could not find debuginfo for package: nodebug-1.0-1.x86_64
-      No debuginfo packages available to install
-      Dependencies resolved.
-      Nothing to do.
-      Complete!
-      """
-
-
 @bz1585137
 Scenario: reports an error for a non-existent package
  When I execute dnf with args "debuginfo-install non-existent-package"

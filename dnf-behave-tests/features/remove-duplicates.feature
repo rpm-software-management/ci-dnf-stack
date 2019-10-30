@@ -34,6 +34,8 @@ Scenario: Remove multiple duplicate RPMs
 
 
 @bz1674296
+# until rhel has commit: https://github.com/rpm-software-management/dnf/commit/74ceed29ddcf8e57dee92f3081db4b7957de9079
+@not.with_os=rhel__eq__8
 Scenario: Remove a duplicate RPM and reinstall an existing RPM when a copy is available in repos
   Given I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-1.fc29.x86_64.rpm"
    Then the exit code is 0

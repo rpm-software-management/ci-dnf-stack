@@ -1,5 +1,7 @@
 Feature: Better user counting
 
+    # until rhel has PR: https://github.com/rpm-software-management/libdnf/pull/807
+    @not.with_os=rhel__eq__8
     @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent
@@ -11,6 +13,7 @@ Feature: Better user counting
             | header     | value                                    |
             | User-Agent | libdnf (Fedora 30; server; Linux.x86_64) |
 
+    @not.with_os=rhel__eq__8
     @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent (missing variant)
@@ -22,6 +25,7 @@ Feature: Better user counting
             | header     | value                                     |
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
+    @not.with_os=rhel__eq__8
     @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent (unknown variant)
@@ -33,6 +37,7 @@ Feature: Better user counting
             | header     | value                                     |
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
+    @not.with_os=rhel__eq__8
     @destructive
     @fixture.httpd
     Scenario: Shortened User-Agent value on a non-Fedora system
@@ -44,6 +49,7 @@ Feature: Better user counting
             | header     | value  |
             | User-Agent | libdnf |
 
+    @not.with_os=rhel__eq__8
     @destructive
     @fixture.httpd
     Scenario: No os-release file installed
@@ -66,6 +72,7 @@ Feature: Better user counting
             | header     | value     |
             | User-Agent | Agent 007 |
 
+    @not.with_os=rhel__eq__8
     @fixture.httpd
     Scenario: Countme flag is sent once per week
         Given I set config option "countme" to "1"
@@ -117,6 +124,7 @@ Feature: Better user counting
             | path                     |
             | */metalink.xml?countme=4 |
 
+    @not.with_os=rhel__eq__8
     @fixture.httpd
     Scenario: Countme flag is not sent repeatedly on retries
         Given I set config option "countme" to "1"
