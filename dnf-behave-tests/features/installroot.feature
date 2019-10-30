@@ -62,6 +62,8 @@ Scenario: Remove package from installroot
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
+# until rhel has PR: https://github.com/rpm-software-management/dnf/pull/1423
+@not.with_os=rhel__eq__8
 @force_installroot
 Scenario: Repolist command in installroot and with a reposdir specified
   Given I use repository "dnf-ci-install-remove"

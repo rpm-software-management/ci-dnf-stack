@@ -19,8 +19,8 @@ Scenario: Builddep installs non-modular build requirements
         | install       | ninja-build-0:1.8.2-5.fc29.x86_64     |
 
 
-# do not run on Fedora until issue fixed in libsolv
-# https://github.com/rpm-software-management/libsolv/pull/1
+# until rhel has commit: https://github.com/rpm-software-management/libdnf/commit/998a434c098c1929b11d9d3892f153292a4e9913
+@not.with_os=rhel__eq__8
 @bz1677583
 Scenario: Builddep preferes default stream over other streams / non-modular content even though the version is older
   Given I use repository "dnf-ci-fedora-modular"
@@ -32,6 +32,7 @@ Scenario: Builddep preferes default stream over other streams / non-modular cont
         | module-stream-enable  | ninja:master                                      |
 
 
+@not.with_os=rhel__eq__8
 @bz1677583
 Scenario: Builddep preferes enabled stream over other streams / non-modular content even though the version is older
   Given I use repository "dnf-ci-fedora-modular"
@@ -60,6 +61,7 @@ Scenario: Builddep reports error where required package is available only in non
 
 # dnf-ci-fedora-modular: nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
 # dnf-ci-fedora-modular-hotfix: nodejs-1:8.11.5-1.module_2030+42747d40.x86_64
+@not.with_os=rhel__eq__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the default stream
   Given I use repository "dnf-ci-fedora-modular"
@@ -75,6 +77,7 @@ Scenario: Builddep preferes hotfix repo over the default stream
         | module-stream-enable  | ninja:master                                      |
 
 
+@not.with_os=rhel__eq__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the enabled stream
   Given I use repository "dnf-ci-fedora-modular"

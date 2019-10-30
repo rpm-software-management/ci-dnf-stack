@@ -123,6 +123,8 @@ Scenario: Multilib obsoletes during distro-sync
 
 # PackageD-0:2.0-1.x86_64 obsoletes PackageC < 2
 # PackageD-0:1.0-1.x86_64 does not obsolete anything
+# until rhel has commit: https://github.com/rpm-software-management/dnf/commit/fe55a8ffaff2e781b2f9b3e3ec698c86de34262b
+@not.with_os=rhel__eq__8
 @bz1761137
 Scenario: Obsoleted package is not installed when group contains both obsoleter and obsoleted packages
    When I execute dnf with args "group install obsoleter-obsoleted"
