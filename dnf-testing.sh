@@ -74,7 +74,11 @@ PARAM_DNFCOMMAND=""
 BUILD_CACHE="--no-cache"
 DOCKER_BIN="sudo docker";
 DOCKER_FILE="Dockerfile";
-! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN="podman"
+
+# use podman if docker is not on the system and podman is
+if [ ! `command -v docker` ] && [ `command -v podman` ]; then
+    DOCKER_BIN="podman"
+fi
 
 while :; do
     case "$1" in
