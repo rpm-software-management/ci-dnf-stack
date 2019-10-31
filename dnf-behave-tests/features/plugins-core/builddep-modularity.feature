@@ -21,7 +21,6 @@ Scenario: Builddep installs non-modular build requirements
 
 # do not run on Fedora until issue fixed in libsolv
 # https://github.com/rpm-software-management/libsolv/pull/1
-@use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes default stream over other streams / non-modular content even though the version is older
   Given I use repository "dnf-ci-fedora-modular"
@@ -33,7 +32,6 @@ Scenario: Builddep preferes default stream over other streams / non-modular cont
         | module-stream-enable  | ninja:master                                      |
 
 
-@use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes enabled stream over other streams / non-modular content even though the version is older
   Given I use repository "dnf-ci-fedora-modular"
