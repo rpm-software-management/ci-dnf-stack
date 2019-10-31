@@ -43,6 +43,7 @@ Options:
   -h, --help               Show this help
   -c, --container  IMAGE   Specified Image ID or name if do not want to run the last built image
   -d, --devel              Share local feature/ with docker
+  -f, --file               Path to Dockerfile to use
   -p, --podman             Force using podman instead of docker
   -r, --reserve            Keep bash shell session open after every single test executed
   -R, --reserveonfail      Keep bash shell session open upon test failure
@@ -61,7 +62,7 @@ EOF
     exit 0
 }
 
-TEMP=$(getopt -n $0 -o hdrpRc:t: -l help,devel,podman,reserve,reserveonfail,noxfail,usecache,container,command:,tags: -- "$@") || show_usage
+TEMP=$(getopt -n $0 -o hdf:rpRc:t: -l help,devel,file:,podman,reserve,reserveonfail,noxfail,usecache,container,command:,tags: -- "$@") || show_usage
 eval set -- "$TEMP"
 
 devel=""
@@ -72,6 +73,7 @@ PARAM_TAGS=""
 PARAM_DNFCOMMAND=""
 BUILD_CACHE="--no-cache"
 DOCKER_BIN="sudo docker";
+DOCKER_FILE="Dockerfile";
 ! rpm -q docker &>/dev/null && rpm -q podman &>/dev/null && DOCKER_BIN="podman"
 
 while :; do
@@ -80,6 +82,7 @@ while :; do
         -h|--help) show_help;;
         -d|--devel) set_devel; shift;;
         -c|--container) IMAGE=$2; shift 2;;
+        -f|--file) DOCKER_FILE=$2; shift 2;;
         -p|--podman) DOCKER_BIN="podman"; shift;;
         -r|--reserve) set_reserve; shift;;
         -R|--reserveonfail) set_reserveR; shift;;
@@ -142,7 +145,7 @@ list()
 build()
 {
     local output=($($DOCKER_BIN build --build-arg TYPE="$type" \
-                    ${BUILD_CACHE} --force-rm -t "$IMAGE" "$PROG_PATH" | \
+                    ${BUILD_CACHE} --force-rm -t "$IMAGE" -f "$DOCKER_FILE" "$PROG_PATH" | \
         tee >(cat - >&2) | tail -1))
     RET=$?
     if [ "$DOCKER_BIN" == "sudo docker" ]; then
