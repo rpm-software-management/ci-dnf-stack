@@ -62,11 +62,12 @@ Scenario: Builddep reports error where required package is available only in non
 
 # dnf-ci-fedora-modular: nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
 # dnf-ci-fedora-modular-hotfix: nodejs-1:8.11.5-1.module_2030+42747d40.x86_64
-@use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the default stream
   Given I use repository "dnf-ci-fedora-modular"
-    And I use repository "dnf-ci-fedora-modular-hotfix"
+    And I use repository "dnf-ci-fedora-modular-hotfix" with configuration
+        | key                 | value |
+        | module_hotfixes     | 1     |
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-nodejs-1.0-1.src.rpm"
    Then the exit code is 0
     And Transaction contains
@@ -76,11 +77,12 @@ Scenario: Builddep preferes hotfix repo over the default stream
         | module-stream-enable  | ninja:master                                      |
 
 
-@use.with_os=rhel__ge__8
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the enabled stream
   Given I use repository "dnf-ci-fedora-modular"
-    And I use repository "dnf-ci-fedora-modular-hotfix"
+    And I use repository "dnf-ci-fedora-modular-hotfix" with configuration
+        | key                 | value |
+        | module_hotfixes     | 1     |
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-nodejs-1.0-1.src.rpm"
