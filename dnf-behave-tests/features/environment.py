@@ -246,9 +246,11 @@ def ftpd_context(context):
 
 @fixture
 def osrelease(context):
-    context.osrelease = OSRelease('/usr/lib/os-release')
-    yield context.osrelease
-    del context.osrelease
+    try:
+        context.osrelease = OSRelease('/usr/lib/os-release')
+        yield context.osrelease
+    finally:
+        del context.osrelease
 
 
 def before_step(context, step):
