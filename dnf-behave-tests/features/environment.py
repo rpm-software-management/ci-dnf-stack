@@ -204,26 +204,30 @@ class DNFContext(object):
 class OSRelease(object):
     """Represents the os-release(5) file."""
     def __init__(self, path):
-        self._backup = '/tmp/os-release'
         self._path = path
-        # Back up the original file
-        shutil.copyfile(path, self._backup)
+        self._backup = None
+        # Back up the original file (if any)
+        if os.path.exists(path):
+            with open(path) as f:
+                self._backup = f.read()
 
     def set(self, data):
         """Store the given data in this file."""
         content = ('%s=%s' % (k, v) for k, v in data.items())
         with open(self._path, 'w') as f:
             f.write('\n'.join(content))
-        self.data = data
 
     def delete(self):
         """Delete the file."""
-        os.remove(self._path)
+        if os.path.exists(self._path):
+            os.remove(self._path)
 
     def __del__(self):
-        # Restore the backup
-        shutil.copyfile(self._backup, self._path)
-        os.remove(self._backup)
+        """Restore the backup."""
+        self.delete()
+        if self._backup is not None:
+            with open(self._path, 'w') as f:
+                f.write(self._backup)
 
 
 @fixture
