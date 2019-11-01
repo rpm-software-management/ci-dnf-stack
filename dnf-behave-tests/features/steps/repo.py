@@ -10,6 +10,7 @@ import parse
 
 from common import *
 from common.rpmdb import get_rpmdb_rpms
+from environment import osrelease
 
 
 def repo_config(repo, new={}):
@@ -300,12 +301,14 @@ def step_clear_http_logs(context):
 
 @behave.step("I am running a system identified as the \"{system}\"")
 def given_system(context, system):
+    behave.use_fixture(osrelease, context)
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
     context.osrelease.set(data)
 
 
 @behave.step("I remove the os-release file")
 def given_no_osrelease(context):
+    behave.use_fixture(osrelease, context)
     context.osrelease.delete()
 
 

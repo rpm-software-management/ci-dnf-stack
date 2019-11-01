@@ -1,6 +1,6 @@
 Feature: Better user counting
 
-    @fixture.osrelease
+    @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent
         Given I am running a system identified as the "Fedora 30 server"
@@ -11,7 +11,7 @@ Feature: Better user counting
             | header     | value                                    |
             | User-Agent | libdnf (Fedora 30; server; Linux.x86_64) |
 
-    @fixture.osrelease
+    @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent (missing variant)
         Given I am running a system identified as the "Fedora 31"
@@ -22,7 +22,7 @@ Feature: Better user counting
             | header     | value                                     |
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
-    @fixture.osrelease
+    @destructive
     @fixture.httpd
     Scenario: User-Agent header is sent (unknown variant)
         Given I am running a system identified as the "Fedora 31 myspin"
@@ -33,7 +33,7 @@ Feature: Better user counting
             | header     | value                                     |
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
-    @fixture.osrelease
+    @destructive
     @fixture.httpd
     Scenario: Shortened User-Agent value on a non-Fedora system
         Given I am running a system identified as the "OpenSUSE 15.1 desktop"
@@ -44,7 +44,7 @@ Feature: Better user counting
             | header     | value  |
             | User-Agent | libdnf |
 
-    @fixture.osrelease
+    @destructive
     @fixture.httpd
     Scenario: No os-release file installed
         Given I remove the os-release file
