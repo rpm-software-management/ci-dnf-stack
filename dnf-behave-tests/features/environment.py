@@ -29,9 +29,6 @@ DEFAULT_PLATFORM_ID="platform:f29"
 # "destructive" to the system running it.
 DESTRUCTIVE_TAGS = [
     "destructive",
-    # This temporarily replaces /usr/lib/os-release and may not get to
-    # restoring the backup if something goes wrong (such as crashing).
-    "fixture.osrelease",
 ]
 
 
@@ -306,8 +303,6 @@ def before_tag(context, tag):
         use_fixture(httpd_context, context)
     if tag == 'fixture.ftpd':
         use_fixture(ftpd_context, context)
-    elif tag == 'fixture.osrelease':
-        use_fixture(osrelease, context)
 
 
 def after_tag(context, tag):
