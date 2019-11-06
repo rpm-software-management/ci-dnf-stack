@@ -43,7 +43,7 @@ Scenario: Get info for a module, only module name specified
       Version          : 20180920144631
       Context          : 6c81f848
       Architecture     : x86_64
-      Profiles         : development, default [d], minimal
+      Profiles         : default [d], development, minimal
       Default profiles : default
       Repo             : dnf-ci-fedora-modular
       Summary          : Javascript runtime
@@ -58,7 +58,7 @@ Scenario: Get info for a module, only module name specified
       Version          : 20190102201818
       Context          : 6c81f848
       Architecture     : x86_64
-      Profiles         : development, default [d], minimal
+      Profiles         : default [d], development, minimal
       Default profiles : default
       Repo             : dnf-ci-fedora-modular-updates
       Summary          : Javascript runtime
@@ -80,7 +80,7 @@ Scenario: Get info for a module, only module name specified
       Version          : 20180801080000
       Context          : 6c81f848
       Architecture     : x86_64
-      Profiles         : development, default [d] [i], minimal
+      Profiles         : default [d] [i], development, minimal
       Default profiles : default
       Repo             : dnf-ci-fedora-modular
       Summary          : Javascript runtime
@@ -95,7 +95,7 @@ Scenario: Get info for a module, only module name specified
       Version          : 20181216123422
       Context          : 7f892346
       Architecture     : x86_64
-      Profiles         : development, default [d] [i], minimal
+      Profiles         : default [d] [i], development, minimal
       Default profiles : default
       Repo             : dnf-ci-fedora-modular-updates
       Summary          : Javascript runtime
@@ -110,7 +110,7 @@ Scenario: Get info for a module, only module name specified
       Version      : 20180920144611
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -124,7 +124,7 @@ Scenario: Get info for a module, only module name specified
       Version      : 20181102165620
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular-updates
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -144,7 +144,7 @@ Scenario: Get info for a module, only module name specified
       Version      : 20181102165620
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular-updates
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -164,7 +164,7 @@ Scenario: Get info for a module, only module name specified
       Version      : 20150811143428
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -189,7 +189,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Version      : 20180920144611
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -203,7 +203,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Version      : 20181102165620
       Context      : 6c81f848
       Architecture : x86_64
-      Profiles     : development, default, minimal
+      Profiles     : default, development, minimal
       Repo         : dnf-ci-fedora-modular-updates
       Summary      : Javascript runtime
       Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -236,7 +236,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20180920144631
         Context          : 6c81f848
         Architecture     : x86_64
-        Profiles         : development, default [d], minimal
+        Profiles         : default [d], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
@@ -251,7 +251,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20190102201818
         Context          : 6c81f848
         Architecture     : x86_64
-        Profiles         : development, default [d], minimal
+        Profiles         : default [d], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
@@ -273,7 +273,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20180801080000
         Context          : 6c81f848
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
@@ -288,7 +288,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20181216123422
         Context          : 7f892346
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
@@ -303,7 +303,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20180920144611
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -317,7 +317,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20181102165620
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular-updates
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -337,7 +337,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20181102165620
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular-updates
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -357,7 +357,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20150811143428
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -384,7 +384,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20180920144611
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -398,7 +398,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20181102165620
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular-updates
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -431,7 +431,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20180920144611
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -445,7 +445,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version      : 20181102165620
         Context      : 6c81f848
         Architecture : x86_64
-        Profiles     : development, default, minimal
+        Profiles     : default, development, minimal
         Repo         : dnf-ci-fedora-modular-updates
         Summary      : Javascript runtime
         Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
@@ -484,7 +484,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20180801080000
         Context          : 6c81f848
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
@@ -499,7 +499,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Version          : 20181216123422
         Context          : 7f892346
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
@@ -668,18 +668,18 @@ Examples:
         """
         <REPOSYNC>
         Name        : nodejs:11:20180920144611:6c81f848:x86_64
+        default     : nodejs
+                    : npm
         development : nodejs
                     : nodejs-devel
-                    : npm
-        default     : nodejs
                     : npm
         minimal     : nodejs
 
         Name        : nodejs:11:20181102165620:6c81f848:x86_64
+        default     : nodejs
+                    : npm
         development : nodejs
                     : nodejs-devel
-                    : npm
-        default     : nodejs
                     : npm
         minimal     : nodejs
 
@@ -719,7 +719,7 @@ Examples:
         Version          : 20180801080000
         Context          : 6c81f848
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
@@ -734,7 +734,7 @@ Examples:
         Version          : 20181216123422
         Context          : 7f892346
         Architecture     : x86_64
-        Profiles         : development, default [d] [i], minimal
+        Profiles         : default [d] [i], development, minimal
         Default profiles : default
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
