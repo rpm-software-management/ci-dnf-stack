@@ -53,14 +53,19 @@ for path in $DIR/*/*.spec; do
     fi
     popd > /dev/null
 
+    RPMBUILD_CMD="rpmbuild --quiet -ba --nodeps"
+    RPMBUILD_CMD="$RPMBUILD_CMD --define='_srcrpmdir $REPODIR/$REPO/src' --define='_rpmdir $REPODIR/$REPO'"
+    RPMBUILD_CMD="$RPMBUILD_CMD --define='dist $DIST'"
+    RPMBUILD_CMD="$RPMBUILD_CMD --define '_source_payload w1.gzdio' --define '_binary_payload w1.gzdio'"
+
     # rebuild changed or new specs
     if [ $CSUM_CHANGED -eq 1 ]; then
         echo "Building $path..."
-        rpmbuild --quiet --target=$ARCH -ba --nodeps --define "_srcrpmdir $REPODIR/$REPO/src" --define "_rpmdir $REPODIR/$REPO" --define "dist $DIST" $path
+        eval $RPMBUILD_CMD --target=$ARCH $path
 
         # make lz4 multilib
         if [[ "$SPEC_NAME" =~ "multilib" ]]; then
-            rpmbuild --quiet --target=i686 -ba --nodeps --define "_srcrpmdir $REPODIR/$REPO/src" --define "_rpmdir $REPODIR/$REPO" --define "dist $DIST" $path
+            eval $RPMBUILD_CMD --target=i686 $path
         fi
 
         pushd "$SPEC_DIR" > /dev/null
