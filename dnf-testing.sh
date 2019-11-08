@@ -141,24 +141,10 @@ list()
 
 build()
 {
-    local output=($($DOCKER_BIN build --build-arg TYPE="$type" \
-                    ${BUILD_CACHE} --force-rm -t "$IMAGE" "$PROG_PATH" | \
-        tee >(cat - >&2) | tail -1))
+    $DOCKER_BIN build --build-arg TYPE="$type" \
+        ${BUILD_CACHE} --force-rm -t "$IMAGE" "$PROG_PATH"
     RET=$?
-    if [ "$DOCKER_BIN" == "sudo docker" ]; then
-        if [ ${#output[@]} -eq 3 ] && \
-       	   [ "${output[0]}" = "Successfully" ] && 
-           [ "${output[1]}" = "built" ]; then
-            printf "%s\n" "${output[2]}"
-        else
-            fatal "Failed to parse output."
-        fi
-    else
-        if [ $RET -ne 0 ]; then
-            fatal "Image build failed."
-        fi
-    fi
-    exit 0
+    exit $RET
 }
 [ "$action" = "build" ] && build
 
