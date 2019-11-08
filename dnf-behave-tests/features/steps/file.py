@@ -9,6 +9,7 @@ import re
 import os
 
 from common import *
+from common.string import print_lines_diff
 
 def prepend_installroot(context, path):
     path = path.format(context=context)
@@ -79,6 +80,17 @@ def file_does_not_exist(context, filepath):
     result = glob.glob(full_path)
     if len(result) > 0:
         raise AssertionError("Filepath %s matches existing files: \n%s" % (full_path, '\n'.join(result)))
+
+
+@behave.step('file "{filepath}" contents is')
+def file_contents_is(context, filepath):
+    expected = context.text.strip()
+    full_path = prepend_installroot(context, filepath)
+    found = read_file_contents(full_path).strip()
+    if expected == found:
+        return
+    print_lines_diff(expected.split('\n'), found.split('\n'))
+    raise AssertionError("File '{}' contents is different then expected.".format(filepath))
 
 
 @behave.step('file "{filepath}" contains lines')
