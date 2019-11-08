@@ -104,7 +104,7 @@ Scenario: Locking does not require that the package exists in a repository
     And stdout is
     """
     <REPOSYNC>
-    No match for argument: wget
+    All matches were excluded by regular filtering for argument: wget
     """
     And stderr is
     """

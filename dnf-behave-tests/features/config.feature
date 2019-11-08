@@ -38,7 +38,7 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
     """
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
-    And stdout contains "No match for argument: filesystem"
+    And stdout contains "All matches were excluded by regular filtering for argument: filesystem"
     And stderr contains "Error: Unable to find a match"
 
 
@@ -59,7 +59,7 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
    Then the exit code is 0
    When I execute dnf with args "install dwm"
    Then the exit code is 1
-    And stdout contains "No match for argument: dwm"
+    And stdout contains "All matches were excluded by regular filtering for argument: dwm"
   Given I do not set config file
    When I execute dnf with args "install dwm"
    Then the exit code is 0

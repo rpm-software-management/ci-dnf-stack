@@ -39,7 +39,7 @@ Scenario: module content masks ursine content - module not enabled, default stre
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
-    And stdout contains "No match for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
+    And stdout contains "All matches were excluded by modular filtering for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
 
 
 Scenario: module content masks ursine content - non-default stream enabled
@@ -50,7 +50,7 @@ Scenario: module content masks ursine content - non-default stream enabled
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
-    And stdout contains "No match for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
+    And stdout contains "All matches were excluded by modular filtering for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
 
 
 Scenario: a package from a non-enabled module is preferred when default stream is defined
