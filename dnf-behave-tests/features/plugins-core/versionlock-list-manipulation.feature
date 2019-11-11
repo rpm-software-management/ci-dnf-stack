@@ -120,3 +120,19 @@ Scenario: Basic commands add/exclude/list/delete/clear for manipulation with ver
     """
     <REPOSYNC>
     """
+
+
+Scenario: Versionlock accepts --raw switch
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | flac-0:1.3.2-8.fc29.x86_64            |
+   When I execute dnf with args "versionlock add --raw flac-1.3.*"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Adding versionlock on: flac-1.3.*
+    """
