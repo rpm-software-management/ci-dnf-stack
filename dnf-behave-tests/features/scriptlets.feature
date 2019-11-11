@@ -94,8 +94,10 @@ Scenario: Remove a pkg with a failing %postun scriptlet
        | remove        | Package-postun-fail-0:1.0-1.x86_64 |
 
 
+# The patch for printing correct pacakges whose the running scriptlet is had to be reverted because it broke DNF API.
+# The fix is delayed to DNF5 because is will use C rpm API instead of the Python one
+@xfail
 @bz1724779
-@not.with_os=rhel__eq__8
 Scenario: Output for triggered successful scriptlet of a package not present in transaction has temporarily just pkg name
  Given I successfully execute dnf with args "install Package-triggerin-ok"
   When I execute dnf with args "install Package-install-file"
@@ -105,27 +107,22 @@ Scenario: Output for triggered successful scriptlet of a package not present in 
        | install       | Package-install-file-0:1.0-1.x86_64 |
    And stdout contains "triggerin scriptlet \(Package-triggerin-ok\) for Package-install-file install/update successfully done"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
-   # We really should be matching the whole NEVRA of pkg but current RPM Python API provides 
-   # only the name (we can fix this by moving logic to libdnf, DNF5).
-   # This same situation is in all of the tests below.
-   # And stdout contains "Running scriptlet\s*:\s*Package-triggerin-ok-1.0-1.x86_64"
-   And stdout contains "Running scriptlet\s*:\s*Package-triggerin-ok"
+   And stdout contains "Running scriptlet\s*:\s*Package-triggerin-ok-1.0-1.x86_64"
 
 
+@xfail
 @bz1724779
-@not.with_os=rhel__eq__8
 Scenario: Correct output for triggered failed scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-triggerin-fail"
   When I execute dnf with args "install Package-install-file"
   Then the exit code is 0
    And stdout contains "failing on triggerin scriptlet"
-   # And stdout contains "Running scriptlet\s*:\s*Package-triggerin-fail-1.0-1.x86_64"
-   And stdout contains "Running scriptlet\s*:\s*Package-triggerin-fail"
+   And stdout contains "Running scriptlet\s*:\s*Package-triggerin-fail-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
    # There is an RPM problem, where it doesn't export internal tag for %triggerin, therefore DNF prints <unknown> instead
    # And stderr is 
    # """
-   # Error in %triggerin scriptlet in rpm package Package-triggerin-fail triggered by rpm package Package-install-file
+   # Error in %triggerin scriptlet in rpm package Package-triggerin-fail triggered by rpm package Package-install-file-1.0-1.x86_64
    # """
    And stderr is 
    """
@@ -133,8 +130,8 @@ Scenario: Correct output for triggered failed scriptlet of package not present i
    """
 
 
+@xfail
 @bz1724779
-@not.with_os=rhel__eq__8
 Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-transfiletriggerpostun-fail"
    And I successfully execute dnf with args "install Package-install-file"
@@ -144,13 +141,10 @@ Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet 
        | Action        | Package                            |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
    And stdout contains "transfiletriggerpostun scriptlet \(Package-transfiletriggerpostun-fail\) for uninstall transaction of Package-install-file is failing"
-   # And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-fail-1.0-1.x86_64"
-   And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-fail"
+   And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-fail-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
-   # There is an RPM problem, where it doesn't export internal tag for %filetriggerin, therefore DNF prints <unknown> instead
-   # And stderr is 
    #"""
-   #Error in %filetriggerin scriptlet in rpm package Package-transfiletriggerpostun-fail triggered by rpm package Package-install-file
+   #Error in %filetriggerin scriptlet in rpm package Package-transfiletriggerpostun-fail triggered by rpm package Package-install-file-1.0-1.x86_64
    #"""
    And stderr is 
    """
@@ -169,13 +163,11 @@ Scenario: Correct output for triggered successful file scriptlet of package not 
        | Action        | Package                             |
        | install       | Package-install-file-0:1.0-1.x86_64 |
    And stdout contains "filetriggerin scriptlet \(Package-filetriggerin-ok\) for Package-install-file install/update successfully done"
-   # And stdout contains "Running scriptlet\s*:\s*Package-filetriggerin-ok-1.0-1.x86_64"
-   And stdout contains "Running scriptlet\s*:\s*Package-filetriggerin-ok"
+   And stdout contains "Running scriptlet\s*:\s*Package-filetriggerin-ok-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
 
 
 @bz1724779
-# This contains both of the above RPM problems
 @xfail
 Scenario: Correct output for triggered failing file scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-filetriggerin-fail"
@@ -184,14 +176,17 @@ Scenario: Correct output for triggered failing file scriptlet of package not pre
    And stdout contains "filetriggerin scriptlet \(Package-filetriggerin-fail\) for Package-install-file install/update is failing"
    And stdout contains "Running scriptlet\s*:\s*Package-filetriggerin-fail-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
+   #"""
+   #Error in %filetriggerin scriptlet in rpm package Package-transfiletriggerpostun-fail triggered by rpm package Package-install-file-1.0-1.x86_64
+   #"""
    And stderr is 
    """
-   Error in %filetriggerin scriptlet in rpm package Package-filetriggerin-fail triggered by rpm package Package-install-file-1.0-1.x86_64
+   Error in <unknown> scriptlet in rpm package Package-filetriggerin-fail triggered by rpm package Package-install-file-1.0-1.x86_64
    """
 
 
+@xfail
 @bz1724779
-@not.with_os=rhel__eq__8
 Scenario: Correct output for triggered successful transfiletriggerpostun scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-transfiletriggerpostun-ok"
    And I successfully execute dnf with args "install Package-install-file"
@@ -201,6 +196,5 @@ Scenario: Correct output for triggered successful transfiletriggerpostun scriptl
        | Action        | Package                            |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
    And stdout contains "transfiletriggerpostun scriptlet \(Package-transfiletriggerpostun-ok\) for Package-install-file transaction uninstall successfully done"
-   # And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-ok-1.0-1.x86_64"
-   And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-ok"
+   And stdout contains "Running scriptlet\s*:\s*Package-transfiletriggerpostun-ok-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
