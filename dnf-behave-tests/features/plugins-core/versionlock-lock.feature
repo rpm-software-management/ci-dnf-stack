@@ -130,7 +130,6 @@ Examples:
     | wget-0:1.19.5-*   |
 
 
-@xfail
 @bz1726712
 Scenario: I can upgrade to the locked version of the package when older version is installed
   Given I successfully execute dnf with args "install wget-1.19.5"
