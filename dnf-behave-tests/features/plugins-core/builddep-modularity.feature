@@ -55,7 +55,7 @@ Scenario: Builddep reports error where required package is available only in non
     """
     Error:
      Problem: conflicting requests
-      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is excluded
+      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is excluded by modular filtering
     """
 
 
