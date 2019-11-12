@@ -172,3 +172,53 @@ Scenario: Lines that contain only whitespaces do not spoil previous config optio
    """
    gpgcheck = 1
    """
+
+
+@bz1721091
+@fixture.httpd
+Scenario: Dnf can use config file from remote location
+  Given I create directory "/remotedir"
+    And I create file "/remotedir/remote.conf" with
+    """
+    [repo-from-remote-config]
+    baseurl=http://some.url/
+    """
+    And I set up a http server for directory "/remotedir"
+    When I execute dnf with args "-c http://localhost:{context.dnf.ports[/remotedir]}/remote.conf repolist repo-from-remote-config"
+   Then the exit code is 0
+    And stdout is
+    """
+    repo id                             repo name                            status
+    repo-from-remote-config             repo-from-remote-config              enabled
+    """
+
+
+@bz1721091
+@fixture.httpd
+Scenario: Dnf prints reasonable error when remote config file is not downloadable
+  Given I create directory "/remotedir"
+    And I set up a http server for directory "/remotedir"
+   # 404 not found
+   When I execute dnf with args "-c http://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   Then the exit code is 1
+   And stderr matches line by line
+   """
+   Config error: Configuration file URL "http://localhost:[\d]+/does-not-exist\.conf" could not be downloaded:
+     Status code: 404 for http://localhost:[\d]+/does-not-exist\.conf
+   """
+   # unsupported protocol
+   When I execute dnf with args "-c xxxx://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   Then the exit code is 1
+   And stderr matches line by line
+   """
+   Config error: Configuration file URL "xxxx://localhost:[\d]+/does-not-exist\.conf" could not be downloaded:
+     Curl error \(1\): Unsupported protocol for xxxx://localhost:[\d]+/does-not-exist\.conf \[Protocol "xxxx" not supported or disabled in libcurl\]
+   """
+   # host unknown
+   When I execute dnf with args "-c http://the_host:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   Then the exit code is 1
+   And stderr matches line by line
+   """
+   Config error: Configuration file URL "http://the_host:[\d]+/does-not-exist\.conf" could not be downloaded:
+     Curl error \(6\): Couldn't resolve host name for http://the_host:[\d]+/does-not-exist\.conf \[Could not resolve host: the_host\]
+   """
