@@ -71,6 +71,38 @@ def faketime_today(context, when):
     context.execute_steps('when I move the clock backward to "{}"'.format(when))
 
 
+@behave.step("I fake kernel release to {release}")
+def i_fake_kernel_release(context, release):
+    """Override uname() system call to return {release} as release.
+
+    This is useful for faking running kernel, because libdnf determines running kernel in the
+    following way:
+        1. makes uname syscall to get operation system release
+        2. searches for file "/boot/vmlinuz-<release>" (<release> from previous step)
+        3. searches for RPM that provides that file
+           -> this RPM is considered the running kernel
+
+    Note that libdnf only checks running kernel when not running in installroot, therefore,
+    @no_installroot tag is needed.
+
+    By faking uname.release, all that remains to create fake running-kernel package is for the
+    RPM to provide file "/boot/vmlinuz-{release}". (Do not forget to add the file into the %files
+    section in the .spec file. It can be specified as %ghost for easier build.)
+
+    :param release: arbitrary string
+    """
+    assert os.path.exists('/usr/bin/fakeuname'), (
+        'Fakeuname binary must be installed (provided by fakeuname from '
+        'rpmsoftwaremanagement/dnf-nightly copr repo)')
+    context.fake_kernel_release = "fakeuname {} ".format(release)
+
+
+@behave.step("I stop faking kernel release")
+def i_stop_faking_kernel_release(context):
+    """Cancels the effect of "I fake kernel release to {release}" step."""
+    context.fake_kernel_release = None
+
+
 @behave.step("I execute dnf with args \"{args}\"")
 def when_I_execute_dnf_with_args(context, args):
     cmd = " ".join(context.dnf.get_cmd(context))
