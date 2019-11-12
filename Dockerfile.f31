@@ -35,11 +35,17 @@ RUN set -x && \
     echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf
 
 
-# if TYPE == copr or local, enable nightly copr
+# install fakeuname from dnf-nightly copr repo
 RUN set -x && \
-    if [ "$TYPE" == "copr" -o "$TYPE" == "local" ]; then \
-        dnf -y install dnf-plugins-core; \
-        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    dnf -y install dnf-plugins-core; \
+    dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    dnf -y install fakeuname;
+
+
+# if not TYPE == copr nor local, disable nightly copr
+RUN set -x && \
+    if [ ! "$TYPE" == "copr" -a ! "$TYPE" == "local" ]; then \
+        dnf -y copr disable rpmsoftwaremanagement/dnf-nightly; \
     fi
 
 
