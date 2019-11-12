@@ -39,11 +39,17 @@ RUN set -x && \
     rpm -Uvh http://download.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 
 
-# if TYPE == copr or local, enable nightly copr
+# install fakeuname from dnf-nightly copr repo
 RUN set -x && \
-    if [ "$TYPE" == "copr" -o "$TYPE" == "local" ]; then \
-        yum -y install yum-plugin-copr; \
-        yum -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    yum -y install yum-plugin-copr; \
+    yum -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    yum -y install fakeuname;
+
+
+# if not TYPE == copr nor local, disable nightly copr
+RUN set -x && \
+    if [ ! "$TYPE" == "copr" -a ! "$TYPE" == "local" ]; then \
+        yum -y copr disable rpmsoftwaremanagement/dnf-nightly; \
     fi
 
 
