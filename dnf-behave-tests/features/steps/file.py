@@ -11,13 +11,6 @@ import os
 from common import *
 from common.string import print_lines_diff
 
-def prepend_installroot(context, path):
-    path = path.format(context=context)
-    root = '/'
-    if not path.startswith('//'):
-        root = context.dnf.installroot
-    return os.path.join(root, path.lstrip("/"))
-
 @behave.given('I create directory "{dirpath}"')
 def step_impl(context, dirpath):
     full_path = prepend_installroot(context, dirpath)

@@ -7,6 +7,13 @@ import codecs
 import os
 import shutil
 
+def prepend_installroot(context, path):
+    path = path.format(context=context)
+    root = '/'
+    if not path.startswith('//'):
+        root = context.dnf.installroot
+    return os.path.join(root, path.lstrip("/"))
+
 def ensure_directory_exists(dirname):
     if not os.path.exists(dirname):
         os.makedirs(dirname)
