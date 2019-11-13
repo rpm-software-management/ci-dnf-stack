@@ -293,9 +293,16 @@ def then_stdout_contains_lines(context):
 
 @behave.then("stdout matches line by line")
 def then_stdout_matches_line_by_line(context):
-    out_lines = context.cmd_stdout.split('\n')
-    regexp_lines = context.text.split('\n')
-    lines_match_to_regexps_line_by_line(out_lines, regexp_lines)
+    """
+    Checks that each line of stdout matches respective line in regular expressions.
+    Supports the <REPOSYNC> in the same way as the step "stdout is"
+    """
+    found = context.cmd_stdout.strip().split('\n')
+    expected = context.text.strip().split('\n')
+
+    clean_expected, clean_found = handle_reposync(expected, found)
+
+    lines_match_to_regexps_line_by_line(clean_found, clean_expected)
 
 
 @behave.then("stderr matches line by line")
