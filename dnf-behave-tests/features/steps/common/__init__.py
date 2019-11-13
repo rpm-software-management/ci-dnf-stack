@@ -3,6 +3,7 @@ from .behave_ext import parse_context_table
 from .cmd import run
 from .cmd import run_in_context
 from .cmd import get_boot_time
+from .cmd import start_server_based_on_type
 from .checksum import sha256_checksum
 from .dnf import parse_history_info
 from .dnf import parse_history_list
