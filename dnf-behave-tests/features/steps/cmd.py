@@ -150,6 +150,13 @@ def step_impl(context, option, value):
     context.dnf["setopts"][option] = value
 
 
+@behave.step('I set up a http server for directory "{path}"')
+def step_set_up_http_server(context, path):
+    full_path = prepend_installroot(context, path)
+    host, port = start_server_based_on_type(context, full_path, 'http')
+    context.dnf.ports[path] = port
+
+
 @behave.then("the exit code is {exitcode}")
 def then_the_exit_code_is(context, exitcode):
     if context.cmd_exitcode == int(exitcode):
