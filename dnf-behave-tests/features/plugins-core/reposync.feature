@@ -152,7 +152,7 @@ Scenario: Reposync --urls switch
    Then the exit code is 0
     And stdout matches line by line
     """
-    dnf-ci-thirdparty-updates\s+.*
+    <REPOSYNC>
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
     http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.2-1\.src\.rpm
@@ -170,7 +170,7 @@ Scenario: Reposync --urls and --download-metadata switches
    Then the exit code is 0
     And stdout matches line by line
     """
-    dnf-ci-thirdparty-updates\s+.*
+    <REPOSYNC>
     http://localhost:[0-9]+/repodata/primary.xml.gz
     http://localhost:[0-9]+/repodata/filelists.xml.gz
     http://localhost:[0-9]+/repodata/other.xml.gz

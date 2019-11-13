@@ -18,7 +18,7 @@ Scenario: Test for list with --showduplicates when the package is installed
  Then the exit code is 0
  Then stdout matches line by line
  """
- ?Last metadata
+ <REPOSYNC>
  Installed Packages
  flac.x86_64\s+1.3.2-8.fc29\s+@dnf-ci-fedora
  Available Packages
@@ -45,7 +45,7 @@ Scenario: Test for list without --showduplicates when the package is installed
  Then the exit code is 0
  Then stdout matches line by line
  """
- ?Last metadata
+ <REPOSYNC>
  Installed Packages
  flac.x86_64\s+1.3.2-8.fc29\s+@dnf-ci-fedora
  Available Packages
@@ -60,7 +60,7 @@ Scenario: Test for list with --showduplicates when the package is not installed
  Then the exit code is 0
  Then stdout matches line by line
  """
- ?Last metadata
+ <REPOSYNC>
  Available Packages
  flac.src\s+1.3.2-8.fc29\s+dnf-ci-fedora
  flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
@@ -81,7 +81,7 @@ Scenario: Test for list without --showduplicates when the package is not install
  Then the exit code is 0
  Then stdout matches line by line
  """
- ?Last metadata
+ <REPOSYNC>
  Available Packages
  flac.src\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
  flac.x86_64\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
@@ -100,7 +100,7 @@ Scenario: Test for list --available --showduplicates when package is installed a
  When I execute dnf with args "list --available --showduplicates flac"
  Then stdout matches line by line
  """
- ?Last metadata
+ <REPOSYNC>
  Available Packages
  flac.src\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
  flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
