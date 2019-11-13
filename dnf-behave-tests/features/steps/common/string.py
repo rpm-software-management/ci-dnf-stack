@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import re
 
+from behave.formatter.ansi_escapes import escapes
 import sys
 PY3 = sys.version_info.major >= 3
 if PY3:
@@ -31,11 +32,13 @@ def print_lines_diff(expected, found, num_lines_equal=0):
 
     print("{:{left_width}}  |  {}".format("expected", "found", left_width=left_width))
 
-    green, red, reset = "\033[1;32m", "\033[1;31m", "\033[0;0m"
-
     for line in zip_longest(expected, found, fillvalue=""):
-        col = green if num_lines_equal > 0 or line[0] == line[1] else red
-        print("{}{:{left_width}}  |  {}{}".format(col, line[0], line[1], reset, left_width=left_width))
+        if num_lines_equal > 0 or line[0] == line[1]:
+            color = escapes['passed_arg']
+        else:
+            color = escapes['failed_arg']
+        print("{}{:{left_width}}  |  {}{}".format(
+            color, line[0], line[1], escapes['reset'], left_width=left_width))
         num_lines_equal -= 1
 
 
