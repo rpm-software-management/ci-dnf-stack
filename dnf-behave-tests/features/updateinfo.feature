@@ -22,7 +22,7 @@ Scenario: Listing available updates
     And the exit code is 0
     And stdout is
     """
-     <REPOSYNC>
+    <REPOSYNC>
     FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
     FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
     """
@@ -35,7 +35,7 @@ Scenario Outline: updateinfo <summary alias> (when there's nothing to report)
    Then the exit code is 0
     And stdout is
     """
-     <REPOSYNC>
+    <REPOSYNC>
     """
 
 Examples: 
@@ -52,7 +52,7 @@ Scenario Outline: updateinfo <summary alias> available (when there is an availab
    Then the exit code is 0
     And stdout is
     """
-     <REPOSYNC>
+    <REPOSYNC>
     Updates Information Summary: available
         1 Bugfix notice(s)
         1 Enhancement notice(s)
@@ -72,15 +72,15 @@ Scenario Outline: updateinfo info
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo <info alias> available"
    Then the exit code is 0
-    And stdout is
+    And stdout matches line by line
     """
-     <REPOSYNC>
+    <REPOSYNC>
     ===============================================================================
       flac enhacements
     ===============================================================================
       Update ID: FEDORA-2999:002-02
            Type: enhancement
-        Updated: 2019-01-17 01:00:00
+        Updated: 2019-01-1\d \d\d:00:00
     Description: Enhance some stuff
        Severity: Moderate
 
@@ -89,7 +89,7 @@ Scenario Outline: updateinfo info
     ===============================================================================
       Update ID: FEDORA-2018-318f184000
            Type: bugfix
-        Updated: 2019-01-17 01:00:00
+        Updated: 2019-01-1\d \d\d:00:00
            Bugs: 222 - 222
            CVEs: 2999
                : CVE-2999
@@ -236,7 +236,7 @@ Scenario: updateinfo info <advisory>
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo info FEDORA-2018-318f184000"
    Then the exit code is 0
-    And stdout is
+    And stdout matches line by line
     """
     <REPOSYNC>
     ===============================================================================
@@ -244,7 +244,7 @@ Scenario: updateinfo info <advisory>
     ===============================================================================
       Update ID: FEDORA-2018-318f184000
            Type: bugfix
-        Updated: 2019-01-17 01:00:00
+        Updated: 2019-01-1\d \d\d:00:00
            Bugs: 222 - 222
            CVEs: 2999
                : CVE-2999
@@ -260,7 +260,7 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo info FEDORA-2999:002-02"
    Then the exit code is 0
-    And stdout is
+    And stdout matches line by line
     """
     <REPOSYNC>
     ===============================================================================
@@ -268,7 +268,7 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
     ===============================================================================
       Update ID: FEDORA-2999:002-02
            Type: enhancement
-        Updated: 2019-01-17 01:00:00
+        Updated: 2019-01-1\d \d\d:00:00
     Description: Enhance some stuff
        Severity: Moderate
     """
