@@ -94,8 +94,7 @@ Scenario: I can't remove pseudo-module
  Then the exit code is 0
   And stdout matches line by line
   """
-  ?Last metadata
-  ^dnf-ci-pseudo-platform-modular\s+
+  <REPOSYNC>
   ^Dependencies resolved.
   ^Nothing to do.
   ^Complete!
