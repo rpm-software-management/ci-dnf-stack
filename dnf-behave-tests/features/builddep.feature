@@ -1,8 +1,12 @@
 Feature: Builddep
 
+
+Background: Enable builddep plugin
+    Given I enable plugin "builddep"
+
+
 Scenario: Builddep with simple dependency (spec)
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec"
      Then the exit code is 0
       And Transaction is following
@@ -11,7 +15,6 @@ Scenario: Builddep with simple dependency (spec)
 
 Scenario: Builddep with simple dependency (spec) + define
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac'"
      Then the exit code is 0
       And Transaction is following
@@ -20,7 +23,6 @@ Scenario: Builddep with simple dependency (spec) + define
 
 Scenario: Builddep with simple dependency (srpm)
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
      Then the exit code is 0
       And Transaction is following
@@ -30,7 +32,6 @@ Scenario: Builddep with simple dependency (srpm)
 @not.with_os=rhel__eq__7
 Scenario: Builddep with rich dependency
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires (flac and lame-libs)'"
      Then the exit code is 0
       And Transaction is following
@@ -40,7 +41,6 @@ Scenario: Builddep with rich dependency
 
 Scenario: Builddep with simple dependency (files-like provide)
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires /etc/ld.so.conf'"
      Then the exit code is 0
       And Transaction contains
@@ -49,7 +49,6 @@ Scenario: Builddep with simple dependency (files-like provide)
 
 Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
-      And I enable plugin "builddep"
       When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
       And stderr contains "No matching package to install: 'flac = 15'"
@@ -70,7 +69,6 @@ Scenario: Builddep on SPEC with non-available Source0
    %files
    %changelog
    """
-   And I enable plugin "builddep"
   When I execute dnf with args "builddep {context.dnf.installroot}/missingSource.spec"
   Then the exit code is 1
    And stderr matches line by line
@@ -84,7 +82,6 @@ Scenario: Builddep on SPEC with non-available Source0
 @bz1758459
 Scenario: I exclude the highest verion of a package and call dnf builddep with --best
   Given I use repository "dnf-ci-fedora-updates"
-    And I enable plugin "builddep"
   Given I create file "dummy-pkg.spec" with
    """
    Name: dummy-pkg
@@ -109,7 +106,6 @@ Scenario: I exclude the highest verion of a package and call dnf builddep with -
 Scenario: I call dnf builddep with --best on a spec file with a modular dependency (tests handling modular excludes)
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
-    And I enable plugin "builddep"
   Given I create file "dummy-pkg.spec" with
    """
    Name: dummy-pkg
@@ -137,3 +133,25 @@ Scenario: I call dnf builddep with --best on a spec file with a modular dependen
         | install                | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
         | install                | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-stream-enable   | nodejs:8                                      |
+
+
+@bz1628634
+Scenario: Builddep with unavailable build dependency
+    Given I use repository "dnf-ci-fedora"
+     When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
+     Then the exit code is 1
+      And stderr is
+      """
+      No matching package to install: 'this-lib-is-not-available'
+      Not all dependencies satisfied
+      Error: Some packages could not be found.
+      """
+     When I execute dnf with args "builddep --skip-unavailable {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
+     Then the exit code is 0
+      And stderr is
+      """
+      No matching package to install: 'this-lib-is-not-available'
+      """
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | lame-libs-0:3.100-4.fc29.x86_64   |
