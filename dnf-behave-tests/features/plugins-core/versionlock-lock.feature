@@ -173,3 +173,51 @@ Scenario: Versionlock can lock only parts of the package version
     And Transaction is following
         | Action        | Package                               |
         | install       | flac-0:1.3.3-3.fc29.x86_64            |
+
+
+@bz1750620
+Scenario: Check-update command does not report updates filtered out by the versionlock
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac-0:1.3.2-8.fc29"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | flac-0:1.3.2-8.fc29.x86_64            |
+  Given I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates-testing"
+  # no versionlock rule for the flac package
+  Given I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    """
+   When I execute dnf with args "check-update"
+   Then the exit code is 100
+    And stdout is
+    """
+    <REPOSYNC>
+
+    flac.x86_64              1.4.0-1.fc29              dnf-ci-fedora-updates-testing
+    """
+  # flac package versionlocked on specific minor version
+  Given I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    flac-0:1.3.*
+    """
+   When I execute dnf with args "check-update"
+   Then the exit code is 100
+    And stdout is
+    """
+    <REPOSYNC>
+
+    flac.x86_64                  1.3.3-3.fc29                  dnf-ci-fedora-updates
+    """
+  # flac package versionlocked on specific version
+  Given I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    flac-0:1.3.2-8.fc29.*
+    """
+   When I execute dnf with args "check-update"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    """
