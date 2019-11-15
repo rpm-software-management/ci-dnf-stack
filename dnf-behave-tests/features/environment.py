@@ -93,7 +93,7 @@ active_tag_matcher = VersionedActiveTagMatcher(active_tag_value_provider)
 
 
 class DNFContext(object):
-    def __init__(self, userdata, force_installroot=False):
+    def __init__(self, userdata, force_installroot=False, no_installroot=False):
         self._scenario_data = {}
 
         self.repos = {}
@@ -102,7 +102,11 @@ class DNFContext(object):
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
         # per scenario by using @force_installroot decorator
-        if "installroot" in userdata and not force_installroot:
+        if no_installroot:
+            self.installroot = "/"
+            # never delete root
+            self.delete_installroot = False
+        elif "installroot" in userdata and not force_installroot:
             self.installroot = userdata["installroot"]
             # never delete user defined installroot - this allows running tests on /
             self.delete_installroot = False
@@ -223,7 +227,8 @@ def before_scenario(context, scenario):
         scenario.skip(reason="DESTRUCTIVE")
 
     context.dnf = DNFContext(context.config.userdata,
-                             force_installroot='force_installroot' in scenario.tags)
+                             force_installroot='force_installroot' in scenario.tags,
+                             no_installroot='no_installroot' in scenario.effective_tags)
 
     context.scenario.default_tmp_dir = context.dnf.installroot
 
