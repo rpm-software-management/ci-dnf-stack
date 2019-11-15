@@ -73,6 +73,14 @@ def when_I_execute_dnf_with_args_times(context, args, times):
         context.execute_steps('when I execute dnf with args "{}"'.format(args))
 
 
+@behave.step("I execute microdnf with args \"{args}\"")
+def when_I_execute_microdnf_with_args(context, args):
+    cmd = "microdnf"
+    cmd += " " + args.format(context=context)
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+    run_in_context(context, cmd, can_fail=True)
+
+
 @behave.step("I execute rpm with args \"{args}\"")
 def when_I_execute_rpm_with_args(context, args):
     cmd = "rpm --root=" + context.dnf.installroot
