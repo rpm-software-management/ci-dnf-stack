@@ -152,6 +152,12 @@ def given_i_successfully_execute_dnf_with_args(context, args):
     assert_exitcode(context, 0)
 
 
+@behave.given("I successfully execute microdnf with args \"{args}\"")
+def given_i_successfully_execute_microdnf_with_args(context, args):
+    context.execute_steps(u"Given I execute microdnf with args \"{args}\"".format(args=args))
+    assert_exitcode(context, 0)
+
+
 @behave.given("I successfully execute rpm with args \"{args}\"")
 def given_i_successfully_execute_rpm_with_args(context, args):
     context.execute_steps(u"Given I execute rpm with args \"{args}\"".format(args=args))
