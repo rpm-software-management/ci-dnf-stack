@@ -497,7 +497,8 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
  Then the exit code is 0
   And stdout is
       """
-      Problem: problem with installed package broken-deps-1:1.0-1.x86_64
+
+       Problem: problem with installed package broken-deps-1:1.0-1.x86_64
         - nothing provides broken-dep-1 needed by broken-deps-1:1.0-1.x86_64
         - nothing provides broken-dep-2 >= 2.0 needed by broken-deps-1:1.0-1.x86_64
       """

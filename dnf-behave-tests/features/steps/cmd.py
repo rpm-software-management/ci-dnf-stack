@@ -185,8 +185,8 @@ def then_stdout_is(context):
     synchronization lines (i.e. the "Last metadata expiration check:" line as
     well as the individual repo download lines) in the test's output.
     """
-    expected = context.text.format(context=context).strip().split('\n')
-    found = context.cmd_stdout.strip().split('\n')
+    expected = context.text.format(context=context).rstrip().split('\n')
+    found = context.cmd_stdout.rstrip().split('\n')
 
     if found == [""]:
         found = []
