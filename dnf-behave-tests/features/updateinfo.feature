@@ -64,8 +64,6 @@ Examples:
         | --summary     |
 
 
-# until rhel has PR https://github.com/rpm-software-management/dnf/pull/1510
-@not.with_os=rhel__eq__8
 Scenario Outline: updateinfo info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -229,7 +227,6 @@ Examples:
         | --advisory  | FEDORA-2018-318f184000 |
 
 
-@not.with_os=rhel__eq__8
 Scenario: updateinfo info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -253,7 +250,6 @@ Scenario: updateinfo info <advisory>
     """
         
 
-@not.with_os=rhel__eq__8
 Scenario: updateinfo info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -277,7 +273,6 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
     And stdout does not contain "glibc"
 
 
-@not.with_os=rhel__eq__8
 @bz1750528
 Scenario Outline: updateinfo lists advisories referencing CVE
   Given I successfully execute dnf with args "install glibc flac"
@@ -300,7 +295,6 @@ Examples:
     | --list cves         |
 
 
-@not.with_os=rhel__eq__8
 Scenario Outline: updateinfo lists advisories referencing bugzilla
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"

@@ -1,7 +1,6 @@
 Feature: makecache command 
 
 
-@not.with_os=rhel__eq__8
 @fixture.httpd
 @bz1745170
 Scenario: disabled makecache --timer does not invalidate cached metadata

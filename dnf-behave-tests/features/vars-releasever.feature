@@ -76,8 +76,6 @@ Scenario: Releasever is substituted in baseurl using vars loaded from the same l
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
-# until rhel has PR: https://github.com/rpm-software-management/dnf/pull/1491
-@not.with_os=rhel__eq__8
 Scenario: Releasever is substituted in baseurl via vars in custom location
   Given I do not set releasever
     And I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f0123"

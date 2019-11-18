@@ -175,6 +175,8 @@ Scenario: Versionlock can lock only parts of the package version
         | install       | flac-0:1.3.3-3.fc29.x86_64            |
 
 
+# until rhel has PR https://github.com/rpm-software-management/dnf-plugins-core/pull/370
+@not.with_os=rhel__eq__8
 @bz1750620
 Scenario: Check-update command does not report updates filtered out by the versionlock
   Given I use repository "dnf-ci-fedora"

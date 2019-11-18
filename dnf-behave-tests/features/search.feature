@@ -22,7 +22,6 @@ Scenario: with keyword
    """
 
 
-@not.with_os=rhel__eq__8
 @bz1742926
 Scenario: with installed and availiable newest package doesn't duplicate results
    When I execute dnf with args "install setup"

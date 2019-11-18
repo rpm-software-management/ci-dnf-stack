@@ -30,8 +30,6 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       | module-profile-install    | postgresql/client                                |
 
 
-# unit rhel has PR: https://github.com/rpm-software-management/dnf/pull/1516
-@not.with_os=rhel__eq__8
 Scenario: Get info for a module, only module name specified
  When I execute dnf with args "module info nodejs"
  Then the exit code is 0
@@ -177,7 +175,6 @@ Scenario: Get info for a module, only module name specified
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Get info for an enabled stream, module name and stream specified
  When I execute dnf with args "module info nodejs:11"
  Then the exit code is 0
@@ -222,7 +219,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
       """
 
 
-  @not.with_os=rhel__eq__8
   @bz1540189
   Scenario: Get info for an installed profile, module name and profile specified
    When I execute dnf with args "module info nodejs/minimal"
@@ -370,7 +366,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
   
   
-  @not.with_os=rhel__eq__8
   @bz1540189
   Scenario: Get info for an installed profile, module name, stream and profile specified
    When I execute dnf with args "module info nodejs:11/minimal"
@@ -417,7 +412,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
 
 
-  @not.with_os=rhel__eq__8
   @bz1540189
   Scenario: Non-existent profile is ignored for dnf module info
    When I execute dnf with args "module info nodejs:11/non-existing-profile"
@@ -472,7 +466,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
     And stderr contains "Error: No matching Modules to list"
 
 
-  @not.with_os=rhel__eq__8
   Scenario: Get info for two enabled modules from different repos
    When I execute dnf with args "module info nodejs:8 postgresql:10"
    Then the exit code is 0
@@ -538,7 +531,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
 
 
-  @not.with_os=rhel__eq__8
   @bz1623535
   # Command "dnf module info" should behave like "dnf info" in case that only one argument cannot
   # be resolved (success).
@@ -584,7 +576,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
     And stderr contains "Error: dnf module info: too few arguments"
 
 
-  @not.with_os=rhel__eq__8
   @bz1571214
   Scenario Outline: I can get the info about content of existing module streams with <command>
    When I execute dnf with args "<command>"
@@ -625,7 +616,6 @@ Examples:
 
 
 
-  @not.with_os=rhel__eq__8
   Scenario: Profile specification is ignored by dnf module info --profile
    When I execute dnf with args "module info --profile postgresql/client"
    Then the exit code is 0
@@ -660,7 +650,6 @@ Examples:
         """
 
 
-  @not.with_os=rhel__eq__8
   Scenario: I can get the info about contents of more than one module profile streams
    When I execute dnf with args "module info --profile postgresql:10 nodejs:11"
    Then the exit code is 0
@@ -705,7 +694,6 @@ Examples:
    Then the exit code is 0
    And stdout contains "Context\s+:\s+6c81f848"
 
-  @not.with_os=rhel__eq__8
   @bz1700250
   @bz1636337
   Scenario: I can get the module context of the active stream
