@@ -60,7 +60,6 @@ Scenario: Download debuginfo for all architectures
         | {context.dnf.tempdir}/lz4-debuginfo-1.8.2-2.fc29.x86_64.rpm  | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/lz4-debuginfo-1.8.2-2.fc29.x86_64.rpm  |
 
 
-@not.with_os=rhel__eq__8
 @bz1637008
 Scenario: Download debugsource for an RPM that doesn't exist
   Given I use repository "dnf-ci-fedora" as http
@@ -69,7 +68,6 @@ Scenario: Download debugsource for an RPM that doesn't exist
     And stderr contains "No package does-not-exist available"
 
 
-@not.with_os=rhel__eq__8
 @bz1637008
 Scenario: Download debugsource for an existing RPM
   Given I use repository "dnf-ci-fedora-updates" as http
@@ -81,7 +79,6 @@ Scenario: Download debugsource for an existing RPM
         | {context.dnf.tempdir}/zstd-debugsource-1.3.6-1.fc29.x86_64.rpm   | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/zstd-debugsource-1.3.6-1.fc29.x86_64.rpm |
 
 
-@not.with_os=rhel__eq__8
 @bz1637008
 Scenario: Download source, debuginfo and debugsource for an existing RPM
   Given I use repository "dnf-ci-fedora-updates" as http
@@ -98,7 +95,6 @@ Scenario: Download source, debuginfo and debugsource for an existing RPM
         | {context.dnf.tempdir}/zstd-debugsource-1.3.6-1.fc29.x86_64.rpm    | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/zstd-debugsource-1.3.6-1.fc29.x86_64.rpm  |
 
 
-@not.with_os=rhel__eq__8
 @bz1637008
 Scenario: Download debugsource for all architectures
   Given I use repository "dnf-ci-fedora-updates" as http

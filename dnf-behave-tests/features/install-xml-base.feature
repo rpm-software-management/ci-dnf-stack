@@ -60,7 +60,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
  
-@not.with_os=rhel__eq__8
 @fixture.httpd
 Scenario: Install from local repodata that have packages with xml:base pointing to a remote as well as local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http

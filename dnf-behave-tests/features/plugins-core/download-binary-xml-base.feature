@@ -47,7 +47,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm |
 
 
-@not.with_os=rhel__eq__8
 @fixture.httpd
 Scenario: Download to destdir from local repodata that have packages with xml:base pointing to a remote as well as local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http

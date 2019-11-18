@@ -7,7 +7,6 @@ Given I use repository "dnf-ci-fedora-modular"
 
 
 @bz1629667
-@not.with_os=rhel__eq__8
 Scenario: I can get list of all modules providing specific package
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
@@ -41,7 +40,6 @@ Scenario: I can get list of all modules providing specific package
 
 
 @bz1623866
-@not.with_os=rhel__eq__8
 Scenario: I can get list of enabled modules providing specific package
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
@@ -76,7 +74,6 @@ Given I successfully execute dnf with args "module enable nodejs:8"
 
 
 @bz1633151
-@not.with_os=rhel__eq__8
 Scenario: I see packages only once when they are availiable and installed
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"

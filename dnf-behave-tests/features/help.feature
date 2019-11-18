@@ -27,10 +27,8 @@ Scenario: Command help
    Then the exit code is 2
    And stderr contains ".+ install: err"
 
-# until rhel has PR: https://github.com/rpm-software-management/dnf/pull/1514
-@not.with_os=rhel__eq__8
 @bz1746474
-# @use.with_os=rhel__ge__8
+@use.with_os=rhel__ge__8
 @use.with_os=centos__ge__8
 @use.with_os=fedora__ge__30
 @use.with_os=fedora__lt__30
@@ -50,9 +48,8 @@ Examples:
         | yum-builddep | --help    |  dnf builddep \[-c \[config file]] \[-q] \[-v] \[--version]    |
         | yum shell    | --help    |  yum shell \[-c \[config file]] \[-q] \[-v] \[--version]     |
 
-@not.with_os=rhel__eq__8
 @bz1746474
-# @use.with_os=rhel__ge__8
+@use.with_os=rhel__ge__8
 @use.with_os=centos__ge__8
 @use.with_os=fedora__ge__30
 @use.with_os=fedora__lt__30

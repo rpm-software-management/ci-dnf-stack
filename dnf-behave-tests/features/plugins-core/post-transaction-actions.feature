@@ -21,6 +21,8 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
+# until rhel has PR https://github.com/rpm-software-management/dnf-plugins-core/pull/366
+@not.with_os=rhel__eq__8
 Scenario: Variables in action files are substituted
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
@@ -37,6 +39,7 @@ Scenario: Variables in action files are substituted
     """
 
 
+@not.with_os=rhel__eq__8    
 Scenario Outline: I can filter on package or file: "<filter>"
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
@@ -65,6 +68,7 @@ Examples:
     | g*c               |
 
 
+@not.with_os=rhel__eq__8
 Scenario Outline: I can filter on transaction state
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """

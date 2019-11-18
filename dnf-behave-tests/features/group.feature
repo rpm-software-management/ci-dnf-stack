@@ -200,8 +200,6 @@ Scenario: Group list
        SuperRipper-and-deps
     """
 
-# until rhel has PR: https://github.com/rpm-software-management/dnf/pull/1513
-@not.with_os=rhel__eq__8
 @bz1706382
 Scenario: Group list --ids
  Given I use repository "dnf-ci-thirdparty"
@@ -216,7 +214,6 @@ Scenario: Group list --ids
        SuperRipper-and-deps (superripper-and-deps)
     """
 
-@not.with_os=rhel__eq__8
 @bz1706382
 Scenario: Group list --ids with arg
  Given I use repository "dnf-ci-thirdparty"
@@ -229,7 +226,6 @@ Scenario: Group list --ids with arg
        DNF-CI-Testgroup (dnf-ci-testgroup)
     """
 
-@not.with_os=rhel__eq__8
 @bz1706382
 Scenario: Group list ids => yum compatibility
  Given I use repository "dnf-ci-thirdparty"
@@ -244,7 +240,6 @@ Scenario: Group list ids => yum compatibility
        SuperRipper-and-deps (superripper-and-deps)
     """
 
-@not.with_os=rhel__eq__8
 @bz1706382
 Scenario: Group list ids with arg => yum compatibility
  Given I use repository "dnf-ci-thirdparty"
