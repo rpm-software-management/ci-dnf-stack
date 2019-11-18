@@ -109,7 +109,7 @@ Scenario: updateinfo info security (when there's nothing to report)
    Then the exit code is 0
    And stdout is
    """
-    <REPOSYNC>
+   <REPOSYNC>
    """
 
 
