@@ -102,6 +102,50 @@ Scenario: Reposync downloads packages from all streams of modular repository eve
     And file "//{context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
 
 
+@not.with_os=rhel__eq__8
+@bz1686602
+Scenario: Reposync respects excludes
+  Given I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --excludepkgs=SuperRipper"
+   Then the exit code is 0
+    And stdout contains ": CQRlib-extension-1\.6-2\.src\.rpm"
+    And stdout contains ": CQRlib-extension-1\.6-2\.x86_64\.rpm"
+    And stdout does not contain "SuperRipper"
+   When I execute "ls {context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/"
+   Then stdout is
+        """
+        CQRlib-extension-1.6-2.x86_64.rpm
+        """
+   When I execute "ls {context.dnf.tempdir}/dnf-ci-thirdparty-updates/src/"
+   Then stdout is
+        """
+        CQRlib-extension-1.6-2.src.rpm
+        """
+
+
+@not.with_os=rhel__eq__8
+Scenario: Reposync respects excludes, but not modular excludes
+  Given I use repository "dnf-ci-fedora-modular" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --setopt=includepkgs=postgresql"
+   Then the exit code is 0
+    And stdout contains ": postgresql-6\.1-1\."
+    And stdout contains ": postgresql-9\.6\.8-1\."
+    And stdout does not contain "ninja"
+    And stdout does not contain "nodejs"
+   When I execute "ls {context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/"
+   Then stdout is
+        """
+        postgresql-6.1-1.module_2514+aa9aadc5.x86_64.rpm
+        postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm
+        """
+   When I execute "ls {context.dnf.tempdir}/dnf-ci-fedora-modular/src/"
+   Then stdout is
+        """
+        postgresql-6.1-1.module_2514+aa9aadc5.src.rpm
+        postgresql-9.6.8-1.module_1710+b535a823.src.rpm
+        """
+
+
 Scenario: Reposync downloads packages and removes packages that are not part of repo anymore
   Given I use repository "setopt.ext"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
