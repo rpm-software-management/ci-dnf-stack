@@ -48,11 +48,11 @@ Scenario: Builddep reports error where required package is available only in non
   Given I use repository "dnf-ci-fedora-modular"
    When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/build-requires-ninja-build-0.5-1.src.rpm"
    Then the exit code is 1
-    And stderr contains lines
+    And stderr is
     """
-    Error:
+    Error: 
      Problem: conflicting requests
-      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is excluded
+      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is filtered out by modular filtering
     """
 
 

@@ -38,9 +38,15 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
     """
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
-    And stdout contains "No match for argument: filesystem"
-    And stderr contains "Error: Unable to find a match"
-
+    And stderr is
+    """
+    Error: Unable to find a match: filesystem
+    """
+    And stdout is
+    """
+    <REPOSYNC>
+    All matches were filtered out by exclude filtering for argument: filesystem
+    """
 
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
   Given I use repository "dnf-ci-fedora"
@@ -59,7 +65,7 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
    Then the exit code is 0
    When I execute dnf with args "install dwm"
    Then the exit code is 1
-    And stdout contains "No match for argument: dwm"
+    And stdout contains "All matches were filtered out by exclude filtering for argument: dwm"
   Given I do not set config file
    When I execute dnf with args "install dwm"
    Then the exit code is 0
