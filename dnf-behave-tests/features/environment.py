@@ -34,6 +34,7 @@ DEFAULT_PLATFORM_ID="platform:f29"
 # "destructive" to the system running it.
 DESTRUCTIVE_TAGS = [
     "destructive",
+    "no_installroot",
 ]
 
 
