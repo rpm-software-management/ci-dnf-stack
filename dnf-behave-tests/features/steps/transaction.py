@@ -4,10 +4,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
-from common.dnf import ACTIONS
-from common.rpm import RPM
-
-from common import *
+from common.behave_ext import check_context_table
+from common.dnf import ACTIONS, parse_transaction_table
+from common.rpm import RPM, diff_rpm_lists
+from common.rpmdb import get_rpmdb_rpms
 
 
 def parse_context_table(context):

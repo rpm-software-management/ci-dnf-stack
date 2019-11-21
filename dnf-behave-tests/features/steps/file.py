@@ -8,8 +8,21 @@ import glob
 import re
 import os
 
-from common import *
+from common.behave_ext import check_context_table
+from common.checksum import sha256_checksum
+from common.cmd import run
+from common.file import create_file_with_contents
+from common.file import copy_file
+from common.file import copy_tree
+from common.file import delete_directory
+from common.file import delete_file
+from common.file import ensure_directory_exists
+from common.file import ensure_file_exists
+from common.file import file_timestamp
+from common.file import prepend_installroot
+from common.file import read_file_contents
 from common.string import print_lines_diff
+
 
 @behave.given('I create directory "{dirpath}"')
 def step_impl(context, dirpath):

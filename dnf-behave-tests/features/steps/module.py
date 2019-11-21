@@ -12,7 +12,8 @@ try:
 except ImportError:
     from ConfigParser import ConfigParser
 
-from common import *
+from common.behave_ext import check_context_table
+from common.dnf import parse_module_list
 
 
 def check_module_list(context):
