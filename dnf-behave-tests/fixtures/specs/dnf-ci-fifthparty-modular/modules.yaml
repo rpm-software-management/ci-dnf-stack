@@ -27,3 +27,31 @@ data:
     profiles:
         default: [duo]
 ...
+---
+document: modulemd
+version: 2
+data:
+  name: empire
+  stream: 1
+  version: 1
+  arch: x86_64
+  summary: Testing module
+  description: Testing module
+  license:
+    module:
+    - MIT
+  profiles:
+    duo:
+      rpms: ["luke"]
+  artifacts:
+    rpms: ["luke-0:1.0-1.x86_64"]
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+    module: empire
+    stream: 1
+    profiles:
+        default: [duo]
+...
