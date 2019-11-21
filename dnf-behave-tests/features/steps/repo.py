@@ -8,11 +8,10 @@ from fnmatch import fnmatch
 import os
 import parse
 
-from common.behave_ext import check_context_table
-from common.checksum import sha256_checksum
-from common.cmd import run_in_context
-from common.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
-from common.rpmdb import get_rpmdb_rpms
+from common.lib.behave_ext import check_context_table
+from common.lib.checksum import sha256_checksum
+from common.lib.cmd import run_in_context
+from common.lib.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
 from environment import osrelease
 from fixtures import start_server_based_on_type
 
