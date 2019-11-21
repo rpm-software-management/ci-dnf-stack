@@ -5,9 +5,9 @@ from __future__ import print_function
 
 import behave
 
-from common.behave_ext import check_context_table
-from common.cmd import run_in_context
-from common.dnf import parse_history_info, parse_history_list
+from common.lib.behave_ext import check_context_table
+from common.lib.cmd import run_in_context
+from lib.dnf import parse_history_info, parse_history_list
 
 
 def parsed_history_info(context, spec):

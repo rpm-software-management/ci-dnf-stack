@@ -7,7 +7,7 @@ import behave
 import sys
 import pexpect
 
-from common.rpmdb import get_rpmdb_rpms
+from lib.rpmdb import get_rpmdb_rpms
 
 
 def stdout_from_shell(context):

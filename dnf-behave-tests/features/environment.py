@@ -6,15 +6,19 @@ from __future__ import print_function
 import operator
 import os
 import shutil
+import sys
 import tempfile
+
+# add the behave tests root to python path so that the `common` module can be found
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from behave import fixture, use_fixture, model
 from behave.tag_matcher import ActiveTagMatcher
 from behave.formatter.ansi_escapes import escapes
 
+from common.lib.file import ensure_directory_exists
 from steps.fixtures.httpd import HttpServerContext
 from steps.fixtures.ftpd import FtpServerContext
-from steps.common.file import ensure_directory_exists
 
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))

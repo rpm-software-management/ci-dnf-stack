@@ -9,11 +9,11 @@ import re
 import sys
 from datetime import datetime
 
-from common.cmd import run_in_context
-from common.file import prepend_installroot
-from common.rpmdb import get_rpmdb_rpms
-from common.string import print_lines_diff
+from common.lib.cmd import run_in_context
+from common.lib.diff import print_lines_diff
+from common.lib.file import prepend_installroot
 from fixtures import start_server_based_on_type
+from lib.rpmdb import get_rpmdb_rpms
 
 
 def handle_reposync(expected, found):
