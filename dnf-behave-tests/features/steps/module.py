@@ -4,15 +4,23 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+import glob
+import os
+
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
 from common import *
 
+
 def check_module_list(context):
     check_context_table(context, ["Repository", "Name", "Stream", "Profiles"])
-    
+
     lines = context.cmd_stdout.splitlines()
     modules = parse_module_list(lines)
-    
+
     for repository, name, stream, profiles_txt in context.table: 
         if not repository or not name or not stream:
             raise ValueError("Invalid row in modules table. Repository, name and "
@@ -34,6 +42,23 @@ def check_module_list(context):
                 "Module '{}:{}' with profiles '{}' not found in repository '{}'.".format(
                     name, stream, profiles_txt, repository))
     return modules
+
+
+def get_modules_state(installroot):
+    cfgdir = os.path.join(installroot, 'etc/dnf/modules.d')
+    cfg = ConfigParser()
+    cfg.read(glob.glob(cfgdir + '/*.module'))
+    cfg_dict = dict()
+    for section in cfg.sections():
+        section_dict = dict(cfg.items(section))
+        if section_dict.get('profiles'):
+            section_dict['profiles'] = set(
+                [p.strip() for p in section_dict['profiles'].split(',')])
+        else:
+            section_dict['profiles'] = set()
+        cfg_dict[section] = section_dict
+    return cfg_dict
+
 
 @behave.given("I set default module platformid to \"{platformid}\"")
 def step_impl(context, platformid):

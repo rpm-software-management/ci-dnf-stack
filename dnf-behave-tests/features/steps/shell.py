@@ -11,6 +11,13 @@ import pexpect
 from common import *
 
 
+def stdout_from_shell(context):
+    # Few notes:
+    #   1. replacing CR/LF with just LF
+    #   2. at the begining, there might also be TTY echo (the command that was sent)
+    context.cmd_stdout = context.shell_session.before.decode().replace("\r\n", "\n")
+
+
 @behave.step("I open dnf shell session")
 def when_I_open_dnf_shell(context):
     cmd = " ".join(context.dnf.get_cmd(context)) + " shell"
