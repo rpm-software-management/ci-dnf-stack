@@ -3,14 +3,15 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+import behave
 import os
 import re
 import sys
 from datetime import datetime
 
-import behave
-
-from common import *
+from common.cmd import run_in_context
+from common.file import prepend_installroot
+from common.rpmdb import get_rpmdb_rpms
 from common.string import print_lines_diff
 from fixtures import start_server_based_on_type
 

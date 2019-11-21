@@ -3,12 +3,11 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
-import sys
-
 import behave
+import sys
 import pexpect
 
-from common import *
+from common.rpmdb import get_rpmdb_rpms
 
 
 def stdout_from_shell(context):
