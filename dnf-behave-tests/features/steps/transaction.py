@@ -4,8 +4,30 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+from common.dnf import ACTIONS
+from common.rpm import RPM
 
 from common import *
+
+
+def parse_context_table(context):
+    result = {}
+    for action in ACTIONS.values():
+        result[action] = []
+    result["obsoleted"] = []
+
+    for action, nevras in context.table:
+        if action not in result:
+            continue
+        if action.startswith('group-') or action.startswith('module-'):
+            for group in nevras.split(", "):
+                result[action].append(group)
+        else:
+            for nevra in nevras.split(", "):
+                rpm = RPM(nevra)
+                result[action].append(rpm)
+
+    return result
 
 
 def check_rpmdb_transaction(context, mode):
