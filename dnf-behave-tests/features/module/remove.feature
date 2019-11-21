@@ -166,3 +166,43 @@ Given I use repository "dnf-ci-fifthparty"
         | remove                    | leia-0:1.0-1.x86_64    |
         | remove                    | luke-0:1.0-1.x86_64    |
 
+
+Scenario: Remove command respects --all switch to remove all packages
+  Given I successfully execute dnf with args "install nodejs-docs"
+   When I execute dnf with args "module remove nodejs --all"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package                                       |
+        | remove                    | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | remove                    | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+        | remove                    | basesystem-0:11-6.fc29.noarch                 |
+        | remove                    | filesystem-0:3.9-2.fc29.x86_64                |
+        | remove                    | setup-0:2.12.1-1.fc29.noarch                  |
+        | remove                    | glibc-0:2.28-9.fc29.x86_64                    |
+        | remove                    | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | remove                    | glibc-common-0:2.28-9.fc29.x86_64             |
+        # nodejs-docs was not installed as part of profile, without --all it
+        # would not get removed
+        | remove                    | nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch |
+        | module-profile-disable    | nodejs/default                                |
+
+
+# modular package luke is part of both jedi:1[d] and empire:1[d] streams
+Scenario: Packages belonging to multiple modules are not removed with --all
+  Given I use repository "dnf-ci-fifthparty"
+    And I use repository "dnf-ci-fifthparty-modular"
+    And I successfully execute dnf with args "module enable jedi:1"
+    And I successfully execute dnf with args "install luke obi-wan"
+   When I execute dnf with args "module remove --all jedi"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package                |
+        | remove                    | obi-wan-0:1.0-1.x86_64 |
+    And stdout contains "Package luke-1.0-1.x86_64 belongs to multiple modules, skipping"
+  Given I successfully execute dnf with args "module disable empire"
+   When I execute dnf with args "module remove --all jedi"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                    | Package                |
+        | remove                    | luke-0:1.0-1.x86_64    |
+    And stdout does not contain "belongs to multiple modules, skipping"
