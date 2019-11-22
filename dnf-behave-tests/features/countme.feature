@@ -12,11 +12,11 @@ Feature: Better user counting
             | User-Agent | <agent> |
 
     Examples:
-        | system                | agent                                     |
-        | Fedora 30 server      | libdnf (Fedora 30; server; Linux.x86_64)  |
-        | Fedora 31             | libdnf (Fedora 31; generic; Linux.x86_64) |
-        | Fedora 31 myspin      | libdnf (Fedora 31; generic; Linux.x86_64) |
-        | OpenSUSE 15.1 desktop | libdnf                                    |
+        | system                        | agent                                                         |
+        | Fedora 30; server             | libdnf (Fedora 30; server; Linux.x86_64)                      |
+        | Fedora 31                     | libdnf (Fedora 31; generic; Linux.x86_64)                     |
+        | Fedora 31; myspin             | libdnf (Fedora 31; generic; Linux.x86_64)                     |
+        | OpenSUSE 15.1; desktop        | libdnf                                                        |
 
     @destructive
     @fixture.httpd
