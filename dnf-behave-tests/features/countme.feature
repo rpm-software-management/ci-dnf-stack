@@ -11,11 +11,12 @@ Feature: Better user counting
             | User-Agent | <agent> |
 
     Examples:
-        | system                        | agent                                     |
-        | Fedora 30; server             | libdnf (Fedora 30; server; Linux.x86_64)  |
-        | Fedora 31                     | libdnf (Fedora 31; generic; Linux.x86_64) |
-        | Fedora 31; myspin             | libdnf (Fedora 31; generic; Linux.x86_64) |
-        | OpenSUSE 15.1; desktop        | libdnf                                    |
+        | system                        | agent                                                         |
+        | Fedora 29; server             | libdnf (Fedora 29; server; Linux.x86_64)                      |
+        | Fedora 30; workstation        | libdnf (Fedora 30; workstation; Linux.x86_64)                 |
+        | Fedora 31                     | libdnf (Fedora 31; generic; Linux.x86_64)                     |
+        | Red Hat Enterprise Linux 8.1  | libdnf (Red Hat Enterprise Linux 8.1; generic; Linux.x86_64)  |
+        | CentOS Linux 8.1              | libdnf (CentOS Linux 8.1; generic; Linux.x86_64)              |
 
     @destructive
     Scenario: No os-release file installed
