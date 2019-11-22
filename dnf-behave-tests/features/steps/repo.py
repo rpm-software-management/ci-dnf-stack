@@ -316,7 +316,14 @@ def step_clear_http_logs(context):
 @behave.step("I am running a system identified as the \"{system}\"")
 def given_system(context, system):
     behave.use_fixture(osrelease_fixture, context)
-    data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
+    system = system.split(';')
+    distro = system[0]
+    variant = None
+    if len(system) > 1:
+        variant = system[1]
+    name, version = distro.rsplit(' ', 1)
+    data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'),
+                    (name, version, variant)))
     context.scenario.osrelease.set(data)
 
 
