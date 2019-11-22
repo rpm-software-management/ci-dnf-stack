@@ -2,47 +2,21 @@ Feature: Better user counting
 
     @destructive
     @fixture.httpd
-    Scenario: User-Agent header is sent
-        Given I am running a system identified as the "Fedora 30 server"
+    Scenario Outline: User-Agent header is sent
+        Given I am running a system identified as the "<system>"
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache"
          Then every HTTP GET request should match:
-            | header     | value                                    |
-            | User-Agent | libdnf (Fedora 30; server; Linux.x86_64) |
+            | header     | value   |
+            | User-Agent | <agent> |
 
-    @destructive
-    @fixture.httpd
-    Scenario: User-Agent header is sent (missing variant)
-        Given I am running a system identified as the "Fedora 31"
-          And I use repository "dnf-ci-fedora" as http
-          And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
-         Then every HTTP GET request should match:
-            | header     | value                                     |
-            | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
-
-    @destructive
-    @fixture.httpd
-    Scenario: User-Agent header is sent (unknown variant)
-        Given I am running a system identified as the "Fedora 31 myspin"
-          And I use repository "dnf-ci-fedora" as http
-          And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
-         Then every HTTP GET request should match:
-            | header     | value                                     |
-            | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
-
-    @destructive
-    @fixture.httpd
-    Scenario: Shortened User-Agent value on a non-Fedora system
-        Given I am running a system identified as the "OpenSUSE 15.1 desktop"
-          And I use repository "dnf-ci-fedora" as http
-          And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
-         Then every HTTP GET request should match:
-            | header     | value  |
-            | User-Agent | libdnf |
+    Examples:
+        | system                | agent                                     |
+        | Fedora 30 server      | libdnf (Fedora 30; server; Linux.x86_64)  |
+        | Fedora 31             | libdnf (Fedora 31; generic; Linux.x86_64) |
+        | Fedora 31 myspin      | libdnf (Fedora 31; generic; Linux.x86_64) |
+        | OpenSUSE 15.1 desktop | libdnf                                    |
 
     @destructive
     @fixture.httpd
