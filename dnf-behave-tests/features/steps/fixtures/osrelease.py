@@ -19,7 +19,7 @@ class OSRelease(object):
 
     def set(self, data):
         """Store the given data in this file."""
-        content = ('%s=%s' % (k, v) for k, v in data.items())
+        content = ('%s=%s' % (k, v) for k, v in data.items() if v is not None)
         with open(self._path, 'w') as f:
             f.write('\n'.join(content))
 
