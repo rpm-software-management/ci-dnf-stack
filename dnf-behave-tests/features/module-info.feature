@@ -46,6 +46,7 @@ Scenario: Get info for a module, only module name specified
       Repo             : dnf-ci-fedora-modular
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
       Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
                        : nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
                        : nodejs-docs-1:10.11.0-1.module_2200+adbac02b.noarch
@@ -61,6 +62,7 @@ Scenario: Get info for a module, only module name specified
       Repo             : dnf-ci-fedora-modular-updates
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
       Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                        : http-parser-devel-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                        : libnghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
@@ -74,6 +76,84 @@ Scenario: Get info for a module, only module name specified
                        : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
 
       Name             : nodejs
+      Stream           : 11
+      Version          : 20180920144611
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+                       : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+                       : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
+                       : npm-1:11.0.0-1.module_2311+8d497411.x86_64
+
+      Name             : nodejs
+      Stream           : 11
+      Version          : 20181102165620
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular-updates
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+                       : postgresql:[9.6]
+      Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
+                       : npm-1:11.1.0-1.module_2379+8d497405.x86_64
+
+      Name             : nodejs
+      Stream           : 12
+      Version          : 20181102165620
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular-updates
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+                       : postgresql:[]
+      Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
+                       : npm-1:12.1.0-1.module_2379+8d497405.x86_64
+
+      Name             : nodejs
+      Stream           : 5
+      Version          : 20150811143428
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+      Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
+                       : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
+                       : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
+                       : npm-1:5.3.1-1.module_2011+41787af0.x86_64
+
+      Name             : nodejs
       Stream           : 8 [d][e][a]
       Version          : 20180801080000
       Context          : 6c81f848
@@ -83,6 +163,7 @@ Scenario: Get info for a module, only module name specified
       Repo             : dnf-ci-fedora-modular
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
       Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
@@ -98,78 +179,11 @@ Scenario: Get info for a module, only module name specified
       Repo             : dnf-ci-fedora-modular-updates
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
       Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                        : npm-1:8.14.0-1.module_2030+42747d41.x86_64
-
-      Name         : nodejs
-      Stream       : 11
-      Version      : 20180920144611
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
-                   : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
-                   : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
-                   : npm-1:11.0.0-1.module_2311+8d497411.x86_64
-
-      Name         : nodejs
-      Stream       : 11
-      Version      : 20181102165620
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular-updates
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
-                   : npm-1:11.1.0-1.module_2379+8d497405.x86_64
-
-      Name         : nodejs
-      Stream       : 12
-      Version      : 20181102165620
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular-updates
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
-                   : npm-1:12.1.0-1.module_2379+8d497405.x86_64
-
-      Name         : nodejs
-      Stream       : 5
-      Version      : 20150811143428
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
-                   : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
-                   : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
-                   : npm-1:5.3.1-1.module_2011+41787af0.x86_64
 
       Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
       """
@@ -181,39 +195,44 @@ Scenario: Get info for an enabled stream, module name and stream specified
   And stdout is
       """
       <REPOSYNC>
-      Name         : nodejs
-      Stream       : 11
-      Version      : 20180920144611
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
-                   : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
-                   : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
-                   : npm-1:11.0.0-1.module_2311+8d497411.x86_64
+      Name             : nodejs
+      Stream           : 11
+      Version          : 20180920144611
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+                       : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+                       : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
+                       : npm-1:11.0.0-1.module_2311+8d497411.x86_64
 
-      Name         : nodejs
-      Stream       : 11
-      Version      : 20181102165620
-      Context      : 6c81f848
-      Architecture : x86_64
-      Profiles     : default, development, minimal
-      Repo         : dnf-ci-fedora-modular-updates
-      Summary      : Javascript runtime
-      Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-      Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                   : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                   : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
-                   : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
-                   : npm-1:11.1.0-1.module_2379+8d497405.x86_64
+      Name             : nodejs
+      Stream           : 11
+      Version          : 20181102165620
+      Context          : 6c81f848
+      Architecture     : x86_64
+      Profiles         : default, development, minimal
+      Default profiles : 
+      Repo             : dnf-ci-fedora-modular-updates
+      Summary          : Javascript runtime
+      Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+      Requires         : platform:[f29]
+                       : postgresql:[9.6]
+      Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                       : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
+                       : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
+                       : npm-1:11.1.0-1.module_2379+8d497405.x86_64
 
       Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
       """
@@ -237,6 +256,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
                          : nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
                          : nodejs-docs-1:10.11.0-1.module_2200+adbac02b.noarch
@@ -252,6 +272,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                          : http-parser-devel-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                          : libnghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
@@ -265,6 +286,84 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
 
         Name             : nodejs
+        Stream           : 11
+        Version          : 20180920144611
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
+                         : npm-1:11.0.0-1.module_2311+8d497411.x86_64
+
+        Name             : nodejs
+        Stream           : 11
+        Version          : 20181102165620
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+                         : postgresql:[9.6]
+        Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
+                         : npm-1:11.1.0-1.module_2379+8d497405.x86_64
+
+        Name             : nodejs
+        Stream           : 12
+        Version          : 20181102165620
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+                         : postgresql:[]
+        Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
+                         : npm-1:12.1.0-1.module_2379+8d497405.x86_64
+
+        Name             : nodejs
+        Stream           : 5
+        Version          : 20150811143428
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+        Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
+                         : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
+                         : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
+                         : npm-1:5.3.1-1.module_2011+41787af0.x86_64
+
+        Name             : nodejs
         Stream           : 8 [d][e][a]
         Version          : 20180801080000
         Context          : 6c81f848
@@ -274,6 +373,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
@@ -289,78 +389,11 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.14.0-1.module_2030+42747d41.x86_64
-
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20180920144611
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
-                     : npm-1:11.0.0-1.module_2311+8d497411.x86_64
-
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20181102165620
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
-                     : npm-1:11.1.0-1.module_2379+8d497405.x86_64
-
-        Name         : nodejs
-        Stream       : 12
-        Version      : 20181102165620
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
-                     : npm-1:12.1.0-1.module_2379+8d497405.x86_64
-
-        Name         : nodejs
-        Stream       : 5
-        Version      : 20150811143428
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
-                     : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
-                     : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
-                     : npm-1:5.3.1-1.module_2011+41787af0.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -374,39 +407,44 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
         <REPOSYNC>
         Ignoring unnecessary profile: 'nodejs/minimal'
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20180920144611
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
-                     : npm-1:11.0.0-1.module_2311+8d497411.x86_64
+        Name             : nodejs
+        Stream           : 11
+        Version          : 20180920144611
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
+                         : npm-1:11.0.0-1.module_2311+8d497411.x86_64
 
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20181102165620
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
-                     : npm-1:11.1.0-1.module_2379+8d497405.x86_64
+        Name             : nodejs
+        Stream           : 11
+        Version          : 20181102165620
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+                         : postgresql:[9.6]
+        Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
+                         : npm-1:11.1.0-1.module_2379+8d497405.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -420,39 +458,44 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
         <REPOSYNC>
         Ignoring unnecessary profile: 'nodejs/non-existing-profile'
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20180920144611
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
-                     : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
-                     : npm-1:11.0.0-1.module_2311+8d497411.x86_64
+        Name             : nodejs
+        Stream           : 11
+        Version          : 20180920144611
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
+                         : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
+                         : npm-1:11.0.0-1.module_2311+8d497411.x86_64
 
-        Name         : nodejs
-        Stream       : 11
-        Version      : 20181102165620
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : default, development, minimal
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : Javascript runtime
-        Description  : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
-        Artifacts    : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
-                     : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
-                     : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
-                     : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
-                     : npm-1:11.1.0-1.module_2379+8d497405.x86_64
+        Name             : nodejs
+        Stream           : 11
+        Version          : 20181102165620
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : default, development, minimal
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : Javascript runtime
+        Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
+                         : postgresql:[9.6]
+        Artifacts        : libnghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libnghttp2-devel-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : libuv-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
+                         : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
+                         : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
+                         : npm-1:11.1.0-1.module_2379+8d497405.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -482,6 +525,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
@@ -497,35 +541,38 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.14.0-1.module_2030+42747d41.x86_64
 
-        Name         : postgresql
-        Stream       : 10
-        Version      : 20181211125304
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : client, default, server
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : PostgreSQL module
-        Description  : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
-        Artifacts    : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
+        Name             : postgresql
+        Stream           : 10
+        Version          : 20181211125304
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : client, default, server
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : PostgreSQL module
+        Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
+        Requires         : platform:[f29]
+        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -541,30 +588,32 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
         <REPOSYNC>
         Unable to resolve argument non-existing-module
-        Name         : postgresql
-        Stream       : 10
-        Version      : 20181211125304
-        Context      : 6c81f848
-        Architecture : x86_64
-        Profiles     : client, default, server
-        Repo         : dnf-ci-fedora-modular-updates
-        Summary      : PostgreSQL module
-        Description  : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
-        Artifacts    : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
-                     : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
+        Name             : postgresql
+        Stream           : 10
+        Version          : 20181211125304
+        Context          : 6c81f848
+        Architecture     : x86_64
+        Profiles         : client, default, server
+        Default profiles : 
+        Repo             : dnf-ci-fedora-modular-updates
+        Summary          : PostgreSQL module
+        Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
+        Requires         : platform:[f29]
+        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
+                         : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -712,6 +761,7 @@ Examples:
         Repo             : dnf-ci-fedora-modular
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
@@ -727,6 +777,7 @@ Examples:
         Repo             : dnf-ci-fedora-modular-updates
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+        Requires         : platform:[f29]
         Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
