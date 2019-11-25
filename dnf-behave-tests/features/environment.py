@@ -278,6 +278,8 @@ def before_scenario(context, scenario):
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags)
 
+    context.scenario.default_tmp_dir = context.dnf.installroot
+
 
 def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
