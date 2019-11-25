@@ -38,3 +38,8 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 
     if not can_fail and context.cmd_exitcode != 0:
         raise AssertionError('Running command "%s" failed: %s' % (cmd, context.cmd_exitcode))
+
+
+def assert_exitcode(context, exitcode):
+    assert context.cmd_exitcode == int(exitcode), \
+        "Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd)

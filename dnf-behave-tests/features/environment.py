@@ -11,6 +11,8 @@ import tempfile
 
 # add the behave tests root to python path so that the `common` module can be found
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# make sure behave loads the common steps
+import common
 
 from behave import fixture, use_fixture, model
 from behave.tag_matcher import ActiveTagMatcher

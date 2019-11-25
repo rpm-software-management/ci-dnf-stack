@@ -9,28 +9,10 @@ import re
 import sys
 from datetime import datetime
 
-from common.lib.cmd import run_in_context
-from common.lib.diff import print_lines_diff
+from common.lib.cmd import assert_exitcode, run_in_context
 from common.lib.file import prepend_installroot
 from fixtures import start_server_based_on_type
 from lib.rpmdb import get_rpmdb_rpms
-
-
-def handle_reposync(expected, found):
-    if expected[0] == "<REPOSYNC>":
-        sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
-        last_check_line = re.compile(r"Last metadata expiration check: .*")
-        i = 0
-
-        while i < len(found) and (
-                sync_line.fullmatch(found[i].strip())
-                or last_check_line.fullmatch(found[i].strip())):
-            i += 1
-
-        expected = expected[1:]
-        found = found[i:]
-
-    return expected, found
 
 
 def get_boot_time():
@@ -64,41 +46,10 @@ def extract_section_content_from_text(section_header, text):
     return parsed
 
 
-def lines_match_to_regexps_line_by_line(out_lines, regexp_lines):
-    """Matches list of lines against a list of regexps line by line"""
-    while out_lines:
-        line = out_lines.pop(0)
-        if line and (not regexp_lines):  # there is no remaining regexp
-            raise AssertionError("Not having a regexp to match line '%s'" % line)
-        elif regexp_lines:
-            regexp = regexp_lines.pop(0).strip()
-            while regexp.startswith('?'):
-                if not re.search(regexp[1:], line):  # optional regexp that doesn't need to be matched
-                    if regexp_lines:
-                        regexp = regexp_lines.pop(0).strip()
-                    else:
-                        raise AssertionError("Not having a regexp to match line '%s'" % line)
-                else:
-                    regexp = regexp[1:]
-            if regexp:
-                if not re.search(regexp, line):
-                    raise AssertionError("'%s' regexp does not match line: '%s'" % (regexp, line))
-
-            else:
-                if not line == "":
-                    raise AssertionError("'%s' is not empty line" % line)
-
-    if regexp_lines:  # there are some unprocessed regexps
-        raise AssertionError("No more line to match regexp '%s'" % regexp_lines[0])
-
-
 @behave.step("I execute step \"{step}\"")
 def execute_step(context, step):
     context.execute_steps(step)
 
-@behave.step("I set working directory to \"{working_dir}\"")
-def i_set_working_directory(context, working_dir):
-    context.dnf.working_dir = working_dir.format(context=context)
 
 @behave.step("I move the clock {direction} to \"{when}\"")
 def faketime(context, direction, when):
@@ -148,16 +99,6 @@ def when_I_execute_rpm_on_host_with_args(context, args):
     run_in_context(context, cmd, can_fail=True)
 
 
-@behave.step("I execute \"{command}\" in \"{directory}\"")
-def when_I_execute_command_in_directory(context, command, directory):
-    run_in_context(context, command.format(context=context), cwd=directory.format(context=context))
-
-
-@behave.step("I execute \"{command}\"")
-def when_I_execute_command(context, command):
-    run_in_context(context, command.format(context=context))
-
-
 @behave.given("I do not assume yes")
 def given_I_do_not_assumeyes(context):
     context.dnf._set("assumeyes_option", "")
@@ -195,13 +136,13 @@ def given_enable_plugin(context, plugin):
 @behave.given("I successfully execute dnf with args \"{args}\"")
 def given_i_successfully_execute_dnf_with_args(context, args):
     context.execute_steps(u"Given I execute dnf with args \"{args}\"".format(args=args))
-    then_the_exit_code_is(context, 0)
+    assert_exitcode(context, 0)
 
 
 @behave.given("I successfully execute rpm with args \"{args}\"")
 def given_i_successfully_execute_rpm_with_args(context, args):
     context.execute_steps(u"Given I execute rpm with args \"{args}\"".format(args=args))
-    then_the_exit_code_is(context, 0)
+    assert_exitcode(context, 0)
 
 
 @behave.step("I set config option \"{option}\" to \"{value}\"")
@@ -218,13 +159,6 @@ def step_set_up_http_server(context, path):
     context.dnf.ports[path] = port
 
 
-@behave.then("the exit code is {exitcode}")
-def then_the_exit_code_is(context, exitcode):
-    if context.cmd_exitcode == int(exitcode):
-        return
-    raise AssertionError("Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd))
-
-
 @behave.then("stdout contains \"{text}\"")
 def then_stdout_contains(context, text):
     if re.search(text.format(context=context), context.cmd_stdout):
@@ -236,50 +170,6 @@ def then_stdout_does_not_contain(context, text):
     if not re.search(text.format(context=context), context.cmd_stdout):
         return
     raise AssertionError("Stdout contains: %s" % text)
-
-
-@behave.then("stdout is empty")
-def then_stdout_is_empty(context):
-    if not context.cmd_stdout:
-        return
-    raise AssertionError("Stdout is not empty, it contains: %s" % context.cmd_stdout)
-
-
-@behave.then("stdout is")
-def then_stdout_is(context):
-    """
-    Checks for the exact match of the test's stdout. Supports the <REPOSYNC>
-    placeholder on the first line, which will match against the repository
-    synchronization lines (i.e. the "Last metadata expiration check:" line as
-    well as the individual repo download lines) in the test's output.
-    """
-    expected = context.text.format(context=context).rstrip().split('\n')
-    found = context.cmd_stdout.rstrip().split('\n')
-
-    if found == [""]:
-        found = []
-
-    clean_expected, clean_found = handle_reposync(expected, found)
-
-    if clean_expected == clean_found:
-        return
-
-    rs_offset = 0
-    if len(clean_expected) < len(expected):
-        if len(clean_found) == len(found):
-            rs_offset = 1
-            # reposync was not in found, prepend a single line to pad for the
-            # <REPOSYNC> line in expected
-            found = [""] + found
-        else:
-            rs_offset = len(found) - len(clean_found)
-            # prepend empty lines to expected to pad for multiple reposync
-            # lines in found
-            expected = [""] * (rs_offset - 1) + expected
-
-    print_lines_diff(expected, found, num_lines_equal=rs_offset)
-
-    raise AssertionError("Stdout is not: %s" % context.text)
 
 
 @behave.then("stdout contains lines")
@@ -313,19 +203,6 @@ def then_stdout_section_contains(context, section, regexp):
     raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
 
 
-@behave.then("stderr is")
-def then_stderr_is(context):
-    expected = context.text.format(context=context).strip().split('\n')
-    found = context.cmd_stderr.strip().split('\n')
-
-    if expected == found:
-        return
-
-    print_lines_diff(expected, found)
-
-    raise AssertionError("Stderr is not: %s" % context.text)
-
-
 @behave.then("stderr contains \"{text}\"")
 def then_stderr_contains(context, text):
     if re.search(text.format(context=context), context.cmd_stderr):
@@ -340,13 +217,6 @@ def then_stderr_contains(context, text):
     raise AssertionError("Stderr contains: %s" % text)
 
 
-@behave.then("stderr is empty")
-def then_stderr_is_empty(context):
-    if not context.cmd_stderr:
-        return
-    raise AssertionError("Stderr is not empty, it contains: %s" % context.cmd_stderr)
-
-
 @behave.then("stderr contains lines")
 def then_stdout_contains_lines(context):
     out_lines = context.cmd_stderr.split('\n')
@@ -357,24 +227,3 @@ def then_stdout_contains_lines(context):
                 break
         else:
             raise AssertionError("Stderr doesn't contain line: %s" % line)
-
-
-@behave.then("stdout matches line by line")
-def then_stdout_matches_line_by_line(context):
-    """
-    Checks that each line of stdout matches respective line in regular expressions.
-    Supports the <REPOSYNC> in the same way as the step "stdout is"
-    """
-    found = context.cmd_stdout.strip().split('\n')
-    expected = context.text.strip().split('\n')
-
-    clean_expected, clean_found = handle_reposync(expected, found)
-
-    lines_match_to_regexps_line_by_line(clean_found, clean_expected)
-
-
-@behave.then("stderr matches line by line")
-def then_stderr_matches_line_by_line(context):
-    out_lines = context.cmd_stderr.split('\n')
-    regexp_lines = context.text.split('\n')
-    lines_match_to_regexps_line_by_line(out_lines, regexp_lines)
