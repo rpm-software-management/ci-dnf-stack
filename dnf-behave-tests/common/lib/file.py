@@ -10,8 +10,11 @@ import shutil
 def prepend_installroot(context, path):
     path = path.format(context=context)
     root = '/'
-    if not path.startswith('//'):
-        root = context.dnf.installroot
+    # tests tend to have a directory for temporary files, make it the default
+    # root directory for the file manipulation steps unless the path starts
+    # with '//'
+    if hasattr(context.scenario, "default_tmp_dir") and not path.startswith('//'):
+        root = context.scenario.default_tmp_dir
     return os.path.join(root, path.lstrip("/"))
 
 def ensure_directory_exists(dirname):

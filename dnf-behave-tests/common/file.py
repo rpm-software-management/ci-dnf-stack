@@ -115,7 +115,7 @@ def file_contains(context, filepath):
 @behave.step('file "{filepath}" does not contain lines')
 def file_does_not_contain(context, filepath):
     regexp_lines = context.text.split('\n')
-    full_path = os.path.join(context.dnf.installroot, filepath.lstrip("/"))
+    full_path = prepend_installroot(context, filepath)
     ensure_directory_exists(os.path.dirname(full_path))
     read_str = read_file_contents(full_path)
     for line in regexp_lines:
@@ -136,7 +136,7 @@ def step_impl(context, source, destination):
 @behave.step('I copy file "{source}" to "{destination}"')
 def copy_file_to(context, source, destination):
     source = source.format(context=context)
-    destination = os.path.join(context.dnf.installroot, destination.lstrip("/"))
+    destination = prepend_installroot(context, destination)
     ensure_directory_exists(os.path.dirname(destination))
     copy_file(source, destination)
 
@@ -169,9 +169,9 @@ def step_impl(context, first, second):
 
 @behave.step('size of file "{filepath}" is less than "{expected_size}"')
 def file_size_less_than(context, filepath, expected_size):
-    filepath = os.path.join(context.dnf.installroot, filepath)
-    size = os.path.getsize(filepath)
-    assert size <= int(expected_size), 'File "{}" has size "{}"'.format(filepath, size)
+    full_path = prepend_installroot(context, filepath)
+    size = os.path.getsize(full_path)
+    assert size <= int(expected_size), 'File "{}" has size "{}"'.format(full_path, size)
 
 
 @behave.then("file sha256 checksums are following")
@@ -179,7 +179,6 @@ def then_file_sha256_checksums_are_following(context):
     check_context_table(context, ["Path", "sha256"])
 
     for path, checksum in context.table:
-        # allow {context.dnf.tempdir} substitution
         path = path.format(context=context)
 
         # "-" checksum indicates that file must not exist
