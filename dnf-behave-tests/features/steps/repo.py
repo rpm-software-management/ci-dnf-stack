@@ -12,8 +12,8 @@ from common.lib.behave_ext import check_context_table
 from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run_in_context
 from common.lib.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
-from environment import osrelease
 from fixtures import start_server_based_on_type
+from fixtures.osrelease import osrelease_fixture
 
 
 def repo_config(repo, new={}):
@@ -315,14 +315,14 @@ def step_clear_http_logs(context):
 
 @behave.step("I am running a system identified as the \"{system}\"")
 def given_system(context, system):
-    behave.use_fixture(osrelease, context)
+    behave.use_fixture(osrelease_fixture, context)
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
     context.osrelease.set(data)
 
 
 @behave.step("I remove the os-release file")
 def given_no_osrelease(context):
-    behave.use_fixture(osrelease, context)
+    behave.use_fixture(osrelease_fixture, context)
     context.osrelease.delete()
 
 
