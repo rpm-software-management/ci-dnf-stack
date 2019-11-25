@@ -206,35 +206,6 @@ class DNFContext(object):
         return result
 
 
-class OSRelease(object):
-    """Represents the os-release(5) file."""
-    def __init__(self, path):
-        self._path = path
-        self._backup = None
-        # Back up the original file (if any)
-        if os.path.exists(path):
-            with open(path) as f:
-                self._backup = f.read()
-
-    def set(self, data):
-        """Store the given data in this file."""
-        content = ('%s=%s' % (k, v) for k, v in data.items())
-        with open(self._path, 'w') as f:
-            f.write('\n'.join(content))
-
-    def delete(self):
-        """Delete the file."""
-        if os.path.exists(self._path):
-            os.remove(self._path)
-
-    def __del__(self):
-        """Restore the backup."""
-        self.delete()
-        if self._backup is not None:
-            with open(self._path, 'w') as f:
-                f.write(self._backup)
-
-
 @fixture
 def httpd_context(context):
     context.httpd = HttpServerContext()
@@ -247,15 +218,6 @@ def ftpd_context(context):
     context.ftpd = FtpServerContext()
     yield context.ftpd
     context.ftpd.shutdown()
-
-
-@fixture
-def osrelease(context):
-    try:
-        context.osrelease = OSRelease('/usr/lib/os-release')
-        yield context.osrelease
-    finally:
-        del context.osrelease
 
 
 def before_step(context, step):
