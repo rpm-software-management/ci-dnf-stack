@@ -1,3 +1,5 @@
+# Aliases config path cannot be changed, so it cannot be taken from installroot
+@no_installroot
 Feature: Test for alias command
 
 Background:
@@ -17,12 +19,13 @@ Scenario: List aliases
 
 
 Scenario: Use alias
-  Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "inthrone setup"
+  Given I use repository "alias-command"
+   When I execute dnf with args "inthrone dnf-ci-package"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install       | dnf-ci-package-0:1.0-1.x86_64         |
+  Given I successfully execute dnf with args "remove dnf-ci-package"
 
 
 Scenario: Delete alias
@@ -32,14 +35,13 @@ Scenario: Delete alias
    When I execute dnf with args "alias list"
    Then the exit code is 0
    And stdout does not contain "Alias inthrone"
-  Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "inthrone setup"
+  Given I use repository "alias-command"
+   When I execute dnf with args "inthrone dnf-ci-package"
    Then the exit code is 1
     And stderr contains "No such command: inthrone"
+  Given I successfully execute dnf with args "remove dnf-ci-package"
 
 
-# Aliases config path cannot be changed, so it cannot be taken from installroot
-@no_installroot
 @bz1680489
 Scenario: Aliases conflicts: USER.conf has the highest priority, then alphabetical ordering is used
       # Multiple config files to decrease the randomness aspect
