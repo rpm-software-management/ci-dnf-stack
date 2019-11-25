@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from behave import fixture
 import contextlib
 import multiprocessing
 import os
@@ -81,3 +82,12 @@ class FtpServerContext(object):
         """
         for _, process in self.servers.values():
             process.terminate()
+
+
+@fixture
+def ftpd_fixture(context):
+    if not hasattr(context.scenario, "httpd"):
+        context.scenario.ftpd = FtpServerContext()
+
+    yield context.scenario.ftpd
+    context.scenario.ftpd.shutdown()
