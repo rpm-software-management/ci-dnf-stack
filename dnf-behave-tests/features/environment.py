@@ -123,7 +123,6 @@ class DNFContext(object):
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
-        self.working_dir = None
 
         self.preserve_temporary_dirs = "none"
         preserve = userdata.get("preserve", "no")

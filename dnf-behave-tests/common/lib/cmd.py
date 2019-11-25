@@ -31,8 +31,8 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 
     context.cmd = cmd
 
-    if context.dnf.working_dir and 'cwd' not in run_args:
-        run_args['cwd'] = context.dnf.working_dir
+    if hasattr(context.scenario, "working_dir") and 'cwd' not in run_args:
+        run_args['cwd'] = context.scenario.working_dir
 
     context.cmd_exitcode, context.cmd_stdout, context.cmd_stderr = run(cmd, **run_args)
 
