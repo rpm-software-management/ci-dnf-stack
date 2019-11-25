@@ -10,7 +10,7 @@ from common.lib.cmd import run_in_context
 
 @behave.step("I set working directory to \"{working_dir}\"")
 def i_set_working_directory(context, working_dir):
-    context.dnf.working_dir = working_dir.format(context=context)
+    context.scenario.working_dir = working_dir.format(context=context)
 
 
 @behave.step("I execute \"{command}\" in \"{directory}\"")
