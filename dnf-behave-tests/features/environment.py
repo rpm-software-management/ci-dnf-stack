@@ -18,6 +18,7 @@ from behave import model
 from behave.tag_matcher import ActiveTagMatcher
 from behave.formatter.ansi_escapes import escapes
 
+from common.lib.cmd import print_last_command
 from common.lib.file import ensure_directory_exists
 
 
@@ -230,21 +231,7 @@ def before_scenario(context, scenario):
 def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
         context.dnf.scenario_failed = True
-
-        if getattr(context, "cmd", ""):
-            print(
-                "%sLast Command: %s%s" %
-                (escapes["failed"], escapes["failed_arg"], context.cmd)
-            )
-            print(escapes["reset"])
-        if getattr(context, "cmd_stdout", ""):
-            print("%sLast Command stdout:%s" % (escapes['outline_arg'], escapes['executing']))
-            print(context.cmd_stdout.strip())
-            print(escapes["reset"])
-        if getattr(context, "cmd_stderr", ""):
-            print("%sLast Command stderr:%s" % (escapes['outline_arg'], escapes['executing']))
-            print(context.cmd_stderr.strip())
-            print(escapes["reset"])
+        print_last_command(context)
 
     del context.dnf
 

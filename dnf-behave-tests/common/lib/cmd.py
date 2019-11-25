@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+from behave.formatter.ansi_escapes import escapes
 import subprocess
 
 
@@ -43,3 +44,20 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 def assert_exitcode(context, exitcode):
     assert context.cmd_exitcode == int(exitcode), \
         "Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd)
+
+
+def print_last_command(context):
+    if getattr(context, "cmd", ""):
+        print(
+            "%sLast Command: %s%s" %
+            (escapes["failed"], escapes["failed_arg"], context.cmd)
+        )
+        print(escapes["reset"])
+    if getattr(context, "cmd_stdout", ""):
+        print("%sLast Command stdout:%s" % (escapes['outline_arg'], escapes['executing']))
+        print(context.cmd_stdout.strip())
+        print(escapes["reset"])
+    if getattr(context, "cmd_stderr", ""):
+        print("%sLast Command stderr:%s" % (escapes['outline_arg'], escapes['executing']))
+        print(context.cmd_stderr.strip())
+        print(escapes["reset"])
