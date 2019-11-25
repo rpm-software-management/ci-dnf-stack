@@ -429,7 +429,6 @@ Scenario: repoquery --location NAME
       .+/fixtures/repos/repoquery-main/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
-@fixture.httpd
 Scenario: repoquery --location NAME (in an HTTP repo)
 Given I use repository "repoquery-main" as https
  When I execute dnf with args "repoquery --location top-a-2.0"

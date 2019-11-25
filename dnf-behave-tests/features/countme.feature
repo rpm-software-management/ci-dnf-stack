@@ -1,7 +1,6 @@
 Feature: Better user counting
 
     @destructive
-    @fixture.httpd
     Scenario: User-Agent header is sent
         Given I am running a system identified as the "Fedora 30 server"
           And I use repository "dnf-ci-fedora" as http
@@ -12,7 +11,6 @@ Feature: Better user counting
             | User-Agent | libdnf (Fedora 30; server; Linux.x86_64) |
 
     @destructive
-    @fixture.httpd
     Scenario: User-Agent header is sent (missing variant)
         Given I am running a system identified as the "Fedora 31"
           And I use repository "dnf-ci-fedora" as http
@@ -23,7 +21,6 @@ Feature: Better user counting
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
     @destructive
-    @fixture.httpd
     Scenario: User-Agent header is sent (unknown variant)
         Given I am running a system identified as the "Fedora 31 myspin"
           And I use repository "dnf-ci-fedora" as http
@@ -34,7 +31,6 @@ Feature: Better user counting
             | User-Agent | libdnf (Fedora 31; generic; Linux.x86_64) |
 
     @destructive
-    @fixture.httpd
     Scenario: Shortened User-Agent value on a non-Fedora system
         Given I am running a system identified as the "OpenSUSE 15.1 desktop"
           And I use repository "dnf-ci-fedora" as http
@@ -45,7 +41,6 @@ Feature: Better user counting
             | User-Agent | libdnf |
 
     @destructive
-    @fixture.httpd
     Scenario: No os-release file installed
         Given I remove the os-release file
           And I use repository "dnf-ci-fedora" as http
@@ -56,7 +51,6 @@ Feature: Better user counting
             | header     | value  |
             | User-Agent | libdnf |
 
-    @fixture.httpd
     Scenario: Custom User-Agent value
         Given I use repository "dnf-ci-fedora" as http
           And I set config option "user_agent" to "'Agent 007'"
@@ -66,7 +60,6 @@ Feature: Better user counting
             | header     | value     |
             | User-Agent | Agent 007 |
 
-    @fixture.httpd
     Scenario: Countme flag is sent once per week
         Given I set config option "countme" to "1"
           And today is Wednesday, August 07, 2019
@@ -117,7 +110,6 @@ Feature: Better user counting
             | path                     |
             | */metalink.xml?countme=4 |
 
-    @fixture.httpd
     Scenario: Countme flag is not sent repeatedly on retries
         Given I set config option "countme" to "1"
           And I copy repository "dnf-ci-fedora" for modification
@@ -136,7 +128,6 @@ Feature: Better user counting
             | path                     |
             | */metalink.xml?countme=1 |
 
-    @fixture.httpd
     Scenario: Countme feature is disabled
         Given I set config option "countme" to "0"
           And I copy repository "dnf-ci-fedora" for modification

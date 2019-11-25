@@ -1,7 +1,6 @@
 Feature: makecache command 
 
 
-@fixture.httpd
 @bz1745170
 Scenario: disabled makecache --timer does not invalidate cached metadata
 Given I use repository "dnf-ci-fedora" as http
