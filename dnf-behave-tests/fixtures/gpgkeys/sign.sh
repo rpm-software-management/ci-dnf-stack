@@ -12,6 +12,7 @@ for KEY_NAME in $(ls ${DIR}/keyspecs); do
 
     # set defaults
     USE_SIGN_SUBKEY=0
+    USE_NOEOF_KEYS=0
 
     # read config file for key
     if [ -f "${DIR}/keyspecs/${KEY_NAME}/config" ]; then
@@ -33,6 +34,12 @@ for KEY_NAME in $(ls ${DIR}/keyspecs); do
     # export public and private key
     HOME=${KEY_DIR} gpg2 --export -a ${KEY_NAME} > "${KEY_DIR}/${KEY_NAME}-public"
     HOME=${KEY_DIR} gpg2 --export-secret-keys -a ${KEY_NAME} > "${KEY_DIR}/${KEY_NAME}-private"
+
+    if [ "${USE_NOEOF_KEYS}" = "1" ]; then
+      # remove EOF from keyfiles
+      truncate -s -1 "${KEY_DIR}/${KEY_NAME}-public"
+      truncate -s -1 "${KEY_DIR}/${KEY_NAME}-private"
+    fi
 
     # create .rpmmacros
     cat > "${KEY_DIR}/.rpmmacros" <<EOF

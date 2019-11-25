@@ -94,7 +94,7 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
    Then the exit code is 0
 
 
-Scenario: Install unsigned package from repositorory without gpgcheck set using option --nogpgcheck
+Scenario: Install unsigned package from repository without gpgcheck set using option --nogpgcheck
   Given I configure repository "dnf-ci-gpg" with
         | key      | value |
         | gpgcheck |       |
@@ -118,3 +118,4 @@ Scenario: Fail to install package with incorrect checksum when gpgcheck=0
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
+
