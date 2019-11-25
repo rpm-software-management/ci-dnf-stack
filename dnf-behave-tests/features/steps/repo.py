@@ -290,12 +290,12 @@ def step_set_up_metalink_for_repository(context, repo):
 
 @behave.step("the server starts responding with HTTP status code {code}")
 def step_server_down(context, code):
-    context.httpd.conf['status'] = int(code)
+    context.scenario.httpd.conf['status'] = int(code)
 
 
 @behave.step("I start capturing outbound HTTP requests")
 def step_start_http_capture(context):
-    context.httpd.conf['logging'] = True
+    context.scenario.httpd.conf['logging'] = True
 
 
 @behave.step('I require client certificate verification with certificate "{client_cert}" and key "{client_key}"')
@@ -310,7 +310,7 @@ def step_impl(context, client_cert, client_key):
 
 @behave.step("I forget any HTTP requests captured so far")
 def step_clear_http_logs(context):
-    context.httpd.clear_log()
+    context.scenario.httpd.clear_log()
 
 
 @behave.step("I am running a system identified as the \"{system}\"")
@@ -331,7 +331,7 @@ def given_no_osrelease(context):
 def step_check_http_log(context, quantifier, command):
     # Obtain the httpd log for this command
     log = [record
-           for record in context.httpd.log
+           for record in context.scenario.httpd.log
            if record.command == command]
     assert log, 'No HTTP requests have been received!'
 

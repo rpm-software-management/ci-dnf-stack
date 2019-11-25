@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
+from behave import fixture
 import contextlib
 import multiprocessing
 import os
@@ -165,3 +166,12 @@ if __name__ == '__main__':
     print(curl)
     print(os.system(curl))
     ctx.shutdown()
+
+
+@fixture
+def httpd_fixture(context):
+    if not hasattr(context.scenario, "httpd"):
+        context.scenario.httpd = HttpServerContext()
+
+    yield context.scenario.httpd
+    context.scenario.httpd.shutdown()

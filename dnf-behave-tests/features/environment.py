@@ -14,13 +14,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
 import common
 
-from behave import fixture, use_fixture, model
+from behave import model
 from behave.tag_matcher import ActiveTagMatcher
 from behave.formatter.ansi_escapes import escapes
 
 from common.lib.file import ensure_directory_exists
-from steps.fixtures.httpd import HttpServerContext
-from steps.fixtures.ftpd import FtpServerContext
 
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
@@ -206,20 +204,6 @@ class DNFContext(object):
         return result
 
 
-@fixture
-def httpd_context(context):
-    context.httpd = HttpServerContext()
-    yield context.httpd
-    context.httpd.shutdown()
-
-
-@fixture
-def ftpd_context(context):
-    context.ftpd = FtpServerContext()
-    yield context.ftpd
-    context.ftpd.shutdown()
-
-
 def before_step(context, step):
     pass
 
@@ -271,13 +255,6 @@ def before_feature(context, feature):
 
 def after_feature(context, feature):
     pass
-
-
-def before_tag(context, tag):
-    if tag == 'fixture.httpd':
-        use_fixture(httpd_context, context)
-    if tag == 'fixture.ftpd':
-        use_fixture(ftpd_context, context)
 
 
 def after_tag(context, tag):
