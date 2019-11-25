@@ -91,11 +91,9 @@ def when_I_execute_rpm_on_host_with_args(context, args):
 def when_I_execute_command_in_directory(context, command, directory):
     run_in_context(context, command.format(context=context), cwd=directory.format(context=context))
 
-
 @behave.step("I execute \"{command}\"")
 def when_I_execute_command(context, command):
     run_in_context(context, command.format(context=context))
-
 
 @behave.given("I do not assume yes")
 def given_I_do_not_assumeyes(context):
@@ -122,6 +120,9 @@ def step_impl(context):
 def step_impl(context):
     context.dnf._set("disable_plugins", False)
 
+@behave.given("I set dnf command to \"{command}\"")
+def step_impl(context, command):
+    context.dnf._set("dnf_command", command)
 
 @behave.given("I enable plugin \"{plugin}\"")
 def given_enable_plugin(context, plugin):
