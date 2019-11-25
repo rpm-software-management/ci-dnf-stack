@@ -1,4 +1,3 @@
-@fixture.httpd
 Feature: Tests for reposync command
 
 

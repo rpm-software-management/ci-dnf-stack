@@ -36,7 +36,6 @@ Given I create file "/plugins/test.py" with
 
 
 @bz1626093
-@fixture.httpd
 Scenario: Plugins can edit http headers
 Given I create file "/plugins/test.py" with
   """

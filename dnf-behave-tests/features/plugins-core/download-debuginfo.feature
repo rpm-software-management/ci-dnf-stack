@@ -1,4 +1,3 @@
-@fixture.httpd
 Feature: dnf download --debuginfo command
 
 

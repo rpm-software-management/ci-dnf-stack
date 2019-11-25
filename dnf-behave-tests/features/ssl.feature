@@ -1,7 +1,6 @@
 Feature: SSL related tests
 
 
-@fixture.httpd
 Scenario: Installing a package from https repository
   Given I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
@@ -15,7 +14,6 @@ Scenario: Installing a package from https repository
         | install       | setup-0:2.12.1-1.fc29.noarch          |
 
 
-@fixture.httpd
 Scenario: Installing a package from https repository with client verification
   Given I require client certificate verification with certificate "certificates/testcerts/client/cert.pem" and key "certificates/testcerts/client/key.pem"
     And I use repository "dnf-ci-fedora" as https
@@ -30,7 +28,6 @@ Scenario: Installing a package from https repository with client verification
         | install       | setup-0:2.12.1-1.fc29.noarch          |
 
 
-@fixture.httpd
 @bz1605187
 @bz1713627
 Scenario: Installing a package using untrusted client cert should fail
@@ -46,7 +43,6 @@ Scenario: Installing a package using untrusted client cert should fail
     """
 
 
-@fixture.httpd
 @bz1605187
 @bz1713627
 Scenario: Installing a package using nonexistent client cert should fail

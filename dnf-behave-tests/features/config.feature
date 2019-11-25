@@ -181,7 +181,6 @@ Scenario: Lines that contain only whitespaces do not spoil previous config optio
 
 
 @bz1721091
-@fixture.httpd
 Scenario: Dnf can use config file from remote location
   Given I create directory "/remotedir"
     And I create file "/remotedir/remote.conf" with
@@ -200,7 +199,6 @@ Scenario: Dnf can use config file from remote location
 
 
 @bz1721091
-@fixture.httpd
 Scenario: Dnf prints reasonable error when remote config file is not downloadable
   Given I create directory "/remotedir"
     And I set up a http server for directory "/remotedir"

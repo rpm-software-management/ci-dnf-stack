@@ -15,7 +15,6 @@ Given I copy repository "dnf-ci-fedora" for modification
   And file "/var/cache/dnf/dnf-ci-fedora_with_baseurl*/packages/setup*" does not exist
 
 
-@fixture.httpd
 Scenario: Install from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -30,7 +29,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And file "/var/cache/dnf/dnf-ci-fedora*/packages/setup*" exists
 
 
-@fixture.httpd
 Scenario: Install from remote repodata with xml:base pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -44,7 +42,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
 
-@fixture.httpd
 Scenario: Install from local repodata with xml:base pointing to remote packages doesn't delete unused local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -60,7 +57,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
  
-@fixture.httpd
 Scenario: Install from local repodata that have packages with xml:base pointing to a remote as well as local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
