@@ -39,7 +39,9 @@ class OSRelease(object):
 @fixture
 def osrelease_fixture(context):
     try:
-        context.osrelease = OSRelease('/usr/lib/os-release')
-        yield context.osrelease
+        if not hasattr(context, "osrelease"):
+            context.scenario.osrelease = OSRelease('/usr/lib/os-release')
+
+        yield context.scenario.osrelease
     finally:
-        del context.osrelease
+        del context.scenario.osrelease

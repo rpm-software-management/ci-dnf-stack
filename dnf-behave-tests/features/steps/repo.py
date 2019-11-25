@@ -317,13 +317,13 @@ def step_clear_http_logs(context):
 def given_system(context, system):
     behave.use_fixture(osrelease_fixture, context)
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'), system.split(' ')))
-    context.osrelease.set(data)
+    context.scenario.osrelease.set(data)
 
 
 @behave.step("I remove the os-release file")
 def given_no_osrelease(context):
     behave.use_fixture(osrelease_fixture, context)
-    context.osrelease.delete()
+    context.scenario.osrelease.delete()
 
 
 @behave.step("{quantifier} HTTP {command} request should match")
