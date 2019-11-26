@@ -4,8 +4,7 @@ Feature: Tests for reposync command with local repository
 Background:
   Given I enable plugin "reposync"
 
-# until rhel has PR https://github.com/rpm-software-management/dnf-plugins-core/pull/346
-@not.with_os=rhel__eq__8
+
 Scenario: Base functionality of reposync on local repository
   Given I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
