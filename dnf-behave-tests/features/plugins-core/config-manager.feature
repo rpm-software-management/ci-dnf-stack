@@ -167,3 +167,20 @@ Scenario: --setopt does not modify repo when used without --save and one argumen
     """
     Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable
     """
+
+
+# Requires PR: https://github.com/rpm-software-management/dnf-plugins-core/pull/373
+@not.with_os=rhel__eq__8
+Scenario: config-manager --save saves to correct config file
+  Given I do not set config file
+    And I create file "alternative.conf" with
+        """
+        [main]
+        """
+   When I execute dnf with args "config-manager --config={context.dnf.installroot}/alternative.conf --save --setopt=debuglevel=7"
+   Then the exit code is 0
+    And file "alternative.conf" contains lines
+        """
+        [main]
+        debuglevel=7
+        """
