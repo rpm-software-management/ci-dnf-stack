@@ -24,6 +24,11 @@ Scenario Outline: Upgrade does not reinstall package with the same NEVRA and dif
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction is empty
+   When I execute dnf with args "distro-sync setup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | reinstall     | setup-0:2.12.1-1.fc29.noarch              |
 
 Examples:
     | offset    |
