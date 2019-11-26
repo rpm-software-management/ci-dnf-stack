@@ -21,8 +21,6 @@ Scenario: Install module, with specified profile and enabled dependencies
         | module-stream-enable      | nodejs:5                                        |
         | module-profile-install    | nodejs/minimal                                  |
 
-# until rhel has PR https://github.com/rpm-software-management/dnf/pull/1532
-@not.with_os=rhel__eq__8
 @bz1696204
 Scenario: Install module, with specified context that is not active (unsatisfied require)
    When I execute dnf with args "module enable postgresql:9.6"

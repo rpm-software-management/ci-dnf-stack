@@ -101,7 +101,6 @@ Scenario: Reposync downloads packages from all streams of modular repository eve
     And file "//{context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
 
 
-@not.with_os=rhel__eq__8
 @bz1686602
 Scenario: Reposync respects excludes
   Given I use repository "dnf-ci-thirdparty-updates" as http
@@ -122,7 +121,6 @@ Scenario: Reposync respects excludes
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Reposync respects excludes, but not modular excludes
   Given I use repository "dnf-ci-fedora-modular" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --setopt=includepkgs=postgresql"
@@ -187,7 +185,6 @@ Scenario: Reposync preserves remote timestamps of metadata files
     And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
 
 
-@not.with_os=rhel__eq__8
 @bz1686602
 Scenario: Reposync --urls switch
   Given I use repository "dnf-ci-thirdparty-updates" as http
@@ -205,7 +202,6 @@ Scenario: Reposync --urls switch
     """
 
 
-@not.with_os=rhel__eq__8
 @bz1686602
 Scenario: Reposync --urls and --download-metadata switches
   Given I use repository "dnf-ci-thirdparty-updates" as http

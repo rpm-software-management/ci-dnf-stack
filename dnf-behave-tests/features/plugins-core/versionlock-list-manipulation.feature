@@ -122,8 +122,6 @@ Scenario: Basic commands add/exclude/list/delete/clear for manipulation with ver
     """
 
 
-# until rhel has PR https://github.com/rpm-software-management/dnf-plugins-core/pull/363
-@not.with_os=rhel__eq__8
 Scenario: Versionlock accepts --raw switch
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install flac"
