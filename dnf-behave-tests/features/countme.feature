@@ -44,6 +44,42 @@ Feature: Better user counting
             | header     | value  |
             | User-Agent | libdnf |
 
+    @bz1676891
+    @destructive
+    @fixture.httpd
+    Scenario: User-Agent header is sent (RHEL)
+        Given I am running a system identified as the "Red Hat Enterprise Linux 8.2 generic"
+          And I use repository "dnf-ci-fedora" as http
+          And I start capturing outbound HTTP requests
+         When I execute dnf with args "makecache"
+         Then every HTTP GET request should match:
+            | header     | value                                                        |
+            | User-Agent | libdnf (Red Hat Enterprise Linux 8.2; generic; Linux.x86_64) |
+
+    @bz1676891
+    @destructive
+    @fixture.httpd
+    Scenario: User-Agent header is sent (RHEL)
+        Given I am running a system identified as the "Red Hat Enterprise Linux 8.2 (Ootpa)"
+          And I use repository "dnf-ci-fedora" as http
+          And I start capturing outbound HTTP requests
+         When I execute dnf with args "makecache"
+         Then every HTTP GET request should match:
+            | header     | value                                                        |
+            | User-Agent | libdnf (Red Hat Enterprise Linux 8.2; generic; Linux.x86_64) |
+
+    @bz1676891
+    @destructive
+    @fixture.httpd
+    Scenario: User-Agent header is sent (RHEL)
+        Given I am running a system identified as the "Red Hat Enterprise Linux"
+          And I use repository "dnf-ci-fedora" as http
+          And I start capturing outbound HTTP requests
+         When I execute dnf with args "makecache"
+         Then every HTTP GET request should match:
+            | header     | value  |
+            | User-Agent | libdnf |
+
     @destructive
     @fixture.httpd
     Scenario: No os-release file installed
