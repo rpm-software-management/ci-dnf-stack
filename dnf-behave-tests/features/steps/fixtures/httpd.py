@@ -4,10 +4,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 from behave import fixture
-import contextlib
 import multiprocessing
 import os
-import socket
 import ssl
 import sys
 
@@ -18,6 +16,8 @@ if PY3:
 else:
     from SimpleHTTPServer import SimpleHTTPRequestHandler
     from SocketServer import TCPServer
+
+from steps.fixtures.server import ServerContext
 
 
 class AccessRecord(object):
@@ -54,9 +54,9 @@ class LoggingHttpHandler(SimpleHTTPRequestHandler):
         super(LoggingHttpHandler, self).do_GET()
 
 
-class HttpServerContext(object):
+class HttpServerContext(ServerContext):
     """
-    This object manages group of simple http servers. Each of them is run in 
+    This object manages group of simple http servers. Each of them is run in
     separate process and serves configured directory.
 
     Usage:
@@ -86,32 +86,11 @@ class HttpServerContext(object):
         httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
         httpd.serve_forever()
 
-    @staticmethod
-    def _get_free_socket(host='localhost'):
-        with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.bind((host, 0))
-            return (host, s.getsockname()[1])
-
     def __init__(self):
-        # mapping path -> (address, server process)
-        self.servers = dict()
+        super(HttpServerContext, self).__init__()
         # list of AccessRecord objects
         self._log = multiprocessing.Manager().list()
         self._conf = multiprocessing.Manager().dict()
-
-    def _start_server(self, path, target, *args):
-        """
-        Start a new http server for serving files from "path" directory.
-        Returns (host, port) tupple of new running server.
-        """
-        if path in self.servers:
-            return self.get_address(path)
-        address = self._get_free_socket()
-        process = multiprocessing.Process(target=target, args=(address, path) + args)
-        process.start()
-        self.servers[path] = (address, process)
-        return address
 
     def new_http_server(self, path):
         return self._start_server(path, self.http_server, self._log, self._conf)
@@ -119,14 +98,6 @@ class HttpServerContext(object):
     def new_https_server(self, path, cacert, cert, key, client_verification):
         return self._start_server(
             path, self.https_server, cacert, cert, key, client_verification)
-
-    def get_address(self, path):
-        """
-        Get address of http server bound to "path" directory
-        """
-        if path in self.servers:
-            return self.servers[path][0]
-        return None
 
     @property
     def log(self):
@@ -142,16 +113,8 @@ class HttpServerContext(object):
     def conf(self):
         return self._conf
 
-    def shutdown(self):
-        """
-        Terminate all running servers
-        """
-        for _, process in self.servers.values():
-            process.terminate()
-
 
 if __name__ == '__main__':
-    import os
     ctx = HttpServerContext()
     certpath = '../../../fixtures/certificates/testcerts'
     cacert = os.path.realpath(os.path.join(certpath, 'ca/cert.pem'))
