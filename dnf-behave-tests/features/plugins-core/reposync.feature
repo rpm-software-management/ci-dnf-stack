@@ -154,7 +154,7 @@ Scenario: Reposync downloads packages and removes packages that are not part of 
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" exists
   Given I configure repository "setopt.ext" with
         | key             | value                               |
-        | baseurl         | {context.dnf.repos_location}/setopt |
+        | baseurl         | {context.scenario.repos_location}/setopt |
     # The following two steps generate repodata for the repository without configuring it
     And I use repository "setopt"
     And I drop repository "setopt"

@@ -40,7 +40,7 @@ def write_repo_config(context, repo, config, path=None):
 class RepoInfo(object):
     def __init__(self, context, repo):
         self.active = False
-        self.path = os.path.join(context.dnf.repos_location, repo)
+        self.path = os.path.join(context.scenario.repos_location, repo)
         self.config = repo_config(repo, {"baseurl": "file://" + self.path})
 
     def update_config(self, new_conf):
@@ -68,7 +68,7 @@ def generate_repodata(context, repo):
     if os.path.isfile(groups_filename):
         args += " --groupfile " + groups_filename
 
-    target_path = os.path.join(context.dnf.repos_location, repo)
+    target_path = os.path.join(context.scenario.repos_location, repo)
 
     run_in_context(context, "createrepo_c %s %s" % (args, target_path))
 

@@ -8,7 +8,7 @@ Scenario: Install package from host repository into empty installroot
   Given I drop repository "dnf-ci-install-remove"
     And I configure a new repository "outside-installroot" in "{context.dnf.tempdir}/repos.d" with
         | key     | value                                              |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-install-remove |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-install-remove |
     When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d install water_carbonated"
    Then the exit code is 0
     And Transaction is following
@@ -74,7 +74,7 @@ Scenario: Repolist command in installroot and with a reposdir specified
         """
   Given I configure a new repository "testrepo" in "{context.dnf.tempdir}/repos.d" with
         | key     | value                                              |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-install-remove |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-install-remove |
    When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d repolist"
    Then the exit code is 0
     And stdout is

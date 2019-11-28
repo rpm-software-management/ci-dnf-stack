@@ -7,7 +7,7 @@ Scenario: Variables are substituted in mirrorlist URLs
       | key        | value                                               |
       | mirrorlist | {context.dnf.installroot}/temp-repos/mirrorlist.txt |
       | baseurl    |                                                     |
-    And I copy directory "{context.dnf.repos_location}/dnf-ci-fedora" to "/temp-repos/base-noarch"
+    And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-noarch"
     And I create and substitute file "/temp-repos/mirrorlist.txt" with
       """
       file:///{context.dnf.installroot}/temp-repos/base-$basearch/
