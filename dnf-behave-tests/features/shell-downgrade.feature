@@ -49,7 +49,6 @@ Scenario: Using dnf shell, fail to downgrade an RPM of the lowest version
     And I execute in dnf shell "downgrade setup"
    Then Transaction is empty
     And stdout contains "Package setup of lowest version already installed, cannot downgrade it\."
-    And stdout contains "No packages marked for downgrade"
    When I execute in dnf shell "run"
    Then Transaction is empty
    When I execute in dnf shell "exit"
