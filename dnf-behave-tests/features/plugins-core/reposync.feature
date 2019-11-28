@@ -183,6 +183,23 @@ Scenario: Reposync downloads packages and removes packages that are not part of 
     And file "//{context.dnf.tempdir}/setopt.ext/x86_64/flac-libs-1.0-1.fc29.x86_64.rpm" does not exist
 
 
+@bz1774103
+Scenario: Reposync --delete does not immediately delete downloaded content when multiple repositories are synced
+  Given I use repository "reposync" as http
+    And I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --delete"
+   Then the exit code is 0
+    And stdout does not contain "[DELETED]"
+    And file "//{context.dnf.tempdir}/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/reposync/src/wget-1.0-1.fc29.src.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/SuperRipper-1.3-1.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/SuperRipper-1.2-1.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/CQRlib-extension-1.6-2.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/src/SuperRipper-1.3-1.src.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/src/SuperRipper-1.2-1.src.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-thirdparty-updates/src/CQRlib-extension-1.6-2.src.rpm" exists
+
+
 Scenario: Reposync preserves remote timestamps of packages
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --remote-time"
