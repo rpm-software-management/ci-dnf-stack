@@ -6,7 +6,10 @@ Background:
   Given I delete directory "/etc/dnf/aliases.d/"
    When I execute dnf with args "alias add inthrone=install"
    Then the exit code is 0
-    And stdout contains "^Aliases added: inthrone$"
+    And stdout is
+        """
+        Aliases added: inthrone
+        """
 
 
 Scenario: Add alias
@@ -16,7 +19,10 @@ Scenario: Add alias
 Scenario: List aliases
    When I execute dnf with args "alias list"
    Then the exit code is 0
-   And stdout contains "Alias inthrone='install'"
+    And stdout is
+        """
+        Alias inthrone='install'
+        """
 
 
 Scenario: Use alias
@@ -32,10 +38,16 @@ Scenario: Use alias
 Scenario: Delete alias
    When I execute dnf with args "alias delete inthrone"
    Then the exit code is 0
-    And stdout contains "^Aliases deleted: inthrone$"
+    And stdout is
+        """
+        Aliases deleted: inthrone
+        """
    When I execute dnf with args "alias list"
    Then the exit code is 0
-   And stdout does not contain "Alias inthrone"
+    And stdout is
+        """
+        No aliases defined.
+        """
   Given I use repository "alias-command"
    When I execute dnf with args "inthrone dnf-ci-package"
    Then the exit code is 1
