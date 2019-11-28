@@ -96,7 +96,7 @@ Scenario: Install remove two package with shared dependency
 
 
 Scenario: Install remove rpm file from local path
-   When I execute dnf with args "install {context.dnf.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
+   When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -109,7 +109,7 @@ Scenario: Install remove rpm file from local path
 
 
 Scenario: Install remove *.rpm from local path
-   When I execute dnf with args "install {context.dnf.repos_location}/dnf-ci-install-remove/x86_64/water_{{still,carbonated}}-1*.rpm"
+   When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water_{{still,carbonated}}-1*.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |

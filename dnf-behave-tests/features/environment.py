@@ -122,7 +122,6 @@ class DNFContext(object):
         self.config = userdata.get("config", DEFAULT_CONFIG)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
-        self.repos_location = userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
         self.fixturesdir = FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
@@ -232,6 +231,7 @@ def before_scenario(context, scenario):
                              no_installroot='no_installroot' in scenario.effective_tags)
 
     context.scenario.default_tmp_dir = context.dnf.installroot
+    context.scenario.repos_location = context.config.userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
 
 
 def after_scenario(context, scenario):

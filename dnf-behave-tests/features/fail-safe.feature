@@ -318,7 +318,7 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
         | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64       |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-   When I execute dnf with args "upgrade {context.dnf.repos_location}/dnf-ci-fedora-modular-updates/x86_64/nodejs-8.11.4-1.module_2030+42747d40.x86_64.rpm"
+   When I execute dnf with args "upgrade {context.scenario.repos_location}/dnf-ci-fedora-modular-updates/x86_64/nodejs-8.11.4-1.module_2030+42747d40.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action                | Package                                            |
@@ -397,7 +397,7 @@ Scenario Outline: When non-modular RPM is installed and modulemd is not availabl
         | install                   | http-parser-0:2.4.0-1.fc29.x86_64                  |
   Given I execute step "<step>"
     And I execute dnf with args "clean all"
-   When I execute dnf with args "upgrade {context.dnf.repos_location}/dnf-ci-fedora-modular-updates/x86_64/http-parser-2.9.0-1.module_2672+97d6a5e9.x86_64.rpm"
+   When I execute dnf with args "upgrade {context.scenario.repos_location}/dnf-ci-fedora-modular-updates/x86_64/http-parser-2.9.0-1.module_2672+97d6a5e9.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action                | Package                                            |
@@ -499,7 +499,7 @@ Scenario Outline: When modulemd is not available, RPM from the enabled stream ca
       # Workaround for a bug - when the repo id is too log and nodejs is installed later on, the output from transaction is formatted incorrectly (no space between "Arch" and "Version")
     And I configure a new repository "short-modular-updates" with
         | key     | value                                                      |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora-modular-updates |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora-modular-updates |
       # since we're configuring the repo ourselves, force generation of repodata by using and unusing it
     And I use repository "dnf-ci-fedora-modular-updates"
     And I drop repository "dnf-ci-fedora-modular-updates"

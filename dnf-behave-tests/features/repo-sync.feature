@@ -188,7 +188,7 @@ Scenario: Mirrorlist with invalid mirrors and one good mirror
         """
         file:///nonexistent.repo
         http://127.0.0.1:5000/nonexistent
-        file://{context.dnf.repos_location}/dnf-ci-fedora
+        file://{context.scenario.repos_location}/dnf-ci-fedora
         """
     And I use repository "dnf-ci-fedora" with configuration
         | key             | value                                       |

@@ -78,8 +78,8 @@ Scenario: Reposdir option in dnf.conf file in installroot
     reposdir=/testrepos
     """
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
-        | key     | value                                      |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora |
+        | key     | value                                                   |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
     And I do not set config file
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -96,8 +96,8 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     reposdir=/testrepos
     """
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
-        | key     | value                                      |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora |
+        | key     | value                                                   |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
     And I set config file to "/testdnf.conf"
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -114,8 +114,8 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     reposdir={context.dnf.installroot}/testrepos,/othertestrepos
     """
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
-        | key     | value                                      |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora |
+        | key     | value                                                   |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
     And I set config file to "/testdnf.conf"
     And I create directory "/othertestrepos"
    When I execute dnf with args "install filesystem"
@@ -132,8 +132,8 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
 
 Scenario: Reposdir option set by --setopt
   Given I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
-        | key     | value                                      |
-        | baseurl | {context.dnf.repos_location}/dnf-ci-fedora |
+        | key     | value                                                   |
+        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
    # fail due to unavailable repository
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
