@@ -3,6 +3,7 @@
 Feature: Test for alias command
 
 Background:
+  Given I delete directory "/etc/dnf/aliases.d/"
    When I execute dnf with args "alias add inthrone=install"
    Then the exit code is 0
     And stdout contains "^Aliases added: inthrone$"
