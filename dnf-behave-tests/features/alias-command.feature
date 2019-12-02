@@ -4,6 +4,7 @@ Feature: Test for alias command
 
 Background:
   Given I delete directory "/etc/dnf/aliases.d/"
+    And I delete file "/etc/yum.repos.d/*.repo" with globs
    When I execute dnf with args "alias add inthrone=install"
    Then the exit code is 0
     And stdout is
