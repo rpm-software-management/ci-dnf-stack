@@ -222,3 +222,18 @@ Scenario: Reposync --urls and --download-metadata switches
     http://localhost:[0-9]+/src/SuperRipper-1\.3-1\.src\.rpm
     http://localhost:[0-9]+/x86_64/SuperRipper-1\.3-1\.x86_64\.rpm
     """
+
+
+@bz1775434
+Scenario: Reposync --newest-only downloads packages from all streams and latest context versions of modular repository and latest non-modular rpms
+  Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular" as http
+   When I execute dnf with args "reposync --newest-only --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_2011+41787af1.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_3012+41787ba4.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_2011+41787af0.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_3012+41787ba3.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.12.1-1.fc29.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.12.2-3.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm" exists
