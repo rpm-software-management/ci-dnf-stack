@@ -312,3 +312,33 @@ Examples:
     # yum compatibility
     | list bugzillas      |
     | list bzs            |
+
+
+@bz1728004
+Scenario: updateinfo show <advisory> of the running kernel after a kernel update
+   When I execute dnf with args "install kernel"
+   Then Transaction is following
+        | Action        | Package                                  |
+        | install       | kernel-core-0:4.18.16-300.fc29.x86_64    |
+        | install       | kernel-modules-0:4.18.16-300.fc29.x86_64 |
+        | install       | kernel-0:4.18.16-300.fc29.x86_64         |
+  Given I use repository "dnf-ci-fedora-updates"
+    And I execute dnf with args "updateinfo list kernel"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2019-348e185000 bugfix kernel-4.19.15-300.fc29.x86_64
+    """
+   When I execute dnf with args "update kernel"
+   Then Transaction is following
+        | Action        | Package                                  |
+        | install       | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | install       | kernel-modules-0:4.19.15-300.fc29.x86_64 |
+        | install       | kernel-0:4.19.15-300.fc29.x86_64         |
+   When I execute dnf with args "updateinfo list kernel"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    """
