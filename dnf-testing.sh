@@ -165,14 +165,14 @@ run()
     local failed_test_name='Failed test(s):'
     if [ -z "$devel" ];then
         for feature in "${TESTS[@]}"; do
-            printf "\n$DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
-            $DOCKER_BIN run $PARAM_TTY --rm "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --net none "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm --net none "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     else
         for feature in "${TESTS[@]}"; do
-            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
-            $DOCKER_BIN run $PARAM_TTY --rm --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
+            printf "\n$DOCKER_BIN run $PARAM_TTY --rm --net none --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature"\n"
+            $DOCKER_BIN run $PARAM_TTY --rm --net none --volume "$devel" "$IMAGE" ./launch-test $PARAM_RESERVE $PARAM_TAGS $PARAM_DNFCOMMAND "$feature" >&2 || \
             if [ $? -ne 0 ]; then let ++failed && failed_test_name+=" $feature"; fi
         done
     fi
