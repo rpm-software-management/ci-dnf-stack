@@ -17,8 +17,12 @@ Background: Add repository with gpgcheck=1
    Then the exit code is 1
 
 
+# the scenario is failing with rpm on Fedora 30:
+# rpm --import gpgkeys/keys/dnf-ci-gpg-noeol/dnf-ci-gpg-noeol-public
+# error: gpgkeys/keys/dnf-ci-gpg-noeol/dnf-ci-gpg-noeol-public: key 1 not an armored public key.
+@use.with_os=rhel__ge__8
 @bz1733971
-  Scenario: Import the GPG key without any EOL characters at EOF
+Scenario: Import the GPG key without any EOL characters at EOF
    When I execute rpm with args "--import {context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-noeol/dnf-ci-gpg-noeol-public"
    Then the exit code is 0
 
