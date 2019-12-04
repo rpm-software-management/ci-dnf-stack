@@ -1,6 +1,6 @@
 Feature: Tests for the repository syncing functionality
 
-
+@bz1763663
 @bz1679509
 @bz1692452
 Scenario: The default value of skip_if_unavailable is False
