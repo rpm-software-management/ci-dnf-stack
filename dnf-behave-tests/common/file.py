@@ -21,6 +21,7 @@ from common.lib.file import ensure_file_exists
 from common.lib.file import file_timestamp
 from common.lib.file import prepend_installroot
 from common.lib.file import read_file_contents
+from common.lib.file import find_file_by_glob
 from common.lib.diff import print_lines_diff
 
 
@@ -73,11 +74,7 @@ def step_delete_directory(context, dirpath):
 @behave.step('file "{filepath}" exists')
 def file_exists(context, filepath):
     full_path = prepend_installroot(context, filepath)
-    result = glob.glob(full_path)
-    if len(result) > 1:
-        raise AssertionError("File path %s matches multiple files: \n%s" % (filepath, '\n'.join(result)))
-    elif len(result) < 1:
-        raise AssertionError("File path %s doesn't match any file." % (filepath))
+    find_file_by_glob(full_path)
 
 
 @behave.step('file "{filepath}" does not exist')
@@ -92,7 +89,8 @@ def file_does_not_exist(context, filepath):
 def file_contents_is(context, filepath):
     expected = context.text.strip()
     full_path = prepend_installroot(context, filepath)
-    found = read_file_contents(full_path).strip()
+    f = find_file_by_glob(full_path)
+    found = read_file_contents(f).strip()
     if expected == found:
         return
     print_lines_diff(expected.split('\n'), found.split('\n'))
