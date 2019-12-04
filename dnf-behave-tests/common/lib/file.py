@@ -7,6 +7,15 @@ import codecs
 import os
 import shutil
 
+import bz2
+import gzip
+# xz compression
+try:
+    import lzma
+except ImportError:
+    from backports import lzma
+
+
 def prepend_installroot(context, path):
     path = path.format(context=context)
     root = '/'
@@ -44,6 +53,11 @@ def create_file_with_contents(filename, contents, encoding="utf-8"):
 
 def read_file_contents(filename, encoding="utf-8"):
     assert os.path.exists(filename), "ENSURE: file exists {!r}".format(filename)
+
+    output = decompress_file_by_extension(filename)
+    if output is not None:
+        return output.decode(encoding)
+
     with codecs.open(filename, "r", encoding) as outstream:
         output = outstream.read()
         return output
@@ -58,3 +72,13 @@ def copy_file(source, destination):
 
 def file_timestamp(filename):
     return os.path.getmtime(filename)
+
+def decompress_file_by_extension(src):
+    if src.endswith(".bz2"):
+        return bz2.open(src, "rb").read()
+    elif src.endswith(".gz"):
+        return gzip.open(src, "rb").read()
+    elif src.endswith(".xz"):
+        return lzma.open(src, "rb").read()
+
+    return None
