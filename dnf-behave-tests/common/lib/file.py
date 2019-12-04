@@ -6,6 +6,7 @@ from __future__ import print_function
 import codecs
 import os
 import shutil
+import glob
 
 import bz2
 import gzip
@@ -25,6 +26,15 @@ def prepend_installroot(context, path):
     if hasattr(context.scenario, "default_tmp_dir") and not path.startswith('//'):
         root = context.scenario.default_tmp_dir
     return os.path.join(root, path.lstrip("/"))
+
+def find_file_by_glob(filepath):
+    result = glob.glob(filepath)
+    if len(result) > 1:
+        raise AssertionError("File path %s matches multiple files: \n%s" % (filepath, '\n'.join(result)))
+    elif len(result) < 1:
+        raise AssertionError("File path %s doesn't match any file." % (filepath))
+
+    return result[0]
 
 def ensure_directory_exists(dirname):
     if not os.path.exists(dirname):
