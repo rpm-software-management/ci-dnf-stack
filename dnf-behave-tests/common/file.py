@@ -147,7 +147,7 @@ def step_impl(context, first, second):
     second = second.format(context=context)
     ensure_file_exists(first)
     ensure_file_exists(second)
-    cmd = "diff {} {}".format(first, second)
+    cmd = "diff -r {} {}".format(first, second)
     exitcode, _, _ = run(cmd, shell=True)
     assert exitcode == 0, 'Files "{}" and "{}" differ.'.format(first, second)
 
