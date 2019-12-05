@@ -6,6 +6,7 @@ from __future__ import print_function
 import contextlib
 import multiprocessing
 import socket
+import time
 
 
 class ServerContext(object):
@@ -40,6 +41,23 @@ class ServerContext(object):
         process = multiprocessing.Process(target=target, args=(address, path) + args)
         process.start()
         self.servers[path] = (address, process)
+
+        attempts = 1
+        while attempts <= 10:
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    s.connect(address)
+                    break
+            except Exception as e:
+                err = str(e)
+
+            # progressive sleep; 0.05 * 55 = 2.75s total sleep over 10 attempts
+            time.sleep(0.05 * attempts)
+            attempts += 1
+
+        if attempts > 10:
+            raise AssertionError("Server not ready: " + err)
+
         return address
 
     def get_address(self, path):

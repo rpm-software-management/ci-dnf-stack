@@ -37,7 +37,9 @@ class FtpServerContext(ServerContext):
         handler = NoLogFtpHandler
         handler.authorizer = authorizer
 
-        ftpd = FTPServer(address, handler)
+        # with 'localhost' in the address, the FTPServer defaults to IPv6; the
+        # ready check would then need to be opening an AF_INET6 socket...
+        ftpd = FTPServer(('127.0.0.1', address[1]), handler)
         ftpd.serve_forever()
 
     def new_ftp_server(self, path):
