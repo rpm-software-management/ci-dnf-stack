@@ -96,6 +96,20 @@ Scenario: I can remove the installed locked version of the package
         | remove        | wget-0:1.19.5-5.fc29.x86_64           |
 
 
+@bz1780370
+Scenario: I can remove installed package when other version is locked
+  Given I successfully execute dnf with args "install wget-1.19.5"
+    And I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    wget-0:2.0.0-1.fc29.*
+    """
+   When I execute dnf with args "remove wget"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | remove        | wget-0:1.19.5-5.fc29.x86_64           |
+
+
 @bz1431491
 Scenario: Locking does not require that the package exists in a repository
   Given I drop repository "dnf-ci-fedora"
