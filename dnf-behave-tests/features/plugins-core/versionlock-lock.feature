@@ -119,7 +119,7 @@ Scenario Outline: Version accepts pattern <pattern> in the lock file
     <pattern>
     """
    When I execute dnf with args "install wget"
-   Then the exit code is 0 
+   Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
         | install       | wget-0:1.19.5-5.fc29.x86_64           |
@@ -138,7 +138,7 @@ Scenario: I can upgrade to the locked version of the package when older version 
     wget-0:1.19.6-5.fc29.*
     """
    When I execute dnf with args "update wget"
-   Then the exit code is 0 
+   Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64           |
