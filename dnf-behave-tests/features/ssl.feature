@@ -35,12 +35,22 @@ Scenario: Installing a package using untrusted client cert should fail
     And I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
-    And stderr matches line by line
-    """
-    Errors during downloading metadata for repository 'dnf-ci-fedora':
-      - Curl error \(56\): Failure when receiving data from the peer for https://localhost:[0-9]+/repodata/repomd.xml \[OpenSSL SSL_read: error:14094418:SSL routines:ssl3_read_bytes:tlsv1 alert unknown ca, errno 0\]
-    Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    """
+        # The list of errors sometimes contains additional errors to the one tested below:
+        #   - Curl error (55): Failed sending data to the peer for https://localhost:37237/repodata/repomd.xml [SSL_write() returned SYSCALL, errno = 104]
+        #   - Curl error (56): Failure when receiving data from the peer for https://localhost:37237/repodata/repomd.xml [SSL_write() returned SYSCALL, errno = 32]
+        #
+        # It is nondeterministic, quite rare and the cause is unknown, as well
+        # as whether it is an issue with the testing framework or a bug in the
+        # DNF stack. This most likely happens for all SSL connections, but is
+        # mostly hidden, because librepo does four download attempts and this
+        # error typically occurs two or three times (when it happens at all).
+        #
+        # The connection failures will be hard to debug, untill then, we test
+        # for stderr containing the expected output and ignore the superfluous
+        # errors.
+    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
+    And stderr contains "  - Curl error \(56\): Failure when receiving data from the peer for https://localhost:[0-9]+/repodata/repomd.xml \[OpenSSL SSL_read: error:14094418:SSL routines:ssl3_read_bytes:tlsv1 alert unknown ca, errno 0\]"
+    And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
 @bz1605187
