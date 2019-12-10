@@ -4,7 +4,7 @@ version: 2
 data:
   name: nodejs
   stream: 5
-  version: 20180801080000
+  version: 30
   context: 6c81f848
   arch: x86_64
   summary: Javascript runtime
