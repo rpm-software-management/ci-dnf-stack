@@ -13,9 +13,6 @@ Summary:        PostgreSQL client programs
 Provides:       postgresql(x86-64) = 9.6.8-1.module_1710+b535a823
 Provides:       postgresql = 9.6.8-1.module_1710+b535a823
 
-Requires:       rtld(GNU_HASH)
-Requires:       libpq.so.5()(64bit)
-Requires:       postgresql-libs(x86-64) = 9.6.8-1.module_1710+b535a823
 
 %description
 PostgreSQL is an advanced Object-Relational database management system (DBMS).
