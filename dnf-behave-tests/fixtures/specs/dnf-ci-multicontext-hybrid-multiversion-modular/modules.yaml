@@ -31,6 +31,9 @@ data:
     minimal:
       rpms:
       - nodejs
+    testlatest:
+      rpms:
+      - nodejs
   api:
     rpms:
     - nodejs
@@ -52,7 +55,7 @@ version: 2
 data:
   name: nodejs
   stream: 5
-  version: 20180801080000
+  version: 30
   context: 7a1f8c5
   arch: x86_64
   summary: Javascript runtime
@@ -77,6 +80,9 @@ data:
     tracker: https://github.com/nodejs/node/issues
   profiles:
     minimal:
+      rpms:
+      - nodejs
+    testlatest:
       rpms:
       - nodejs
   api:
@@ -129,6 +135,9 @@ data:
     minimal:
       rpms:
       - nodejs
+    testlatest:
+      rpms:
+      - postgresql
   api:
     rpms:
     - nodejs
@@ -177,6 +186,9 @@ data:
     minimal:
       rpms:
       - nodejs
+    testlatest:
+      rpms:
+      - postgresql
   api:
     rpms:
     - nodejs
