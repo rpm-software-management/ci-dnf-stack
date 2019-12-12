@@ -8,7 +8,7 @@ import re
 import rpm
 
 
-NEVRA_RE = re.compile(r"^(.+)-([0-9]+):(.+)-(.+)\.(.+)$")
+NEVRA_RE = re.compile(r"^(.+)-(?:([0-9]+):)?(.+)-(.+)\.(.+)$")
 INSTALLONLY_PROVIDES = {b'kernel', b'kernel-PAE', b'installonlypkg(kernel)',
                         b'installonlypkg(kernel-module)', b'installonlypkg(vm)',
                         b'multiversion(kernel)'}
@@ -23,7 +23,7 @@ class RPM(object):
         if not match:
             raise ValueError("Cannot parse NEVRA: %s" % nevra)
         result = list(match.groups())
-        result[1] = int(result[1])
+        result[1] = int(result[1]) if result[1] is not None else 0
         return result
 
     def __init__(self, nevra, rpmheader=None):
