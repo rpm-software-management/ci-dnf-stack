@@ -22,6 +22,10 @@ def print_lines_diff(expected, found, num_lines_equal=0):
             treat as equal even if they differ; a hack for correctly diffing
             outputs with repository syncing
     """
+    # make this function work for lists and tuples in addition to strings
+    expected = [" ".join(l) if type(l) in (list, tuple) else l for l in expected]
+    found = [" ".join(l) if type(l) in (list, tuple) else l for l in found]
+
     left_width = len("expected")
 
     # calculate the width of the left column
