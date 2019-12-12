@@ -20,8 +20,6 @@ Scenario: Variables are substituted in mirrorlist URLs
       | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
-# until rhel has PR: https://github.com/rpm-software-management/dnf/pull/1537
-@not.with_os=rhel__eq__8
 @bz1748841
 Scenario: Variables without {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
