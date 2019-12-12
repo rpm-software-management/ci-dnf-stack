@@ -1,6 +1,8 @@
 Feature: Better user counting
 
     @destructive
+    @bz1777255
+    @bz1676891
     Scenario Outline: User-Agent header is sent
         Given I am running a system identified as the "<system>"
           And I use repository "dnf-ci-fedora" as http
