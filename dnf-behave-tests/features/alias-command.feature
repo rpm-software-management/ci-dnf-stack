@@ -5,6 +5,9 @@ Feature: Test for alias command
 Background:
   Given I delete directory "/etc/dnf/aliases.d/"
     And I delete file "/etc/yum.repos.d/*.repo" with globs
+
+
+Scenario: Add alias
    When I execute dnf with args "alias add inthrone=install"
    Then the exit code is 0
     And stdout is
@@ -13,11 +16,10 @@ Background:
         """
 
 
-Scenario: Add alias
-
-
 @bz1666325
 Scenario: List aliases
+   When I execute dnf with args "alias add inthrone=install"
+   Then the exit code is 0
    When I execute dnf with args "alias list"
    Then the exit code is 0
     And stdout is
@@ -27,6 +29,8 @@ Scenario: List aliases
 
 
 Scenario: Use alias
+   When I execute dnf with args "alias add inthrone=install"
+   Then the exit code is 0
   Given I use repository "alias-command"
    When I execute dnf with args "inthrone dnf-ci-package"
    Then the exit code is 0
@@ -37,6 +41,8 @@ Scenario: Use alias
 
 
 Scenario: Delete alias
+   When I execute dnf with args "alias add inthrone=install"
+   Then the exit code is 0
    When I execute dnf with args "alias delete inthrone"
    Then the exit code is 0
     And stdout is
