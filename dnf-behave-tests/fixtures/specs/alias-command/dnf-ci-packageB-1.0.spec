@@ -1,4 +1,4 @@
-Name:           dnf-ci-package
+Name:           dnf-ci-packageB
 Version:        1.0
 Release:        1
 
