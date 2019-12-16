@@ -73,3 +73,57 @@ Scenario: Repolist with "--enabled --disabled"
       dnf-ci-thirdparty\s+dnf-ci-thirdparty test repository\s+disabled
       dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates test repository
       """
+
+
+# Tests for "--disablerepo" and "--enablerepo" including wildcards support
+@bz1781420
+Scenario: Disable all repos and then enable "dnf-ci-fedora-updates" repo
+   When I execute microdnf with args "repolist --disablerepo=* --enablerepo=dnf-ci-fedora-updates --all"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id                   repo name                                   status
+      dnf-ci-fedora             dnf-ci-fedora test repository             disabled
+      dnf-ci-fedora-updates     dnf-ci-fedora-updates test repository      enabled
+      dnf-ci-thirdparty         dnf-ci-thirdparty test repository         disabled
+      dnf-ci-thirdparty-updates dnf-ci-thirdparty-updates test repository disabled
+      """
+
+
+Scenario: Disable "dnf-ci-thirdparty*" repos and enable "dnf-ci-fedora*" repos
+   When I execute microdnf with args "repolist --disablerepo=dnf-ci-thirdparty* --enablerepo=dnf-ci-fedora* --all"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id                   repo name                                   status
+      dnf-ci-fedora             dnf-ci-fedora test repository              enabled
+      dnf-ci-fedora-updates     dnf-ci-fedora-updates test repository      enabled
+      dnf-ci-thirdparty         dnf-ci-thirdparty test repository         disabled
+      dnf-ci-thirdparty-updates dnf-ci-thirdparty-updates test repository disabled
+      """
+
+
+Scenario: Only "*-updates" repos are enabled
+   When I execute microdnf with args "repolist --disablerepo=* --enablerepo=*-updates --all"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id                   repo name                                   status
+      dnf-ci-fedora             dnf-ci-fedora test repository             disabled
+      dnf-ci-fedora-updates     dnf-ci-fedora-updates test repository      enabled
+      dnf-ci-thirdparty         dnf-ci-thirdparty test repository         disabled
+      dnf-ci-thirdparty-updates dnf-ci-thirdparty-updates test repository  enabled
+      """
+
+
+Scenario: Test '?' wildcard. Only "dnf-ci-fedora-updates" repo is enabled
+   When I execute microdnf with args "repolist --disablerepo=* --enablerepo=dnf-ci-??????-* --all"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id                   repo name                                   status
+      dnf-ci-fedora             dnf-ci-fedora test repository             disabled
+      dnf-ci-fedora-updates     dnf-ci-fedora-updates test repository      enabled
+      dnf-ci-thirdparty         dnf-ci-thirdparty test repository         disabled
+      dnf-ci-thirdparty-updates dnf-ci-thirdparty-updates test repository disabled
+      """
