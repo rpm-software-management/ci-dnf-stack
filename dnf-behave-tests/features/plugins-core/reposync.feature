@@ -101,7 +101,7 @@ Scenario: Reposync downloads packages from all streams of modular repository eve
     And file "//{context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
 
 
-@bz1686602
+@bz1750273
 Scenario: Reposync respects excludes
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --excludepkgs=SuperRipper"
@@ -119,6 +119,22 @@ Scenario: Reposync respects excludes
         """
         CQRlib-extension-1.6-2.src.rpm
         """
+
+
+@bz1750273
+Scenario: Reposync respects includes
+  Given I use repository "dnf-ci-fedora" as http
+  When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --arch=noarch --setopt=includepkgs=abcde"
+   Then the exit code is 0
+    And stdout contains "abcde-2.9.2-1.fc29.noarch.rpm"
+   When I execute "find" in "{context.dnf.tempdir}"
+   Then stdout is
+    """
+    .
+    ./dnf-ci-fedora
+    ./dnf-ci-fedora/noarch
+    ./dnf-ci-fedora/noarch/abcde-2.9.2-1.fc29.noarch.rpm
+    """
 
 
 Scenario: Reposync respects excludes, but not modular excludes
