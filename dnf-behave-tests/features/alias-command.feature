@@ -228,3 +228,15 @@ Scenario: One disabled config does not affect others
         | Action        | Package                               |
         | install       | dnf-ci-package-0:1.0-1.x86_64         |
   Given I successfully execute dnf with args "remove dnf-ci-package"
+
+
+@bz1680482
+Scenario: Backslash ends the recursive processing and the '\' is stripped
+  Given I successfully execute dnf with args "alias add install='\install'"
+    And I use repository "alias-command"
+   When I execute dnf with args "install dnf-ci-packageA"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | dnf-ci-packageA-0:1.0-1.x86_64        |
+  Given I successfully execute dnf with args "remove dnf-ci-packageA"
