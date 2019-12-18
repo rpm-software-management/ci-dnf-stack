@@ -26,28 +26,28 @@ Scenario: Repolist with "--enabled"
 Scenario: Repolist with "--disabled"
    When I execute microdnf with args "repolist --disabled"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
       """
-      repo id\s+repo name
-      dnf-ci-fedora\s+dnf-ci-fedora test repository
+      repo id       repo name
+      dnf-ci-fedora dnf-ci-fedora test repository
       """
 
 
 Scenario: Repolist with "--all"
    When I execute microdnf with args "repolist --all"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
       """
-      repo id\s+repo name
-      dnf-ci-fedora\s+dnf-ci-fedora test repository\s+disabled
+      repo id       repo name                       status
+      dnf-ci-fedora dnf-ci-fedora test repository disabled
       """
 
 
 Scenario: Repolist with "--enabled --disabled"
    When I execute microdnf with args "repolist --enabled --disabled"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
       """
-      repo id\s+repo name
-      dnf-ci-fedora\s+dnf-ci-fedora test repository\s+disabled
+      repo id       repo name                       status
+      dnf-ci-fedora dnf-ci-fedora test repository disabled
       """
