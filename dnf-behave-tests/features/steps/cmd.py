@@ -7,6 +7,7 @@ import behave
 import os
 import re
 import sys
+import tempfile
 from datetime import datetime
 
 from common.lib.cmd import assert_exitcode, run_in_context
@@ -137,6 +138,18 @@ def when_I_execute_rpm_on_host_with_args(context, args):
     cmd = "rpm"
     cmd += " " + args.format(context=context)
     run_in_context(context, cmd, can_fail=True)
+
+
+@behave.step("I execute python script")
+def step_I_execute_python_script(context):
+    """
+    Create temporary file with context.text as its contents and execute it with python
+    """
+    with tempfile.NamedTemporaryFile(dir=context.dnf.tempdir, suffix=".py") as script_file:
+        script_file.write(context.text.encode('utf-8'))
+        script_file.seek(0)
+        cmd = "%s %s" % (sys.executable, script_file.name)
+        run_in_context(context, cmd, can_fail=True)
 
 
 @behave.given("I do not assume yes")
