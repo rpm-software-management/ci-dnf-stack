@@ -1,19 +1,23 @@
 #!/bin/bash
-set -xeuo pipefail
+set -euo pipefail
 
 RESERVE=0
 TAGS=""
-FEATURE_PATH="/opt/behave/features"
+NAMES=()
+FEATURE_PATH="/opt/behave"
 FEATURE_FILE=""
 DEFINES=""
 DNFCOMMAND=""
+JUNIT_SUBDIR=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -r|-R) RESERVE="$1"; shift;;
         -t|--tag|--tags) TAGS="$TAGS --tags $2"; shift 2;;
+        -n) NAMES+=("-n" "$2"); shift 2;;
         --command) DNFCOMMAND="$2"; shift 2;;
         -D) DEFINES="$DEFINES -D $2"; shift 2;;
+        -j) JUNIT_SUBDIR="$2"; shift 2;;
         *) FEATURE_FILE="$1"; shift;;
     esac
 done
@@ -41,7 +45,7 @@ elif [ "$RESERVE" == "-R" ]; then
 fi
 
 TEST_EXIT=0
-behave $DEFINES $TAGS --junit --junit-directory=/junit/ "$FEATURE_PATH/$FEATURE_FILE" || TEST_EXIT=$?
+behave $DEFINES $TAGS "${NAMES[@]}" --no-skipped --junit --junit-directory="/junit/$JUNIT_SUBDIR" "$FEATURE_PATH/$FEATURE_FILE" || TEST_EXIT=$?
 
 if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
     bash || :
