@@ -1,4 +1,7 @@
 @no_installroot
+# There is logical bug in libdnf and the test is not correct.
+# Disable test until it will be fixed.
+@xfail
 Feature: Tests --setopt=install_weak_deps=
 
 
