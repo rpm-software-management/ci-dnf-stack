@@ -225,7 +225,7 @@ Scenario: repoquery --obsoletes NAMEGLOB-VERSION
       bottom2
       """
 
-
+@bz1782906
 # --whatrequires
 Scenario: repoquery --whatrequires NAME
  When I execute dnf with args "repoquery --whatrequires bottom1"
@@ -237,6 +237,7 @@ Scenario: repoquery --whatrequires NAME
       middle2-1:2.0-1.x86_64
       """
 
+@bz1782906
 Scenario: repoquery --whatrequires NAME-VERSION
  When I execute dnf with args "repoquery --whatrequires bottom1-2.0"
  Then the exit code is 0
@@ -246,6 +247,7 @@ Scenario: repoquery --whatrequires NAME-VERSION
       middle2-1:2.0-1.x86_64
       """
 
+@bz1782906
 Scenario: repoquery --whatrequires NEVRA
  When I execute dnf with args "repoquery --whatrequires bottom2-1:1.0-1.x86_64"
  Then the exit code is 0
@@ -255,6 +257,7 @@ Scenario: repoquery --whatrequires NEVRA
       middle1-1:2.0-1.x86_64
       """
 
+@bz1782906
 Scenario: repoquery --whatrequires NAME (file provide)
  When I execute dnf with args "repoquery --whatrequires bottom4"
  Then the exit code is 0
