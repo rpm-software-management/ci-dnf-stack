@@ -14,10 +14,11 @@ Given I copy repository "dnf-ci-fedora" for modification
   And I use repository "dnf-ci-fedora"
   And I execute "createrepo_c --baseurl file://{context.dnf.installroot}/xml_base/dnf-ci-fedora /{context.dnf.repos[dnf-ci-fedora].path}"
   And I copy directory "{context.dnf.repos[dnf-ci-fedora].path}" to "/xml_base/dnf-ci-fedora"
- When I execute microdnf with args "install abcde"
+ When I execute microdnf with args "install kernel"
  Then the exit code is 0
   And microdnf transaction is
       | Action        | Package                                   |
-      | install       | flac-0:1.3.2-8.fc29.x86_64                |
-      | install       | abcde-0:2.9.2-1.fc29.noarch               |
-  And file "/xml_base/dnf-ci-fedora/noarch/abcde-2.9.2-1.fc29.noarch.rpm" exists
+      | install       | kernel-core-0:4.18.16-300.fc29.x86_64     |
+      | install       | kernel-modules-0:4.18.16-300.fc29.x86_64  |
+      | install       | kernel-0:4.18.16-300.fc29.x86_64          |
+  And file "/xml_base/dnf-ci-fedora/x86_64/kernel-4.18.16-300.fc29.x86_64.rpm" exists
