@@ -288,6 +288,48 @@ Scenario: repoquery --deplist NAME
          provider: mid-a1-1:1.0-1.x86_64
       """
 
+@bz1784148
+Scenario: repoquery --deplist REMOTE_RPM
+ When I execute dnf with args "repoquery --deplist {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"
+ Then the exit code is 0
+  And stdout is
+      """
+      package: top-a-1:1.0-1.x86_64
+        dependency: bottom-a1 = 1:1.0-1
+         provider: bottom-a1-1:1.0-1.noarch
+        dependency: mid-a1 >= 2
+         provider: mid-a1-1:1.0-1.x86_64
+        dependency: mid-a2 = 1:1.0-1
+         provider: mid-a2-1:1.0-1.x86_64
+        dependency: rpmlib(CompressedFileNames) <= 3.0.4-1
+        dependency: rpmlib(FileDigests) <= 4.6.0-1
+        dependency: rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+      """
+
+@bz1784148
+Scenario: repoquery --deplist NEVRA REMOTE_RPM
+ When I execute dnf with args "repoquery --deplist top-a-2:2.0-2.x86_64 {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"
+ Then the exit code is 0
+  And stdout is
+      """
+      package: top-a-1:1.0-1.x86_64
+        dependency: bottom-a1 = 1:1.0-1
+         provider: bottom-a1-1:1.0-1.noarch
+        dependency: mid-a1 >= 2
+         provider: mid-a1-1:1.0-1.x86_64
+        dependency: mid-a2 = 1:1.0-1
+         provider: mid-a2-1:1.0-1.x86_64
+        dependency: rpmlib(CompressedFileNames) <= 3.0.4-1
+        dependency: rpmlib(FileDigests) <= 4.6.0-1
+        dependency: rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+
+      package: top-a-2:2.0-2.x86_64
+        dependency: bottom-a1 = 1:1.0-1
+         provider: bottom-a1-1:1.0-1.noarch
+        dependency: mid-a1 >= 2
+         provider: mid-a1-1:1.0-1.x86_64
+      """
+
 Scenario: repoquery --deplist NAME (no such package)
  When I execute dnf with args "repoquery --deplist dummy"
  Then the exit code is 0
