@@ -41,3 +41,30 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And file "/cache/package-devel-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[a-z0-9]*-[a-z0-9]*" exists
   And file "/cache/package-libs-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[a-z0-9]*-[a-z0-9]*" exists
   And file "/cache/package-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[a-z0-9]*-[a-z0-9]*" exists
+
+
+@bz1686812
+Scenario: created cache files respect umask setting
+Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
+  And I set umask to "0022"
+ When I execute createrepo_c with args "--cachedir ./cache ." in "/"
+ Then the exit code is 0
+  And file "/cache/package-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[0-9]*-[0-9]*" has mode "0644"
+
+
+@bz1686812
+Scenario: created cache files respect umask setting
+Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
+  And I set umask to "0066"
+ When I execute createrepo_c with args "--cachedir ./cache ." in "/"
+ Then the exit code is 0
+  And file "/cache/package-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[0-9]*-[0-9]*" has mode "0600"
+
+
+@bz1686812
+Scenario: created cache files respect umask setting
+Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
+  And I set umask to "0000"
+ When I execute createrepo_c with args "--cachedir ./cache ." in "/"
+ Then the exit code is 0
+  And file "/cache/package-0.2.1-1.fc29.x86_64.rpm-[a-z0-9]*-[0-9]*-[0-9]*" has mode "0666"
