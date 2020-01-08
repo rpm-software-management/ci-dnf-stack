@@ -158,3 +158,73 @@ Scenario: Aliases conflicts: USER.conf has the highest priority, then alphabetic
         Alias test3='commandB'
         Alias test4='commandA'
         """
+
+
+@bz1680566
+Scenario: ALIASES.conf can disable all aliases
+  Given I create file "/etc/dnf/aliases.d/ALIASES.conf" with
+        """
+        [main]
+        enabled = 0
+        """
+    And I create file "/etc/dnf/aliases.d/custom.conf" with
+        """
+        [main]
+        enabled = 1
+        [aliases]
+        inthrone = install
+        """
+    And I use repository "alias-command"
+   When I execute dnf with args "inthrone dnf-ci-package"
+   Then the exit code is 1
+    And stderr contains "No such command: inthrone"
+
+
+@bz1680566
+Scenario: Aliases can be disabled in individual conf files
+  Given I create file "/etc/dnf/aliases.d/ALIASES.conf" with
+        """
+        [main]
+        enabled = 1
+        """
+    And I create file "/etc/dnf/aliases.d/USER.conf" with
+        """
+        [main]
+        enabled = 0
+        [aliases]
+        inthrone = install
+        """
+    And I use repository "alias-command"
+   When I execute dnf with args "inthrone dnf-ci-package"
+   Then the exit code is 1
+    And stderr contains "No such command: inthrone"
+
+
+@bz1680566
+Scenario: One disabled config does not affect others
+  Given I create file "/etc/dnf/aliases.d/ALIASES.conf" with
+        """
+        [main]
+        enabled = 1
+        """
+    And I create file "/etc/dnf/aliases.d/USER.conf" with
+        """
+        [main]
+        enabled = 0
+        [aliases]
+        inthrone = install
+        """
+    And I create file "/etc/dnf/aliases.d/custom.conf" with
+        """
+        [main]
+        enabled = 1
+        [aliases]
+        inthrone = install
+        """
+    And I use repository "alias-command"
+   When I execute dnf with args "inthrone dnf-ci-package"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | dnf-ci-package-0:1.0-1.x86_64         |
+  Given I successfully execute dnf with args "remove dnf-ci-package"
