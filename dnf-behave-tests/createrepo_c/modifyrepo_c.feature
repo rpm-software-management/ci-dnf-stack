@@ -1,0 +1,37 @@
+Feature: Tests for modifyrepo_c command
+
+
+@bz1776399
+Scenario: Modifyrepo is able to work with metadata file which is a symlink
+Given I create directory "/temp-repo/"
+  And I create symlink "/temp-repo/createrepo_c-ci-packages" to file "/{context.scenario.repos_location}/createrepo_c-ci-packages"
+  And I create file "/modules-source.yaml" with
+      """
+      ---
+      document: modulemd
+      version: 2
+      data:
+      name: ingredience
+      stream: chicken
+      version: 1
+      arch: x86_64
+      description: Made up module
+      license:
+      module:
+      - MIT
+      ...
+      """
+  And I execute createrepo_c with args "." in "/temp-repo"
+  And I create symlink "modules.yaml" to file "modules-source.yaml"
+ When I execute modifyrepo_c with args "../../modules.yaml ." in "/temp-repo/repodata"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                                | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
+      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
