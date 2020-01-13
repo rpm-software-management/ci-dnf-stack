@@ -112,6 +112,11 @@ RUN echo -e "\
 destructive=yes\n\
 os=$OSVERSION" > /opt/behave/behave.ini
 
+RUN set -x && \
+    rm -rf "/opt/behave/fixtures/certificates/testcerts/" && \
+    rm -rf "/opt/behave/fixtures/gpgkeys/keys/" && \
+    rm -rf "/opt/behave/fixtures/repos/"
+
 # build test repos from sources
 RUN set -x && \
     cd /opt/behave/fixtures/specs/ && \
