@@ -110,8 +110,8 @@ def then_stdout_matches_line_by_line(context):
     Checks that each line of stdout matches respective line in regular expressions.
     Supports the <REPOSYNC> in the same way as the step "stdout is"
     """
-    found = context.cmd_stdout.strip().split('\n')
-    expected = context.text.strip().split('\n')
+    found = context.cmd_stdout.split('\n')
+    expected = context.text.split('\n')
 
     clean_expected, clean_found = handle_reposync(expected, found)
 
