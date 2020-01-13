@@ -97,14 +97,13 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
   Given I use repository "dnf-ci-fedora-updates-testing"
-   When I execute dnf with args "upgrade --repofrompath=r,{context.dnf.repos[dnf-ci-fedora-updates-testing].path} --repo=r --nogpgcheck"
+   When I execute dnf with args "upgrade --repofrompath=r,{context.dnf.repos[dnf-ci-fedora-updates-testing].path} --repo=r --nogpgcheck kernel-core"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                  |
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64     |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64    |
-        | upgrade       | wget-1:1.19.5-5.fc29.x86_64              |
    When I execute dnf with args "remove --oldinstallonly"
    Then the exit code is 0
     And Transaction is following
