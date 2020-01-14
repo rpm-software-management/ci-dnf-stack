@@ -40,7 +40,8 @@ class OSRelease(object):
 def osrelease_fixture(context):
     try:
         if not hasattr(context, "osrelease"):
-            context.scenario.osrelease = OSRelease('/usr/lib/os-release')
+            path = os.path.realpath('/etc/os-release')
+            context.scenario.osrelease = OSRelease(path)
 
         yield context.scenario.osrelease
     finally:
