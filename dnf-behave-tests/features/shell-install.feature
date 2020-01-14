@@ -37,8 +37,6 @@ Scenario: Using dnf shell, fail to install a non-existent RPM
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
-# the fix is not released in RHEL 8 yet
-@not.with_os=rhel__eq__8
 @bz1773483
 Scenario: Using dnf shell, fail to install local file when goal is not empty
   Given I use repository "dnf-ci-fedora"

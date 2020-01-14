@@ -257,8 +257,6 @@ Scenario: Reposync --urls and --download-metadata switches
     """
 
 
-# not yet released for RHEL 8
-@not.with_os=rhel__eq__8
 @bz1775434
 Scenario: Reposync --newest-only downloads packages from all streams and latest context versions of modular repository and latest non-modular rpms
   Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular" as http
