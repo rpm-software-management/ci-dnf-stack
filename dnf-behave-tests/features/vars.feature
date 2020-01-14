@@ -41,7 +41,6 @@ Scenario: Variables without {} are substituted in repo id
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Variables with {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
       """
