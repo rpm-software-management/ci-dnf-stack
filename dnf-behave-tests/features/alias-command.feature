@@ -5,6 +5,7 @@ Feature: Test for alias command
 Background:
   Given I delete directory "/etc/dnf/aliases.d/"
     And I delete file "/etc/yum.repos.d/*.repo" with globs
+    And I use repository "alias-command"
 
 
 Scenario: Add alias
@@ -30,7 +31,7 @@ Scenario: List aliases
 
 @bz1680488
 Scenario: List aliases with trivial infinite recursion
- When I execute dnf with args "alias add install='install dnf-ci-packageA'"
+ When I execute dnf with args "alias add install='install dnf-ci-packageC'"
  Then the exit code is 0
   And stdout is
       """
@@ -40,21 +41,20 @@ Scenario: List aliases with trivial infinite recursion
    Then the exit code is 0
     And stderr is
         """
-        Aliases contain infinite recursion, alias install="install dnf-ci-packageA"
+        Aliases contain infinite recursion, alias install="install dnf-ci-packageC"
         """
-  Given I use repository "alias-command"
    When I execute dnf with args "install dnf-ci-packageB"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | dnf-ci-packageB-0:1.0-1.x86_64        |
-    And stderr contains "Aliases contain infinite recursion, using original arguments."
-  Given I successfully execute dnf with args "remove dnf-ci-packageB"
+   Then the exit code is 1
+    And stderr is
+        """
+        Aliases contain infinite recursion, using original arguments.
+        Error: Unable to find a match: dnf-ci-packageB
+        """
 
 
 @bz1680488
 Scenario: List aliases with non-trivial infinite recursion
- When I execute dnf with args "alias add install='inthrone dnf-ci-packageA' inthrone=install"
+ When I execute dnf with args "alias add install='inthrone dnf-ci-packageC' inthrone=install"
  Then the exit code is 0
   And stdout is
       """
@@ -64,29 +64,27 @@ Scenario: List aliases with non-trivial infinite recursion
    Then the exit code is 0
     And stderr is
         """
-        Aliases contain infinite recursion, alias install="inthrone dnf-ci-packageA"
+        Aliases contain infinite recursion, alias install="inthrone dnf-ci-packageC"
         Aliases contain infinite recursion, alias inthrone="install"
         """
-  Given I use repository "alias-command"
    When I execute dnf with args "install dnf-ci-packageB"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | dnf-ci-packageB-0:1.0-1.x86_64        |
-    And stderr contains "Aliases contain infinite recursion, using original arguments."
-  Given I successfully execute dnf with args "remove dnf-ci-packageB"
+   Then the exit code is 1
+    And stderr is
+        """
+        Aliases contain infinite recursion, using original arguments.
+        Error: Unable to find a match: dnf-ci-packageB
+        """
 
 
 Scenario: Use alias
    When I execute dnf with args "alias add inthrone=install"
    Then the exit code is 0
-  Given I use repository "alias-command"
-   When I execute dnf with args "inthrone dnf-ci-packageA"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | dnf-ci-packageA-0:1.0-1.x86_64        |
-  Given I successfully execute dnf with args "remove dnf-ci-packageA"
+   When I execute dnf with args "install dnf-ci-packageB"
+   Then the exit code is 1
+    And stderr is
+        """
+        Error: Unable to find a match: dnf-ci-packageB
+        """
 
 
 Scenario: Delete alias
@@ -104,11 +102,9 @@ Scenario: Delete alias
         """
         No aliases defined.
         """
-  Given I use repository "alias-command"
-   When I execute dnf with args "inthrone dnf-ci-package"
+   When I execute dnf with args "inthrone dnf-ci-packageB"
    Then the exit code is 1
     And stderr contains "No such command: inthrone"
-  Given I successfully execute dnf with args "remove dnf-ci-package"
 
 
 @bz1680489
@@ -163,10 +159,9 @@ Scenario: Aliases conflicts: USER.conf has the highest priority, then alphabetic
 @bz1680482
 Scenario: Backslash ends the recursive processing and the '\' is stripped
   Given I successfully execute dnf with args "alias add install='\install'"
-    And I use repository "alias-command"
-   When I execute dnf with args "install dnf-ci-packageA"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | dnf-ci-packageA-0:1.0-1.x86_64        |
-  Given I successfully execute dnf with args "remove dnf-ci-packageA"
+   When I execute dnf with args "install dnf-ci-packageB"
+   Then the exit code is 1
+    And stderr is
+        """
+        Error: Unable to find a match: dnf-ci-packageB
+        """
