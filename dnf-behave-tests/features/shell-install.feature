@@ -42,7 +42,7 @@ Scenario: Using dnf shell, fail to install local file when goal is not empty
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
     And I execute in dnf shell "install setup-0:2.12.1-1.fc29.noarch"
-   When I execute in dnf shell "install {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/filesystem-0:3.9-2.fc29.x86_64.rpm"
+   When I execute in dnf shell "install {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm"
    Then stdout contains "Error: Cannot add local packages, because transaction job already exists"
    When I execute in dnf shell "run"
    Then Transaction is following
