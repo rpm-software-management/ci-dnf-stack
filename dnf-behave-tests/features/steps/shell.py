@@ -39,7 +39,7 @@ def when_I_execute_in_shell(context, command):
 
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
 
-    context.shell_session.sendline(command)
+    context.shell_session.sendline(command.format(context=context))
 
     if command.strip() == "quit" or command.strip() == "exit":
         context.shell_session.expect(pexpect.EOF)
