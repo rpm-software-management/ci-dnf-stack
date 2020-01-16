@@ -222,11 +222,9 @@
             popd
             CONTAINER=$(uuidgen)
             ./dnf-testing.sh -c $CONTAINER build jjb
-            TESTS=($(./dnf-testing.sh -c $CONTAINER list))
           popd
 
-          echo "TESTS=${{TESTS[@]}}" > props
-          echo "CONTAINER=$CONTAINER" >> props
+          echo "CONTAINER=$CONTAINER" > props
     publishers:
       - trigger-parameterized-builds:
           - project: "dnf-{name}-test"
@@ -254,6 +252,8 @@
     defaults: github-testers-defaults
     concurrent: False
     node: dnf
+    scm:
+      - ci-dnf-stack-scm
     builders:
       - trigger-builds:
           - project: "dnf-{name}-update-gh-status"
@@ -267,31 +267,34 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          TESTS=(${{TESTS[@]}})
-
-          #COMMANDS=('dnf-2' 'dnf-3')
-          COMMANDS=('dnf-3')
-          for cmd in ${{COMMANDS[@]}}; do
-              mkdir -p "test-results-$cmd"
-              TEST_DIR=`readlink -f "test-results-$cmd"`
-              chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
-              parallel -j2 sudo docker run --rm --net none -v "$TEST_DIR":/junit "$CONTAINER" ./launch-test --tags ~@xfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
-          done
+          pushd ci-dnf-stack
+              TESTS=($(./dnf-testing.sh -c $CONTAINER list))
+              #COMMANDS=('dnf-2' 'dnf-3')
+              COMMANDS=('dnf-3')
+              for cmd in ${{COMMANDS[@]}}; do
+                  mkdir -p "test-results/$cmd"
+                  TEST_DIR=`readlink -f "test-results/$cmd"`
+                  chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
+                  parallel -j2 ./dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
+              done
+          popd
 
       # Analyze results
       - python: |
-          import glob
           import os
           import xunitparser
 
           all = [0, 0]
-          for xml in glob.glob("test-results-*/*.xml"):
-              with open(xml, "r") as test:
-                  ts, result = xunitparser.parse(test)
-              passed = result.wasSuccessful()
-              all[1] += 1
-              if passed:
-                  all[0] += 1
+          for root, dirs, files in os.walk("/test-results"):
+              for name in files:
+                  if name.endswith(".xml"):
+                      xml = os.path.join(root, name)
+                      with open(xml, "r") as test:
+                          ts, result = xunitparser.parse(test)
+                      passed = result.wasSuccessful()
+                      all[1] += 1
+                      if passed:
+                          all[0] += 1
           with open("GH_UPDATE.txt", "w") as gh:
               gh.write("GH_CONTEXT={github-context}\n")
               if all[1] == 0:
@@ -310,10 +313,8 @@
             condition: ALWAYS
             property-file: GH_UPDATE.txt
             fail-on-missing: True
-#      - junit:
-#          results: test-results-dnf-2/*.xml
       - junit:
-          results: test-results-dnf-3/*.xml
+          results: test-results/**/*.xml
       - trigger-parameterized-builds:
           - project: "dnf-{name}-teardown"
             current-parameters: True
@@ -321,8 +322,7 @@
       - workspace-cleanup:
           exclude:
             - GH_UPDATE.txt
-            - test-results-dnf-3/*.xml
-#            - test-results-dnf-2/*.xml
+            - test-results/**/*.xml
 
 ##############
 ## TEARDOWN ##
