@@ -165,11 +165,6 @@ def step_impl(context):
     context.dnf._set("disable_plugins", False)
 
 
-@behave.given("I set dnf command to \"{command}\"")
-def step_set_dnf_command(context, command):
-    context.dnf.dnf_command = command
-
-
 @behave.given("I enable plugin \"{plugin}\"")
 def given_enable_plugin(context, plugin):
     if "plugins" not in context.dnf:

@@ -152,20 +152,10 @@ Given I successfully execute dnf with args "makecache"
       """
 
 
-Scenario: An error is printed when no arguments are provided (dnf)
-Given I set dnf command to "dnf"
+Scenario: An error is printed when no arguments are provided
  When I execute dnf with args "module provides"
  Then the exit code is 1
   And stderr is
       """
-      Error: dnf module provides: too few arguments
-      """
-
-Scenario: An error is printed when no arguments are provided (yum)
-Given I set dnf command to "yum"
- When I execute dnf with args "module provides"
- Then the exit code is 1
-  And stderr is
-      """
-      Error: yum module provides: too few arguments
+      Error: {context.dnf.prog_name} module provides: too few arguments
       """

@@ -119,6 +119,13 @@ class DNFContext(object):
             self.delete_installroot = True
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
+
+        self.prog_name = "dnf"
+        self.prog_name_upper = "DNF"
+        if "yum" in self.dnf_command.lower():
+            self.prog_name = "yum"
+            self.prog_name_upper = "YUM"
+
         self.config = userdata.get("config", DEFAULT_CONFIG)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)

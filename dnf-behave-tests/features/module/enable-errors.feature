@@ -5,8 +5,7 @@ Background:
   Given I use repository "dnf-ci-fedora-modular-updates"
 
 
-Scenario: Fail to enable a different stream of an already enabled module (dnf)
-  Given I set dnf command to "dnf"
+Scenario: Fail to enable a different stream of an already enabled module
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
     And Transaction is following
@@ -24,33 +23,10 @@ Scenario: Fail to enable a different stream of an already enabled module (dnf)
         """
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module.
-        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
-        """
-
-Scenario: Fail to enable a different stream of an already enabled module (yum)
-  Given I set dnf command to "yum"
-   When I execute dnf with args "module enable nodejs:8"
-   Then the exit code is 0
-    And Transaction is following
-        | Action                   | Package            |
-        | module-stream-enable     | nodejs:8           |
-    And modules state is following
-        | Module    | State     | Stream    | Profiles  |
-        | nodejs    | enabled   | 8         |           |
-   When I execute dnf with args "module enable nodejs:10"
-   Then the exit code is 1
-    And modules state is following
-        | Module    | State     | Stream    | Profiles  |
-        | nodejs    | enabled   | 8         |           |
-    And stderr is
-        """
-        The operation would result in switching of module 'nodejs' stream '8' to stream '10'
-        Error: It is not possible to switch enabled streams of a module.
-        It is recommended to remove all installed content from the module, and reset the module using 'yum module reset <module_name>' command. After you reset the module, you can install the other stream.
+        It is recommended to remove all installed content from the module, and reset the module using '{context.dnf.prog_name} module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 Scenario: Fail to install a different stream of an already enabled module
-  Given I set dnf command to "dnf"
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
     And Transaction is following
@@ -68,13 +44,12 @@ Scenario: Fail to install a different stream of an already enabled module
         """
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module.
-        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
+        It is recommended to remove all installed content from the module, and reset the module using '{context.dnf.prog_name} module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 
 @bz1706215
 Scenario: Fail to install a different stream of an already enabled module using @module:stream syntax
-  Given I set dnf command to "dnf"
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
     And Transaction is following
@@ -92,7 +67,7 @@ Scenario: Fail to install a different stream of an already enabled module using 
         """
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module.
-        It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
+        It is recommended to remove all installed content from the module, and reset the module using '{context.dnf.prog_name} module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 
@@ -131,7 +106,6 @@ Scenario: Fail to enable a non-existent module stream
 
 
 Scenario: Fail to enable a module stream when not specifying anything
-  Given I set dnf command to "dnf"
    When I execute dnf with args "module enable"
    Then the exit code is 1
     And Transaction is empty
@@ -139,7 +113,7 @@ Scenario: Fail to enable a module stream when not specifying anything
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
-        Error: dnf module enable: too few arguments
+        Error: {context.dnf.prog_name} module enable: too few arguments
         """
 
 

@@ -1,7 +1,6 @@
 Feature: Help command
 
-Scenario: General help (dnf)
-  Given I set dnf command to "dnf"
+Scenario: General help
    When I execute dnf with args "--help"
    Then the exit code is 0
     And stdout contains "List of Main Commands"
@@ -15,27 +14,8 @@ Scenario: General help (dnf)
    Then the exit code is 1
     And stderr is
    """
-   No such command: unknown-command. Please use /usr/bin/dnf --help
-   It could be a DNF plugin command, try: "dnf install 'dnf-command(unknown-command)'"
-   """
-
-Scenario: General help (yum)
-  Given I set dnf command to "yum"
-   When I execute dnf with args "--help"
-   Then the exit code is 0
-    And stdout contains "List of Main Commands"
-   When I execute dnf with args "--unknown-option"
-   Then the exit code is 0
-    And stdout contains "List of Main Commands"
-   When I execute dnf with args "help"
-   Then the exit code is 0
-    And stdout contains "List of Main Commands"
-   When I execute dnf with args "unknown-command"
-   Then the exit code is 1
-    And stderr is
-   """
-   No such command: unknown-command. Please use /usr/bin/yum --help
-   It could be a YUM plugin command, try: "yum install 'dnf-command(unknown-command)'"
+   No such command: unknown-command. Please use /usr/bin/{context.dnf.prog_name} --help
+   It could be a {context.dnf.prog_name_upper} plugin command, try: "{context.dnf.prog_name} install 'dnf-command(unknown-command)'"
    """
 
 Scenario: Command help

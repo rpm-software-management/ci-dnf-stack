@@ -619,17 +619,11 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
 
 
- Scenario: Run 'dnf module info' without further argument (dnf)
-  Given I set dnf command to "dnf"
+ Scenario: Run 'dnf module info' without further argument
    When I execute dnf with args "module info"
    Then the exit code is 1
-    And stderr contains "Error: dnf module info: too few arguments"
+    And stderr contains "Error: {context.dnf.prog_name} module info: too few arguments"
 
- Scenario: Run 'dnf module info' without further argument (yum)
-  Given I set dnf command to "yum"
-   When I execute dnf with args "module info"
-   Then the exit code is 1
-    And stderr contains "Error: yum module info: too few arguments"
 
   @bz1571214
   Scenario Outline: I can get the info about content of existing module streams with <command>
@@ -735,12 +729,11 @@ Examples:
 
 
   Scenario: "dnf module profile" without any additional arguments should raise an error
-  Given I set dnf command to "dnf"
    When I execute dnf with args "module info --profile"
    Then the exit code is 1
     And stderr is
     """
-    Error: dnf module info: too few arguments
+    Error: {context.dnf.prog_name} module info: too few arguments
     """
 
 
