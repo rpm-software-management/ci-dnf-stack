@@ -7,6 +7,7 @@ import glob
 from common.lib.cmd import run_in_context
 from common.lib.file import prepend_installroot
 
+from lib.file import create_compressed_file_with_contents
 
 @behave.step("I execute createrepo_c with args \"{arguments}\" in \"{directory}\"")
 def when_I_execute_createrepo_c_in_directory(context, arguments, directory):
@@ -48,3 +49,9 @@ def file_has_mode(context, filepath, octal_mode_str):
     octal_file_mode = os.stat(matched_files[0]).st_mode & 0o777
     assert oct(octal_mode) == oct(octal_file_mode), \
         "File \"{}\" has mode \"{}\"".format(matched_files[0], oct(octal_file_mode))
+
+
+@behave.step("I create \"{compression}\" compressed file \"{filepath}\" with")
+def create_compressed_file_with(context, compression, filepath):
+    target_path = prepend_installroot(context, filepath)
+    create_compressed_file_with_contents(target_path, compression, context.text)
