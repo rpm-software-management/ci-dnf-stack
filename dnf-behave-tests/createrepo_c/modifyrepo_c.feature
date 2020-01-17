@@ -35,3 +35,108 @@ Given I create directory "/temp-repo/"
       | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
       | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+
+
+Scenario: Modifying repo with compressed metadata of the same compression type
+Given I create directory "/temp-repo/"
+  And I execute createrepo_c with args "." in "/temp-repo"
+  And I create "gz" compressed file "/modules.yaml" with
+      """
+      ---
+      document: modulemd
+      version: 2
+      data:
+      name: ingredience
+      stream: chicken
+      version: 1
+      arch: x86_64
+      description: Made up module
+      license:
+      module:
+      - MIT
+      ...
+      """
+ When I execute modifyrepo_c with args "../modules.yaml.gz ./repodata" in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                                | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
+      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+
+
+Scenario: Modifying repo with compressed metadata of different compression type
+Given I create directory "/temp-repo/"
+  And I execute createrepo_c with args "." in "/temp-repo"
+  And I create "xz" compressed file "/modules.yaml" with
+      """
+      ---
+      document: modulemd
+      version: 2
+      data:
+      name: ingredience
+      stream: chicken
+      version: 1
+      arch: x86_64
+      description: Made up module
+      license:
+      module:
+      - MIT
+      ...
+      """
+ When I execute modifyrepo_c with args "../modules.yaml.xz ./repodata" in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                                | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
+      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+
+
+# createrepo_c is compiled without support for zchunk on rhel 8
+@not.with_os=rhel__eq__8
+Scenario: Modifying repo with zck compressed metadata
+Given I create directory "/temp-repo/"
+  And I execute createrepo_c with args "--zck ." in "/temp-repo"
+  And I create "xz" compressed file "/modules.yaml" with
+      """
+      ---
+      document: modulemd
+      version: 2
+      data:
+      name: ingredience
+      stream: chicken
+      version: 1
+      arch: x86_64
+      description: Made up module
+      license:
+      module:
+      - MIT
+      ...
+      """
+ When I execute modifyrepo_c with args "--compress-type zck ../modules.yaml.xz ./repodata" in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                             | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zck      | sha256        | zck              |
+      | filelists           | ${checksum}-filelists.xml.zck    | sha256        | zck              |
+      | other               | ${checksum}-other.xml.zck        | sha256        | zck              |
+      | primary_db          | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
+      | modules             | ${checksum}-modules.yaml.zck     | sha256        | zck              |
+
