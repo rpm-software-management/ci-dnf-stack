@@ -44,7 +44,7 @@ def xml_parse_repodata(repodata_path, element_tag, repodata_type):
         parse_pkg_elem = parse_repomd_item_elem
 
     parser = ET.XMLPullParser(['end'])
-    metadata_obj = Metadata()
+    metadata_obj = Metadata(repodata_path)
     for xml_data in iterator:
         parser.feed(xml_data)
         for event, element in parser.read_events():
