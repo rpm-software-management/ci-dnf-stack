@@ -17,6 +17,7 @@ from behave import model
 from behave.formatter.ansi_escapes import escapes
 
 from common.lib.cmd import print_last_command
+from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
 
@@ -58,6 +59,8 @@ def after_step(context, step):
 
 
 def before_scenario(context, scenario):
+    if context.tag_matcher.should_exclude_with(scenario.effective_tags):
+        scenario.skip(reason="DISABLED ACTIVE-TAG")
     context.tempdir_manager = TempDirManager(context.config.userdata)
 
     context.scenario.default_tmp_dir = context.tempdir_manager.tempdir
@@ -85,7 +88,7 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    pass
+    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", None)})
 
 
 def after_all(context):

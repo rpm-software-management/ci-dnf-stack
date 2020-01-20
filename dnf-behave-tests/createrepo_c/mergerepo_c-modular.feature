@@ -85,6 +85,8 @@ Given I create directory "/modular_repo1/"
 
 
 
+# createrepo_c is compiled without support for modular metadata and refuses to use them on rhel 8
+@not.with_os=rhel__eq__8
 Scenario: merged repository contains streams from both source repositories
  When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/modular_repo1 --repo {context.scenario.default_tmp_dir}/modular_repo2" in "/"
  Then the exit code is 0
