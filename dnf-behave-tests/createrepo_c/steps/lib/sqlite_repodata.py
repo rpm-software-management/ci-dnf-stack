@@ -38,7 +38,7 @@ COL_PACKAGES_MAPPING = {"checksum": "pkgId",
 
 
 def load_sqlite(sqlite_path, repodata_type):
-    metadata_obj = Metadata()
+    metadata_obj = Metadata(sqlite_path)
     con = sqlite3.Connection(sqlite_path)
     con.row_factory = sqlite3.Row
 

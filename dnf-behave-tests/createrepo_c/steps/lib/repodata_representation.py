@@ -29,8 +29,9 @@ class MetadataItem(object):
 
 
 class Metadata(object):
-    def __init__(self):
+    def __init__(self, location):
         self.items = {}
+        self.path = location
 
     def append(self, key, item):
         if key in self.items:

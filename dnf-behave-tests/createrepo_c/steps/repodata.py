@@ -11,6 +11,7 @@ import glob
 
 from lib.file import decompress_file_by_extension_to_dir
 from common.lib.behave_ext import check_context_table
+from common.lib.diff import print_lines_diff
 
 from lib.sqlite_repodata import load_sqlite
 from lib.xml_repodata import xml_parse_repodata
@@ -32,11 +33,46 @@ ns = {"pri_ns": "http://linux.duke.edu/metadata/common",
       "md_ns": "http://linux.duke.edu/metadata/repo"}
 
 
+def keys_do_not_differ(prim, flist, oth):
+    if prim.keys() != flist.keys():
+        print_lines_diff(prim.keys(), flist.keys())
+        raise AssertionError("Primary and Filelists have different package sets.")
+    if prim.keys() != oth.keys():
+        print_lines_diff(prim.keys(), oth.keys())
+        raise AssertionError("Primary and Other have different package sets.")
+
+
+def repodata_do_not_differ(prim1, prim2, flist1, flist2, oth1, oth2):
+        # Compare packages by checksums
+        if prim1.keys() != prim2.keys():
+            print_lines_diff(prim1.keys(), prim2.keys())
+            raise AssertionError("Primary repodata have different package sets.")
+
+        # Compare packages by name
+        if prim1.packages() != prim2.packages():
+            print_lines_diff(prim1.packages(), prim2.packages())
+            raise AssertionError("Primary repodata have different sets of package names.")
+
+        diff = prim1.diff(prim2)
+        if diff:
+            raise AssertionError("Primary repodata are different.\n"
+                                 "Difference: %s" % (diff))
+        diff = flist1.diff(flist2)
+        if diff:
+            raise AssertionError("Filelists repodata are different.\n"
+                                 "Difference: %s" % (diff))
+        diff = oth1.diff(oth2)
+        if diff:
+            raise AssertionError("Other repodata are different.\n"
+                                 "Difference: %s" % (diff))
+
+
 @behave.step("repodata \"{path}\" are consistent")
 def repodata_are_consistent(context, path):
     repopath = os.path.join(context.tempdir_manager.tempdir, path.lstrip('/'))
     tmpdir = tempfile.mkdtemp()
     prim_path_sqlite = None
+    prim_zck_path = None
 
     # REPOMD
     md_path = os.path.join(repopath, "repomd.xml")
@@ -57,18 +93,24 @@ def repodata_are_consistent(context, path):
 
         decompressed_p = decompress_file_by_extension_to_dir(p, tmpdir)
 
-        if "primary_db" == item.name:
+        if item.name == "primary_db":
             prim_path_sqlite = decompressed_p
-        elif "filelists_db" == item.name:
+        elif item.name == "filelists_db":
             filelists_path_sqlite = decompressed_p
-        elif "other_db" == item.name:
+        elif item.name == "other_db":
             other_path_sqlite = decompressed_p
-        elif "primary" == item.name:
+        elif item.name == "primary":
             prim_path = decompressed_p
-        elif "filelists" == item.name:
+        elif item.name == "filelists":
             filelists_path = decompressed_p
-        elif "other" == item.name:
+        elif item.name == "other":
             other_path = decompressed_p
+        elif item.name == "primary_zck":
+            prim_zck_path = decompressed_p
+        elif item.name == "filelists_zck":
+            filelists_zck_path = decompressed_p
+        elif item.name == "other_zck":
+            other_zck_path = decompressed_p
         else:
             # Skip unsupported updateinfo, comps, etc..
             # TODO(amatej): we could technically check for updateinfo,
@@ -82,10 +124,8 @@ def repodata_are_consistent(context, path):
     filelists = xml_parse_repodata(filelists_path, "{%s}package" % ns["fil_ns"], "filelists")
     other = xml_parse_repodata(other_path, "{%s}package" % ns["oth_ns"], "other")
 
-    if set(primary.keys()) != set(filelists.keys()):
-        raise AssertionError("XML files Primary and Filelists have different package sets")
-    if set(primary.keys()) != set(other.keys()):
-        raise AssertionError("XML files Primary and Other have different package sets")
+
+    keys_do_not_differ(primary, filelists, other)
 
     # SQLITE
     if prim_path_sqlite: # All three sqlite files have to be present at the same time
@@ -93,35 +133,18 @@ def repodata_are_consistent(context, path):
         filelists_sql = load_sqlite(filelists_path_sqlite, "filelists")
         other_sql = load_sqlite(other_path_sqlite, "other")
 
-        if set(primary_sql.keys()) != set(filelists_sql.keys()):
-            raise AssertionError("SQLITE files Primary and Filelists have different package sets.")
-        if set(primary_sql.keys()) != set(other_sql.keys()):
-            raise AssertionError("SQLITE files Primary and Other have different package sets.")
+        keys_do_not_differ(primary_sql, filelists_sql, other_sql)
+        repodata_do_not_differ(primary, primary_sql, filelists, filelists_sql, other, other_sql)
 
-        # Compare XML vs SQLITE packages by checksums
-        if primary.keys() != primary_sql.keys():
-            raise AssertionError("SQLITE Primary and XML Primary have different package sets.")
-        if filelists.keys() != filelists_sql.keys():
-            raise AssertionError("SQLITE Filelists and XML Filelists have different package sets.")
-        if other.keys() != other_sql.keys():
-            raise AssertionError("SQLITE Other and XML Other have different package sets.")
+    # ZCK
+    if prim_zck_path: # All three zck files have to be present at the same time
+        primary_zck = xml_parse_repodata(prim_zck_path, "{%s}package" % ns["pri_ns"], "primary")
+        filelists_zck = xml_parse_repodata(filelists_zck_path, "{%s}package" % ns["fil_ns"], "filelists")
+        other_zck = xml_parse_repodata(other_zck_path, "{%s}package" % ns["oth_ns"], "other")
 
-        # Compare XML vs SQLITE packages by name, names in SQLITE are only in Primary
-        if primary.packages() != primary_sql.packages():
-            raise AssertionError("SQLITE Primary and XML Primary have different package sets.")
+        keys_do_not_differ(primary_zck, filelists_zck, other_zck)
+        repodata_do_not_differ(primary, primary_zck, filelists, filelists_zck, other, other_zck)
 
-        diff = primary.diff(primary_sql)
-        if diff:
-            raise AssertionError("SQLITE Primary and XML Primary are different.\n"
-                                 "Difference: %s" % (diff))
-        diff = filelists.diff(filelists_sql)
-        if diff:
-            raise AssertionError("SQLITE Filelists and XML Filelists are different.\n"
-                                 "Difference: %s" % (diff))
-        diff = other.diff(other_sql)
-        if diff:
-            raise AssertionError("SQLITE Filelists and XML Filelists are different.\n"
-                                 "Difference: %s" % (diff))
     return
 
 
