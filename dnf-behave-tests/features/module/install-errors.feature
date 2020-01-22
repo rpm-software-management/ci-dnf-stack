@@ -49,12 +49,12 @@ Scenario: I cannot install an RPM with same name as an RPM that belongs to enabl
     """
 
 Scenario: A proper error message is displayed when I try to install a non-existent stream
- When I execute dnf with args "module install ModuleX:NoSuchStream"
+ When I execute dnf with args "module install meson:NoSuchStream"
  Then the exit code is 1
   And stderr contains lines
   """
   Error: Problems in request:
-  missing groups or modules: ModuleX:NoSuchStream
+  missing groups or modules: meson:NoSuchStream
   """
 
 
@@ -77,23 +77,23 @@ Scenario: Install module without any profiles
 
 @bz1645167
 Scenario: A proper error message is displayed when I try to install a non-existent profile
- When I execute dnf with args "module install ModuleX:f26/NoSuchProfile"
+ When I execute dnf with args "module install meson:master/NoSuchProfile"
  Then the exit code is 1
   And stderr contains lines
   """
   Error: Problems in request:
-  missing groups or modules: ModuleX:f26/NoSuchProfile
+  missing groups or modules: meson:master/NoSuchProfile
   """
 
 
 Scenario: Install fails even when only one of the module specs cannot be installed
-   When I execute dnf with args "module install nodejs:8/minimal ModuleX:f26/NoSuchProfile"
+   When I execute dnf with args "module install nodejs:8/minimal meson:master/NoSuchProfile"
    Then the exit code is 1
     And Transaction is empty
     And stderr contains lines
         """
         Error: Problems in request:
-        missing groups or modules: ModuleX:f26/NoSuchProfile
+        missing groups or modules: meson:master/NoSuchProfile
         """
 
 
