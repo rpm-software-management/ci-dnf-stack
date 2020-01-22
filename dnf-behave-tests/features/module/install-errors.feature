@@ -59,6 +59,7 @@ Scenario: A proper error message is displayed when I try to install a non-existe
 
 
 @bz1724564
+@bz1790967
 Scenario: Install module without any profiles
    When I execute dnf with args "module install DnfCiModuleNoProfiles:master"
    Then the exit code is 1
@@ -70,7 +71,7 @@ Scenario: Install module without any profiles
         """
         No default profiles for module DnfCiModuleNoProfiles:master
         Error: Problems in request:
-        missing groups or modules: DnfCiModuleNoProfiles:master
+        broken groups or modules: DnfCiModuleNoProfiles:master
         """
 
 
