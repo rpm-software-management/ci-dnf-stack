@@ -37,6 +37,7 @@ ACTIONS_EN = {
     "Removing unused dependencies": "remove",
     "Downgrading": "downgrade",
     "Skipping packages with broken dependencies": "broken",
+    "Skipping packages with conflicts": "conflict",
     "Installing group/module packages": "install",
     "Installing Groups": "group-install",
     "Removing Groups": "group-remove",
@@ -123,11 +124,14 @@ def parse_transaction_table(lines):
     lines = lines[:table_end]
 
     # lines in transaction table could be splitted, join them
-    # also remove empty lines
+    # also remove empty lines and descriptions such as: (add '--best --allowerasing'
+    # to command line to force their upgrade)
     if lines:
         joined_lines = [lines[0]]
         for line in lines[1:]:
-            if OBSOLETE_REPLACING.match(line):
+            if DESCRIPTION_RE.match(line):
+                continue
+            elif OBSOLETE_REPLACING.match(line):
                 joined_lines.append(line)
             elif line.startswith('  '):
                 joined_lines[-1] = joined_lines[-1] + line
@@ -139,11 +143,6 @@ def parse_transaction_table(lines):
 
     while lines:
         line = lines.pop(0).rstrip()
-
-        # skip descriptions such as: (add '--best --allowerasing' to command line to force their upgrade):
-        match = DESCRIPTION_RE.match(line)
-        if match:
-            continue
 
         match = ACTION_RE.match(line)
         if not match:
