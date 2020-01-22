@@ -3,6 +3,7 @@ Feature: Installing module profiles - error handling
 Background:
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-thirdparty"
 
 
 Scenario: A proper error message is displayed when I try to install a non-existent module
@@ -67,6 +68,7 @@ Scenario: Install module without any profiles
         | DnfCiModuleNoProfiles   |           |           |           |
     And stderr is
         """
+        No default profiles for module DnfCiModuleNoProfiles:master
         Error: Problems in request:
         missing groups or modules: DnfCiModuleNoProfiles:master
         """
