@@ -69,7 +69,7 @@ Scenario: Install module without any profiles
         | DnfCiModuleNoProfiles   |           |           |           |
     And stderr is
         """
-        No default profiles for module DnfCiModuleNoProfiles:master
+        No profiles for module DnfCiModuleNoProfiles:master
         Error: Problems in request:
         broken groups or modules: DnfCiModuleNoProfiles:master
         """
