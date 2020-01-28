@@ -91,6 +91,7 @@ RUN set -x && \
         dnf \
         nextgen-yum4 \
         dnf-plugins-core \
+        dnf-automatic \
         # dnf-utils are disabled in the latest builds
         # dnf-utils \
         libdnf \
