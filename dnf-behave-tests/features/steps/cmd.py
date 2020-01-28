@@ -139,6 +139,14 @@ def when_I_execute_rpm_on_host_with_args(context, args):
     run_in_context(context, cmd, can_fail=True)
 
 
+@behave.step("I execute dnf-automatic with args \"{args}\"")
+def when_I_execute_dnf_automatic_with_args(context, args):
+    cmd = "dnf-automatic"
+    cmd += " " + args.format(context=context)
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+    run_in_context(context, cmd, can_fail=True)
+
+
 @behave.given("I do not assume yes")
 def given_I_do_not_assumeyes(context):
     context.dnf._set("assumeyes_option", "")
