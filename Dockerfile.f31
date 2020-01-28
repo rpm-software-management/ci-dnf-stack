@@ -88,6 +88,7 @@ RUN set -x && \
         yum \
         dnf-plugins-core \
         dnf-utils \
+        dnf-automatic \
         # all plugins with the same version as dnf-utils
         $(dnf repoquery dnf-utils --latest-limit=1 -q --qf="python*-dnf-plugin-*-%{version}-%{release}") \
         libdnf \
