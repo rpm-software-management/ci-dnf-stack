@@ -14,6 +14,15 @@ Background:
 Scenario: when run without arguments
    When I execute dnf with args "config-manager"
    Then the exit code is 1
+    And stdout contains "usage: dnf config-manager"
+    And stderr contains "Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable"
+
+
+Scenario: when run with single argument
+   When I execute dnf with args "config-manager repo1"
+   Then the exit code is 1
+    And stdout contains "usage: dnf config-manager"
+    And stderr contains "Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable"
 
 
 Scenario Outline: <option> enables given repository
@@ -125,3 +134,20 @@ Scenario: --setopt does not modify repo when used without --save
         enabled=1
         gpgcheck=0
         """
+    And stdout contains "usage: dnf config-manager"
+    And stderr contains "Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable"
+
+
+
+Scenario: --setopt does not modify repo when used without --save and one argument
+   When I execute dnf with args "config-manager --setopt=repo1.gpgcheck=1 repo1"
+   Then the exit code is 1
+    And file "/etc/yum.repos.d/repo1.repo" contents is
+        """
+        [repo1]
+        name=repo1 test repository
+        enabled=1
+        gpgcheck=0
+        """
+    And stdout contains "usage: dnf config-manager"
+    And stderr contains "Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable"
