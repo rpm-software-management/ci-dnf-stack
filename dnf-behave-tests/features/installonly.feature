@@ -51,6 +51,7 @@ Scenario: Install multiple versions of an installonly package and keep reason
    Then the exit code is 0
     And Transaction is empty
 
+@bz1774670
 Scenario: Remove all installonly packages but keep the latest
    When I execute dnf with args "install kernel-core"
    Then the exit code is 0
@@ -80,6 +81,7 @@ Scenario: Remove all installonly packages but keep the latest
         | remove        | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64    |
 
+@bz1774670
 @no_installroot
 @destructive
 Scenario: Remove all installonly packages but keep the latest and running kernel-core-0:4.18.16-300.fc29.x86_64
