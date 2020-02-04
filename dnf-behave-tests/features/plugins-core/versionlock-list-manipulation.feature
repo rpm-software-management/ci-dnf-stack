@@ -136,3 +136,15 @@ Scenario: Versionlock accepts --raw switch
     <REPOSYNC>
     Adding versionlock on: flac-1.3.*
     """
+
+@bz1785563
+@not.with_os=rhel__eq__8
+Scenario: versionlock will print just necessary information with -q option
+  Given I use repository "dnf-ci-fedora"
+  Given I execute dnf with args "versionlock add wget"
+  When I execute dnf with args "-q versionlock"
+  Then the exit code is 0
+  And stdout is
+    """
+    wget-0:1.19.5-5.fc29.*
+    """
