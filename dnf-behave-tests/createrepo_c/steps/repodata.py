@@ -179,9 +179,7 @@ def repodata_in_path_is(context, path):
             if compression_suffix and filepath.endswith(compression_suffix):
                 filepath = filepath[:-(len(compression_suffix))]
             if tmp:
-                if filepath.endswith(".zck"):
-                    assert("ZCK" in str(tmp))
-                elif filepath.endswith(".sqlite"):
+                if filepath.endswith(".sqlite"):
                     assert("SQLite" in str(tmp))
                 elif filepath.endswith(".xml"):
                     assert("xml" in str(tmp))
@@ -194,7 +192,7 @@ def repodata_in_path_is(context, path):
                     raise
         except (AssertionError, IOError):
             raise AssertionError("Cannot decompress File: " + repodata_file + " using"
-                                 " copression type: " + compression_type)
+                                 " compression type: " + compression_type)
 
     if len(files) > 0:
         raise AssertionError("repodata directory contains additional metadata files:\n{0}".format('\n'.join(files)))
