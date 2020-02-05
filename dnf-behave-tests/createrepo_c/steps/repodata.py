@@ -176,16 +176,22 @@ def repodata_in_path_is(context, path):
                                  " not match suffix of File: " + repodata_file)
         try:
             tmp = next(decompression_iter(filepath, compression_type, blocksize=100))
+            if compression_suffix and filepath.endswith(compression_suffix):
+                filepath = filepath[:-(len(compression_suffix))]
             if tmp:
                 if filepath.endswith(".zck"):
                     assert("ZCK" in str(tmp))
                 elif filepath.endswith(".sqlite"):
-                    assert("SQLITE" in str(tmp))
+                    assert("SQLite" in str(tmp))
                 elif filepath.endswith(".xml"):
                     assert("xml" in str(tmp))
-                else:
+                elif filepath.endswith(".yaml"):
+                    # Assume all yaml files are modulemd documents
+                    assert("modulemd" in str(tmp))
+                elif filepath.endswith(".txt"):
                     pass
-                    # We don't know the filetype, assume it's correct
+                else:
+                    raise
         except (AssertionError, IOError):
             raise AssertionError("Cannot decompress File: " + repodata_file + " using"
                                  " copression type: " + compression_type)
