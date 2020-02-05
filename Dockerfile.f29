@@ -92,7 +92,8 @@ RUN set -x && \
         # all plugins with the same version as dnf-utils
         $(dnf repoquery dnf-utils --latest-limit=1 -q --qf="python*-dnf-plugin-*-%{version}-%{release}") \
         libdnf \
-        microdnf
+        microdnf \
+        zchunk
 
 
 # install local RPMs if available

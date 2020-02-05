@@ -27,14 +27,8 @@ def get_checksum_regex(type_str):
 
 
 def get_compression_suffix(type_str):
-    if type_str == "gz":
-        return ".gz"
-    if type_str == "zck":
-        return ".zck"
-    if type_str == "xz":
-        return ".xz"
-    if type_str == "bz2":
-        return ".bz2"
+    if type_str in ("gz", "zck", "xz", "bz2"):
+        return "." + type_str
     if type_str == "-":
         return ""
     raise ValueError("Unknown compression type: " + type_str)
@@ -47,6 +41,9 @@ def decompression_iter(filepath, compression_type, blocksize=65536):
         return file_as_blockiter(lzma.open(filepath, 'rb'), blocksize)
     if compression_type == "bz2":
         return file_as_blockiter(bz2.open(filepath, 'rb'), blocksize)
+    if compression_type == "zck":
+        decompress_file_by_extension_to_dir(filepath, os.path.dirname(filepath))
+        return file_as_blockiter(open(filepath[:-4], 'rb'), blocksize)
 
     return file_as_blockiter(open(filepath, 'rb'), blocksize)
 
@@ -83,10 +80,7 @@ def decompress_file_by_extension_to_dir(compressed_filepath, dest_dir):
 
     basename = os.path.basename(compressed_filepath)
     dst = os.path.join(dest_dir, basename)
-    if compressed_filepath.endswith(".bz2"):
-        dst = dst[:-4]
-    else: # .gz and .xz are both 3 chars long
-        dst = dst[:-3]
+    dst = os.path.splitext(dst)[0] #remove compression extension
 
     open(dst, "wb").write(content)
     return dst

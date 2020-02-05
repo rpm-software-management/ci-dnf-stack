@@ -7,6 +7,7 @@ import codecs
 import os
 import shutil
 import glob
+import subprocess
 
 import bz2
 import gzip
@@ -90,5 +91,7 @@ def decompress_file_by_extension(src):
         return gzip.open(src, "rb").read()
     elif src.endswith(".xz"):
         return lzma.open(src, "rb").read()
+    elif src.endswith(".zck"):
+        return subprocess.run(["unzck", "--stdout", src], capture_output=True).stdout
 
     return None
