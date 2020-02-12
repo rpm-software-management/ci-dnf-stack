@@ -58,6 +58,7 @@ Scenario: A proper error message is displayed when I try to install a non-existe
   """
 
 
+@not.with_os=rhel__eq__8
 @bz1724564
 @bz1790967
 Scenario: Install module without any profiles

@@ -1,3 +1,4 @@
+@not.with_os=rhel__eq__8
 Feature: Tests for post-transaction-actions plugin
 
 
@@ -21,6 +22,7 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
+@bz967264
 Scenario: Variables in action files are substituted
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
@@ -37,6 +39,7 @@ Scenario: Variables in action files are substituted
     """
 
 
+@bz967264
 Scenario Outline: I can filter on package or file: "<filter>"
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
@@ -65,6 +68,7 @@ Examples:
     | g*c               |
 
 
+@bz967264
 Scenario Outline: I can filter on transaction state
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
