@@ -5,6 +5,7 @@ Feature: microdnf install command on packages
 Background:
 Given I delete file "/etc/dnf/dnf.conf"
   And I delete file "/etc/yum.repos.d/*.repo" with globs
+  And I delete directory "/var/lib/dnf/modulefailsafe/"
 
 
 Scenario: Install a documentation package from local repodata

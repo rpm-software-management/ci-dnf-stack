@@ -5,6 +5,7 @@ Feature: microdnf is able to downgrade packages
 Background:
 Given I delete file "/etc/dnf/dnf.conf"
   And I delete file "/etc/yum.repos.d/*.repo" with globs
+  And I delete directory "/var/lib/dnf/modulefailsafe/"
 
 
 @bz1725863
