@@ -6,6 +6,7 @@ Feature: Reinstall must keep the "reason" why a package was installed
 Background:
   Given I delete file "/etc/dnf/dnf.conf"
     And I delete file "/etc/yum.repos.d/*.repo" with globs
+    And I delete directory "/var/lib/dnf/modulefailsafe/"
 
 
 Scenario: Reinstall a dependency, and then remove the main package
