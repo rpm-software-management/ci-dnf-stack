@@ -147,6 +147,7 @@ Scenario: Test replacing of existing excludes short notation using --setopt
     """
 
 
+@not.with_os=rhel__eq__8
 @bz1788154
 Scenario: Test adding excludes (empty values in the middle of short notation are ignored)
    When I execute dnf with args "--exclude=lz4,,wget repoquery abcde lame lz4 wget"
@@ -158,6 +159,7 @@ Scenario: Test adding excludes (empty values in the middle of short notation are
     """
 
 
+@not.with_os=rhel__eq__8
 @bz1788154
 Scenario: Test adding excludes (empty values in the middle of short notation are ignored) using --setopt
    When I execute dnf with args "--setopt=excludepkgs=lz4,,wget repoquery abcde lame lz4 wget"
@@ -169,6 +171,7 @@ Scenario: Test adding excludes (empty values in the middle of short notation are
     """
 
 
+@not.with_os=rhel__eq__8
 @bz1788154
 Scenario: Test adding excludes (empty value at the end of short notation is ignored)
    When I execute dnf with args "--exclude=lz4,wget, repoquery abcde lame lz4 wget"

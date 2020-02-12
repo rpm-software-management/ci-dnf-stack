@@ -93,6 +93,7 @@ Given I successfully execute dnf with args "install x1"
       a1-0:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 @bz1534123
 @bz1698034
 Scenario: repoquery --whatconflicts for "(d1-prov1 >= 1.0 with d1-prov1 < 2.0)"
@@ -157,6 +158,7 @@ Scenario: repoquery --whatsuggests for "((b1 with b1-prov2 > 1.7) or (c1 <= 1.0 
       a1-0:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 @bz1534123
 @bz1698034
 Scenario: repoquery --whatsuggests for "(d1-prov1 >= 1.0 with d1-prov1 < 2.0)" - only d1-1.0 should match

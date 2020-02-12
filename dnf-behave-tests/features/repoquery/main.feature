@@ -288,6 +288,7 @@ Scenario: repoquery --deplist NAME
          provider: mid-a1-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 @bz1784148
 Scenario: repoquery --deplist REMOTE_RPM
  When I execute dnf with args "repoquery --deplist {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"
@@ -306,6 +307,7 @@ Scenario: repoquery --deplist REMOTE_RPM
         dependency: rpmlib(PayloadFilesHavePrefix) <= 4.0-1
       """
 
+@not.with_os=rhel__eq__8
 @bz1784148
 Scenario: repoquery --deplist NEVRA REMOTE_RPM
  When I execute dnf with args "repoquery --deplist top-a-2:2.0-2.x86_64 {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"

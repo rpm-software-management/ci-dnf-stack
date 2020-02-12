@@ -157,6 +157,7 @@ Scenario: Aliases conflicts: USER.conf has the highest priority, then alphabetic
         """
 
 
+@not.with_os=rhel__eq__8
 @bz1680566
 Scenario: ALIASES.conf can disable all aliases
   Given I create file "/etc/dnf/aliases.d/ALIASES.conf" with
@@ -176,6 +177,7 @@ Scenario: ALIASES.conf can disable all aliases
     And stderr contains "No such command: inthrone"
 
 
+@not.with_os=rhel__eq__8
 @bz1680566
 Scenario: Aliases can be disabled in individual conf files
   Given I create file "/etc/dnf/aliases.d/ALIASES.conf" with
