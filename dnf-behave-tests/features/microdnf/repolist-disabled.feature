@@ -24,12 +24,24 @@ Scenario: Repolist with "--enabled"
     And stdout is empty
 
 
+# two versions of the same test due to https://github.com/rpm-software-management/microdnf/pull/66
+# the difference is in trailing spaces in stdout
+@not.with_os=rhel__eq__8
 Scenario: Repolist with "--disabled"
    When I execute microdnf with args "repolist --disabled"
    Then the exit code is 0
     And stdout is
       """
       repo id       repo name
+      dnf-ci-fedora dnf-ci-fedora test repository
+      """
+@use.with_os=rhel__eq__8
+Scenario: Repolist with "--disabled"
+   When I execute microdnf with args "repolist --disabled"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id       repo name                    
       dnf-ci-fedora dnf-ci-fedora test repository
       """
 
