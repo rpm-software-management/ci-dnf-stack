@@ -270,3 +270,28 @@ Scenario: Reposync --newest-only downloads packages from all streams and latest 
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.12.2-3.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm" exists
+
+
+@not.with_os=rhel__eq__8
+@bz1795965
+Scenario: Reposync accepts --norepopath to synchronize single repository
+  Given I use repository "reposync" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath"
+   Then the exit code is 0
+    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*"
+    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.src\.rpm .*"
+    And the files "{context.dnf.tempdir}/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
+    And the files "{context.dnf.tempdir}/src/wget-1.0-1.fc29.src.rpm" and "{context.dnf.fixturesdir}/repos/reposync/src/wget-1.0-1.fc29.src.rpm" do not differ
+
+
+@not.with_os=rhel__eq__8
+@bz1795965
+Scenario: Reposync --norepopath cannot be used with multiple repositories
+  Given I use repository "reposync" as http
+    And I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath"
+   Then the exit code is 1
+    And stderr is
+    """
+    Error: Can't use --norepopath with multiple repositories
+    """
