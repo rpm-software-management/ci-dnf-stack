@@ -37,7 +37,9 @@ Scenario: Installing a package using untrusted client cert should fail
    Then the exit code is 1
         # The list of errors sometimes contains additional errors to the one tested below:
         #   - Curl error (55): Failed sending data to the peer for https://localhost:37237/repodata/repomd.xml [SSL_write() returned SYSCALL, errno = 104]
+        #   - Curl error (55): Failed sending data to the peer for https://localhost:38661/repodata/repomd.xml [SSL_write() returned SYSCALL, errno = 32]
         #   - Curl error (56): Failure when receiving data from the peer for https://localhost:37237/repodata/repomd.xml [SSL_write() returned SYSCALL, errno = 32]
+        #   - Curl error (56): Failure when receiving data from the peer for https://localhost:[0-9]+/repodata/repomd.xml [OpenSSL SSL_read: error:14094418:SSL routines:ssl3_read_bytes:tlsv1 alert unknown ca, errno 0]"
         #
         # It is nondeterministic, quite rare and the cause is unknown, as well
         # as whether it is an issue with the testing framework or a bug in the
@@ -49,7 +51,7 @@ Scenario: Installing a package using untrusted client cert should fail
         # for stderr containing the expected output and ignore the superfluous
         # errors.
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(56\): Failure when receiving data from the peer for https://localhost:[0-9]+/repodata/repomd.xml \[OpenSSL SSL_read: error:14094418:SSL routines:ssl3_read_bytes:tlsv1 alert unknown ca, errno 0\]"
+    And stderr contains "  - Curl error"
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
