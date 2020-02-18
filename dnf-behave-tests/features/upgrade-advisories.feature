@@ -1,7 +1,6 @@
 Feature: Upgrade using security advisories
 
 
-@not.with_os=rhel__eq__8
 @bz1770125
 @bz1794644
 Scenario: Upgrade packages with bugfixes
