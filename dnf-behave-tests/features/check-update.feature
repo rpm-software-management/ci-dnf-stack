@@ -1,5 +1,6 @@
 Feature: check-update commands
 
+@bz1769466
 Scenario: check for updates according to priority
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install glibc"
