@@ -102,6 +102,7 @@ Scenario: The repo configuration takes precedence over the global one
 
 
 @bz1741442
+@bz1752362
 Scenario: Test repo_gpgcheck=1 error if repomd.xml.asc is not present
 Given I use repository "dnf-ci-fedora" with configuration
       | key           | value |
