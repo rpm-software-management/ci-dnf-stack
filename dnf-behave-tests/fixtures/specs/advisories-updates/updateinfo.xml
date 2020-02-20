@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
-    <update from="updates@fedoraproject.org" status="stable" type="bugfix" version="2.0">
+    <update from="updates@fedoraproject.org" status="stable" type="security" version="2.0">
         <id>FEDORA-2019-f4eb34cf4c</id>
         <title>labirinto-1.56.2-1.fc30</title>
         <issued date="2019-05-12 01:21:43"/>
         <updated date="2019-05-11 07:26:31"/>
         <rights>Copyright (C) 2020 Red Hat, Inc. and others.</rights>
         <release>Fedora 30</release>
-        <severity>None</severity>
+        <severity>Moderate</severity>
         <summary>labirinto-1.56.2-1.fc30</summary>
         <description>GNOME 3.32.2</description>
         <references>
@@ -29,14 +29,14 @@
         </pkglist>
     </update>
 
-    <update from="updates@fedoraproject.org" status="stable" type="bugfix" version="2.0">
+    <update from="updates@fedoraproject.org" status="stable" type="security" version="2.0">
         <id>FEDORA-2019-57b5902ed1</id>
         <title>labirinto-1.56.2-6.fc30 mozjs60-60.9.0-2.fc30 polkit-0.116-2.fc30</title>
         <issued date="2019-09-15 01:34:29"/>
         <updated date="2019-09-08 11:57:09"/>
         <rights>Copyright (C) 2020 Red Hat, Inc. and others.</rights>
         <release>Fedora 30</release>
-        <severity>None</severity>
+        <severity>Critical</severity>
         <summary>labirinto-1.56.2-6.fc30 bugfix update</summary>
         <description>mozjs60 60.9.0, including various security, stability and regression fixes from Firefox 60.9.0 ESR. For details, see https://www.mozilla.org/en-US/firefox/60.9.0/releasenotes/</description>
         <references/>
