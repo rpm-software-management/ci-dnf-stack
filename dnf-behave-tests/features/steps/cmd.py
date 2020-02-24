@@ -151,6 +151,7 @@ def step_impl(context):
 
 @behave.given("I set config file to \"{configfile}\"")
 def step_impl(context, configfile):
+    configfile = configfile.format(context=context)
     full_path = os.path.join(context.dnf.installroot, configfile.lstrip("/"))
     context.dnf._set("config", full_path)
 
