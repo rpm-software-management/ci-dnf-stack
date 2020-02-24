@@ -44,6 +44,8 @@ class DNFContext(object):
         self.repos = {}
         self.ports = {}
 
+        self.invalid_utf8_char = '\udcfd'
+
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
         # per scenario by using @force_installroot decorator
