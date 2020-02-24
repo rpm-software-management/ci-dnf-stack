@@ -45,15 +45,17 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 
 
 def assert_exitcode(context, exitcode):
+    cmd = context.cmd.replace(context.dnf.invalid_utf8_char, "\\udcfd")
     assert context.cmd_exitcode == int(exitcode), \
-        "Command has returned exit code {0}: {1}".format(context.cmd_exitcode, context.cmd)
+        "Command has returned exit code {0}: {1}".format(context.cmd_exitcode, cmd)
 
 
 def print_last_command(context):
+    cmd = context.cmd.replace(context.dnf.invalid_utf8_char, "\\udcfd")
     if getattr(context, "cmd", ""):
         print(
             "%sLast Command: %s%s" %
-            (escapes["failed"], escapes["failed_arg"], context.cmd)
+            (escapes["failed"], escapes["failed_arg"], cmd)
         )
         print(escapes["reset"])
     if getattr(context, "cmd_stdout", ""):
