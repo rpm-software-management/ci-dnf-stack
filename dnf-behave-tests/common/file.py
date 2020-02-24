@@ -134,6 +134,7 @@ def step_impl(context, source, destination):
 @behave.step('I copy file "{source}" to "{destination}"')
 def copy_file_to(context, source, destination):
     source = source.format(context=context)
+    destination = destination.format(context=context)
     destination = prepend_installroot(context, destination)
     ensure_directory_exists(os.path.dirname(destination))
     # If we dont specify destination with name keep the name of source file
