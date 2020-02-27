@@ -21,3 +21,8 @@ def when_I_execute_command_in_directory(context, command, directory):
 @behave.step("I execute \"{command}\"")
 def when_I_execute_command(context, command):
     run_in_context(context, command.format(context=context))
+
+
+@behave.step("I set LC_ALL to \"{value}\"")
+def i_set_lc_all(context, value):
+    context.lc_all = "LC_ALL={value} ".format(value=value)

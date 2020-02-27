@@ -33,6 +33,9 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
     if getattr(context, "fake_kernel_release", None) is not None:
         cmd = context.fake_kernel_release + cmd
 
+    if getattr(context, "lc_all", None) is not None:
+        cmd = context.lc_all + cmd
+
     context.cmd = cmd
 
     if hasattr(context.scenario, "working_dir") and 'cwd' not in run_args:
