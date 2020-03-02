@@ -33,7 +33,7 @@ Scenario: Download an existing RPM in file:// mode with all dependencies into a 
 # Add dnf-ci-fedora-updates repository with identical metadata of dnf-ci-fedora
     And I use repository "dnf-ci-fedora-updates" with configuration
         | key             | value                                       |
-        | baseurl         | file:///opt/behave/fixtures/repos/dnf-ci-fedora  |
+        | baseurl         | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora  |
    When I execute dnf with args "download basesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
     And file sha256 checksums are following
