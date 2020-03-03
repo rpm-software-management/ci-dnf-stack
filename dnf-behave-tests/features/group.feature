@@ -186,6 +186,42 @@ Scenario: Group remove does not remove user installed packages
         | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
 
+@not.with_os=rhel__eq__8
+@bz1809600
+Scenario: Group remove does not traceback when reason change
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
+   When I execute dnf with args "group install DNF-CI-Testgroup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | setup-0:2.12.1-1.fc29.noarch              |
+        | install       | filesystem-0:3.9-2.fc29.x86_64            |
+        | install       | lame-0:3.100-4.fc29.x86_64                |
+        | install       | lame-libs-0:3.100-4.fc29.x86_64           |
+        | group-install | DNF-CI-Testgroup                          |
+   When I execute dnf with args "install basesystem"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | basesystem-0:11-6.fc29.noarch             |
+        # filesystem package should be removed without Tracebacks in callbacks
+  When I open dnf shell session
+    And I execute in dnf shell "group remove DNF-CI-Testgroup"
+    And I execute in dnf shell "remove filesystem"
+    And I execute in dnf shell "run"
+   Then Transaction is following
+        | Action        | Package                                   |
+        | remove        | lame-0:3.100-4.fc29.x86_64                |
+        | remove        | lame-libs-0:3.100-4.fc29.x86_64           |
+        | group-remove  | DNF-CI-Testgroup                          |
+        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove        | setup-0:2.12.1-1.fc29.noarch              |
+        | remove        | basesystem-0:11-6.fc29.noarch             |
+    And stdout does not contain "Traceback .*"
+   When I execute in dnf shell "exit"
+   Then stdout contains "Leaving Shell"
+
 @bz1706382
 Scenario: Group list
  Given I use repository "dnf-ci-thirdparty"
