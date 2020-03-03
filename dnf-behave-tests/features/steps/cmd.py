@@ -255,6 +255,13 @@ def then_stdout_section_contains(context, section, regexp):
     raise AssertionError("Stdout section %s doesn't contain: %s" % (section, regexp))
 
 
+@behave.then('stdout section "{section}" does not contain "{regexp}"')
+def then_stdout_section_does_not_contain(context, section, regexp):
+    section_content = extract_section_content_from_text(section, context.cmd_stdout)
+    if re.search(regexp, section_content):
+        raise AssertionError("Stdout section %s contains: %s" % (section, regexp))
+
+
 @behave.then("stderr contains \"{text}\"")
 def then_stderr_contains(context, text):
     if re.search(text.format(context=context), context.cmd_stderr):
