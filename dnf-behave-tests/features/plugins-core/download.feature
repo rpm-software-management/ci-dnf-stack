@@ -61,3 +61,17 @@ Scenario: Download an existing RPM in two versions in file:// mode with all depe
         | {context.dnf.tempdir}/downloaddir/glibc-common-2.28-26.fc29.x86_64.rpm          | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc-common-2.28-26.fc29.x86_64.rpm         |
         | {context.dnf.tempdir}/downloaddir/glibc-common-2.28-9.fc29.x86_64.rpm           | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/glibc-common-2.28-9.fc29.x86_64.rpm                  |
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm              | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm                     |
+
+
+@not.with_os=rhel__eq__8
+@bz1800342
+Scenario: Download RPM form repository of higher priority
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates" with configuration
+        | key             | value        |
+        | priority        | 100          |
+   When I execute dnf with args "download wget --destdir={context.dnf.tempdir}/downloaddir"
+   Then the exit code is 0
+    And file sha256 checksums are following
+        | Path                                                             | sha256                                                                                     |
+        | {context.dnf.tempdir}/downloaddir/wget-1.19.5-5.fc29.x86_64.rpm  | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/wget-1.19.5-5.fc29.x86_64.rpm  |
