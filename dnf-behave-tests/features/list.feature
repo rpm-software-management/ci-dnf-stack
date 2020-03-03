@@ -220,3 +220,69 @@ Given I use repository "dnf-ci-thirdparty"
  When I execute "eval dnf -y --releasever={context.dnf.releasever} --installroot={context.dnf.installroot} --config={context.dnf.config} --setopt=module_platform_id={context.dnf.module_platform_id} --disableplugin='*' list available | grep 1" in "{context.dnf.installroot}"
  Then the exit code is 0
  Then stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions.x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty"
+
+
+@not.with_os=rhel__eq__8
+@bz1800342
+Scenario: dnf list respects repo priorities
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+        | key           | value   |
+        # lower priority than default
+        | priority      | 100     |
+   When I execute dnf with args "list flac.x86_64"
+   Then the exit code is 0
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
+    And stdout section "Available Packages" does not contain "1.3.3"
+
+
+Scenario: dnf list --showduplicates lists all (even from lower-priority repo)
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+        | key           | value   |
+        # lower priority than default
+        | priority      | 100     |
+   When I execute dnf with args "list flac.x86_64 --showduplicates"
+   Then the exit code is 0
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates"
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.3-2.fc29\s+dnf-ci-fedora-updates"
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates"
+
+
+@not.with_os=rhel__eq__8
+@bz1800342
+Scenario: dnf list doesn't show any available packages when there are no upgrades in the highest-priority repo
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+        | key           | value   |
+        # lower priority than default
+        | priority      | 100     |
+    And I successfully execute dnf with args "install flac-1.3.3-1.fc29"
+   When I execute dnf with args "list flac.x86_64"
+   Then the exit code is 0
+    And stdout section "Available Packages" does not contain "flac"
+
+
+Scenario: dnf list shows available packages when there are upgrades in the highest-priority repo
+  Given I use repository "dnf-ci-fedora-updates" with configuration
+        | key           | value   |
+        # higher priority than default
+        | priority      | 1       |
+    And I successfully execute dnf with args "install flac-1.3.3-1.fc29"
+   When I execute dnf with args "list flac.x86_64"
+   Then the exit code is 0
+    And stdout section "Installed Packages" contains "flac.x86_64\s+1.3.3-1.fc29\s+@dnf-ci-fedora-updates"
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates"
+    And stdout section "Available Packages" does not contain "1.3.2"
+    And stdout section "Available Packages" does not contain "1.3.3-1"
+    And stdout section "Available Packages" does not contain "1.3.3-2"
+
+
+Scenario: dnf list doesn't show package with same nevra from lower-priority repo
+  Gicen I configure a new repository "dnf-ci-fedora2" with
+        | key     | value                                          |
+        | baseurl | file://{context.dnf.repos[dnf-ci-fedora].path} |
+        # lower priority than default
+        | priority      | 100                                      |
+   When I execute dnf with args "list flac.x86_64"
+   Then the exit code is 0
+    And stdout section "Available Packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
+    And stdout section "Available Packages" does not contain "dnf-ci-fedora2"
