@@ -45,6 +45,7 @@ data:
   artifacts:
     rpms:
     - nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
+    - nodejs-1:5.3.1-1.module_2011+41787af0.src
 ...
 ---
 document: modulemd
@@ -94,7 +95,8 @@ data:
         buildorder: 10
   artifacts:
     rpms:
-    - nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+    - nodejs-1:5.3.1-1.module_3012+41787ba3.x86_64
+    - nodejs-1:5.3.1-1.module_3012+41787ba3.src
 ...
 ---
 document: modulemd
@@ -166,6 +168,7 @@ data:
   artifacts:
     rpms:
     - postgresql-0:9.6.8-1.module_1710+b535a823.x86_64
+    - postgresql-0:9.6.8-1.module_1710+b535a823.src
 ...
 ---
 document: modulemd
@@ -232,4 +235,5 @@ data:
   artifacts:
     rpms:
     - postgresql-0:9.8.1-1.module_9790+c535b823.x86_64
+    - postgresql-0:9.8.1-1.module_9790+c535b823.src
 ...

@@ -27,6 +27,37 @@ Scenario: I cannot install a specific package from not enabled module when defau
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
 
+@bz1767351
+Scenario: I cannot install a specific package from not enabled module after reset
+  Given I use repository "dnf-ci-multicontext-modular"
+   When I execute dnf with args "install nodejs"
+   Then Transaction is empty
+   When I execute dnf with args "module enable nodejs:5"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-stream-enable     | nodejs:5           |
+        | module-stream-enable     | postgresql:9.6     |
+    And modules state is following
+        | Module     | State     | Stream    | Profiles  |
+        | nodejs     | enabled   | 5         |           |
+        | postgresql | enabled   | 9.6       |           |
+   When I open dnf shell session
+    And I execute in dnf shell "module reset '*'"
+#  nodejs must be after reset not available
+    And I execute in dnf shell "install nodejs"
+ #  Then stderr contains "Error: Unable to find a match"
+    And I execute in dnf shell "run"
+   Then Transaction is following
+        | Action                   | Package            |
+        | module-reset             | nodejs             |
+        | module-reset             | postgresql         |
+    And modules state is following
+        | Module     | State     | Stream    | Profiles  |
+        | nodejs     |           |           |           |
+        | postgresql |           |           |           |
+   When I execute in dnf shell "exit"
+   Then stdout contains "Leaving Shell"
 
 # module ninja:master [d] contains ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64
 # ninja:legacy contains ninja-build-0:1.5.2-1.module_1991+4e5efe2f.x86_64
