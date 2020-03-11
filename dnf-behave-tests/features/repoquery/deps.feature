@@ -235,6 +235,7 @@ Scenario: repoquery --whatrequires NAME
       middle1-1:1.0-1.x86_64
       middle1-1:2.0-1.x86_64
       middle2-1:2.0-1.x86_64
+      middle3-1:1.0-1.x86_64
       """
 
 @bz1782906
