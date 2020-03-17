@@ -367,6 +367,26 @@ Scenario: repoquery --whatrequires NAME --whatrequires NAME
       middle2-1:1.0-1.x86_64
       """
 
+Scenario: repoquery --whatrequires NAME (buildrequires, srpm)
+ When I execute dnf with args "repoquery --whatrequires bottom5-prov1"
+ Then the exit code is 0
+  And stdout is
+      """
+      middle3-1:1.0-1.x86_64
+      middle4-1:1.0-1.src
+      """
+
+@bz1812596
+Scenario: repoquery --whatrequires NEVRA (buildrequires, srpm)
+ When I execute dnf with args "repoquery --whatrequires bottom5"
+ Then the exit code is 0
+  And stdout is
+      """
+      middle3-1:1.0-1.x86_64
+      middle4-1:1.0-1.src
+      middle5-1:1.0-1.x86_64
+      """
+
 
 # --whatprovides
 Scenario: repoquery --whatprovides NAME
