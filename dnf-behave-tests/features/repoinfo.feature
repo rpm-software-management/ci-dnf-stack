@@ -17,7 +17,6 @@ Scenario: Repolist without arguments
    Then the exit code is 0
     And stdout matches line by line
 """
-
 Repo-id            : dnf-ci-fedora
 Repo-name          : dnf-ci-fedora test repository
 Repo-revision      : 1550000000
@@ -48,7 +47,6 @@ Scenario: Repoinfo without arguments and option --all
    Then the exit code is 0
     And stdout matches line by line
 """
-
 Repo-id            : dnf-ci-fedora
 Repo-name          : dnf-ci-fedora test repository
 Repo-status        : enabled
@@ -95,7 +93,6 @@ Scenario: Repoinfo without arguments but with excludes
    Then the exit code is 0
     And stdout matches line by line
 """
-
 Repo-id            : dnf-ci-fedora
 Repo-name          : dnf-ci-fedora test repository
 Repo-revision      : 1550000000
