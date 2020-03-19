@@ -342,3 +342,75 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
     """
     <REPOSYNC>
     """
+
+
+@not.with_os=rhel__eq__8
+Scenario Outline: updateinfo lists advisories using direct commands (yum compat)
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "<command>"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
+    FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
+    """
+
+Examples:
+    | command         |
+    | list-sec        |
+    | list-security   |
+    | list-updateinfo |
+
+
+@not.with_os=rhel__eq__8
+Scenario Outline: updateinfo shows info for advisories using direct commands (yum compat)
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "<command>"
+   Then the exit code is 0
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    ===============================================================================
+      flac enhacements
+    ===============================================================================
+      Update ID: FEDORA-2999:002-02
+           Type: enhancement
+        Updated: 2019-01-1\d \d\d:00:00
+    Description: Enhance some stuff
+       Severity: Moderate
+
+    ===============================================================================
+      glibc bug fix
+    ===============================================================================
+      Update ID: FEDORA-2018-318f184000
+           Type: bugfix
+        Updated: 2019-01-1\d \d\d:00:00
+           Bugs: 222 - 222
+           CVEs: 2999
+               : CVE-2999
+    Description: Fix some stuff
+       Severity: none
+    """
+
+Examples:
+    | command         |
+    | info-sec        |
+    | info-security   |
+    | info-updateinfo |
+
+
+Scenario: updateinfo shows summary for advisories using direct commands (yum compat)
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "summary-updateinfo"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Updates Information Summary: available
+        1 Bugfix notice(s)
+        1 Enhancement notice(s)
+    """
