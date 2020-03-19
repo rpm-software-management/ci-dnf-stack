@@ -36,6 +36,7 @@ components:
   - name: libdnf
     git:
       src: github:rpm-software-management/libdnf.git
+      branch: origin/dnf-4-master
 
   - name: dnf
     git:
