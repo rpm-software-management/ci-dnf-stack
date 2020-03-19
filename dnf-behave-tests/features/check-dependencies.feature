@@ -35,6 +35,7 @@ Examples:
         | --provides         |
 
 
+@not.with_os=rhel__eq__8
 @bz1543449
 Scenario: Removed scriptlet pre and post dependencies are not reported as missing
   Given I use repository "dnf-ci-check-dependencies"
