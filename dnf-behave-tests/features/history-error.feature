@@ -44,6 +44,17 @@ Given I successfully execute "chmod o+rwx {context.dnf.tempdir}"
   And file "{context.dnf.tempdir}/history.sqlite" exists
 
 
+@bz1634385
+@no_installroot
+Scenario: history database not present under a regular user
+ When I execute dnf with args "--setopt=persistdir={context.dnf.tempdir} repoquery --userinstalled" as an unprivileged user
+ Then the exit code is 0
+  And stderr is
+      """
+      History database is not readable, using in-memory database instead: Failed to access "{context.dnf.tempdir}/history.sqlite": Permission denied
+      """
+
+
 @bz1761976
 @no_installroot
 Scenario: read permission error on the history database
