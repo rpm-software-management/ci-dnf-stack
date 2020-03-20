@@ -589,6 +589,13 @@ Given I successfully execute dnf with args "install top-a"
       top-a-2:2.0-2.x86_64
       """
 
+@destructive
+@bz1634385
+# --userinstalled with destdir with unopenable path
+Scenario: repoquery --userinstalled with unaccesible SWDB
+ When I execute "useradd test1user"
+ When I execute "runuser -l test1user -c 'dnf repoquery --setopt=persistdir=/etc/dnf --userinstalled'"
+ Then the exit code is 0
 
 # --queryformat
 Scenario: repoquery --queryformat NVR
