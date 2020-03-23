@@ -61,6 +61,8 @@ RUN set -x && \
     dnf -y install \
         # behave and test requirements
         findutils \
+        glibc-all-langpacks \
+        langpacks-en \
         libfaketime \
         openssl \
         python3-behave \
