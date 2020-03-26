@@ -191,3 +191,23 @@ Scenario: history lame (no transaction with such package)
       """
       No transaction which manipulates package 'lame' was found.
       """
+
+@bz1786335
+@bz1786316
+Scenario: history longer than 80 characters
+ When I execute dnf with args "history | head -1 | wc -c"
+ Then the exit code is 0
+  And stdout is
+  """
+  244
+  """
+
+@bz1786335
+@bz1786316
+Scenario: history length is 80 chars when missing rows are queried
+ When I execute dnf with args "history 10 | head -1 | wc -c"
+ Then the exit code is 0
+  And stdout is
+  """
+  80
+  """
