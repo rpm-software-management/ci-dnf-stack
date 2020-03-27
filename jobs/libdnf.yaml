@@ -5,6 +5,7 @@
           url: "https://github.com/rpm-software-management/libdnf.git"
           branches:
             - origin/master
+            - origin/dnf-4-master
             - origin/auto
             - origin/try
           basedir: libdnf
