@@ -111,6 +111,24 @@ def when_I_execute_dnf_with_args(context, args):
     run_in_context(context, cmd, can_fail=True)
 
 
+@behave.step("I execute dnf with args \"{args}\" as an unprivileged user")
+def when_I_execute_dnf_with_args(context, args):
+    """
+    Creates an unpriviged user if it doesn't exist (therefore the test is
+    destructive!). Runs the dnf command under this user.
+    """
+    # create a regular user for the test if it doesn't exist
+    run_in_context(context, 'id -u testuser || useradd testuser', can_fail=False)
+
+    cmd = " ".join(context.dnf.get_cmd(context))
+    cmd += " " + args.format(context=context)
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+
+    # escape the quotes so that we can wrap the command in `su`
+    cmd = cmd.replace('"', '\\"')
+    run_in_context(context, 'su testuser -c "' + cmd + '"', can_fail=True)
+
+
 @behave.step("I execute dnf with args \"{args}\" {times} times")
 def when_I_execute_dnf_with_args_times(context, args, times):
     for i in range(int(times)):
