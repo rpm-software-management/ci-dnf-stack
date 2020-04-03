@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import behave
 
-from common.lib.cmd import run_in_context
+from common.lib.cmd import assert_exitcode, run_in_context
 
 
 @behave.step("I set working directory to \"{working_dir}\"")
@@ -18,9 +18,21 @@ def when_I_execute_command_in_directory(context, command, directory):
     run_in_context(context, command.format(context=context), cwd=directory.format(context=context))
 
 
+@behave.step("I successfully execute \"{command}\" in \"{directory}\"")
+def when_I_successfully_execute_command_in_directory(context, command, directory):
+    when_I_execute_command_in_directory(context, command, directory)
+    assert_exitcode(context, 0)
+
+
 @behave.step("I execute \"{command}\"")
 def when_I_execute_command(context, command):
     run_in_context(context, command.format(context=context))
+
+
+@behave.step("I successfully execute \"{command}\"")
+def when_I_successfully_execute_command(context, command):
+    when_I_execute_command(context, command)
+    assert_exitcode(context, 0)
 
 
 @behave.step("I set LC_ALL to \"{value}\"")
