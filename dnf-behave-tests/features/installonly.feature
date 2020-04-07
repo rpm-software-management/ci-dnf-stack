@@ -85,9 +85,7 @@ Scenario: Remove all installonly packages but keep the latest
 @no_installroot
 @destructive
 Scenario: Remove all installonly packages but keep the latest and running kernel-core-0:4.18.16-300.fc29.x86_64
-  Given I delete file "/etc/yum.repos.d/*.repo" with globs
-    And I delete directory "/var/lib/dnf/modulefailsafe/"
-    And I use repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
     And I fake kernel release to "4.18.16-300.fc29.x86_64"
    When I execute dnf with args "install kernel-core --repofrompath=r,{context.dnf.repos[dnf-ci-fedora].path} --repo=r --nogpgcheck"
    Then the exit code is 0

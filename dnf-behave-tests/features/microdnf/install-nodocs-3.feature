@@ -2,12 +2,6 @@
 Feature: microdnf install command on packages
 
 
-Background:
-Given I delete file "/etc/dnf/dnf.conf"
-  And I delete file "/etc/yum.repos.d/*.repo" with globs
-  And I delete directory "/var/lib/dnf/modulefailsafe/"
-
-
 @bz1771012
 Scenario: Install package with --nodocs option from local repodata with local packages
 Given I use repository "microdnf-install-nodocs"

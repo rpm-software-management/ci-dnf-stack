@@ -43,6 +43,20 @@ class DNFContext(object):
         # per scenario by using @force_installroot decorator
         if no_installroot:
             self.installroot = "/"
+
+            # move the following original system setup files to a backup location,
+            # so that they don't interfere and the tests start with a clean state
+            for path in ("/etc/dnf/dnf.conf", "/etc/yum.repos.d", "/var/lib/dnf/modulefailsafe"):
+                backup_path = path + ".backup"
+                if os.path.exists(backup_path):
+                    raise AssertionError(
+                        'System backup path "%s" already exists. '
+                        'Rerunning a no_installroot test in an unclean environment?' % backup_path)
+                try:
+                    shutil.move(path, backup_path)
+                except FileNotFoundError:
+                    pass
+
             # never delete root
             self.delete_installroot = False
         elif "installroot" in userdata and not force_installroot:
@@ -51,10 +65,9 @@ class DNFContext(object):
             self.delete_installroot = False
         else:
             self.installroot = tempfile.mkdtemp(prefix="dnf_ci_installroot_")
-            # if we're creating installroot, ensure /etc/yum.repos.d exists,
-            # otherwise dnf picks repo configs from the host
-            ensure_directory_exists(os.path.join(self.installroot, "etc/yum.repos.d"))
             self.delete_installroot = True
+
+        ensure_directory_exists(os.path.join(self.installroot, "etc/yum.repos.d"))
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
         self.config = userdata.get("config", DEFAULT_CONFIG)

@@ -5,10 +5,7 @@ Feature: Repositories configured in main configuration file
 
 
 Background: Configure repositories in the main configuration file
-  Given I delete file "/etc/dnf/dnf.conf"
-    And I delete file "/etc/yum.repos.d/*.repo" with globs
-    And I delete directory "/var/lib/dnf/modulefailsafe/"
-    And I create file "/etc/dnf/dnf.conf" with
+  Given I create file "/etc/dnf/dnf.conf" with
      """
      [main]
      gpgcheck = 0

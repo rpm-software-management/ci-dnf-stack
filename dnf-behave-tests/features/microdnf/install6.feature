@@ -2,12 +2,6 @@
 Feature: microdnf install command on packages
 
 
-Background:
-Given I delete file "/etc/dnf/dnf.conf"
-  And I delete file "/etc/yum.repos.d/*.repo" with globs
-  And I delete directory "/var/lib/dnf/modulefailsafe/"
-
-
 @bz1734350
 Scenario: Install packages from remote repodata with xml:base pointing to packages on different remote
 #6. remote repo with remote packages (different package location (different url) specified using xml:base)

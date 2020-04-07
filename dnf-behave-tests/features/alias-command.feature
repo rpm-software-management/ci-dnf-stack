@@ -3,10 +3,7 @@
 Feature: Test for alias command
 
 Background:
-  Given I delete directory "/etc/dnf/aliases.d/"
-    And I delete file "/etc/yum.repos.d/*.repo" with globs
-    And I delete directory "/var/lib/dnf/modulefailsafe/"
-    And I use repository "alias-command"
+  Given I use repository "alias-command"
 
 
 Scenario: Add alias
