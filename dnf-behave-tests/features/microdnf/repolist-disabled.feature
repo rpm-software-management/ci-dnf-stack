@@ -4,10 +4,7 @@ Feature: Repolist when all repositories are disabled
 
 
 Background:
-  Given I delete file "/etc/dnf/dnf.conf"
-    And I delete file "/etc/yum.repos.d/*.repo" with globs
-    And I delete directory "/var/lib/dnf/modulefailsafe/"
-    And I use repository "dnf-ci-fedora" with configuration
+  Given I use repository "dnf-ci-fedora" with configuration
         |key      | value |
         | enabled | 0     |
 

@@ -6,10 +6,7 @@ Feature: Tests --setopt=install_weak_deps=
 
 
 Background: Prepare environment
-  Given I delete file "/etc/dnf/dnf.conf"
-    And I delete file "/etc/yum.repos.d/*.repo" with globs
-    And I delete directory "/var/lib/dnf/modulefailsafe/"
-    And I execute microdnf with args "remove abcde flac"
+  Given I execute microdnf with args "remove abcde flac"
     And I use repository "dnf-ci-fedora"
 
 
