@@ -6,6 +6,8 @@ from __future__ import print_function
 from behave.formatter.ansi_escapes import escapes
 import subprocess
 
+import consts
+
 
 def run(cmd, shell=True, cwd=None):
     """
@@ -48,13 +50,13 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 
 
 def assert_exitcode(context, exitcode):
-    cmd = context.cmd.replace(context.dnf.invalid_utf8_char, "\\udcfd")
+    cmd = context.cmd.replace(consts.INVALID_UTF8_CHAR, "\\udcfd")
     assert context.cmd_exitcode == int(exitcode), \
         "Command has returned exit code {0}: {1}".format(context.cmd_exitcode, cmd)
 
 
 def print_last_command(context):
-    cmd = context.cmd.replace(context.dnf.invalid_utf8_char, "\\udcfd")
+    cmd = context.cmd.replace(consts.INVALID_UTF8_CHAR, "\\udcfd")
     if getattr(context, "cmd", ""):
         print(
             "%sLast Command: %s%s" %

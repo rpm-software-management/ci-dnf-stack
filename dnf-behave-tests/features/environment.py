@@ -36,8 +36,6 @@ class DNFContext(object):
         self.repos = {}
         self.ports = {}
 
-        self.invalid_utf8_char = '\udcfd'
-
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
         # per scenario by using @force_installroot decorator
@@ -195,6 +193,7 @@ def after_tag(context, tag):
 def before_all(context):
     context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", None)})
     context.repos = {}
+    context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 
 
 def after_all(context):
