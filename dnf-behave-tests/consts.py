@@ -10,3 +10,5 @@ DESTRUCTIVE_TAGS = [
     "destructive",
     "no_installroot",
 ]
+
+INVALID_UTF8_CHAR = '\udcfd'
