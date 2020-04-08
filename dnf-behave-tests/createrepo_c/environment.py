@@ -12,13 +12,13 @@ import tempfile
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
 import common
+import consts
 
 from behave import model
 from behave.formatter.ansi_escapes import escapes
 
 from common.lib.cmd import print_last_command
 
-FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
 
 class TempDirManager(object):
     def __init__(self, userdata):
@@ -61,7 +61,7 @@ def before_scenario(context, scenario):
     context.tempdir_manager = TempDirManager(context.config.userdata)
 
     context.scenario.default_tmp_dir = context.tempdir_manager.tempdir
-    context.scenario.repos_location = os.path.join(FIXTURES_DIR, "repos")
+    context.scenario.repos_location = os.path.join(consts.FIXTURES_DIR, "repos")
 
 
 def after_scenario(context, scenario):

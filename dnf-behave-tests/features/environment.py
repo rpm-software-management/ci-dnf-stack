@@ -13,6 +13,7 @@ import tempfile
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
 import common
+import consts
 
 from behave import model
 from behave.tag_matcher import ActiveTagMatcher
@@ -22,20 +23,11 @@ from common.lib.cmd import print_last_command
 from common.lib.file import ensure_directory_exists
 
 
-FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "fixtures"))
-
 DEFAULT_DNF_COMMAND = "dnf"
-DEFAULT_CONFIG = os.path.join(FIXTURES_DIR, "dnf.conf")
-DEFAULT_REPOS_LOCATION = os.path.join(FIXTURES_DIR, "repos")
+DEFAULT_CONFIG = os.path.join(consts.FIXTURES_DIR, "dnf.conf")
+DEFAULT_REPOS_LOCATION = os.path.join(consts.FIXTURES_DIR, "repos")
 DEFAULT_RELEASEVER="29"
 DEFAULT_PLATFORM_ID="platform:f29"
-
-# If a test is marked with any of these tags, it will be considered
-# "destructive" to the system running it.
-DESTRUCTIVE_TAGS = [
-    "destructive",
-    "no_installroot",
-]
 
 
 class VersionedActiveTagMatcher(ActiveTagMatcher):
@@ -122,7 +114,7 @@ class DNFContext(object):
         self.config = userdata.get("config", DEFAULT_CONFIG)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
-        self.fixturesdir = FIXTURES_DIR
+        self.fixturesdir = consts.FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
@@ -222,7 +214,7 @@ def before_scenario(context, scenario):
         scenario.skip(reason="DISABLED ACTIVE-TAG")
 
     # Skip if destructive and not explicitly allowed by the user
-    if ((set(scenario.effective_tags) & set(DESTRUCTIVE_TAGS)) and not
+    if ((set(scenario.effective_tags) & set(consts.DESTRUCTIVE_TAGS)) and not
             context.config.userdata.get('destructive', 'no') == 'yes'):
         scenario.skip(reason="DESTRUCTIVE")
 
