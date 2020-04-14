@@ -175,6 +175,12 @@ def before_scenario(context, scenario):
             context.config.userdata.get('destructive', 'no') == 'yes'):
         scenario.skip(reason="DESTRUCTIVE")
 
+    # if we are skipping a scenario, don't create the environment
+    # in case of a destructive scenario, that could mean modifying the current (non-temporary) system!
+    if scenario.status == model.Status.skipped:
+        context.dnf = None
+        return
+
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
                              no_installroot='no_installroot' in scenario.effective_tags)
