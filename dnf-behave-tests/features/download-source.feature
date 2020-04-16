@@ -122,3 +122,35 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And Transaction is following
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |
+
+
+@bz1817130
+Scenario: Download a package that contains special URL characters that need to be encoded (e.g. a +)
+Given I use repository "download-sources" as http
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "install special-c++-package"
+ Then the exit code is 0
+  And HTTP log contains
+      """
+      GET /noarch/special-c%2b%2b-package-1.0-1.noarch.rpm
+      """
+
+
+@bz1817130
+@xfail
+# For packages with full URL in their location we can't encode the package name.
+# The URL would need to come encoded in the repo metadata from createrepo_c.
+Scenario: Download a package that contains special URL characters with full URL in location
+Given I make packages from repository "download-sources" accessible via http
+  And I copy repository "download-sources" for modification
+  And I execute "createrepo_c --location-prefix http://localhost:{context.dnf.ports[download-sources]} {context.dnf.repos[download-sources].path}"
+  And I use repository "download-sources" as http
+  # delete packages from the repo copied for modification so they cannot be accidentally used
+  And I delete directory "/{context.dnf.repos[download-sources].path}/noarch"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "install special-c++-package"
+ Then the exit code is 0
+  And HTTP log contains
+      """
+      GET /noarch/special-c%2b%2b-package-1.0-1.noarch.rpm
+      """
