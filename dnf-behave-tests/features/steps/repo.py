@@ -11,6 +11,7 @@ import parse
 from common.lib.behave_ext import check_context_table
 from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run_in_context
+from common.lib.diff import print_lines_diff
 from common.lib.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
 from fixtures import start_server_based_on_type
 from fixtures.osrelease import osrelease_fixture
@@ -377,3 +378,13 @@ def step_check_http_log(context, quantifier, command):
         assert not good, \
             'Expected no matches but got %i:%s' \
             % (len(good), dump(good))
+
+
+@behave.step("HTTP log contains")
+def step_http_log_contains(context):
+    expected = context.text.format(context=context).rstrip().split('\n')
+    found = ["%s %s" % (r.command, r.path) for r in context.scenario.httpd.log]
+
+    for e in expected:
+        if e not in found:
+            raise AssertionError('HTTP log does not contain "%s": %s' % (e, "\n" + "\n".join(found) + "\n"))
