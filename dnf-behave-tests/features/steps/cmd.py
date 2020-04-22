@@ -170,18 +170,6 @@ def given_I_do_not_assumeyes(context):
     context.dnf._set("assumeyes_option", "")
 
 
-@behave.given("I do not set config file")
-def step_impl(context):
-    context.dnf._set("config", "")
-
-
-@behave.given("I set config file to \"{configfile}\"")
-def step_impl(context, configfile):
-    configfile = configfile.format(context=context)
-    full_path = os.path.join(context.dnf.installroot, configfile.lstrip("/"))
-    context.dnf._set("config", full_path)
-
-
 @behave.given("I do not set releasever")
 def step_impl(context):
     context.dnf._set("releasever", "")
