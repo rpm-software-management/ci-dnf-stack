@@ -17,13 +17,13 @@ import consts
 from behave import model
 from behave.formatter.ansi_escapes import escapes
 
+from steps.lib.config import write_config
 from common.lib.cmd import print_last_command
 from common.lib.file import ensure_directory_exists
 from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
 DEFAULT_DNF_COMMAND = "dnf"
-DEFAULT_CONFIG = os.path.join(consts.FIXTURES_DIR, "dnf.conf")
 DEFAULT_REPOS_LOCATION = os.path.join(consts.FIXTURES_DIR, "repos")
 DEFAULT_RELEASEVER="29"
 DEFAULT_PLATFORM_ID="platform:f29"
@@ -35,6 +35,14 @@ class DNFContext(object):
 
         self.repos = {}
         self.ports = {}
+        self.config = {
+            "[main]": {
+                "gpgcheck": "1",
+                "installonly_limit": "3",
+                "clean_requirements_on_remove": "True",
+                "best": "True"
+            }
+        }
 
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
@@ -68,7 +76,6 @@ class DNFContext(object):
         ensure_directory_exists(os.path.join(self.installroot, "etc/yum.repos.d"))
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
-        self.config = userdata.get("config", DEFAULT_CONFIG)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
         self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
         self.fixturesdir = consts.FIXTURES_DIR
@@ -132,10 +139,6 @@ class DNFContext(object):
         if self.installroot:
             result.append("--installroot={0}".format(self.installroot))
 
-        config = self._get("config")
-        if config:
-            result.append("--config={0}".format(config))
-
         releasever = self._get("releasever")
         if releasever:
             result.append("--releasever={0}".format(releasever))
@@ -184,6 +187,8 @@ def before_scenario(context, scenario):
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
                              no_installroot='no_installroot' in scenario.effective_tags)
+
+    write_config(context)
 
     context.scenario.default_tmp_dir = context.dnf.installroot
     context.scenario.repos_location = context.config.userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
