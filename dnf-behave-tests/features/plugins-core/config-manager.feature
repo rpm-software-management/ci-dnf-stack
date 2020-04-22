@@ -172,8 +172,7 @@ Scenario: --setopt does not modify repo when used without --save and one argumen
 # Requires PR: https://github.com/rpm-software-management/dnf-plugins-core/pull/373
 @not.with_os=rhel__eq__8
 Scenario: config-manager --save saves to correct config file
-  Given I do not set config file
-    And I create file "alternative.conf" with
+  Given I create file "alternative.conf" with
         """
         [main]
         """

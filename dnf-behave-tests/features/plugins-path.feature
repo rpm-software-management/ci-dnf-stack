@@ -7,12 +7,9 @@ Scenario: Redirect pluginspath
    Then the exit code is 0
    When I execute dnf with args "versionlock --help"
    Then the exit code is 0
-  Given I do not set config file
-    And I create and substitute file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    pluginpath={context.dnf.installroot}/test/plugins
-    """
+  Given I configure dnf with
+        | key        | value                                  |
+        | pluginpath | {context.dnf.installroot}/test/plugins |
     And I create file "/test/plugins/download.py" with
     """
     import dnf.cli
@@ -47,12 +44,9 @@ Scenario: Redirect pluginsconfpath in dnf.conf
   Given I do not disable plugins
    When I execute dnf with args "versionlock"
    Then the exit code is 0
-  Given I do not set config file
-    And I create and substitute file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    pluginconfpath={context.dnf.installroot}/test/pluginconfpath
-    """
+  Given I configure dnf with
+        | key            | value                                         |
+        | pluginconfpath | {context.dnf.installroot}/test/pluginconfpath |
   Given I create file "/test/pluginconfpath/versionlock.conf" with
     """
     [main]

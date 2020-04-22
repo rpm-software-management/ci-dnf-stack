@@ -4,21 +4,15 @@ Feature: Tests for post-transaction-actions plugin
 
 Background:
   Given I enable plugin "post-transaction-actions"
-    And I create and substitute file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    gpgcheck=1
-    installonly_limit=3
-    clean_requirements_on_remove=True
-    pluginconfpath={context.dnf.installroot}/etc/dnf/plugins
-    """
+    And I configure dnf with
+      | key            | value                                     |
+      | pluginconfpath | {context.dnf.installroot}/etc/dnf/plugins |
     And I create and substitute file "/etc/dnf/plugins/post-transaction-actions.conf" with
     """
     [main]
     enabled = 1
     actiondir = {context.dnf.installroot}/etc/dnf/plugins/post-transaction-actions.d/
     """
-    And I do not set config file
     And I use repository "dnf-ci-fedora"
 
 

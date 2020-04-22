@@ -8,13 +8,10 @@ Feature: DNF config files testing
 
 Scenario: Test removal of dependency when clean_requirements_on_remove=false
   Given I use repository "dnf-ci-fedora"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    exclude=filesystem
-    clean_requirements_on_remove=false
-    """
+    And I configure dnf with
+        | key                          | value      |
+        | exclude                      | filesystem |
+        | clean_requirements_on_remove | False      |
     When I execute dnf with args "install --disableexcludes=main filesystem"
    Then the exit code is 0
     And Transaction is following
@@ -30,12 +27,9 @@ Scenario: Test removal of dependency when clean_requirements_on_remove=false
 
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   Given I use repository "dnf-ci-fedora"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    exclude=filesystem
-    """
+    And I configure dnf with
+        | key                          | value      |
+        | exclude                      | filesystem |
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
     And stderr is
@@ -50,37 +44,28 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
 
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
   Given I use repository "dnf-ci-fedora"
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    exclude=filesystem
-    """
+    And I configure dnf with
+        | key     | value      |
+        | exclude | filesystem |
     And I create file "/test/dnf.conf" with
     """
     [main]
     exclude=dwm
     """
-    And I set config file to "/test/dnf.conf"
-   When I execute dnf with args "install filesystem"
+   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 0
-   When I execute dnf with args "install dwm"
+   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install dwm"
    Then the exit code is 1
     And stdout contains "All matches were filtered out by exclude filtering for argument: dwm"
-  Given I do not set config file
-   When I execute dnf with args "install dwm"
-   Then the exit code is 0
 
 
 Scenario: Reposdir option in dnf.conf file in installroot
-  Given I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    reposdir=/testrepos
-    """
+  Given I configure dnf with
+        | key      | value      |
+        | reposdir | /testrepos |
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
-    And I do not set config file
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
@@ -90,7 +75,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot
-  Given I create file "/testdnf.conf" with
+  Given I create file "/test/dnf.conf" with
     """
     [main]
     reposdir=/testrepos
@@ -98,8 +83,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
-    And I set config file to "/testdnf.conf"
-   When I execute dnf with args "install filesystem"
+   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -108,7 +92,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot is taken first from installroot then from host
-  Given I create and substitute file "/testdnf.conf" with
+  Given I create and substitute file "/test/dnf.conf" with
     """
     [main]
     reposdir={context.dnf.installroot}/testrepos,/othertestrepos
@@ -116,13 +100,12 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
-    And I set config file to "/testdnf.conf"
     And I create directory "/othertestrepos"
-   When I execute dnf with args "install filesystem"
+   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 1
     And stderr contains "Error: There are no enabled repositories in "
   Given I delete directory "/othertestrepos"
-   When I execute dnf with args "install filesystem"
+   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -151,9 +134,7 @@ Scenario: Reposdir option set by --setopt
 @bz1512457
 Scenario: Test usage of not existing config file
   Given I use repository "dnf-ci-fedora"
-    And I set config file to "/etc/dnf/not_existing_dnf.conf"
-    And I delete file "/etc/dnf/not_existing_dnf.conf"
-   When I execute dnf with args "list"
+   When I execute dnf with args "--config {context.dnf.installroot}/non/existing/dnf.conf list"
    Then the exit code is 1
     And stderr contains "Config file.*does not exist"
 
@@ -161,8 +142,7 @@ Scenario: Test usage of not existing config file
 @bz1722493
 Scenario: Lines that contain only whitespaces do not spoil previous config options
   Given I enable plugin "config_manager"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
+    And I create file "/test/dnf.conf" with
     # the "empty" line between gpgcheck and baseurl intentionally contains spaces
     """
     [main]
@@ -173,7 +153,7 @@ Scenario: Lines that contain only whitespaces do not spoil previous config optio
          
     baseurl=http://some.url/
     """
-   When I execute dnf with args "config-manager testingrepo --dump"
+   When I execute dnf with args "-c {context.dnf.installroot}/test/dnf.conf config-manager testingrepo --dump"
    Then stdout contains lines
    """
    gpgcheck = 1
