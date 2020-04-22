@@ -5,14 +5,9 @@ Background: Set up versionlock infrastructure in the installroot
   Given I enable plugin "versionlock"
   # plugins do not honor installroot when searching their configuration
   # all the next steps are merely to set up versionlock plugin inside installroot
-  And I create and substitute file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    gpgcheck=1
-    installonly_limit=3
-    clean_requirements_on_remove=True
-    pluginconfpath={context.dnf.installroot}/etc/dnf/plugins
-    """
+  And I configure dnf with
+    | key            | value                                     |
+    | pluginconfpath | {context.dnf.installroot}/etc/dnf/plugins |
   And I create and substitute file "/etc/dnf/plugins/versionlock.conf" with
     """
     [main]
@@ -23,7 +18,6 @@ Background: Set up versionlock infrastructure in the installroot
     """
     wget-0:1.19.5-5.fc29.*
     """
-  And I do not set config file
   # check that both locked and newer versions of the package are available
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"

@@ -3,7 +3,6 @@ Feature: Handling local base url in repository in installroot
 
 Scenario: Handling remote base url in repository in installroot
   Given I use repository "dnf-ci-fedora" as http
-    And I do not set config file
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following

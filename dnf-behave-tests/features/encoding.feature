@@ -2,12 +2,9 @@ Feature: Test encoding
 
 
 Scenario: UTF-8 characters in .repo filename
-  Given I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-        """
-        [main]
-        reposdir=/testrepos
-        """
+  Given I configure dnf with
+        | key      | value      |
+        | reposdir | /testrepos |
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                            |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora  |
@@ -22,12 +19,9 @@ Scenario: UTF-8 characters in .repo filename
 @not.with_os=rhel__eq__8
 @bz1803038
 Scenario: non-UTF-8 characters in .repo filename
-  Given I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-        """
-        [main]
-        reposdir=/testrepos
-        """
+  Given I configure dnf with
+        | key      | value      |
+        | reposdir | /testrepos |
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                            |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora  |

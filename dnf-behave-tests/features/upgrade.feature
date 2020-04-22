@@ -53,15 +53,9 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
     And I use repository "dnf-ci-thirdparty-updates"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    gpgcheck=1
-    installonly_limit=3
-    clean_requirements_on_remove=True
-    best=False
-    """
+  Given I configure dnf with
+        | key  | value |
+        | best | False |
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And stderr is
@@ -87,15 +81,6 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
     And I use repository "dnf-ci-thirdparty-updates"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    gpgcheck=1
-    installonly_limit=3
-    clean_requirements_on_remove=True
-    best=True
-    """
    When I execute dnf with args "upgrade"
    Then the exit code is 1
     And stderr is

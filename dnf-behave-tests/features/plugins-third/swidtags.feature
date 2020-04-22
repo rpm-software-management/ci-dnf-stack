@@ -40,21 +40,15 @@ Scenario: Run swidtags without command prints usage
 Scenario: SWID tags are locally generated
   Given I use repository "dnf-ci-fedora"
     # enable locally generated SWID tags
-    And I create and substitute file "/etc/dnf/dnf.conf" with
-      """
-      [main]
-      gpgcheck=1
-      installonly_limit=3
-      clean_requirements_on_remove=True
-      pluginconfpath={context.dnf.installroot}/etc/dnf/plugins
-      """
+  Given I configure dnf with
+        | key            | value                                         |
+        | pluginconfpath | {context.dnf.installroot}/etc/dnf/plugins     |
     And I create and substitute file "/etc/dnf/plugins/swidtags.conf" with
       """
       [main]
       enabled = 1
       rpm2swidtag_command = /usr/bin/rpm2swidtag
       """
-    And I do not set config file
     # make sure there are no swid tags
     And I delete directory "/var/lib/swidtag"
     # passive part of swidtags plugin generates tags after transaction

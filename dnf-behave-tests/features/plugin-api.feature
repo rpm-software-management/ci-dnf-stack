@@ -3,12 +3,9 @@ Feature: Plugin API
 
 Background:
 Given I do not disable plugins
-  And I do not set config file
-  And I create and substitute file "/etc/dnf/dnf.conf" with
-  """
-  [main]
-  pluginpath={context.dnf.installroot}/plugins
-  """
+  And I configure dnf with
+      | key        | value                             |
+      | pluginpath | {context.dnf.installroot}/plugins |
 
 
 @bz1650446

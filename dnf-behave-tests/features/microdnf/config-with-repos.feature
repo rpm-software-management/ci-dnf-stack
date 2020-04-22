@@ -5,26 +5,21 @@ Feature: Repositories configured in main configuration file
 
 
 Background: Configure repositories in the main configuration file
-  Given I create file "/etc/dnf/dnf.conf" with
-     """
-     [main]
-     gpgcheck = 0
-     
-     [repo-A]
-     name = repo-A test repository
-     enabled = 1
-     baseurl = http://url.xyz
-     
-     [repo-B]
-     name = repo-B test repository
-     enabled = 0
-     baseurl = http://url.xyz
-     
-     [repo-C]
-     name = repo-C test repository
-     enabled = 1
-     baseurl = http://url.xyz
-     """
+  Given I configure dnf with
+        | key      | value                  |
+        | gpgcheck | 0                      |
+        | [repo-A] |                        |
+        | name     | repo-A test repository |
+        | enabled  | 1                      |
+        | baseurl  | http://url.xyz         |
+        | [repo-B] |                        |
+        | name     | repo-B test repository |
+        | enabled  | 0                      |
+        | baseurl  | http://url.xyz         |
+        | [repo-C] |                        |
+        | name     | repo-C test repository |
+        | enabled  | 1                      |
+        | baseurl  | http://url.xyz         |
 
 
 Scenario: Repositories configured only in the main configuration file

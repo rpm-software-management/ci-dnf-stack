@@ -5,12 +5,9 @@ Feature: DNF test of append option
 
 Background: Enable repository and set excludes in configuration
   Given I use repository "dnf-ci-fedora-updates"
-    And I do not set config file
-    And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    exclude = lame, lz4
-    """
+    And I configure dnf with
+        | key     | value     |
+        | exclude | lame, lz4 |
 
 
 Scenario: Test that excludes from config file are applied
