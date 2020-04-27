@@ -1,0 +1,54 @@
+---
+aliases:
+  - name: github
+    url: https://github.com/
+  - name: fedorapkgs
+    url: https://src.fedoraproject.org/rpms/
+
+components:
+  - name: libsolv
+    git:
+      src: github:openSUSE/libsolv.git
+    distgit:
+      src: fedorapkgs:libsolv.git
+#      freeze: 335f469bf6e3109d4973e55a3a86a274adb0c21d
+      patches: drop
+
+  - name: drpm
+    git:
+      src: github:rpm-software-management/drpm.git
+
+  - name: librepo
+    git:
+      src: github:rpm-software-management/librepo.git
+
+  - name: createrepo_c
+    git:
+      src: github:rpm-software-management/createrepo_c.git
+    distgit:
+      src: fedorapkgs:createrepo_c.git
+      patches: drop
+
+  - name: libcomps
+    git:
+      src: github:rpm-software-management/libcomps.git
+
+  - name: libdnf
+    git:
+      src: github:rpm-software-management/libdnf.git
+
+  - name: dnf
+    git:
+      src: github:rpm-software-management/dnf.git
+
+  - name: dnf-plugins-core
+    git:
+      src: github:rpm-software-management/dnf-plugins-core.git
+
+  - name: dnf-plugins-extras
+    git:
+      src: github:rpm-software-management/dnf-plugins-extras.git
+
+  - name: microdnf
+    git:
+      src: github:rpm-software-management/microdnf.git

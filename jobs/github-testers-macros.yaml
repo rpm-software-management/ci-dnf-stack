@@ -174,7 +174,12 @@
             fi
           popd
 
+          # hackish - when building directly libdnf rpm-gitoverlay need to use already cloned HEAD
+          # if libdnf is build as a dependency, use dnf-4-master branch
           overlay_dir="dnf-master"
+          if [ "{name}" == "libdnf" ]; then
+            overlay_dir="libdnf-master"
+          fi
 
           rpm-gitoverlay --log DEBUG --gitdir=`pwd` -o rpms build-overlay -s ci-dnf-stack/overlays/$overlay_dir rpm copr --chroot fedora-31-x86_64 --owner rpmsoftwaremanagement
           RPMS=`cat rpms | xargs`
