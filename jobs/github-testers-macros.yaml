@@ -267,17 +267,15 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          pushd ci-dnf-stack
-              TESTS=($(./dnf-testing.sh -c $CONTAINER list))
-              #COMMANDS=('dnf-2' 'dnf-3')
-              COMMANDS=('dnf-3')
-              for cmd in ${{COMMANDS[@]}}; do
-                  mkdir -p "test-results/$cmd"
-                  TEST_DIR=`readlink -f "test-results/$cmd"`
-                  chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
-                  parallel -j2 ./dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
-              done
-          popd
+          TESTS=($(./ci-dnf-stack/dnf-testing.sh -c $CONTAINER list))
+          #COMMANDS=('dnf-2' 'dnf-3')
+          COMMANDS=('dnf-3')
+          for cmd in ${{COMMANDS[@]}}; do
+              mkdir -p "test-results/$cmd"
+              TEST_DIR=`readlink -f "test-results/$cmd"`
+              chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
+              parallel -j2 ./ci-dnf-stack/dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
+          done
 
       # Analyze results
       - python: |
@@ -285,7 +283,7 @@
           import xunitparser
 
           all = [0, 0]
-          for root, dirs, files in os.walk("/test-results"):
+          for root, dirs, files in os.walk("test-results"):
               for name in files:
                   if name.endswith(".xml"):
                       xml = os.path.join(root, name)
