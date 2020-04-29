@@ -234,3 +234,40 @@ Scenario: Check-update command does not report updates filtered out by the versi
     """
     <REPOSYNC>
     """
+
+
+# PackageB-Obsoleter obsoletes PackageB < 3.0
+@bz1627124
+Scenario: The locked version of the package cannot get obsoleted
+  Given I use repository "dnf-ci-obsoletes"
+    And I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    PackageB-0:1.0-1.*
+    """
+   When I execute dnf with args "install PackageB-1.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageB-0:1.0-1.x86_64                   |
+   When I execute dnf with args "upgrade PackageB"
+   Then the exit code is 0
+    And Transaction is empty
+
+
+# PackageD-2.0 obsoletes PackageC < 2.0
+@bz1627124
+Scenario: The locked version of the package cannot get obsoleted by upgrade of other package
+  Given I use repository "dnf-ci-obsoletes"
+    And I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    PackageC-0:1.0-1.*
+    """
+   When I execute dnf with args "install PackageC-1.0 PackageD-1.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageC-0:1.0-1.x86_64                   |
+        | install       | PackageD-0:1.0-1.x86_64                   |
+   When I execute dnf with args "upgrade PackageD"
+   Then the exit code is 0
+    And Transaction is empty
