@@ -63,9 +63,18 @@ for path in $DIR/*/*.spec; do
         echo "Building $path..."
         eval $RPMBUILD_CMD --target=$ARCH $path
 
-        # make lz4 multilib
-        if [[ "$SPEC_NAME" =~ "multilib" ]]; then
+        # In addition to default $ARCH (x86_64) also build packages with architectures
+        # whose names are contained in the specfile name
+        if [[ "$SPEC_NAME" =~ "i686" ]]; then
             eval $RPMBUILD_CMD --target=i686 $path
+        fi
+
+        if [[ "$SPEC_NAME" =~ "i386" ]]; then
+            eval $RPMBUILD_CMD --target=i386 $path
+        fi
+
+        if [[ "$SPEC_NAME" =~ "ppc64" ]]; then
+            eval $RPMBUILD_CMD --target=ppc64 $path
         fi
 
         pushd "$SPEC_DIR" > /dev/null
