@@ -43,7 +43,7 @@ def command_line_parser():
         help="Increase verbosity")
 
     subparsers = parser.add_subparsers(
-        dest="command", required=True, help="List of available commands:")
+        dest="command", help="List of available commands:")
 
     # build command
     build_parser = subparsers.add_parser(
