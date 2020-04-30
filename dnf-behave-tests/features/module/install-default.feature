@@ -4,7 +4,7 @@ Feature: Installing modules without profile specification using defaults from re
 Background:
   Given I use repository "dnf-ci-thirdparty"
 
-@not.with_os=rhel__eq__8
+
 @bz1724564
 @bz1790967
 Scenario: Install module, no default profile defined, expecting no profile selection

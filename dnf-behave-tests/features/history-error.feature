@@ -4,6 +4,8 @@ Background:
 Given I use repository "dnf-ci-fedora"
 
 
+# Requires PR: https://github.com/rpm-software-management/libdnf/pull/926
+@not.with_os=rhel__eq__8
 Scenario: history list on a broken history database
 Given I create file "/var/lib/dnf/history.sqlite" with
       """
@@ -18,6 +20,8 @@ Given I create file "/var/lib/dnf/history.sqlite" with
       """
 
 
+# Requires PR: https://github.com/rpm-software-management/libdnf/pull/926
+@not.with_os=rhel__eq__8
 Scenario: install with a broken history database
 Given I use repository "dnf-ci-fedora"
   And I create file "/var/lib/dnf/history.sqlite" with
@@ -44,6 +48,8 @@ Given I successfully execute "chmod o+rwx {context.dnf.tempdir}"
   And file "{context.dnf.tempdir}/history.sqlite" exists
 
 
+# Requires PR https://github.com/rpm-software-management/libdnf/pull/935
+@not.with_os=rhel__eq__8
 @bz1634385
 @no_installroot
 Scenario: history database not present under a regular user
@@ -55,6 +61,8 @@ Scenario: history database not present under a regular user
       """
 
 
+# Requires PR https://github.com/rpm-software-management/libdnf/pull/935
+@not.with_os=rhel__eq__8
 @bz1761976
 @no_installroot
 Scenario: read permission error on the history database
@@ -68,6 +76,8 @@ Given I successfully execute dnf with args "--setopt=persistdir={context.dnf.tem
       """
 
 
+# Requires PR https://github.com/rpm-software-management/libdnf/pull/935
+@not.with_os=rhel__eq__8
 @bz1761976
 @no_installroot
 Scenario: read permission error on the history database directory

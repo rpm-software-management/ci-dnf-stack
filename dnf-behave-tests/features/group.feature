@@ -186,7 +186,6 @@ Scenario: Group remove does not remove user installed packages
         | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
 
-@not.with_os=rhel__eq__8
 @bz1809600
 Scenario: Group remove does not traceback when reason change
   Given I use repository "dnf-ci-thirdparty"

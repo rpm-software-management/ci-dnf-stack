@@ -230,6 +230,8 @@ Scenario: Check-update command does not report updates filtered out by the versi
     """
 
 
+# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/393
+@not.with_os=rhel__eq__8
 # PackageB-Obsoleter obsoletes PackageB < 3.0
 @bz1627124
 Scenario: The locked version of the package cannot get obsoleted
@@ -248,6 +250,8 @@ Scenario: The locked version of the package cannot get obsoleted
     And Transaction is empty
 
 
+# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/393
+@not.with_os=rhel__eq__8
 # PackageD-2.0 obsoletes PackageC < 2.0
 @bz1627124
 Scenario: The locked version of the package cannot get obsoleted by upgrade of other package

@@ -1,7 +1,6 @@
 Feature: Tests for install with dependencies
 
 
-@not.with_os=rhel__eq__8
 @bz1774617
 Scenario: Best candidates have conflicting dependencies
   Given I use repository "install-dependencies"

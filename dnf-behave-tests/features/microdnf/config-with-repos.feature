@@ -1,5 +1,4 @@
 # no bug, PR https://github.com/rpm-software-management/libdnf/pull/882
-@not.with_os=rhel__eq__8
 @no_installroot
 Feature: Repositories configured in main configuration file
 

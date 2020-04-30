@@ -222,7 +222,6 @@ Given I use repository "dnf-ci-thirdparty"
  Then stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions.x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty"
 
 
-@not.with_os=rhel__eq__8
 @bz1800342
 Scenario: dnf list respects repo priorities
   Given I use repository "dnf-ci-fedora-updates" with configuration
@@ -248,7 +247,6 @@ Scenario: dnf list --showduplicates lists all (even from lower-priority repo)
     And stdout section "Available Packages" contains "flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates"
 
 
-@not.with_os=rhel__eq__8
 @bz1800342
 Scenario: dnf list doesn't show any available packages when there are no upgrades in the highest-priority repo
   Given I use repository "dnf-ci-fedora-updates" with configuration
