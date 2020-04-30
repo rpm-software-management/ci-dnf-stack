@@ -6,7 +6,6 @@ Background: Enable builddep plugin
     And I use repository "dnf-ci-fedora"
 
 
-@not.with_os=rhel__eq__8
 Scenario: Dnf builddep can use spec file from a remote location
   Given I create directory "/remotedir"
     And I create file "/remotedir/pkg.spec" with

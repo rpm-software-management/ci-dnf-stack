@@ -4,7 +4,6 @@ Feature: Reinstall must keep the "reason" why a package was installed
 
 
 # no bug, PR https://github.com/rpm-software-management/microdnf/pull/61
-@not.with_os=rhel__eq__8
 Scenario: Reinstall a dependency, and then remove the main package
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"

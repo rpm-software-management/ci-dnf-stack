@@ -272,7 +272,6 @@ Scenario: Reposync --newest-only downloads packages from all streams and latest 
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm" exists
 
 
-@not.with_os=rhel__eq__8
 @bz1795965
 Scenario: Reposync accepts --norepopath to synchronize single repository
   Given I use repository "reposync" as http
@@ -284,7 +283,6 @@ Scenario: Reposync accepts --norepopath to synchronize single repository
     And the files "{context.dnf.tempdir}/src/wget-1.0-1.fc29.src.rpm" and "{context.dnf.fixturesdir}/repos/reposync/src/wget-1.0-1.fc29.src.rpm" do not differ
 
 
-@not.with_os=rhel__eq__8
 @bz1795965
 Scenario: Reposync --norepopath cannot be used with multiple repositories
   Given I use repository "reposync" as http

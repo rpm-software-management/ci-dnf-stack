@@ -22,14 +22,12 @@ Background: Set up versionlock infrastructure in the installroot
     And I use repository "dnf-ci-fedora-updates"
 
 
-@not.with_os=rhel__eq__8
 Scenario: dnf will fail if versionlock.list file is missing
   Given I delete file "/etc/dnf/plugins/versionlock.list"
   When I execute dnf with args "check-update"
   Then the exit code is 1
 
 
-@not.with_os=rhel__eq__8
 Scenario: dnf will fail if versionlock.list path is missing from conf
   Given I create file "/etc/dnf/plugins/versionlock.conf" with
     """
@@ -40,7 +38,6 @@ Scenario: dnf will fail if versionlock.list path is missing from conf
   Then the exit code is 1
 
 
-@not.with_os=rhel__eq__8
 Scenario Outline: dnf versionlock <option> <package> will fail if versionlock.list file is missing
   Given I delete file "/etc/dnf/plugins/versionlock.list"
   When I execute dnf with args "versionlock <option> <package>"
@@ -54,7 +51,6 @@ Examples:
         | exclude | abcde   |
 
 
-@not.with_os=rhel__eq__8
 Scenario: dnf versionlock clear will create empty file if versionlock.list is missing
   Given I delete file "/etc/dnf/plugins/versionlock.list"
   When I execute dnf with args "versionlock clear"
@@ -64,7 +60,7 @@ Scenario: dnf versionlock clear will create empty file if versionlock.list is mi
     """
     """
 
-@not.with_os=rhel__eq__8
+
 Scenario Outline: dnf versionlock <option> <package> will fail if versionlock.list path is missing from conf
   Given I create file "/etc/dnf/plugins/versionlock.conf" with
     """

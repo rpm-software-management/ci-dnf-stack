@@ -26,7 +26,6 @@ Scenario: Download an existing RPM in file:// mode with all dependencies into a 
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm    | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm  |
 
 
-@not.with_os=rhel__eq__8
 @bz1787908
 Scenario: Download an existing RPM in file:// mode with all dependencies into a --destdir when it is in multiple repositories
   Given I use repository "dnf-ci-fedora"
@@ -43,7 +42,6 @@ Scenario: Download an existing RPM in file:// mode with all dependencies into a 
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm    | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm  |
 
 
-@not.with_os=rhel__eq__8
 @bz1787908
 Scenario: Download an existing RPM in two versions in file:// mode with all dependencies into a --destdir
   Given I use repository "dnf-ci-fedora"
@@ -63,7 +61,6 @@ Scenario: Download an existing RPM in two versions in file:// mode with all depe
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm              | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm                     |
 
 
-@not.with_os=rhel__eq__8
 @bz1800342
 Scenario: Download RPM form repository of higher priority
   Given I use repository "dnf-ci-fedora"

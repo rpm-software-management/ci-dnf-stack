@@ -16,7 +16,6 @@ Scenario: UTF-8 characters in .repo filename
     And stderr is empty
 
 
-@not.with_os=rhel__eq__8
 @bz1803038
 Scenario: non-UTF-8 characters in .repo filename
   Given I configure dnf with
@@ -37,7 +36,6 @@ Scenario: non-UTF-8 characters in .repo filename
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: non-UTF-8 character in pkgspec
   Given I use repository "miscellaneous"
    When I execute dnf with args "install {context.invalid_utf8_char}ummy"
@@ -49,7 +47,6 @@ Scenario: non-UTF-8 character in pkgspec
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: non-UTF-8 character in baseurl
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --repofrompath=testrepo,{context.invalid_utf8_char}"
@@ -61,7 +58,6 @@ Scenario: non-UTF-8 character in baseurl
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: non-UTF-8 character in an option
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --config={context.invalid_utf8_char}"
@@ -73,7 +69,6 @@ Scenario: non-UTF-8 character in an option
         """
 
 
-@not.with_os=rhel__eq__8
 Scenario: non-UTF-8 character in an option when using corresponding locale
   Given I use repository "miscellaneous"
     And I create file "/{context.invalid_utf8_char}" with

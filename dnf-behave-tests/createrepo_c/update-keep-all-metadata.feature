@@ -71,8 +71,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
-# createrepo_c is compiled without support for modular metadata and refuses to use them on rhel 8
-@not.with_os=rhel__eq__8
 Scenario: --update --keep-all-metadata keeps all additional metadata
 Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/temp-repo"
   And I execute modifyrepo_c with args "../../updateinfo.xml ." in "/temp-repo/repodata"

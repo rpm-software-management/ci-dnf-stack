@@ -27,7 +27,6 @@ Scenario: I cannot install a specific package from not enabled module when defau
    Then the exit code is 1
     And stderr contains "Error: Unable to find a match"
 
-@not.with_os=rhel__eq__8
 @bz1767351
 Scenario: I cannot install a specific package from not enabled module after reset
   Given I use repository "dnf-ci-multicontext-modular"
