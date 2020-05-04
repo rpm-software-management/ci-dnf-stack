@@ -58,7 +58,7 @@ data:
     - nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
     - nodejs-1:5.3.1-1.module_2011+41787af0.src
     - nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
-    - nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
+    - nodejs-docs-1:5.3.1-1.module_2011+41787af0.noarch
     - npm-1:5.3.1-1.module_2011+41787af0.x86_64
 ...
 ---
@@ -478,6 +478,8 @@ data:
   artifacts:
     rpms:
     - ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64
+    - ninja-build-debuginfo-0:1.8.2-4.module_1991+4e5efe2f.x86_64
+    - ninja-build-debugsource-0:1.8.2-4.module_1991+4e5efe2f.x86_64
     - ninja-build-0:1.8.2-4.module_1991+4e5efe2f.src
 ...
 ---

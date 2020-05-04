@@ -289,6 +289,7 @@ data:
     - nodejs-1:10.14.1-1.module_2533+7361f245.src
     - nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
     - nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
+    - npm-1:10.14.1-1.module_2533+7361f245.x86_64
 ...
 ---
 document: modulemd

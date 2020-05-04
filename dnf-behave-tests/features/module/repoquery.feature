@@ -67,6 +67,8 @@ Scenario: module repoquery can be used with both --installed and --available tog
     <REPOSYNC>
     ninja-build-1.8.2-4.module_1991+4e5efe2f.src
     ninja-build-1.8.2-4.module_1991+4e5efe2f.x86_64
+    ninja-build-debuginfo-1.8.2-4.module_1991+4e5efe2f.x86_64
+    ninja-build-debugsource-1.8.2-4.module_1991+4e5efe2f.x86_64
     nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
     npm-1:12.1.0-1.module_2379+8d497405.x86_64
     """
