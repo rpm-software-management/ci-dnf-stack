@@ -452,20 +452,9 @@ data:
   artifacts:
     rpms:
     - postgresql-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-contrib-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-devel-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-docs-0:9.6.11-1.module_2689+ea8f147f.x86_64
     - postgresql-libs-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-plperl-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-plpython-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-plpython3-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-pltcl-0:9.6.11-1.module_2689+ea8f147f.x86_64
     - postgresql-server-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-static-0:9.6.11-1.module_2689+ea8f147f.x86_64
     - postgresql-test-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-test-rpm-macros-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-upgrade-0:9.6.11-1.module_2689+ea8f147f.x86_64
-    - postgresql-upgrade-devel-0:9.6.11-1.module_2689+ea8f147f.x86_64
 ...
 ---
 document: modulemd
@@ -533,20 +522,9 @@ data:
   artifacts:
     rpms:
     - postgresql-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-contrib-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-devel-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-docs-0:11.1-2.module_2597+e45c4cc9.x86_64
     - postgresql-libs-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-plperl-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-plpython-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-plpython3-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-pltcl-0:11.1-2.module_2597+e45c4cc9.x86_64
     - postgresql-server-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-static-0:11.1-2.module_2597+e45c4cc9.x86_64
     - postgresql-test-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-test-rpm-macros-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-upgrade-0:11.1-2.module_2597+e45c4cc9.x86_64
-    - postgresql-upgrade-devel-0:11.1-2.module_2597+e45c4cc9.x86_64
 ...
 ---
 document: modulemd
@@ -614,18 +592,7 @@ data:
   artifacts:
     rpms:
     - postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
     - postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
     - postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
     - postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
-    - postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
 ...

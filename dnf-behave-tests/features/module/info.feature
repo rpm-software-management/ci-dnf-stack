@@ -559,20 +559,9 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
         Requires         : platform:[f29]
         Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
@@ -600,20 +589,9 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
         Requires         : platform:[f29]
         Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-contrib-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-docs-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plperl-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plpython-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-plpython3-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-pltcl-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-static-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-test-rpm-macros-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-upgrade-0:10.6-1.module_2594+0c9aadc5.x86_64
-                         : postgresql-upgrade-devel-0:10.6-1.module_2594+0c9aadc5.x86_64
 
         Hint: [d]efault, [e]nabled, [x]disabled, [i]nstalled, [a]ctive
         """
