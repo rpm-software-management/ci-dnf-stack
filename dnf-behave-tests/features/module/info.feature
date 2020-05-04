@@ -47,7 +47,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
+      Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.src
+                       : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
                        : nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
                        : nodejs-docs-1:10.11.0-1.module_2200+adbac02b.noarch
                        : npm-1:10.11.0-1.module_2200+adbac02b.x86_64
@@ -63,7 +64,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
+      Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.src
+                       : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                        : http-parser-devel-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                        : libnghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
                        : libnghttp2-devel-0:1.35.1-1.module_2672+97d6a5e9.x86_64
@@ -71,6 +73,7 @@ Scenario: Get info for a module, only module name specified
                        : libuv-devel-1:1.23.2-1.module_2302+4c6ccf2f.x86_64
                        : libuv-static-1:1.23.2-1.module_2302+4c6ccf2f.x86_64
                        : nghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
+                       : nodejs-1:10.14.1-1.module_2533+7361f245.src
                        : nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
                        : nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
                        : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
@@ -86,7 +89,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
+                       : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
                        : npm-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -109,6 +113,7 @@ Scenario: Get info for a module, only module name specified
                        : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                        : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                        : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:11.1.0-1.module_2379+8d497405.src
                        : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
@@ -132,6 +137,7 @@ Scenario: Get info for a module, only module name specified
                        : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                        : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                        : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:12.1.0-1.module_2379+8d497405.src
                        : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
@@ -148,7 +154,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
+      Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
+                       : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
                        : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
                        : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
                        : npm-1:5.3.1-1.module_2011+41787af0.x86_64
@@ -164,7 +171,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+      Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                       : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                        : npm-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -180,7 +188,8 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+      Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                       : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                        : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                        : npm-1:8.14.0-1.module_2030+42747d41.x86_64
@@ -206,7 +215,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
-      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+      Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
+                       : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
                        : npm-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -229,6 +239,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                        : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                        : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                        : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                       : nodejs-1:11.1.0-1.module_2379+8d497405.src
                        : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
                        : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
@@ -257,7 +268,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
+        Artifacts        : nodejs-1:10.11.0-1.module_2200+adbac02b.src
+                         : nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64
                          : nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
                          : nodejs-docs-1:10.11.0-1.module_2200+adbac02b.noarch
                          : npm-1:10.11.0-1.module_2200+adbac02b.x86_64
@@ -273,7 +285,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
+        Artifacts        : http-parser-0:2.9.0-1.module_2672+97d6a5e9.src
+                         : http-parser-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                          : http-parser-devel-0:2.9.0-1.module_2672+97d6a5e9.x86_64
                          : libnghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
                          : libnghttp2-devel-0:1.35.1-1.module_2672+97d6a5e9.x86_64
@@ -281,6 +294,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : libuv-devel-1:1.23.2-1.module_2302+4c6ccf2f.x86_64
                          : libuv-static-1:1.23.2-1.module_2302+4c6ccf2f.x86_64
                          : nghttp2-0:1.35.1-1.module_2672+97d6a5e9.x86_64
+                         : nodejs-1:10.14.1-1.module_2533+7361f245.src
                          : nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
                          : nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
                          : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
@@ -296,7 +310,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
+                         : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
                          : npm-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -319,6 +334,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                          : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                          : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.src
                          : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
@@ -342,6 +358,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                          : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                          : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:12.1.0-1.module_2379+8d497405.src
                          : nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-devel-1:12.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-docs-1:12.1.0-1.module_2379+8d497405.noarch
@@ -358,7 +375,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
+        Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
+                         : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
                          : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
                          : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
                          : npm-1:5.3.1-1.module_2011+41787af0.x86_64
@@ -374,7 +392,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -390,7 +409,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.14.0-1.module_2030+42747d41.x86_64
@@ -418,7 +438,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
+                         : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
                          : npm-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -441,6 +462,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                          : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                          : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.src
                          : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
@@ -469,7 +491,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
+        Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
+                         : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-docs-1:11.0.0-1.module_2311+8d497411.noarch
                          : npm-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -492,6 +515,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : libuv-devel-1:1.23.2-1.module_2365+652bf990.x86_64
                          : libuv-static-1:1.23.2-1.module_2365+652bf990.x86_64
                          : nghttp2-0:1.34.0-1.module_2365+652bf990.x86_64
+                         : nodejs-1:11.1.0-1.module_2379+8d497405.src
                          : nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-devel-1:11.1.0-1.module_2379+8d497405.x86_64
                          : nodejs-docs-1:11.1.0-1.module_2379+8d497405.noarch
@@ -526,7 +550,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -542,7 +567,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.14.0-1.module_2030+42747d41.x86_64
@@ -558,7 +584,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : PostgreSQL module
         Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
         Requires         : platform:[f29]
-        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
+        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.src
+                         : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
@@ -588,7 +615,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : PostgreSQL module
         Description      : PostgreSQL is an advanced Object-Relational database management system (DBMS). The PostgreSQL server can be found in the postgresql-server sub-package.
         Requires         : platform:[f29]
-        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
+        Artifacts        : postgresql-0:10.6-1.module_2594+0c9aadc5.src
+                         : postgresql-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-libs-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-server-0:10.6-1.module_2594+0c9aadc5.x86_64
                          : postgresql-test-0:10.6-1.module_2594+0c9aadc5.x86_64
@@ -747,7 +775,8 @@ Examples:
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.11.4-1.module_2030+42747d40.x86_64
@@ -763,7 +792,8 @@ Examples:
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
-        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
+        Artifacts        : nodejs-1:8.11.4-1.module_2030+42747d40.src
+                         : nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
                          : nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch
                          : npm-1:8.14.0-1.module_2030+42747d41.x86_64
