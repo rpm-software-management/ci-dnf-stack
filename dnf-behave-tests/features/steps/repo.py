@@ -176,7 +176,7 @@ def step_copy_repository(context, repo):
     dst = os.path.join(context.dnf.tempdir, "repos", repo)
     copy_tree(repo_info.path, dst)
     repo_info.path = dst
-    repo_info.update_config({"baseurl": dst})
+    repo_info.update_config({"baseurl": "file://" + dst})
 
 
 @behave.step("I configure a new repository \"{repo}\" in \"{path}\" with")
