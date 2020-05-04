@@ -60,28 +60,10 @@ Conflicts:      nodejs > 1:8.11.4-1.module_2030+42747d40
 %description docs
 The API documentation for the Node.js JavaScript runtime.
 
-%package -n npm
-Summary:        Node.js Package Manager
-
-Provides:       npm = 1:5.6.0-1.8.11.4.1.module_2030+42747d40
-Provides:       npm = 1:5.6.0
-Provides:       npm(npm) = 5.6.0
-Provides:       npm(x86-64) = 1:5.6.0-1.8.11.4.1.module_2030+42747d40
-
-Requires:       nodejs = 1:8.11.4-1.module_2030+42747d40
-
-Obsoletes:      npm < 3.5.4-6
-
-%description -n npm
-npm is a package manager for node.js. You can use it to install and publish
-your node programs. It manages dependencies and does other cool stuff.
-
 %files
 
 %files devel
 
 %files docs
-
-%files -n npm
 
 %changelog
