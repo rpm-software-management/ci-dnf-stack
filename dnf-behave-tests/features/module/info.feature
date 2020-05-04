@@ -77,6 +77,7 @@ Scenario: Get info for a module, only module name specified
                        : nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
                        : nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
                        : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
+                       : npm-1:10.14.1-1.module_2533+7361f245.x86_64
 
       Name             : nodejs
       Stream           : 11
@@ -157,7 +158,7 @@ Scenario: Get info for a module, only module name specified
       Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
                        : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
                        : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
-                       : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
+                       : nodejs-docs-1:5.3.1-1.module_2011+41787af0.noarch
                        : npm-1:5.3.1-1.module_2011+41787af0.x86_64
 
       Name             : nodejs
@@ -298,6 +299,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
                          : nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
                          : nodejs-devel-1:10.14.1-1.module_2533+7361f245.x86_64
                          : nodejs-docs-1:10.14.1-1.module_2533+7361f245.noarch
+                         : npm-1:10.14.1-1.module_2533+7361f245.x86_64
 
         Name             : nodejs
         Stream           : 11
@@ -378,7 +380,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
                          : nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
                          : nodejs-devel-1:5.3.1-1.module_2011+41787af0.x86_64
-                         : nodejs-docs-1:5.3.1-1.module_2011+41787af0.x86_64
+                         : nodejs-docs-1:5.3.1-1.module_2011+41787af0.noarch
                          : npm-1:5.3.1-1.module_2011+41787af0.x86_64
 
         Name             : nodejs
