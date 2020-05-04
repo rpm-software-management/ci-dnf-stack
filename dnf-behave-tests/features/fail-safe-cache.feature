@@ -27,7 +27,7 @@ Background: Copy the dnf-ci-fedora modular repository (to allow modulemd removal
 #         nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
 #         nodejs-1:12.1.0-1.module_2379+8d497405.x86_64
 #         nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
-#         nodejs-1:8.14.0-1.module_2030+42747d40.x86_64
+#         nodejs-1:8.14.0-1.x86_64
 #         - nodejs:8 - nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
 #         - nodejs:10 - nodejs-1:10.14.1-1.module_2533+7361f245.x86_64
 #         - nodejs:11 - nodejs-1:11.1.0-1.module_2379+8d497405.x86_64
@@ -270,7 +270,7 @@ Scenario: When modular RPM is installed and the modular repo is disabled and fai
    Then the exit code is 0
     And Transaction is following
         | Action                    | Package                                            |
-        | upgrade                   | nodejs-1:8.14.0-1.module_2030+42747d41.x86_64      |
+        | upgrade                   | nodejs-1:8.14.0-1.x86_64                           |
 
 
 @bz1616167
