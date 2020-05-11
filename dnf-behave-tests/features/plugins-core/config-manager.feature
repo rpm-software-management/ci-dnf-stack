@@ -65,6 +65,124 @@ Examples:
         | --set-disabled  |
 
 
+@bz1830530
+Scenario Outline: enable more than one repository
+   When I execute dnf with args "config-manager --enable <option>"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/repo1.repo" contents is
+        """
+        [repo1]
+        name=repo1 test repository
+        enabled=1
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/repo2.repo" contents is
+        """
+        [repo2]
+        name=repo2 test repository
+        enabled=1
+        gpgcheck=0
+        """
+
+Examples:
+        | option         |
+        | repo1 repo2    |
+        | repo1,repo2    |
+        | repo1, repo2   |
+        | repo1 ,repo2   |
+        | repo1 , repo2  |
+
+
+@bz1830530
+Scenario Outline: disable more than one repository
+   When I execute dnf with args "config-manager --disable <option>"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/repo1.repo" contents is
+        """
+        [repo1]
+        name=repo1 test repository
+        enabled=0
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/repo2.repo" contents is
+        """
+        [repo2]
+        name=repo2 test repository
+        enabled=0
+        gpgcheck=0
+        """
+
+Examples:
+        | option         |
+        | repo1 repo2    |
+        | repo1,repo2    |
+        | repo1, repo2   |
+        | repo1 ,repo2   |
+        | repo1 , repo2  |
+
+
+@bz1830530
+Scenario Outline: enable more than one repository
+Scenario: enable repo using wildcards and commas
+  Given I configure a new repository "sepo1" with
+        | key         | value    |
+        | enabled     | 1        |
+   When I execute dnf with args "config-manager --enable repo*, sepo1"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/repo1.repo" contents is
+        """
+        [repo1]
+        name=repo1 test repository
+        enabled=1
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/repo2.repo" contents is
+        """
+        [repo2]
+        name=repo2 test repository
+        enabled=1
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/sepo1.repo" contents is
+        """
+        [sepo1]
+        name=sepo1 test repository
+        enabled=1
+        gpgcheck=0
+        """
+
+
+@bz1830530
+Scenario Outline: enable more than one repository
+Scenario: disable repo using wildcards and commas
+  Given I configure a new repository "sepo1" with
+        | key         | value    |
+        | enabled     | 1        |
+   When I execute dnf with args "config-manager --disable repo*, sepo1"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/repo1.repo" contents is
+        """
+        [repo1]
+        name=repo1 test repository
+        enabled=0
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/repo2.repo" contents is
+        """
+        [repo2]
+        name=repo2 test repository
+        enabled=0
+        gpgcheck=0
+        """
+    And file "/etc/yum.repos.d/sepo1.repo" contents is
+        """
+        [sepo1]
+        name=sepo1 test repository
+        enabled=0
+        gpgcheck=0
+        """
+
+
 @bz1679213
 Scenario: --enable enables repository specified in --setopt option
    When I execute dnf with args "config-manager --enable --setopt=repo2.gpgcheck=1"
