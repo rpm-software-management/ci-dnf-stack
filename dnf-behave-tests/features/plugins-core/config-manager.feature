@@ -18,7 +18,7 @@ Scenario: when run without arguments
    Then the exit code is 1
     And stderr is
     """
-    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable
+    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --set-enabled --enable --set-disabled --disable
     """
 
 
@@ -29,7 +29,7 @@ Scenario: when run with single argument
    Then the exit code is 1
     And stderr is
     """
-    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable
+    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --set-enabled --enable --set-disabled --disable
     """
 
 
@@ -146,7 +146,7 @@ Scenario: --setopt does not modify repo when used without --save
         """
     And stderr is
     """
-    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable
+    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --set-enabled --enable --set-disabled --disable
     """
 
 
@@ -165,7 +165,7 @@ Scenario: --setopt does not modify repo when used without --save and one argumen
         """
     And stderr is
     """
-    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --enable --disable
+    Command line error: one of the following arguments is required: --save --add-repo --dump --dump-variables --set-enabled --enable --set-disabled --disable
     """
 
 
