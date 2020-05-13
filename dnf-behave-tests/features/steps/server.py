@@ -19,6 +19,15 @@ def parse_server_type(text):
 behave.register_type(server_type=parse_server_type)
 
 
+@behave.step("I start {stype:server_type} server \"{id}\" at \"{path}\"")
+def step_start_new_server(context, stype, id, path):
+    """
+    Starts a new HTTP/FTP server at path. The port can then be retrieved through the id.
+    """
+    host, port = start_server_based_on_type(context, path.format(context=context), stype)
+    context.dnf.ports[id] = port
+
+
 @behave.step("the server starts responding with HTTP status code {code}")
 def step_server_down(context, code):
     context.scenario.httpd.conf['status'] = int(code)
