@@ -29,6 +29,7 @@ class ServerContext(object):
 
     def __init__(self):
         # mapping path -> (address, server process)
+        self._error = multiprocessing.Manager().Value(str, "")
         self.servers = dict()
 
     def _start_server(self, path, target, *args):
@@ -38,12 +39,15 @@ class ServerContext(object):
         if path in self.servers:
             return self.get_address(path)
         address = self._get_free_socket()
-        process = multiprocessing.Process(target=target, args=(address, path) + args)
+        process = multiprocessing.Process(target=target, args=(address, path, self._error) + args)
         process.start()
         self.servers[path] = (address, process)
 
         attempts = 1
         while attempts <= 10:
+            if self._error.value:
+                raise AssertionError("Server failed to start: " + self._error.value)
+
             try:
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     s.connect(address)
