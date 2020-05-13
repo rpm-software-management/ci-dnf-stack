@@ -68,23 +68,29 @@ class HttpServerContext(ServerContext):
     """
 
     @staticmethod
-    def http_server(address, path, log, conf):
-        os.chdir(path)
-        httpd = TCPServer(address, LoggingHttpHandler)
-        httpd._log = log
-        httpd._conf = conf
-        httpd.serve_forever()
+    def http_server(address, path, error, log, conf):
+        try:
+            os.chdir(path)
+            httpd = TCPServer(address, LoggingHttpHandler)
+            httpd._log = log
+            httpd._conf = conf
+            httpd.serve_forever()
+        except Exception as e:
+            error.value = str(e)
 
     @staticmethod
-    def https_server(address, path, cacert, cert, key, client_verification=False):
-        os.chdir(path)
-        httpd = TCPServer(address, NoLogHttpHandler)
-        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=cacert)
-        context.load_cert_chain(certfile=cert, keyfile=key)
-        if client_verification:
-            context.verify_mode = ssl.CERT_REQUIRED
-        httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
-        httpd.serve_forever()
+    def https_server(address, path, error, cacert, cert, key, client_verification=False):
+        try:
+            os.chdir(path)
+            httpd = TCPServer(address, NoLogHttpHandler)
+            context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=cacert)
+            context.load_cert_chain(certfile=cert, keyfile=key)
+            if client_verification:
+                context.verify_mode = ssl.CERT_REQUIRED
+            httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
+            httpd.serve_forever()
+        except Exception as e:
+            error.value = str(e)
 
     def __init__(self):
         super(HttpServerContext, self).__init__()
