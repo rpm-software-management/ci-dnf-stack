@@ -49,6 +49,7 @@ Scenario: Repolist with "all"
 
 
 Scenario: Repolist in verbose mode without arguments
+  Given I set dnf command to "dnf"
    When I execute dnf with args "repolist --verbose"
    Then the exit code is 0
     And stdout matches line by line
@@ -82,11 +83,12 @@ Total packages: 295
 @bz1812682
 Scenario: Repolist with -d 6
 #  -d with 6 or higher is similar to --verbose option
+  Given I set dnf command to "yum"
    When I execute dnf with args "-d 6 repolist"
    Then the exit code is 0
     And stdout matches line by line
 """
-DNF version: .*
+YUM version: .*
 cachedir: .*
 Repo-id            : dnf-ci-fedora
 Repo-name          : dnf-ci-fedora test repository
