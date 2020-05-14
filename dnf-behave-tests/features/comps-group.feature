@@ -286,3 +286,41 @@ Scenario: Group list ids with arg => yum compatibility
     Available Groups:
        DNF-CI-Testgroup (dnf-ci-testgroup)
     """
+
+@bz1826198
+Scenario: List an environment with empty name
+  Given I use repository "comps-group"
+  When I execute dnf with args "group list"
+   Then the exit code is 0
+   And stdout is
+       """
+       <REPOSYNC>
+       Available Environment Groups:
+          <name-unset>
+       Available Groups:
+          Test Group
+          <name-unset>
+       """
+
+@bz1826198
+Scenario: Install a group with empty name
+  Given I use repository "comps-group"
+  When I execute dnf with args "group install no-name-group"
+   Then the exit code is 0
+    # note the group is not listed in the transaction due to its name missing
+    And Transaction is following
+        | Action        | Package                           |
+        | group-install | <name-unset>                      |
+        | install-group | test-package-1.0-1.fc29.noarch    |
+
+@bz1826198
+Scenario: Install an environment with empty name
+  Given I use repository "comps-group"
+  When I execute dnf with args "group install no-name-env"
+   Then the exit code is 0
+    # note the env group is not listed in the transaction due to its name missing
+    And Transaction is following
+        | Action        | Package                           |
+        | env-install   | <name-unset>                      |
+        | group-install | Test Group                        |
+        | install-group | test-package-1.0-1.fc29.noarch    |
