@@ -22,7 +22,7 @@ def parse_context_table(context):
     for action, nevras in context.table:
         if action not in result:
             continue
-        if action.startswith('group-') or action.startswith('module-'):
+        if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
             for group in nevras.split(", "):
                 result[action].append(group)
         else:
@@ -55,9 +55,7 @@ def check_rpmdb_transaction(context, mode):
             continue
         for nevra in nevras.split(", "):
             checked_rpmdb.setdefault(action, set()).add(nevra)
-            if action.startswith('group-'):
-                continue
-            if action.startswith('module-'):
+            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
                 continue
             rpm = RPM(nevra)
             if action == "reinstall" and rpm not in rpmdb_transaction["reinstall"]:
@@ -105,7 +103,7 @@ def check_dnf_transaction(context, mode):
         if action in ["absent", "present", "unchanged", "changed"]:
             continue
         for nevra in nevras.split(", "):
-            if action.startswith('group-') or action.startswith('module-'):
+            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
                 title = action.split('-')[0].capitalize()
                 group = nevra
                 if group not in dnf_transaction[action]:

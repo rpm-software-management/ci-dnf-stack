@@ -40,6 +40,7 @@ ACTIONS_EN = {
     "Skipping packages with conflicts": "conflict",
     "Installing group/module packages": "install-group",
     "Installing Groups": "group-install",
+    "Installing Environment Groups": "env-install",
     "Removing Groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
     "Installing module profiles": "module-profile-install",
@@ -156,7 +157,7 @@ def parse_transaction_table(lines):
 
             line = lines[0].rstrip()
 
-            if action.startswith('group-') or action.startswith('module-'):
+            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
                 if ACTION_RE.match(line):
                     break
                 lines.pop(0)
