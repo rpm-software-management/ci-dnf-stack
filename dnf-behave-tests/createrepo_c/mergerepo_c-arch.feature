@@ -24,6 +24,8 @@ Scenario: merged repository contains packages of all arches by default
       | package        | 0     | 0.2.1   | 1.fc29  | x86_64       |
 
 
+# Requires PR https://github.com/rpm-software-management/createrepo_c/pull/218
+@not.with_os=rhel__eq__8
 Scenario: --arch-expand cannot be used without --archlist
  When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/repo1 --repo {context.scenario.default_tmp_dir}/repo2 --arch-expand" in "/"
  Then the exit code is 1
@@ -43,6 +45,8 @@ Scenario: merged repository contains packages only for architecture specified by
       | arch-package-a | 0     | 0.0.1   | 1.fc29  | i386         |
 
 
+# Requires PR https://github.com/rpm-software-management/createrepo_c/pull/218
+@not.with_os=rhel__eq__8
 Scenario: using --arch-expand merged repository contains packages for x86_64, arches expanded from it and arches expanded from its multilib arches
  When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/repo1 --repo {context.scenario.default_tmp_dir}/repo2 --archlist x86_64 --arch-expand" in "/"
  Then the exit code is 0
@@ -55,6 +59,8 @@ Scenario: using --arch-expand merged repository contains packages for x86_64, ar
       | package        | 0     | 0.2.1   | 1.fc29  | x86_64       |
 
 
+# Requires PR https://github.com/rpm-software-management/createrepo_c/pull/218
+@not.with_os=rhel__eq__8
 Scenario: using --arch-expand merged repository contains packages only for i386 and arches expanded from it, no other since its not multilib arch
  When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/repo1 --repo {context.scenario.default_tmp_dir}/repo2 --archlist i386 --arch-expand" in "/"
  Then the exit code is 0
@@ -66,6 +72,8 @@ Scenario: using --arch-expand merged repository contains packages only for i386 
       | arch-package-b | 0     | 0.0.1   | 1.fc29  | i686         |
 
 
+# Requires PR https://github.com/rpm-software-management/createrepo_c/pull/218
+@not.with_os=rhel__eq__8
 Scenario: using --arch-expand merged repository contains packages only for architecture i686 specified by archlist because its not multilib and doesn't expand
  When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/repo1 --repo {context.scenario.default_tmp_dir}/repo2 --archlist i686 --arch-expand" in "/"
  Then the exit code is 0
