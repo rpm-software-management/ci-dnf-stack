@@ -264,6 +264,7 @@ Scenario: repoquery --whatrequires NAME (file provide)
   And stdout is
       """
       middle1-1:2.0-1.x86_64
+      middle3-1:1.0-1.x86_64
       """
 
 Scenario: repoquery --whatrequires PROVIDE_NAME
