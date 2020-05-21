@@ -210,6 +210,11 @@ def after_step(context, step):
 
 
 def before_scenario(context, scenario):
+    if context.config.junit:
+        # i did not find any other way how to put feature file name
+        # into junit output xml than appending this fake tag
+        scenario.tags.append('feature_file_name:%s' % context.feature.filename)
+
     if context.tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip(reason="DISABLED ACTIVE-TAG")
 
