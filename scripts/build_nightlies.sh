@@ -20,7 +20,7 @@ run_build(){
     rm -rf "$gitdir"
 }
 
-pushd $(dirname $(readlink -f $0))
+pushd "$(dirname "$(readlink -f "$0")")"
     for chroot in "${CHROOTS[@]}"; do
         run_build "$chroot" &
     done
