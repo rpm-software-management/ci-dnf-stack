@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-PROG_PATH=$(dirname $(readlink -f -- $0))
-. ${PROG_PATH}/x509certgen
+PROG_PATH="$(dirname "$(readlink -f -- "$0")")"
+# shellcheck source=dnf-behave-tests/fixtures/certificates/x509certgen
+. "${PROG_PATH}/x509certgen"
 rm -rf "$PROG_PATH/testcerts"
 mkdir -p "$PROG_PATH/testcerts"
 pushd "$PROG_PATH/testcerts"
