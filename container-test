@@ -96,6 +96,16 @@ def command_line_parser():
     shell_parser = subparsers.add_parser(
         'shell', help="Run a bash shell session within the container")
 
+    # execute command
+    execute_parser = subparsers.add_parser(
+        'execute', help="Execute any command in the container")
+    execute_parser.add_argument(
+        "execute_cmd", metavar="<command> <args> ...", nargs=1,
+        help="Command to execute in the container")
+    execute_parser.add_argument(
+        "execute_args", metavar="<args>", nargs=argparse.REMAINDER,
+        help=argparse.SUPPRESS)
+
     return parser
 
 
@@ -372,6 +382,18 @@ class BehaveRunner(object):
         returncode = subprocess.call(command)
         if returncode > 0:
             error('Failed to build the container.')
+
+    def command_execute(self):
+        '''
+        Execute any command in the container
+        '''
+        command = self.docker_bin + ['run', '--rm']
+        command += self.volumes
+        command.append(self.command_line_args.container)
+        command.extend(self.command_line_args.execute_cmd)
+        command.extend(self.command_line_args.execute_args)
+        subprocess.call(command)
+
 
 
 if __name__ == '__main__':
