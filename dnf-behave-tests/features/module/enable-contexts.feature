@@ -15,7 +15,7 @@ Scenario: Appropriate context is selected depending on the enabled required modu
         | Action                    | Package                       |
         | module-stream-enable      | berry:raspberry               |
         | module-profile-install    | berry/default                 |
-        | install                   | raspberry-0:1.0-1.wood.x86_64 |
+        | install-group             | raspberry-0:1.0-1.wood.x86_64 |
 
 
 Scenario: Appropriate context is selected depending on the enabled required module stream - cross check
@@ -30,7 +30,7 @@ Scenario: Appropriate context is selected depending on the enabled required modu
         | Action                    | Package                           |
         | module-stream-enable      | berry:raspberry                   |
         | module-profile-install    | berry/default                     |
-        | install                   | raspberry-0:1.0-1.garden.x86_64   |
+        | install-group             | raspberry-0:1.0-1.garden.x86_64   |
 
 
 Scenario: Any suitable context is selected when more options are possible

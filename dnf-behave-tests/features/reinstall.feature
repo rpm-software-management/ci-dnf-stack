@@ -8,8 +8,8 @@ Background: Install CQRlib-devel and CQRlib
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
+        | install-dep   | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
 Scenario: Reinstall an RPM from the same repository

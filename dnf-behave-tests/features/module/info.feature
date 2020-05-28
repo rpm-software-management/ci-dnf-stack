@@ -13,8 +13,8 @@ Given I use repository "dnf-ci-fedora-modular"
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+      | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module enable postgresql:11"
@@ -26,7 +26,7 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       | postgresql    | enabled   | 11        | client        |
   And Transaction contains
       | Action                    | Package                                          |
-      | install                   | postgresql-0:11.1-2.module_2597+e45c4cc9.x86_64  |
+      | install-group             | postgresql-0:11.1-2.module_2597+e45c4cc9.x86_64  |
       | module-profile-install    | postgresql/client                                |
 
 

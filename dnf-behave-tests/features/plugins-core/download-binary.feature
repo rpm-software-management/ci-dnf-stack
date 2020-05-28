@@ -77,8 +77,8 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
     And Transaction is following
         | Action        | Package                               |
         | install       | basesystem-0:11-6.fc29.noarch         |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "download basesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
     And stdout contains "basesystem-11-6.fc29.noarch.rpm"

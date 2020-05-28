@@ -16,8 +16,8 @@ Scenario: I can update a module profile to a newer version
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+      | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs/default"
@@ -49,8 +49,8 @@ Scenario: I try to update a module when no update is available
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+      | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
  When I execute dnf with args "module update nodejs/default"
  Then the exit code is 0
@@ -71,8 +71,8 @@ Scenario: I can update a module profile with package changes
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                        |
-      | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64 |
-      | install                   | npm-1:10.11.0-1.module_2200+adbac02b.x86_64    |
+      | install-group             | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64 |
+      | install-group             | npm-1:10.11.0-1.module_2200+adbac02b.x86_64    |
       | module-profile-install    | nodejs/default                                 |
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs/default"
@@ -95,8 +95,8 @@ Scenario: default stream is used for new deps during an update
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:11.0.0-1.module_2311+8d497411.x86_64 |
-      | install                   | npm-1:11.0.0-1.module_2311+8d497411.x86_64    |
+      | install-group             | nodejs-1:11.0.0-1.module_2311+8d497411.x86_64 |
+      | install-group             | npm-1:11.0.0-1.module_2311+8d497411.x86_64    |
       | module-profile-install    | nodejs/default                                |
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "module update nodejs"
@@ -105,9 +105,9 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       | Action                    | Package                                               |
       | upgrade                   | npm-1:11.1.0-1.module_2379+8d497405.x86_64            |
       | upgrade                   | nodejs-1:11.1.0-1.module_2379+8d497405.x86_64         |
-      | install                   | wget-0:1.19.5-5.fc29.x86_64                           |
-      | install                   | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64      |
-      | install                   | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64 |
+      | install-dep               | wget-0:1.19.5-5.fc29.x86_64                           |
+      | install-dep               | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64      |
+      | install-dep               | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64 |
       | module-stream-enable      | postgresql:9.6                                        |
   And modules state is following
       | Module     | State     | Stream    | Profiles  |
@@ -133,8 +133,8 @@ Given I use repository "dnf-ci-thirdparty"
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+      | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
 Given I use repository "dnf-ci-fedora-modular-updates"
 Given I use repository "dnf-ci-thirdparty-updates"
@@ -145,7 +145,7 @@ Given I use repository "dnf-ci-thirdparty-updates"
        | upgrade                   | npm-1:8.14.0-1.module_2030+42747d41.x86_64    |
        | unchanged                 | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
        | upgrade                   | CQRlib-extension-0:1.6-2.x86_64               |
-       | install                   | SuperRipper-0:1.2-1.x86_64                    |
+       | install-dep               | SuperRipper-0:1.2-1.x86_64                    |
 
 
 @bz1647429
@@ -210,15 +210,15 @@ Scenario: Update module packages and dependent packages when some profiles are i
    Then the exit code is 0
     And Transaction is following
         | Action                   | Package                   |
-        | install                  | axe-0:1.0-1.x86_64        |
+        | install-group            | axe-0:1.0-1.x86_64        |
         | module-profile-install   | cookbook/axe-soup         |
    When I execute dnf with args "module install cookbook:1/ham-and-eggs"
    Then the exit code is 0
     And Transaction is following
         | Action                   | Package                   |
-        | install                  | egg-0:1.0-1.x86_64        |
-        | install                  | ham-0:1.0-1.x86_64        |
-        | install                  | spatula-0:1.0-1.x86_64    |
+        | install-group            | egg-0:1.0-1.x86_64        |
+        | install-group            | ham-0:1.0-1.x86_64        |
+        | install-group            | spatula-0:1.0-1.x86_64    |
         | module-profile-install   | cookbook/ham-and-eggs     |
    When I execute dnf with args "install whisk"
    Then the exit code is 0
@@ -252,15 +252,15 @@ Scenario: Update module profiles that contains non-modular packages and packages
    Then the exit code is 0
     And Transaction is following
         | Action                   | Package                   |
-        | install                  | axe-0:1.0-1.x86_64        |
+        | install-group            | axe-0:1.0-1.x86_64        |
         | module-profile-install   | cookbook/axe-soup         |
    When I execute dnf with args "module install cookbook:1/ham-and-eggs"
    Then the exit code is 0
     And Transaction is following
         | Action                   | Package                   |
-        | install                  | egg-0:1.0-1.x86_64        |
-        | install                  | ham-0:1.0-1.x86_64        |
-        | install                  | spatula-0:1.0-1.x86_64    |
+        | install-group            | egg-0:1.0-1.x86_64        |
+        | install-group            | ham-0:1.0-1.x86_64        |
+        | install-group            | spatula-0:1.0-1.x86_64    |
         | module-profile-install   | cookbook/ham-and-eggs     |
     And modules state is following
         | Module      | State      | Stream    | Profiles      |

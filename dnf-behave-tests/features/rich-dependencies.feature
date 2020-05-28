@@ -17,7 +17,7 @@ Scenario: Required one of packages with recommended
       And Transaction is following
         | Action        | Package                           |
         | install       | pancake-0:1.0-1.x86_64            |
-        | install       | milk-0:1.0-1.x86_64               |
+        | install-dep   | milk-0:1.0-1.x86_64               |
 
 
 Scenario: Required one of packages with recommended, even if the other is installed
@@ -31,7 +31,7 @@ Scenario: Required one of packages with recommended, even if the other is instal
       And Transaction is following
         | Action        | Package                           |
         | install       | pancake-0:1.0-1.x86_64            |
-        | install       | milk-0:1.0-1.x86_64               |
+        | install-weak  | milk-0:1.0-1.x86_64               |
 
 
 # soup
@@ -43,7 +43,7 @@ Scenario: Conditional dependency (condition is not met)
       And Transaction is following
         | Action        | Package                           |
         | install       | soup-0:1.0-1.x86_64               |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
 
 
 Scenario: Conditional dependency (condition is met)
@@ -57,8 +57,8 @@ Scenario: Conditional dependency (condition is met)
       And Transaction is following
         | Action        | Package                           |
         | install       | soup-0:1.0-1.x86_64               |
-        | install       | water-0:1.0-1.x86_64              |
-        | install       | cream-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
+        | install-dep   | cream-0:1.0-1.x86_64              |
 
 
 # sauce
@@ -72,7 +72,7 @@ Scenario: Conditional dependency with "one of" and conflict (condition is not me
       And Transaction is following
         | Action        | Package                           |
         | install       | sauce-0:1.0-1.x86_64              |
-        | install       | flour-0:1.0-1.x86_64              |
+        | install-dep   | flour-0:1.0-1.x86_64              |
 
 
 Scenario: Conditional dependency with "one of" and conflict (condition is met)
@@ -87,8 +87,8 @@ Scenario: Conditional dependency with "one of" and conflict (condition is met)
       And Transaction is following
         | Action        | Package                           |
         | install       | sauce-0:1.0-1.x86_64              |
-        | install       | flour-0:1.0-1.x86_64              |
-        | install       | cream-0:1.0-1.x86_64              |
+        | install-dep   | flour-0:1.0-1.x86_64              |
+        | install-dep   | cream-0:1.0-1.x86_64              |
 
 
 # porridge
@@ -105,7 +105,7 @@ Scenario: Conditional dependency on "one of" packages
       And Transaction is following
         | Action        | Package                           |
         | install       | porridge-0:1.0-1.x86_64           |
-        | install       | milk-0:1.0-1.x86_64               |
+        | install-dep   | milk-0:1.0-1.x86_64               |
 
 
 Scenario: Gradually removing conditional dependencies
@@ -114,8 +114,8 @@ Scenario: Gradually removing conditional dependencies
       And Transaction is following
         | Action        | Package                           |
         | install       | porridge-0:1.0-1.x86_64           |
-        | install       | milk-0:1.0-1.x86_64               |
         | install       | oat-0:1.0-1.x86_64                |
+        | install-dep   | milk-0:1.0-1.x86_64               |
      When I execute dnf with args "remove oat"
      Then the exit code is 0
       And Transaction is following

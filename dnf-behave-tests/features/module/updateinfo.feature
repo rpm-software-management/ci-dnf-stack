@@ -17,9 +17,9 @@ Scenario: List available updates for installed streams (updates available)
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                                 |
-      | install                   | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64        |
-      | install                   | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64   |
-      | install                   | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
+      | install-group             | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
+      | install-dep               | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64        |
+      | install-dep               | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64   |
       | module-profile-install    | postgresql/default                                      |
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "updateinfo --list"
@@ -33,9 +33,9 @@ Scenario: Updates for non enabled streams are hidden
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                               |
-      | install                   | postgresql-0:6.1-1.module_2514+aa9aadc5.x86_64        |
-      | install                   | postgresql-server-0:6.1-1.module_2514+aa9aadc5.x86_64 |
-      | install                   | postgresql-libs-0:6.1-1.module_2514+aa9aadc5.x86_64   |
+      | install-group             | postgresql-server-0:6.1-1.module_2514+aa9aadc5.x86_64 |
+      | install-dep               | postgresql-0:6.1-1.module_2514+aa9aadc5.x86_64        |
+      | install-dep               | postgresql-libs-0:6.1-1.module_2514+aa9aadc5.x86_64   |
       | module-profile-install    | postgresql/default                                    |
 Given I use repository "dnf-ci-fedora-modular-updates"
  Then I execute dnf with args "updateinfo --list"

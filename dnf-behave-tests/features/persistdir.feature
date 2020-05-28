@@ -9,5 +9,5 @@ Scenario: Persistdir is created during transaction
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
     And file "/var/lib/dnf" exists

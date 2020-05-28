@@ -7,12 +7,12 @@ Background: Force installation of an RPM that will cause problems with dependenc
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-dep   | basesystem-0:11-6.fc29.noarch             |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
    When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc-2.28-26.fc29.x86_64.rpm"
    Then the exit code is 0
 

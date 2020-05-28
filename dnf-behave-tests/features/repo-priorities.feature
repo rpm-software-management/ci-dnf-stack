@@ -35,9 +35,9 @@ Scenario: Install RPMs from different highest-priority repositories
     And Transaction is following
         | Action        | Package                                   |
         | install       | flac-0:1.3.3-2.fc29.x86_64                |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
         | install       | filesystem-0:3.9-2.fc29.x86_64            |
         | install       | basesystem-0:11-6.fc29.noarch             |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
 Scenario: Install an RPM and its dependencies from the proper highest-priority repositories
@@ -45,12 +45,12 @@ Scenario: Install an RPM and its dependencies from the proper highest-priority r
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-dep   | basesystem-0:11-6.fc29.noarch             |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
 Scenario: Upgrade an RPM from the highest-priority repository
@@ -97,12 +97,12 @@ Scenario: Upgrade RPMs from different highest-priority repositories
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | install       | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-dep   | basesystem-0:11-6.fc29.noarch             |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
    When I drop repository "dnf-ci-priority-1"
    When I execute dnf with args "upgrade setup glibc"
    Then the exit code is 0
@@ -119,12 +119,12 @@ Scenario: Downgrade an RPM from the highest-priority repository
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                    |
-        | install       | setup-0:2.12.1-1.fc29.noarch               |
-        | install       | filesystem-0:3.9-2.fc29.x86_64             |
-        | install       | basesystem-0:11-6.fc29.noarch              |
         | install       | glibc-0:2.28-27.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-27.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-27.fc29.x86_64  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64             |
+        | install-dep   | basesystem-0:11-6.fc29.noarch              |
+        | install-dep   | glibc-common-0:2.28-27.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-27.fc29.x86_64  |
    When I execute dnf with args "downgrade glibc"
    Then the exit code is 0
     And Transaction is following

@@ -14,7 +14,7 @@ Scenario: I can install a non-default profile using dnf module install module:st
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                           |
-        | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
+        | install-group             | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
         | module-profile-install    | nodejs/minimal                                    |
         | module-stream-enable      | nodejs:10                                         |
     And modules state is following
@@ -28,7 +28,7 @@ Scenario: I can install a non-default profile from a default stream using dnf mo
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                           |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64     |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64     |
         | module-profile-install    | nodejs/minimal                                    |
         | module-stream-enable      | nodejs:8                                          |
     And modules state is following
@@ -46,7 +46,7 @@ Scenario: I can install a non-default profile from an enabled stream using dnf m
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                           |
-        | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
+        | install-group             | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
         | module-profile-install    | nodejs/minimal                                    |
     And modules state is following
         | Module    | State     | Stream    | Profiles  |

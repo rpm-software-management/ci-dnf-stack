@@ -10,10 +10,10 @@ Scenario: List userinstalled packages
         | Action        | Package                                   |
         | install       | abcde-0:2.9.2-1.fc29.noarch               |
         | install       | basesystem-0:11-6.fc29.noarch             |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | flac-0:1.3.2-8.fc29.x86_64                |
-        | install       | wget-0:1.19.5-5.fc29.x86_64               |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-dep   | wget-0:1.19.5-5.fc29.x86_64               |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+        | install-weak  | flac-0:1.3.2-8.fc29.x86_64                |
     And history userinstalled should
         | Action        | Package                                   |
         | match         | abcde-2.9.2-1.fc29.noarch                 |

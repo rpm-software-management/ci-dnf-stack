@@ -7,7 +7,7 @@ Given I use repository "dnf-ci-fedora"
   And Transaction is following
       | Action        | Package                                  |
       | install       | filesystem-0:3.9-2.fc29.x86_64           |
-      | install       | setup-0:2.12.1-1.fc29.noarch             |
+      | install-dep   | setup-0:2.12.1-1.fc29.noarch             |
  When I execute dnf with args "repository-packages dnf-ci-fedora info all"
  Then the exit code is 0
  Then stdout contains "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"

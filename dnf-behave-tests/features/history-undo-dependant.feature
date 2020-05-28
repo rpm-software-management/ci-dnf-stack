@@ -9,7 +9,7 @@ Scenario: Undo module install with dependent userinstalled package
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
+        | install-group             | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
    # install package, that requires postgresql-server
    When I execute dnf with args "install postgresql-test"
    Then the exit code is 0

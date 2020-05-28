@@ -9,8 +9,8 @@ Scenario: Reinstall a dependency, and then remove the main package
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
+        | install-dep   | CQRlib-0:1.1.2-16.fc29.x86_64             |
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "reinstall CQRlib"
    Then the exit code is 0
@@ -21,5 +21,5 @@ Scenario: Reinstall a dependency, and then remove the main package
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | remove        | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
+        | remove-unused | CQRlib-0:1.1.2-16.fc29.x86_64             |

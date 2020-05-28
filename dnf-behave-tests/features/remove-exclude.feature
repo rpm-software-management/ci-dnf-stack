@@ -7,9 +7,9 @@ Scenario: Remove RPMs while excluding another RPM
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
         | install       | basesystem-0:11-6.fc29.noarch         |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "remove basesystem filesystem --exclude setup"
    Then the exit code is 0
     And Transaction is following
@@ -24,8 +24,8 @@ Scenario: Remove RPM which is required by excluded RPM
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "remove setup --exclude filesystem"
    Then the exit code is 1
     And Transaction is empty

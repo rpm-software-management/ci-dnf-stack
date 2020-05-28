@@ -10,9 +10,9 @@ Background: Install flac and filesystem
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
         | install       | filesystem-0:3.9-2.fc29.x86_64            |
         | install       | flac-0:1.3.2-8.fc29.x86_64                |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
 Scenario: Using dnf shell, reinstall an RPM

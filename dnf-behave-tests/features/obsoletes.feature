@@ -129,7 +129,7 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
-        | install       | PackageD-0:2.0-1.x86_64               |
+        | install-group | PackageD-0:2.0-1.x86_64               |
         | group-install | Obsoleter and obsoleted               |
     And stderr is
     """

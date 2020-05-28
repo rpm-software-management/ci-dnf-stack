@@ -28,7 +28,7 @@ Scenario Outline: The default stream is enabled when its package is required by 
     And Transaction contains
         | Action                    | Package                                       |
         | install                   | morning-mood-0:1.0-1.module.x86_64            |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-dep               | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
     And modules state is following
         | Module                | State     | Stream        | Profiles  |
         | DnfCiModulePackageDep | enabled   | <stream>      |           |
@@ -47,7 +47,7 @@ Scenario: The default stream is enabled when its package is required by installe
     And Transaction contains
         | Action                    | Package                                       |
         | install                   | anitras-dance-0:1.0-1.x86_64                  |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-dep               | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
     And modules state is following
         | Module                | State     | Stream        | Profiles  |
         | nodejs                | enabled   | 8             |           |

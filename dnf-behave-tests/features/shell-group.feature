@@ -23,10 +23,10 @@ Scenario: Using dnf shell, install a package group
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                     |
-        | install       | setup-0:2.12.1-1.fc29.noarch                |
-        | install       | filesystem-0:3.9-2.fc29.x86_64              |
-        | install       | lame-0:3.100-4.fc29.x86_64                  |
-        | install       | lame-libs-0:3.100-4.fc29.x86_64             |
+        | install-group | filesystem-0:3.9-2.fc29.x86_64              |
+        | install-group | lame-0:3.100-4.fc29.x86_64                  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch                |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64             |
         | group-install | DNF-CI-Testgroup                            |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
@@ -46,10 +46,10 @@ Scenario Outline: Using dnf shell, upgrade a package group using alias <upgrade 
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                     |
-        | install       | setup-0:2.12.1-1.fc29.noarch                |
-        | install       | filesystem-0:3.9-2.fc29.x86_64              |
-        | install       | lame-0:3.100-4.fc29.x86_64                  |
-        | install       | lame-libs-0:3.100-4.fc29.x86_64             |
+        | install-group | filesystem-0:3.9-2.fc29.x86_64              |
+        | install-group | lame-0:3.100-4.fc29.x86_64                  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch                |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64             |
         | group-install | DNF-CI-Testgroup                            |
    When I execute in dnf shell "repo enable dnf-ci-fedora-updates dnf-ci-thirdparty-updates"
     And I execute in dnf shell "group <upgrade alias> DNF-CI-Testgroup"
@@ -58,11 +58,11 @@ Scenario Outline: Using dnf shell, upgrade a package group using alias <upgrade 
         | Action        | Package                                     |
         | upgrade       | lame-0:3.100-5.fc29.x86_64                  |
         | upgrade       | lame-libs-0:3.100-5.fc29.x86_64             |
-        | install       | libzstd-0:1.3.6-1.fc29.x86_64               |
-        | install       | glibc-0:2.28-26.fc29.x86_64                 |
-        | install       | glibc-common-0:2.28-26.fc29.x86_64          |
-        | install       | glibc-all-langpacks-0:2.28-26.fc29.x86_64   |
-        | install       | basesystem-0:11-6.fc29.noarch               |
+        | install-group | libzstd-0:1.3.6-1.fc29.x86_64               |
+        | install-dep   | glibc-0:2.28-26.fc29.x86_64                 |
+        | install-dep   | glibc-common-0:2.28-26.fc29.x86_64          |
+        | install-dep   | glibc-all-langpacks-0:2.28-26.fc29.x86_64   |
+        | install-dep   | basesystem-0:11-6.fc29.noarch               |
         | group-upgrade | DNF-CI-Testgroup                            |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
@@ -81,19 +81,19 @@ Scenario: Using dnf shell, remove a package group
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                     |
-        | install       | setup-0:2.12.1-1.fc29.noarch                |
-        | install       | filesystem-0:3.9-2.fc29.x86_64              |
-        | install       | lame-0:3.100-4.fc29.x86_64                  |
-        | install       | lame-libs-0:3.100-4.fc29.x86_64             |
+        | install-group | filesystem-0:3.9-2.fc29.x86_64              |
+        | install-group | lame-0:3.100-4.fc29.x86_64                  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch                |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64             |
         | group-install | DNF-CI-Testgroup                            |
    When I execute in dnf shell "group remove DNF-CI-Testgroup"
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                     |
-        | remove        | setup-0:2.12.1-1.fc29.noarch                |
         | remove        | filesystem-0:3.9-2.fc29.x86_64              |
         | remove        | lame-0:3.100-4.fc29.x86_64                  |
-        | remove        | lame-libs-0:3.100-4.fc29.x86_64             |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch                |
+        | remove-unused | lame-libs-0:3.100-4.fc29.x86_64             |
         | group-remove  | DNF-CI-Testgroup                            |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"

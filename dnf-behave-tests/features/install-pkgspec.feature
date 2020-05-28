@@ -10,7 +10,7 @@ Scenario: Install an RPM by name
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by name-version
@@ -19,7 +19,7 @@ Scenario: Install an RPM by name-version
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by name-version-release
@@ -28,7 +28,7 @@ Scenario: Install an RPM by name-version-release
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by name-version-release.arch
@@ -37,7 +37,7 @@ Scenario: Install an RPM by name-version-release.arch
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by name-epoch:version-release.arch
@@ -46,7 +46,7 @@ Scenario: Install an RPM by name-epoch:version-release.arch
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: I can install an RPM by $pkgspec where $pkgspec is name.arch
@@ -64,8 +64,8 @@ Scenario: I can install an RPM by $pkgspec where $pkgspec contains name with das
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
-        | install       | CQRlib-0:1.1.2-16.fc29.x86_64         |
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64   |
+        | install-dep   | CQRlib-0:1.1.2-16.fc29.x86_64         |
 
 
 Scenario: I can install an RPM by $pkgspec where $pkgspec contains wildcards

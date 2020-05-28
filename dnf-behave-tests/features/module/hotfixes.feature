@@ -21,7 +21,7 @@ Scenario: hotfix content updates are used when installing a module stream
         | Action                    | Package                                       |
         | module-stream-enable      | nodejs:8                                      |
         | module-profile-install    | nodejs/minimal                                |
-        | install                   | nodejs-1:8.11.5-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.5-1.module_2030+42747d40.x86_64 |
 
 
 Scenario: hotfix content update is used when installing a package
@@ -43,7 +43,7 @@ Scenario: hotfix content updates are used for updating a module
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
   Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module update nodejs"
    Then the exit code is 0

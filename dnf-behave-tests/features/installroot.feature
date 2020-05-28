@@ -54,7 +54,7 @@ Scenario: Remove package from installroot
         | Action        | Package                           |
         | install       | water_carbonated-0:1.0-1.x86_64   |
         | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "remove water_carbonated"
    Then the exit code is 0
     And Transaction is following

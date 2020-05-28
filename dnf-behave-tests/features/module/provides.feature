@@ -109,7 +109,7 @@ Given I successfully execute dnf with args "module enable nodejs:8"
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                             |
-      | install                   | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | module-profile-install    | nodejs/development                                  |
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
