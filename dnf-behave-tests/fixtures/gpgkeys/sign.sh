@@ -50,7 +50,7 @@ for KEY_NAME in $KEYSPECS; do
 EOF
 
     # sign packages
-    while IFS= read -r package; do
+    while IFS= read -r package || [ -n "$package" ]; do
         HOME=${KEY_DIR} rpm --addsign "${REPODIR}/${package}"
     done < "${DIR}/keyspecs/${KEY_NAME}/packages"
 done
