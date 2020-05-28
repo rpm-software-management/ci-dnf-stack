@@ -124,14 +124,14 @@ Scenario: I call dnf builddep with --best on a spec file with a modular dependen
    Then the exit code is 0
     And Transaction is following
         | Action                 | Package                                       |
-        | install                | setup-0:2.12.1-1.fc29.noarch                  |
-        | install                | filesystem-0:3.9-2.fc29.x86_64                |
-        | install                | basesystem-0:11-6.fc29.noarch                 |
-        | install                | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
-        | install                | glibc-common-0:2.28-9.fc29.x86_64             |
-        | install                | glibc-0:2.28-9.fc29.x86_64                    |
-        | install                | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
         | install                | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-dep            | setup-0:2.12.1-1.fc29.noarch                  |
+        | install-dep            | filesystem-0:3.9-2.fc29.x86_64                |
+        | install-dep            | basesystem-0:11-6.fc29.noarch                 |
+        | install-dep            | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | install-dep            | glibc-common-0:2.28-9.fc29.x86_64             |
+        | install-dep            | glibc-0:2.28-9.fc29.x86_64                    |
+        | install-weak           | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
         | module-stream-enable   | nodejs:8                                      |
 
 

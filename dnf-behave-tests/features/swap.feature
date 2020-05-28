@@ -20,10 +20,10 @@ Scenario: Switch packages by swap command
         | Action        | Package                                   |
         | remove        | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.3-1.fc29.noarch               |
-        | install       | flac-0:1.3.3-3.fc29.x86_64                |
-        | install       | wget-0:1.19.6-5.fc29.x86_64               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
+        | install-dep   | abcde-0:2.9.3-1.fc29.noarch               |
+        | install-dep   | wget-0:1.19.6-5.fc29.x86_64               |
+        | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
+        | install-weak  | flac-0:1.3.3-3.fc29.x86_64                |
 
 
 Scenario: Switch packages and their subpackages by swap command with wildcards
@@ -43,10 +43,10 @@ Scenario: Switch packages and their subpackages by swap command with wildcards
         | remove        | CQRlib-extension-0:1.5-2.x86_64           |
         | install       | SuperRipper-extension-0:1.1-1.x86_64      |
         | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.3-1.fc29.noarch               |
-        | install       | flac-0:1.3.3-3.fc29.x86_64                |
-        | install       | wget-0:1.19.6-5.fc29.x86_64               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
+        | install-dep   | abcde-0:2.9.3-1.fc29.noarch               |
+        | install-dep   | wget-0:1.19.6-5.fc29.x86_64               |
+        | install-weak  | flac-0:1.3.3-3.fc29.x86_64                |
+        | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
    When I execute dnf with args "install CQRlib-devel"
    Then the exit code is 0
     And Transaction is following
@@ -59,8 +59,8 @@ Scenario: Switch groups by swap command
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | CQRlib-0:1.1.2-16.fc29.x86_64             |
-        | install       | CQRlib-extension-0:1.5-2.x86_64           |
+        | install-group | CQRlib-0:1.1.2-16.fc29.x86_64             |
+        | install-group | CQRlib-extension-0:1.5-2.x86_64           |
         | group-install | CQRlib-non-devel                          |
    When I execute dnf with args "install CQRlib-devel"
    Then the exit code is 0
@@ -73,11 +73,11 @@ Scenario: Switch groups by swap command
         | Action        | Package                                   |
         | unchanged     | CQRlib-0:1.1.2-16.fc29.x86_64             |
         | remove        | CQRlib-extension-0:1.5-2.x86_64           |
-        | install       | SuperRipper-extension-0:1.1-1.x86_64      |
-        | install       | SuperRipper-0:1.0-1.x86_64                |
-        | install       | abcde-0:2.9.3-1.fc29.noarch               |
-        | install       | flac-0:1.3.3-3.fc29.x86_64                |
-        | install       | wget-0:1.19.6-5.fc29.x86_64               |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64          |
+        | install-group | SuperRipper-extension-0:1.1-1.x86_64      |
+        | install-group | SuperRipper-0:1.0-1.x86_64                |
+        | install-group | abcde-0:2.9.3-1.fc29.noarch               |
+        | install-group | wget-0:1.19.6-5.fc29.x86_64               |
+        | install-group | flac-0:1.3.3-3.fc29.x86_64                |
+        | install-group | FlacBetterEncoder-0:1.0-1.x86_64          |
         | group-remove  | CQRlib-non-devel                          |
         | group-install | SuperRipper-and-deps                      |

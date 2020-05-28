@@ -16,8 +16,8 @@ Scenario: Test removal of dependency when clean_requirements_on_remove=false
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
-        | install       | setup-0:2.12.1-1.fc29.noarch      |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
    When I execute dnf with args "remove --disableexcludes=all filesystem"
    Then the exit code is 0
     And Transaction is following
@@ -71,7 +71,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
-        | install       | setup-0:2.12.1-1.fc29.noarch      |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot
@@ -88,7 +88,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
-        | install       | setup-0:2.12.1-1.fc29.noarch      |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
 Scenario: Reposdir option in dnf.conf file with --config option in installroot is taken first from installroot then from host
@@ -110,7 +110,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
-        | install       | setup-0:2.12.1-1.fc29.noarch      |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
 Scenario: Reposdir option set by --setopt
@@ -128,7 +128,7 @@ Scenario: Reposdir option set by --setopt
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
-	| install       | setup-0:2.12.1-1.fc29.noarch      |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
 @bz1512457

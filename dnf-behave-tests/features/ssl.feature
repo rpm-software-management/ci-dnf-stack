@@ -11,7 +11,7 @@ Scenario: Installing a package from https repository
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Installing a package from https repository with client verification
@@ -25,7 +25,7 @@ Scenario: Installing a package from https repository with client verification
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 @bz1605187

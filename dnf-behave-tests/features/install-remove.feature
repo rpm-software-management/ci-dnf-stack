@@ -10,7 +10,7 @@ Scenario Outline: Install remove <spec type> that requires only name
     And Transaction is following
         | Action        | Package                           |
         | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "install tea"
    Then the exit code is 0
     And Transaction is empty
@@ -19,7 +19,7 @@ Scenario Outline: Install remove <spec type> that requires only name
     And Transaction is following
         | Action        | Package                           |
         | remove        | tea-0:1.0-1.x86_64                |
-        | remove        | water-0:1.0-1.x86_64              |
+        | remove-unused | water-0:1.0-1.x86_64              |
 
 Examples:
     | spec type         | spec          |
@@ -34,15 +34,15 @@ Scenario: Install remove package that requires exact version
     And Transaction is following
         | Action        | Package                           |
         | install       | coffee-0:1.0-1.x86_64             |
-        | install       | sugar-0:1.0-1.x86_64              |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | sugar-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "remove coffee"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | remove        | coffee-0:1.0-1.x86_64             |
-        | remove        | sugar-0:1.0-1.x86_64              |
-        | remove        | water-0:1.0-1.x86_64              |
+        | remove-unused | sugar-0:1.0-1.x86_64              |
+        | remove-unused | water-0:1.0-1.x86_64              |
 
 
 # chockolate  requires sugar>=2 and milk==1
@@ -52,15 +52,15 @@ Scenario: Install remove package that requires version >=
     And Transaction is following
         | Action        | Package                           |
         | install       | chockolate-0:1.0-1.x86_64         |
-        | install       | sugar-0:2.0-1.x86_64              |
-        | install       | milk-0:1.0-1.x86_64               |
+        | install-dep   | sugar-0:2.0-1.x86_64              |
+        | install-dep   | milk-0:1.0-1.x86_64               |
    When I execute dnf with args "remove chockolate"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | remove        | chockolate-0:1.0-1.x86_64         |
-        | remove        | sugar-0:2.0-1.x86_64              |
-        | remove        | milk-0:1.0-1.x86_64               |
+        | remove-unused | sugar-0:2.0-1.x86_64              |
+        | remove-unused | milk-0:1.0-1.x86_64               |
 
 
 # mate requires water >= 2
@@ -78,8 +78,8 @@ Scenario: Install remove two package with shared dependency
         | Action        | Package                           |
         | install       | coffee-0:1.0-1.x86_64             |
         | install       | tea-0:1.0-1.x86_64                |
-        | install       | sugar-0:1.0-1.x86_64              |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | sugar-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "remove tea"
    Then the exit code is 0
     And Transaction is following
@@ -91,8 +91,8 @@ Scenario: Install remove two package with shared dependency
     And Transaction is following
         | Action        | Package                           |
         | remove        | coffee-0:1.0-1.x86_64             |
-        | remove        | sugar-0:1.0-1.x86_64              |
-        | remove        | water-0:1.0-1.x86_64              |
+        | remove-unused | sugar-0:1.0-1.x86_64              |
+        | remove-unused | water-0:1.0-1.x86_64              |
 
 
 Scenario: Install remove rpm file from local path
@@ -129,9 +129,9 @@ Scenario: Install remove group
     And Transaction is following
         | Action        | Package                           |
         | group-install | Beverages                         |
-        | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
-        | install       | water_still-0:1.0-1.x86_64        |
+        | install-group | tea-0:1.0-1.x86_64                |
+        | install-group | water_still-0:1.0-1.x86_64        |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "group list Beverages"
    Then the exit code is 0
     And stdout does not contain "Available Groups"
@@ -148,8 +148,8 @@ Scenario: Install remove group
         | Action        | Package                           |
         | group-remove  | Beverages                         |
         | remove        | tea-0:1.0-1.x86_64                |
-        | remove        | water-0:1.0-1.x86_64              |
         | remove        | water_still-0:1.0-1.x86_64        |
+        | remove-unused | water-0:1.0-1.x86_64              |
         | present       | water_carbonated-0:1.0-1.x86_64   |
 
 
@@ -159,19 +159,19 @@ Scenario: Install remove group with optional packages
     And Transaction is following
         | Action        | Package                           |
         | group-install | Beverages                         |
-        | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
-        | install       | water_still-0:1.0-1.x86_64        |
-        | install       | water_carbonated-0:1.0-1.x86_64   |
+        | install-group | tea-0:1.0-1.x86_64                |
+        | install-group | water_still-0:1.0-1.x86_64        |
+        | install-group | water_carbonated-0:1.0-1.x86_64   |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "remove @Beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | group-remove  | Beverages                         |
         | remove        | tea-0:1.0-1.x86_64                |
-        | remove        | water-0:1.0-1.x86_64              |
         | remove        | water_still-0:1.0-1.x86_64        |
         | remove        | water_carbonated-0:1.0-1.x86_64   |
+        | remove-unused | water-0:1.0-1.x86_64              |
 
 
 Scenario: Install remove group with already installed package with dependency
@@ -180,13 +180,13 @@ Scenario: Install remove group with already installed package with dependency
     And Transaction is following
         | Action        | Package                           |
         | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "install @Beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | group-install | Beverages                         |
-        | install       | water_still-0:1.0-1.x86_64        |
+        | install-group | water_still-0:1.0-1.x86_64        |
         | present       | tea-0:1.0-1.x86_64                |
         | present       | water-0:1.0-1.x86_64              |
    When I execute dnf with args "group remove Beverages"
@@ -210,8 +210,8 @@ Scenario: Install remove group with already installed package
     And Transaction is following
         | Action        | Package                           |
         | group-install | Beverages                         |
-        | install       | tea-0:1.0-1.x86_64                |
-        | install       | water-0:1.0-1.x86_64              |
+        | install-group | tea-0:1.0-1.x86_64                |
+        | install-dep   | water-0:1.0-1.x86_64              |
         | present       | water_still-0:1.0-1.x86_64        |
    When I execute dnf with args "group remove Beverages"
    Then the exit code is 0
@@ -219,7 +219,7 @@ Scenario: Install remove group with already installed package
         | Action        | Package                           |
         | group-remove  | Beverages                         |
         | remove        | tea-0:1.0-1.x86_64                |
-        | remove        | water-0:1.0-1.x86_64              |
+        | remove-unused | water-0:1.0-1.x86_64              |
         | present       | water_still-0:1.0-1.x86_64        |
 
 

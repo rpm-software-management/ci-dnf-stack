@@ -9,7 +9,7 @@ Scenario: Package protected via setopt cannot be removed
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "remove filesystem --setopt=protected_packages=filesystem"
    Then the exit code is 1
     And Transaction is empty
@@ -23,7 +23,7 @@ Scenario: Package with protected dependency via setopt cannot be removed
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "remove filesystem --setopt=protected_packages=setup"
    Then the exit code is 1
     And Transaction is empty

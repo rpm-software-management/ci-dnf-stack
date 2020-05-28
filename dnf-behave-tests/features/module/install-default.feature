@@ -58,4 +58,4 @@ Scenario: Install module, populated default profile exists, expecting default pr
         | Action                    | Package                                       |
         | module-stream-enable      | DnfCiModulePopulatedDefault:stable            |
         | module-profile-install    | DnfCiModulePopulatedDefault/server            |
-        | install                   | peer-gynt-0:1.0-1.module.x86_64               |
+        | install-group             | peer-gynt-0:1.0-1.module.x86_64               |

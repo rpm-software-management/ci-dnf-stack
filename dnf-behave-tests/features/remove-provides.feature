@@ -7,12 +7,12 @@ Background: Install glibc
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-0:2.28-9.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-dep   | basesystem-0:11-6.fc29.noarch             |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
 Scenario Outline: Remove an RPM by provide <operator> e:v-r
@@ -20,12 +20,12 @@ Scenario Outline: Remove an RPM by provide <operator> e:v-r
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | setup-0:2.12.1-1.fc29.noarch              |
-        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
-        | remove        | basesystem-0:11-6.fc29.noarch             |
         | remove        | glibc-0:2.28-9.fc29.x86_64                |
-        | remove        | glibc-common-0:2.28-9.fc29.x86_64         |
-        | remove        | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
+        | remove-unused | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove-unused | basesystem-0:11-6.fc29.noarch             |
+        | remove-unused | glibc-common-0:2.28-9.fc29.x86_64         |
+        | remove-unused | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 Examples:
         | operator      | e:v-r                |
@@ -41,12 +41,12 @@ Scenario Outline: Remove an RPM by <provide type>
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | setup-0:2.12.1-1.fc29.noarch              |
-        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
-        | remove        | basesystem-0:11-6.fc29.noarch             |
         | remove        | glibc-0:2.28-9.fc29.x86_64                |
-        | remove        | glibc-common-0:2.28-9.fc29.x86_64         |
-        | remove        | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
+        | remove-unused | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove-unused | basesystem-0:11-6.fc29.noarch             |
+        | remove-unused | glibc-common-0:2.28-9.fc29.x86_64         |
+        | remove-unused | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 Examples:
         | provide type                        | provide               |

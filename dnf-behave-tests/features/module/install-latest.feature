@@ -22,4 +22,4 @@ Scenario: Install module, profile from the latest module context
         | Action                    | Package                                                                                         |
         | module-stream-enable      | nodejs:5                                                                                        |
         | module-profile-install    | nodejs/testlatest                                                                               |
-        | install                   | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64 |
+        | install-group             | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64 |

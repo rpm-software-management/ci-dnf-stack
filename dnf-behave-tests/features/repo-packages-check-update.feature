@@ -8,8 +8,8 @@ Given I use repository "dnf-ci-fedora"
   And Transaction is following
       | Action        | Package                                   |
       | install       | basesystem-0:11-6.fc29.noarch             |
-      | install       | filesystem-0:3.9-2.fc29.x86_64            |
-      | install       | setup-0:2.12.1-1.fc29.noarch              |
+      | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+      | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
  When I execute dnf with args "-q repository-packages dnf-ci-fedora check-update"
  Then stdout is empty
  Then the exit code is 0
@@ -21,12 +21,12 @@ Given I use repository "dnf-ci-fedora"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                                   |
-      | install       | basesystem-0:11-6.fc29.noarch             |
-      | install       | filesystem-0:3.9-2.fc29.x86_64            |
-      | install       | setup-0:2.12.1-1.fc29.noarch              |
       | install       | glibc-0:2.28-9.fc29.x86_64                |
-      | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-      | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+      | install-dep   | basesystem-0:11-6.fc29.noarch             |
+      | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+      | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+      | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+      | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
   Given I use repository "dnf-ci-fedora-updates" with configuration
       | key     | value |
       | enabled | 0     |
@@ -43,12 +43,12 @@ Given I use repository "dnf-ci-fedora"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                                   |
-      | install       | basesystem-0:11-6.fc29.noarch             |
-      | install       | filesystem-0:3.9-2.fc29.x86_64            |
-      | install       | setup-0:2.12.1-1.fc29.noarch              |
       | install       | glibc-0:2.28-9.fc29.x86_64                |
-      | install       | glibc-common-0:2.28-9.fc29.x86_64         |
-      | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+      | install-dep   | basesystem-0:11-6.fc29.noarch             |
+      | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+      | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+      | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+      | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "repository-packages dnf-ci-fedora-updates check-update"
  Then the exit code is 100

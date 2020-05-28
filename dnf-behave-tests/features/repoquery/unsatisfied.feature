@@ -11,7 +11,7 @@ Scenario: When kernel has unsatisfied dependencies, dnf repoquery --unsatisfied 
     And DNF Transaction is following
         | Action        | Package                             |
         | install       | dnf-ci-kernel-0:1.0-1.x86_64        |
-        | install       | dnf-ci-systemd-0:1.0-1.x86_64       |
+        | install-dep   | dnf-ci-systemd-0:1.0-1.x86_64       |
    When I execute "rpm -e --nodeps dnf-ci-systemd"
    Then the exit code is 0
   Given I fake kernel release to "1.0"

@@ -13,8 +13,8 @@ Given I use repository "dnf-ci-fedora-modular"
  Then the exit code is 0
   And Transaction contains
       | Action                    | Package                                       |
-      | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-      | install                   | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+      | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
       | module-profile-install    | nodejs/default                                |
 
 
@@ -50,7 +50,7 @@ Scenario: I can remove an installed module profile using "module remove <module_
  When I execute dnf with args "module install nodejs/development"
  Then Transaction contains
       | Action                    | Package                                             |
-      | install                   | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | module-profile-install    | nodejs/development                                  |
  When I execute dnf with args "module remove nodejs/minimal"
  Then the exit code is 0
@@ -90,7 +90,7 @@ Scenario: I can remove multiple profiles
  When I execute dnf with args "module install nodejs/development"
  Then Transaction contains
       | Action                    | Package                                             |
-      | install                   | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | module-profile-install    | nodejs/development                                  |
   And modules state is following
       | Module    | State     | Stream    | Profiles                      |
@@ -118,7 +118,7 @@ Scenario: I can remove an installed module profile using "remove @<module_spec>"
  When I execute dnf with args "module install nodejs/development"
  Then Transaction contains
       | Action                    | Package                                             |
-      | install                   | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
+      | install-group             | nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64 |
       | module-profile-install    | nodejs/development                                  |
  When I execute dnf with args "remove @nodejs/minimal"
  Then the exit code is 0
@@ -141,8 +141,8 @@ Given I use repository "dnf-ci-fifthparty"
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                |
-        | install                   | luke-0:1.0-1.x86_64    |
-        | install                   | obi-wan-0:1.0-1.x86_64 |
+        | install-group             | luke-0:1.0-1.x86_64    |
+        | install-group             | obi-wan-0:1.0-1.x86_64 |
         | module-profile-install    | jedi/duo               |
    # install package leia that requires luke
    When I execute dnf with args "install leia"
@@ -164,7 +164,7 @@ Given I use repository "dnf-ci-fifthparty"
     And Transaction contains
         | Action                    | Package                |
         | remove                    | leia-0:1.0-1.x86_64    |
-        | remove                    | luke-0:1.0-1.x86_64    |
+        | remove-unused             | luke-0:1.0-1.x86_64    |
 
 
 Scenario: Remove command respects --all switch to remove all packages
@@ -174,16 +174,16 @@ Scenario: Remove command respects --all switch to remove all packages
     And Transaction is following
         | Action                    | Package                                       |
         | remove                    | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
-        | remove                    | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
-        | remove                    | basesystem-0:11-6.fc29.noarch                 |
-        | remove                    | filesystem-0:3.9-2.fc29.x86_64                |
-        | remove                    | setup-0:2.12.1-1.fc29.noarch                  |
-        | remove                    | glibc-0:2.28-9.fc29.x86_64                    |
-        | remove                    | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
-        | remove                    | glibc-common-0:2.28-9.fc29.x86_64             |
         # nodejs-docs was not installed as part of profile, without --all it
         # would not get removed
         | remove                    | nodejs-docs-1:8.11.4-1.module_2030+42747d40.noarch |
+        | remove                    | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+        | remove-unused             | basesystem-0:11-6.fc29.noarch                 |
+        | remove-unused             | filesystem-0:3.9-2.fc29.x86_64                |
+        | remove-unused             | setup-0:2.12.1-1.fc29.noarch                  |
+        | remove-unused             | glibc-0:2.28-9.fc29.x86_64                    |
+        | remove-unused             | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | remove-unused             | glibc-common-0:2.28-9.fc29.x86_64             |
         | module-profile-disable    | nodejs/default                                |
 
 

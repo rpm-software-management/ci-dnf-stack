@@ -83,7 +83,7 @@ Scenario: installs debuginfo when a -debuginfo package is provided
   And Transaction is following
       | Action        | Package                                   |
       | install       | foo-debuginfo-0:2.0-1.x86_64              |
-      | install       | foo-debugsource-0:2.0-1.x86_64            |
+      | install-weak  | foo-debugsource-0:2.0-1.x86_64            |
 
 @bz1586059 @bz1629412
 Scenario: can't find the version of debuginfo for an installed package

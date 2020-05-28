@@ -13,7 +13,7 @@ Scenario: Install a module profile with glob in name
         | Action                    | Package                                       |
         | module-stream-enable      | nodejs:8                                      |
         | module-profile-install    | nodejs/default                                |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
 
 
 Scenario: Install a module profile with glob in name and stream
@@ -23,7 +23,7 @@ Scenario: Install a module profile with glob in name and stream
         | Action                    | Package                                           |
         | module-stream-enable      | nodejs:10                                         |
         | module-profile-install    | nodejs/default                                    |
-        | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
+        | install-group             | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
 
 
 Scenario: Install a module profile with glob in version
@@ -36,7 +36,7 @@ Scenario: Install a module profile with glob in version
         | Action                    | Package                                           |
         | module-stream-enable      | nodejs:10                                         |
         | module-profile-install    | nodejs/default                                    |
-        | install                   | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
+        | install-group             | nodejs-1:10.11.0-1.module_2200+adbac02b.x86_64    |
 
 
 Scenario: Install a module profile with glob in arch
@@ -46,7 +46,7 @@ Scenario: Install a module profile with glob in arch
         | Action                    | Package                                       |
         | module-stream-enable      | nodejs:8                                      |
         | module-profile-install    | nodejs/default                                |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
 
 
 Scenario: Install a module profile with glob in profile

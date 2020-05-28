@@ -8,7 +8,7 @@ Scenario: Install an RPM by provide that equals to e:v-r
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by provide that is greater than e:vr
@@ -18,7 +18,7 @@ Scenario: Install an RPM by provide that is greater than e:vr
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by provide that is greater or equal to e:vr
@@ -28,7 +28,7 @@ Scenario: Install an RPM by provide that is greater or equal to e:vr
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by provide that is lower than e:vr
@@ -39,11 +39,11 @@ Scenario: Install an RPM by provide that is lower than e:vr
     And Transaction is following
         | Action        | Package                               |
         | install       | glibc-0:2.28-9.fc29.x86_64            |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64     |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
-        | install       | basesystem-0:11-6.fc29.noarch         |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64     |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | install-dep   | basesystem-0:11-6.fc29.noarch         |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: Install an RPM by provide that is lower or equal to e:vr
@@ -54,11 +54,11 @@ Scenario: Install an RPM by provide that is lower or equal to e:vr
     And Transaction is following
         | Action        | Package                               |
         | install       | glibc-0:2.28-26.fc29.x86_64           |
-        | install       | glibc-common-0:2.28-26.fc29.x86_64    |
-        | install       | glibc-all-langpacks-0:2.28-26.fc29.x86_64     |
-        | install       | basesystem-0:11-6.fc29.noarch         |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | glibc-common-0:2.28-26.fc29.x86_64    |
+        | install-dep   | glibc-all-langpacks-0:2.28-26.fc29.x86_64     |
+        | install-dep   | basesystem-0:11-6.fc29.noarch         |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
 Scenario: I can install an RPM by $provide where $provide is key
@@ -76,12 +76,12 @@ Scenario Outline: I can install an RPM by <provide type>
  Then the exit code is 0
   And Transaction is following
        | Action        | Package                                   |
-       | install       | setup-0:2.12.1-1.fc29.noarch              |
-       | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-       | install       | glibc-common-0:2.28-9.fc29.x86_64         |
        | install       | glibc-0:2.28-9.fc29.x86_64                |
-       | install       | filesystem-0:3.9-2.fc29.x86_64            |
-       | install       | basesystem-0:11-6.fc29.noarch             |
+       | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+       | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+       | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
+       | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
+       | install-dep   | basesystem-0:11-6.fc29.noarch             |
 
 Examples:
         | provide type                 | provide          |

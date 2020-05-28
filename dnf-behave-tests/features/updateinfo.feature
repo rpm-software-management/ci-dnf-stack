@@ -9,13 +9,13 @@ Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
         | Action        | Package                                  |
-        | install       | setup-0:2.12.1-1.fc29.noarch             |
-        | install       | basesystem-0:11-6.fc29.noarch            |
-        | install       | filesystem-0:3.9-2.fc29.x86_64           |
         | install       | glibc-0:2.28-9.fc29.x86_64               |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64 |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64        |
         | install       | flac-0:1.3.2-8.fc29.x86_64               |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch             |
+        | install-dep   | basesystem-0:11-6.fc29.noarch            |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64           |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64 |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64        |
     And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "updateinfo list"
@@ -319,9 +319,9 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
    When I execute dnf with args "install kernel"
    Then Transaction is following
         | Action        | Package                                  |
-        | install       | kernel-core-0:4.18.16-300.fc29.x86_64    |
-        | install       | kernel-modules-0:4.18.16-300.fc29.x86_64 |
         | install       | kernel-0:4.18.16-300.fc29.x86_64         |
+        | install-dep   | kernel-core-0:4.18.16-300.fc29.x86_64    |
+        | install-dep   | kernel-modules-0:4.18.16-300.fc29.x86_64 |
   Given I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "updateinfo list kernel"
    Then the exit code is 0
@@ -333,9 +333,9 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
    When I execute dnf with args "update kernel"
    Then Transaction is following
         | Action        | Package                                  |
-        | install       | kernel-core-0:4.19.15-300.fc29.x86_64    |
-        | install       | kernel-modules-0:4.19.15-300.fc29.x86_64 |
         | install       | kernel-0:4.19.15-300.fc29.x86_64         |
+        | install-dep   | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | install-dep   | kernel-modules-0:4.19.15-300.fc29.x86_64 |
    When I execute dnf with args "updateinfo list kernel"
    Then the exit code is 0
     And stdout is

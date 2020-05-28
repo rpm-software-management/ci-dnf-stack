@@ -8,10 +8,10 @@ Scenario: Autoremoval of package which became non-required by others
     And Transaction is following
         | Action        | Package                           |
         | install       | SuperRipper-0:1.0-1.x86_64        |
-        | install       | abcde-0:2.9.2-1.fc29.noarch       |
-        | install       | flac-0:1.3.2-8.fc29.x86_64        |
-        | install       | wget-0:1.19.5-5.fc29.x86_64       |
-        | install       | FlacBetterEncoder-0:1.0-1.x86_64  |
+        | install-dep   | abcde-0:2.9.2-1.fc29.noarch       |
+        | install-dep   | wget-0:1.19.5-5.fc29.x86_64       |
+        | install-weak  | flac-0:1.3.2-8.fc29.x86_64        |
+        | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64  |
    When I use repository "dnf-ci-thirdparty-updates"
     And I execute dnf with args "update --nobest"
    Then the exit code is 0

@@ -15,7 +15,7 @@ Scenario: I can install a module profile for an enabled module stream
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-profile-install    | nodejs/minimal                                |
 
 
@@ -25,7 +25,7 @@ Scenario: I can install a module profile by name:stream/profile
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-profile-install    | nodejs/minimal                                |
         | module-stream-enable      | nodejs:8                                      |
     And stdout contains "Installing group/module packages"
@@ -41,8 +41,8 @@ Scenario: I can install multiple module profiles at the same time
         | postgresql    | enabled   | 9.6       | client,server |
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
-        | install                   | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64 |
+        | install-group             | postgresql-server-0:9.6.8-1.module_1710+b535a823.x86_64 |
+        | install-group             | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64 |
 
 
 
@@ -52,8 +52,8 @@ Scenario: Installing a module and its dependencies, non-modular dependency avail
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | meson-0:0.47.1-5.module_1993+7c0a4d1e.noarch  |
-        | install                   | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
+        | install-group             | meson-0:0.47.1-5.module_1993+7c0a4d1e.noarch  |
+        | install-dep               | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
         | module-stream-enable      | meson:master                                  |
         | module-stream-enable      | ninja:master                                  |
         | module-profile-install    | meson/default                                 |
@@ -100,8 +100,8 @@ Scenario: Install a module of which all packages are non-modular
    Then the exit code is 0
     And Transaction is following
         | Action                    | Package                           |
-        | install                   | wget-0:1.19.5-5.fc29.x86_64       |
-        | install                   | solveigs-song-0:1.0-1.x86_64      |
+        | install-group             | wget-0:1.19.5-5.fc29.x86_64       |
+        | install-group             | solveigs-song-0:1.0-1.x86_64      |
         | module-profile-install    | DnfCiModuleNoArtifacts/default    |
         | module-stream-enable      | DnfCiModuleNoArtifacts:master     |
     And modules state is following
@@ -140,10 +140,10 @@ Scenario: I can install a module profile for a stream that was enabled as depend
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                                 |
-        | install                   | postgresql-0:9.6.11-1.module_2689+ea8f147f.x86_64       |
-        | install                   | postgresql-libs-0:9.6.11-1.module_2689+ea8f147f.x86_64  |
-        | install                   | CQRlib-devel-0:1.1.2-16.fc29.x86_64                     |
-        | install                   | CQRlib-0:1.1.2-16.fc29.x86_64                           |
+        | install-group             | postgresql-0:9.6.11-1.module_2689+ea8f147f.x86_64       |
+        | install-dep               | postgresql-libs-0:9.6.11-1.module_2689+ea8f147f.x86_64  |
+        | install-dep               | CQRlib-devel-0:1.1.2-16.fc29.x86_64                     |
+        | install-dep               | CQRlib-0:1.1.2-16.fc29.x86_64                           |
         | module-profile-install    | postgresql/client                                       |
 
 
@@ -161,7 +161,7 @@ Scenario: Install a module profile of a disabled module
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-profile-install    | nodejs/minimal                                |
         | module-stream-enable      | nodejs:8                                      |
     And modules state is following
@@ -186,7 +186,7 @@ Scenario: Installing module in presence of a modular error
    Then the exit code is 0
     And Transaction contains
         | Action                    | Package                                       |
-        | install                   | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-group             | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
         | module-profile-install    | nodejs/default                                |
         | module-stream-enable      | nodejs:8                                      |
     And modules state is following

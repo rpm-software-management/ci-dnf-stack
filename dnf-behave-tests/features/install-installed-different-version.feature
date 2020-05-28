@@ -7,12 +7,12 @@ Scenario: Install higher versions of installed RPMs
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                    |
-        | install       | setup-0:2.12.1-1.fc29.noarch               |
-        | install       | filesystem-0:3.9-2.fc29.x86_64             |
-        | install       | basesystem-0:11-6.fc29.noarch              |
         | install       | glibc-0:2.28-9.fc29.x86_64                 |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64          |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64             |
+        | install-dep   | basesystem-0:11-6.fc29.noarch              |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64          |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc-2.28-26.fc29"
    Then the exit code is 0
@@ -30,12 +30,12 @@ Scenario: Install lower versions of installed RPMs
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                    |
-        | install       | setup-0:2.12.1-1.fc29.noarch               |
-        | install       | filesystem-0:3.9-2.fc29.x86_64             |
-        | install       | basesystem-0:11-6.fc29.noarch              |
         | install       | glibc-0:2.28-26.fc29.x86_64                |
-        | install       | glibc-common-0:2.28-26.fc29.x86_64         |
-        | install       | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64             |
+        | install-dep   | basesystem-0:11-6.fc29.noarch              |
+        | install-dep   | glibc-common-0:2.28-26.fc29.x86_64         |
+        | install-dep   | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
    When I execute dnf with args "install glibc-2.28-9.fc29"
    Then the exit code is 0
     And Transaction is following

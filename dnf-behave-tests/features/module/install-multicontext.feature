@@ -17,7 +17,7 @@ Scenario: Install module, with specified profile and enabled dependencies
         | nodejs         | enabled   | 5        | minimal   |
     And Transaction is following
         | Action                    | Package                                         |
-        | install                   | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64    |
+        | install-group             | nodejs-1:5.3.1-1.module_2011+41787af0.x86_64    |
         | module-stream-enable      | nodejs:5                                        |
         | module-profile-install    | nodejs/minimal                                  |
 

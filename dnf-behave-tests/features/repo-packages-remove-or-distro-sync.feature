@@ -8,11 +8,11 @@ Scenario: Sync package to latest version in available repositories
     And Transaction is following
         | Action        | Package                               |
         | install       | glibc-0:2.28-9.fc29.x86_64            |
-        | install       | glibc-common-0:2.28-9.fc29.x86_64     |
-        | install       | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
-        | install       | basesystem-0:11-6.fc29.noarch         |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | glibc-common-0:2.28-9.fc29.x86_64     |
+        | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | install-dep   | basesystem-0:11-6.fc29.noarch         |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repo-packages dnf-ci-fedora remove-or-distro-sync glibc"
    Then the exit code is 0
@@ -48,11 +48,11 @@ Scenario: Remove and distro-sync packages from a repository
         | Action        | Package                               |
         | install       | libzstd-0:1.3.6-1.fc29.x86_64         |
         | install       | glibc-0:2.28-26.fc29.x86_64           |
-        | install       | glibc-common-0:2.28-26.fc29.x86_64    |
-        | install       | glibc-all-langpacks-0:2.28-26.fc29.x86_64     |
-        | install       | basesystem-0:11-6.fc29.noarch         |
-        | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | glibc-common-0:2.28-26.fc29.x86_64    |
+        | install-dep   | glibc-all-langpacks-0:2.28-26.fc29.x86_64     |
+        | install-dep   | basesystem-0:11-6.fc29.noarch         |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "repo-packages dnf-ci-fedora-updates remove-or-distro-sync"
    Then the exit code is 0
     And Transaction is following
@@ -70,7 +70,7 @@ Scenario: Fail on no package installed from the repo
     And Transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "repo-packages dnf-ci-fedora-updates remove-or-distro-sync"
    Then the exit code is 1
 

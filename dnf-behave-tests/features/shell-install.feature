@@ -8,9 +8,9 @@ Scenario: Using dnf shell, install an RPM
     And I execute in dnf shell "run"
    Then Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
         | install       | filesystem-0:3.9-2.fc29.x86_64            |
         | install       | wget-0:1.19.5-5.fc29.x86_64               |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 

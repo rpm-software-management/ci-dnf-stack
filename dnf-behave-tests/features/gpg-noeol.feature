@@ -33,5 +33,5 @@ Scenario: Install signed package from repository
     And Transaction is following
         | Action        | Package                     |
         | install       | abcde-0:2.9.2-1.fc29.noarch |
-        | install       | wget-0:1.19.5-5.fc29.x86_64 |
+        | install-dep   | wget-0:1.19.5-5.fc29.x86_64 |
 
