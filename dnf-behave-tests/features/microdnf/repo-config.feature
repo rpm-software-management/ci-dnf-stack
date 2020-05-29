@@ -79,3 +79,18 @@ Given I use repository "simple-base" as http
   And microdnf transaction is
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
+
+
+@bz1797265
+Scenario: install older version of available pkg from repo with higher (smaller number) priority
+Given I use repository "simple-base" with configuration
+      | key      | value |
+      | priority | 1     |
+  And I use repository "simple-updates" with configuration
+      | key      | value |
+      | priority | 2     |
+ When I execute microdnf with args "install labirinto"
+ Then the exit code is 0
+  And microdnf transaction is
+      | Action        | Package                       |
+      | install       | labirinto-0:1.0-1.fc29.x86_64 |
