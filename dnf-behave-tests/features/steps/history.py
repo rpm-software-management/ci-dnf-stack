@@ -7,6 +7,7 @@ import behave
 
 from common.lib.behave_ext import check_context_table
 from common.lib.cmd import run_in_context
+from common.lib.diff import print_lines_diff
 from lib.dnf import parse_history_info, parse_history_list
 
 
@@ -89,6 +90,7 @@ def step_impl(context, spec=None):
         spec = ""
     h_info = parsed_history_info(context, spec)
 
+    expected_actions = []
     for key, value in context.table:
         if key in h_info:
             if key in IN and value in h_info[key]:
@@ -100,15 +102,15 @@ def step_impl(context, spec=None):
                     '[history] {0} "{1}" not matched by "{2}".'.format(
                         key, h_info[key], value))
         elif key in ACTIONS:
-            for pkg in value.split(','):
-                for line in h_info[None]:
-                    if key in line and pkg in line:
-                        break
-                else:
-                    raise AssertionError(
-                        '[history] "{0}" not matched as "{1}".'.format(pkg, key))
+            expected_actions.append([key, value])
         else:
             raise AssertionError('[history] key "{0}" not found.'.format(key))
+
+    found_actions = [i.split()[0:2] for i in h_info[None]]
+
+    if expected_actions != found_actions:
+        print_lines_diff(expected_actions, found_actions)
+        raise AssertionError("History actions mismatch")
 
 @behave.then('History info rpmdb version did not change')
 def step_impl(context, spec=""):

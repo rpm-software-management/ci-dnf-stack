@@ -85,11 +85,18 @@ Scenario: History info in range - transaction merging
 Scenario: History info of package
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
-   Then History info "abcde" should match
+   Then History info "last-1" should match
         | Key           | Value                     |
         | Return-Code   | Success                   |
         | Install       | abcde-2.9.2-1.fc29.noarch |
+        | Install       | flac-1.3.2-8.fc29.x86_64  |
+        | Install       | wget-1.19.5-5.fc29.x86_64 |
+    And History info "last" should match
+        | Key           | Value                     |
+        | Return-Code   | Success                   |
         | Removed       | abcde-2.9.2-1.fc29.noarch |
+        | Removed       | flac-1.3.2-8.fc29.x86_64  |
+        | Removed       | wget-1.19.5-5.fc29.x86_64 |
 
 
 Scenario: history info aaa (nonexistent package)
