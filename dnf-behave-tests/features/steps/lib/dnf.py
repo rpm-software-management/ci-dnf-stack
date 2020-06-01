@@ -210,12 +210,20 @@ def parse_history_list(lines):
 def parse_history_info(lines):
     result = dict()
     result[None] = []
-    for line in lines:
-        if ':' in line:
-            key, val = [s.strip() for s in line.split(':', 1)]
+
+    it = iter(lines)
+    for line in it:
+        if ' : ' in line:
+            key, val = [s.strip() for s in line.split(' : ', 1)]
             result[key] = val
-        else:
-            result[None].append(line.strip())
+        elif line == "Packages Altered:":
+            for line in it:
+                if not line.startswith("    "):
+                    break
+                result[None].append(line.strip())
+
+            break
+
     return result
 
 
