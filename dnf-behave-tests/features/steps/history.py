@@ -83,7 +83,19 @@ def step_impl(context, history_range=None):
 @behave.then('History info "{spec}" should match')
 def step_impl(context, spec=None):
     IN = ['Command Line',]
-    ACTIONS = ['Install', 'Removed', 'Upgrade', 'Upgraded', 'Reinstall', 'Downgrade']
+    ACTIONS = [
+        'Install',
+        'Removed',
+        'Upgrade',
+        'Upgraded',
+        'Reinstall',
+        'Reinstalled',
+        'Downgrade',
+        'Downgraded',
+        'Obsoleted',
+        'Reason Change'
+    ]
+
     check_context_table(context, ["Key", "Value"])
 
     if spec is None:
@@ -106,7 +118,14 @@ def step_impl(context, spec=None):
         else:
             raise AssertionError('[history] key "{0}" not found.'.format(key))
 
-    found_actions = [i.split()[0:2] for i in h_info[None]]
+    found_actions = []
+    for a in h_info[None]:
+        action = a.split()
+
+        if action[0:2] == ["Reason", "Change"]:
+            found_actions.append(["Reason Change", action[2]])
+        else:
+            found_actions.append(action[0:2])
 
     if expected_actions != found_actions:
         print_lines_diff(expected_actions, found_actions)
