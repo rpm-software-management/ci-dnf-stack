@@ -1,4 +1,3 @@
-@not.with_os=rhel__eq__8
 @no_installroot
 Feature: libdnf context part correctly reading repo config
 

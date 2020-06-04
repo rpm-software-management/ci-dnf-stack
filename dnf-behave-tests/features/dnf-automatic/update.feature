@@ -22,8 +22,6 @@ Scenario: dnf-automatic can update package
         | upgrade       | labirinto-0:2.0-1.fc29.x86_64         |
 
 
-# Requires PR https://github.com/rpm-software-management/dnf/pull/1580
-@not.with_os=rhel__eq__8
 @bz1793298
 Scenario: dnf-automatic fails to update when the update package is not signed
   Given I use repository "simple-base"
@@ -36,8 +34,6 @@ Scenario: dnf-automatic fails to update when the update package is not signed
     And Transaction is empty
 
 
-# Requires PR https://github.com/rpm-software-management/dnf/pull/1580
-@not.with_os=rhel__eq__8
 @bz1793298
 Scenario: dnf-automatic fails to update when the public gpg key is not installed
   Given I use repository "simple-base"

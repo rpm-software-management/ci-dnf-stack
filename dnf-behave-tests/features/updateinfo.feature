@@ -344,7 +344,6 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
     """
 
 
-@not.with_os=rhel__eq__8
 Scenario Outline: updateinfo lists advisories using direct commands (yum compat)
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
@@ -364,7 +363,6 @@ Examples:
     | list-updateinfo |
 
 
-@not.with_os=rhel__eq__8
 Scenario Outline: updateinfo shows info for advisories using direct commands (yum compat)
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
@@ -416,7 +414,6 @@ Scenario: updateinfo shows summary for advisories using direct commands (yum com
     """
 
 
-@not.with_os=rhel__eq__8
 @bz1801092
 Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
   Given I successfully execute dnf with args "install glibc flac"
