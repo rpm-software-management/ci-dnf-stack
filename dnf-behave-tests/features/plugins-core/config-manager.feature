@@ -11,8 +11,6 @@ Background:
         | enabled     | 0        |
 
 
-# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/396
-@not.with_os=rhel__eq__8
 @bz1782822
 Scenario: when run without arguments
    When I execute dnf with args "config-manager"
@@ -23,8 +21,6 @@ Scenario: when run without arguments
     """
 
 
-# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/396
-@not.with_os=rhel__eq__8
 @bz1782822
 Scenario: when run with single argument
    When I execute dnf with args "config-manager repo1"
@@ -134,8 +130,6 @@ Scenario: --setopt modifies repo when used with --save
         """
 
 
-# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/396
-@not.with_os=rhel__eq__8
 @bz1782822
 Scenario: --setopt does not modify repo when used without --save
    When I execute dnf with args "config-manager --setopt=repo1.gpgcheck=1"
@@ -154,8 +148,6 @@ Scenario: --setopt does not modify repo when used without --save
 
 
 
-# Requires PR https://github.com/rpm-software-management/dnf-plugins-core/pull/396
-@not.with_os=rhel__eq__8
 @bz1782822
 Scenario: --setopt does not modify repo when used without --save and one argument
    When I execute dnf with args "config-manager --setopt=repo1.gpgcheck=1 repo1"

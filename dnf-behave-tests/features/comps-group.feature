@@ -287,6 +287,8 @@ Scenario: Group list ids with arg => yum compatibility
        DNF-CI-Testgroup (dnf-ci-testgroup)
     """
 
+#Requires PR https://github.com/rpm-software-management/ci-dnf-stack/pull/832
+@not.with_os=rhel__eq__8
 @bz1826198
 Scenario: List an environment with empty name
   Given I use repository "comps-group"
@@ -302,6 +304,8 @@ Scenario: List an environment with empty name
           <name-unset>
        """
 
+#Requires PR https://github.com/rpm-software-management/ci-dnf-stack/pull/832
+@not.with_os=rhel__eq__8
 @bz1826198
 Scenario: Install a group with empty name
   Given I use repository "comps-group"
@@ -313,6 +317,8 @@ Scenario: Install a group with empty name
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
 
+#Requires PR https://github.com/rpm-software-management/ci-dnf-stack/pull/832
+@not.with_os=rhel__eq__8
 @bz1826198
 Scenario: Install an environment with empty name
   Given I use repository "comps-group"

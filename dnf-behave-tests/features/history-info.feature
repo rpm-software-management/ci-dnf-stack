@@ -6,8 +6,6 @@ Background: Set up dnf-ci-fedora repository
   And I successfully execute dnf with args "install abcde --comment this_is_a_comment"
 
 
-# Requires PR: https://github.com/rpm-software-management/dnf/pull/1598
-@not.with_os=rhel__eq__8
 @bz1773679
 Scenario: history info shows comment to transaction
   When I execute dnf with args "history info"
