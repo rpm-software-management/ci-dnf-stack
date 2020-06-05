@@ -26,3 +26,63 @@ Scenario: dnf.rpm.log doesn't contain duplicate entries ()
         .* INFO --- logging initialized ---
         .* SUBDEBUG Erase: flac-1.3.3-3.fc29.x86_64
         """
+
+
+@bz1802074
+Scenario Outline: logfilelevel <level> controls verbosity of dnf.log
+Given I use repository "dnf-ci-fedora-updates"
+ When I configure dnf with
+      | key          | value   |
+      | logfilelevel | <level> |
+  And I execute dnf with args "install flac"
+  And I execute dnf with args "remove flac"
+ Then file "/var/log/dnf.log" contains lines
+      """
+      <info_lines>
+      <debug_lines>
+      <ddebug_lines>
+      """
+  And file "/var/log/dnf.log" does not contain lines
+      """
+      <not_present>
+      """
+
+Examples:
+      | level | info_lines | debug_lines | ddebug_lines | not_present   |
+      | 0     |            |             |              | .* INFO .*    |
+      | 1     | .* INFO .* |             |              | .* DEBUG .*   |
+      | 3     | .* INFO .* | .* DEBUG .* |              | .* DDEBUG .*  |
+      | 7     | .* INFO .* | .* DEBUG .* | .* DDEBUG .* | .* WARNING .* |
+
+
+@bz1802074
+Scenario Outline: logfilelevel <level> controls verbosity of dnf.librepo.log and hawkey.log
+Given I use repository "dnf-ci-fedora-updates"
+ When I configure dnf with
+      | key          | value   |
+      | logfilelevel | <level> |
+  And I execute dnf with args "install flac"
+  And I execute dnf with args "remove flac"
+ Then file "/var/log/dnf.librepo.log" contains lines
+      """
+      .* <info_line>
+      .* <debug_line>
+      """
+ Then file "/var/log/hawkey.log" contains lines
+      """
+      <info_line>
+      <debug_line>
+      """
+ Then file "/var/log/dnf.librepo.log" does not contain lines
+      """
+      <not_present>
+      """
+ Then file "/var/log/hawkey.log" does not contain lines
+      """
+      <not_present>
+      """
+
+Examples:
+      | level | info_line | debug_line | not_present |
+      | 1     | INFO .*   |            | DEBUG .*    |
+      | 10    | INFO .*   | DEBUG .*   | WARNING .*  |
