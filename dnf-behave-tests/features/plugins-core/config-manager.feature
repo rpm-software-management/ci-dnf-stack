@@ -177,3 +177,46 @@ Scenario: config-manager --save saves to correct config file
         [main]
         debuglevel=7
         """
+
+@not.with_os=rhel__eq__8
+Scenario: config-manager --save preserves comments and empty lines
+  Given I create file "/etc/yum.repos.d/emptylines.repo" with
+        """
+        [dummy1]
+        name=Dummy repo 1
+        # the comment line
+
+        enabled=0
+
+        baseurl=file://the/dummy1/location/
+
+        # other comment line
+
+        [dummy2]
+        name=Dummy repo 2
+        enabled=0
+        baseurl=file://the/dummy2/location/
+
+        # trailing comment
+        """
+   When I execute dnf with args "config-manager --set-enabled dummy1"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/emptylines.repo" contents is
+        """
+        [dummy1]
+        name=Dummy repo 1
+        # the comment line
+
+        enabled=1
+
+        baseurl=file://the/dummy1/location/
+
+        # other comment line
+
+        [dummy2]
+        name=Dummy repo 2
+        enabled=0
+        baseurl=file://the/dummy2/location/
+
+        # trailing comment
+        """
