@@ -2,7 +2,7 @@
 
 PROG_PATH="$(dirname "$(realpath -s -- "$0")")"
 
-pushd "$PROG_PATH" > /dev/null || return
+pushd "$PROG_PATH" > /dev/null || exit 1
 
 # first check whether platform-python binary exists (for RHEL8)
 if [[ -x "/usr/libexec/platform-python" ]]; then
@@ -20,5 +20,8 @@ if [ ! "$PYTHON" ]; then
 fi
 
 "$PYTHON" container-test "$@"
+EXITCODE=$?
 
-popd || exit
+popd > /dev/null || :
+
+exit $EXITCODE
