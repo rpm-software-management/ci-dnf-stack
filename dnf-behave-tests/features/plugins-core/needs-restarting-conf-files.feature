@@ -13,6 +13,18 @@ Given I enable plugin "needs_restarting"
   wget
   """
 
+
+@bz1810123
+Scenario: plugin does not fail if config directory not found
+Given I delete directory "/etc/dnf/plugins/needs-restarting.d/"
+ When I execute dnf with args "needs-restarting -r"
+ Then the exit code is 0
+  And stdout is
+  """
+  No core libraries or services have been updated since boot-up.
+  Reboot should not be necessary.
+  """
+
 @bz1810123
 Scenario: restarting needed after updating package in conf files
 Given I execute dnf with args "upgrade wget"
