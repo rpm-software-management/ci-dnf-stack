@@ -6,8 +6,6 @@ Background:
     And I use repository "dnf-ci-fedora-updates"
 
 
-# Requires PR https://github.com/rpm-software-management/libdnf/pull/953
-@not.with_os=rhel__eq__8
 Scenario: Rollback
   Given I successfully execute dnf with args "install basesystem"
     And I successfully execute dnf with args "install glibc-2.28-26.fc29.x86_64"
@@ -21,8 +19,6 @@ Scenario: Rollback
         | remove        | glibc-all-langpacks-2.28-26.fc29.x86_64    |
         | remove        | glibc-common-2.28-26.fc29.x86_64           |
 
-# Requires PR https://github.com/rpm-software-management/libdnf/pull/953
-@not.with_os=rhel__eq__8
 Scenario: Multiple rollbacks
   Given I successfully execute dnf with args "install basesystem"
     And I successfully execute dnf with args "install glibc-2.28-26.fc29.x86_64"
