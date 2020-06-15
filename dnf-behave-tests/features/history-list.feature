@@ -212,3 +212,32 @@ Scenario: history length is 80 chars when missing rows are queried
   """
   80
   """
+
+@bz1846692
+Scenario: history list --reverse
+ When I execute dnf with args "history list --reverse"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+      | 2  |         | Removed | 3       |
+      | 3  |         | Install | 5       |
+
+@bz1846692
+Scenario: history --reverse
+ When I execute dnf with args "history --reverse"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 1  |         | Install | 6       |
+      | 2  |         | Removed | 3       |
+      | 3  |         | Install | 5       |
+
+@bz1846692
+Scenario: history 2..3 --reverse
+ When I execute dnf with args "history 2..3 --reverse"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 2  |         | Removed | 3       |
+      | 3  |         | Install | 5       |
