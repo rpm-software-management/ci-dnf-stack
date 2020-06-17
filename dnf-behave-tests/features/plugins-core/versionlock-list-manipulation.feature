@@ -142,3 +142,30 @@ Scenario: versionlock will print just necessary information with -q option
     """
     wget-0:1.19.5-5.fc29.*
     """
+
+
+@bz1782052
+Scenario: Prevent duplicate entries in versionlock.list
+  Given I use repository "dnf-ci-fedora"
+    And I successfully execute dnf with args "install wget"
+    And I successfully execute dnf with args "versionlock add wget"
+   When I execute dnf with args "versionlock add wget"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Package already locked in equivalent form: wget-0:1.19.5-5.fc29.*
+    """
+
+
+@bz1782052
+Scenario: Prevent conflicting entries in versionlock.list
+  Given I use repository "dnf-ci-fedora"
+    And I successfully execute dnf with args "install wget"
+    And I successfully execute dnf with args "versionlock add wget"
+   When I execute dnf with args "versionlock exclude wget"
+   Then the exit code is 1
+    And stderr is
+    """
+    Error: Package wget-0:1.19.5-5.fc29.* is already locked
+    """
