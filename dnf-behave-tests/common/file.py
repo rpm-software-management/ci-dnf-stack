@@ -11,6 +11,7 @@ import os
 from common.lib.behave_ext import check_context_table
 from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run
+from common.lib.diff import print_lines_diff
 from common.lib.file import create_file_with_contents
 from common.lib.file import copy_file
 from common.lib.file import copy_tree
@@ -22,7 +23,7 @@ from common.lib.file import file_timestamp
 from common.lib.file import prepend_installroot
 from common.lib.file import read_file_contents
 from common.lib.file import find_file_by_glob
-from common.lib.diff import print_lines_diff
+from common.lib.text import lines_match_to_regexps_line_by_line
 
 
 @behave.given('I create directory "{dirpath}"')
@@ -95,6 +96,19 @@ def file_contents_is(context, filepath):
         return
     print_lines_diff(expected.split('\n'), found.split('\n'))
     raise AssertionError("File '{}' contents is different then expected.".format(filepath))
+
+
+@behave.then('file "{filepath}" matches line by line')
+def then_stdout_matches_line_by_line(context, filepath):
+    """
+    Checks that each line of given file matches respective line in regular expressions.
+    """
+    expected = context.text.split('\n')
+    full_path = prepend_installroot(context, filepath)
+    f = find_file_by_glob(full_path)
+    found = read_file_contents(f).split('\n')
+
+    lines_match_to_regexps_line_by_line(found, expected)
 
 
 @behave.step('file "{filepath}" contains lines')
