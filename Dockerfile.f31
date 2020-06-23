@@ -94,8 +94,11 @@ RUN set -x && \
         microdnf \
         # install third party plugins
         dnf-plugin-swidtags \
-        zchunk
-
+        zchunk \
+        # dnf-repoconfig-daemon requirements
+        dbus-daemon \
+        python3-dbus \
+        polkit
 
 # install local RPMs if available
 COPY ./rpms/ /opt/behave/rpms/
@@ -104,6 +107,8 @@ RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
         dnf -y install /opt/behave/rpms/*.rpm --disableplugin=local; \
     fi
 
+# create directory for dbus-daemon socket
+RUN mkdir -p /run/dbus
 
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/behave/
