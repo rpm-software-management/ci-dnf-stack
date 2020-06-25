@@ -42,6 +42,21 @@ Scenario: Download an existing RPM with dependencies
         | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm      | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm    |
 
 
+@bz1844925
+Scenario: Error when failed to resolve dependencies
+   When I execute dnf with args "download filesystem --resolve --exclude setup"
+   Then the exit code is 1
+    And stderr is
+        """
+        Error in resolve of packages:
+            filesystem-3.9-2.fc29.x86_64
+
+         Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
+          - conflicting requests
+          - package setup-2.12.1-1.fc29.noarch is filtered out by exclude filtering
+        """
+
+
 Scenario: Download an existing RPM with dependencies into a --destdir
    When I execute dnf with args "download filesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
