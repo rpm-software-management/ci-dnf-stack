@@ -67,3 +67,13 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
       | package-devel | 0     | 0.2.1   | 1.fc29  | x86_64       |
+
+
+Scenario: --update --recycle-pkglist does not include newly added package when running on existing empty repodata
+Given I create directory "/temp-repo-empty/"
+  And I execute createrepo_c with args "." in "/temp-repo-empty"
+Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-libs-0.2.1-1.fc29.x86_64.rpm" to "/temp-repo-empty"
+ When I execute createrepo_c with args ". --update --recycle-pkglist" in "/temp-repo-empty"
+ Then the exit code is 0
+  And repodata "/temp-repo-empty/repodata/" are consistent
+  And primary in "/temp-repo-empty/repodata" doesn't have any packages
