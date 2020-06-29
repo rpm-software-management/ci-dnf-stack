@@ -630,8 +630,6 @@ Scenario: dnf repoquery --querytags
  Then the exit code is 0
   And stdout is
       """
-      Available query-tags: use --queryformat ".. %{{tag}} .."
-
       name, arch, epoch, version, release, reponame (repoid), evr,
       debug_name, source_name, source_debug_name,
       installtime, buildtime, size, downloadsize, installsize,
