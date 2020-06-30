@@ -168,6 +168,20 @@ def step_impl(context, first, second):
     assert exitcode == 0, 'Files "{}" and "{}" differ.'.format(first, second)
 
 
+@behave.step('the text file contents of "{first}" and "{second}" do not differ')
+def step_impl(context, first, second):
+    full_path_first = prepend_installroot(context, first)
+    full_path_second = prepend_installroot(context, second)
+    f1 = find_file_by_glob(full_path_first)
+    f2 = find_file_by_glob(full_path_second)
+    found1 = read_file_contents(f1).strip()
+    found2 = read_file_contents(f2).strip()
+    if found1 == found2:
+        return
+    print_lines_diff(found1.split('\n'), found2.split('\n'))
+    raise AssertionError("File '{}' contents differ from {}.".format(first, second))
+
+
 @behave.step('timestamps of the files "{first}" and "{second}" do not differ')
 def step_impl(context, first, second):
     first = first.format(context=context)
