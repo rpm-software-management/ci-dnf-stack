@@ -18,7 +18,9 @@ Scenario: debug-restore does not do anything if there is no package set change
     And stdout is
     """
     <REPOSYNC>
+    Dependencies resolved.
     Nothing to do.
+    Complete!
     """
 
 
@@ -48,7 +50,9 @@ Scenario: debug-restore does not install missing packages if 'install' not in fi
     And stdout is
     """
     <REPOSYNC>
+    Dependencies resolved.
     Nothing to do.
+    Complete!
     """
 
 
@@ -69,7 +73,9 @@ Scenario: debug-restore does not remove packages if 'remove' not in filter-types
     And stdout is
     """
     <REPOSYNC>
+    Dependencies resolved.
     Nothing to do.
+    Complete!
     """
 
 
@@ -99,7 +105,9 @@ Scenario: debug-restore does not replace packages if 'replace' not in filter-typ
     And stdout is
     """
     <REPOSYNC>
+    Dependencies resolved.
     Nothing to do.
+    Complete!
     """
 
 
