@@ -16,5 +16,6 @@ Provides:       installonlypkg(kernel)
 The kernel meta package
 
 %files
+%ghost /boot/vmlinuz-4.19.1-fc29.x86_64
 
 %changelog
