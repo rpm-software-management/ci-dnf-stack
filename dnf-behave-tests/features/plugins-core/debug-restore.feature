@@ -110,9 +110,8 @@ Scenario: debug-restore does not replace packages if 'replace' not in filter-typ
     Complete!
     """
 
-
 @bz1844533
-Scenario: debug-restore can handle install-only packages
+Scenario: debug-restore does not remove install-only packages
   Given I successfully execute dnf with args "install kernel-4.18.1"
     And I successfully execute dnf with args "remove kernel-4.20.1"
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt"
@@ -120,7 +119,33 @@ Scenario: debug-restore can handle install-only packages
     And Transaction is following
         | Action        | Package                               |
         | install       | kernel-0:4.20.1-fc29.x86_64           |
+
+
+@bz1844533
+Scenario: debug-restore --remove-installonly does remove install-only packages
+  Given I successfully execute dnf with args "install kernel-4.18.1"
+    And I successfully execute dnf with args "remove kernel-4.20.1"
+   When I execute dnf with args "debug-restore --remove-installonly {context.dnf.tempdir}/dump.txt"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-0:4.20.1-fc29.x86_64           |
         | remove        | kernel-0:4.18.1-fc29.x86_64           |
+
+
+@bz1844533
+@no_installroot
+Scenario: debug-restore --remove-installonly fails to remove running kernel
+  Given I successfully execute dnf with args "install kernel-4.18.1"
+    And I successfully execute dnf with args "remove kernel-4.20.1"
+    And I fake kernel release to "4.18.1-fc29.x86_64"
+   When I execute dnf with args "debug-restore --remove-installonly {context.dnf.tempdir}/dump.txt"
+   Then the exit code is 1
+    And stderr is
+    """
+    Error: 
+     Problem: The operation would result in removing the following protected packages: kernel
+    """
 
 
 Scenario: debug-restore --output only prints what would be changed
@@ -128,6 +153,21 @@ Scenario: debug-restore --output only prints what would be changed
     And I successfully execute dnf with args "install kernel-4.18.1"
     And I successfully execute dnf with args "remove kernel-4.20.1"
    When I execute dnf with args "debug-restore --output {context.dnf.tempdir}/dump.txt"
+   Then the exit code is 0
+    And transaction is empty
+    And stdout is
+    """
+    <REPOSYNC>
+    install   kernel-0:4.20.1-fc29.x86_64
+    replace   test-replace-0:2-fc29.x86_64
+    """
+
+
+Scenario: debug-restore --output only prints what would be changed (with --remove-installonly)
+  Given I successfully execute dnf with args "upgrade test-replace"
+    And I successfully execute dnf with args "install kernel-4.18.1"
+    And I successfully execute dnf with args "remove kernel-4.20.1"
+   When I execute dnf with args "debug-restore --remove-installonly --output {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
     And transaction is empty
     And stdout is
