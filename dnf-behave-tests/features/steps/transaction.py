@@ -74,20 +74,26 @@ def check_rpmdb_transaction(context, mode):
 
     if mode == 'exact_match':
         context_table = parse_context_table(context)
-        for action in ["install", "remove", "upgrade", "downgrade"]:
-            delta = []
-            for nevra in context_table[action].copy():
+        for action, nevras in context_table.items():
+            if action.startswith("install-"):
+                action = "install"
+            if action.startswith("remove-") or action == "obsoleted":
+                action = "remove"
+
+            if action not in ["install", "remove", "upgrade", "downgrade"]:
+                continue
+
+            for nevra in nevras:
                 if nevra in rpmdb_transaction[action]:
                     rpmdb_transaction[action].remove(nevra)
-                elif action == "remove": # and nevra in rpmdb_transaction["obsolete"]:
+                elif action == "remove" and nevra in rpmdb_transaction["obsoleted"]:
                     rpmdb_transaction["obsoleted"].remove(nevra)
-                else:
-                    delta.append(nevra)
-            if delta:
+
+        for action in ["install", "remove", "upgrade", "downgrade", "obsoleted"]:
+            if rpmdb_transaction[action]:
                 raise AssertionError(
                     "[rpmdb] Following packages weren't captured in the table for action '%s': %s" % (
-                    action, ", ".join([str(rpm) for rpm in sorted(delta)])))
-
+                    action, ", ".join([str(rpm) for rpm in sorted(rpmdb_transaction[action])])))
 
 def check_dnf_transaction(context, mode):
     check_context_table(context, ["Action", "Package"])
