@@ -41,8 +41,6 @@ def check_rpmdb_transaction(context, mode):
 
     context.dnf["rpmdb_post"] = get_rpmdb_rpms(context.dnf.installroot)
 
-    checked_rpmdb = {}
-
     # check changes in RPMDB
     rpmdb_transaction = diff_rpm_lists(context.dnf["rpmdb_pre"], context.dnf["rpmdb_post"])
     for action, nevras in context.table:
@@ -54,7 +52,6 @@ def check_rpmdb_transaction(context, mode):
         if action in ["broken"] or action in ["conflict"]:
             continue
         for nevra in nevras.split(", "):
-            checked_rpmdb.setdefault(action, set()).add(nevra)
             if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
                 continue
             rpm = RPM(nevra)
