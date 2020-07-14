@@ -1,13 +1,8 @@
-@no_installroot
-# There is logical bug in libdnf and the test is not correct.
-# Disable test until it will be fixed.
-@xfail
 Feature: Tests --setopt=install_weak_deps=
 
 
 Background: Prepare environment
-  Given I execute microdnf with args "remove abcde flac"
-    And I use repository "dnf-ci-fedora"
+ Given I use repository "dnf-ci-fedora"
 
 
 Scenario: Install "abcde" without weak dependencies
@@ -16,6 +11,7 @@ Scenario: Install "abcde" without weak dependencies
     And microdnf transaction is
         | Action        | Package                                   |
         | install       | abcde-0:2.9.2-1.fc29.noarch               |
+        | install       | wget-0:1.19.5-5.fc29.x86_64               |
 
 
 Scenario: Install "abcde" with weak dependencies
@@ -25,3 +21,4 @@ Scenario: Install "abcde" with weak dependencies
         | Action        | Package                                   |
         | install       | abcde-0:2.9.2-1.fc29.noarch               |
         | install       | flac-0:1.3.2-8.fc29.x86_64                |
+        | install       | wget-0:1.19.5-5.fc29.x86_64               |
