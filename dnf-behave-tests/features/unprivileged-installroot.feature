@@ -13,6 +13,7 @@ Scenario: Fail when installing into installroot as unprivileged user
         """
 
 
+@not.with_os=rhel__eq__8
 @bz1843280
 Scenario: Fail when missing permissions for installroot directory
   Given I use repository "miscellaneous"
