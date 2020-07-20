@@ -197,7 +197,7 @@ def step_impl(context, first, second):
             first, ts_first, second, ts_second)
 
 
-@behave.step('size of file "{filepath}" is less than "{expected_size}"')
+@behave.step('size of file "{filepath}" is at most "{expected_size}"')
 def file_size_less_than(context, filepath, expected_size):
     full_path = prepend_installroot(context, filepath)
     size = os.path.getsize(full_path)
