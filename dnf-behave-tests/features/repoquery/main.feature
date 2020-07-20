@@ -624,6 +624,7 @@ Scenario: repoquery --queryformat EVERYTHING
 
 
 # --querytags
+@not.with_os=rhel__eq__8
 @bz1744073
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"

@@ -1,6 +1,7 @@
 Feature: Test for debug plugin - dumping
 
 
+@not.with_os=rhel__eq__8
 Scenario: dnf debug-dump dumps file with configuration
   Given I enable plugin "debug"
     And I use repository "debug-plugin"
@@ -47,6 +48,7 @@ Scenario: dnf debug-dump dumps file with configuration
     """
 
 
+@not.with_os=rhel__eq__8
 Scenario: dnf debug-dump with --norepos skips dumping repositories contents
   Given I enable plugin "debug"
     And I use repository "debug-plugin"

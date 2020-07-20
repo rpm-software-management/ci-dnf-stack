@@ -213,6 +213,7 @@ Scenario: history length is 80 chars when missing rows are queried
   80
   """
 
+@not.with_os=rhel__eq__8
 @bz1846692
 Scenario: history list --reverse
  When I execute dnf with args "history list --reverse"
@@ -223,6 +224,7 @@ Scenario: history list --reverse
       | 2  |         | Removed | 3       |
       | 3  |         | Install | 5       |
 
+@not.with_os=rhel__eq__8
 @bz1846692
 Scenario: history --reverse
  When I execute dnf with args "history --reverse"
@@ -233,6 +235,7 @@ Scenario: history --reverse
       | 2  |         | Removed | 3       |
       | 3  |         | Install | 5       |
 
+@not.with_os=rhel__eq__8
 @bz1846692
 Scenario: history 2..3 --reverse
  When I execute dnf with args "history 2..3 --reverse"

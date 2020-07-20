@@ -13,6 +13,8 @@ Scenario: history info shows comment to transaction
   Then stdout contains "Comment        : this_is_a_comment"
 
 
+@bz1845800
+@not.with_os=rhel__eq__8
 Scenario: history info for installing a group
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "group install DNF-CI-Testgroup"
@@ -27,6 +29,8 @@ Scenario: history info for installing a group
         | Install       | @dnf-ci-testgroup             |
 
 
+@bz1845800
+@not.with_os=rhel__eq__8
 Scenario: history info for installing a group when there are upgrades
   Given I successfully execute dnf with args "install lame"
     And I use repository "dnf-ci-thirdparty"
