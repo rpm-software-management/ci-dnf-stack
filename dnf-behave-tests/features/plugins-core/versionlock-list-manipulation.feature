@@ -145,6 +145,7 @@ Scenario: versionlock will print just necessary information with -q option
 
 
 @bz1782052
+@bz1845270
 Scenario: Prevent duplicate entries in versionlock.list
   Given I use repository "dnf-ci-fedora"
     And I successfully execute dnf with args "install wget"
