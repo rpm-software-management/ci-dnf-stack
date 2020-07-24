@@ -73,6 +73,8 @@ def generate_repodata(context, repo):
         args += " --groupfile " + groups_filename
 
     target_path = os.path.join(context.scenario.repos_location, repo_replaced)
+    if not os.path.isdir(target_path):
+        os.makedirs(target_path)
 
     run_in_context(context, "createrepo_c %s '%s'" % (args, target_path))
 
