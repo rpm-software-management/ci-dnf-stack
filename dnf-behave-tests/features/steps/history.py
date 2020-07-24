@@ -138,20 +138,18 @@ def step_impl(context, spec=""):
     assert (h_info['End rpmdb']), "End rpmdb version not found"
     assert (h_info['End rpmdb'] == h_info['Begin rpmdb']), "Begin and end rpmdb versions are different"
 
-@then('history userinstalled should')
-def step_impl(context):
-    check_context_table(context, ["Action", "Package"])
-    cmd = " ".join(context.dnf.get_cmd(context) + ["history", "userinstalled"])
-    run_in_context(context, cmd)
 
-    for action, package in context.table:
-        if action == 'match':
-            if package not in context.cmd_stdout:
-                raise AssertionError(
-                    '[history] package "{0}" not matched as userinstalled.'.format(package))
-        elif action == 'not match':
-            if package in context.cmd_stdout:
-                raise AssertionError(
-                    '[history] package "{0}" matched as userinstalled.'.format(package))
-        else:
-            raise ValueError('Invalid action "{0}".'.format(action))
+@behave.then('package reasons are')
+def step_impl(context):
+    check_context_table(context, ["Package", "Reason"])
+
+    cmd = context.dnf.get_cmd(context) + ["repoquery --qf '%{name}-%{evr}.%{arch},%{reason}' --installed"]
+
+    run_in_context(context, " ".join(cmd))
+
+    expected = [[p, r] for p, r in context.table]
+    found = sorted([r.split(",") for r in context.cmd_stdout.strip().split('\n')])
+
+    if found != expected:
+        print_lines_diff(expected, found)
+        raise AssertionError("Package reasons mismatch")
