@@ -73,6 +73,8 @@ def generate_repodata(context, repo):
         args += " --groupfile " + groups_filename
 
     target_path = os.path.join(context.scenario.repos_location, repo_replaced)
+    if not os.path.isdir(target_path):
+        os.makedirs(target_path)
 
     # skip creating repos that have repomd.xml created already
     repomd_xml = os.path.join(target_path, "repodata", "repomd.xml")
