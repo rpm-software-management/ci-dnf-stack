@@ -71,18 +71,18 @@ Scenario: Keep reason of obsoleted package
    Then the exit code is 0
    When I execute dnf with args "mark remove PackageB"
    Then the exit code is 0
-    And history userinstalled should
-        | Action        | Package                                   |
-        | not match     | PackageB-1.0-1                            | 
+    And package reasons are
+        | Package        | Reason     |
+        | PackageB-1.0-1 | dependency |
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | remove        | PackageB-0:1.0-1.x86_64                   |
-    And history userinstalled should
-        | Action        | Package                                   |
-        | not match     | PackageB-Obsoleter-1.0-1                  | 
+    And package reasons are
+        | Package                  | Reason     |
+        | PackageB-Obsoleter-1.0-1 | dependency |
 
 
 Scenario: Autoremoval of obsoleted package

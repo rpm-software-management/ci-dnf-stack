@@ -14,14 +14,14 @@ Scenario: List userinstalled packages
         | install-dep   | wget-0:1.19.5-5.fc29.x86_64               |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
         | install-weak  | flac-0:1.3.2-8.fc29.x86_64                |
-    And history userinstalled should
-        | Action        | Package                                   |
-        | match         | abcde-2.9.2-1.fc29.noarch                 |
-        | match         | basesystem-11-6.fc29.noarch               |
-        | not match     | flac-1.3.2-8.fc29.x86_64                  |
-        | not match     | wget-1.19.5-5.fc29.x86_64                 |
-        | not match     | setup-2.12.1-1.fc29.noarch                |
-        | not match     | filesystem-3.9-2.fc29.x86_64              |
+    And package reasons are
+        | Package                      | Reason          |
+        | abcde-2.9.2-1.fc29.noarch    | user            |
+        | basesystem-11-6.fc29.noarch  | user            |
+        | filesystem-3.9-2.fc29.x86_64 | dependency      |
+        | flac-1.3.2-8.fc29.x86_64     | weak-dependency |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+        | wget-1.19.5-5.fc29.x86_64    | dependency      |
 
 
 Scenario: History info
