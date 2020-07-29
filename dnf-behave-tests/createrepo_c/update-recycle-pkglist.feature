@@ -69,6 +69,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | package-devel | 0     | 0.2.1   | 1.fc29  | x86_64       |
 
 
+@not.with_os=rhel__eq__8
 Scenario: --update --recycle-pkglist does not include newly added package when running on existing empty repodata
 Given I create directory "/temp-repo-empty/"
   And I execute createrepo_c with args "." in "/temp-repo-empty"
