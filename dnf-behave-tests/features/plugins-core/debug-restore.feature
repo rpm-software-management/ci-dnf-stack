@@ -1,4 +1,3 @@
-@not.with_os=rhel__eq__8
 Feature: Test for debug plugin - restoring
 
 
