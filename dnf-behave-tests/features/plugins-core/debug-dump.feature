@@ -35,6 +35,10 @@ Scenario: dnf debug-dump dumps file with configuration
       kernel-0:4.19.1-fc29.x86_64
       kernel-0:4.20.1-fc29.src
       kernel-0:4.20.1-fc29.x86_64
+      test-obsoleted-0:1-fc29.src
+      test-obsoleted-0:1-fc29.x86_64
+      test-obsoleter-0:2-fc29.src
+      test-obsoleter-0:2-fc29.x86_64
       test-remove-0:1-fc29.src
       test-remove-0:1-fc29.x86_64
       test-replace-0:1-fc29.src
