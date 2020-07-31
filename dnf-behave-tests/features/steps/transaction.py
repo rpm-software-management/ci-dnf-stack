@@ -207,6 +207,7 @@ def parse_microdnf_transaction_table(lines):
     lines = lines[:transaction_end]
 
     label_re = re.compile(r"^([^ ].+):$")
+    replacing_re = re.compile(r"^replacing +(?P<nevra>[^ ]*)$")
     action = None
     result = []
     for line in lines:
@@ -217,7 +218,13 @@ def parse_microdnf_transaction_table(lines):
             action = ACTIONS[label_match.group(1)]
             continue
 
-        package = line.split(" ")[0]
+        replacing_match = replacing_re.match(line)
+        if replacing_match:
+            action = "replaced"
+            package = replacing_match.group("nevra")
+        else:
+            package = line.split(" ")[0]
+
         # use RPM to parse and format the NEVRA to add epoch if missing
         result.append((action, str(RPM(package))))
 
@@ -230,8 +237,15 @@ def check_microdnf_transaction(context, mode):
     transaction = parse_microdnf_transaction_table(context.cmd_stdout.splitlines())
     table = sorted([(a, p) for a, p in context.table])
 
-    if transaction != table:
-        print_lines_diff(table, transaction)
+    updated_table = []
+    for action, nevra in table:
+        if action in ["upgraded", "downgraded", "reinstalled", "obsoleted"]:
+            action = "replaced"
+        updated_table.append((action, nevra))
+    updated_table.sort()
+
+    if transaction != updated_table:
+        print_lines_diff(updated_table, transaction)
         raise AssertionError("Transaction table mismatch")
 
 
