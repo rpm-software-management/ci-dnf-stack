@@ -1,0 +1,74 @@
+#!/bin/bash
+set -xeuo pipefail
+
+ANSIBLE_BRANCH="stable-2.10"
+TEST_TARGETS="yum dnf"
+JUNIT_DIR=""
+
+fatal() {
+    printf >&2 "Error: %s\n" "$*"
+    exit 1
+}
+
+show_usage() {
+    printf >&2 "Try \`$0 --help' for more information.\n"
+    exit 1
+}
+
+show_help() {
+    cat << EOF
+Usage: $0 [OPTIONS...]
+
+Options:
+  -h, --help               Show this help
+  --junit-directory        The directory to save JUnit test output to
+
+EOF
+    exit 0
+}
+
+TEMP=$(getopt -n $0 -o h -l help,junit-directory: -- "$@") || show_usage
+eval set -- "$TEMP"
+
+while :; do
+    case "$1" in
+        --) shift; break;;
+        -h|--help) show_help;;
+        --junit-directory) JUNIT_DIR=$2; shift 2;;
+        *) fatal "Option not implemented: $1"
+    esac
+done
+
+if [ "$JUNIT_DIR" -a ! -d "$JUNIT_DIR" ]; then
+    fatal "JUnit directory \"${JUNIT_DIR}\" is not a directory."
+fi
+
+git clone -b ${ANSIBLE_BRANCH} --single-branch --depth 1 https://github.com/ansible/ansible ansible-git
+
+pushd ansible-git
+    # intentionally break some tests
+    #sed -i 's/shell: rpm -q sos/shell: rpm -q sosxxx/' test/integration/targets/dnf/tasks/dnf.yml
+
+    # temporary fix for RHEL8 (there is no "default" stream of swig:3.0)
+    #sed -i 's/@swig:3\.0\/default/@swig:3.0\/common/' test/integration/targets/dnf/tasks/modularity.yml
+
+    if [ "$JUNIT_DIR" ]; then
+        # ansible test suite outputs junit xmls if junit-xml is detected
+        pip install junit-xml
+    fi
+
+    source hacking/env-setup
+
+    # run dnf integration tests
+    COMMAND="ansible-test integration $TEST_TARGETS --allow-destructive"
+    TEST_EXIT=0
+
+    $COMMAND || TEST_EXIT=1
+
+    if [ -d "$JUNIT_DIR" ]; then
+        # output is in test/results/junit/
+        cp test/results/junit/*.xml "$JUNIT_DIR"
+    fi
+popd
+
+exit $TEST_EXIT

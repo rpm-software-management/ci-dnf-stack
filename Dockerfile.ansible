@@ -1,0 +1,56 @@
+# Build
+# -----
+# $ podman build -f Dockerfile.ansible -t ansible
+#
+# Run
+# ---
+# $ podman run -it --rm ansible ./ansible
+
+
+# Build types
+# -----------
+# distro
+#       install distro packages
+# copr
+#       install distro packages
+#       then upgrade to copr packages
+# local
+#       install distro packages
+#       then upgrade to copr packages
+#       then install packages from local rpms/ folder
+
+
+FROM fedora:31
+ARG TYPE=local
+
+
+# if not TYPE == copr nor local, disable nightly copr
+RUN set -x && \
+    dnf -y install dnf-plugins-core; \
+    if [ "$TYPE" != "distro" ]; then \
+        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    fi
+
+
+# upgrade all packages to the latest available versions
+RUN set -x && \
+    dnf -y --refresh upgrade
+
+
+RUN set -x && \
+    dnf -y install glibc-langpack-en python3-pip python3-jinja2 python3-pyyaml git findutils man-db which
+
+
+# install local RPMs if available
+COPY ./rpms/ /tmp/rpms/
+RUN set -x && \
+    rm /tmp/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+    if [ -n "$(find /tmp/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
+        dnf -y install /tmp/rpms/*.rpm --disableplugin=local; \
+    fi
+
+
+COPY ./integration/ /tmp/integration/
+
+
+WORKDIR /tmp/integration
