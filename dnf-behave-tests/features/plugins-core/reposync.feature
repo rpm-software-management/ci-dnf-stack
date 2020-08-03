@@ -272,6 +272,23 @@ Scenario: Reposync --newest-only downloads packages from all streams and latest 
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm" exists
 
 
+@bz1833074
+Scenario: Reposync --newest-only downloads latest modular packages versions even if they are not part of the latest context version
+  Given I use repository "reposync-newest-modular"
+   When I execute dnf with args "reposync --newest-only --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+   When I execute "ls {context.dnf.tempdir}/reposync-newest-modular/x86_64/"
+   # labirinto-0.9-1 is the highest non-modular NEVRA
+   # labirinto-1.0-2 is part of the latest stream version
+   # labirinto-1.0-9 is the highest modular NEVRA
+   Then stdout is
+        """
+        labirinto-0.9-1.x86_64.rpm
+        labirinto-1.0-2.module.x86_64.rpm
+        labirinto-1.0-9.module.x86_64.rpm
+        """
+
+
 @bz1795965
 Scenario: Reposync accepts --norepopath to synchronize single repository
   Given I use repository "reposync" as http
