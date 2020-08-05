@@ -7,6 +7,7 @@ import behave
 import os
 import re
 import sys
+import time
 from datetime import datetime
 
 from common.lib.cmd import assert_exitcode, run_in_context
@@ -300,3 +301,8 @@ def then_stdout_contains_lines(context):
                 break
         else:
             raise AssertionError("Stderr doesn't contain line: %s" % line)
+
+
+@behave.step("I sleep for \"{duration:d}\" seconds")
+def step_sleep(context, duration):
+    time.sleep(duration)
