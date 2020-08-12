@@ -12,3 +12,4 @@ Given I use repository "dnf-ci-fedora"
   And microdnf transaction is
       | Action        | Package                                   |
       | downgrade     | flac-0:1.3.2-8.fc29.x86_64                |
+      | downgraded    | flac-0:1.3.3-3.fc29.x86_64                |
