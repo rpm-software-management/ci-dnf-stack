@@ -198,7 +198,7 @@ class BehaveRunner(object):
                     os.path.join('/opt/behave', self.command_line_args.suite))])
             if hasattr(self.command_line_args, 'junit_directory') \
                 and self.command_line_args.junit_directory:
-                self._volumes.extend(['--volume', '{}:/junit:Z'.format(
+                self._volumes.extend(['--volume', '{}:/junit:z'.format(
                     self.command_line_args.junit_directory)])
         return self._volumes
 
