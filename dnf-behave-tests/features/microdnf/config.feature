@@ -32,3 +32,17 @@ Given I copy repository "simple-base" for modification
       """
       GET /repodata/primary.xml.gz
       """
+
+
+@bz1866253
+Scenario: microdnf respects --config option
+Given I use repository "simple-base"
+  And I create file "/test/microdnf.conf" with
+      """
+      [main]
+      exclude=labirinto
+      """
+ When I execute microdnf with args "--config {context.dnf.installroot}/test/microdnf.conf install labirinto"
+ Then the exit code is 1
+  And stderr contains "error: No package matches 'labirinto'"
+  And stdout is empty
