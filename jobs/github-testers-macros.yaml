@@ -198,6 +198,11 @@
               GH_STATE=failure
               GH_CONTEXT={github-context}
               GH_DESC=Error while building RPM git-overlay.
+      - trigger-parameterized-builds:
+          - project: "dnf-{name}-ansible"
+            current-parameters: True
+            condition: SUCCESS
+            property-file: props
       - workspace-cleanup:
           exclude:
             - props
@@ -327,6 +332,44 @@
             - GH_UPDATE.txt
             - test-results/**/*.xml
 
+#############
+## ANSIBLE ##
+#############
+
+- job-template:
+    name: "dnf-{name}-ansible"
+    defaults: github-testers-defaults
+    concurrent: True
+    node: dnf
+    scm:
+      - ci-dnf-stack-scm
+    builders:
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          IMAGE=ansible-ci-$(uuidgen)
+
+          join() {{ local IFS="$1"; shift; echo "$*"; }}
+          RPMS=($RPMS)
+          pushd ci-dnf-stack
+            pushd rpms
+              join , "{{${{RPMS[@]}}}}" | xargs curl -O
+            popd
+            sudo docker build -f Dockerfile.ansible -t $IMAGE .
+          popd
+
+          mkdir test-results
+          sudo docker run --volume `readlink -f test-results`:/junit:z --rm $IMAGE ./ansible --junit-directory /junit || :
+          sudo docker rmi -f "$IMAGE"
+
+    publishers:
+      - junit:
+          results: test-results/**/*.xml
+      - workspace-cleanup:
+          exclude:
+            - test-results/**/*.xml
+
 ##############
 ## TEARDOWN ##
 ##############
@@ -352,4 +395,5 @@
       - "dnf-{name}-build"
       - "dnf-{name}-provision"
       - "dnf-{name}-test"
+      - "dnf-{name}-ansible"
       - "dnf-{name}-teardown"
