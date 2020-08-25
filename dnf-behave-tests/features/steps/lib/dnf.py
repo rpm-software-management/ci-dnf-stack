@@ -41,6 +41,7 @@ ACTIONS_EN = {
     "Installing group/module packages": "install-group",
     "Installing Groups": "group-install",
     "Installing Environment Groups": "env-install",
+    "Upgrading Environment Groups": "env-upgrade",
     "Removing Groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
     "Installing module profiles": "module-profile-install",
