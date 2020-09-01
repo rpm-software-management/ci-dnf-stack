@@ -252,7 +252,7 @@ Scenario: Module cannot be disabled if there are other enabled streams requiring
    Then the exit code is 1
     And stderr contains "Error: Problems in request:"
     And stderr contains "Modular dependency problems:"
-    And stderr contains "Problem: module food-type:meat:1:-0.x86_64 requires module\(ingredience:chicken\)"
+    And stderr contains "Problem: module food-type:meat:1:.x86_64 requires module\(ingredience:chicken\)"
     And modules state is following
         | Module       | State     | Stream     | Profiles  |
         | food-type    | enabled   | meat       |           |
@@ -312,7 +312,7 @@ Scenario: Cannot enable a stream depending on a disabled module
    Then the exit code is 1
     And stderr contains "Error: Problems in request:"
     And stderr contains "Modular dependency problems:"
-    And stderr contains "module ingredience:chicken:1:-0.x86_64 is disabled"
+    And stderr contains "module ingredience:chicken:1:.x86_64 is disabled"
     And modules state is following
         | Module       | State     | Stream     | Profiles  |
         | food-type    | disabled  |            |           |
