@@ -90,6 +90,7 @@ Scenario: Get info for a module, only module name specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
+                       : postgresql:[9.6]
       Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
                        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -216,6 +217,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
       Summary          : Javascript runtime
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
+                       : postgresql:[9.6]
       Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
                        : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                        : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -312,6 +314,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
+                         : postgresql:[9.6]
         Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
                          : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -440,6 +443,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
+                         : postgresql:[9.6]
         Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
                          : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
@@ -493,6 +497,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Summary          : Javascript runtime
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
+                         : postgresql:[9.6]
         Artifacts        : nodejs-1:11.0.0-1.module_2311+8d497411.src
                          : nodejs-1:11.0.0-1.module_2311+8d497411.x86_64
                          : nodejs-devel-1:11.0.0-1.module_2311+8d497411.x86_64
