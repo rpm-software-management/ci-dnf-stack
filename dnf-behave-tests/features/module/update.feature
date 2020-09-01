@@ -108,7 +108,6 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       | install-dep               | wget-0:1.19.5-5.fc29.x86_64                           |
       | install-dep               | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64      |
       | install-dep               | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64 |
-      | module-stream-enable      | postgresql:9.6                                        |
   And modules state is following
       | Module     | State     | Stream    | Profiles  |
       | nodejs     | enabled   | 11        | default   |
