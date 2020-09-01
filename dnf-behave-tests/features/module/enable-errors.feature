@@ -190,7 +190,7 @@ Scenario: Enabling a stream depending on other than enabled stream should fail
    When I execute dnf with args "module enable beverage:soda"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"
-    And stderr contains "module beverage:soda:1:-0.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
+    And stderr contains "module beverage:soda:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
 
 
 Scenario: Enabling a stream depending on a disabled stream should fail
@@ -224,8 +224,8 @@ Scenario: Enabling a stream depending on a disabled stream should fail
    When I execute dnf with args "module enable beverage:soda"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"
-    And stderr contains "module beverage:soda:1:-0.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
-    And stderr contains "module fluid:water:1:-0.x86_64 is disabled"
+    And stderr contains "module beverage:soda:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
+    And stderr contains "module fluid:water:1:.x86_64 is disabled"
 
 
 # side-dish:chip requires fluid:oil
@@ -235,8 +235,8 @@ Scenario: Enabling two modules both requiring different streams of another modul
    When I execute dnf with args "module enable side-dish:chips beverage:beer"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"
-    And stderr contains "module side-dish:chips:1:-0.x86_64 requires module\(fluid:oil\), but none of the providers can be installed"
-    And stderr contains "module beverage:beer:1:-0.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
+    And stderr contains "module side-dish:chips:1:.x86_64 requires module\(fluid:oil\), but none of the providers can be installed"
+    And stderr contains "module beverage:beer:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
 
 
 # beverage:beer requires fluid:water
@@ -246,4 +246,4 @@ Scenario: Enabling module stream and another module requiring another stream
    When I execute dnf with args "module enable fluid:oil beverage:beer"
    Then the exit code is 1
     And stderr contains "Modular dependency problems:"
-    And stderr contains "module beverage:beer:1:-0.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
+    And stderr contains "module beverage:beer:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"

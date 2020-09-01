@@ -20,7 +20,7 @@ Scenario: I can't enable module requiring different platform pseudo module
 Given I delete file "/etc/os-release"
  When I execute dnf with args "module enable dwm:6.0"
  Then the exit code is 1
-  And stderr contains "nothing provides module\(pseudoplatform:6.0\) needed by module dwm:6.0:20180813144159:-0.x86_64"
+  And stderr contains "nothing provides module\(pseudoplatform:6.0\) needed by module dwm:6.0:20180813144159:.x86_64"
 
 
 Scenario: I can't see pseudo-module in module listing
