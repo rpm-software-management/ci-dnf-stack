@@ -61,30 +61,32 @@ def create_repo_conf(context, repo):
 
 
 def generate_repodata(context, repo):
-    if repo in context.repos:
+    repo_replaced = repo.replace("$releasever", context.dnf.releasever)
+
+    if repo_replaced in context.repos:
         return
 
     args = "--no-database --simple-md-filenames --revision=1550000000"
 
-    groups_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "comps.xml")
+    groups_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "comps.xml")
     if os.path.isfile(groups_filename):
         args += " --groupfile " + groups_filename
 
-    target_path = os.path.join(context.scenario.repos_location, repo)
+    target_path = os.path.join(context.scenario.repos_location, repo_replaced)
 
     run_in_context(context, "createrepo_c %s %s" % (args, target_path))
 
     repodata_path = os.path.join(target_path, "repodata")
 
-    updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "updateinfo.xml")
+    updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "updateinfo.xml")
     if os.path.isfile(updateinfo_filename):
         run_in_context(context, "modifyrepo_c %s %s" % (updateinfo_filename, repodata_path))
 
-    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo, "modules.yaml")
+    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "modules.yaml")
     if os.path.isfile(modules_filename):
         run_in_context(context, "modifyrepo_c --mdtype=modules %s %s" % (modules_filename, repodata_path))
 
-    context.repos[repo] = True
+    context.repos[repo_replaced] = True
 
 
 def generate_metalink(destdir, url):
@@ -213,7 +215,7 @@ def make_repo_packages_accessible(context, repo, rtype):
     its port to context.
     """
     repo_info = get_repo_info(context, repo)
-    server_dir = repo_info.path
+    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
     host, port = start_server_based_on_type(context, server_dir, rtype)
     context.dnf.ports[repo] = port
 
@@ -225,7 +227,7 @@ def step_use_repository_as(context, repo, rtype):
     configures the repository's baseurl with the server's url.
     """
     repo_info = get_repo_info(context, repo)
-    server_dir = repo_info.path
+    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
 
     if rtype == "https":
         certs = {
