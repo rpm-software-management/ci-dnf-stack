@@ -119,6 +119,14 @@ def generate_metalink(destdir, url):
         f.write(data + '\n')
 
 
+@behave.given("I set releasever to \"{releasever}\"")
+def step_impl(context, releasever):
+    context.dnf._set("releasever", releasever)
+    for repo, info in context.dnf.repos.items():
+        if "$releasever" in repo:
+            generate_repodata(context, repo)
+
+
 @behave.step("I use repository \"{repo}\"")
 def step_use_repository(context, repo):
     """
