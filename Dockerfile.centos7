@@ -71,6 +71,7 @@ RUN set -x && \
         # python2-behave - version >= 1.2.6 is not available as an RPM; install it from pip instead
         python2-pip \
         pexpect \
+        sqlite \
         # if TYPE == local, install debugging tools
         $(if [ "$TYPE" == "local" ]; then \
             echo \
