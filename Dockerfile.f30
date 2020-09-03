@@ -66,6 +66,7 @@ RUN set -x && \
         python3-pyftpdlib \
         rpm-build \
         rpm-sign \
+        sqlite \
         # if TYPE == local, install debugging tools
         $(if [ "$TYPE" == "local" ]; then \
             echo \
