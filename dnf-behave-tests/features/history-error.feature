@@ -65,6 +65,7 @@ Given I successfully execute dnf with args "--setopt=persistdir={context.dnf.tem
   And stderr is
       """
       History database is not readable, using in-memory database instead: Failed to access "{context.dnf.tempdir}/history.sqlite": Permission denied
+      History database is not readable, using in-memory database instead: Failed to access "{context.dnf.tempdir}/history.sqlite": Permission denied
       """
 
 
@@ -78,5 +79,6 @@ Given I successfully execute dnf with args "--setopt=persistdir={context.dnf.tem
  Then the exit code is 0
   And stderr is
       """
+      History database is not readable, using in-memory database instead: Failed to access "{context.dnf.tempdir}/history.sqlite": Permission denied
       History database is not readable, using in-memory database instead: Failed to access "{context.dnf.tempdir}/history.sqlite": Permission denied
       """
