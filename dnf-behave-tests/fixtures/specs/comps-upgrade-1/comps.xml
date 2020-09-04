@@ -46,4 +46,38 @@
     </grouplist>
   </environment>
 
+  <group>
+   <id>empty-group</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>empty-group</name>
+   <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+    </packagelist>
+  </group>
+
+  <environment>
+   <id>empty-environment</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>empty-environment</name>
+   <description>Testgroup for DNF CI testing</description>
+    <grouplist>
+    </grouplist>
+  </environment>
+
+  <environment>
+   <id>optional-environment</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>optional-environment</name>
+   <description>Testenvironment for DNF CI testing</description>
+    <optionlist>
+      <groupid>A-group</groupid>
+    </optionlist>
+  </environment>
+
 </comps>

@@ -229,3 +229,65 @@ Scenario: Upgrade environment when there were removed packages since installatio
         | Action        | Package                            |
         | group-upgrade | A-group                            |
         | env-upgrade   | AB-environment                     |
+
+
+@bz1872586
+Scenario: Upgrade empty group
+  Given I successfully execute dnf with args "group install empty-group"
+   When I execute dnf with args "group upgrade empty-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | group-upgrade | empty-group                        |
+
+
+@bz1872586
+Scenario: Upgrade empty environment
+  Given I successfully execute dnf with args "group install empty-environment"
+   When I execute dnf with args "group upgrade empty-environment"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | env-upgrade   | empty-environment                  |
+
+
+@bz1872586
+Scenario: Upgrade environment when all groups are removed
+  Given I successfully execute dnf with args "group install AB-environment"
+    And I successfully execute dnf with args "group remove A-group"
+   When I execute dnf with args "group upgrade AB-environment"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | env-upgrade   | AB-environment                     |
+
+
+@bz1872586
+Scenario: Upgrade environment with installed optional groups
+  Given I successfully execute dnf with args "group mark install optional-environment A-group"
+   When I execute dnf with args "group upgrade optional-environment"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | group-upgrade | A-group                            |
+        | env-upgrade   | optional-environment               |
+
+
+Scenario: Upgrade nonexistent group
+   When I execute dnf with args "group upgrade nonexistent"
+   Then the exit code is 1
+    And Transaction is empty
+    And stderr is
+        """
+        Module or Group 'nonexistent' is not installed.
+        Error: No group marked for upgrade.
+        """
+
+
+Scenario: Upgrade nonexistent and existent group
+  Given I successfully execute dnf with args "group install empty-group"
+   When I execute dnf with args "group upgrade nonexistent empty-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | group-upgrade | empty-group                        |
