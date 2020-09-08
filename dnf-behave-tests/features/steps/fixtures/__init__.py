@@ -26,3 +26,10 @@ def start_server_based_on_type(context, server_dir, rtype, certs=None):
             raise AssertionError("Unknown server type: %s" % rtype)
 
     return host, port
+
+
+def stop_server_type(context, path, rtype):
+    if rtype == "ftp":
+        context.scenario.ftpd.stop_server(path)
+    else:
+        context.scenario.httpd.stop_server(path)
