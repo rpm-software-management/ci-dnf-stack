@@ -64,6 +64,9 @@ class ServerContext(object):
 
         return address
 
+    def stop_server(self, path):
+        self.servers.pop(path)[1].terminate()
+
     def get_address(self, path):
         """
         Get address of the server bound to the "path" directory.

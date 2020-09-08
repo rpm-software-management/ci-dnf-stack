@@ -14,7 +14,7 @@ from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run_in_context
 from common.lib.diff import print_lines_diff
 from common.lib.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
-from fixtures import start_server_based_on_type
+from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
 
 
@@ -264,6 +264,17 @@ def step_use_repository_as(context, repo, rtype):
     repo_info.update_config(config)
     generate_repodata(context, repo)
     create_repo_conf(context, repo)
+
+
+@behave.step("I stop {rtype:server_type} server for repository \"{repo}\"")
+def step_stop_server_for_repo(context, rtype, repo):
+    """
+    Stops the server that is running for the repository.
+    """
+    repo_info = get_repo_info(context, repo)
+    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
+
+    stop_server_type(context, server_dir, rtype)
 
 
 @behave.step("I set up metalink for repository \"{repo}\"")
