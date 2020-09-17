@@ -74,17 +74,17 @@ def generate_repodata(context, repo):
 
     target_path = os.path.join(context.scenario.repos_location, repo_replaced)
 
-    run_in_context(context, "createrepo_c %s %s" % (args, target_path))
+    run_in_context(context, "createrepo_c %s '%s'" % (args, target_path))
 
     repodata_path = os.path.join(target_path, "repodata")
 
     updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "updateinfo.xml")
     if os.path.isfile(updateinfo_filename):
-        run_in_context(context, "modifyrepo_c %s %s" % (updateinfo_filename, repodata_path))
+        run_in_context(context, "modifyrepo_c %s '%s'" % (updateinfo_filename, repodata_path))
 
     modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "modules.yaml")
     if os.path.isfile(modules_filename):
-        run_in_context(context, "modifyrepo_c --mdtype=modules %s %s" % (modules_filename, repodata_path))
+        run_in_context(context, "modifyrepo_c --mdtype=modules %s '%s'" % (modules_filename, repodata_path))
 
     context.repos[repo_replaced] = True
 
