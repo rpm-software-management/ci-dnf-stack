@@ -61,20 +61,20 @@ for path in "$DIR"/*/*.spec; do
     # rebuild changed or new specs
     if [ $CSUM_CHANGED -eq 1 ]; then
         echo "Building $path..."
-        eval "$RPMBUILD_CMD" --target=$ARCH "$path"
+        eval "$RPMBUILD_CMD" --target=$ARCH "'$path'"
 
         # In addition to default $ARCH (x86_64) also build packages with architectures
         # whose names are contained in the specfile name
         if [[ "$SPEC_NAME" =~ "i686" ]]; then
-            eval "$RPMBUILD_CMD" --target=i686 "$path"
+            eval "$RPMBUILD_CMD" --target=i686 "'$path'"
         fi
 
         if [[ "$SPEC_NAME" =~ "i386" ]]; then
-            eval "$RPMBUILD_CMD" --target=i386 "$path"
+            eval "$RPMBUILD_CMD" --target=i386 "'$path'"
         fi
 
         if [[ "$SPEC_NAME" =~ "ppc64" ]]; then
-            eval "$RPMBUILD_CMD" --target=ppc64 "$path"
+            eval "$RPMBUILD_CMD" --target=ppc64 "'$path'"
         fi
 
         pushd "$SPEC_DIR" > /dev/null
