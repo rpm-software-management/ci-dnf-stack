@@ -4,6 +4,7 @@ Feature: Test for dnf repoquery --unsatisfied
 @bz1750745
 @no_installroot
 @use.with_os=fedora__ge__30
+@use.with_os=rhel__ge__8
 Scenario: When kernel has unsatisfied dependencies, dnf repoquery --unsatisfied reports the problems and does not report "The operation would result in removing the following protected packages"
   Given I use repository "repoquery-unsatisfied"
    When I execute "dnf install dnf-ci-kernel --repofrompath=r,{context.dnf.repos[repoquery-unsatisfied].path} --repo=r -y --nogpgcheck --refresh"
