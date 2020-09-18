@@ -189,7 +189,7 @@ class DNFContext(object):
         if not self.installroot or self.installroot == "/":
             disable_plugins = self._get("disable_plugins")
             if disable_plugins:
-                result.append("--disableplugin='*'")
+                result.append("--noplugins")
             plugins = self._get("plugins") or []
             for plugin in plugins:
                 result.append("--enableplugin='{0}'".format(plugin))
