@@ -49,6 +49,40 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | top-d-1.0-1.x86_64     | user            |
 
 
+Scenario: Replay an install transaction from a non-existent repository
+Given I create file "/{context.dnf.tempdir}/transaction.json" with
+      """
+      {
+          "rpms": [
+              {
+                  "action": "Install",
+                  "nevra": "bottom-a1-2.0-1.noarch",
+                  "reason": "user",
+                  "repo_id": "nonexistent"
+              }
+          ],
+          "version": "0.0"
+      }
+      """
+ When I execute dnf with args "history replay transaction.json"
+ Then the exit code is 0
+  And Transaction is following
+      | Action      | Package                  |
+      | install     | bottom-a1-2.0-1.noarch   |
+  And History info should match
+      | Key           | Value                   |
+      | Return-Code   | Success                 |
+      | Install       | bottom-a1-2.0-1.noarch  |
+  And package reasons are
+      | Package                | Reason          |
+      | bottom-a1-2.0-1.noarch | user            |
+      | bottom-a2-1.0-1.x86_64 | dependency      |
+      | bottom-a3-1.0-1.x86_64 | dependency      |
+      | mid-a1-1.0-1.x86_64    | dependency      |
+      | mid-a2-1.0-1.x86_64    | weak-dependency |
+      | top-a-1:1.0-1.x86_64   | user            |
+
+
 Scenario: Replay an upgrade transaction
 Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
