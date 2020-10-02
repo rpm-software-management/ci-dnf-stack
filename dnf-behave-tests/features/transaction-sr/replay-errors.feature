@@ -110,14 +110,6 @@ Scenario: Replay a transaction upgrading to a nonexistent package version
 Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
       {
-          "rpms": {
-              "top-a.x86_64": {
-                  "action": "Upgrade",
-                  "from": "1:1.0-1",
-                  "reason": "user",
-                  "to": "1:3.0-1"
-              }
-          },
           "rpms": [
               {
                   "action": "Upgrade",
@@ -147,14 +139,6 @@ Scenario: Replay a transaction upgrading from a not-installed package version
 Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
       {
-          "rpms": {
-              "top-a.x86_64": {
-                  "action": "Upgrade",
-                  "from": "1:1.0-1",
-                  "reason": "user",
-                  "to": "1:3.0-1"
-              }
-          },
           "rpms": [
               {
                   "action": "Upgrade",
