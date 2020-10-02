@@ -14,7 +14,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "does-not-exist-1.0-1.noarch",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -36,7 +37,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "top-a-1:3.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -58,7 +60,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a2-1.0-1.x86_64",
-                  "reason": "dependency"
+                  "reason": "dependency",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -80,12 +83,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "does-not-exist-2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "does-not-exist-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -117,12 +122,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:3.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -152,12 +159,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -179,7 +188,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Removed",
                   "nevra": "does-not-exist-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -201,7 +211,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Removed",
                   "nevra": "top-c-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -223,12 +234,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -250,22 +263,26 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-1.0-1.noarch",
-                  "reason": "dependency"
+                  "reason": "dependency",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               },
               {
                   "action": "Install",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -290,7 +307,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "broken-dep-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -322,12 +340,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -428,12 +448,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
@@ -513,17 +535,20 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "top-a-1:3.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-b-2.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "@System"
               }
           ],
           "version": "0.0"
