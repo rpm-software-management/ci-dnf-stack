@@ -128,7 +128,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
           "rpms": [
               {
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -149,7 +150,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
           "rpms": [
               {
                   "action": "Install",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -170,7 +172,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
           "rpms": [
               {
                   "action": "Install",
-                  "nevra": "top-a-1:1.0-1.x86_64"
+                  "nevra": "top-a-1:1.0-1.x86_64",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -192,7 +195,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Fixxit",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -214,7 +218,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "wakaka",
-                  "reason": "user"
+                  "reason": "user",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
@@ -236,7 +241,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "dumb"
+                  "reason": "dumb",
+                  "repo_id": "transaction-sr"
               }
           ],
           "version": "0.0"
