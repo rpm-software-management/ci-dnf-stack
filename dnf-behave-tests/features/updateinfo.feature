@@ -423,6 +423,7 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
    Then the exit code is 0
     And stdout matches line by line
     """
+    <REPOSYNC>
     DNF version: .*
     cachedir: .*
     User-Agent: constructed: .*
@@ -445,6 +446,7 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
    Then the exit code is 0
     And stdout matches line by line
     """
+    <REPOSYNC>
     YUM version: .*
     cachedir: .*
     User-Agent: constructed: .*
