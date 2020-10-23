@@ -310,3 +310,44 @@ Scenario: Reposync --norepopath cannot be used with multiple repositories
     """
     Error: Can't use --norepopath with multiple repositories
     """
+
+
+@bz1856818
+Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by not-installed keys
+  Given I use repository "reposync-gpg" with configuration
+        | key      | value      |
+        | gpgcheck | 1          |
+        | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/reposync-gpg/reposync-gpg-public |
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --gpgcheck"
+   Then the exit code is 1
+    And stderr matches line by line
+    """
+    warning: .*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm: Header V4 RSA/SHA256 Signature, key ID .*: NOKEY
+    Removing dedalo-signed-1\.0-1\.fc29\.src\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.src\.rpm is not installed
+    Removing dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm is not installed
+    Removing dedalo-unsigned-1\.0-1\.fc29\.src\.rpm: Package dedalo-unsigned-1\.0-1\.fc29\.src\.rpm is not signed
+    Removing dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm: Package dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm is not signed
+    Error: GPG signature check failed\.
+    """
+    And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" does not exist
+
+
+@bz1856818
+Scenario: Reposync --gpgcheck removes unsigned packages
+  Given I use repository "reposync-gpg" with configuration
+        | key      | value      |
+        | gpgcheck | 1          |
+        | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/reposync-gpg/reposync-gpg-public |
+    # install package to ensure the key is imported to rpmdb
+    And I successfully execute dnf with args "install dedalo-signed"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --gpgcheck"
+   Then the exit code is 1
+    And stderr is
+    """
+    Removing dedalo-unsigned-1.0-1.fc29.src.rpm: Package dedalo-unsigned-1.0-1.fc29.src.rpm is not signed
+    Removing dedalo-unsigned-1.0-1.fc29.x86_64.rpm: Package dedalo-unsigned-1.0-1.fc29.x86_64.rpm is not signed
+    Error: GPG signature check failed.
+    """
+    And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
+    And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
