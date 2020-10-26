@@ -194,13 +194,15 @@ Scenario: history lame (no transaction with such package)
 
 @bz1786335
 @bz1786316
+@bz1852577
+@bz1906970
 # TODO change this to actually verify stdout
-Scenario: history longer than 80 characters
- When I execute dnf with args "history | head -1 | wc -c | wc -c"
+Scenario: history longer than 80 charactersi gets cut when there is no terminal
+ When I execute dnf with args "history | head -1 | wc -c"
  Then the exit code is 0
   And stdout is
   """
-  4
+  80
   """
 
 @bz1786335
