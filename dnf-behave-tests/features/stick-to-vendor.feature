@@ -29,7 +29,6 @@ Scenario: Upgrade sticks to vendor
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
-@wip
 @bz1788371
 Scenario: No upgrade if same vendor not found
   Given I use repository "dnf-ci-vendor-2-updates"
@@ -51,7 +50,7 @@ Scenario: Downgrade is unable to resolve transaction
    And transaction is empty
    And stdout is
    """
-   dnf-ci-vendor-2 test repository                 992 kB/s | 1.0 kB     00:00    
+   <REPOSYNC>
    (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages)
    """
    And stderr is
