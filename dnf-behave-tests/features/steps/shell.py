@@ -17,6 +17,19 @@ def stdout_from_shell(context):
     context.cmd_stdout = context.shell_session.before.decode().replace("\r\n", "\n")
 
 
+def expect_from_shell(context, shell_out):
+    try:
+        context.shell_session.expect(shell_out)
+    except pexpect.exceptions.EOF:
+        stdout_from_shell(context)
+        raise AssertionError("expected: '" + str(shell_out) + "' was not found in dnf shell output,"
+                             " it terminated unexpectedly")
+    except pexpect.exceptions.TIMEOUT:
+        stdout_from_shell(context)
+        raise AssertionError("expected: '" + str(shell_out) + "' was not found in dnf shell output,"
+                             " it timed out")
+
+
 @behave.step("I open dnf shell session")
 def when_I_open_dnf_shell(context):
     cmd = " ".join(context.dnf.get_cmd(context)) + " shell"
@@ -27,8 +40,8 @@ def when_I_open_dnf_shell(context):
     # pexpect adds a short delay before sending data, so that SSH has time
     # to turn off TTY echo; the echo is still there though, so removing the delay
     context.shell_session.delaybeforesend = None
-    
-    context.shell_session.expect('> ')
+
+    expect_from_shell(context, '> ')
     stdout_from_shell(context)
 
 
@@ -42,12 +55,10 @@ def when_I_execute_in_shell(context, command):
     context.shell_session.sendline(command.format(context=context))
 
     if command.strip() == "quit" or command.strip() == "exit":
-        context.shell_session.expect(pexpect.EOF)
+        expect_from_shell(context, pexpect.EOF)
         stdout_from_shell(context)
         context.shell_session = None
         return
 
-    # previously, there was timeout=600 added in commit 415d980eb34e8fd0487f1be3da14a8c279b74993
-    # but it's probably not needed anymore
-    context.shell_session.expect("\r\n[^ \r-]*> ")
+    expect_from_shell(context, "\r\n[^ \r-]*> ")
     stdout_from_shell(context)
