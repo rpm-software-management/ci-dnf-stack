@@ -51,7 +51,7 @@ class FtpServerContext(ServerContext):
 
 @fixture
 def ftpd_fixture(context):
-    if not hasattr(context.scenario, "httpd"):
+    if not hasattr(context.scenario, "ftpd"):
         context.scenario.ftpd = FtpServerContext()
 
     yield context.scenario.ftpd
