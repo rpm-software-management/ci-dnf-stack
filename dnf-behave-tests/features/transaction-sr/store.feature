@@ -58,7 +58,6 @@ Scenario: Store a transaction with an invalid transaction ID
  Then the exit code is 1
   And stderr is
       """
-      Warning: The stored transaction format is considered unstable and may change at any time. It will work if the same version of dnf is used to store and replay (or between versions as long as it stays the same).
       Error: Transaction ID "2" not found.
       """
 
@@ -1018,7 +1017,6 @@ Scenario: Store a transaction to a nonexistent path
  Then the exit code is 1
   And stderr is
       """
-      Warning: The stored transaction format is considered unstable and may change at any time. It will work if the same version of dnf is used to store and replay (or between versions as long as it stays the same).
       Error: Error storing transaction: [Errno 2] No such file or directory: '{context.dnf.tempdir}/not-there/out.json'
       """
 
