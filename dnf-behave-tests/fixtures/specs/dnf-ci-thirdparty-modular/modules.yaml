@@ -501,6 +501,25 @@ data:
     rpms: ["spatula-0:1.0-1.x86_64", "blender-0:1.0-1.x86_64", "whisk-0:1.0-1.x86_64"]
 ...
 ---
+document: modulemd
+version: 2
+data:
+  name: yum-source
+  stream: 1
+  version: 1
+  arch: x86_64
+  summary: Module for testing module soure filtering
+  description: Contains only yum.src
+  license:
+    module:
+    - MIT
+  profiles:
+    yum:
+      rpms: ["yum"]
+  artifacts:
+    rpms: ["yum-0:3.8.3-0.f29.modular.src"]
+...
+---
 document: modulemd-defaults
 version: 1
 data:
