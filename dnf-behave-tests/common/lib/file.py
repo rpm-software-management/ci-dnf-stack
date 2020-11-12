@@ -95,3 +95,29 @@ def decompress_file_by_extension(src):
         return subprocess.run(["unzck", "--stdout", src], capture_output=True).stdout
 
     return None
+
+
+def get_compression_suffix(type_str):
+    if type_str in ("gz", "zck", "xz", "bz2"):
+        return "." + type_str
+    if type_str == "-":
+        return ""
+    raise ValueError("Unknown compression type: " + type_str)
+
+
+def create_compressed_file_with_contents(filename, compression, contents, encoding="utf-8"):
+    fullname = filename + get_compression_suffix(compression)
+    if os.path.exists(fullname):
+        raise ValueError("File: " + fullname + " already exists")
+
+    if compression == "gz":
+        with gzip.open(fullname, 'wt') as f:
+            f.write(contents)
+    elif compression == "xz":
+        with lzma.open(fullname, 'wt') as f:
+            f.write(contents)
+    elif compression == "bz2":
+        with bz2.open(fullname, 'wt') as f:
+            f.write(contents)
+    else:
+        raise ValueError("Unknown compression type: " + compression)

@@ -12,6 +12,7 @@ import glob
 from lib.file import decompress_file_by_extension_to_dir
 from common.lib.behave_ext import check_context_table
 from common.lib.diff import print_lines_diff
+from common.lib.file import get_compression_suffix
 
 from lib.sqlite_repodata import load_sqlite
 from lib.xml_repodata import xml_parse_repodata
@@ -19,7 +20,6 @@ from lib.repodata import regex_find_file_from_list
 from lib.repodata import verify_repomd_item_with_file
 from lib.repodata import build_nevra
 from lib.file import get_checksum_regex
-from lib.file import get_compression_suffix
 from lib.file import decompression_iter
 from lib.file import checksum_of_file
 
