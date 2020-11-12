@@ -236,3 +236,11 @@ def then_file_sha256_checksums_are_following(context):
 def create_compressed_file_with(context, compression, filepath):
     target_path = prepend_installroot(context, filepath)
     create_compressed_file_with_contents(target_path, compression, context.text)
+
+
+@behave.step("I compress file \"{filepath}\" using \"{compression}\"")
+def create_compressed_file_with(context, compression, filepath):
+    file_path = prepend_installroot(context, filepath)
+    ensure_file_exists(file_path)
+    create_compressed_file_with_contents(
+        file_path, compression, read_file_contents(file_path))
