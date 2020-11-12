@@ -12,9 +12,10 @@ from common.lib.behave_ext import check_context_table
 from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run
 from common.lib.diff import print_lines_diff
-from common.lib.file import create_file_with_contents
 from common.lib.file import copy_file
 from common.lib.file import copy_tree
+from common.lib.file import create_compressed_file_with_contents
+from common.lib.file import create_file_with_contents
 from common.lib.file import delete_directory
 from common.lib.file import delete_file
 from common.lib.file import ensure_directory_exists
@@ -229,3 +230,9 @@ def then_file_sha256_checksums_are_following(context):
 
         if file_checksum != checksum:
             raise AssertionError("File sha256 checksum doesn't match (expected: %s, actual: %s): %s" % (checksum, file_checksum, path))
+
+
+@behave.step("I create \"{compression}\" compressed file \"{filepath}\" with")
+def create_compressed_file_with(context, compression, filepath):
+    target_path = prepend_installroot(context, filepath)
+    create_compressed_file_with_contents(target_path, compression, context.text)
