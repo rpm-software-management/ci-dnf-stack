@@ -16,6 +16,7 @@ DESCRIPTION_RE = re.compile(r"^\(.*\):$")
 PACKAGE_RE = re.compile(r" (?P<name>[^ ]+) *(?P<arch>[^ ]+) *(?P<evr>[^ ]+) *(?P<repo>[^ ]+) *(?P<size>.+)$")
 MODULE_LIST_HEADER_RE = re.compile(r"^(Name)\s+(Stream)\s+(Profiles)\s+(Summary)\s*$")
 MODULE_STREAM_RE = re.compile(r"(?P<module>[^ ]+) *(?P<stream>[^ ]+)$")
+MODULE_STREAM_SWITCH_RE = re.compile(r"(?P<module>[^ ]+) *(?P<stream>[^ ]+ -> [^ ]+)$")
 
 OBSOLETE_REPLACING_LABEL = {
     'en_US': 'replacing',
@@ -49,6 +50,7 @@ ACTIONS_EN = {
     "Removing module profiles": "module-profile-remove",
     "Disabling module profiles": "module-profile-disable",
     "Enabling module streams": "module-stream-enable",
+    "Switching module streams": "module-stream-switch",
     "Disabling modules": "module-disable",
     "Resetting modules": "module-reset",
 }
@@ -164,9 +166,14 @@ def parse_transaction_table(lines):
                     break
                 lines.pop(0)
                 if '-stream-' in action:
-                    match = MODULE_STREAM_RE.match(line.strip())
-                    if not match:
-                        raise ValueError("Couldn't parse module/stream: {}".format(line))
+                    if '-switch' in action:
+                        match = MODULE_STREAM_SWITCH_RE.match(line.strip())
+                        if not match:
+                            raise ValueError("Couldn't parse module/stream: {}".format(line))
+                    else:
+                        match = MODULE_STREAM_RE.match(line.strip())
+                        if not match:
+                            raise ValueError("Couldn't parse module/stream: {}".format(line))
                     result[action].add("{0[module]}:{0[stream]}".format(match.groupdict()))
                 else:
                     group = line.strip()
