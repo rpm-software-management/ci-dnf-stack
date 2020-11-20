@@ -234,3 +234,21 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm
       """
+
+
+Scenario: multiple runs of repomanage don't use cached metadata
+Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
+  And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"
+  And I delete file "//{context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/*/nodejs*" with globs
+  And I execute "createrepo_c --update --keep-all-metadata {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/"
+  And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/postgresql-9.6.8-1.module_1710+b535a823.src.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/postgresql-9.8.1-1.module_9790+c535b823.src.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/npm-5.12.1-1.fc29.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/npm-5.12.2-3.fc29.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm
+      """
