@@ -56,4 +56,4 @@ Scenario: Rollback update
         | Action        | Package                                   |
         | remove        | abcde-0:2.9.2-1.fc29.noarch               |
         | remove        | flac-0:1.3.2-8.fc29.x86_64                |
-        | remove        | wget-0:1.19.5-5.fc29.x86_64               |
+        | remove-dep    | wget-0:1.19.5-5.fc29.x86_64               |

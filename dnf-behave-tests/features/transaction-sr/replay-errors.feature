@@ -25,7 +25,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Cannot find rpm nevra "does-not-exist-1.0-1.noarch".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Cannot find rpm nevra "does-not-exist-1.0-1.noarch".
       """
 
 
@@ -48,7 +49,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Cannot find rpm nevra "top-a-1:3.0-1.x86_64".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Cannot find rpm nevra "top-a-1:3.0-1.x86_64".
       """
 
 
@@ -71,7 +73,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Package "bottom-a2.x86_64" is already installed for action "Install".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Package "bottom-a2.x86_64" is already installed for action "Install".
       """
 
 
@@ -100,7 +103,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Errors in "{context.dnf.tempdir}/transaction.json":
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
         Cannot find rpm nevra "does-not-exist-2.0-1.x86_64".
         Cannot find rpm nevra "does-not-exist-1.0-1.x86_64".
       """
@@ -131,7 +134,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Cannot find rpm nevra "top-a-1:3.0-1.x86_64".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Cannot find rpm nevra "top-a-1:3.0-1.x86_64".
       """
 
 
@@ -160,7 +164,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Package nevra "top-a-1:2.0-1.x86_64" not installed for action "Upgraded".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Package nevra "top-a-1:2.0-1.x86_64" not installed for action "Upgraded".
       """
 
 
@@ -183,7 +188,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Cannot find rpm nevra "does-not-exist-1.0-1.x86_64".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Cannot find rpm nevra "does-not-exist-1.0-1.x86_64".
       """
 
 
@@ -206,7 +212,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Package nevra "top-c-1.0-1.x86_64" not installed for action "Removed".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Package nevra "top-c-1.0-1.x86_64" not installed for action "Removed".
       """
 
 
@@ -235,7 +242,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Package nevra "bottom-a1-2.0-1.noarch", which is not present in the transaction file, was pulled into the transaction.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Package nevra "bottom-a1-2.0-1.noarch", which is not present in the transaction file, was pulled into the transaction.
       """
 
 
@@ -341,7 +349,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Group id 'nonexistent' is not available.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Group id 'nonexistent' is not available.
       """
 
 
@@ -364,7 +373,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Group id 'nonexistent' is not installed.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Group id 'nonexistent' is not installed.
       """
 
 
@@ -387,7 +397,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Group id 'nonexistent' is not installed.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Group id 'nonexistent' is not installed.
       """
 
 
@@ -412,7 +423,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Group id 'test-group' is not available.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Group id 'test-group' is not available.
       """
 
 
@@ -449,7 +461,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Environment id 'nonexistent' is not available.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Environment id 'nonexistent' is not available.
       """
 
 
@@ -472,7 +485,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Environment id 'nonexistent' is not installed.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Environment id 'nonexistent' is not installed.
       """
 
 
@@ -495,7 +509,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Environment id 'nonexistent' is not installed.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Environment id 'nonexistent' is not installed.
       """
 
 
@@ -542,7 +557,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Errors in "{context.dnf.tempdir}/transaction.json":
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
         Cannot find rpm nevra "top-a-1:3.0-1.x86_64".
         Cannot find rpm nevra "top-b-2.0-1.x86_64".
         Package nevra "top-b-1.0-1.x86_64" not installed for action "Upgraded".

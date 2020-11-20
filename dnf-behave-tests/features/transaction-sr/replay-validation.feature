@@ -26,7 +26,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Expecting ',' delimiter: line 3 column 5 (char 27).
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Expecting ',' delimiter: line 3 column 5 (char 27).
       """
 
 
@@ -41,7 +42,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing key "version".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing key "version".
       """
 
 
@@ -56,7 +58,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "version", string expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "version", string expected.
       """
 
 
@@ -71,7 +74,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Invalid major version "a", number expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Invalid major version "a", number expected.
       """
 
 
@@ -86,7 +90,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Invalid minor version "a", number expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Invalid minor version "a", number expected.
       """
 
 
@@ -101,7 +106,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Incompatible major version "5", supported major version is "0".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Incompatible major version "5", supported major version is "0".
       """
 
 
@@ -117,7 +123,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "rpms", array expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "rpms", array expected.
       """
 
 
@@ -139,7 +146,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "action" in an rpm.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "action" in an rpm.
       """
 
 
@@ -161,7 +169,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "nevra" in an rpm.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "nevra" in an rpm.
       """
 
 
@@ -183,7 +192,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "reason" in an rpm.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "reason" in an rpm.
       """
 
 
@@ -206,7 +216,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected value of package action "Fixxit" for rpm nevra "top-a-1:1.0-1.x86_64".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected value of package action "Fixxit" for rpm nevra "top-a-1:1.0-1.x86_64".
       """
 
 
@@ -229,7 +240,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Cannot parse NEVRA for package "wakaka".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Cannot parse NEVRA for package "wakaka".
       """
 
 
@@ -252,7 +264,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected value of package reason "dumb" for rpm nevra "top-a-1:1.0-1.x86_64".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected value of package reason "dumb" for rpm nevra "top-a-1:1.0-1.x86_64".
       """
 
 
@@ -268,7 +281,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "groups", array expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "groups", array expected.
       """
 
 
@@ -288,7 +302,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "id" in a group.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "id" in a group.
       """
 
 
@@ -310,7 +325,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "action" in a group.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "action" in a group.
       """
 
 
@@ -333,7 +349,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected value of group action "Invalid" for group "dummy".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected value of group action "Invalid" for group "dummy".
       """
 
 
@@ -356,7 +373,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Invalid comps package type "aaa".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Invalid comps package type "aaa".
       """
 
 
@@ -378,7 +396,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "packages" in a group.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "packages" in a group.
       """
 
 
@@ -406,7 +425,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "name" in groups.packages.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "name" in groups.packages.
       """
 
 
@@ -434,7 +454,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "installed" in groups.packages.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "installed" in groups.packages.
       """
 
 
@@ -462,7 +483,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "package_type" in groups.packages.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "package_type" in groups.packages.
       """
 
 
@@ -491,7 +513,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "groups.packages.name", string expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "groups.packages.name", string expected.
       """
 
 
@@ -520,7 +543,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "groups.packages.installed", boolean expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "groups.packages.installed", boolean expected.
       """
 
 
@@ -549,7 +573,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "groups.packages.package_type", string expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "groups.packages.package_type", string expected.
       """
 
 
@@ -565,7 +590,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "environments", array expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "environments", array expected.
       """
 
 
@@ -585,7 +611,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "id" in an environment.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "id" in an environment.
       """
 
 
@@ -605,7 +632,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "action" in an environment.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "action" in an environment.
       """
 
 
@@ -627,7 +655,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected value of environment action "Invalid" for environment "dummy".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected value of environment action "Invalid" for environment "dummy".
       """
 
 
@@ -649,7 +678,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Invalid comps package type "aaa".
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Invalid comps package type "aaa".
       """
 
 
@@ -671,7 +701,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "groups" in an environment.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "groups" in an environment.
       """
 
 
@@ -699,7 +730,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "id" in environments.groups.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "id" in environments.groups.
       """
 
 
@@ -727,7 +759,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "installed" in environments.groups.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "installed" in environments.groups.
       """
 
 
@@ -755,7 +788,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Missing object key "group_type" in environments.groups.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Missing object key "group_type" in environments.groups.
       """
 
 
@@ -784,7 +818,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "environments.groups.id", string expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "environments.groups.id", string expected.
       """
 
 
@@ -813,7 +848,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "environments.groups.installed", boolean expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "environments.groups.installed", boolean expected.
       """
 
 
@@ -842,5 +878,6 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
-      Error: Error in "{context.dnf.tempdir}/transaction.json": Unexpected type of "environments.groups.group_type", string expected.
+      Error: The following problems occurred while replaying the transaction from file "{context.dnf.tempdir}/transaction.json":
+        Unexpected type of "environments.groups.group_type", string expected.
       """
