@@ -30,10 +30,10 @@ Scenario: Undo with obsoletes
     And Transaction is following
         | Action        | Package                                   |
         | remove        | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-        | remove        | setup-0:2.12.1-1.fc29.noarch              |
+        | remove-dep    | setup-0:2.12.1-1.fc29.noarch              |
         | remove        | glibc-0:2.28-9.fc29.x86_64                |
-        | remove        | glibc-common-0:2.28-9.fc29.x86_64         |
-        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
-        | remove        | basesystem-0:11-6.fc29.noarch             |
+        | remove-dep    | glibc-common-0:2.28-9.fc29.x86_64         |
+        | remove-dep    | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove-dep    | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
-        
+

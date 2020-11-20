@@ -1437,7 +1437,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Package "bottom-a1.noarch" is already installed for action "Install".
       """
   And Transaction is following
@@ -1504,7 +1504,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Package "bottom-a2.x86_64" is already installed for action "Install".
         Package "bottom-a3.x86_64" is already installed for action "Install".
         Package "mid-a1.x86_64" is already installed for action "Install".
@@ -1551,7 +1551,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Package nevra "bottom-a1-1.0-1.noarch" not installed for action "Upgraded".
       """
   And Transaction is following
@@ -1593,7 +1593,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Package nevra "bottom-a1-2.0-1.noarch" not installed for action "Removed".
       """
   And Transaction is empty
@@ -1624,7 +1624,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Cannot find rpm nevra "does-not-exist-1.0-1.noarch".
       """
   And Transaction is following
@@ -1671,7 +1671,7 @@ Given I successfully execute dnf with args "install bottom-a1-2.0"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while replaying the transaction:
+      Warning, the following problems occurred while running a transaction:
         Package nevra "bottom-a1-2.0-1.noarch" not available in repositories for action "Reinstall".
       """
   And Transaction is empty
