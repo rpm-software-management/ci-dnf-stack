@@ -1,4 +1,3 @@
-@destructive
 @use.with_os=fedora__ge__31
 Feature: Test the system-upgrade plugin with comps
 
