@@ -30,6 +30,11 @@ Scenario: I can install a module profile by name:stream/profile
         | module-stream-enable      | nodejs:8                                      |
     And stdout contains "Installing group/module packages"
 
+@bz1898548
+Scenario: I cannot install source rpm
+   When I execute dnf with args "module install nodejs:8/minimal -x nodejs.x86_64"
+   Then the exit code is 1
+    And stderr does not contain "Error: Will not install a source rpm package"
 
 Scenario: I can install multiple module profiles at the same time
    When I execute dnf with args "module enable postgresql:9.6"
