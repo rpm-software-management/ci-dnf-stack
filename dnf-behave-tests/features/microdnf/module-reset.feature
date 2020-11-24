@@ -33,7 +33,7 @@ Scenario: I can reset a disabled default stream back to its default state
 
 
 Scenario: I can reset a disabled non-default stream back to a non-default state
- When I execute microdnf with args "module disablegc dwm"
+ When I execute microdnf with args "module disable dwm"
  Then the exit code is 0
   And modules state is following
       | Module | State    | Stream | Profiles |
