@@ -623,6 +623,27 @@ Scenario: repoquery --queryformat EVERYTHING
       """
 
 
+# install bottom-a1 using dnf (i.e. has record in history database)
+# install bottom-a2 using rpm (no record in history database)
+@bz1898968
+@bz1879168
+Scenario: repoquery --queryformat from_repo
+Given I successfully execute dnf with args "install bottom-a1"
+  And I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/bottom-a2-1.0-1.x86_64.rpm"
+ When I execute dnf with args "repoquery --available --installed --queryformat '%{{name}}-%{{version}}-%{{release}} %{{repoid}} %{{from_repo}}' bottom-*"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom-a1-1.0-1 repoquery-main repoquery-main
+      bottom-a1-2.0-1 @System @repoquery-main
+      bottom-a1-2.0-1 repoquery-main repoquery-main
+      bottom-a2-1.0-1 @System @System
+      bottom-a2-1.0-1 repoquery-main repoquery-main
+      bottom-a3-1.0-1 repoquery-main repoquery-main
+      bottom-a3-2.0-1 repoquery-main repoquery-main
+      """
+
+
 # --querytags
 @not.with_os=rhel__eq__8
 @bz1744073
@@ -631,7 +652,7 @@ Scenario: dnf repoquery --querytags
  Then the exit code is 0
   And stdout is
       """
-      name, arch, epoch, version, release, reponame (repoid), evr,
+      name, arch, epoch, version, release, reponame (repoid), from_repo, evr,
       debug_name, source_name, source_debug_name,
       installtime, buildtime, size, downloadsize, installsize,
       provides, requires, obsoletes, conflicts, sourcerpm,
