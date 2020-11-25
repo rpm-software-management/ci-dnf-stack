@@ -630,17 +630,18 @@ Scenario: repoquery --queryformat EVERYTHING
 Scenario: repoquery --queryformat from_repo
 Given I successfully execute dnf with args "install bottom-a1"
   And I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/bottom-a2-1.0-1.x86_64.rpm"
- When I execute dnf with args "repoquery --available --installed --queryformat '%{{name}}-%{{version}}-%{{release}} %{{repoid}} %{{from_repo}}' bottom-*"
+ When I execute dnf with args "repoquery --available --installed --queryformat '%{{name}}-%{{version}}-%{{release}} %{{repoid}} -%{{from_repo}}-' bottom-*"
  Then the exit code is 0
   And stdout is
       """
-      bottom-a1-1.0-1 repoquery-main repoquery-main
-      bottom-a1-2.0-1 @System @repoquery-main
-      bottom-a1-2.0-1 repoquery-main repoquery-main
-      bottom-a2-1.0-1 @System @System
-      bottom-a2-1.0-1 repoquery-main repoquery-main
-      bottom-a3-1.0-1 repoquery-main repoquery-main
-      bottom-a3-2.0-1 repoquery-main repoquery-main
+      bottom-a1-1.0-1 repoquery-main --
+      bottom-a1-2.0-1 @System -repoquery-main-
+      bottom-a1-2.0-1 repoquery-main --
+      bottom-a1-2.0-1 repoquery-main -repoquery-main-
+      bottom-a2-1.0-1 @System --
+      bottom-a2-1.0-1 repoquery-main --
+      bottom-a3-1.0-1 repoquery-main --
+      bottom-a3-2.0-1 repoquery-main --
       """
 
 
