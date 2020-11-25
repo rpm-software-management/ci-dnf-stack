@@ -27,6 +27,7 @@ Scenario: Upgrade group when there are new package versions - upgrade packages
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
+        | group-upgrade | A-group                            |
 
 
 Scenario: Upgrade group when there are new packages - install new packages
@@ -53,6 +54,7 @@ Scenario: Upgrade group when there are new packages - install new packages
         | upgrade       | A-default-0:2.0-1.x86_64           |
         | install-group | B-mandatory-0:1.0-1.x86_64         |
         | install-group | B-default-0:1.0-1.x86_64           |
+        | group-upgrade | AB-group                           |
 
 
 Scenario: Upgrade group when there were excluded packages during installation - don't install these packages
@@ -120,6 +122,9 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | upgrade       | A-default-0:2.0-1.x86_64           |
         | install-group | B-mandatory-0:1.0-1.x86_64         |
         | install-group | B-default-0:1.0-1.x86_64           |
+        | group-install | B-group                            |
+        | group-upgrade | A-group                            |
+        | env-upgrade   | AB-environment                     |
 
 
 Scenario: Upgrade environment when there were excluded packages during installation - don't install these packages

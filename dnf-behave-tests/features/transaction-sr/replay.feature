@@ -466,9 +466,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|top-a|1|4
-      2|9|top-b|1|2
-      3|9|top-c|0|8
+      1|6|top-a|1|4
+      2|6|top-b|1|2
+      3|6|top-c|0|8
       """
 
 
@@ -548,9 +548,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|8|top-a|1|4
-      2|8|top-b|0|2
-      3|8|top-c|0|8
+      1|6|top-a|1|4
+      2|6|top-b|0|2
+      3|6|top-c|0|8
       """
 
 
@@ -616,9 +616,9 @@ Given I successfully execute dnf with args "install @test-group"
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|top-a|1|4
-      2|9|top-b|1|2
-      3|9|top-c|0|8
+      1|6|top-a|1|4
+      2|6|top-b|1|2
+      3|6|top-c|0|8
       4|10|top-a|1|4
       5|10|top-b|1|2
       6|10|top-c|0|8
@@ -696,9 +696,9 @@ Given I successfully execute dnf with args "install @test-group"
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|top-a|1|4
-      2|9|top-b|1|2
-      3|9|top-c|0|8
+      1|6|top-a|1|4
+      2|6|top-b|1|2
+      3|6|top-c|0|8
       4|10|top-a|1|4
       5|10|top-b|1|2
       6|10|top-c|0|8
@@ -793,8 +793,8 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|test-env-group|1|4
-      2|9|test-env-optgroup|0|8
+      1|7|test-env-group|1|4
+      2|7|test-env-optgroup|0|8
       """
 
 
@@ -884,8 +884,8 @@ Given I successfully execute dnf with args "install @test-env"
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|test-env-group|1|4
-      2|9|test-env-optgroup|0|8
+      1|6|test-env-group|1|4
+      2|6|test-env-optgroup|0|8
       3|11|test-env-group|1|4
       4|11|test-env-optgroup|0|8
       """
@@ -987,8 +987,8 @@ Given I successfully execute dnf with args "install @test-env"
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
-      1|9|test-env-group|1|4
-      2|9|test-env-optgroup|0|8
+      1|6|test-env-group|1|4
+      2|6|test-env-optgroup|0|8
       3|12|test-env-group|1|4
       4|12|test-env-optgroup|0|8
       """
