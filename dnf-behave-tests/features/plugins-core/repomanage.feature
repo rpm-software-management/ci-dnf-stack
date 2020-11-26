@@ -177,8 +177,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/nodejs-5.4.1-2.module_3012+41787ba4.src.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/postgresql-9.6.8-1.module_1710+b535a823.src.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.12.1-1.fc29.x86_64.rpm
-      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_2011+41787af1.x86_64.rpm
-      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_3012+41787ba4.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_2011+41787af0.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_3012+41787ba3.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-devel-5.12.1-1.fc29.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/npm-5.12.1-1.fc29.x86_64.rpm
       """
@@ -195,8 +195,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/nodejs-5.12.2-3.fc29.src.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/src/postgresql-9.8.1-1.module_9790+c535b823.src.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.12.2-3.fc29.x86_64.rpm
-      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_2011+41787af0.x86_64.rpm
-      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.3.1-1.module_3012+41787ba3.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_2011+41787af1.x86_64.rpm
+      {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-5.4.1-2.module_3012+41787ba4.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/nodejs-devel-5.12.2-3.fc29.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/npm-5.12.2-3.fc29.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm
