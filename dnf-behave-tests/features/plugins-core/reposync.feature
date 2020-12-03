@@ -53,6 +53,16 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
     And stdout does not contain "comps.xml for repository dnf-ci-rich saved"
 
 
+@bz1895059
+Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
+  Given I copy repository "dnf-ci-thirdparty-updates" for modification
+    And I execute "modifyrepo_c --remove group_gz /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
+    And I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --downloadcomps"
+   Then the exit code is 0
+    And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
+
+
 @bz1676726
 Scenario: Reposync with --downloadcomps and --metadata-path options
   Given I use repository "dnf-ci-thirdparty-updates" as http
