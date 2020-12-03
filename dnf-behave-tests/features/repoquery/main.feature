@@ -637,7 +637,6 @@ Given I successfully execute dnf with args "install bottom-a1"
       bottom-a1-1.0-1 repoquery-main --
       bottom-a1-2.0-1 @System -repoquery-main-
       bottom-a1-2.0-1 repoquery-main --
-      bottom-a1-2.0-1 repoquery-main -repoquery-main-
       bottom-a2-1.0-1 @System --
       bottom-a2-1.0-1 repoquery-main --
       bottom-a3-1.0-1 repoquery-main --
