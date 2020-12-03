@@ -463,7 +463,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a2-1.0-1.x86_64    | weak-dependency |
       | top-a-1:2.0-1.x86_64   | user            |
       | top-b-1.0-1.x86_64     | group           |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|top-a|1|4
@@ -545,7 +545,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a1-1.0-1.x86_64    | dependency      |
       | mid-a2-1.0-1.x86_64    | weak-dependency |
       | top-a-1:2.0-1.x86_64   | user            |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|8|top-a|1|4
@@ -613,7 +613,7 @@ Given I successfully execute dnf with args "install @test-group"
       | mid-a1-1.0-1.x86_64    | dependency      |
       | mid-a2-1.0-1.x86_64    | weak-dependency |
       | top-a-1:2.0-1.x86_64   | user            |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|top-a|1|4
@@ -693,7 +693,7 @@ Given I successfully execute dnf with args "install @test-group"
       | mid-a2-1.0-1.x86_64    | weak-dependency |
       | top-a-1:2.0-1.x86_64   | user            |
       | top-b-1.0-1.x86_64     | group           |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|top-a|1|4
@@ -790,7 +790,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a2-2.0-1.x86_64    | weak-dependency |
       | top-a-1:1.0-1.x86_64   | user            |
       | top-c-2.0-1.x86_64     | group           |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|test-env-group|1|4
@@ -881,7 +881,7 @@ Given I successfully execute dnf with args "install @test-env"
       | bottom-a2-1.0-1.x86_64 | dependency      |
       | mid-a1-1.0-1.x86_64    | dependency      |
       | top-a-1:1.0-1.x86_64   | user            |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|test-env-group|1|4
@@ -984,7 +984,7 @@ Given I successfully execute dnf with args "install @test-env"
       | mid-a2-2.0-1.x86_64    | weak-dependency |
       | top-a-1:1.0-1.x86_64   | user            |
       | top-c-2.0-1.x86_64     | group           |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 {context.dnf.installroot}/var/lib/dnf/history.sqlite"
+  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
       1|9|test-env-group|1|4
