@@ -206,3 +206,12 @@ Scenario: Packages belonging to multiple modules are not removed with --all
         | Action                    | Package                |
         | remove                    | luke-0:1.0-1.x86_64    |
     And stdout does not contain "belongs to multiple modules, skipping"
+
+@bz1904490
+Scenario: module removed with --all and not existing module argument - no traceback
+  Given I use repository "dnf-ci-fifthparty"
+    And I use repository "dnf-ci-fifthparty-modular"
+   When I execute dnf with args "module remove --all noexists"
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr does not contain "Traceback"
