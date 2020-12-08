@@ -1,3 +1,4 @@
+@not.with_os=rhel__eq__8
 Feature: Switch module to streams
 
 Background:

@@ -56,6 +56,7 @@ Scenario: Running kernel is protected against obsoleting
         """
 
 
+@bz1855542
 @bz1698145
 Scenario: Running kernel is not protected against obsoleting with config protect_running_kernel=False
   Given I configure dnf with

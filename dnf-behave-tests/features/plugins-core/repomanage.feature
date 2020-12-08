@@ -162,6 +162,7 @@ Given I copy repository "dnf-ci-fedora-modular-updates" for modification
       """
 
 
+@not.with_os=rhel__eq__8
 @bz1804720
 Scenario: packages get listed as old if there are newer version within the same stream
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
@@ -184,6 +185,7 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@not.with_os=rhel__eq__8
 @bz1804720
 Scenario: only the newest modular packages get listed as new
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
@@ -236,6 +238,7 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@not.with_os=rhel__eq__8
 Scenario: multiple runs of repomanage don't use cached metadata
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
   And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"

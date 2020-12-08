@@ -1,7 +1,8 @@
 @no_installroot
 Feature: microdnf is able to downgrade packages
 
-
+@not.with_os=rhel__eq__8
+@bz1855542
 @bz1725863
 Scenario: Install a package specifying a lower version than currently installed
 Given I use repository "dnf-ci-fedora"

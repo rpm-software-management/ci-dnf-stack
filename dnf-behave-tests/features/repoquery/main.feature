@@ -625,6 +625,7 @@ Scenario: repoquery --queryformat EVERYTHING
 
 # install bottom-a1 using dnf (i.e. has record in history database)
 # install bottom-a2 using rpm (no record in history database)
+@not.with_os=rhel__eq__8
 @bz1898968
 @bz1879168
 Scenario: repoquery --queryformat from_repo

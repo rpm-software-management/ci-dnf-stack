@@ -1,3 +1,4 @@
+@not.with_os=rhel__eq__8
 Feature: Disabling module stream using microdnf
 
 

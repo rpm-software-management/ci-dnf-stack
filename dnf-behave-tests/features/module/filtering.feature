@@ -33,6 +33,7 @@ Scenario: Check that only module packages including src are available
       berry-0:1.0-1.garden.x86_64
       """
 
+@not.with_os=rhel__eq__8
 @bz1809314
 Scenario: Check that source packages do not filter binary rpms
  Given I use repository "dnf-ci-fedora"
