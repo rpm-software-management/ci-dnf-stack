@@ -38,6 +38,11 @@ components:
       src: github:rpm-software-management/libdnf.git
       branch: origin/dnf-4-master
 
+  - name: libmodulemd
+    git:
+      src: github:fedora-modularity/libmodulemd.git
+      spec-path: fedora/libmodulemd.spec
+
   - name: dnf
     git:
       src: github:rpm-software-management/dnf.git
