@@ -20,7 +20,7 @@ Scenario: Install module, no default profile defined, expecting no profile selec
         broken groups or modules: DnfCiModuleNoDefaults:stable
         """
 
-
+@bz1814831
 Scenario: Install module, no default stream or profile defined, expecting no profile selection
    When I execute dnf with args "module install DnfCiModuleNoDefaults"
    Then the exit code is 1
@@ -30,7 +30,7 @@ Scenario: Install module, no default stream or profile defined, expecting no pro
     And Transaction is empty
     And stderr is
         """
-        Cannot enable more streams from module 'DnfCiModuleNoDefaults' at the same time
+        Argument 'DnfCiModuleNoDefaults' matches 2 streams ('development', 'stable') of module 'DnfCiModuleNoDefaults', but non of the streams are enabled or default
         Unable to resolve argument DnfCiModuleNoDefaults
         Error: Problems in request:
         broken groups or modules: DnfCiModuleNoDefaults

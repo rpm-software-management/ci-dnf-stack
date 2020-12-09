@@ -95,17 +95,20 @@ Scenario: Fail to install a different stream of an already enabled module using 
         It is recommended to remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
-
+@bz1814831
 Scenario: Fail to enable a module stream when specifying only module
    When I execute dnf with args "module enable nodejs"
    Then the exit code is 1
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr contains "Cannot enable more streams from module 'nodejs' at the same time"
-    And stderr contains "Unable to resolve argument nodejs"
-    And stderr contains "Error: Problems in request:"
-    And stderr contains "broken groups or modules: nodejs"
+    And stderr is
+        """
+        Argument 'nodejs' matches 4 streams ('8', '10', '11', '12') of module 'nodejs', but non of the streams are enabled or default
+        Unable to resolve argument nodejs
+        Error: Problems in request:
+        broken groups or modules: nodejs
+        """
 
 
 @bz1629655
