@@ -25,7 +25,6 @@
     overlay_dir: dnf-master
     chroot:
       - epel-8-x86_64
-      - fedora-30-x86_64
-      - fedora-31-x86_64
       - fedora-32-x86_64
+      - fedora-33-x86_64
       - fedora-rawhide-x86_64
