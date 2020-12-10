@@ -38,10 +38,10 @@ Scenario: I can't see pseudo-module in module listing
 Scenario: I can't list info for the pseudo-module
  When I execute dnf with args "module info pseudoplatform"
  Then the exit code is 1
-  And stdout matches line by line
+  And stdout is
    """
-   ^dnf-ci-pseudo-platform-modular\s+
-   ^Unable to resolve argument pseudoplatform
+   <REPOSYNC>
+   Unable to resolve argument pseudoplatform
    """
   And stderr is
    """
