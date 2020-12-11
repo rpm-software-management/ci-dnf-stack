@@ -214,4 +214,8 @@ Scenario: module removed with --all and not existing module argument - no traceb
    When I execute dnf with args "module remove --all noexists"
    Then the exit code is 0
     And Transaction is empty
-    And stderr does not contain "Traceback"
+    And stderr is
+        """
+        Problems in request:
+        missing groups or modules: noexists
+        """
