@@ -12,18 +12,20 @@ from common.lib.text import lines_match_to_regexps_line_by_line
 
 
 def handle_reposync(expected, found):
-    if expected[0] == "<REPOSYNC>":
-        sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
-        last_check_line = re.compile(r"Last metadata expiration check: .*")
-        i = 0
+    line_number = 0
+    for line in expected:
+        if line == "<REPOSYNC>":
+            sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
+            last_check_line = re.compile(r"Last metadata expiration check: .*")
 
-        while i < len(found) and (
-                sync_line.fullmatch(found[i].strip())
-                or last_check_line.fullmatch(found[i].strip())):
-            i += 1
+            while line_number < len(found) and (
+                    sync_line.fullmatch(found[line_number].strip())
+                    or last_check_line.fullmatch(found[line_number].strip())):
+                found.pop(line_number)
 
-        expected = expected[1:]
-        found = found[i:]
+            expected.pop(line_number)
+            break
+        line_number += 1
 
     return expected, found
 
