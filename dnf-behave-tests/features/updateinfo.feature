@@ -423,7 +423,6 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
    Then the exit code is 0
     And stdout matches line by line
     """
-    <REPOSYNC>
     DNF version: .*
     cachedir: .*
     User-Agent: constructed: .*
@@ -432,6 +431,7 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     dnf-ci-fedora-updates: using metadata from .*
     repo: using cache for: dnf-ci-fedora
     dnf-ci-fedora: using metadata from .*
+    <REPOSYNC>
     2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     """
@@ -446,7 +446,6 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
    Then the exit code is 0
     And stdout matches line by line
     """
-    <REPOSYNC>
     YUM version: .*
     cachedir: .*
     User-Agent: constructed: .*
@@ -455,6 +454,7 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     dnf-ci-fedora-updates: using metadata from .*
     repo: using cache for: dnf-ci-fedora
     dnf-ci-fedora: using metadata from .*
+    <REPOSYNC>
     2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     """
