@@ -388,3 +388,15 @@ Given I create directory "/repo/"
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/modular-result.yaml" and "/repo/repodata/[a-z0-9]*-modules.yaml.gz" do not differ
+
+
+@bz1906831
+Scenario: Using invalid modular metadata doesn't leave temp .repodata directory
+Given I create directory "/repo/"
+  And I create file "repo/modules.yaml" with
+      """
+      invalid modular metadata file
+      """
+ When I execute createrepo_c with args "." in "/repo"
+ Then the exit code is 1
+  And file "/repo/.repodata" does not exist
