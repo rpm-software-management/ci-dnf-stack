@@ -9,12 +9,26 @@ Background: Use dnf-ci-obsoletes repository
   Given I use repository "dnf-ci-obsoletes"
 
 
+# PackageA has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageA-3.0-1 are valid.
+# PackageA-3.0-1 is picked because it lexicographically precedes PackageA-Obsoleter-1.0-1.
+@bz1902279
 Scenario: Install of obsoleted package, but higher version than obsoleted present
    When I execute dnf with args "install PackageA"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageA-0:3.0-1.x86_64                   |
+
+
+# PackageE has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageE-3.0-1 are valid.
+# PackageA-Obsoleter-1.0-1 is picked because it lexicographically precedes PackageE-3.0-1.
+@bz1902279
+Scenario: Install of obsoleting package, even though higher version than obsoleted present
+   When I execute dnf with args "install PackageE"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
 
 
 Scenario: Upgrade of obsoleted package by package of higher version than obsoleted
