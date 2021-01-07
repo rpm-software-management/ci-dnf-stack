@@ -185,6 +185,10 @@ class DNFContext(object):
         if releasever:
             result.append("--releasever={0}".format(releasever))
 
+        module_platform_id = self._get("module_platform_id")
+        if module_platform_id:
+            result.append("--setopt=module_platform_id={0}".format(module_platform_id))
+
         # Plugins support is disabled in installroot mode. We can't disable/enable plugins.
         if not self.installroot or self.installroot == "/":
             disable_plugins = self._get("disable_plugins")
