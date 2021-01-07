@@ -245,6 +245,10 @@ def check_microdnf_transaction(context, mode):
     for action, nevra in table:
         if action in ["upgraded", "downgraded", "reinstalled", "obsoleted"]:
             action = "replaced"
+        if action.startswith("install-"):
+            action = "install"
+        if action.startswith("remove-"):
+            action = "remove"
         updated_table.append((action, nevra))
     updated_table.sort()
 
