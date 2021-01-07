@@ -223,13 +223,14 @@ def parse_microdnf_transaction_table(lines):
 
         replacing_match = replacing_re.match(line)
         if replacing_match:
-            action = "replaced"
+            real_action = "replaced"
             package = replacing_match.group("nevra")
         else:
+            real_action = action
             package = line.split(" ")[0]
 
         # use RPM to parse and format the NEVRA to add epoch if missing
-        result.append((action, str(RPM(package))))
+        result.append((real_action, str(RPM(package))))
 
     return sorted(result)
 
