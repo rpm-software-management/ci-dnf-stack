@@ -23,7 +23,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
-Repo-size          : 2.0 M
+Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
@@ -34,7 +34,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
-Repo-size          : 36 k
+Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
@@ -54,7 +54,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
-Repo-size          : 2.0 M
+Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
@@ -80,7 +80,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
-Repo-size          : 36 k
+Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
@@ -99,7 +99,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 0
-Repo-size          : 2.0 M
+Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
@@ -110,7 +110,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 0
-Repo-size          : 36 k
+Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
