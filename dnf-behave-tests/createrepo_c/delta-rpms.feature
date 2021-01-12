@@ -1,3 +1,4 @@
+@not.with_os=rhel__ge__9
 Feature: Tests createrepo_c generating delta rpms
 
 
