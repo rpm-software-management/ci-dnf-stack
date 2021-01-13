@@ -14,6 +14,8 @@
 
           rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/{overlay_dir} rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly
           rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/{overlay_dir} rpm copr --chroot "{chroot}" --owner rpmsoftwaremanagement --project dnf-nightly-sanitizers
+          rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/dnf5 rpm copr --chroot "fedora-33-x86_64" --owner rpmsoftwaremanagement --project dnf5-unstable
+          rpm-gitoverlay --log DEBUG build-overlay -s ci-dnf-stack/overlays/dnf5 rpm copr --chroot "fedora-rawhide-x86_64" --owner rpmsoftwaremanagement --project dnf5-unstable
 
     publishers:
       - workspace-cleanup
