@@ -9,6 +9,7 @@ DIR="$(dirname "$(readlink -f "$0")")"
 ARCH="x86_64"
 DIST=".fc29"
 REPODIR="$DIR/../repos"
+STATIC_REPODIR="$DIR/../repos-static"
 GPGDIR="$DIR/../gpgkeys"
 CERTSDIR="$DIR/../certificates"
 GROUPS_FILENAME="comps.xml"
@@ -85,8 +86,16 @@ for path in "$DIR"/*/*.spec; do
 
 done
 
+
+# link static (manually created) repositories to the 'repos' directory
+for repo in $STATIC_REPODIR/*; do
+    ln -sf ../repos-static/$(basename $repo) $REPODIR/
+done
+
+
 "${GPGDIR}/sign.sh"
 "${DIR}/break-packages.sh"
 "${CERTSDIR}/generate_certificates.sh"
+
 
 echo "DONE: Test data created"
