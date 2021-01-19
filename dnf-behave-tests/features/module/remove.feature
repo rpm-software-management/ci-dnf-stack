@@ -208,6 +208,7 @@ Scenario: Packages belonging to multiple modules are not removed with --all
     And stdout does not contain "belongs to multiple modules, skipping"
 
 @bz1904490
+@not.with_os=rhel__eq__8
 Scenario: module removed with --all and not existing module argument - no traceback
   Given I use repository "dnf-ci-fifthparty"
     And I use repository "dnf-ci-fifthparty-modular"

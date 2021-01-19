@@ -9,6 +9,7 @@ Background: Install fake kernel
 
 
 @bz1698145
+@not.with_os=rhel__eq__8
 Scenario: Running kernel is protected
    When I execute microdnf with args "remove dnf-ci-kernel"
    Then the exit code is 1
@@ -20,6 +21,7 @@ Scenario: Running kernel is protected
 
 
 @bz1698145
+@not.with_os=rhel__eq__8
 Scenario: Running kernel is not protected with config protect_running_kernel=False
   Given I configure dnf with
         | key                       | value            |
@@ -32,6 +34,7 @@ Scenario: Running kernel is not protected with config protect_running_kernel=Fal
 
 
 @bz1698145
+@not.with_os=rhel__eq__8
 Scenario: Running kernel is protected when in protected_packages even with config protect_running_kernel=False
   Given I configure dnf with
         | key                       | value            |
@@ -46,6 +49,7 @@ Scenario: Running kernel is protected when in protected_packages even with confi
 
 
 @bz1698145
+@not.with_os=rhel__eq__8
 Scenario: Running kernel is protected against obsoleting
    When I execute microdnf with args "install dnf-ci-obsolete"
    Then the exit code is 1

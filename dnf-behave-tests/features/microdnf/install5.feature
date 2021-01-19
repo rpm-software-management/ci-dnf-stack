@@ -3,6 +3,7 @@ Feature: microdnf install command on packages
 
 
 @bz1734350
+@not.with_os=rhel__eq__8
 Scenario: Install packages from remote repodata with remote packages
 #5. remote repo with remote packages
 Given I use repository "dnf-ci-fedora" as http

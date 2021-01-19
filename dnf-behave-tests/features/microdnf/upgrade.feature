@@ -24,6 +24,7 @@ Background: Install RPMs
 
 
 @tier1
+@not.with_os=rhel__eq__8
 Scenario: Upgrade one RPM
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade glibc"
@@ -38,6 +39,7 @@ Scenario: Upgrade one RPM
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+@not.with_os=rhel__eq__8
 Scenario: Upgrade one RPM using "update" command alias
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "update glibc"
@@ -52,6 +54,7 @@ Scenario: Upgrade one RPM using "update" command alias
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+@not.with_os=rhel__eq__8
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade glibc flac"
@@ -70,6 +73,7 @@ Scenario: Upgrade two RPMs
 
 @tier1
 @bz1670776 @bz1671683
+@not.with_os=rhel__eq__8
 Scenario: Upgrade all RPMs from multiple repositories with best=False
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
@@ -99,6 +103,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
 
 @tier1
 @bz1670776 @bz1671683
+@not.with_os=rhel__eq__8
 Scenario: Upgrade all RPMs from multiple repositories with best=True
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
