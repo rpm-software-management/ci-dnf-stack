@@ -7,6 +7,7 @@ Background:
 
 
 # <name> globs
+@not.with_os=rhel__eq__8
 Scenario: repoquery '*' (lists all available packages)
  When I execute microdnf with args "repoquery '*'"
  Then the exit code is 0
@@ -30,6 +31,7 @@ Scenario: repoquery '*' (lists all available packages)
       toppler-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top*
  When I execute microdnf with args "repoquery top*"
  Then the exit code is 0
@@ -47,6 +49,7 @@ Scenario: repoquery top*
       toppler-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top?d
  When I execute microdnf with args "repoquery top?d"
  Then the exit code is 0
@@ -56,6 +59,7 @@ Scenario: repoquery top?d
       toped-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top?{d,it}
  When I execute microdnf with args "repoquery top?{{d,it}}"
  Then the exit code is 0
@@ -69,6 +73,7 @@ Scenario: repoquery top?{d,it}
       topgit-1:1.17.6-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top[a-f]d
  When I execute microdnf with args "repoquery top[a-f]d"
  Then the exit code is 0
@@ -78,6 +83,7 @@ Scenario: repoquery top[a-f]d
       toped-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top[a-fg]*
  When I execute microdnf with args "repoquery top[a-fg]*"
  Then the exit code is 0
@@ -91,6 +97,7 @@ Scenario: repoquery top[a-fg]*
       topgit-1:1.17.6-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top[^a-g]*
  When I execute microdnf with args "repoquery top[^a-g]*"
  Then the exit code is 0
@@ -100,6 +107,7 @@ Scenario: repoquery top[^a-g]*
       toppler-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top{ed,pler}
  When I execute microdnf with args "repoquery top{{ed,pler}}"
  Then the exit code is 0
@@ -111,6 +119,7 @@ Scenario: repoquery top{ed,pler}
       toppler-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery top[!n-z]{d,aaa,it}
  When I execute microdnf with args "repoquery top[!n-z]{{d,aaa,it}}"
  Then the exit code is 0
@@ -124,6 +133,7 @@ Scenario: repoquery top[!n-z]{d,aaa,it}
       topgit-1:1.17.6-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery *top[-a-f]*
  When I execute microdnf with args "repoquery *top[-a-f]*"
  Then the exit code is 0
@@ -139,6 +149,7 @@ Scenario: repoquery *top[-a-f]*
 
 
 # <name-version> globs
+@not.with_os=rhel__eq__8
 Scenario: repoquery *top[-a-f]*-1.0
  When I execute microdnf with args "repoquery *top[-a-f]*-1.0"
  Then the exit code is 0
@@ -150,6 +161,7 @@ Scenario: repoquery *top[-a-f]*-1.0
       toped-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery *top[-a-f]*-1.[1-4]*
  When I execute microdnf with args "repoquery *top[-a-f]*-1.[1-4]*"
  Then the exit code is 0
@@ -159,6 +171,7 @@ Scenario: repoquery *top[-a-f]*-1.[1-4]*
       desktop-utils-1:1.23.9-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery *top[-a-f]*-1.[!1-4]*.x86_64
  When I execute microdnf with args "repoquery *top[-a-f]*-1.[!1-4]*.x86_64"
  Then the exit code is 0
@@ -168,6 +181,7 @@ Scenario: repoquery *top[-a-f]*-1.[!1-4]*.x86_64
       toped-1:1.0-1.x86_64
       """
 
+@not.with_os=rhel__eq__8
 Scenario: repoquery *top*-1.{17,23,99}*
  When I execute microdnf with args "repoquery *top*-1.{{17,23,99}}*"
  Then the exit code is 0

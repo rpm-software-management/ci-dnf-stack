@@ -3,6 +3,7 @@ Feature: microdnf install command on packages
 
 
 @bz1734350
+@not.with_os=rhel__eq__8
 Scenario: Install package from local repodata with local xml:base
 #2. local repo with local packages (different package location specified using xml:base)
 Given I copy repository "dnf-ci-fedora" for modification

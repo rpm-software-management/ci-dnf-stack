@@ -54,6 +54,7 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
 
 
 @bz1895059
+@not.with_os=rhel__eq__8
 Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
     And I execute "modifyrepo_c --remove group_gz /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"

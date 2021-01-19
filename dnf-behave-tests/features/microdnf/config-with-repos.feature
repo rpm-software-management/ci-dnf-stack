@@ -21,6 +21,7 @@ Background: Configure repositories in the main configuration file
         | baseurl  | http://url.xyz         |
 
 
+@not.with_os=rhel__eq__8
 Scenario: Repositories configured only in the main configuration file
    When I execute microdnf with args "repolist --all"
    Then the exit code is 0
@@ -33,6 +34,7 @@ Scenario: Repositories configured only in the main configuration file
      """
 
 
+@not.with_os=rhel__eq__8
 Scenario: Repositories configured in the main configuration file and in *.repo files
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates" with configuration

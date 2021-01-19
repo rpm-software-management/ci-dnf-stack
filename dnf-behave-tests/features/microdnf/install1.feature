@@ -4,6 +4,7 @@ Feature: microdnf install command on packages
 
 @bz1734350
 @bz1779757
+@not.with_os=rhel__eq__8
 Scenario: Install package from local repodata with local packages
 #1. local repo with local packages
 Given I use repository "dnf-ci-fedora"

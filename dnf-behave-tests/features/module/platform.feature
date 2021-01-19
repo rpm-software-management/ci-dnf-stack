@@ -15,7 +15,8 @@ Given I create file "/etc/os-release" with
     """
  And I do not set default module platformid
 
-  
+
+@not.with_os=rhel__eq__8
 Scenario: I can't enable module requiring different platform pseudo module
 Given I delete file "/etc/os-release"
  When I execute dnf with args "module enable dwm:6.0"

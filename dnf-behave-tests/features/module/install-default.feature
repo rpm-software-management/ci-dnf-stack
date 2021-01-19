@@ -21,6 +21,7 @@ Scenario: Install module, no default profile defined, expecting no profile selec
         """
 
 @bz1814831
+@not.with_os=rhel__eq__8
 Scenario: Install module, no default stream or profile defined, expecting no profile selection
    When I execute dnf with args "module install DnfCiModuleNoDefaults"
    Then the exit code is 1
