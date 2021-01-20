@@ -15,7 +15,7 @@ Given I create directory "/modular_repo1/"
       version: 2
       data:
         name: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         version: 1
         arch: x86_64
         description: Made up module
@@ -39,7 +39,7 @@ Given I create directory "/modular_repo1/"
       version: 1
       data:
         module: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         profiles:
           test-profile1: [default]
       ...
@@ -51,7 +51,7 @@ Given I create directory "/modular_repo1/"
       version: 2
       data:
         name: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         version: 1
         arch: x86_64
         description: Made up module
@@ -75,7 +75,7 @@ Given I create directory "/modular_repo1/"
       version: 1
       data:
         module: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         profiles:
           test-profile2: [default]
       ...
@@ -105,7 +105,7 @@ Scenario: merged repository contains streams from both source repositories
       version: 2
       data:
         name: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         version: 1
         arch: x86_64
         summary: Test module
@@ -131,7 +131,7 @@ Scenario: merged repository contains streams from both source repositories
       version: 2
       data:
         name: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         version: 1
         arch: x86_64
         summary: Test module
