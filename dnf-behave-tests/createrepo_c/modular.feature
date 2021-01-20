@@ -9,7 +9,7 @@ Given I create file "/modules.yaml" with
       version: 2
       data:
         name: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         version: 1
         arch: x86_64
         description: Made up module
@@ -33,7 +33,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         profiles:
           test-profile1: [default]
       ...
@@ -45,7 +45,7 @@ Given I create file "/modules.yaml" with
       version: 2
       data:
         name: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         version: 1
         arch: x86_64
         description: Made up module
@@ -69,7 +69,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         profiles:
           test-profile2: [default]
       ...
@@ -81,7 +81,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: stratis
-        stream: 1
+        stream: "1"
         profiles:
           1: [default]
       ...
@@ -90,7 +90,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: scala
-        stream: 2.10
+        stream: "2.10"
         profiles:
           2.10: [default]
       ...
@@ -102,7 +102,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: scala
-        stream: 2.10
+        stream: "2.10"
         profiles:
           2.10: [default]
       ...
@@ -111,7 +111,7 @@ Given I create file "/modules.yaml" with
       version: 1
       data:
         module: stratis
-        stream: 1
+        stream: "1"
         profiles:
           1: [default]
       ...
@@ -129,7 +129,7 @@ Given I create file "/modules.yaml" with
       version: 2
       data:
         name: test-module
-        stream: modular-package1
+        stream: "modular-package1"
         version: 1
         arch: x86_64
         summary: Test module
@@ -155,7 +155,7 @@ Given I create file "/modules.yaml" with
       version: 2
       data:
         name: test-module
-        stream: modular-package2
+        stream: "modular-package2"
         version: 1
         arch: x86_64
         summary: Test module
@@ -349,7 +349,7 @@ Given I create directory "/repo/"
       version: 1
       data:
         module: scala
-        stream: 2.10
+        stream: "2.10"
         profiles:
           2.10: [default]
       ...
@@ -358,7 +358,7 @@ Given I create directory "/repo/"
       version: 1
       data:
         module: stratis
-        stream: 1
+        stream: "1"
         profiles:
           1: [default]
       ...
