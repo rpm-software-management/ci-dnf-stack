@@ -18,13 +18,7 @@ from lib.rpmdb import get_rpmdb_rpms
 
 def get_boot_time():
     """Return the boot time of this system (as a timestamp)."""
-    key = 'btime '
-    with open('/proc/stat') as f:
-        for line in f:
-            if not line.startswith(key):
-                continue
-            return int(line[len(key):].strip())
-
+    return int(os.stat('/proc/1/cmdline').st_mtime)
 
 def extract_section_content_from_text(section_header, text):
     SECTION_HEADERS = [
