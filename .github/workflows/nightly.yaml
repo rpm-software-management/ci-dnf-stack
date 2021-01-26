@@ -58,4 +58,4 @@ jobs:
           # will clean it up and since it is no longer the whole secret being
           # printed, Github won't hide it anymore.
           COPR_USER=${{secrets.COPR_USER}}
-          rpm-gitoverlay build-overlay -s overlays/${{matrix.project}} rpm copr --owner $COPR_USER --project ${{matrix.project}}${{matrix.variant}} --no-wait
+          rpm-gitoverlay build-overlay -s overlays/${{matrix.project}} rpm copr --owner $COPR_USER --project ${{matrix.project}}${{matrix.variant}}
