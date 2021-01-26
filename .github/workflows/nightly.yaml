@@ -2,7 +2,7 @@
 name: Nightly builds in Fedora Copr
 on:
   schedule:
-    - cron:  '* 0 * * *'  # at midnight UTC
+    - cron:  '0 0 * * *'  # at midnight UTC
 
 jobs:
   build:
