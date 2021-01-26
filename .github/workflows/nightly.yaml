@@ -24,17 +24,38 @@ jobs:
           fetch-depth: 0
 
       - name: Install API token for Copr
+        id: copr_token
         env:
           COPR_API_TOKEN: ${{secrets.COPR_API_TOKEN}}  # use env to hide the secret
+          # Abusing secrets for a simple env variable; anyone can use this to
+          # run the workflow in their own Copr (for testing etc.) by setting
+          # the user in their project Secrets. It also prevents the workflow
+          # from running on forks. Github hides the secret, the value for
+          # rpm-software-management/ci-dnf-stack is "rpmsoftwaremanagement #".
+          # See the hack below for why the hash sign.
+          COPR_USER: ${{secrets.COPR_USER}}
+        if: env.COPR_USER != ''
         run: |
           mkdir -p "$HOME/.config"
           echo "$COPR_API_TOKEN" > "$HOME/.config/copr"
 
       - name: Install tools
+        id: install_tools
+        if: steps.copr_token.conclusion == 'success'
         run: |
           dnf -y install dnf-plugins-core
           dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
           dnf -y install rpm-gitoverlay
 
       - name: Build in Copr
-        run: rpm-gitoverlay build-overlay -s overlays/${{matrix.project}} rpm copr --owner rpmsoftwaremanagement --project ${{matrix.project}}${{matrix.variant}} --no-wait
+        if: steps.install_tools.conclusion == 'success'
+        env:
+          COPR_USER: ${{secrets.COPR_USER}}
+        run: |
+          # hack: Github replaces secrets with *** in the whole output (even in
+          # e.g. Copr URLs printed by rpm-gitoverlay). If there's a comment (#)
+          # at the end of the secret (e.g.  "rpmsofwaremanagement #"), this
+          # will clean it up and since it is no longer the whole secret being
+          # printed, Github won't hide it anymore.
+          COPR_USER=${{secrets.COPR_USER}}
+          rpm-gitoverlay build-overlay -s overlays/${{matrix.project}} rpm copr --owner $COPR_USER --project ${{matrix.project}}${{matrix.variant}} --no-wait
