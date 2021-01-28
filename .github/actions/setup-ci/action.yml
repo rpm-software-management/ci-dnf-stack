@@ -1,0 +1,12 @@
+name: Setup DNF CI
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install tools
+      shell: bash
+      run: |
+        dnf -y update
+        dnf -y install dnf-plugins-core
+        dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
+        dnf -y install fuse-overlayfs git parallel podman rpm-gitoverlay wget
