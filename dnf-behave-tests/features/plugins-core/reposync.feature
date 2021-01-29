@@ -323,7 +323,6 @@ Scenario: Reposync --norepopath cannot be used with multiple repositories
     """
 
 
-@not.with_os=rhel__eq__8
 @bz1856818
 Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by not-installed keys
   Given I use repository "reposync-gpg" with configuration
@@ -345,7 +344,6 @@ Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by n
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" does not exist
 
 
-@not.with_os=rhel__eq__8
 @bz1856818
 Scenario: Reposync --gpgcheck removes unsigned packages
   Given I use repository "reposync-gpg" with configuration

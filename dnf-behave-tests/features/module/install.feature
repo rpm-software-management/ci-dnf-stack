@@ -30,7 +30,6 @@ Scenario: I can install a module profile by name:stream/profile
         | module-stream-enable      | nodejs:8                                      |
     And stdout contains "Installing group/module packages"
 
-@not.with_os=rhel__eq__8
 @bz1898548
 Scenario: I cannot install source rpm
    When I execute dnf with args "module install nodejs:8/minimal -x nodejs.x86_64"
