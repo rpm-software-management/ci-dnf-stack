@@ -65,7 +65,6 @@ Examples:
         | --set-disabled  |
 
 
-@not.with_os=rhel__eq__8
 @bz1830530
 Scenario Outline: enable more than one repository
    When I execute dnf with args "config-manager --enable <option>"
@@ -94,7 +93,6 @@ Examples:
         | repo1 , repo2  |
 
 
-@not.with_os=rhel__eq__8
 @bz1830530
 Scenario Outline: disable more than one repository
    When I execute dnf with args "config-manager --disable <option>"
@@ -125,7 +123,6 @@ Examples:
 
 @bz1830530
 Scenario Outline: enable more than one repository
-@not.with_os=rhel__eq__8
 Scenario: enable repo using wildcards and commas
   Given I configure a new repository "sepo1" with
         | key         | value    |
@@ -157,7 +154,6 @@ Scenario: enable repo using wildcards and commas
 
 @bz1830530
 Scenario Outline: enable more than one repository
-@not.with_os=rhel__eq__8
 Scenario: disable repo using wildcards and commas
   Given I configure a new repository "sepo1" with
         | key         | value    |
@@ -300,7 +296,6 @@ Scenario: config-manager --save saves to correct config file
         debuglevel=7
         """
 
-@not.with_os=rhel__eq__8
 Scenario: config-manager --save preserves comments and empty lines
   Given I create file "/etc/yum.repos.d/emptylines.repo" with
         """

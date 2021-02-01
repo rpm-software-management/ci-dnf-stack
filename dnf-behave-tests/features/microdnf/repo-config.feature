@@ -23,7 +23,6 @@ Given I use repository "simple-base"
 
 
 @bz1807864
-@not.with_os=rhel__eq__8
 Scenario: multiline config for gpg works with remote repo
 Given I use repository "simple-base" as http
   And I create and substitute file "/etc/yum.repos.d/simple-base.repo" with
@@ -44,7 +43,6 @@ Given I use repository "simple-base" as http
 
 
 @bz1807864
-@not.with_os=rhel__eq__8
 Scenario: multiline multivalue comma and space separated config for gpg works with remote repo
 Given I use repository "simple-base" as http
   And I create and substitute file "/etc/yum.repos.d/simple-base.repo" with
@@ -64,7 +62,6 @@ Given I use repository "simple-base" as http
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
 
-@not.with_os=rhel__eq__8
 Scenario: multiline config for baseurl
 Given I use repository "simple-base" as http
   And I create and substitute file "/etc/yum.repos.d/simple-base.repo" with
@@ -84,7 +81,6 @@ Given I use repository "simple-base" as http
 
 
 @bz1797265
-@not.with_os=rhel__eq__8
 Scenario: install older version of available pkg from repo with higher (smaller number) priority
 Given I use repository "simple-base" with configuration
       | key      | value |

@@ -14,7 +14,6 @@ Background: Using repositories dnf-ci-fedora and dnf-ci-thirdparty-updates
         | enabled | 0     |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Repolist without arguments
    When I execute microdnf with args "repolist"
    Then the exit code is 0
@@ -26,7 +25,6 @@ Scenario: Repolist without arguments
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Repolist with "--enabled"
    When I execute microdnf with args "repolist --enabled"
    Then the exit code is 0
@@ -38,7 +36,6 @@ Scenario: Repolist with "--enabled"
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Repolist with "--disabled"
    When I execute microdnf with args "repolist --disabled"
    Then the exit code is 0
@@ -50,7 +47,6 @@ Scenario: Repolist with "--disabled"
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Repolist with "--all"
    When I execute microdnf with args "repolist --all"
    Then the exit code is 0
@@ -64,7 +60,6 @@ Scenario: Repolist with "--all"
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Repolist with "--enabled --disabled"
    When I execute microdnf with args "repolist --enabled --disabled"
    Then the exit code is 0
@@ -80,7 +75,6 @@ Scenario: Repolist with "--enabled --disabled"
 
 # Tests for "--disablerepo" and "--enablerepo" including wildcards support
 @bz1781420
-@not.with_os=rhel__eq__8
 Scenario: Disable all repos and then enable "dnf-ci-fedora-updates" repo
    When I execute microdnf with args "repolist --disablerepo=* --enablerepo=dnf-ci-fedora-updates --all"
    Then the exit code is 0
@@ -94,7 +88,6 @@ Scenario: Disable all repos and then enable "dnf-ci-fedora-updates" repo
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Disable "dnf-ci-thirdparty*" repos and enable "dnf-ci-fedora*" repos
    When I execute microdnf with args "repolist --disablerepo=dnf-ci-thirdparty* --enablerepo=dnf-ci-fedora* --all"
    Then the exit code is 0
@@ -108,7 +101,6 @@ Scenario: Disable "dnf-ci-thirdparty*" repos and enable "dnf-ci-fedora*" repos
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Only "*-updates" repos are enabled
    When I execute microdnf with args "repolist --disablerepo=* --enablerepo=*-updates --all"
    Then the exit code is 0
@@ -122,7 +114,6 @@ Scenario: Only "*-updates" repos are enabled
       """
 
 
-@not.with_os=rhel__eq__8
 Scenario: Test '?' wildcard. Only "dnf-ci-fedora-updates" repo is enabled
    When I execute microdnf with args "repolist --disablerepo=* --enablerepo=dnf-ci-??????-* --all"
    Then the exit code is 0

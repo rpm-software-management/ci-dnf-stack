@@ -54,7 +54,6 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
 
 
 @bz1895059
-@not.with_os=rhel__eq__8
 Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
     And I execute "modifyrepo_c --remove group_gz /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
@@ -323,7 +322,6 @@ Scenario: Reposync --norepopath cannot be used with multiple repositories
     """
 
 
-@not.with_os=rhel__eq__8
 @bz1856818
 Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by not-installed keys
   Given I use repository "reposync-gpg" with configuration
@@ -345,7 +343,6 @@ Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by n
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" does not exist
 
 
-@not.with_os=rhel__eq__8
 @bz1856818
 Scenario: Reposync --gpgcheck removes unsigned packages
   Given I use repository "reposync-gpg" with configuration

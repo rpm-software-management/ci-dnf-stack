@@ -1,4 +1,3 @@
-@not.with_os=rhel__eq__8
 Feature: Enabling module streams using microdnf
 
 

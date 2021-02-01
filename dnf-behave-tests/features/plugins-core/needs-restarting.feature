@@ -25,6 +25,8 @@ Scenario: Update core packages
           More information: https://access.redhat.com/solutions/27943
           """
 
+@not.with_os=rhel__eq__8
+# https://github.com/rpm-software-management/dnf-plugins-core/pull/422
 Scenario: Update non-core packages only
     Given I execute dnf with args "upgrade lame basesystem wget"
      When I execute dnf with args "needs-restarting -r"
@@ -35,6 +37,8 @@ Scenario: Update non-core packages only
           Reboot should not be necessary.
           """
 
+@not.with_os=rhel__eq__8
+# https://github.com/rpm-software-management/dnf-plugins-core/pull/422
 Scenario: Long option form
      When I execute dnf with args "needs-restarting --reboothint"
      Then the exit code is 0

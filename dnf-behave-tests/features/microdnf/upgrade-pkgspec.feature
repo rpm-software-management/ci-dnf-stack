@@ -17,7 +17,6 @@ Background: Install glibc
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
-@not.with_os=rhel__eq__8
 Scenario Outline: Upgrade an RPM by <pkgspec-type>
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade <pkgspec>"
@@ -46,7 +45,6 @@ Examples: Other pkgspecs
   | name.arch                       | glibc.x86_64                  |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Upgrade an RPM by name containing dashes
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade glibc-common"
@@ -61,7 +59,6 @@ Scenario: Upgrade an RPM by name containing dashes
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Upgrade an RPM by pkgspec contining wildcards
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade glibc-*.x86_64"

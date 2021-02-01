@@ -4,7 +4,6 @@ Feature: Handling new stream with multicontext modules
 Background:
   Given I set default module platformid to "platform:f29"
 
-@not.with_os=rhel__eq__8
 Scenario: Enable new stream with multicontext stream enabled
   Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular"
     And I use repository "dnf-ci-multicontext-hybrid-multiversion-modular-updates"

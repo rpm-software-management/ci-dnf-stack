@@ -13,7 +13,6 @@ Background: Install CQRlib-devel and CQRlib
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Reinstall an RPM that is not available
   Given I drop repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "reinstall CQRlib"

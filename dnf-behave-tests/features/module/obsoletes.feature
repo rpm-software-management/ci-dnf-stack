@@ -10,7 +10,6 @@ Given I use repository "dnf-ci-fedora"
       | module_stream_switch | True  |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is not switched according to obsoletes if options not enabled
 Given I execute dnf with args "module install nodejs:5/minimal"
   And I configure dnf with
@@ -25,7 +24,6 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs    | enabled   | 5         | minimal   |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is switched according to obsoletes in new metadata
 Given I execute dnf with args "module install nodejs:5/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -36,7 +34,6 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs    | enabled   | 10        |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: two stream changes, one of which is obsoletes, do not throw exception
 Given I execute dnf with args "module enable nodejs:5"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -47,7 +44,6 @@ Given I execute dnf with args "module enable nodejs:5"
       | nodejs    |           |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is resetted according to obsoletes in new metadata
 Given I execute dnf with args "module install nodejs:8/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -58,7 +54,6 @@ Given I execute dnf with args "module install nodejs:8/minimal"
       | nodejs    |           |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is not resetted before the obsoletes_date in new metadata
 Given I execute dnf with args "module install nodejs:10/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -69,7 +64,6 @@ Given I execute dnf with args "module install nodejs:10/minimal"
       | nodejs    | enabled   | 10        | minimal   |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream with context is affected by general obsoletes without context specified
 Given I execute dnf with args "module install nodejs:11/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -80,7 +74,6 @@ Given I execute dnf with args "module install nodejs:11/minimal"
       | nodejs    |           |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream with two obsoletes is switched according to the newer one and switching to a different module resets the original one
 Given I execute dnf with args "module install nodejs:5/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -93,7 +86,6 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs     |            |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: obsoletes is applied before the current transaction is resolved (effects from obsoletes switch affect the current transaction)
 Given I execute dnf with args "module install nodejs:5/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -106,7 +98,6 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs     |            |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is not affected if a valid obsoletes is superseded by a newer one which resets obsoletes
 Given I execute dnf with args "module install nodejs:8/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -118,7 +109,6 @@ Given I execute dnf with args "module install nodejs:8/minimal"
       | nodejs     | enabled    | 8         | minimal   |
 
 
-@not.with_os=rhel__eq__8
 Scenario: stream is affected if a valid obsoletes with reset is superseded by a newer obsoletes
 Given I execute dnf with args "module install postgresql:6/client"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -130,7 +120,6 @@ Given I execute dnf with args "module install postgresql:6/client"
       | postgresql |            |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: active obsoletes isn't affected by future obsoletes (with eol_date)
 Given I execute dnf with args "module install nodejs:11/minimal"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -142,7 +131,6 @@ Given I execute dnf with args "module install nodejs:11/minimal"
       | nodejs    |           |           |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: obsoletes with obsoleted_by and passed eol_date works
 Given I execute dnf with args "module install postgresql:9.6/client"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -155,7 +143,6 @@ Given I execute dnf with args "module install postgresql:9.6/client"
       | dwm        | enabled    | 6.0       |           |
 
 
-@not.with_os=rhel__eq__8
 Scenario: setting reset into the future (with eol_date) is an error (invalid metadata)
 Given I create file "invalid_modules.yaml" with
       """

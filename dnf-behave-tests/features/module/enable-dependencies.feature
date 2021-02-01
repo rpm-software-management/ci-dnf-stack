@@ -237,7 +237,6 @@ Scenario: Enable a module and its dependencies by specifying profile
 #        | food-type    | disabled  |            |           |
 #        | ingredience  | disabled  |            |           |
 
-@not.with_os=rhel__eq__8
 Scenario: Module cannot be disabled if there are other enabled streams requiring it
    When I execute dnf with args "module enable food-type:meat"
    Then the exit code is 0
@@ -298,7 +297,6 @@ Scenario: Enable the default stream of a module and its dependencies
 #        | ingredience  | enabled   | chicken    |           |
 
 # rely on merging bz1649261 fix
-@not.with_os=rhel__eq__8
 Scenario: Cannot enable a stream depending on a disabled module
    When I execute dnf with args "module disable food-type:meat ingredience:chicken"
    Then the exit code is 0

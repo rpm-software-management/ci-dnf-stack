@@ -3,7 +3,6 @@ Feature: Install package
 
 
 @bz1691353
-@not.with_os=rhel__eq__8
 Scenario: Install an RPM without null lines
   Given I use repository "dnf-ci-fedora"
    When I execute microdnf with args "install lame"

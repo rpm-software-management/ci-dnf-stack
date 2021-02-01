@@ -5,7 +5,6 @@ Background: Prepare environment
  Given I use repository "dnf-ci-fedora"
 
 
-@not.with_os=rhel__eq__8
 Scenario: Install "abcde" without weak dependencies
    When I execute microdnf with args "install --setopt=install_weak_deps=0 abcde"
    Then the exit code is 0
@@ -15,7 +14,6 @@ Scenario: Install "abcde" without weak dependencies
         | install       | wget-0:1.19.5-5.fc29.x86_64               |
 
 
-@not.with_os=rhel__eq__8
 Scenario: Install "abcde" with weak dependencies
    When I execute microdnf with args "install --setopt=install_weak_deps=1 abcde"
    Then the exit code is 0
