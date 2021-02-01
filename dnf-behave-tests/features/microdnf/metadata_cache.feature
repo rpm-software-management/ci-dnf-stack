@@ -1,7 +1,6 @@
 Feature: microdnf can use repository metadata cache
 
 @bz1771147
-@not.with_os=rhel__eq__8
 Scenario: Microdnf respects metadata_expire
 Given I use repository "simple-base" as http
  When I execute microdnf with args "repoquery labirinto"

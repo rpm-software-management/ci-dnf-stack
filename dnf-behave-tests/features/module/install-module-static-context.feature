@@ -23,7 +23,6 @@ Scenario: Install module, profile from the latest module context without static_
         | module-profile-install    | nodejs/testlatest                                |
         | install-group             | postgresql-0:9.6.8-1.module_1710+b535a823.x86_64 |
 
-@not.with_os=rhel__eq__8
 Scenario: Install module, profile from the latest module context with static_context-=true
   Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular-static-context"
    When I execute dnf with args "module enable postgresql:9.6"
@@ -42,7 +41,6 @@ Scenario: Install module, profile from the latest module context with static_con
         | module-profile-install    | nodejs/testlatest                                   |
         | install-group             | postgresql-0:9.6.8-1.module_1710+b535a823_V3.x86_64 |
 
-@not.with_os=rhel__eq__8
 Scenario: Install module, profile and the latest package with static_context=true
   Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular-static-context"
    When I execute dnf with args "module enable postgresql:9.6"
@@ -61,7 +59,6 @@ Scenario: Install module, profile and the latest package with static_context=tru
         | module-profile-install    | nodejs/minimal                                  |
         | install-group             | nodejs-1:5.4.1-2.module_2011+41787af1_V3.x86_64 |
 
-@not.with_os=rhel__eq__8
 Scenario: Install and upgrade from context with broken dependencies => static_context=true
   Given I use repository "dnf-ci-static-context-requires-change"
    When I execute dnf with args "module install nodejs:5/minimal"
@@ -90,7 +87,6 @@ Scenario: Install and upgrade from context with broken dependencies => static_co
   nodejs-1:6.5.1-2.module_3012+41787ba4_V3.x86_64
   """
 
-@not.with_os=rhel__eq__8
 Scenario: Install and upgrade from context with broken dependencies => static_context=true
   Given I use repository "dnf-ci-static-context-requires-change"
    When I execute dnf with args "module install nodejs:5/nodejs-postgresql --best"

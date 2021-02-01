@@ -3,7 +3,6 @@ Feature: microdnf install command on packages
 
 
 @bz1734350
-@not.with_os=rhel__eq__8
 Scenario: Install package from local repodata with xml:base pointing to remote packages
 #3. local repo with remote packages (different package location specified using xml:base)
 Given I make packages from repository "dnf-ci-fedora" accessible via http

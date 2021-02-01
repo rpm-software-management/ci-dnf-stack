@@ -37,7 +37,6 @@ Given I copy repository "simple-base" for modification
 
 
 @bz1866253
-@not.with_os=rhel__eq__8
 Scenario: microdnf respects --config option
 Given I use repository "simple-base"
   And I create file "/test/microdnf.conf" with

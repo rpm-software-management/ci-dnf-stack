@@ -490,6 +490,7 @@ Scenario: repoquery --location NAME (no such package)
 
 
 @bz1873146
+@not.with_os=rhel__eq__8
 Scenario: repoquery --location for local package with file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location file://{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
  Then the exit code is 0
@@ -497,6 +498,7 @@ Scenario: repoquery --location for local package with file protocol is empty (no
 
 
 @bz1873146
+@not.with_os=rhel__eq__8
 Scenario: repoquery --location for local package without file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location /{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
  Then the exit code is 0
@@ -504,6 +506,7 @@ Scenario: repoquery --location for local package without file protocol is empty 
 
 
 @bz1873146
+@not.with_os=rhel__eq__8
 Scenario: repoquery --location NAME for --installed is empty (no traceback)
 Given I successfully execute dnf with args "install bottom-a1"
  When I execute dnf with args "repoquery --installed bottom-a1 --location"
@@ -647,9 +650,9 @@ Scenario: repoquery --queryformat EVERYTHING
 
 # install bottom-a1 using dnf (i.e. has record in history database)
 # install bottom-a2 using rpm (no record in history database)
-@not.with_os=rhel__eq__8
 @bz1898968
 @bz1879168
+@not.with_os=rhel__eq__8
 Scenario: repoquery --queryformat from_repo
 Given I successfully execute dnf with args "install bottom-a1"
   And I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/bottom-a2-1.0-1.x86_64.rpm"
@@ -668,8 +671,9 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 
 # --querytags
-@not.with_os=rhel__eq__8
 @bz1744073
+# not with os is related to 1879168
+@not.with_os=rhel__eq__8
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"
  Then the exit code is 0

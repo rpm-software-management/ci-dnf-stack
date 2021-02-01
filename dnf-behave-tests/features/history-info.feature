@@ -14,7 +14,6 @@ Scenario: history info shows comment to transaction
 
 
 @bz1845800
-@not.with_os=rhel__eq__8
 Scenario: history info for installing a group
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "group install DNF-CI-Testgroup"
@@ -30,7 +29,6 @@ Scenario: history info for installing a group
 
 
 @bz1845800
-@not.with_os=rhel__eq__8
 Scenario: history info for installing a group when there are upgrades
   Given I successfully execute dnf with args "install lame"
     And I use repository "dnf-ci-thirdparty"

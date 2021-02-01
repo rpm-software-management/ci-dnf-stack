@@ -3,7 +3,6 @@ Feature: microdnf install command on packages
 
 
 @bz1771012
-@not.with_os=rhel__eq__8
 Scenario: Install package with --nodocs option from local repodata with local packages
 Given I use repository "microdnf-install-nodocs"
   And I execute microdnf with args "--nodocs install man-pages"

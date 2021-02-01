@@ -44,7 +44,6 @@ Scenario: Any suitable context is selected when more options are possible
    Then the exit code is 0
 
 
-@not.with_os=rhel__eq__8
 Scenario: An error is printed with no stream and context is possible to enable
    When I execute dnf with args "module enable biotope:pond"
    Then the exit code is 0
@@ -56,7 +55,6 @@ Scenario: An error is printed with no stream and context is possible to enable
 
 
 @bz1670496
-@not.with_os=rhel__eq__8
 Scenario: An error is printed when trying to install different context
    When I execute dnf with args "module enable biotope:pond"
    Then the exit code is 0
