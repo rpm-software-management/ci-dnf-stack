@@ -160,6 +160,7 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
     And stderr contains "broken groups or modules: nodejs:10"
 
 
+@not.with_os=rhel__eq__8
 Scenario: Enabling a stream depending on other than enabled stream should fail
   Given I use repository "dnf-ci-thirdparty-modular"
     And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
@@ -194,6 +195,7 @@ Scenario: Enabling a stream depending on other than enabled stream should fail
     And stderr contains "module beverage:soda:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
 
 
+@not.with_os=rhel__eq__8
 Scenario: Enabling a stream depending on a disabled stream should fail
   Given I use repository "dnf-ci-thirdparty-modular"
     And I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
@@ -231,6 +233,7 @@ Scenario: Enabling a stream depending on a disabled stream should fail
 
 # side-dish:chip requires fluid:oil
 # beverage:beer requires fluid:water
+@not.with_os=rhel__eq__8
 Scenario: Enabling two modules both requiring different streams of another module
   Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable side-dish:chips beverage:beer"
@@ -242,6 +245,7 @@ Scenario: Enabling two modules both requiring different streams of another modul
 
 # beverage:beer requires fluid:water
 @bz1651280
+@not.with_os=rhel__eq__8
 Scenario: Enabling module stream and another module requiring another stream
   Given I use repository "dnf-ci-thirdparty-modular"
    When I execute dnf with args "module enable fluid:oil beverage:beer"
