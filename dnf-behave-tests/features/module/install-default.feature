@@ -20,6 +20,7 @@ Scenario: Install module, no default profile defined, expecting no profile selec
         broken groups or modules: DnfCiModuleNoDefaults:stable
         """
 
+@not.with_os=rhel__eq__8
 @bz1814831
 Scenario: Install module, no default stream or profile defined, expecting no profile selection
    When I execute dnf with args "module install DnfCiModuleNoDefaults"
