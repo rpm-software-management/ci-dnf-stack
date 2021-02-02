@@ -5,6 +5,7 @@ Background:
   Given I use repository "microdnf-module-enable"
 
 
+@not.with_os=rhel__eq__8
 Scenario Outline: Enable a module stream by <modulespec-type>
    When I execute microdnf with args "module enable <modulespec>"
    Then the exit code is 0
@@ -21,6 +22,7 @@ Examples:
   | glob:glob:glob                  | node*:*:*0801*                |
 
 
+@not.with_os=rhel__eq__8
 Scenario: Enable a module stream that was already enabled
    When I execute microdnf with args "module enable nodejs:8"
    Then the exit code is 0
