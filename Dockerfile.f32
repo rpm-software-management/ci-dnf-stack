@@ -42,16 +42,16 @@ RUN set -x && \
     dnf -y install fakeuname;
 
 
+# upgrade all packages to the latest available versions
+RUN set -x && \
+    dnf -y --refresh upgrade
+
+
 # if not TYPE == copr nor local, disable nightly copr
 RUN set -x && \
     if [ ! "$TYPE" == "copr" -a ! "$TYPE" == "local" ]; then \
         dnf -y copr disable rpmsoftwaremanagement/dnf-nightly; \
     fi
-
-
-# upgrade all packages to the latest available versions
-RUN set -x && \
-    dnf -y --refresh upgrade
 
 
 # install the test environment and additional packages
