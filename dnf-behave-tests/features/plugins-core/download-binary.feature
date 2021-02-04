@@ -105,6 +105,7 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm    | -                                                                                             |
         | {context.dnf.tempdir}/downloaddir/setup-2.12.1-1.fc29.noarch.rpm      | -                                                                                             |
 
+@bz1612874
 Scenario: Download an existing RPM when there are multiple packages of the same NEVRA
   Given I use repository "dnf-ci-gpg" as http
    When I execute dnf with args "download --destdir={context.dnf.installroot}/tmp/download setup filesystem wget"
