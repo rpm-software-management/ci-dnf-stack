@@ -21,6 +21,9 @@ def get_rpmdb_rpms(installroot="/"):
     """
     result = []
     ts = rpm.TransactionSet(installroot)
+    # we only need to retrieve NEVRAs from rpmdb
+    # skipping signature and digest verification cuts the execution time by ~60%
+    ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS)
     for hdr in ts.dbMatch():
         name = _str(hdr["name"])
         evr = _str(hdr["evr"])
