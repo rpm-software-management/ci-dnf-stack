@@ -74,3 +74,29 @@ Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple tim
         | Action        | Package                                   |
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
 
+
+Scenario: Upgrade an RPM from URL where URL is a http address
+  Given I use repository "dnf-ci-fedora-updates" as http
+  And I execute dnf with args "upgrade http://localhost:{context.dnf.ports[dnf-ci-fedora-updates]}/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
+
+
+Scenario: Upgrade an RPM from URL where URL is a ftp address
+  Given I use repository "dnf-ci-fedora-updates" as ftp
+  And I execute dnf with args "upgrade ftp://localhost:{context.dnf.ports[dnf-ci-fedora-updates]}/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
+
+
+Scenario: Upgrade an RPM from URL where URL is a local path
+  Given I use repository "dnf-ci-fedora-updates"
+  And I execute dnf with args "upgrade file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
