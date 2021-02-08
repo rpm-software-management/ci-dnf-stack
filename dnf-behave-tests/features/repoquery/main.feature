@@ -652,7 +652,6 @@ Scenario: repoquery --queryformat EVERYTHING
 # install bottom-a2 using rpm (no record in history database)
 @bz1898968
 @bz1879168
-@not.with_os=rhel__eq__8
 Scenario: repoquery --queryformat from_repo
 Given I successfully execute dnf with args "install bottom-a1"
   And I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/bottom-a2-1.0-1.x86_64.rpm"
@@ -672,8 +671,6 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 # --querytags
 @bz1744073
-# not with os is related to 1879168
-@not.with_os=rhel__eq__8
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"
  Then the exit code is 0
