@@ -26,6 +26,46 @@ Scenario: Security check-update when there are such updates
     And stdout contains "security_A.*1\.0-4\s+dnf-ci-security"
     And stdout does not contain "security_B"
 
+@bz1918475
+Scenario: Security update
+   When I execute dnf with args "update-minimal --security"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                   |
+        | upgrade       | security_A-0:1.0-3.x86_64 |
+  When I execute dnf with args "update --security"
+  Then the exit code is 0
+    And Transaction is empty
+
+@bz1918475
+Scenario: Security update-minimal when exact version is not available
+   When I execute dnf with args "update-minimal --security -x security_A-0:1.0-3.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                   |
+        | upgrade       | security_A-0:1.0-4.x86_64 |
+
+@bz1918475
+Scenario: Security update-minimal with priority setting
+  Given I use repository "dnf-ci-security-priority" with configuration
+      | key           | value   |
+      | priority      | 1       |
+   When I execute dnf with args "update --security "
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                     |
+        | upgrade       | security_A-0:1.0-3.8.x86_64 |
+
+@bz1918475
+Scenario: Security update-minimal with priority setting
+  Given I use repository "dnf-ci-security-priority" with configuration
+      | key           | value   |
+      | priority      | 1       |
+   When I execute dnf with args "update-minimal --security "
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                     |
+        | upgrade       | security_A-0:1.0-3.1.x86_64 |
 
 Scenario Outline: Security <command>
    When I execute dnf with args "<command> --security"
