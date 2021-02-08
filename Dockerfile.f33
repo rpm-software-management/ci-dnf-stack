@@ -1,11 +1,11 @@
 # Build
 # -----
-# $ podman build --build-arg TYPE=local -t dnf-bot/ci-dnf-stack:f31 -f Dockerfile.f31
+# $ podman build --build-arg TYPE=local -t dnf-bot/ci-dnf-stack:f33 -f Dockerfile.f33
 #
 #
 # Run
 # ---
-# $ podman run -it dnf-bot/ci-dnf-stack:f31 behave -Ddnf_executable=dnf -t~xfail --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped]
+# $ podman run -it dnf-bot/ci-dnf-stack:f33 behave -Ddnf_executable=dnf -t~xfail --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped]
 #
 #
 # Build types
@@ -22,10 +22,10 @@
 #       install also additional tools for debugging in the container
 
 
-FROM fedora:31
+FROM fedora:33
 ENV LANG C
 ARG TYPE=local
-ARG OSVERSION=fedora__31
+ARG OSVERSION=fedora__33
 
 
 
@@ -61,9 +61,10 @@ RUN set -x && \
         findutils \
         glibc-langpack-en \
         libfaketime \
+        openssl \
         python3-behave \
         python3-pexpect \
-        python3-pyftpdlib \
+        python3-pip \
         rpm-build \
         rpm-sign \
         sqlite \
@@ -97,7 +98,8 @@ RUN set -x && \
         microdnf \
         # install third party plugins
         dnf-plugin-swidtags \
-        zchunk
+        zchunk && \
+    pip install 'pyftpdlib'
 
 
 # install local RPMs if available
