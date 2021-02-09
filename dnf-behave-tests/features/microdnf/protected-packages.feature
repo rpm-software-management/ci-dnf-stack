@@ -1,7 +1,7 @@
 Feature: Protected packages
 
 
-@not.wit_os=rhel__eq__8
+@not.with_os=rhel__eq__8
 Scenario: Package protected via "protected_packages" option cannot be removed
   Given I configure dnf with
         | key                       | value            |
