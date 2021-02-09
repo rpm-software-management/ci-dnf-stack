@@ -197,6 +197,7 @@ Scenario: history lame (no transaction with such package)
 @bz1852577
 @bz1906970
 # TODO change this to actually verify stdout
+@not.with_os=rhel__eq__8
 Scenario: history longer than 80 charactersi gets cut when there is no terminal
  When I execute dnf with args "history | head -1 | wc -c"
  Then the exit code is 0
