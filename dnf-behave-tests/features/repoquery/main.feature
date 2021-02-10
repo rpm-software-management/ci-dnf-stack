@@ -627,13 +627,10 @@ Scenario: repoquery --queryformat NVR
 
 # note: %{{installtime}}, %{{buildtime}}, %{{size}}, %{{downloadsize}}, %{{installsize}} untested as they vary
 Scenario: repoquery --queryformat EVERYTHING
- When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}}' top*"
+ When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}}' top*.x86_64"
  Then the exit code is 0
   And stdout is
       """
-      top-a | src | 1 | 1.0 | 1 | repoquery-main | repoquery-main | 1:1.0-1 | top-a-debuginfo | (none) | top-a-debuginfo |  |  |  |  | (none) | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
-      top-a | src | 1 | 2.0 | 1 | repoquery-main | repoquery-main | 1:2.0-1 | top-a-debuginfo | (none) | top-a-debuginfo |  |  |  |  | (none) | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
-      top-a | src | 2 | 2.0 | 2 | repoquery-main | repoquery-main | 2:2.0-2 | top-a-debuginfo | (none) | top-a-debuginfo |  |  |  |  | (none) | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
       top-a | x86_64 | 1 | 1.0 | 1 | repoquery-main | repoquery-main | 1:1.0-1 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 1:1.0-1
       top-a(x86-64) = 1:1.0-1 | bottom-a1 = 1:1.0-1
       mid-a1 >= 2
