@@ -22,6 +22,7 @@ Examples:
   | glob:glob                       | node*:*                       |
   | glob:glob:glob                  | node*:*:*0801*                |
 
+@bz1792020
 @bz1809314
 Scenario: Switch a module to stream that was only enabled
    When I execute dnf with args "module enable nodejs:10"
@@ -41,6 +42,7 @@ Scenario: Switch a module to stream that was only enabled
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
 
+@bz1792020
 @bz1809314
 Scenario: I can switch a module to stream, install packages from a new module and keep installed profile
   Given I use repository "dnf-ci-fedora"
@@ -74,6 +76,7 @@ Scenario: I can switch a module to stream, install packages from a new module an
         | Module    | State     | Stream    | Profiles       |
         | nodejs    | enabled   | 8         |  minimal       |
 
+@bz1792020
 Scenario: Reject switch a module stream, when stream does not exist
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "module install nodejs:8/minimal"
