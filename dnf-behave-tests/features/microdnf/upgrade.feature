@@ -23,7 +23,7 @@ Background: Install RPMs
         | install-dep   | abcde-0:2.9.2-1.fc29.noarch               |
         | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
 
-
+@bz1905471
 @tier1
 Scenario: Upgrade one RPM
   Given I use repository "dnf-ci-fedora-updates"
@@ -38,7 +38,7 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
-
+@bz1905471
 Scenario: Upgrade one RPM using "update" command alias
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "update glibc"
@@ -52,7 +52,7 @@ Scenario: Upgrade one RPM using "update" command alias
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
-
+@bz1905471
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade glibc flac"
@@ -68,7 +68,7 @@ Scenario: Upgrade two RPMs
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
         | upgraded      | flac-0:1.3.2-8.fc29.x86_64                |
 
-
+@bz1905471
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=False
@@ -97,7 +97,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
         | upgraded      | abcde-0:2.9.2-1.fc29.noarch               |
 
-
+@bz1905471
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=True
