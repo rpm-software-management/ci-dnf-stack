@@ -19,7 +19,7 @@ Background: Install some RPMs from one repository
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
-
+@bz1905471
 Scenario: Upgrade all RPMs from one repository
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade"
@@ -37,7 +37,7 @@ Scenario: Upgrade all RPMs from one repository
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
         | upgraded      | wget-0:1.19.5-5.fc29.x86_64               |
 
-
+@bz1905471
 Scenario: Upgrade all RPMs from one repository using '*'
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade '*'"
