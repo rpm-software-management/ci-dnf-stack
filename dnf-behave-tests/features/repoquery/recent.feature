@@ -1,4 +1,4 @@
-Feature: Test dnf list --recent
+Feature: Tests for dnf repoquery --recent option
 
 
 Background: prepare repository with recent package labirinto
@@ -12,36 +12,28 @@ Background: prepare repository with recent package labirinto
     # rebuild repodata
     And I execute "createrepo_c --simple-md-filenames --no-database /{context.dnf.repos[simple-base].path}"
     And I use repository "simple-base"
+    And I successfully execute dnf with args "install labirinto vagare"
 
 
-Scenario Outline: dnf list <option>
-   When I execute dnf with args "list <option>"
+Scenario: dnf repoquery --recent vagare (when there's no such recent pkg)
+   When I execute dnf with args "repoquery --recent vagare"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    <REPOSYNC>
-    Recently Added Packages
-    labirinto\.x86_64\s+1\.0-1\.fc29\s+simple-base
-    """
-
-Examples:
-    | option    |
-    | recent    |
-    | --recent  |
+    And stdout is empty
 
 
-Scenario: dnf list package that is not recently added
-   # make sure that vagare package is present
-   When I execute dnf with args "list vagare"
+Scenario: dnf repoquery --recent labirinto (when recent pkg exists)
+   When I execute dnf with args "repoquery --recent labirinto"
    Then the exit code is 0
-   # but was not recently added
-   When I execute dnf with args "list --recent vagare"
-   Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
+    labirinto-0:1.0-1.fc29.x86_64
     """
-    And stderr is
+
+
+Scenario: dnf repoquery --recent --installed labirinto (when recent pkg exists)
+   When I execute dnf with args "repoquery --recent --installed"
+   Then the exit code is 0
+    And stdout is
     """
-    Error: No matching Packages to list
+    labirinto-0:1.0-1.fc29.x86_64
     """
