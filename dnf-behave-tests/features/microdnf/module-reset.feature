@@ -5,6 +5,7 @@ Background:
 Given I use repository "microdnf-module-enable"
 
 
+@bz1827424
 Scenario: I can reset a disabled default stream back to its default state
  When I execute microdnf with args "module disable nodejs"
  Then the exit code is 0
@@ -32,6 +33,7 @@ Scenario: I can reset a disabled default stream back to its default state
       | microdnf-module-enable | nodejs | 11     | default, development, minimal     |
 
 
+@bz1827424
 Scenario: I can reset a disabled non-default stream back to a non-default state
  When I execute microdnf with args "module disable dwm"
  Then the exit code is 0
@@ -55,6 +57,7 @@ Scenario: I can reset a disabled non-default stream back to a non-default state
       | microdnf-module-enable | dwm  | 6.0    | default  |
 
 
+@bz1827424
 Scenario: Resetting of a default stream does nothing
  When I execute dnf with args "module list nodejs"
  Then module list contains
@@ -76,6 +79,7 @@ Scenario: Resetting of a default stream does nothing
       | microdnf-module-enable | nodejs | 11     | default, development, minimal     |
 
 
+@bz1827424
 Scenario: Resetting of a non-default non-enabled stream does nothing
  When I execute dnf with args "module list dwm"
  Then module list contains
@@ -93,6 +97,7 @@ Scenario: Resetting of a non-default non-enabled stream does nothing
       | microdnf-module-enable | dwm  | 6.0    | default  |
 
 
+@bz1827424
 Scenario: I can reset an enabled default stream back to its non-enabled default state
  When I execute microdnf with args "module enable nodejs:8"
  Then the exit code is 0
@@ -120,6 +125,7 @@ Scenario: I can reset an enabled default stream back to its non-enabled default 
       | microdnf-module-enable | nodejs | 11     | default, development, minimal     |
 
 
+@bz1827424
 Scenario: I can reset an enabled non-default stream back to a non-enabled state
  When I execute microdnf with args "module enable dwm:6.0/default"
  Then the exit code is 0
