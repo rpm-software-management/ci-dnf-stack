@@ -1,6 +1,0 @@
-[upgrade_1-gpg-file]
-name=upgrade_1-gpg-file
-baseurl=http://127.0.0.1/repo/upgrade_1-gpg
-enabled=1
-gpgcheck=1
-gpgkey=http://127.0.0.1/repo/upgrade_1-gpg/RPM-GPG-KEY-dtest2
