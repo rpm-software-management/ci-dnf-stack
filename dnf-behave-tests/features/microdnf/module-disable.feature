@@ -11,6 +11,7 @@ Background:
         | nodejs    | enabled   | 8         |           |
 
 
+@bz1827424
 Scenario: I can disable a module when specifying module name
    When I execute microdnf with args "module disable nodejs"
    Then the exit code is 0
@@ -20,6 +21,7 @@ Scenario: I can disable a module when specifying module name
         | nodejs    | disabled  |           |           |
 
 
+@bz1827424
 Scenario: Disabling an already disabled module should pass
    When I execute microdnf with args "module disable nodejs"
    Then the exit code is 0
@@ -31,6 +33,7 @@ Scenario: Disabling an already disabled module should pass
     And stdout contains "Nothing to do."
 
 
+@bz1827424
 Scenario Outline: I can disable a module when specifying <spec>
    When I execute microdnf with args "module disable <modulespec>"
    Then the exit code is 0
@@ -44,6 +47,7 @@ Examples:
     | version           | nodejs:10:20180920144631  |
 
 
+@bz1827424
 Scenario: It is possible to disable an enabled default stream
   When I execute microdnf with args "module disable nodejs"
    Then the exit code is 0
