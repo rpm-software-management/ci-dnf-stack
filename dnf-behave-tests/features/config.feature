@@ -1,10 +1,5 @@
 Feature: DNF config files testing
 
-# Scenarios, that need changes in host /etc/dnf/dnf.conf
-# Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf.
-# Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.conf file (absolute and relative path)
-# Scenario: Test without dnf.conf in installroot (dnf.conf is not taken from host)
-# Scenario: Reposdir option in dnf conf.file in host
 
 Scenario: Test removal of dependency when clean_requirements_on_remove=false
   Given I use repository "dnf-ci-fedora"
@@ -63,6 +58,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
   Given I configure dnf with
         | key      | value      |
         | reposdir | /testrepos |
+    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -80,6 +76,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     [main]
     reposdir=/testrepos
     """
+    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -97,6 +94,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     [main]
     reposdir={context.dnf.installroot}/testrepos,/othertestrepos
     """
+    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -117,6 +115,7 @@ Scenario: Reposdir option set by --setopt
   Given I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
+    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
    # fail due to unavailable repository
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
@@ -206,3 +205,97 @@ Scenario: Dnf prints reasonable error when remote config file is not downloadabl
    Config error: Configuration file URL "http://the_host:[\d]+/does-not-exist\.conf" could not be downloaded:
      Curl error \(6\): Couldn't resolve host name for http://the_host:[\d]+/does-not-exist\.conf \[Could not resolve host: the_host\]
    """
+
+
+@no_installroot
+Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
+  Given I use repository "simple-base"
+    And I create file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    exclude=vagare
+    """
+   When I execute dnf with args "install vagare"
+   Then the exit code is 1
+    And stdout is
+    """
+    <REPOSYNC>
+    All matches were filtered out by exclude filtering for argument: vagare
+    """
+    And stderr is
+    """
+    Error: Unable to find a match: vagare
+    """
+
+
+@no_installroot
+Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.conf file
+  Given I use repository "simple-base"
+    And I create file "/etc/dnf/dnf.conf" with
+    """
+    [main]
+    exclude=vagare
+    """
+    And I create file "/test/dnf.conf" with
+    """
+    [main]
+    exclude=dedalo-signed
+    """
+   When I execute dnf with args "-c /test/dnf.conf install vagare"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | vagare-1.0-1.fc29.x86_64              |
+        | install-dep   | labirinto-1.0-1.fc29.x86_64           |
+   When I execute dnf with args "-c /test/dnf.conf install dedalo-signed"
+   Then the exit code is 1
+    And stdout is
+    """
+    <REPOSYNC>
+    All matches were filtered out by exclude filtering for argument: dedalo-signed
+    """
+    And stderr is
+    """
+    Error: Unable to find a match: dedalo-signed
+    """
+
+
+@destructive
+Scenario: Test without dnf.conf in installroot (dnf.conf is taken from host)
+  Given I use repository "simple-base"
+    # create host config file
+    And I create file "//etc/dnf/dnf.conf" with
+    """
+    [main]
+    exclude=vagare
+    """
+    # ensure there is no dnf.conf in the installroot
+    And I delete file "/etc/dnf/dnf.conf"
+   When I execute dnf with args "install vagare"
+   Then the exit code is 1
+    And stdout is
+    """
+    <REPOSYNC>
+    All matches were filtered out by exclude filtering for argument: vagare
+    """
+    And stderr is
+    """
+    Error: Unable to find a match: vagare
+    """
+
+
+@no_installroot
+Scenario: Reposdir option in dnf.conf file in host
+  Given I configure dnf with
+        | key      | value      |
+        | reposdir | /testrepos |
+    And I execute "createrepo_c {context.scenario.repos_location}/simple-base"
+    And I configure a new repository "testrepo" in "/testrepos" with
+        | key     | value                                                   |
+        | baseurl | {context.scenario.repos_location}/simple-base           |
+   When I execute dnf with args "install vagare"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | vagare-1.0-1.fc29.x86_64          |
+        | install-dep   | labirinto-1.0-1.fc29.x86_64       |
