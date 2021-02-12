@@ -68,3 +68,30 @@ Scenario: Installing a package using nonexistent client cert should fail
       - Curl error \(58\): Problem with the local SSL certificate for https://localhost:[0-9]+/repodata/repomd.xml \[could not load PEM client certificate, OpenSSL error error:[0-9]+:system library:fopen:No such file or directory, \(no key found, wrong pass phrase, or wrong file format\?\)\]
     Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
+
+
+Scenario: Installation with untrusted repository should fail
+        # https repositories use sslcacert certificates/testcerts/ca/cert.pem
+  Given I use repository "simple-base" as https
+    And I configure repository "simple-base" with
+        | key               | value |
+        # replace cacert with another
+        | sslcacert         | {context.dnf.fixturesdir}/certificates/testcerts/ca2/cert.pem |
+   When I execute dnf with args "install labirinto"
+   Then the exit code is 1
+    And stderr matches line by line
+    """
+    Errors during downloading metadata for repository 'simple-base':
+      - Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem: self signed certificate in certificate chain\]
+    Error: Failed to download metadata for repo 'simple-base': Cannot download repomd\.xml: Cannot download repodata/repomd\.xml: All mirrors were tried
+    """
+
+
+Scenario: Untrusted cert can be overriden with sslverify=False
+  Given I use repository "simple-base" as https
+    And I configure repository "simple-base" with
+        | key               | value |
+        | sslcacert         | {context.dnf.fixturesdir}/certificates/testcerts/ca2/cert.pem |
+        | sslverify         | false |
+   When I execute dnf with args "install labirinto"
+   Then the exit code is 0
