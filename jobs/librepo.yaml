@@ -5,8 +5,8 @@
           url: "https://github.com/rpm-software-management/librepo.git"
           branches:
             - origin/master
-            - origin/auto
-            - origin/try
+            - origin/staging
+            - origin/trying
           basedir: librepo
           skip-tag: true
 

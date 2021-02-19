@@ -6,8 +6,8 @@
           branches:
             - origin/master
             - origin/dnf-4-master
-            - origin/auto
-            - origin/try
+            - origin/staging
+            - origin/trying
           basedir: libdnf
           skip-tag: true
 

@@ -19,7 +19,7 @@
         Managed by Jenkins Job Builder. <strong>Do not edit via web.</strong<br>
     wrappers:
       - workspace-cleanup
-    github-context: "Jenkins (Red Hat)"
+    github-context: "DNF CI"
 
 ##############
 ## TRIGGERS ##
