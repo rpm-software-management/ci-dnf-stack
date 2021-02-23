@@ -9,8 +9,7 @@ Background: prepare repository with recent package labirinto
     And I execute "SOURCE_DATE_EPOCH=$(date +%s) rpmbuild -rb --define "_rpmdir ." --define "use_source_date_epoch_as_buildtime 1" /{context.dnf.repos[simple-base].path}/src/labirinto*.src.rpm" in "{context.dnf.repos[simple-base].path}"
     # remove source rpms not to interfere with list outputs
     And I execute "rm -rf src" in "{context.dnf.repos[simple-base].path}"
-    # rebuild repodata
-    And I execute "createrepo_c --simple-md-filenames --no-database /{context.dnf.repos[simple-base].path}"
+    And I generate repodata for repository "simple-base"
     And I use repository "simple-base"
 
 

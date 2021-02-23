@@ -6,8 +6,8 @@ Feature: microdnf install command on packages
 Scenario: Install package from local repodata with local xml:base
 #2. local repo with local packages (different package location specified using xml:base)
 Given I copy repository "dnf-ci-fedora" for modification
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl file://{context.dnf.installroot}/xml_base/dnf-ci-fedora"
   And I use repository "dnf-ci-fedora"
-  And I execute "createrepo_c --baseurl file://{context.dnf.installroot}/xml_base/dnf-ci-fedora /{context.dnf.repos[dnf-ci-fedora].path}"
   And I copy directory "{context.dnf.repos[dnf-ci-fedora].path}" to "/xml_base/dnf-ci-fedora"
  When I execute microdnf with args "install kernel"
  Then the exit code is 0

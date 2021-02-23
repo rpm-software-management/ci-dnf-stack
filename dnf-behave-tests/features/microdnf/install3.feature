@@ -7,7 +7,7 @@ Scenario: Install package from local repodata with xml:base pointing to remote p
 #3. local repo with remote packages (different package location specified using xml:base)
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
-  And I execute "createrepo_c --baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]} /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora"
  When I execute microdnf with args "install kernel"
  Then the exit code is 0

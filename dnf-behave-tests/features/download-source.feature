@@ -93,7 +93,7 @@ Given I create directory "/baseurlrepo"
 Scenario: Install from local repodata with locations pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
-  And I execute "createrepo_c --location-prefix http://localhost:{context.dnf.ports[dnf-ci-fedora]} {context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--location-prefix http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora"
   # delete packages from the repo copied for modification so they cannot be accidentally used
   And I delete directory "/{context.dnf.repos[dnf-ci-fedora].path}/noarch"
@@ -109,7 +109,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 Scenario: Install from remote repodata with locations pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
-  And I execute "createrepo_c --location-prefix http://localhost:{context.dnf.ports[dnf-ci-fedora]} {context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--location-prefix http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora" as http
   # delete packages from the repo copied for modification so they cannot be accidentally used
   And I delete directory "/{context.dnf.repos[dnf-ci-fedora].path}/noarch"
@@ -140,7 +140,7 @@ Given I use repository "download-sources" as http
 Scenario: Download a package that contains special URL characters with full URL in location
 Given I make packages from repository "download-sources" accessible via http
   And I copy repository "download-sources" for modification
-  And I execute "createrepo_c --location-prefix http://localhost:{context.dnf.ports[download-sources]} {context.dnf.repos[download-sources].path}"
+  And I generate repodata for repository "download-sources" with extra arguments "--location-prefix http://localhost:{context.dnf.ports[download-sources]}"
   And I use repository "download-sources" as http
   # delete packages from the repo copied for modification so they cannot be accidentally used
   And I delete directory "/{context.dnf.repos[download-sources].path}/noarch"

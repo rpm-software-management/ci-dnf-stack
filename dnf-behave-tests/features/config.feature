@@ -58,7 +58,7 @@ Scenario: Reposdir option in dnf.conf file in installroot
   Given I configure dnf with
         | key      | value      |
         | reposdir | /testrepos |
-    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
+    And I generate repodata for repository "dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -76,7 +76,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
     [main]
     reposdir=/testrepos
     """
-    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
+    And I generate repodata for repository "dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -94,7 +94,7 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     [main]
     reposdir={context.dnf.installroot}/testrepos,/othertestrepos
     """
-    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
+    And I generate repodata for repository "dnf-ci-fedora"
     And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
@@ -115,7 +115,7 @@ Scenario: Reposdir option set by --setopt
   Given I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
-    And I execute "createrepo_c {context.scenario.repos_location}/dnf-ci-fedora"
+    And I generate repodata for repository "dnf-ci-fedora"
    # fail due to unavailable repository
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
@@ -289,7 +289,7 @@ Scenario: Reposdir option in dnf.conf file in host
   Given I configure dnf with
         | key      | value      |
         | reposdir | /testrepos |
-    And I execute "createrepo_c {context.scenario.repos_location}/simple-base"
+    And I generate repodata for repository "simple-base"
     And I configure a new repository "testrepo" in "/testrepos" with
         | key     | value                                                   |
         | baseurl | {context.scenario.repos_location}/simple-base           |
