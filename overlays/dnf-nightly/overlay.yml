@@ -11,7 +11,7 @@ components:
       src: github:openSUSE/libsolv.git
     distgit:
       src: fedorapkgs:libsolv.git
-      branch: origin/f33
+      branch: origin/f32
       patches: drop
 
   - name: libmodulemd
