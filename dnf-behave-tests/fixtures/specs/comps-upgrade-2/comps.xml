@@ -3,12 +3,12 @@
 <comps>
 
   <group>
-   <id>A-group</id>
+   <id>a-group</id>
    <default>false</default>
    <uservisible>true</uservisible>
    <display_order>1024</display_order>
-   <name>A-group</name>
-   <description>Testgroup for DNF CI testing</description>
+   <name>A-group - repo#2</name>
+   <description>Testgroup for DNF CI testing - repo#2</description>
     <packagelist>
       <packagereq type="mandatory">A-mandatory</packagereq>
       <packagereq type="default">A-default</packagereq>
