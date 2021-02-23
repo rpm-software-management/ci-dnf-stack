@@ -39,18 +39,17 @@ Background: Enable comps-upgrade-1 nad install dummy
   Given I use repository "comps-upgrade-1"
     And I successfully execute dnf with args "install dummy"
 
-
 Scenario: Upgrade group when there are new package versions - upgrade packages
-  Given I successfully execute dnf with args "group install A-group"
+  Given I successfully execute dnf with args "group install 'A-group - repo#1'"
     And I use repository "comps-upgrade-2"
-   When I execute dnf with args "group upgrade A-group"
+   When I execute dnf with args "group upgrade 'A-group - repo#1'"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
         | upgrade       | A-conditional-true-0:2.0-1.x86_64  |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#2                   |
 
 
 Scenario: Upgrade group when there are no new packages - nothing is installed
@@ -143,7 +142,7 @@ Scenario: Upgrade environment when there are no new groups/packages - nothing is
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
 
@@ -173,7 +172,7 @@ Scenario: Upgrade environment when there are both old and new groups/packages - 
         | install-group | B-mandatory-0:1.0-1.x86_64         |
         | install-group | B-default-0:1.0-1.x86_64           |
         | install-group | B-conditional-true-0:1.0-1.x86_64  |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#2                   |
         | group-install | B-group                            |
         | env-upgrade   | AB-environment                     |
 
@@ -200,7 +199,7 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | A-mandatory-0:1.0-1.x86_64         |
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
-        | group-install | A-group                            |
+        | group-install | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
 
@@ -210,13 +209,13 @@ Scenario: Upgrade environment when there were excluded packages during installat
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
-        | group-install | A-group                            |
+        | group-install | A-group - repo#1                   |
         | env-install   | AB-environment                     |
    When I execute dnf with args "group upgrade AB-environment"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
 
@@ -227,7 +226,7 @@ Scenario: Upgrade environment when there were removed packages since installatio
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
 
@@ -250,11 +249,10 @@ Scenario: Upgrade empty environment
         | Action        | Package                            |
         | env-upgrade   | empty-environment                  |
 
-
 @bz1872586
 Scenario: Upgrade environment when all groups are removed
   Given I successfully execute dnf with args "group install AB-environment"
-    And I successfully execute dnf with args "group remove A-group"
+    And I successfully execute dnf with args "group remove 'A-group - repo#1'"
    When I execute dnf with args "group upgrade AB-environment"
    Then the exit code is 0
     And Transaction is following
@@ -264,12 +262,12 @@ Scenario: Upgrade environment when all groups are removed
 
 @bz1872586
 Scenario: Upgrade environment with installed optional groups
-  Given I successfully execute dnf with args "group mark install optional-environment A-group"
+  Given I successfully execute dnf with args "group mark install optional-environment a-group"
    When I execute dnf with args "group upgrade optional-environment"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
-        | group-upgrade | A-group                            |
+        | group-upgrade | A-group - repo#1                   |
         | env-upgrade   | optional-environment               |
 
 

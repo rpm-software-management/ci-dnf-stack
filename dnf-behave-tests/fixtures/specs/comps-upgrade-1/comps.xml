@@ -3,12 +3,12 @@
 <comps>
 
   <group>
-   <id>A-group</id>
+   <id>a-group</id>
    <default>false</default>
    <uservisible>true</uservisible>
    <display_order>1024</display_order>
-   <name>A-group</name>
-   <description>Testgroup for DNF CI testing</description>
+   <name>A-group - repo#1</name>
+   <description>Testgroup for DNF CI testing - repo#1</description>
     <packagelist>
       <packagereq type="mandatory">A-mandatory</packagereq>
       <packagereq type="default">A-default</packagereq>
@@ -42,7 +42,7 @@
    <name>AB-environment</name>
    <description>Testenvironment for DNF CI testing</description>
     <grouplist>
-      <groupid>A-group</groupid>
+      <groupid>a-group</groupid>
     </grouplist>
   </environment>
 
@@ -76,7 +76,7 @@
    <name>optional-environment</name>
    <description>Testenvironment for DNF CI testing</description>
     <optionlist>
-      <groupid>A-group</groupid>
+      <groupid>a-group</groupid>
     </optionlist>
   </environment>
 
