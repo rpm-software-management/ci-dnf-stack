@@ -4,8 +4,8 @@ Feature: zchunk tests
 
 Scenario: I can install an RPM from local mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base"
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
   And I configure dnf with
       | key    | value |
       | zchunk | True  |
@@ -19,8 +19,8 @@ Given I copy repository "simple-base" for modification
 @bz1886706
 Scenario: I can install an RPM from FTP mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base" as ftp
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
   And I configure dnf with
       | key    | value |
       | zchunk | True  |
@@ -33,8 +33,8 @@ Given I copy repository "simple-base" for modification
 
 Scenario: I can install an RPM from FTP mirror with zchunk repo and disabled zchunk
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base" as ftp
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
   And I configure dnf with
       | key    | value |
       | zchunk | False |
@@ -47,7 +47,7 @@ Given I copy repository "simple-base" for modification
 
 Scenario: when zchunk is enabled, prefer HTTP over FTP
 Given I copy repository "simple-base" for modification
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I start http server "http_server" at "/{context.dnf.repos[simple-base].path}"
   And I start ftp server "ftp_server" at "/{context.dnf.repos[simple-base].path}"
   And I create and substitute file "/tmp/mirrorlist" with
@@ -77,7 +77,7 @@ Given I copy repository "simple-base" for modification
 
 Scenario: when zchunk is enabled, prefer HTTP over FTP (reversed)
 Given I copy repository "simple-base" for modification
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I start http server "http_server" at "/{context.dnf.repos[simple-base].path}"
   And I start ftp server "ftp_server" at "/{context.dnf.repos[simple-base].path}"
   And I create and substitute file "/tmp/mirrorlist" with
@@ -107,8 +107,8 @@ Given I copy repository "simple-base" for modification
 
 Scenario: using mirror wihtout ranges supports and zchunk results in only two GET requests per file (the first try is with range specified)
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base" as http
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
   And I configure dnf with
       | key    | value |
       | zchunk | True |

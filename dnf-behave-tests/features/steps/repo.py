@@ -44,9 +44,13 @@ class RepoInfo(object):
         self.active = False
         self.path = os.path.join(context.scenario.repos_location, repo)
         self.config = repo_config(repo, {"baseurl": "file://" + self.path})
+        self.copied = False
 
     def update_config(self, new_conf):
         self.config.update(new_conf)
+
+    def get_substituted_path(self, context):
+        return self.path.replace("$releasever", context.dnf.releasever)
 
 
 def get_repo_info(context, repo):
@@ -60,19 +64,23 @@ def create_repo_conf(context, repo):
     write_repo_config(context, repo, repo_info.config)
 
 
-def generate_repodata(context, repo):
-    repo_replaced = repo.replace("$releasever", context.dnf.releasever)
+def generate_repodata(context, repo, extra_args=None, explicit=False):
+    repo_subst = repo.replace("$releasever", context.dnf.releasever)
+    repo_info = get_repo_info(context, repo)
 
-    if repo_replaced in context.repos:
+    if repo_subst in context.repos and not extra_args and not (explicit and repo_info.copied):
         return
 
     args = "--no-database --simple-md-filenames --revision=1550000000"
 
-    groups_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "comps.xml")
+    groups_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_subst, "comps.xml")
     if os.path.isfile(groups_filename):
         args += " --groupfile " + groups_filename
 
-    target_path = os.path.join(context.scenario.repos_location, repo_replaced)
+    if extra_args is not None:
+        args += " " + extra_args
+
+    target_path = repo_info.get_substituted_path(context)
     if not os.path.isdir(target_path):
         os.makedirs(target_path)
 
@@ -80,15 +88,16 @@ def generate_repodata(context, repo):
 
     repodata_path = os.path.join(target_path, "repodata")
 
-    updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "updateinfo.xml")
+    updateinfo_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_subst, "updateinfo.xml")
     if os.path.isfile(updateinfo_filename):
         run_in_context(context, "modifyrepo_c %s '%s'" % (updateinfo_filename, repodata_path))
 
-    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_replaced, "modules.yaml")
+    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_subst, "modules.yaml")
     if os.path.isfile(modules_filename):
         run_in_context(context, "modifyrepo_c --mdtype=modules %s '%s'" % (modules_filename, repodata_path))
 
-    context.repos[repo_replaced] = True
+    if not repo_info.copied:
+        context.repos[repo_subst] = True
 
 
 def generate_metalink(destdir, url):
@@ -129,10 +138,34 @@ def step_impl(context, releasever):
             generate_repodata(context, repo)
 
 
+@behave.step("I generate repodata for repository \"{repo}\" with extra arguments \"{args}\"")
+def step_generate_repodata_for_repository_with_extra_args(context, repo, args):
+    """
+    Generates the repository repodata (without configuring it for use),
+    allowing to specify extra arguments to createrepo_c. Only possible if the
+    repository was copied for modification.
+    """
+    repo_info = get_repo_info(context, repo)
+    assert repo_info.copied, \
+        "Cannot specify extra createrepo_c arguments if the repository wasn't copied for modification"
+
+    generate_repodata(context, repo, extra_args=args.format(context=context), explicit=True)
+
+
+@behave.step("I generate repodata for repository \"{repo}\"")
+def step_generate_repodata_for_repository(context, repo):
+    """
+    Generates the repository repodata (without configuring it for use).
+    """
+    generate_repodata(context, repo, explicit=True)
+
+
 @behave.step("I use repository \"{repo}\"")
 def step_use_repository(context, repo):
     """
-    Creates the repository's config file at /etc/yum.repos.d/ (inside installroot).
+    Generates the repodata if they weren't generated yet for this run of
+    behave. Creates the repository's config file at /etc/yum.repos.d/ (inside
+    installroot).
     """
     generate_repodata(context, repo)
     create_repo_conf(context, repo)
@@ -156,8 +189,10 @@ def step_configure_repository(context, repo):
 @behave.step("I use repository \"{repo}\" with configuration")
 def step_use_repository_with_config(context, repo):
     """
-    Sets the repository configuration (i.e. the contents of its config file)
-    and creates its config file at /etc/yum.repos.d/ (inside installroot).
+    Generates the repodata if they weren't generated yet for this run of
+    behave. Sets the repository configuration (i.e. the contents of its config
+    file) and creates its config file at /etc/yum.repos.d/ (inside
+    installroot).
     """
     check_context_table(context, ["key", "value"])
 
@@ -186,11 +221,15 @@ def step_copy_repository(context, repo):
     data stay unchanged for the other tests.
     """
     generate_repodata(context, repo)
+
     repo_info = get_repo_info(context, repo)
-    dst = os.path.join(context.dnf.tempdir, "repos", repo)
-    copy_tree(repo_info.path, dst)
-    repo_info.path = dst
-    repo_info.update_config({"baseurl": "file://" + dst})
+
+    src_path = repo_info.get_substituted_path(context)
+    repo_info.path = os.path.join(context.dnf.tempdir, "repos", repo)
+    copy_tree(src_path, repo_info.get_substituted_path(context))
+
+    repo_info.copied = True
+    repo_info.update_config({"baseurl": "file://" + repo_info.path})
 
 
 @behave.step("I configure a new repository \"{repo}\" in \"{path}\" with")
@@ -225,8 +264,7 @@ def make_repo_packages_accessible(context, repo, rtype):
     its port to context.
     """
     repo_info = get_repo_info(context, repo)
-    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
-    host, port = start_server_based_on_type(context, server_dir, rtype)
+    host, port = start_server_based_on_type(context, repo_info.get_substituted_path(context), rtype)
     context.dnf.ports[repo] = port
 
 
@@ -234,10 +272,11 @@ def make_repo_packages_accessible(context, repo, rtype):
 def step_use_repository_as(context, repo, rtype):
     """
     Starts a new HTTP/FTP server at the repository's location and then
-    configures the repository's baseurl with the server's url.
+    configures the repository's baseurl with the server's url. Also generates
+    the repodata if they weren't generated yet for this run of behave.
     """
     repo_info = get_repo_info(context, repo)
-    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
+    server_dir = repo_info.get_substituted_path(context)
 
     if rtype == "https":
         certs = {
@@ -274,9 +313,7 @@ def step_stop_server_for_repo(context, rtype, repo):
     Stops the server that is running for the repository.
     """
     repo_info = get_repo_info(context, repo)
-    server_dir = repo_info.path.replace("$releasever", context.dnf.releasever)
-
-    stop_server_type(context, server_dir, rtype)
+    stop_server_type(context, repo_info.get_substituted_path(context), rtype)
 
 
 @behave.step("I set up metalink for repository \"{repo}\"")

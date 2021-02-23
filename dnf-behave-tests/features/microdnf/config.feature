@@ -6,9 +6,9 @@ Feature: Respect main config options
 @not.with_os=rhel__eq__8
 Scenario: microdnf downloads zchunk metadata, enabled by default
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base" as http
   And I start capturing outbound HTTP requests
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
  When I execute microdnf with args "install labirinto"
  Then the exit code is 0
   And HTTP log contains
@@ -22,9 +22,9 @@ Given I copy repository "simple-base" for modification
 @not.with_os=rhel__eq__8
 Scenario: microdnf ignores zchunk metadata if disabled
 Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
   And I use repository "simple-base" as http
   And I start capturing outbound HTTP requests
-  And I execute "createrepo_c --simple-md-filenames --zck /{context.dnf.repos[simple-base].path}"
   And I configure dnf with
       | key    | value |
       | zchunk | False |

@@ -243,7 +243,7 @@ Scenario: multiple runs of repomanage don't use cached metadata
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
   And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"
   And I delete file "//{context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/*/nodejs*" with globs
-  And I execute "createrepo_c --update --keep-all-metadata {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/"
+  And I generate repodata for repository "dnf-ci-multicontext-hybrid-multiversion-modular"
   And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"
  Then the exit code is 0
   And stdout is

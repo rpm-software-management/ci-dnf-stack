@@ -27,8 +27,7 @@ Given I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
 @bz1853349
 Scenario: Install an rpm with spaces in its baseurl (the xml:base attribute of the package)
 Given I copy repository "repo with spaces" for modification
-  And I use repository "dnf-ci-fedora"
-  And I execute "createrepo_c --baseurl file://{context.scenario.repos_location}/repo%20with%20spaces '/{context.dnf.repos[repo with spaces].path}'"
+  And I generate repodata for repository "repo with spaces" with extra arguments "--baseurl file://{context.scenario.repos_location}/repo%20with%20spaces"
   And I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
       """
       [test-repo]
@@ -47,8 +46,7 @@ Given I copy repository "repo with spaces" for modification
 @bz1853349
 Scenario: Download an rpm with spaces in its baseurl (the xml:base attribute of the package) to a destdir
 Given I copy repository "repo with spaces" for modification
-  And I use repository "dnf-ci-fedora"
-  And I execute "createrepo_c --baseurl file://{context.scenario.repos_location}/repo%20with%20spaces '/{context.dnf.repos[repo with spaces].path}'"
+  And I generate repodata for repository "repo with spaces" with extra arguments "--baseurl file://{context.scenario.repos_location}/repo%20with%20spaces"
   And I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
       """
       [test-repo]

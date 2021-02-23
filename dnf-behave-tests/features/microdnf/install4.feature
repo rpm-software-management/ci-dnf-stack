@@ -8,7 +8,7 @@ Scenario: Install packages from local repodata that have packages with xml:base 
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
   And I copy repository "dnf-ci-thirdparty" for modification
-  And I execute "createrepo_c --baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]} /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I execute "mergerepo_c --repo file://{context.dnf.repos[dnf-ci-fedora].path} --repo file://{context.dnf.repos[dnf-ci-thirdparty].path}" in "{context.dnf.installroot}"
   And I configure a new repository "merged-repo" with
       | key     | value                                        |

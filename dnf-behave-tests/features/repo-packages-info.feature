@@ -60,7 +60,7 @@ Given I delete file "/{context.dnf.repos[dnf-ci-fedora].path}/noarch/setup-2.12.
  Then the exit code is 0
 Given I delete file "/{context.dnf.repos[dnf-ci-fedora].path}/src/setup-2.12.1-1.fc29.src.rpm"
  Then the exit code is 0
-  And I execute "createrepo_c --update ." in "/{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora"
  Then the exit code is 0
  When I execute dnf with args "clean expire-cache"
  Then the exit code is 0

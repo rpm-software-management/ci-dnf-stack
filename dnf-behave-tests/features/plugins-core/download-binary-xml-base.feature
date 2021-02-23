@@ -8,7 +8,7 @@ Background:
 Scenario: Download packages from local repository with local xml:base
 Given I copy repository "dnf-ci-fedora" for modification
   And I use repository "dnf-ci-fedora"
-  And I execute "createrepo_c --baseurl file://{context.dnf.installroot}/xml_base/dnf-ci-fedora /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl file://{context.dnf.installroot}/xml_base/dnf-ci-fedora"
   # setup data to which the base:xml (createrepo_c --baseurl argument) is pointing
   And I copy directory "{context.dnf.repos[dnf-ci-fedora].path}" to "/xml_base/dnf-ci-fedora"
  When I execute dnf with args "download setup --destdir={context.dnf.tempdir}"
@@ -22,7 +22,7 @@ Given I copy repository "dnf-ci-fedora" for modification
 Scenario: Download from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
-  And I execute "createrepo_c --baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]} /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora"
  When I execute dnf with args "download setup --destdir={context.dnf.tempdir}"
  Then stderr is empty
@@ -35,7 +35,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 Scenario: Download from remote repodata with xml:base pointing to packages on different remote
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
-  And I execute "createrepo_c --baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]} /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora" as http
  When I execute dnf with args "download setup --destdir={context.dnf.tempdir}"
  Then the exit code is 0
@@ -49,7 +49,7 @@ Scenario: Download to destdir from local repodata that have packages with xml:ba
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
   And I copy repository "dnf-ci-thirdparty" for modification
-  And I execute "createrepo_c --baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]} /{context.dnf.repos[dnf-ci-fedora].path}"
+  And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I execute "mergerepo_c --repo file://{context.dnf.repos[dnf-ci-fedora].path} --repo file://{context.dnf.repos[dnf-ci-thirdparty].path}" in "{context.dnf.installroot}"
   And I configure a new repository "merged-repo" with
       | key     | value                                        |
