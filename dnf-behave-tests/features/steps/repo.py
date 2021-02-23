@@ -76,12 +76,6 @@ def generate_repodata(context, repo):
     if not os.path.isdir(target_path):
         os.makedirs(target_path)
 
-    # skip creating repos that have repomd.xml created already
-    repomd_xml = os.path.join(target_path, "repodata", "repomd.xml")
-    if os.path.exists(repomd_xml):
-        context.repos[repo_replaced] = True
-        return
-
     run_in_context(context, "createrepo_c %s '%s'" % (args, target_path))
 
     repodata_path = os.path.join(target_path, "repodata")
