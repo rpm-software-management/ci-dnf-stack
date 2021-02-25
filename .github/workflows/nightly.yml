@@ -7,8 +7,8 @@ on:
 jobs:
   build:
     name: Build
-    container: fedora:latest
     runs-on: ubuntu-latest
+    container: ghcr.io/rpm-software-management/dnf-ci-host
     strategy:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
