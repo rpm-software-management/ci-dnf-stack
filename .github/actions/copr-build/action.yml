@@ -1,9 +1,14 @@
-name: Run DNF CI
+name: Copr Build for CI
 
 inputs:
   copr-user:
     description: The Copr user to build packages under
     required: true
+
+outputs:
+  package-urls:
+    description: The URLs of built RPM packages
+    value: ${{steps.copr-build.outputs.package-urls}}
 
 runs:
   using: "composite"
@@ -19,6 +24,7 @@ runs:
         popd
 
     - name: Build packages in Copr
+      id: copr-build
       shell: bash
       run: |
         PROJECT_NAME="CI-${{github.event.pull_request.head.repo.name}}-pr${{github.event.pull_request.number}}"
@@ -28,21 +34,6 @@ runs:
         # delete the Copr secret just to be on the safe(er) side when running potentially untrusted PR code (albeit in a container, which should be secure)
         rm -rf "$HOME/.config/copr"
 
-        for RPM in $(cat rpmlist); do wget -P rpms $RPM; done
-
-    - name: Run tests
-      shell: bash
-      run: |
-        # needed for podman user containers to work
-        export STORAGE_OPTS='overlay2.mount_program=/usr/bin/fuse-overlayfs'
-        echo "[engine]" > /etc/containers/containers.conf
-        echo "cgroup_manager = \"cgroupfs\"" >> /etc/containers/containers.conf
-        echo "events_logger = \"file\"" >> /etc/containers/containers.conf
-
-        CONTAINER=$(uuidgen)
-        ./dnf-testing.sh -c $CONTAINER build jjb
-
-        TESTS=($(./dnf-testing.sh -c $CONTAINER list))
-        mkdir "test-results"
-        TEST_DIR=`readlink -f "test-results"`
-        parallel -j2 ./dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
+        # convert newlines to spaces (output variable assignment below doesn't support newlines)
+        PACKAGE_URLS="$(tr '\n' ' ' < rpmlist)"
+        echo "::set-output name=package-urls::$PACKAGE_URLS"
