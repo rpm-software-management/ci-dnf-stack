@@ -1,0 +1,31 @@
+name: Run DNF Integration Tests
+
+inputs:
+  package-urls:
+    description: The URLs of RPM packages to test
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Integration Tests
+      shell: bash
+      run: |
+        # needed for podman user containers to work
+        export STORAGE_OPTS='overlay2.mount_program=/usr/bin/fuse-overlayfs'
+        echo "[engine]" > /etc/containers/containers.conf
+        echo "cgroup_manager = \"cgroupfs\"" >> /etc/containers/containers.conf
+        echo "events_logger = \"file\"" >> /etc/containers/containers.conf
+
+        echo "Downloading RPMs:"
+        for RPM in ${{inputs.package-urls}}; do
+          wget -P rpms ${RPM};
+        done
+
+        CONTAINER=$(uuidgen)
+        ./dnf-testing.sh -c $CONTAINER build jjb
+
+        TESTS=($(./dnf-testing.sh -c $CONTAINER list))
+        mkdir "test-results"
+        TEST_DIR=`readlink -f "test-results"`
+        parallel -j2 ./dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
