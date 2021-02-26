@@ -20,7 +20,7 @@
 #       then install packages from local rpms/ folder
 
 
-FROM fedora:32
+FROM fedora:33
 ARG TYPE=local
 
 
