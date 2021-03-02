@@ -111,8 +111,8 @@ Scenario: Install and upgrade from context with broken dependencies => static_co
   Modular dependency problem:
 
    Problem: module nodejs:5:30180801080004:6c81f848.x86_64 requires module(postgresql:9.8), but none of the providers can be installed
-    - module postgresql:9.8:20180816142114:9c81f899.x86_64 conflicts with module(postgresql) provided by postgresql:9.6:30180816142114:7c81f878.x86_64
     - module postgresql:9.6:30180816142114:7c81f878.x86_64 conflicts with module(postgresql) provided by postgresql:9.8:20180816142114:9c81f899.x86_64
+    - module postgresql:9.8:20180816142114:9c81f899.x86_64 conflicts with module(postgresql) provided by postgresql:9.6:30180816142114:7c81f878.x86_64
     - cannot install the best candidate for the job
     - conflicting requests
   Error: 
