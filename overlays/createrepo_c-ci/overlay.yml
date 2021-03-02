@@ -1,0 +1,9 @@
+---
+aliases:
+  - name: github
+    url: https://github.com/
+
+components:
+  - name: createrepo_c
+    git:
+      src: github:rpm-software-management/createrepo_c.git

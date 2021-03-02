@@ -4,6 +4,9 @@ inputs:
   copr-user:
     description: The Copr user to build packages under
     required: true
+  overlay:
+    description: The rpm-gitoverlay overlay name to build (default is dnf-ci)
+    default: dnf-ci
 
 outputs:
   package-urls:
@@ -29,7 +32,7 @@ runs:
       run: |
         PROJECT_NAME="CI-${{github.event.pull_request.head.repo.name}}-pr${{github.event.pull_request.number}}"
         # if there's a git already checked out in the `gits` directory, rpm-gitoverlay will use it
-        rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s overlays/dnf-ci rpm copr --owner "${{inputs.copr-user}}" --project "$PROJECT_NAME" --chroot fedora-33-x86_64 --delete-project-after-days=7
+        rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner "${{inputs.copr-user}}" --project "$PROJECT_NAME" --chroot fedora-33-x86_64 --delete-project-after-days=7
 
         # delete the Copr secret just to be on the safe(er) side when running potentially untrusted PR code (albeit in a container, which should be secure)
         rm -rf "$HOME/.config/copr"
