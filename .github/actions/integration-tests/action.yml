@@ -1,6 +1,8 @@
 name: Run DNF Integration Tests
 
 inputs:
+  suite:
+    description: The suite to run (default is "dnf", which is in the "features" directory)
   package-urls:
     description: The URLs of RPM packages to test
     required: true
@@ -22,10 +24,13 @@ runs:
           wget -P rpms ${RPM};
         done
 
+        SUITE=""
+        if [ -n "${{inputs.suite}}" ]; then SUITE="-s ${{inputs.suite}}"; fi
+
         CONTAINER=$(uuidgen)
         ./dnf-testing.sh -c $CONTAINER build jjb
 
-        TESTS=($(./dnf-testing.sh -c $CONTAINER list))
+        TESTS=($(./dnf-testing.sh -c $CONTAINER $SUITE list))
         mkdir "test-results"
         TEST_DIR=`readlink -f "test-results"`
-        parallel -j2 ./dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
+        parallel -j2 ./dnf-testing.sh --container "$CONTAINER" $SUITE run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
