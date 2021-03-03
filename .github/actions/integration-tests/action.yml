@@ -3,6 +3,7 @@ name: Run DNF Integration Tests
 inputs:
   suite:
     description: The suite to run (default is "dnf", which is in the "features" directory)
+    default: "dnf"
   package-urls:
     description: The URLs of RPM packages to test
     required: true
@@ -24,8 +25,9 @@ runs:
           wget -P rpms ${RPM};
         done
 
-        SUITE=""
-        if [ -n "${{inputs.suite}}" ]; then SUITE="-s ${{inputs.suite}}"; fi
+        SUITE="${{inputs.suite}}"
+        if [ "${SUITE}" = "dnf" ]; then SUITE="features"; fi  # hack the wrong name of the dnf test suite
+        SUITE="-s ${SUITE}"
 
         CONTAINER=$(uuidgen)
         ./dnf-testing.sh -c $CONTAINER build jjb
