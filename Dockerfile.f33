@@ -68,6 +68,7 @@ RUN set -x && \
         rpm-build \
         rpm-sign \
         sqlite \
+        attr \
         # if TYPE == local, install debugging tools
         $(if [ "$TYPE" == "local" ]; then \
             echo \
