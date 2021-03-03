@@ -19,19 +19,24 @@ runs:
     - name: Rebase the pull request on target branch
       shell: bash
       run: |
-        pushd gits/${{github.event.pull_request.head.repo.name}}
+        REPO_NAME="${{github.event.pull_request.head.repo.name}}"
+        # if the triggering repo is ci-dnf-stack, the git we are rebasing is in the current directory
+        # otherwise, it's cloned into the gits directory for rpm-overlay to build from
+        if [ ${REPO_NAME} != "ci-dnf-stack" ]; then
+          cd gits/${REPO_NAME}
+        fi
+
         git config user.name github-actions
         git config user.email github-actions@github.com
         echo "Rebasing \"`git log --oneline -1`\" on ${{github.event.pull_request.base.ref}}: \"`git log --oneline -1 origin/${{github.event.pull_request.base.ref}}`\""
         git rebase origin/${{github.event.pull_request.base.ref}}
-        popd
 
     - name: Build packages in Copr
       id: copr-build
       shell: bash
       run: |
         PROJECT_NAME="CI-${{github.event.pull_request.head.repo.name}}-pr${{github.event.pull_request.number}}"
-        # if there's a git already checked out in the `gits` directory, rpm-gitoverlay will use it
+        # if there's a git already cloned in the `gits` directory, rpm-gitoverlay will use it
         rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner "${{inputs.copr-user}}" --project "$PROJECT_NAME" --chroot fedora-33-x86_64 --delete-project-after-days=7
 
         # delete the Copr secret just to be on the safe(er) side when running potentially untrusted PR code (albeit in a container, which should be secure)
