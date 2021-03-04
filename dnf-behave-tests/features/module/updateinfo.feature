@@ -93,3 +93,42 @@ Given I use repository "dnf-ci-fedora"
       FEDORA-2019-0329090518 enhancement nodejs-1:8.14.0-1.x86_64
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
+
+@bz1804234
+Scenario: Show applicable advisories only from active contexts
+Given I use repository "dnf-ci-multicontext-modular-advisory"
+ When I execute dnf with args "module enable perl:5.24"
+ Then the exit code is 0
+  And modules state is following
+      | Module     | State     | Stream    | Profiles  |
+      | perl       | enabled   | 5.24      |           |
+
+ When I execute dnf with args "install test-perl-DBI-0:1-1.module_el8+7554+8763afg8.x86_64"
+ Then the exit code is 0
+  And Transaction is following
+      | Action                | Package                                                |
+      | install               | test-perl-DBI-0:1-1.module_el8+7554+8763afg8.x86_64    |
+      | install-dep           | test-perl-0:5.24-2.module_el8+4182+3467aeg6.x86_64     |
+      | module-stream-enable  | perl-DBI:master                                        |
+  When I execute dnf with args "updateinfo --list"
+  Then the exit code is 0
+   And stdout is
+      """
+      <REPOSYNC>
+      FEDORA-2019-0329090518 enhancement test-perl-DBI-1-2.module_el8+6587+9879afr5.x86_64
+      """
+  When I execute dnf with args "check-update --enhancement"
+  Then the exit code is 100
+   And stdout contains "test-perl-DBI.x86_64\s+1-2.module_el8\+6587\+9879afr5\s+dnf-ci-multicontext-modular-advisory"
+  When I execute dnf with args "update --enhancement"
+  Then the exit code is 0
+   And Transaction is following
+      | Action                | Package                                               |
+      | upgrade               | test-perl-DBI-0:1-2.module_el8+6587+9879afr5.x86_64   |
+  When I execute dnf with args "updateinfo"
+  Then the exit code is 0
+   And stdout is
+      """
+      <REPOSYNC>
+
+      """
