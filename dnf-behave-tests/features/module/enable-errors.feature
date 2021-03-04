@@ -105,7 +105,7 @@ Scenario: Fail to enable a module stream when specifying only module
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
-        Argument 'nodejs' matches 4 streams ('8', '10', '11', '12') of module 'nodejs', but non of the streams are enabled or default
+        Argument 'nodejs' matches 4 streams ('8', '10', '11', '12') of module 'nodejs', but none of the streams are enabled or default
         Unable to resolve argument nodejs
         Error: Problems in request:
         broken groups or modules: nodejs

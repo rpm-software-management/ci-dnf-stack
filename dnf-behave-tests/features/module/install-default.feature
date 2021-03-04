@@ -31,7 +31,7 @@ Scenario: Install module, no default stream or profile defined, expecting no pro
     And Transaction is empty
     And stderr is
         """
-        Argument 'DnfCiModuleNoDefaults' matches 2 streams ('development', 'stable') of module 'DnfCiModuleNoDefaults', but non of the streams are enabled or default
+        Argument 'DnfCiModuleNoDefaults' matches 2 streams ('development', 'stable') of module 'DnfCiModuleNoDefaults', but none of the streams are enabled or default
         Unable to resolve argument DnfCiModuleNoDefaults
         Error: Problems in request:
         broken groups or modules: DnfCiModuleNoDefaults
