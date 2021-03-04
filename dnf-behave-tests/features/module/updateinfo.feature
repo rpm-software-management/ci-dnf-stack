@@ -76,6 +76,7 @@ Given I use repository "dnf-ci-fedora"
  Then stdout is
       """
       <REPOSYNC>
+      FEDORA-2019-0329090518 enhancement nodejs-1:8.14.0-1.x86_64
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
 
