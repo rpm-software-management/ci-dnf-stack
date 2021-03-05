@@ -214,3 +214,29 @@ Scenario: Keep reason for installonly packages
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
+
+@bz1926261
+Scenario: Value 1 of installonly_limit config option is not allowed
+  Given I configure dnf with
+        | key               | value     |
+        | installonly_limit | 1         |
+   When I execute dnf with args " "
+   Then the exit code is 0
+    And stderr matches line by line
+    """
+    Invalid configuration value: installonly_limit=1 in .*/etc/dnf/dnf.conf; value 1 is not allowed
+    """
+
+@bz1926261
+Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value is used instead of invalid 1)
+  Given I configure dnf with
+        | key               | value     |
+        | installonly_limit | 1         |
+    And I successfully execute dnf with args "install kernel-core"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
+        | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
