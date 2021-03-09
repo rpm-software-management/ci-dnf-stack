@@ -55,7 +55,8 @@ def before_step(context, step):
 
 
 def after_step(context, step):
-    pass
+    if step.status == model.Status.failed:
+        print_last_command(context)
 
 
 def before_scenario(context, scenario):
@@ -70,7 +71,6 @@ def before_scenario(context, scenario):
 def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
         context.tempdir_manager.scenario_failed = True
-        print_last_command(context)
 
     del context.tempdir_manager
 
