@@ -82,7 +82,7 @@ Scenario: Installation with untrusted repository should fail
     And stderr matches line by line
     """
     Errors during downloading metadata for repository 'simple-base':
-      - Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem: self signed certificate in certificate chain\]
+      - Curl error \(60\): .* for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem: self signed certificate in certificate chain\]
     Error: Failed to download metadata for repo 'simple-base': Cannot download repomd\.xml: Cannot download repodata/repomd\.xml: All mirrors were tried
     """
 
