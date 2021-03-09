@@ -23,6 +23,7 @@ Scenario: Transaction callback of removed plugin is not executed
     And stdout does not contain "watermelon-dnf-plugin transaction()"
 
 
+@not.with_os=rhel__eq__8
 @bz1929163
 Scenario: Removal of plugin in splitted package is detected
   Given I successfully execute dnf with args "install watermelon-1.0"
@@ -36,6 +37,7 @@ Scenario: Removal of plugin in splitted package is detected
     And stdout does not contain "watermelon-dnf-plugin transaction()"
 
 
+@not.with_os=rhel__eq__8
 @bz1929163
 Scenario: Moving plugin between subpackages is not considered removal of plugin
   Given I execute dnf with args "install watermelon-dnf-plugin-2.0"
