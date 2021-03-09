@@ -58,16 +58,15 @@ def assert_exitcode(context, exitcode):
 def print_last_command(context):
     cmd = context.cmd.replace(consts.INVALID_UTF8_CHAR, "\\udcfd")
     if getattr(context, "cmd", ""):
-        print(
-            "%sLast Command: %s%s" %
-            (escapes["failed"], escapes["failed_arg"], cmd)
-        )
-        print(escapes["reset"])
+        print(escapes["failed"])
+        print("Last Command: %s%s" % (escapes["failed_arg"], cmd))
     if getattr(context, "cmd_stdout", ""):
-        print("%sLast Command stdout:%s" % (escapes['outline_arg'], escapes['executing']))
+        print(escapes["outline_arg"])
+        print("Last Command stdout:%s" % (escapes['executing'], ))
         print(context.cmd_stdout.strip())
-        print(escapes["reset"])
     if getattr(context, "cmd_stderr", ""):
-        print("%sLast Command stderr:%s" % (escapes['outline_arg'], escapes['executing']))
+        print(escapes["outline_arg"])
+        print("Last Command stderr:%s" % (escapes['executing'], ))
         print(context.cmd_stderr.strip())
-        print(escapes["reset"])
+
+    print(escapes["reset"])
