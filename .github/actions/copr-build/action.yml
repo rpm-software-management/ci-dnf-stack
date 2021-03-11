@@ -19,7 +19,7 @@ runs:
     - name: Rebase the pull request on target branch
       shell: bash
       run: |
-        REPO_NAME="${{github.event.pull_request.repository.name}}"
+        REPO_NAME="${{github.event.repository.name}}"
         # if the triggering repo is ci-dnf-stack, the git we are rebasing is in the current directory
         # otherwise, it's cloned into the gits directory for rpm-overlay to build from
         if [ ${REPO_NAME} != "ci-dnf-stack" ]; then
@@ -35,7 +35,7 @@ runs:
       id: copr-build
       shell: bash
       run: |
-        PROJECT_NAME="CI-${{github.event.pull_request.repository.name}}-pr${{github.event.pull_request.number}}"
+        PROJECT_NAME="CI-${{github.event.repository.name}}-pr${{github.event.pull_request.number}}"
         # if there's a git already cloned in the `gits` directory, rpm-gitoverlay will use it
         rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner "${{inputs.copr-user}}" --project "$PROJECT_NAME" --chroot fedora-33-x86_64 --delete-project-after-days=7
 
