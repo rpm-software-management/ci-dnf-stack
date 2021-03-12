@@ -215,6 +215,29 @@ Examples:
         | reset    |
 
 
+@bz1847035
+Scenario: Fail-safe modulemd copy is deleted after module disable all modules
+   When I execute dnf with args "module enable nodejs:5"
+   Then the exit code is 0
+    And Transaction contains
+        | Action                    | Package                |
+        | module-stream-enable      | nodejs:5               |
+    And modules state is following
+        | Module         | State     | Stream    | Profiles  |
+        | nodejs         | enabled   | 5         |           |
+   Then file "/var/lib/dnf/modulefailsafe/" exists
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   Then stdout is
+        """
+        nodejs:5:x86_64.yaml
+        """
+   When I execute dnf with args "module disable '*'"
+   Then the exit code is 0
+    And file "/var/lib/dnf/modulefailsafe/" exists
+   When I execute "ls {context.dnf.installroot}/var/lib/dnf/modulefailsafe/"
+   Then stdout is empty
+
+
 @bz1616167
 @bz1623128
 Scenario: Fail-safe modulemd copy is created during transaction (module enable, install upgrade)
