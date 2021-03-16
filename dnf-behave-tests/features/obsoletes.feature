@@ -31,6 +31,40 @@ Scenario: Install of obsoleting package, even though higher version than obsolet
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
 
 
+Scenario: Do not install of obsoleting package using upgrade command, when obsoleted package not on the system
+   When I execute dnf with args "upgrade PackageA-Obsoleter"
+   Then the exit code is 1
+    And Transaction is empty
+
+
+@bz1818118
+Scenario: Install of obsoleting package using upgrade command, when obsoleted package on the system
+  Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageE-0:1.0-1.x86_64                   |
+   When I execute dnf with args "upgrade PackageA-Obsoleter"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
+        | obsoleted     | PackageE-0:1.0-1.x86_64                   |
+
+@bz1818118
+Scenario: Install of obsoleting package from commandline using upgrade command, when obsoleted package on the system
+  Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageE-0:1.0-1.x86_64                   |
+   When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-obsoletes/x86_64/PackageA-Obsoleter-1.0-1.x86_64.rpm"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
+        | obsoleted     | PackageE-0:1.0-1.x86_64                   |
+
 Scenario: Upgrade of obsoleted package by package of higher version than obsoleted
    When I execute dnf with args "install PackageA-1.0"
    Then the exit code is 0
