@@ -4,7 +4,6 @@ set -euo pipefail
 RESERVE=0
 TAGS=""
 NAMES=()
-FEATURE_PATH="/opt/behave"
 FEATURE_FILE=""
 DEFINES=""
 DNFCOMMAND=""
@@ -22,11 +21,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [ ! -f "$FEATURE_PATH/$FEATURE_FILE" ]; then
-    echo "Feature file not found: $FEATURE_PATH/$FEATURE_FILE" >&2
-    exit 1
-fi
-
 if [ "$DNFCOMMAND" ]; then
     DEFINES="$DEFINES -D dnf_command=$DNFCOMMAND"
 fi
@@ -40,7 +34,7 @@ elif [ "$RESERVE" == "-R" ]; then
 fi
 
 TEST_EXIT=0
-behave $DEFINES $TAGS "${NAMES[@]}" --no-skipped --junit --junit-directory="/junit/$JUNIT_SUBDIR" "$FEATURE_PATH/$FEATURE_FILE" || TEST_EXIT=$?
+behave $DEFINES $TAGS "${NAMES[@]}" --no-skipped --junit --junit-directory="/junit/$JUNIT_SUBDIR" "$FEATURE_FILE" || TEST_EXIT=$?
 
 if [ "$RESERVE" == "-r" ] || [ "$RESERVE" == "-R" -a $TEST_EXIT -ne 0 ]; then
     bash || :
