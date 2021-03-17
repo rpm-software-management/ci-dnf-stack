@@ -9,6 +9,7 @@ Background:
       And I move the clock forward to "the present"
       And I use repository "dnf-ci-fedora-updates"
 
+@bz1913962
 Scenario: Update core packages
     Given I execute dnf with args "upgrade kernel basesystem"
       And I execute dnf with args "upgrade glibc"
