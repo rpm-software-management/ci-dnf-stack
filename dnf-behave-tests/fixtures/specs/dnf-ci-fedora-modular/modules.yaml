@@ -7,7 +7,10 @@ data:
   version: 20150811143428
   context: 6c81f848
   arch: x86_64
-  summary: Javascript runtime
+  summary: >-
+    Javascript runtime module with quite a long
+
+    summary that contains an empty line.
   description: >-
     Node.js is a platform built on Chrome''s JavaScript runtime for easily building
     fast, scalable network applications. Node.js uses an event-driven, non-blocking
