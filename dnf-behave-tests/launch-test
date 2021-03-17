@@ -28,11 +28,6 @@ if [ ! -f "$FEATURE_PATH/$FEATURE_FILE" ]; then
 fi
 
 if [ "$DNFCOMMAND" ]; then
-    # this copy is needed to distinguish dnf-2 and dnf-3 results in
-    # name attribute of junit *.xml results files
-    COPY_NAME="$(dirname $FEATURE_FILE)/$DNFCOMMAND-$(basename $FEATURE_FILE)"
-    ln -fs "$FEATURE_PATH/$FEATURE_FILE" "$FEATURE_PATH/$COPY_NAME"
-    FEATURE_FILE="$COPY_NAME"
     DEFINES="$DEFINES -D dnf_command=$DNFCOMMAND"
 fi
 
