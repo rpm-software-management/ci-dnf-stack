@@ -159,3 +159,9 @@ Scenario: Modules are ordered by repository then module name and stream name
     And stdout section "dnf-ci-fedora-modular test repository" contains "postgresql\s+6.*\n\s*postgresql\s+9.6"
     And stdout section "dnf-ci-fedora-modular-updates test repository" contains "nodejs\s+8.*\n\s*nodejs\s+10.*\n\s*nodejs\s+11.*\n\s*nodejs\s+12"
     And stdout section "dnf-ci-fedora-modular-updates test repository" contains "postgresql\s+9.6.*\n\s*postgresql\s+10.*\n\s*postgresql\s+11"
+
+
+Scenario: Correctly display module summary that contains empty lines
+   When I execute dnf with args "module list nodejs:5"
+   Then the exit code is 0
+    And stdout section "dnf-ci-fedora-modular test repository" contains "Javascript runtime module with quite a long summary that contains an empty line."

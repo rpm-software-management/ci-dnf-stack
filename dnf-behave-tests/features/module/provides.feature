@@ -29,7 +29,8 @@ Scenario: I can get list of all modules providing specific package
       Module   : nodejs:5:20150811143428:6c81f848:x86_64
       Profiles : development
       Repo     : dnf-ci-fedora-modular
-      Summary  : Javascript runtime
+      Summary  : Javascript runtime module with quite a long
+               : summary that contains an empty line.
 
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
@@ -63,7 +64,8 @@ Given I successfully execute dnf with args "module enable nodejs:8"
       Module   : nodejs:5:20150811143428:6c81f848:x86_64
       Profiles : development
       Repo     : dnf-ci-fedora-modular
-      Summary  : Javascript runtime
+      Summary  : Javascript runtime module with quite a long
+               : summary that contains an empty line.
 
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
@@ -97,7 +99,8 @@ Given I successfully execute dnf with args "module enable nodejs:8"
       Module   : nodejs:5:20150811143428:6c81f848:x86_64
       Profiles : development
       Repo     : dnf-ci-fedora-modular
-      Summary  : Javascript runtime
+      Summary  : Javascript runtime module with quite a long
+               : summary that contains an empty line.
 
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64
@@ -132,7 +135,8 @@ Given I successfully execute dnf with args "module enable nodejs:8"
       Module   : nodejs:5:20150811143428:6c81f848:x86_64
       Profiles : development
       Repo     : dnf-ci-fedora-modular
-      Summary  : Javascript runtime
+      Summary  : Javascript runtime module with quite a long
+               : summary that contains an empty line.
 
       nodejs-devel-1:8.11.4-1.module_2030+42747d40.x86_64
       Module   : nodejs:8:20180801080000:6c81f848:x86_64

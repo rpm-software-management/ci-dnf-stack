@@ -153,7 +153,8 @@ Scenario: Get info for a module, only module name specified
       Profiles         : default, development, minimal
       Default profiles : 
       Repo             : dnf-ci-fedora-modular
-      Summary          : Javascript runtime
+      Summary          : Javascript runtime module with quite a long
+                       : summary that contains an empty line.
       Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
       Requires         : platform:[f29]
       Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
@@ -377,7 +378,8 @@ Scenario: Get info for an enabled stream, module name and stream specified
         Profiles         : default, development, minimal
         Default profiles : 
         Repo             : dnf-ci-fedora-modular
-        Summary          : Javascript runtime
+        Summary          : Javascript runtime module with quite a long
+                         : summary that contains an empty line.
         Description      : Node.js is a platform built on Chrome''s JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
         Requires         : platform:[f29]
         Artifacts        : nodejs-1:5.3.1-1.module_2011+41787af0.src
