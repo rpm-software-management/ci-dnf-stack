@@ -3,8 +3,8 @@
 # the script modifies the test suite files so it can be run on different architectures
 # Usage:
 #  $ ./arch-switch
-#  $ ./dnf-testing.sh build
-#  $ ./dnf-testing.sh run
+#  $ ./container-test build
+#  $ ./container-test run
 
 set -xe
 

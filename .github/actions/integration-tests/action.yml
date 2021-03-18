@@ -30,9 +30,9 @@ runs:
         SUITE="-s ${SUITE}"
 
         CONTAINER=$(uuidgen)
-        ./dnf-testing.sh -c $CONTAINER build jjb
+        ./container-test -c $CONTAINER build jjb
 
-        TESTS=($(./dnf-testing.sh -c $CONTAINER $SUITE list))
+        TESTS=($(./container-test -c $CONTAINER $SUITE list))
         mkdir "test-results"
         TEST_DIR=`readlink -f "test-results"`
-        parallel -j2 ./dnf-testing.sh --container "$CONTAINER" $SUITE run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
+        parallel -j2 ./container-test --container "$CONTAINER" $SUITE run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
