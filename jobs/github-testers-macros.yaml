@@ -231,7 +231,7 @@
               join , "{{${{RPMS[@]}}}}" | xargs curl -O
             popd
             CONTAINER=$(uuidgen)
-            ./dnf-testing.sh -c $CONTAINER build jjb
+            ./container-test -c $CONTAINER build jjb
           popd
 
           echo "CONTAINER=$CONTAINER" > props
@@ -277,14 +277,14 @@
           #!/bin/bash
           set -xeuo pipefail
 
-          TESTS=($(./ci-dnf-stack/dnf-testing.sh -c $CONTAINER list))
+          TESTS=($(./ci-dnf-stack/container-test -c $CONTAINER list))
           #COMMANDS=('dnf-2' 'dnf-3')
           COMMANDS=('dnf-3')
           for cmd in ${{COMMANDS[@]}}; do
               mkdir -p "test-results/$cmd"
               TEST_DIR=`readlink -f "test-results/$cmd"`
               chcon -Rt svirt_sandbox_file_t "$TEST_DIR"
-              parallel -j2 ./ci-dnf-stack/dnf-testing.sh --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
+              parallel -j2 ./ci-dnf-stack/container-test --container "$CONTAINER" run --junit-directory "$TEST_DIR" --noxfail --command "$cmd" "{{}}" ::: "${{TESTS[@]}}" || :
           done
 
       # Analyze results
