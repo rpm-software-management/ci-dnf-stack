@@ -131,5 +131,4 @@ RUN set -x && \
     ./build.sh --force-rebuild
 
 
-VOLUME ["/opt/behave/junit"]
 WORKDIR /opt/behave
