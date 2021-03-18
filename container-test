@@ -315,29 +315,26 @@ class BehaveRunner(object):
         '''
         def process_feature(feature, scenarios):
             '''
+            Processes scenarios in a feature file and splits them according to
+            the destructive tags. Each destructive scenario is yielded
+            separately. If there are non-destructive scenarios, a single pair
+            (feature_name, None) is returned to run them in bulk.
+
             feature: tuple (feature file name, set(feature tags))
             scenarios: list of tuples [(scenario name, set(scenario tags))]
-            yields behave options for running the feature
+            yields (feature_name, scenario_name)
             '''
             feature_name, feature_tags = feature
             nondestructive_tests = False
-            i = 1
+
             for scenario_name, scenario_tags in scenarios:
                 if feature_tags.union(scenario_tags).intersection(DESTRUCTIVE_TAGS):
-                    # destructive tests are run one scenario per container
-                    yield ['-n', '^{} *$'.format(re.escape(scenario_name)),
-                           '-j', '{}_{}'.format(feature_name, i),
-                           self.prepend_featuresdir(feature_name)]
-                    i += 1
+                    yield (feature_name, scenario_name)
                 else:
                     nondestructive_tests = True
+
             if nondestructive_tests:
-                # run all remaining non-destructive scenarios at once
-                options = [self.prepend_featuresdir(feature_name),
-                           '-j', '{}_0'.format(feature_name)]
-                for tag in DESTRUCTIVE_TAGS:
-                    options.extend(['--tags', '~{}'.format(tag)])
-                yield options
+                yield (feature_name, None)
 
         command = self.docker_bin + ['run', '--rm']
         command += self.param_tty
@@ -351,12 +348,25 @@ class BehaveRunner(object):
         command += self.param_dnfcommand
         failed = set()
         for feature, scenarios in self.dry_run():
-            for test_options in process_feature(feature, scenarios):
+            i = 1
+            for feature_name, scenario_name in process_feature(feature, scenarios):
+                if scenario_name is not None:
+                    run_args = ['-n', '^{} *$'.format(re.escape(scenario_name)), '-j', '{}_{}'.format(feature_name, i)]
+                    i += 1
+                else:
+                    run_args = ['-j', '{}_0'.format(feature_name)]
+                    for tag in DESTRUCTIVE_TAGS:
+                        run_args.extend(['--tags', '~{}'.format(tag)])
+
+                run_args.append(self.prepend_featuresdir(feature_name))
+
                 if self.command_line_args.verbose:
-                    print("Running command:", ' '.join(command + test_options), '\n')
-                returncode = subprocess.call(command + test_options)
+                    print("Running command:", ' '.join(command + run_args), '\n')
+
+                returncode = subprocess.call(command + run_args)
                 if returncode > 0:
                     failed.add(feature[0])
+
         if failed:
             error('\n'.join(['Failed test(s):'] + sorted(failed)))
 
