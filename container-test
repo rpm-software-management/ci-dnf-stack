@@ -259,18 +259,12 @@ class BehaveRunner(object):
 
         return tests
 
-    def prepend_featuresdir(self, feature):
-        if not feature.startswith('{}/'.format(self.command_line_args.suite)):
-            return os.path.join(self.command_line_args.suite, feature)
-        else:
-            return feature
-
     def dry_run(self):
         command = self.docker_bin + ['run', '--rm']
         command += self.volumes
         command += [self.command_line_args.container, 'behave', '--dry-run']
-        if hasattr(self.command_line_args, 'featurefiles') and self.command_line_args.featurefiles:
-            command += [self.prepend_featuresdir(a) for a in self.command_line_args.featurefiles]
+        if getattr(self.command_line_args, 'featurefiles', []):
+            command += [os.path.join(self.command_line_args.suite, a) for a in self.command_line_args.featurefiles]
         else:
             command += [self.command_line_args.suite]
         returncode, stdout, stderr = execute(command)
@@ -290,8 +284,13 @@ class BehaveRunner(object):
         '''
         List all features available in the container.
         '''
+        def remove_prefix(text, prefix):
+            if text.startswith(prefix):
+                return text[len(prefix):]
+            return text
+
         for (feature, scenarios) in self.dry_run():
-            print(feature[0])
+            print(remove_prefix(feature[0], self.command_line_args.suite + "/"))
 
     def command_shell(self):
         '''
@@ -361,7 +360,7 @@ class BehaveRunner(object):
                     for tag in DESTRUCTIVE_TAGS:
                         run_args.extend(['--tags', '~{}'.format(tag)])
 
-                run_args.append(self.prepend_featuresdir(feature_name))
+                run_args.append(feature_name)
 
                 if self.command_line_args.verbose:
                     print("Running command:", ' '.join(command + run_args), '\n')
