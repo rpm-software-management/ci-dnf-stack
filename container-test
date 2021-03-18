@@ -160,13 +160,6 @@ class BehaveRunner(object):
         return retval
 
     @property
-    def param_dnfcommand(self):
-        retval = []
-        if self.command_line_args.dnf_command:
-            retval.extend(['--command', self.command_line_args.dnf_command])
-        return retval
-
-    @property
     def docker_bin(self):
         '''
         Autodetection whether podman (default) or docker is gonna be used
@@ -336,25 +329,35 @@ class BehaveRunner(object):
             if nondestructive_tests:
                 yield (feature_name, None)
 
-        command = self.docker_bin + ['run', '--rm']
-        command += self.param_tty
-        command += self.volumes
+        def param_junit(feature_name, i):
+            return ['--junit-directory="/junit/{}_{}"'.format(feature_name, i)]
+
+
+        command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes
+
         if not self.command_line_args.enable_network:
             command += ['--net', 'none']
-        command += [self.command_line_args.container, './launch-test']
+
+        command += [self.command_line_args.container, './container-test-wrapper']
         command += self.param_reserve
+
+        command += ['--', '--no-skipped', '--junit']
+
         for tag in self.tags:
             command += ['--tags', tag]
-        command += self.param_dnfcommand
+
+        if self.command_line_args.dnf_command:
+            command.extend(['-D dnf_command={}'.format(self.command_line_args.dnf_command)])
+
         failed = set()
         for feature, scenarios in self.dry_run():
             i = 1
             for feature_name, scenario_name in process_feature(feature, scenarios):
                 if scenario_name is not None:
-                    run_args = ['-n', '^{} *$'.format(re.escape(scenario_name)), '-j', '{}_{}'.format(feature_name, i)]
+                    run_args = ['-n', '^{} *$'.format(re.escape(scenario_name))] + param_junit(feature_name, i)
                     i += 1
                 else:
-                    run_args = ['-j', '{}_0'.format(feature_name)]
+                    run_args = param_junit(feature_name, 0)
                     for tag in DESTRUCTIVE_TAGS:
                         run_args.extend(['--tags', '~{}'.format(tag)])
 
