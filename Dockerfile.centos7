@@ -123,5 +123,4 @@ RUN echo -e "\
 destructive=yes\n\
 os=$OSVERSION" > /opt/behave/behave.ini
 
-VOLUME ["/opt/behave/junit"]
 WORKDIR /opt/behave
