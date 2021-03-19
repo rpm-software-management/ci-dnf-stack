@@ -1,152 +1,169 @@
 ci-dnf-stack
 ============
 
-ci-dnf-stack is a set of configuration and scripts that allow continuous
-integrations DNF (https://github.com/rpm-software-management/dnf) stack.
+This repository contains the integration test suite (a.k.a. the behave tests)
+of the DNF stack, along with tooling to run the suite in containers (which are
+used for sandboxing, some of the DNF tests are destructive to the system), and
+the shared CI setup for DNF stack components.
 
-This serves as an ad hoc solution to where to store routines that belong
-to all the components of the stack. It would be nice to merge them into
-the respective components.
+For documentation of the integration test suite based on behave, see
+[`dnf-behave-tests/README.md`](dnf-behave-tests/README.md).
 
-These scripts are free and open-source software; see the section License
-to understand the terms and conditions under which you can use, study,
-modify and distribute ci-dnf-stack.
 
-Dnf Docker Test in ci-dnf-stack
--------------------------------
+Running the Containerized Test Suite
+------------------------------------
 
-The project originated from richdeps-docker (https://github.com/shaded-enmity/richdeps-docker).
-Docker image for testing rich dependencies and CLI in DNF/RPM
-using the Behave framework. The project was optimized for incorporation to
-ci-dnf-stack as a module.
-Each test runs in it's own container making it possible to run multiple tests
-in parallel without interfering with each other. These tests are meant to
-verify that both DNF and RPM (if relevant) interpret the rich dependency semantics
-correctly and all functionality of DNF and related component is intact. Dnf Docker
-Test use its own feature files and steps descriptions placed in its directory
-(dnf-docker-test/).
+To set up clean and sandboxed environment, the integration test suite is run in
+containers. The dockerfiles in the root directory are used to build the image
+in which the tests are run.
 
-License
--------
+For destructive tests, each destructive scenario is run in its own container.
+For non-destructive tests one container per feature file is run.
 
-The project is licensed under the copyleft GNU General Public License;
-either version 2, or (at your option) any later version. See the
-LICENSE file found in the top-level directory of this distribution and
-at https://github.com/rpm-software-management/ci-dnf-stack/. No part of
-ci-dnf-stack, including this file, may be copied, modified, propagated,
-or distributed except according to the terms contained in the LICENSE
-file.
+### Building the Container Image to Run Tests
 
-Requirements
-------------
-
-* python
-* python3 >= 3.5
-* jenkins
-* docker
-* git-core
-* /usr/bin/rpmbuild
-* docker
-* jq
-
-For building in COPR:
-* python3-copr
-* python3-beautifulsoup4
-* python3-requests
-
-sudo should be configured for `jenkins` user to use `docker`:
+Build the container image for the tests:
 ```
-# cat << EOF > /etc/sudoers.d/99-jenkins
-jenkins ALL=(ALL) NOPASSWD: /usr/bin/docker
-EOF
+./container-test build
 ```
 
-To rebuild `test-1` or `upgrade_1` repository for Dnf Docker Test run
-`test-1.py` or `upgrade_1.py` in `dnf-docker-test/repo_create directory`.
-It requires following components:
-* python3-rpmfluff
+During the build, any RPMs found in the `rpms` directory are installed in the
+image. Place your RPMs to be tested in this directory. Barring these, the
+latest versions of the DNF stack RPMs from the dnf-nightly Copr repository (see
+[Nightly Builds](#Nightly-Builds) below) are installed on the system.
 
-Configuring Jenkins
--------------------
+The full integration test suite directory (`dnf-behave-tests`) is copied into
+the image during the build.
 
-We are using [jenkins-job-builder](http://docs.openstack.org/infra/jenkins-job-builder/)
-to manage jenkins jobs.
+### Running the Tests
 
-To deploy jobs you need configure your [jenkins_jobs.ini](http://docs.openstack.org/infra/jenkins-job-builder/execution.html)
-and run `jenkins-jobs --config=/path/to/jenkins_jobs.ini update jobs/`.
-
-Local run
----------
-
-Local test can be performed with dnf-testing.sh
-* Container build:
-  * Put your RPMs into ``rpms`` directory
-  * Then run ``dnf-testing.sh build``
-* Run tests:
-  * Run all tests with last built container: ``./dnf-testing.sh run``
-  * Run all tests with specified container: ``./dnf-testing.sh run -c <CONTAINER>``
-  * Run particular tests: ``./dnf-testing.sh run TEST-A.feature TEST-B.feature ...``
-* Run in devel mode:
-  * It shares local feature dir with description of tests and test steps with docker image, therefore you can develop CI stack on the fly.
-  * Use command ``./dnf-testing.sh run --devel $CONTAINER TEST-A``
-* Get help:
-  * ``./dnf-testing.sh --help``
-
-
-Describing a test
------------------
-
-Here's an example configuration from the first ported test:
-
+Run the integration test suite in containers:
 ```
-Feature: Install package with dependency
-
-    @setup
-    Scenario: Feature setup
-        Given repository "test" with packages
-           | Package | Tag      | Value |
-           | TestA   | Requires | TestB |
-           | TestB   |          |       |
-
-    Scenario: Install TestA from repository "test" with dependency TestB
-         When I save rpmdb
-          And I enable repository "test"
-          And I successfully run "dnf install -y TestA" with "success"
-         Then rpmdb changes are
-           | State     | Packages     |
-           | installed | TestA, TestB |
+./container-test run
 ```
 
-Possible states: installed, removed, absent, unchanged, reinstalled, updated, downgraded.
-The states unchanged and absent can be used
-for detailed description of tested step or to ensure, that required conditions before or after tested step were met.
+The integration test suite actually contains two distinct test suites, `dnf`
+(default, right now in the `features` directory) and `createrepo_c`. To specify
+the suite, use the `-s` switch:
+```
+./container-test -s createrepo_c run
+```
 
-Support
--------
+For development, it is possible to dynamically mount the features directory of
+the given suite by using the `-d` switch:
+```
+./container-test -s createrepo_c -d run
+```
 
-If you are having issues, please report them via the issue tracking
-system.
+To only run a subset of a suite, simply specify the feature files (this will
+run scenarios in `dnf-behave-tests/features/config.feature`, as `dnf` is the
+default test suite):
+```
+./container-test run config.feature
+```
 
-- issue tracker: https://github.com/rpm-software-management/ci-dnf-stack/issues
+For documentation of the rest of the options of the script, use `--help`:
+```
+./container-test --help
+./container-test COMMAND --help
+```
 
-Notes for functional testing
-----------------------------
 
-Repo upgrade_1:
-updateinfo.xml was added using modifyrepo_c updateinfo.xml path/upgrade_1/repodata/
+rpm-gitoverlay Overlays
+-----------------------
 
-Repo test-1-gpg:
-Was created from rpms in test-1 repo. All rpm were signed with gpg-pubkey-2d2e7ca3-56c1e69d	gpg(DNF Test1 (TESTER)
-<dnf@testteam.org>) except TestE (not signed), TestG (signed with key gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2
-(TESTER) <dnf@testteam.org>)), and TestJ (not signed and incorrect check-sum).
+The [rpm-gitoverlay](https://github.com/rpm-software-management/rpm-gitoverlay)
+tool is used to build the DNF stack RPMs in Copr. You can find rpm-gitoverlay
+RPM packages in [its own Copr repository](https://copr.fedorainfracloud.org/coprs/rpmsoftwaremanagement/rpm-gitoverlay/).
+Use `dnf copr enable rpmsoftwaremanagement/rpm-gitoverlay` to add the
+repository on your system.
 
-Repo upgrade_1-gpg:
-Was created from rpms in upgrade_1 repo. All rpm were signed with gpg-pubkey-705f3e8c-56c2e298	gpg(DNF Test2
-(TESTER) <dnf@testteam.org>) except both TestE (not signed) packages.
+The configurations for groups of packages to build can be found in the
+[`overlays`](overlays) directory.  As an example, assuming you have your [Copr
+API token configured](https://copr.fedorainfracloud.org/api/), you can build
+the `dnf-ci` overlay (the stack of packages that is tested by the `dnf` test
+suite) with this command:
+```
+rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s overlays/dnf-ci rpm copr --owner YOUR_COPR_USERNAME --project my-test-build --chroot fedora-33-x86_64 --delete-project-after-days=2
+```
 
-Contributions
--------------
+Where:
+- `-o rpmlist` will output the full list of built RPMs into the `rpmlist` file
+- `--gitdir=gits` specifies the directory to which rpm-gitoverlay will clone
+  the components' git repositories
+- `-s overlays/dnf-ci` specifies the path to the overlay to build
+- `--delete-project-after-days=2` will tell Copr to delete the project in two
+  days, meaning you don't have to clean up manually later
 
-Any contribution or feedback is more than welcome.
+You can then download the built RPMs into the `rpms/` directory:
+```
+for RPM in $(cat rpmlist); do wget -P rpms $RPM; done
+```
 
-- version control system: https://github.com/rpm-software-management/ci-dnf-stack
+And you're set to run the test suite on the RPMs.
+
+In case you want to build some components of the stack with your changes,
+simply set up your clone in `gits/COMPONENT` and run the above command. If
+`rpm-gitoverlay` finds an existing git repository for a component in the
+`--gitdir`, it will use it as-is.
+
+
+CI in Github Actions
+--------------------
+
+The DNF stack CI is implemented in Github Actions. The code that makes up the
+CI is located in [`.github/workflows/`](.github/workflows/) in this repository
+as well as in all the stack component repositories. The CI workflow files are
+mostly the same across the repositories, and some of the code is shared between
+them in form of actions, located in [`.github/actions/`](.github/actions/).
+
+The bootstrap of the CI (on a Pull Request) in Github Actions for a repository
+in the stack is done in a bit unconventional way:
+
+1. The first git repository that is cloned is this, `ci-dnf-stack`. This then
+makes the shared actions available to be called.
+
+2. Then, the Pull Request target repository is cloned into `gits/REPO` (the PR
+HEAD is checked out and subsequently rebased on the target branch to bring it
+up to date). This is then used directly by `rpm-gitoverlay`,
+[see above](#rpm-gitoverlay-overlays).
+
+### Workflow Host Image
+
+All DNF stack CI workflows run on a base Fedora container image. Since we need
+some additional tools installed, to save on installing these on a vanilla
+Fedora image on every CI run, we create a daily host image and store it in
+Github Container Registry. This is done in `.github/workflows/ci-host.yml`.
+
+### Setting Up the Workflows on a Fork
+
+For the Github Actions workflows to work on a fork, you need two secrets
+configured on your Github repository:
+- `COPR_USER`: Your Copr username; Since Github Actions automatically scrub any
+  secret value from the workflow outputs (e.g. in Copr URLs in the log), there
+  is a workaround to avoid this on the username: append a `#` (bash comment
+  sign) to the end of the secret. It is dropped in a bash variable assignment
+  in the workflow and the username is no longer masked in the output.
+- `COPR_API_TOKEN`: The full contents of [Copr API
+  token](https://copr.fedorainfracloud.org/api/) meant to go into
+  `~/.config/copr`.
+
+
+Nightly Builds
+--------------
+
+The DNF stack nightlies are built via a Github Actions workflow:
+`.github/workflows/nightly.yml`.
+
+The built nightlies can be found in the [rpmsoftwaremanagement
+Copr](https://copr.fedorainfracloud.org/coprs/rpmsoftwaremanagement/dnf-nightly/).
+
+
+Integration Tests of Users of the DNF Stack
+-------------------------------------------
+
+The aim is to run integration tests of projects that depend on the DNF stack,
+so that regressions can be caught early and close to the source.
+
+So far there's only the Ansible integration test suite (specifically its part
+that concerns DNF) integrated into our CI.
