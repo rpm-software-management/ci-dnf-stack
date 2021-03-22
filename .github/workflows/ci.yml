@@ -28,7 +28,7 @@ jobs:
   integration-tests:
     name: Integration Tests
     needs: permission-check
-    if: needs.permission-check.outputs.has-write == 'true' # TODO test this doesn't run if unprivileged
+    if: needs.permission-check.outputs.has-write == 'true'
     strategy:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
