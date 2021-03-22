@@ -60,6 +60,16 @@ def after_step(context, step):
 
 
 def before_scenario(context, scenario):
+    if "xfail" in scenario.effective_tags:
+        skip = True
+        for ors in context.config.tags.ands:
+            if "xfail" in ors:
+                skip = False
+                break
+
+        if skip:
+            scenario.skip(reason="Disabled by default by @xfail.")
+
     if context.tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip(reason="Disabled by OS version tag.")
 
