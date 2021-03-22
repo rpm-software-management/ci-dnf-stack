@@ -74,7 +74,7 @@ def command_line_parser():
         help="Pass specific tag to the behave command when running tests")
     run_parser.add_argument(
         "--noxfail", action="store_true", default=False,
-        help="Skip tests marked as @xfail (same as --tags ~@xfail)")
+        help="Skip tests marked as @xfail (same as --tags ~@xfail) (deprecated, skipping @xfail is now default)")
     run_parser.add_argument(
         "--command", metavar="COMMAND", dest="dnf_command",
         help="DNF command to be used in tests")
