@@ -61,7 +61,8 @@ def after_step(context, step):
 
 def before_scenario(context, scenario):
     if context.tag_matcher.should_exclude_with(scenario.effective_tags):
-        scenario.skip(reason="DISABLED ACTIVE-TAG")
+        scenario.skip(reason="Disabled by OS version tag.")
+
     context.tempdir_manager = TempDirManager(context.config.userdata)
 
     context.scenario.default_tmp_dir = context.tempdir_manager.tempdir
