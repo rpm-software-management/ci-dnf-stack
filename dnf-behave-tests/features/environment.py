@@ -216,12 +216,12 @@ def after_step(context, step):
 
 def before_scenario(context, scenario):
     if context.tag_matcher.should_exclude_with(scenario.effective_tags):
-        scenario.skip(reason="DISABLED ACTIVE-TAG")
+        scenario.skip(reason="Disabled by OS version tag.")
 
     # Skip if destructive and not explicitly allowed by the user
     if ((set(scenario.effective_tags) & set(consts.DESTRUCTIVE_TAGS)) and not
             context.config.userdata.get('destructive', 'no') == 'yes'):
-        scenario.skip(reason="DESTRUCTIVE")
+        scenario.skip(reason="Disabled by destructive tag.")
 
     # if we are skipping a scenario, don't create the environment
     # in case of a destructive scenario, that could mean modifying the current (non-temporary) system!
