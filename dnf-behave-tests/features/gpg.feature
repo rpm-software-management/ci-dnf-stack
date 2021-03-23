@@ -134,3 +134,25 @@ Scenario: Refuse to install a package with broken gpg signature
    Then the exit code is 1
    # dnf must not extract any files from the broken package
    Then file "/usr/share/doc/setup/README" does not exist
+
+
+@xfail
+@1941959
+Scenario: Expire repo when failed to install package with incorrect checksum
+  Given I drop repository "dnf-ci-gpg"
+    And I use repository "dnf-ci-gpg" as http
+    And I configure repository "dnf-ci-gpg" with
+        | key      | value |
+        | gpgcheck | 0     |
+        | gpgkey   |       |
+   When I execute dnf with args "install broken-package"
+   Then the exit code is 1
+    And DNF Transaction is following
+        | Action        | Package                               |
+        | install       | broken-package-0:0.2.4-1.fc29.noarch  |
+    And RPMDB Transaction is empty
+    And file "/var/cache/dnf/expired_repos.json" contents is
+        """
+        ["dnf-ci-gpg"]
+        """
+
