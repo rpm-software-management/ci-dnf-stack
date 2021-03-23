@@ -13,12 +13,15 @@ Background: Use repositories with priorities 1, 2, and 3
         | priority | 3     |
 
 
-Scenario: Install an RPM from the highest-priority repository
+Scenario: Install an RPM from the highest-priority repository and ensure that upgrade will not install update from the lower priority repository
    When I execute dnf with args "install flac"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | install       | flac-0:1.3.3-2.fc29.x86_64                |
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And Transaction is empty
 
 
 Scenario: Install an RPM of specific version from lower-priority repository
