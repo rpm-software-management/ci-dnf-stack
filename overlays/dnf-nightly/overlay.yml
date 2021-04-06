@@ -15,6 +15,7 @@ components:
       patches: drop
 
   - name: libmodulemd
+    version-from: git
     git:
       src: github:fedora-modularity/libmodulemd.git
       spec-path: fedora/libmodulemd.spec
