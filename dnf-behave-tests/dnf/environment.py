@@ -31,7 +31,7 @@ DEFAULT_PLATFORM_ID="platform:f29"
 
 
 class DNFContext(object):
-    def __init__(self, userdata, force_installroot=False, no_installroot=False):
+    def __init__(self, userdata, force_installroot=False, no_installroot=False, dnf5_mode=False):
         self._scenario_data = {}
 
         self.repos = {}
@@ -87,6 +87,7 @@ class DNFContext(object):
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
+        self.dnf5_mode = dnf5_mode
 
         self.preserve_temporary_dirs = "none"
         preserve = userdata.get("preserve", "no")
@@ -141,11 +142,11 @@ class DNFContext(object):
         result.append(self.assumeyes_option)
 
         # installroot can't be set via context for safety reasons
-        if self.installroot:
+        if self.installroot and self.installroot != "/":
             result.append("--installroot={0}".format(self.installroot))
 
         releasever = self._get("releasever")
-        if releasever:
+        if releasever and not self.dnf5_mode:
             result.append("--releasever={0}".format(releasever))
 
         module_platform_id = self._get("module_platform_id")
@@ -153,7 +154,7 @@ class DNFContext(object):
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
         disable_plugins = self._get("disable_plugins")
-        if disable_plugins:
+        if disable_plugins and not self.dnf5_mode:
             result.append("--disableplugin='*'")
         plugins = self._get("plugins") or []
         for plugin in plugins:
@@ -162,6 +163,11 @@ class DNFContext(object):
         setopts = self._get("setopts") or {}
         for key,value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
+
+        if self.dnf5_mode:
+            result.append("--setopt=reposdir=%s" % self.installroot + "/etc/yum.repos.d")
+            result.append("--setopt=config_file_path=%s" % self.installroot + "/etc/dnf/dnf.conf")
+            result.append("--setopt=cachedir=%s" % self.installroot + "/var/cache/dnf")
 
         return result
 
@@ -240,9 +246,17 @@ def before_scenario(context, scenario):
         context.dnf = None
         return
 
+    # if "dnf5" is in the commandline tags, turn on dnf5 mode
+    dnf5_mode = False
+    for ors in context.config.tags.ands:
+        if "dnf5" in ors:
+            dnf5_mode = True
+            break
+
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
-                             no_installroot='no_installroot' in scenario.effective_tags)
+                             no_installroot='no_installroot' in scenario.effective_tags,
+                             dnf5_mode = dnf5_mode)
 
     write_config(context)
 
