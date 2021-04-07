@@ -157,3 +157,22 @@ Scenario: When upgrading with best=1 (default), fail on broken packages
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade -x glibc-common-0:2.28-26.fc29.x86_64 --best"
    Then the exit code is 1
+
+# top requires middle (middle-0.15 and middle-0.18 available)
+# middle requires bottom (bottom-2.26 and bottom-2.48 available)
+# middle-0.18 requires bottom >= 2.48
+@bz1946975
+Scenario: Installed lower version of 2nd level dependency does not prevent installation of the best dependencies versions
+  Given I use repository "best"
+    # install older version of 2nd level dependency
+    And I successfully execute dnf with args "install bottom-2.26"
+   When I execute dnf with args "install --best top"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | top-0:3.0-1.fc29.noarch               |
+        | install-dep   | middle-0:0.18-1.fc29.noarch           |
+        | upgrade       | bottom-0:2.48-1.fc29.noarch           |
+
+
+
