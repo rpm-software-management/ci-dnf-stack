@@ -22,6 +22,10 @@ Conflicts:      initscripts < 4.26
 The setup package contains a set of important system configuration and
 setup files, such as passwd, group, and profile.
 
+%install
+touch README
+
 %files
+%doc README
 
 %changelog

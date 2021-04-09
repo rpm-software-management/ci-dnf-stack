@@ -119,3 +119,18 @@ Scenario: Fail to install package with incorrect checksum when gpgcheck=0
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
 
+
+@bz1915990
+@bz1932079
+@bz1932089
+@bz1932090
+Scenario: Refuse to install a package with broken gpg signature
+  Given I drop repository "dnf-ci-gpg"
+    And I use repository "dnf-ci-broken-rpm-signature" with configuration
+        | key      | value                                                                                                                                                               |
+        | gpgcheck | 1                                                                                                                                                                   |
+        | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public,file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public |
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+   # dnf must not extract any files from the broken package
+   Then file "/usr/share/doc/setup/README" does not exist
