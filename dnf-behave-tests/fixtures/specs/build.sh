@@ -91,4 +91,9 @@ done
 "${CERTSDIR}/generate_certificates.sh"
 
 
+# create a repo with broken rpm signatures
+mkdir -p "${REPODIR}"/dnf-ci-broken-rpm-signature
+"${DIR}"/break-rpm-signatures.py "${REPODIR}"/dnf-ci-gpg/noarch/setup-2.12.1-1.fc29.noarch.rpm "${REPODIR}"/dnf-ci-broken-rpm-signature/setup-2.12.1-1.fc29.noarch.rpm
+
+
 echo "DONE: Test data created"
