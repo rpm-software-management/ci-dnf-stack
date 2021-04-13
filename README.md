@@ -43,8 +43,7 @@ Run the integration test suite in containers:
 ```
 
 The integration test suite actually contains two distinct test suites, `dnf`
-(default, right now in the `features` directory) and `createrepo_c`. To specify
-the suite, use the `-s` switch:
+(default) and `createrepo_c`. To specify the suite, use the `-s` switch:
 ```
 ./container-test -s createrepo_c run
 ```
@@ -56,7 +55,7 @@ the given suite by using the `-d` switch:
 ```
 
 To only run a subset of a suite, simply specify the feature files (this will
-run scenarios in `dnf-behave-tests/features/config.feature`, as `dnf` is the
+run scenarios in `dnf-behave-tests/dnf/config.feature`, as `dnf` is the
 default test suite):
 ```
 ./container-test run config.feature
