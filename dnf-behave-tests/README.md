@@ -2,8 +2,7 @@ dnf-behave-tests
 ================
 
 dnf-behave-tests is the integration test suite for the DNF stack. It actually
-contains two test suites, `dnf` (right now in the `features` directory) and
-`createrepo_c`.
+contains two test suites, `dnf` and `createrepo_c`.
 
 The test suites' directory structure is that of a behave test suite. They
 contain .feature files, which contain the test scenarios, defined in steps. The
@@ -38,35 +37,35 @@ Running the Integration Tests Directly
 Besides running one of the suites in containers through the top-level
 `container-test` script, you can also run it directly, e.g. in its basic form:
 ```
-sudo behave features
+sudo behave dnf
 ```
 
 This will test the `dnf` binary on your system (note that there are also a bit
 ad-hoc placed `microdnf` tests inside the `dnf` test suite). If you've got your
 own binary set up for testing, you can specify it:
 ```
-sudo behave -Ddnf_command=my-dnf features
+sudo behave -Ddnf_command=my-dnf dnf
 ```
 
 To run only scenarios of a single feature file:
 ```
-sudo behave -Ddnf_command=my-dnf features/config.feature
+sudo behave -Ddnf_command=my-dnf dnf/config.feature
 ```
 
 You can further specify a single scenario to run by its name:
 ```
-sudo behave -Ddnf_command=my-dnf -n "Test removal of dependency when clean_requirements_on_remove=false" features/config.feature
+sudo behave -Ddnf_command=my-dnf -n "Test removal of dependency when clean_requirements_on_remove=false" dnf/config.feature
 ```
 
 You can also use tags to limit which scenarios to run:
 ```
-sudo behave -Ddnf_command=my-dnf -tbz123456 features/config.feature
+sudo behave -Ddnf_command=my-dnf -tbz123456 dnf/config.feature
 ```
 
 Or to exclude scenarios via a tag by using `~` (this will skip any scenarios
 tagged with the `use.with_os=rhel__eq__8` tag):
 ```
-sudo behave -Ddnf_command=my-dnf -t~use.with_os=rhel__eq__8 features
+sudo behave -Ddnf_command=my-dnf -t~use.with_os=rhel__eq__8 dnf
 ```
 
 
@@ -86,7 +85,7 @@ sandboxed environment, and usually you should only run a single destructive
 test, as the tests will modify an environment shared with the tests that are
 run in succession:
 ```
-sudo behave -Ddnf_command=my-dnf -Ddestructive=yes features/cache.feature
+sudo behave -Ddnf_command=my-dnf -Ddestructive=yes dnf/cache.feature
 ```
 
 
@@ -100,12 +99,12 @@ The installroot, as well as a temporary directory to use for the tests, are
 created in `/tmp` and are normally deleted after a test run. To preserve the
 directories of all scenarios for inspection, use:
 ```
-sudo behave -Ddnf_command=my-dnf -Dpreserve=y features
+sudo behave -Ddnf_command=my-dnf -Dpreserve=y dnf
 ```
 
 To preserve the directories of failing scenarios only, you can use:
 ```
-sudo behave -Ddnf_command=my-dnf -Dpreserve=f features
+sudo behave -Ddnf_command=my-dnf -Dpreserve=f dnf
 ```
 
 

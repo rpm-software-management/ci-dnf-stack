@@ -2,7 +2,7 @@ name: Run DNF Integration Tests
 
 inputs:
   suite:
-    description: The suite to run (default is "dnf", which is in the "features" directory)
+    description: The suite to run (default is "dnf")
     default: "dnf"
   package-urls:
     description: The URLs of RPM packages to test
@@ -25,14 +25,10 @@ runs:
           wget -P rpms ${RPM};
         done
 
-        SUITE="${{inputs.suite}}"
-        if [ "${SUITE}" = "dnf" ]; then SUITE="features"; fi  # hack the wrong name of the dnf test suite
-        SUITE="-s ${SUITE}"
-
         CONTAINER=$(uuidgen)
         ./container-test -c $CONTAINER build jjb
 
-        TESTS=($(./container-test -c $CONTAINER $SUITE list))
+        TESTS=($(./container-test -c $CONTAINER -s "${{inputs.suite}}" list))
         mkdir "test-results"
         TEST_DIR=`readlink -f "test-results"`
-        parallel -j2 ./container-test --container "$CONTAINER" $SUITE run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
+        parallel -j2 ./container-test --container "$CONTAINER" -s "${{inputs.suite}}" run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"

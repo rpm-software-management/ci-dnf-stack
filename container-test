@@ -26,7 +26,7 @@ def command_line_parser():
         description="Functional tests for DNF",
         epilog="To get help on specific command use \"%(prog)s <command> --help\"")
     parser.add_argument(
-        "-s", "--suite", default="features",
+        "-s", "--suite", default="dnf",
         help="Test suite to run (directory with *.feature files)")
     parser.add_argument(
         "-c", "--container", metavar="IMAGE",
