@@ -1,63 +1,38 @@
-# Build
-# -----
-# $ podman build --build-arg TYPE=local -t dnf-bot/ci-dnf-stack:f33 -f Dockerfile.f33
-#
-#
-# Run
-# ---
-# $ podman run -it dnf-bot/ci-dnf-stack:f33 behave -Ddnf_executable=dnf -t~xfail --junit --junit-directory=/opt/behave/junit/ [--wip --no-skipped]
-#
-#
-# Build types
-# -----------
-# distro
-#       install distro packages
-# copr
-#       install distro packages
-#       then upgrade to copr packages
-# local
-#       install distro packages
-#       then upgrade to copr packages
-#       then install packages from local rpms/ folder
-#       install also additional tools for debugging in the container
-
+# Example Usage:
+# $ podman build --build-arg TYPE=distro -t ci-dnf-stack -f Dockerfile
+# $ podman run --net none -it ci-dnf-stack behave dnf
 
 FROM fedora:33
-ENV LANG C
-ARG TYPE=local
+ENV LANG C.UTF-8
+ARG TYPE=nightly
 ARG OSVERSION=fedora__33
-
-
 
 # disable deltas and weak deps
 RUN set -x && \
     echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
     echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf
 
-
-# install fakeuname from dnf-nightly copr repo
+# enable the test-utils repo
 RUN set -x && \
     dnf -y install dnf-plugins-core; \
-    dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-    dnf -y install fakeuname;
+    dnf -y copr enable rpmsoftwaremanagement/test-utils;
 
-
-# if not TYPE == copr nor local, disable nightly copr
+# enable nightlies if requested
 RUN set -x && \
-    if [ ! "$TYPE" == "copr" -a ! "$TYPE" == "local" ]; then \
-        dnf -y copr disable rpmsoftwaremanagement/dnf-nightly; \
+    if [ "$TYPE" == "nightly" ]; then \
+        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     fi
 
-
-# upgrade all packages to the latest available versions
+# upgrade all packages
 RUN set -x && \
     dnf -y --refresh upgrade
-
 
 # install the test environment and additional packages
 RUN set -x && \
     dnf -y install \
         # behave and test requirements
+        attr \
+        fakeuname \
         findutils \
         glibc-langpack-en \
         libfaketime \
@@ -68,22 +43,16 @@ RUN set -x && \
         rpm-build \
         rpm-sign \
         sqlite \
-        attr \
-        # if TYPE == local, install debugging tools
-        $(if [ "$TYPE" == "local" ]; then \
-            echo \
-                less \
-                openssh-clients \
-                procps-ng \
-                psmisc \
-                screen \
-                strace \
-                tcpdump \
-                vim-enhanced \
-                vim-minimal \
-                wget \
-            ; \
-        fi) \
+        # install debugging tools
+        less \
+        openssh-clients \
+        procps-ng \
+        psmisc \
+        strace \
+        tcpdump \
+        vim-enhanced \
+        vim-minimal \
+        wget \
         # install dnf stack
         createrepo_c \
         dnf \
@@ -102,14 +71,12 @@ RUN set -x && \
         zchunk && \
     pip install 'pyftpdlib'
 
-
 # install local RPMs if available
 COPY ./rpms/ /opt/behave/rpms/
 RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
         dnf -y install /opt/behave/rpms/*.rpm --disableplugin=local; \
     fi
-
 
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/behave/
@@ -129,6 +96,5 @@ RUN set -x && \
 RUN set -x && \
     cd /opt/behave/fixtures/specs/ && \
     ./build.sh --force-rebuild
-
 
 WORKDIR /opt/behave
