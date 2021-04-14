@@ -14,7 +14,6 @@ PROGPATH = os.path.abspath(os.path.dirname(sys.argv[0]))
 sys.path.append(os.path.join(PROGPATH, 'dnf-behave-tests'))
 import consts
 DESTRUCTIVE_TAGS = set(consts.DESTRUCTIVE_TAGS)
-BUILD_TYPES = ['jjb', 'local', 'side-tag', 'distro']
 
 
 def command_line_parser():
@@ -55,9 +54,8 @@ def command_line_parser():
         "--usecache", action="store_true", default=False,
         help="Use cache when building the image")
     build_parser.add_argument(
-        "build_type", metavar="<type>", nargs="?",
-        help="Possible build types are {}. The default is 'local'".format(
-            ', '.join(BUILD_TYPES)))
+        "--type", metavar="<type>",
+        help='Build type for the image, e.g. "nightly" or "distro". Needs to be supported by the Dockerfile.')
 
     # run command
     run_parser = subparsers.add_parser(
@@ -125,7 +123,6 @@ class BehaveRunner(object):
         self.command_line_parser = command_line_parser()
         self.command_line_args = self.command_line_parser.parse_args()
         self._docker_bin = None
-        self._build_type = None
         self._volumes = None
 
     def __call__(self):
@@ -194,18 +191,6 @@ class BehaveRunner(object):
                 self._volumes.extend(['--volume', '{}:/junit:z'.format(
                     self.command_line_args.junit_directory)])
         return self._volumes
-
-    @property
-    def build_type(self):
-        if not self._build_type:
-            self._build_type = 'local'
-            if self.command_line_args.build_type:
-                build_type = self.command_line_args.build_type
-                if build_type in BUILD_TYPES:
-                    self._build_type = build_type
-                else:
-                    error('Unknown build type: "{}"'.format(build_type))
-        return self._build_type
 
     @property
     def tags(self):
@@ -378,9 +363,13 @@ class BehaveRunner(object):
         '''
         command = self.docker_bin + ['build', '--force-rm']
         command += self.param_cache
-        command += ['--build-arg', 'TYPE={}'.format(self.build_type)]
+
+        if self.command_line_args.type is not None:
+            command += ['--build-arg', 'TYPE={}'.format(self.command_line_args.type)]
+
         command += ['-t', self.command_line_args.container]
         command += ['-f', self.command_line_args.docker_file, PROGPATH]
+
         returncode = subprocess.call(command)
         if returncode > 0:
             error('Failed to build the container.')
