@@ -21,7 +21,7 @@ Scenario Outline: groups-manager can read <filename> file
        <default>false</default>
        <uservisible>true</uservisible>
        <packagelist>
-         <packagereq type="default" requires="">gnomo</packagereq>
+         <packagereq type="default">gnomo</packagereq>
        </packagelist>
      </group>
      <group>
@@ -30,8 +30,8 @@ Scenario Outline: groups-manager can read <filename> file
        <default>false</default>
        <uservisible>true</uservisible>
        <packagelist>
-         <packagereq type="default" requires="">gnomo</packagereq>
-         <packagereq type="default" requires="">pazzo</packagereq>
+         <packagereq type="default">gnomo</packagereq>
+         <packagereq type="default">pazzo</packagereq>
        </packagelist>
      </group>
    </comps>
@@ -74,7 +74,7 @@ Scenario: edit group properties
         <uservisible>false</uservisible>
         <display_order>111</display_order>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
+          <packagereq type="default">gnomo</packagereq>
         </packagelist>
       </group>
       <group>
@@ -83,8 +83,8 @@ Scenario: edit group properties
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
-          <packagereq type="default" requires="">pazzo</packagereq>
+          <packagereq type="default">gnomo</packagereq>
+          <packagereq type="default">pazzo</packagereq>
         </packagelist>
       </group>
     </comps>
@@ -106,8 +106,8 @@ Scenario Outline: edit group filelists - add package of type "<type>"
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
-          <packagereq type="<type>" requires="">vagare</packagereq>
+          <packagereq type="default">gnomo</packagereq>
+          <packagereq type="<type>">vagare</packagereq>
         </packagelist>
       </group>
       <group>
@@ -116,8 +116,8 @@ Scenario Outline: edit group filelists - add package of type "<type>"
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
-          <packagereq type="default" requires="">pazzo</packagereq>
+          <packagereq type="default">gnomo</packagereq>
+          <packagereq type="default">pazzo</packagereq>
         </packagelist>
       </group>
     </comps>
@@ -145,9 +145,9 @@ Scenario: edit group filelists - add package with dependencies
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
-          <packagereq type="default" requires="">labirinto</packagereq>
-          <packagereq type="default" requires="">vagare</packagereq>
+          <packagereq type="default">gnomo</packagereq>
+          <packagereq type="default">labirinto</packagereq>
+          <packagereq type="default">vagare</packagereq>
         </packagelist>
       </group>
       <group>
@@ -156,8 +156,8 @@ Scenario: edit group filelists - add package with dependencies
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">gnomo</packagereq>
-          <packagereq type="default" requires="">pazzo</packagereq>
+          <packagereq type="default">gnomo</packagereq>
+          <packagereq type="default">pazzo</packagereq>
         </packagelist>
       </group>
     </comps>
@@ -179,7 +179,7 @@ Scenario: add a new group
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default" requires="">vagare</packagereq>
+          <packagereq type="default">vagare</packagereq>
         </packagelist>
       </group>
     </comps>

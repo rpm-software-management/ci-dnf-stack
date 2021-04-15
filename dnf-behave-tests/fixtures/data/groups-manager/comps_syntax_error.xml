@@ -6,7 +6,7 @@
     <name>Group A</name>
     <description>Group A description</description>
     <pkagelist>
-      <packagereq type="default" requires="">gnomo</packagereq>
+      <packagereq type="default">gnomo</packagereq>
     </packagelist>
   </group>
 </comps>
