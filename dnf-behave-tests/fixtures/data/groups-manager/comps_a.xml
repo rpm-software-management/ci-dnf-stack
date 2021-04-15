@@ -7,7 +7,7 @@
     <default>false</default>
     <uservisible>true</uservisible>
     <packagelist>
-      <packagereq type="default" requires="">gnomo</packagereq>
+      <packagereq type="default">gnomo</packagereq>
     </packagelist>
   </group>
   <group>
@@ -16,8 +16,8 @@
     <default>false</default>
     <uservisible>true</uservisible>
     <packagelist>
-      <packagereq type="default" requires="">gnomo</packagereq>
-      <packagereq type="default" requires="">pazzo</packagereq>
+      <packagereq type="default">gnomo</packagereq>
+      <packagereq type="default">pazzo</packagereq>
     </packagelist>
   </group>
 </comps>
