@@ -370,6 +370,9 @@ class BehaveRunner(object):
         command += ['-t', self.command_line_args.container]
         command += ['-f', self.command_line_args.docker_file, PROGPATH]
 
+        if self.command_line_args.verbose:
+            print("Running command:", command, '\n')
+
         returncode = subprocess.call(command)
         if returncode > 0:
             error('Failed to build the container.')
