@@ -56,6 +56,9 @@ def command_line_parser():
     build_parser.add_argument(
         "--type", metavar="<type>",
         help='Build type for the image, e.g. "nightly" or "distro". Needs to be supported by the Dockerfile.')
+    build_parser.add_argument(
+        "--base", metavar="<base>",
+        help='Base image to override the FROM clause in the Dockerfile.')
 
     # run command
     run_parser = subparsers.add_parser(
@@ -366,6 +369,9 @@ class BehaveRunner(object):
 
         if self.command_line_args.type is not None:
             command += ['--build-arg', 'TYPE={}'.format(self.command_line_args.type)]
+
+        if self.command_line_args.base is not None:
+            command += ['--build-arg', 'BASE={}'.format(self.command_line_args.base)]
 
         command += ['-t', self.command_line_args.container]
         command += ['-f', self.command_line_args.docker_file, PROGPATH]
