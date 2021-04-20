@@ -26,7 +26,7 @@ runs:
         done
 
         CONTAINER=$(uuidgen)
-        ./container-test -c $CONTAINER build jjb
+        ./container-test -c $CONTAINER build
 
         TESTS=($(./container-test -c $CONTAINER -s "${{inputs.suite}}" list))
         mkdir "test-results"
