@@ -43,11 +43,6 @@ RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
         dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
 
-# set os userdata for behave
-RUN echo -e "\
-[behave.userdata]\n\
-destructive=yes" > /opt/ci/dnf-behave-tests/behave.ini
-
 RUN set -x && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/certificates/testcerts/" && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/gpgkeys/keys/" && \

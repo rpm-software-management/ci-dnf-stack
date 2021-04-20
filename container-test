@@ -86,6 +86,9 @@ def command_line_parser():
         "--enable-network", action="store_true", default=False,
         help="Enable networking inside the container")
     run_parser.add_argument(
+        "--no-destructive", action="store_true", default=False,
+        help="Disable running destructive tests (which are run by default through this script)")
+    run_parser.add_argument(
         "featurefiles", metavar="<feature>", nargs="*",
         help="List of feature files to run")
 
@@ -293,6 +296,8 @@ class BehaveRunner(object):
         '''
         Run specified tests in the container.
         '''
+        do_destructive = not self.command_line_args.no_destructive
+
         def process_feature(feature, scenarios):
             '''
             Processes scenarios in a feature file and splits them according to
@@ -307,9 +312,11 @@ class BehaveRunner(object):
             feature_name, feature_tags = feature
             nondestructive_tests = False
 
+            # if destructive tests are enabled (default), run each one separately
             for scenario_name, scenario_tags in scenarios:
                 if feature_tags.union(scenario_tags).intersection(DESTRUCTIVE_TAGS):
-                    yield (feature_name, scenario_name)
+                    if do_destructive:
+                        yield (feature_name, scenario_name)
                 else:
                     nondestructive_tests = True
 
@@ -335,6 +342,9 @@ class BehaveRunner(object):
 
         if self.command_line_args.dnf_command:
             command.extend(['-D dnf_command={}'.format(self.command_line_args.dnf_command)])
+
+        if do_destructive:
+            command.extend(['-D destructive=yes'])
 
         failed = set()
         for feature, scenarios in self.dry_run():
