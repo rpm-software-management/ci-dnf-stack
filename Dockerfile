@@ -29,74 +29,35 @@ RUN set -x && \
 RUN set -x && \
     dnf -y --refresh upgrade
 
-# install the test environment and additional packages
+# copy test suite
+COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
+
+# install test suite dependencies
 RUN set -x && \
-    dnf -y install \
-        # behave and test requirements
-        attr \
-        fakeuname \
-        findutils \
-        glibc-langpack-en \
-        libfaketime \
-        openssl \
-        python3-behave \
-        python3-pexpect \
-        python3-pip \
-        rpm-build \
-        rpm-sign \
-        sqlite \
-        # install debugging tools
-        less \
-        openssh-clients \
-        procps-ng \
-        psmisc \
-        strace \
-        tcpdump \
-        vim-enhanced \
-        vim-minimal \
-        wget \
-        # install dnf stack
-        createrepo_c \
-        dnf \
-        yum \
-        dnf-plugins-core \
-        dnf-utils \
-        dnf-automatic \
-        # all plugins with the same version as dnf-utils
-        $(dnf repoquery dnf-utils --latest-limit=1 -q --qf="python*-dnf-plugin-*-%{version}-%{release}") \
-        # extras plugins that are being tested
-        python3-dnf-plugin-system-upgrade \
-        libdnf \
-        microdnf \
-        # install third party plugins
-        dnf-plugin-swidtags \
-        zchunk && \
-    pip install 'pyftpdlib'
+    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
-COPY ./rpms/ /opt/behave/rpms/
-RUN rm /opt/behave/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
-    if [ -n "$(find /opt/behave/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf -y install /opt/behave/rpms/*.rpm --disableplugin=local; \
+COPY ./rpms/ /opt/ci/rpms/
+RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+    if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
+        dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
-
-# copy test suite
-COPY ./dnf-behave-tests/ /opt/behave/
 
 # set os userdata for behave
 RUN echo -e "\
 [behave.userdata]\n\
 destructive=yes\n\
-os=$OSVERSION" > /opt/behave/behave.ini
+os=$OSVERSION" > /opt/ci/dnf-behave-tests/behave.ini
 
 RUN set -x && \
-    rm -rf "/opt/behave/fixtures/certificates/testcerts/" && \
-    rm -rf "/opt/behave/fixtures/gpgkeys/keys/" && \
-    rm -rf "/opt/behave/fixtures/repos/"
+    rm -rf "/opt/ci/dnf-behave-tests/fixtures/certificates/testcerts/" && \
+    rm -rf "/opt/ci/dnf-behave-tests/fixtures/gpgkeys/keys/" && \
+    rm -rf "/opt/ci/dnf-behave-tests/fixtures/repos/"
 
 # build test repos from sources
 RUN set -x && \
-    cd /opt/behave/fixtures/specs/ && \
+    cd /opt/ci/dnf-behave-tests/fixtures/specs/ && \
     ./build.sh --force-rebuild
 
-WORKDIR /opt/behave
+WORKDIR /opt/ci/dnf-behave-tests
