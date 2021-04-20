@@ -27,6 +27,12 @@ Build the container image for the tests:
 ./container-test build
 ```
 
+You can also quite simply run the tests on a different distribution than the
+default:
+```
+./container-test build --base quay.io/centos/centos:stream8
+```
+
 During the build, any RPMs found in the `rpms` directory are installed in the
 image. Place your RPMs to be tested in this directory. Barring these, the
 latest versions of the DNF stack RPMs from the dnf-nightly Copr repository (see
