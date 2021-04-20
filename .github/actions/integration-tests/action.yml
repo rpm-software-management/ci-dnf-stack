@@ -29,6 +29,4 @@ runs:
         ./container-test -c $CONTAINER build
 
         TESTS=($(./container-test -c $CONTAINER -s "${{inputs.suite}}" list))
-        mkdir "test-results"
-        TEST_DIR=`readlink -f "test-results"`
-        parallel -j2 ./container-test --container "$CONTAINER" -s "${{inputs.suite}}" run --junit-directory "$TEST_DIR" --noxfail "{}" ::: "${TESTS[@]}"
+        parallel -j2 ./container-test --container "$CONTAINER" -s "${{inputs.suite}}" run "{}" ::: "${TESTS[@]}"
