@@ -20,6 +20,7 @@ from behave.formatter.ansi_escapes import escapes
 from steps.lib.config import write_config
 from common.lib.cmd import print_last_command
 from common.lib.file import ensure_directory_exists
+from common.lib.os_version import detect_os_version
 from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
@@ -269,7 +270,7 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", None)})
+    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 

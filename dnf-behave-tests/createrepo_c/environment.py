@@ -18,6 +18,7 @@ from behave import model
 from behave.formatter.ansi_escapes import escapes
 
 from common.lib.cmd import print_last_command
+from common.lib.os_version import detect_os_version
 from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
@@ -99,7 +100,7 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", None)})
+    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
 
 
 def after_all(context):

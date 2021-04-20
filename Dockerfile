@@ -7,7 +7,6 @@ FROM $BASE
 
 ENV LANG C.UTF-8
 ARG TYPE=nightly
-ARG OSVERSION=fedora__33
 
 # disable deltas and weak deps
 RUN set -x && \
@@ -47,8 +46,7 @@ RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
 # set os userdata for behave
 RUN echo -e "\
 [behave.userdata]\n\
-destructive=yes\n\
-os=$OSVERSION" > /opt/ci/dnf-behave-tests/behave.ini
+destructive=yes" > /opt/ci/dnf-behave-tests/behave.ini
 
 RUN set -x && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/certificates/testcerts/" && \

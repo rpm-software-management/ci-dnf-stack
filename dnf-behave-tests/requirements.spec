@@ -23,6 +23,7 @@ BuildRequires:  findutils
 BuildRequires:  glibc-langpack-en
 BuildRequires:  openssl
 BuildRequires:  python3
+BuildRequires:  python3-distro
 BuildRequires:  python3-pip
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
