@@ -84,19 +84,19 @@ Scenario: Repo with --groupfile
 
 
 Scenario: Repo with --groupfile and --checksum sha
- When I execute createrepo_c with args "--checksum sha1 --groupfile ../groupfile.xml ." in "/temp-repo"
+ When I execute createrepo_c with args "--checksum sha224 --groupfile ../groupfile.xml ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha1          | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha1          | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha1          | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha1          | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha1          | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha1          | bz2              |
-      | group        | ${checksum}-groupfile.xml        | sha1          | -                |
-      | group_gz     | ${checksum}-groupfile.xml.gz     | sha1          | gz               |
+      | primary      | ${checksum}-primary.xml.gz       | sha224        | gz               |
+      | filelists    | ${checksum}-filelists.xml.gz     | sha224        | gz               |
+      | other        | ${checksum}-other.xml.gz         | sha224        | gz               |
+      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha224        | bz2              |
+      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha224        | bz2              |
+      | other_db     | ${checksum}-other.sqlite.bz2     | sha224        | bz2              |
+      | group        | ${checksum}-groupfile.xml        | sha224        | -                |
+      | group_gz     | ${checksum}-groupfile.xml.gz     | sha224        | gz               |
 
 
 Scenario: Repo with --simple-md-filenames and --groupfile
@@ -196,35 +196,35 @@ Scenario: Repo with --compress-type xz
 
 
 Scenario: Repo with --repomd-checksum and --groupfile
- When I execute createrepo_c with args "--repomd-checksum sha1 --groupfile ../groupfile.xml ." in "/temp-repo"
+ When I execute createrepo_c with args "--repomd-checksum sha224 --groupfile ../groupfile.xml ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha1          | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha1          | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha1          | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha1          | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha1          | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha1          | bz2              |
-      | group        | ${checksum}-groupfile.xml        | sha1          | -                |
-      | group_gz     | ${checksum}-groupfile.xml.gz     | sha1          | gz               |
+      | primary      | ${checksum}-primary.xml.gz       | sha224        | gz               |
+      | filelists    | ${checksum}-filelists.xml.gz     | sha224        | gz               |
+      | other        | ${checksum}-other.xml.gz         | sha224        | gz               |
+      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha224        | bz2              |
+      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha224        | bz2              |
+      | other_db     | ${checksum}-other.sqlite.bz2     | sha224        | bz2              |
+      | group        | ${checksum}-groupfile.xml        | sha224        | -                |
+      | group_gz     | ${checksum}-groupfile.xml.gz     | sha224        | gz               |
 
 
 Scenario: Repo with --checksum --repomd-checksum and --groupfile
- When I execute createrepo_c with args "--checksum md5 --repomd-checksum sha1 --groupfile ../groupfile.xml ." in "/temp-repo"
+ When I execute createrepo_c with args "--checksum sha256 --repomd-checksum sha512 --groupfile ../groupfile.xml ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha1          | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha1          | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha1          | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha1          | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha1          | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha1          | bz2              |
-      | group        | ${checksum}-groupfile.xml        | sha1          | -                |
-      | group_gz     | ${checksum}-groupfile.xml.gz     | sha1          | gz               |
+      | primary      | ${checksum}-primary.xml.gz       | sha512        | gz               |
+      | filelists    | ${checksum}-filelists.xml.gz     | sha512        | gz               |
+      | other        | ${checksum}-other.xml.gz         | sha512        | gz               |
+      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha512        | bz2              |
+      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha512        | bz2              |
+      | other_db     | ${checksum}-other.sqlite.bz2     | sha512        | bz2              |
+      | group        | ${checksum}-groupfile.xml        | sha512        | -                |
+      | group_gz     | ${checksum}-groupfile.xml.gz     | sha512        | gz               |
 
 
 Scenario: Repo with --general-compress-type and --groupfile

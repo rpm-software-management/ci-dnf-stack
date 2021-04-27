@@ -17,10 +17,10 @@ except ImportError:
 def get_checksum_regex(type_str):
     if type_str == "sha256":
         return "[a-z0-9]{64}"
-    if type_str == "sha1":
-        return "[a-z0-9]{40}"
-    if type_str == "md5":
-        return "[a-z0-9]{32}"
+    if type_str == "sha224":
+        return "[a-z0-9]{56}"
+    if type_str == "sha512":
+        return "[a-z0-9]{128}"
     if type_str == "-":
         return ""
     raise ValueError("Unknown checksum type: " + type_str)
@@ -43,10 +43,10 @@ def decompression_iter(filepath, compression_type, blocksize=65536):
 def checksum_of_file(filepath, checksum_type="sha256"):
     if checksum_type == "sha256":
         return hash_bytestr_iter(file_as_blockiter(open(filepath, 'rb')), hashlib.sha256())
-    if checksum_type == "sha1":
-        return hash_bytestr_iter(file_as_blockiter(open(filepath, 'rb')), hashlib.sha1())
-    if checksum_type == "md5":
-        return hash_bytestr_iter(file_as_blockiter(open(filepath, 'rb')), hashlib.md5())
+    if checksum_type == "sha224":
+        return hash_bytestr_iter(file_as_blockiter(open(filepath, 'rb')), hashlib.sha224())
+    if checksum_type == "sha512":
+        return hash_bytestr_iter(file_as_blockiter(open(filepath, 'rb')), hashlib.sha512())
     raise ValueError("Unknown checksum type: " + checksum_type)
 
 
