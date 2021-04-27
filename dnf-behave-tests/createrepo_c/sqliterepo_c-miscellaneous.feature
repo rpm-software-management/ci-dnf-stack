@@ -144,7 +144,7 @@ Given I execute createrepo_c with args "." in "/"
 
 Scenario: Sqlitedbs should be created using --force with different checksum
 Given I execute createrepo_c with args "." in "/"
- When I execute sqliterepo_c with args "--force --checksum md5 ." in "/"
+ When I execute sqliterepo_c with args "--force --checksum sha512 ." in "/"
  Then the exit code is 0
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
@@ -152,6 +152,6 @@ Given I execute createrepo_c with args "." in "/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | md5           | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | md5           | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | md5           | bz2              |
+      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha512        | bz2              |
+      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha512        | bz2              |
+      | other_db     | ${checksum}-other.sqlite.bz2     | sha512        | bz2              |
