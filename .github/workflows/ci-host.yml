@@ -3,9 +3,6 @@ name: Nightly DNF CI host container build
 on:
   schedule:
     - cron:  '0 2 * * *'  # at 2am UTC
-#  push:
-#    branches:
-#      - ci-container-test
 
 jobs:
   container-build:
@@ -17,7 +14,7 @@ jobs:
           DATE=`date "+%F"`
           IMAGE="ghcr.io/rpm-software-management/dnf-ci-host"
 
-          echo ${{secrets.CONTAINER_PAT}} | docker login ghcr.io -u dnf-bot --password-stdin
+          echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u rpm-software-management --password-stdin
 
           docker build -t ${IMAGE}:${DATE} -t ${IMAGE}:latest -<<EOF
           FROM fedora:latest
