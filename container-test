@@ -191,7 +191,7 @@ class BehaveRunner(object):
                 self._volumes.extend(['--volume', '{}:{}:Z'.format(
                     os.path.join(PROGPATH, 'dnf-behave-tests',
                                  self.command_line_args.suite),
-                    os.path.join('/opt/behave', self.command_line_args.suite))])
+                    os.path.join('/opt/ci/dnf-behave-tests', self.command_line_args.suite))])
             if hasattr(self.command_line_args, 'junit_directory') \
                 and self.command_line_args.junit_directory:
                 self._volumes.extend(['--volume', '{}:/junit:z'.format(
