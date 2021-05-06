@@ -34,9 +34,16 @@ default:
 ```
 
 During the build, any RPMs found in the `rpms` directory are installed in the
-image. Place your RPMs to be tested in this directory. Barring these, the
-latest versions of the DNF stack RPMs from the dnf-nightly Copr repository (see
-[Nightly Builds](#Nightly-Builds) below) are installed on the system.
+image. Place your RPMs to be tested in this directory.
+
+Barring these, the latest versions of the DNF stack RPMs from the dnf-nightly
+Copr repository (see [Nightly Builds](#Nightly-Builds) below) are installed on
+the system, unless you disable this via the `--type` argument (the value of
+this argument should be whatever the `Dockerfile` supports, in this case
+anything other than `"nightly"` will do the job):
+```
+./container-test build --type distro
+```
 
 The full integration test suite directory (`dnf-behave-tests`) is copied into
 the image during the build.
