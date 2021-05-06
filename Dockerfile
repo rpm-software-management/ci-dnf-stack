@@ -13,6 +13,9 @@ RUN set -x && \
     echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
     echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf
 
+# Copy extra repo files
+COPY ./repos.d/ /etc/yum.repos.d/
+
 # enable the test-utils repo
 RUN set -x && \
     dnf -y install dnf-plugins-core; \

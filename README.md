@@ -33,6 +33,9 @@ default:
 ./container-test build --base quay.io/centos/centos:stream8
 ```
 
+If any additional repositories are needed to be added to the container image,
+you can place them into the `repos.d` directory (mainly useful for RHEL).
+
 During the build, any RPMs found in the `rpms` directory are installed in the
 image. Place your RPMs to be tested in this directory.
 
