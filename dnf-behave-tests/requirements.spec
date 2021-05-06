@@ -21,6 +21,7 @@ BuildRequires:  createrepo_c
 BuildRequires:  fakeuname
 BuildRequires:  findutils
 BuildRequires:  glibc-langpack-en
+BuildRequires:  libfaketime
 BuildRequires:  openssl
 BuildRequires:  python3
 BuildRequires:  python3-distro
@@ -29,8 +30,6 @@ BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite
 %if 0%{?fedora}
-# TODO: make libfaketime available on CentOS/RHEL
-BuildRequires:  libfaketime
 BuildRequires:  python3-behave
 BuildRequires:  python3-pexpect
 BuildRequires:  zchunk
