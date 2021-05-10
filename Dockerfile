@@ -46,6 +46,13 @@ RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
         dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
 
+# create directory for dbus daemon socket
+RUN set -x && \
+    mkdir -p /run/dbus
+
+# dnfdaemon
+COPY ./dnfdaemon-server/ /
+
 RUN set -x && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/certificates/testcerts/" && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/gpgkeys/keys/" && \
