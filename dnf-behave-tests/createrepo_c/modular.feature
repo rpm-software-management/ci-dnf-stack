@@ -299,7 +299,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
  Then the exit code is 1
   And stderr is
       """
-      Critical: Could not update module index from file invalid-not-existing.modulemd-defaults.yaml: Failed to open file: No such file or directory
+      Critical: Failed to detect compression for file invalid-not-existing.modulemd-defaults.yaml: File invalid-not-existing.modulemd-defaults.yaml doesn't exists or not a regular file
       """
 
 
@@ -400,3 +400,15 @@ Given I create directory "/repo/"
  When I execute createrepo_c with args "." in "/repo"
  Then the exit code is 1
   And file "/repo/.repodata" does not exist
+
+
+Scenario: Using file with an unknown compressions is an error
+Given I create directory "/repo/"
+  And I execute "head -c 100 < /dev/urandom > {context.scenario.default_tmp_dir}/repo/modules.yaml.magck"
+ When I execute createrepo_c with args "." in "/repo"
+ Then the exit code is 1
+  And file "/repo/.repodata" does not exist
+  And stderr is
+      """
+      Critical: Could not load module index file ./modules.yaml.magck: Cannot open ./modules.yaml.magck: Cannot detect compression type
+      """
