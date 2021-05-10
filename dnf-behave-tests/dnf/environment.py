@@ -13,6 +13,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
 import common
 import consts
+import subprocess
+import time
 
 from behave import model
 from behave.formatter.ansi_escapes import escapes
@@ -31,7 +33,7 @@ DEFAULT_PLATFORM_ID="platform:f29"
 
 
 class DNFContext(object):
-    def __init__(self, userdata, force_installroot=False, no_installroot=False, dnf5_mode=False):
+    def __init__(self, userdata, force_installroot=False, no_installroot=False, dnf5_mode=False, dnfdaemon_mode=False):
         self._scenario_data = {}
 
         self.repos = {}
@@ -88,6 +90,7 @@ class DNFContext(object):
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
         self.dnf5_mode = dnf5_mode
+        self.dnfdaemon_mode = dnfdaemon_mode
 
         self.preserve_temporary_dirs = "none"
         preserve = userdata.get("preserve", "no")
@@ -138,6 +141,13 @@ class DNFContext(object):
         return setattr(self, name, value)
 
     def get_cmd(self, context):
+        if self.dnf5_mode:
+            result = self.get_dnf5_cmd(context)
+        else:
+            result = self.get_dnf4_cmd(context)
+        return result
+
+    def get_dnf4_cmd(self, context):
         result = [self.dnf_command]
         result.append(self.assumeyes_option)
 
@@ -146,7 +156,7 @@ class DNFContext(object):
             result.append("--installroot={0}".format(self.installroot))
 
         releasever = self._get("releasever")
-        if releasever and not self.dnf5_mode:
+        if releasever:
             result.append("--releasever={0}".format(releasever))
 
         module_platform_id = self._get("module_platform_id")
@@ -154,7 +164,7 @@ class DNFContext(object):
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
         disable_plugins = self._get("disable_plugins")
-        if disable_plugins and not self.dnf5_mode:
+        if disable_plugins:
             result.append("--disableplugin='*'")
         plugins = self._get("plugins") or []
         for plugin in plugins:
@@ -163,11 +173,6 @@ class DNFContext(object):
         setopts = self._get("setopts") or {}
         for key,value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
-
-        if self.dnf5_mode:
-            result.append("--setopt=reposdir=%s" % self.installroot + "/etc/yum.repos.d")
-            result.append("--setopt=config_file_path=%s" % self.installroot + "/etc/dnf/dnf.conf")
-            result.append("--setopt=cachedir=%s" % self.installroot + "/var/cache/dnf")
 
         return result
 
@@ -211,6 +216,34 @@ class DNFContext(object):
 
         return result
 
+    def get_dnf5_cmd(self, context):
+        result = [self.dnf_command]
+        result.append(self.assumeyes_option)
+
+        if self.installroot and self.installroot != "/":
+            result.append("--installroot={0}".format(self.installroot))
+
+        releasever = self._get("releasever")
+        if releasever:
+            result.append("--releasever={0}".format(releasever))
+
+        module_platform_id = self._get("module_platform_id")
+        if module_platform_id:
+            result.append("--setopt=module_platform_id={0}".format(module_platform_id))
+
+        plugins = self._get("plugins") or []
+        for plugin in plugins:
+            result.append("--enableplugin='{0}'".format(plugin))
+
+        setopts = self._get("setopts") or {}
+        for key,value in setopts.items():
+            result.append("--setopt={0}={1}".format(key, value))
+
+        result.append("--setopt=reposdir=%s" % self.installroot + "/etc/yum.repos.d")
+        result.append("--setopt=config_file_path=%s" % self.installroot + "/etc/dnf/dnf.conf")
+        result.append("--setopt=cachedir=%s" % self.installroot + "/var/cache/dnf")
+
+        return result
 
 def before_step(context, step):
     pass
@@ -247,16 +280,24 @@ def before_scenario(context, scenario):
         return
 
     # if "dnf5" is in the commandline tags, turn on dnf5 mode
+    # if "dnfdaemon" turn on dnfdaemon mode and dnf5 mode
     dnf5_mode = False
+    dnfdaemon_mode = False
     for ors in context.config.tags.ands:
         if "dnf5" in ors:
             dnf5_mode = True
             break
+        if "dnfdaemon" in ors:
+            dnf5_mode = True
+            dnfdaemon_mode = True
+            break
+
 
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
                              no_installroot='no_installroot' in scenario.effective_tags,
-                             dnf5_mode = dnf5_mode)
+                             dnf5_mode = dnf5_mode,
+                             dnfdaemon_mode = dnfdaemon_mode)
 
     write_config(context)
 
@@ -267,6 +308,12 @@ def before_scenario(context, scenario):
 def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
         context.dnf.scenario_failed = True
+
+    # TODO workaround to avoid
+    # terminate called after throwing an instance of 'sdbus::Error'
+    # what():  [org.freedesktop.DBus.Error.NoReply] Message recipient disconnected from message bus without replying
+    if context.dnf and context.dnf.dnfdaemon_mode:
+        time.sleep(2)
 
     del context.dnf
 
@@ -287,6 +334,11 @@ def before_all(context):
     context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
+
+    for ors in context.config.tags.ands:
+        if "dnfdaemon" in ors:
+            p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
+            p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
 
 
 def after_all(context):

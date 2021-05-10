@@ -12,6 +12,7 @@ Background: Using repositories dnf-ci-fedora and dnf-ci-thirdparty-updates
         | enabled | 0     |
 
 
+@dnfdaemon
 Scenario: Repolist without arguments
    When I execute dnf with args "repolist"
    Then the exit code is 0
@@ -23,6 +24,16 @@ Scenario: Repolist without arguments
 
 Scenario: Repolist with "enabled"
    When I execute dnf with args "repolist enabled"
+   Then the exit code is 0
+    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
+    And stdout contains "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
+    And stdout does not contain "dnf-ci-fedora-updates"
+    And stdout does not contain "dnf-ci-thirdparty\s+dnf-ci-thirdparty"
+
+
+@dnfdaemon
+Scenario: Repolist with "--enabled"
+   When I execute dnf with args "repolist --enabled"
    Then the exit code is 0
     And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout contains "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"

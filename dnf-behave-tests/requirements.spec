@@ -55,6 +55,11 @@ BuildRequires:  dnf-plugin-swidtags
 
 BuildRequires:  microdnf
 
+# dnfdaemon
+BuildRequires:  dbus-daemon
+BuildRequires:  python3-dbus
+BuildRequires:  polkit
+
 # debugging tools (always installed for simplicity)
 BuildRequires: less
 BuildRequires: openssh-clients
