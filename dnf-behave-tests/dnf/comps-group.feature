@@ -324,3 +324,94 @@ Scenario: Install an environment with empty name
         | env-install   | <name-unset>                      |
         | group-install | Test Group                        |
         | install-group | test-package-1.0-1.fc29.noarch    |
+
+
+@not.with_os=rhel__eq__8
+Scenario: List and info a group with missing packagelist
+  Given I use repository "comps-group-merging"
+   When I execute dnf with args "group list"
+   Then the exit code is 0
+    And stdout is
+       """
+       <REPOSYNC>
+       Available Environment Groups:
+          <name-unset>
+       Available Groups:
+          Test Group
+       """
+   When I execute dnf with args "group info test-group"
+   Then stdout is
+       """
+       <REPOSYNC>
+       Group: Test Group
+        Description: Test Group description updated.
+       """
+
+
+Scenario: Install a group with empty packagelist
+  Given I use repository "comps-group-merging"
+   When I execute dnf with args "group install test-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package       |
+        | group-install | Test Group    |
+
+
+@not.with_os=rhel__eq__8
+Scenario: Merge groups when one has empty packagelist
+  Given I use repository "comps-group"
+    And I use repository "comps-group-merging"
+   When I execute dnf with args "group install test-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | group-install | Test Group                        |
+        | install-group | test-package-1.0-1.fc29.noarch    |
+   When I execute dnf with args "group info test-group"
+   Then stdout is
+       """
+       <REPOSYNC>
+       Group: Test Group
+        Description: Test Group description updated.
+        Mandatory Packages:
+          test-package
+       """
+
+
+@not.with_os=rhel__eq__8
+Scenario: Merge environment with missing names containg a group with missing name
+  Given I use repository "comps-group"
+    And I use repository "comps-group-merging"
+   When I execute dnf with args "group info no-name-env"
+   Then stdout is
+       """
+       <REPOSYNC>
+       Environment Group: <name-unset>
+        Mandatory Groups:
+          <name-unset>
+          Test Group
+       """
+
+
+@not.with_os=rhel__eq__8
+Scenario: Group info with a group that has missing name
+  Given I use repository "comps-group"
+   When I execute dnf with args "group info no-name-group"
+   Then stdout is
+       """
+       <REPOSYNC>
+       Group: <name-unset>
+        Mandatory Packages:
+          test-package
+       """
+
+
+Scenario: Mark a group and an environment without name
+  Given I use repository "comps-group"
+    And I use repository "comps-group-merging"
+   When I execute dnf with args "group mark no-name-group no-name-env"
+   Then Transaction is following
+        | Action        | Package                           |
+        | env-install   | <name-unset>                      |
+        | group-install | <name-unset>                      |
+        | group-install | Test Group                        |
