@@ -265,3 +265,17 @@ Scenario: The locked version of the package cannot get obsoleted by upgrade of o
    When I execute dnf with args "upgrade PackageD"
    Then the exit code is 0
     And Transaction is empty
+
+@bz1957280
+Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is not filtered out and can be installed
+  Given I use repository "dnf-ci-obsoletes"
+    And I create file "/etc/dnf/plugins/versionlock.list" with
+    """
+    PackageB-0:1.0-1.*
+    PackageB-Obsoleter-0:1.0-1.*
+    """
+   When I execute dnf with args "install PackageB-Obsoleter"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
