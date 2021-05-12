@@ -11,7 +11,6 @@ Background: Enable reposync plugin
 Given I enable plugin "reposync"
 
 
-@not.with_os=rhel__eq__8
 @bz1931904
 Scenario: Different checksum type does not cause package re-download
 Given I copy repository "simple-base" for modification
@@ -40,7 +39,6 @@ Given I copy repository "simple-base" for modification
       """
 
 
-@not.with_os=rhel__eq__8
 @bz1931904
 Scenario: reposync --remote-time stores correct timestamp in xattr
 Given I use repository "simple-base" as http
