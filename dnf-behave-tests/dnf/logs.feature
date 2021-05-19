@@ -99,7 +99,6 @@ Given I use repository "dnf-ci-fedora-updates"
   And file "/var/log/hawkey.log" has mode "644"
 
 
-@not.with_os=rhel__eq__8
 @bz1910084
 Scenario: Created logfiles respect umask setting
 Given I use repository "dnf-ci-fedora-updates"
@@ -113,7 +112,6 @@ Given I use repository "dnf-ci-fedora-updates"
 Given I set umask to "0022"
 
 
-@not.with_os=rhel__eq__8
 @bz1910084
 Scenario: Log rotation keeps file permissions
 Given I use repository "dnf-ci-fedora-updates"

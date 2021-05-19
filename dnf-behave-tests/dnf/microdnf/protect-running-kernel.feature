@@ -56,7 +56,6 @@ Scenario: Running kernel is protected against obsoleting
         """
 
 
-@not.with_os=rhel__eq__8
 @bz1855542
 @bz1698145
 Scenario: Running kernel is not protected against obsoleting with config protect_running_kernel=False

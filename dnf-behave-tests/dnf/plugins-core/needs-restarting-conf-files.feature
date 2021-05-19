@@ -78,8 +78,7 @@ Given I create and substitute file "/etc/dnf/plugins/needs-restarting.d/wget.con
   More information: https://access.redhat.com/solutions/27943
   """
 
-@not.with_os=rhel__eq__8
-# https://github.com/rpm-software-management/dnf-plugins-core/pull/422
+
 @bz1810123
 Scenario: conf files without .conf extension are ignored
 Given I create and substitute file "/etc/dnf/plugins/needs-restarting.d/abcde" with
@@ -118,8 +117,7 @@ Given I create and substitute file "/etc/dnf/plugins/needs-restarting.d/abcde.co
   No installed package found for package name "abcde" specified in needs-restarting file "abcde.conf".
   """
 
-@not.with_os=rhel__eq__8
-# https://github.com/rpm-software-management/dnf-plugins-core/pull/422
+
 @bz1810123
 Scenario: package self adds to needs-restarting
 Given I successfully execute dnf with args "install dwm"

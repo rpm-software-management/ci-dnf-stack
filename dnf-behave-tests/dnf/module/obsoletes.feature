@@ -1,4 +1,3 @@
-@not.with_os=rhel__eq__8
 Feature: obsoletes reset/change streams in any transaction according to metadata
 
 

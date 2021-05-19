@@ -1,7 +1,6 @@
 Feature: Test error messages
 
 
-@not.with_os=rhel__eq__8
 @bz1888946
 Scenario: Global option 'proxy_username' is set but not 'proxy_password'
   Given I use repository "dnf-ci-fedora"
@@ -14,7 +13,6 @@ Scenario: Global option 'proxy_username' is set but not 'proxy_password'
     And stderr contains "'proxy_username' is set but not 'proxy_password'"
 
 
-@not.with_os=rhel__eq__8
 @bz1888946
 Scenario: Repository option 'proxy_username' is set but not 'proxy_password'
   Given I use repository "dnf-ci-fedora" with configuration
