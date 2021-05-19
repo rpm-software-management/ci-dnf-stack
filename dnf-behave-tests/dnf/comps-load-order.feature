@@ -1,4 +1,3 @@
-@not.with_os=rhel__eq__8
 @bz1928181
 Feature: Comps are merged based on repoconf load order
 

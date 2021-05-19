@@ -115,7 +115,7 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | remove          | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
-@not.with_os=rhel__eq__8
+
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -139,7 +139,7 @@ Scenario: Do not autoremove kernel after upgrade with --best
    Then the exit code is 0
     And Transaction is empty
 
-@not.with_os=rhel__eq__8
+
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --nobest
@@ -163,7 +163,7 @@ Scenario: Do not autoremove kernel after upgrade with --nobest
    Then the exit code is 0
     And Transaction is empty
 
-@not.with_os=rhel__eq__8
+
 @bz1934499
 @bz1921063
 Scenario: Do not remove or change reason after remove of one of installonly packages
@@ -194,6 +194,7 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
     And package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
+
 
 @bz1934499
 @bz1921063
