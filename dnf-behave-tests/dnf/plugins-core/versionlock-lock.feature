@@ -266,6 +266,7 @@ Scenario: The locked version of the package cannot get obsoleted by upgrade of o
    Then the exit code is 0
     And Transaction is empty
 
+
 @bz1957280
 Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is not filtered out and can be installed
   Given I use repository "dnf-ci-obsoletes"
@@ -279,3 +280,22 @@ Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
+
+
+@bz1961217
+Scenario: The packages with minorbump part of release are correctly locked
+  Given I use repository "miscellaneous"
+    And I successfully execute dnf with args "install minorbump-0:1.0-1.fc29.x86_64"
+    And I successfully execute dnf with args "versionlock minorbump"
+        # check that minorbump is available with version higher then locked
+    And I successfully execute dnf with args "repoquery minorbump"
+   Then stdout is
+    """
+    minorbump-0:1.0-1.fc29.1.src
+    minorbump-0:1.0-1.fc29.1.x86_64
+    minorbump-0:1.0-1.fc29.src
+    minorbump-0:1.0-1.fc29.x86_64
+    """
+   When I execute dnf with args "upgrade minorbump"
+   Then the exit code is 0
+    And Transaction is empty
