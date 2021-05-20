@@ -18,9 +18,5 @@ Scenario: When kernel has unsatisfied dependencies, dnf repoquery --unsatisfied 
   Given I fake kernel release to "1.0"
    When I execute "dnf repoquery --unsatisfied"
    Then the exit code is 0
-    And stdout is
-        """
-        
-         Problem: problem with installed package dnf-ci-kernel-1.0-1.x86_64
-          - nothing provides dnf-ci-systemd needed by dnf-ci-kernel-1.0-1.x86_64
-        """
+    And stdout contains "Problem: problem with installed package dnf-ci-kernel-1.0-1.x86_64"
+    And stdout contains "- nothing provides dnf-ci-systemd needed by dnf-ci-kernel-1.0-1.x86_64"
