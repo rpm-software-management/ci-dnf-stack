@@ -13,6 +13,7 @@ Background: setup repository
 @bz1815327
 @bz1887293
 @bz1909845
+@not.with_os=rhel__eq__8
 Scenario: Dnf fails to update a plugin if it does not exist after resolving the transaction
   Given I successfully execute dnf with args "install dummy"
     And I successfully execute dnf with args "install dnf-plugin-remove-dummy"
