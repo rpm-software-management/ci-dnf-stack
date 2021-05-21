@@ -43,6 +43,7 @@ for path in "$DIR"/*/*.spec; do
     SPEC_DIR=$(dirname "$path")
     CSUM_FILE="$SPEC_NAME.sha256"
     CSUM_CHANGED=0
+    RPMBUILD_OPTS_FILE="$SPEC_NAME.rpmbuild_opts"
 
     # detect spec change -> force rebuild
     pushd "$SPEC_DIR" > /dev/null
@@ -57,6 +58,15 @@ for path in "$DIR"/*/*.spec; do
     RPMBUILD_CMD="$RPMBUILD_CMD --define='_srcrpmdir $REPODIR/$REPO/src' --define='_rpmdir $REPODIR/$REPO'"
     RPMBUILD_CMD="$RPMBUILD_CMD --define='dist $DIST'"
     RPMBUILD_CMD="$RPMBUILD_CMD --define '_source_payload w1.gzdio' --define '_binary_payload w1.gzdio'"
+
+    # add build options configured per spec file
+    pushd "$SPEC_DIR" > /dev/null
+        if [ -f "$RPMBUILD_OPTS_FILE" ]; then
+            while IFS='' read -r CFGLINE || [ -n "${CFGLINE}" ]; do
+                RPMBUILD_CMD="$RPMBUILD_CMD ${CFGLINE}"
+            done < "$RPMBUILD_OPTS_FILE"
+        fi
+    popd > /dev/null
 
     # rebuild changed or new specs
     if [ $CSUM_CHANGED -eq 1 ]; then
