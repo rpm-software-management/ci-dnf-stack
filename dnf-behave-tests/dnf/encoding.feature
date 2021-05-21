@@ -80,3 +80,16 @@ Scenario: non-UTF-8 character in an option when using corresponding locale
     And Transaction is following
         | Action        | Package                    |
         | install       | dummy-1:1.0-1.x86_64       |
+
+
+@bz1893176
+Scenario: non-UTF-8 character in filename in an installed package
+  Given I use repository "miscellaneous"
+    And I successfully execute dnf with args "install non_utf_filenames"
+   When I execute dnf with args "repoquery --list --installed non_utf_filenames"
+   Then the exit code is 0
+   When I execute dnf with args "remove non_utf_filenames"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | remove        | non_utf_filenames-0:1.0-1.noarch  |
