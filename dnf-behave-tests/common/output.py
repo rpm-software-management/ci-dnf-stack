@@ -11,20 +11,43 @@ from common.lib.diff import print_lines_diff
 from common.lib.text import lines_match_to_regexps_line_by_line
 
 
-def handle_reposync(expected, found):
+sync_line_dnf4 = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
+bottom_line_dnf4 = re.compile(r"Last metadata expiration check: .*")
+
+def strip_reposync_dnf4(found_lines, line_number):
+    while line_number < len(found_lines) and sync_line_dnf4.fullmatch(found_lines[line_number].strip()):
+        found_lines.pop(line_number)
+
+    if line_number < len(found_lines) and bottom_line_dnf4.fullmatch(found_lines[line_number].strip()):
+        found_lines.pop(line_number)
+
+
+sync_line_dnf5 = re.compile(r"\[[0-9]+/[0-9]+\] .* [0-9]+% \| +[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[KMG]?iB \| + [0-9hms]+")
+
+def strip_reposync_dnf5(found_lines, line_number):
+    if line_number < len(found_lines) and found_lines[line_number].strip() == "Updating repositories metadata and load them:":
+        found_lines.pop(line_number)
+
+    while line_number < len(found_lines) and sync_line_dnf5.fullmatch(found_lines[line_number].strip()):
+        found_lines.pop(line_number)
+
+    for s in ("Waiting until sack is filled...", "Sack is filled.", ""):
+        if line_number < len(found_lines) and found_lines[line_number].strip() == s:
+            found_lines.pop(line_number)
+
+
+def handle_reposync(expected, found, dnf5_mode):
     line_number = 0
     for line in expected:
         if line == "<REPOSYNC>":
-            sync_line = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
-            last_check_line = re.compile(r"Last metadata expiration check: .*")
-
-            while line_number < len(found) and (
-                    sync_line.fullmatch(found[line_number].strip())
-                    or last_check_line.fullmatch(found[line_number].strip())):
-                found.pop(line_number)
+            if dnf5_mode:
+                strip_reposync_dnf5(found, line_number)
+            else:
+                strip_reposync_dnf4(found, line_number)
 
             expected.pop(line_number)
             break
+
         line_number += 1
 
     return expected, found
@@ -56,7 +79,7 @@ def then_stdout_is(context):
     if found == [""]:
         found = []
 
-    clean_expected, clean_found = handle_reposync(expected, found)
+    clean_expected, clean_found = handle_reposync(expected, found, context.dnf.dnf5_mode)
 
     if clean_expected == clean_found:
         return
@@ -88,7 +111,7 @@ def then_stdout_matches_line_by_line(context):
     found = context.cmd_stdout.split('\n')
     expected = context.text.split('\n')
 
-    clean_expected, clean_found = handle_reposync(expected, found)
+    clean_expected, clean_found = handle_reposync(expected, found, context.dnf.dnf5_mode)
 
     lines_match_to_regexps_line_by_line(clean_found, clean_expected)
 
