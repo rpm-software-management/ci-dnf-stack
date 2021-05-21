@@ -22,6 +22,7 @@ def run(cmd, shell=True, cwd=None):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,
+        errors="surrogateescape",
     )
 
     stdout, stderr = proc.communicate()
