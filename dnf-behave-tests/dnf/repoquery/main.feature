@@ -39,11 +39,13 @@ Scenario: repoquery NAME (nonexisting package)
  Then the exit code is 0
   And stdout is empty
 
+@dnf5
 Scenario: repoquery NAME
  When I execute dnf with args "repoquery top-a"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top-a-1:1.0-1.src
       top-a-1:1.0-1.x86_64
       top-a-1:2.0-1.src
