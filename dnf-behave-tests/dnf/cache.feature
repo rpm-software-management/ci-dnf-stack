@@ -5,7 +5,7 @@ Feature: Tests for cache
 @destructive
 @no_installroot
 Scenario: Do not error out when fail to load/store expired_repos cache
-  Given I use repository "miscellaneous"
+  Given I use repository "simple-base"
     And I create file "/tmp/dnf/expired_repos.json" with
         """
         """
@@ -15,12 +15,12 @@ Scenario: Do not error out when fail to load/store expired_repos cache
    Then the exit code is 0
     And stdout is
         """
-        dummy-1:1.0-1.src
-        dummy-1:1.0-1.x86_64
-        weird-1:1.0-1.src
-        weird-1:1.0-1.x86_64
-        weird-1:2.0-1.src
-        weird-1:2.0-1.x86_64
+        dedalo-signed-0:1.0-1.fc29.src
+        dedalo-signed-0:1.0-1.fc29.x86_64
+        labirinto-0:1.0-1.fc29.src
+        labirinto-0:1.0-1.fc29.x86_64
+        vagare-0:1.0-1.fc29.src
+        vagare-0:1.0-1.fc29.x86_64
         """
     And stderr contains lines
         """
