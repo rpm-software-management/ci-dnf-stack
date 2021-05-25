@@ -82,6 +82,8 @@ Scenario: non-UTF-8 character in an option when using corresponding locale
         | install       | dummy-1:1.0-1.x86_64       |
 
 
+# Requires: https://github.com/rpm-software-management/libdnf/commit/6c2ac6786a423c00750a44805ade0268dd6d19e5
+@not.with_os=rhel__eq__8
 @bz1893176
 Scenario: non-UTF-8 character in filename in an installed package
   Given I use repository "miscellaneous"
