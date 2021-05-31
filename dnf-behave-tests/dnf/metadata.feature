@@ -1,28 +1,26 @@
 Feature: Testing DNF metadata handling
 
+
 @bz1644283
-Scenario: update expired metadata on first dnf update
-Given I create directory "/temp-repos/temp-repo"
+Scenario: update expired metadata on first dnf run
+Given I create directory "temp-repo"
   And I configure a new repository "testrepo" with
-      | key             | value                                          |
-      | baseurl         | {context.dnf.installroot}/temp-repos/temp-repo |
-      | metadata_expire | 1s                                             |
-  And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
+      | key             | value                               |
+      | baseurl         | {context.dnf.installroot}/temp-repo |
+      | metadata_expire | 0s                                  |
+  And I execute "createrepo_c ." in "{context.dnf.installroot}/temp-repo"
+  And I execute dnf with args "makecache"
+  And I copy file "{context.scenario.repos_location}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" to "/temp-repo/"
+  # Ensure metadata are expired
+  And I execute "sleep 1s"
+  And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repo"
+ When I execute dnf with args "repoquery --all"
  Then the exit code is 0
- When I execute dnf with args "list all"
- Then the exit code is 0
-  And stdout contains "testrepo"
-Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/temp-repo/dnf-ci-fedora"
- Then the exit code is 0
-  And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
- Then the exit code is 0
- #Ensure metadata are expired
-  And I execute "sleep 2s"
- Then I execute dnf with args "update"
- Then the exit code is 0
- Then I execute dnf with args "list all"
- Then the exit code is 0
-  And stdout contains "\s+wget.src\s+1.19.5-5.fc29\s+testrepo"
+  And stdout is
+      """
+      <REPOSYNC>
+      labirinto-0:1.0-1.fc29.x86_64
+      """
 
 
 @bz1866505
@@ -64,8 +62,8 @@ Given I create file "/a/etc/malicious.file" with
       """
   And I start http server "malicious_server" at "{context.dnf.installroot}/a"
   And I configure a new repository "test" with
-        | key      | value                                                                                                                                                               |
-        | gpgcheck | 0    |
+        | key      | value                                                             |
+        | gpgcheck | 0                                                                 |
         | baseurl  | http://0.0.0.0:{context.dnf.ports[malicious_server]}/b/c/d/e/f/g/ |
  When I execute dnf with args "--refresh install htop"
  Then file "/etc/malicious.file" does not exist
