@@ -9,6 +9,7 @@ import os
 import parse
 
 from fixtures import start_server_based_on_type
+from common.lib.diff import print_lines_diff
 
 
 @parse.with_pattern(r"http|https|ftp")
@@ -107,3 +108,25 @@ def step_http_log_contains(context):
     for e in expected:
         if e not in found:
             raise AssertionError('HTTP log does not contain "%s": %s' % (e, "\n" + "\n".join(found) + "\n"))
+
+
+@behave.step("HTTP log is")
+def step_http_log_is(context):
+    expected = context.text.format(context=context).rstrip().split('\n')
+    found = []
+    server_ids = list(context.dnf.ports.keys())
+    server_ports = list(context.dnf.ports.values())
+    for r in context.scenario.httpd.log:
+        port = r.headers['Host'].split(':')[1]
+        server_id = server_ids[server_ports.index(int(port))]
+        found.append("%s %s %s" % (r.command, server_id, r.path))
+
+    if found == [""]:
+        found = []
+
+    if expected == found:
+        return
+
+    print_lines_diff(expected, found)
+
+    raise AssertionError("HTTP log is not: %s" % context.text)

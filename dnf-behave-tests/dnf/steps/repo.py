@@ -100,8 +100,8 @@ def generate_repodata(context, repo, extra_args=None, explicit=False):
         context.repos[repo_subst] = True
 
 
-def generate_metalink(destdir, url):
-    metalink = """<?xml version="1.0" encoding="utf-8"?>
+def generate_empty_metalink(destdir):
+    empty_metalink = """<?xml version="1.0" encoding="utf-8"?>
 <metalink version="3.0" xmlns="http://www.metalinker.org/" xmlns:mm0="http://fedorahosted.org/mirrormanager">
   <files>
     <file name="repomd.xml">
@@ -111,23 +111,35 @@ def generate_metalink(destdir, url):
         <hash type="sha256">{csum}</hash>
       </verification>
       <resources>
-        <url protocol="{schema}" type="{schema}">{url}/repodata/repomd.xml</url>
       </resources>
     </file>
   </files>
 </metalink>
 """
-    schema = url.split(':')[0]
     with open(os.path.join(destdir, 'repodata', 'repomd.xml')) as f:
         repomd = f.read()
     with open(os.path.join(destdir, 'metalink.xml'), 'w') as f:
-        data = metalink.format(
+        data = empty_metalink.format(
             size=len(repomd),
             csum=sha256_checksum(repomd.encode('utf-8')),
-            schema=schema,
-            url=url,
         )
         f.write(data + '\n')
+
+
+def add_mirror_to_metalinkg(destdir, url):
+    metalink_data = """        <url protocol="{schema}" type="{schema}">{url}/repodata/repomd.xml</url>\n"""
+    schema = url.split(':')[0]
+    mirror_str = metalink_data.format(schema=schema, url=url)
+    with open(os.path.join(destdir, 'metalink.xml'), "r") as f:
+        contents = f.readlines()
+
+    # We need to place new mirrors as the fifth line from the bottom (-5)
+    # so that they end up in the <resources> tag.
+    contents.insert(-5, mirror_str)
+
+    with open(os.path.join(destdir, 'metalink.xml'), "w") as f:
+        contents = "".join(contents)
+        f.write(contents)
 
 
 @behave.given("I set releasever to \"{releasever}\"")
@@ -334,12 +346,22 @@ def step_set_up_metalink_for_repository(context, repo):
         "Creating a metalink needs to be done on a repo that was copied for modification."
 
     url = repo_info.config['baseurl']
-    generate_metalink(repo_info.path, url)
+    generate_empty_metalink(repo_info.path)
+    add_mirror_to_metalinkg(repo_info.path, url)
     repo_info.update_config({
         "baseurl": "",
-        "metalink": url + "metalink.xml",
+        "metalink": os.path.join(url, "metalink.xml"),
     })
     create_repo_conf(context, repo)
+
+@behave.step("I add \"{url}\" mirror to \"{metalink_repo}\" metalink")
+def step_set_up_metalink_for_repository(context, url, metalink_repo):
+    """
+    Add mirror to metalink
+    """
+    metalink_repo_info = get_repo_info(context, metalink_repo)
+    url = url.format(context=context)
+    add_mirror_to_metalinkg(metalink_repo_info.path, url)
 
 
 @behave.step("I am running a system identified as the \"{system}\"")
