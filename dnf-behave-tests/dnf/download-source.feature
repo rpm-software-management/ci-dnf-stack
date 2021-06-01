@@ -151,3 +151,100 @@ Given I make packages from repository "download-sources" accessible via http
       """
       GET /noarch/special-c%2b%2b-package-1.0-1.noarch.rpm
       """
+
+
+@bz1966482
+Scenario: when the first mirror from metalink isn't available we try the next one
+Given I copy repository "simple-base" for modification
+  And I copy directory "/{context.dnf.repos[simple-base].path}" to "/mirror"
+  And I start http server "mirror" at "{context.dnf.installroot}/mirror"
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  And I add "http://localhost:{context.dnf.ports[mirror]}" mirror to "simple-base" metalink
+  And I delete directory "/{context.dnf.repos[simple-base].path}/repodata"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+  And stderr is empty
+  # TODO(amatej): this is maybe a bug in librepo, we shouln't try to download metadata
+  #               from a mirror which fails to serve repomd. Reported as bz1966482
+  #               Expected:
+  # And HTTP log is
+  #    """
+  #    GET simple-base /metalink.xml
+  #    GET simple-base /repodata/repomd.xml
+  #    GET mirror /repodata/repomd.xml
+  #    GET mirror /repodata/primary.xml.gz
+  #    GET mirror /repodata/filelists.xml.gz
+  #    """
+  # Instead we get:
+  And HTTP log is
+      """
+      GET simple-base /metalink.xml
+      GET simple-base /repodata/repomd.xml
+      GET mirror /repodata/repomd.xml
+      GET simple-base /repodata/primary.xml.gz
+      GET simple-base /repodata/filelists.xml.gz
+      GET mirror /repodata/primary.xml.gz
+      GET mirror /repodata/filelists.xml.gz
+      """
+
+
+@bz1966482
+Scenario: when the first mirror from mirrorlist isn't available we try the next one
+Given I copy repository "simple-base" for modification
+  And I copy directory "/{context.dnf.repos[simple-base].path}" to "/mirror"
+  And I start http server "mirror" at "{context.dnf.installroot}/mirror"
+  And I use repository "simple-base" as http
+  And I create and substitute file "/mirrorlist" with
+      """
+      http://localhost:{context.dnf.ports[simple-base]}
+      http://localhost:{context.dnf.ports[mirror]}
+      """
+  And I configure repository "simple-base" with
+      | key        | value                                |
+      | mirrorlist | {context.dnf.installroot}/mirrorlist |
+  And I delete directory "/{context.dnf.repos[simple-base].path}/repodata"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+  And stderr is empty
+  # TODO(amatej): this is maybe a bug in librepo, we shouln't try to download metadata
+  #               from a mirror which fails to serve repomd. Reported as bz1966482
+  And HTTP log is
+      """
+      GET simple-base /repodata/repomd.xml
+      GET mirror /repodata/repomd.xml
+      GET simple-base /repodata/primary.xml.gz
+      GET simple-base /repodata/filelists.xml.gz
+      GET mirror /repodata/primary.xml.gz
+      GET mirror /repodata/filelists.xml.gz
+      """
+
+
+@bz1966482
+Scenario: when the first repomd checksum from metalink doesn't match we should try the next mirror
+Given I copy repository "simple-base" for modification
+  And I copy directory "/{context.dnf.repos[simple-base].path}" to "/mirror"
+  And I start http server "mirror" at "{context.dnf.installroot}/mirror"
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  And I add "http://localhost:{context.dnf.ports[mirror]}" mirror to "simple-base" metalink
+  # Change repomd.xml from simple-base repo so that it doesn't match with metalink checksum
+  Given I generate repodata for repository "simple-base" with extra arguments "--checksum sha512"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+  And stderr is empty
+  # TODO(amatej): this is maybe a bug in librepo, we shouln't try to download metadata
+  #               from a mirror which has different repomd than expected. Reported as bz1966482
+  And HTTP log is
+      """
+      GET simple-base /metalink.xml
+      GET simple-base /repodata/repomd.xml
+      GET mirror /repodata/repomd.xml
+      GET simple-base /repodata/primary.xml.gz
+      GET simple-base /repodata/filelists.xml.gz
+      GET mirror /repodata/primary.xml.gz
+      GET mirror /repodata/filelists.xml.gz
+      """
