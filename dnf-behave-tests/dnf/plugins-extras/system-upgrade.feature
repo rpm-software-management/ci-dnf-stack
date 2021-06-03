@@ -180,3 +180,20 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
+
+
+Scenario: Test system-upgrade empty transaction
+Given I successfully execute dnf with args "distro-sync"
+ When I execute dnf with args "system-upgrade download"
+ Then the exit code is 0
+  And DNF Transaction is empty
+  And stdout contains lines
+      """
+      The system-upgrade transaction is empty, your system is already up-to-date.
+      """
+ When I execute dnf with args "system-upgrade reboot"
+ Then the exit code is 1
+  And stderr is
+      """
+      Error: system is not ready for upgrade
+      """
