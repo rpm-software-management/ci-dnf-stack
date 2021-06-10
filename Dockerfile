@@ -18,6 +18,8 @@ COPY ./repos.d/ /etc/yum.repos.d/
 
 # enable the test-utils repo
 RUN set -x && \
+    dnf -y upgrade; \
+    dnf clean all; \
     dnf -y install dnf-plugins-core; \
     dnf -y copr enable rpmsoftwaremanagement/test-utils;
 
