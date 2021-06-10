@@ -79,7 +79,8 @@ def then_stdout_is(context):
     if found == [""]:
         found = []
 
-    clean_expected, clean_found = handle_reposync(expected, found, context.dnf.dnf5_mode)
+    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
 
     if clean_expected == clean_found:
         return
@@ -111,7 +112,8 @@ def then_stdout_matches_line_by_line(context):
     found = context.cmd_stdout.split('\n')
     expected = context.text.split('\n')
 
-    clean_expected, clean_found = handle_reposync(expected, found, context.dnf.dnf5_mode)
+    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
 
     lines_match_to_regexps_line_by_line(clean_found, clean_expected)
 
