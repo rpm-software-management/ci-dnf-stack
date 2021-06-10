@@ -95,7 +95,6 @@ Scenario: Fail to install a different stream of an already enabled module using 
         It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
-@not.with_os=rhel__eq__8
 @bz1814831
 Scenario: Fail to enable a module stream when specifying only module
    When I execute dnf with args "module enable nodejs"
