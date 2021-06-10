@@ -100,7 +100,7 @@ def check_dnf_transaction(context, mode):
 
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
-    dnf_transaction = parse_transaction_table(lines)
+    dnf_transaction = parse_transaction_table(context, lines)
 
     for action, nevras in context.table:
         if action in ["absent", "present", "unchanged", "changed"]:
@@ -174,7 +174,7 @@ def then_DNF_transaction_is_empty(context):
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
     try:
-        dnf_transaction = parse_transaction_table(lines)
+        dnf_transaction = parse_transaction_table(context, lines)
     except RuntimeError:
         dnf_transaction = {}
     if dnf_transaction:
