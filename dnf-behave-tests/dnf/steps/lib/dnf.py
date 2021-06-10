@@ -60,7 +60,7 @@ ACTIONS = {}
 ACTIONS.update(ACTIONS_EN)
 
 
-def find_transaction_table_begin(lines):
+def find_transaction_table_begin(context, lines):
     """
     Find a DNF transaction table header and return index of a following line:
     ==========================================
@@ -68,6 +68,15 @@ def find_transaction_table_begin(lines):
     ==========================================
     """
 
+    # DNF 5
+    if context.dnf.dnf5_mode:
+        trans_start_re = re.compile(r"Package +Arch +Version +Repository +Size")
+        for i in range(0, len(lines) - 1):
+            if trans_start_re.match(lines[i]):
+                return i + 1
+        raise RuntimeError("Transaction table start not found")
+
+    # DNF 4
     i = 0
     while i < len(lines) - 3:
         line1 = lines[i]
@@ -99,12 +108,22 @@ def find_transaction_table_begin(lines):
     raise RuntimeError("Transaction table start not found")
 
 
-def find_transaction_table_end(lines):
+def find_transaction_table_end(context, lines):
     """
     Find a DNF transaction table end:
     Transaction Summary
     ===================
     """
+
+    # DNF 5
+    if context.dnf.dnf5_mode:
+        for i in range(0, len(lines)):
+            if not lines[i].strip():
+                # empty line indicates the end of the transaction table
+                return i
+        raise RuntimeError("Transaction table end not found")
+
+    # DNF 4
     for i, line in enumerate(lines):
         match = SEPARATOR_RE.match(line)
         if match:
@@ -112,7 +131,7 @@ def find_transaction_table_end(lines):
     raise RuntimeError("Transaction table end not found")
 
 
-def parse_transaction_table(lines):
+def parse_transaction_table(context, lines):
     """
     Find and parse transaction table.
     Return {action: set([rpms])}
@@ -122,10 +141,10 @@ def parse_transaction_table(lines):
         result[action] = set()
     result["obsoleted"] = set()
 
-    table_begin = find_transaction_table_begin(lines)
+    table_begin = find_transaction_table_begin(context, lines)
     lines = lines[table_begin:]
 
-    table_end = find_transaction_table_end(lines)
+    table_end = find_transaction_table_end(context, lines)
     lines = lines[:table_end]
 
     # lines in transaction table could be splitted, join them
