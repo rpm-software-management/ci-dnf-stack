@@ -268,7 +268,6 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
     And Transaction is following
         | Action                    | Package                                            |
         | upgrade                   | nodejs-1:8.11.5-1.module_2030+42747d40.x86_64      |
-        | install-weak              | npm-1:8.11.5-1.module_2030+42747d40.x86_64         |
     And modules state is following
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 5         |           |
@@ -296,7 +295,6 @@ Scenario Outline: When modular RPM is installed and modulemd is not available, t
     And Transaction is following
         | Action                    | Package                                            |
         | upgrade                   | nodejs-1:5.12.1-1.fc29.x86_64                      |
-        | install-weak              | npm-1:5.12.1-1.fc29.x86_64                         |
     And modules state is following
         | Module         | State     | Stream    | Profiles  |
         | nodejs         | enabled   | 5         |           |
