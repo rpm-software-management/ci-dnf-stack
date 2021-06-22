@@ -4,6 +4,9 @@ on:
   schedule:
     - cron:  '0 2 * * *'  # at 2am UTC
 
+  # allow to run the workflow manually from GitHub web interface
+  workflow_dispatch:
+
 jobs:
   container-build:
     name: Container build
