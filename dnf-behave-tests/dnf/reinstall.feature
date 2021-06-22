@@ -12,6 +12,7 @@ Background: Install CQRlib-devel and CQRlib
         | install-dep   | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
+@dnf5
 Scenario: Reinstall an RPM from the same repository
    When I execute dnf with args "reinstall CQRlib"
    Then the exit code is 0
@@ -20,6 +21,7 @@ Scenario: Reinstall an RPM from the same repository
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
+@dnf5
 Scenario: Reinstall an RPM from different repository
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "reinstall CQRlib"

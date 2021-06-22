@@ -25,6 +25,7 @@ Scenario: Downgrade one RPM
    Then the exit code is 0
     And stderr contains "Package flac of lowest version already installed, cannot downgrade it."
 
+@dnf5
 Scenario: Downgrade RPM that requires downgrade of dependency
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"

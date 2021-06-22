@@ -1,6 +1,7 @@
 Feature: Install an obsoleted RPM
 
 
+@dnf5
 Scenario: Install an obsoleted RPM
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install glibc-profile"
@@ -10,6 +11,7 @@ Scenario: Install an obsoleted RPM
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
 
 
+@dnf5
 Scenario: Install an obsoleted RPM when the obsoleting RPM is available
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-thirdparty"
