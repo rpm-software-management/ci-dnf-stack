@@ -332,6 +332,7 @@ Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by n
    Then the exit code is 1
     And stderr matches line by line
     """
+    ?warning: .*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm: Header V4 .SA/SHA256 Signature, key ID .*: NOKEY
     Removing dedalo-signed-1\.0-1\.fc29\.src\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.src\.rpm is not installed
     Removing dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm is not installed
     Removing dedalo-unsigned-1\.0-1\.fc29\.src\.rpm: Package dedalo-unsigned-1\.0-1\.fc29\.src\.rpm is not signed
