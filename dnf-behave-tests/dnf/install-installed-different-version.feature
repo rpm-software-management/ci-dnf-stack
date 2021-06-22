@@ -1,3 +1,4 @@
+@dnf5
 Feature: Install different version of installed RPMs
 
 

@@ -1,3 +1,4 @@
+@dnf5
 Feature: Install RPMs by pkgspec
 
 Background: Use dnf-ci-fedora repository

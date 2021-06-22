@@ -1,3 +1,4 @@
+@dnf5
 Feature: Upgrade RPMs by pkgspec
 
 

@@ -15,6 +15,7 @@ Background: Install glibc
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+@dnf5
 Scenario Outline: Upgrade an RPM by provide <operator> e:v-r
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade 'glibc <operator> <e:v-r>'"
@@ -35,6 +36,7 @@ Examples:
   | <=            | 0:2.28-26.fc29       |
 
 
+@dnf5
 Scenario: Upgrade an RPM by provide
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade 'libm.so.6()(64bit)'"

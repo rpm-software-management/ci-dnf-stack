@@ -4,6 +4,7 @@ Background: Use install-remove repository
   Given I use repository "dnf-ci-install-remove"
 
 # tea requires water and provides hot-beverage
+@dnf5
 Scenario Outline: Install remove <spec type> that requires only name
    When I execute dnf with args "install <spec>"
    Then the exit code is 0
@@ -28,6 +29,7 @@ Examples:
 
 
 # coffee requires water and sugar == 1
+@dnf5
 Scenario: Install remove package that requires exact version
    When I execute dnf with args "install coffee"
    Then the exit code is 0
@@ -46,6 +48,7 @@ Scenario: Install remove package that requires exact version
 
 
 # chockolate  requires sugar>=2 and milk==1
+@dnf5
 Scenario: Install remove package that requires version >=
    When I execute dnf with args "install chockolate"
    Then the exit code is 0
@@ -71,6 +74,7 @@ Scenario: Install remove package that requires version >=, not satisfiable
 
 
 # both coffee and tea require water
+@dnf5
 Scenario: Install remove two package with shared dependency
    When I execute dnf with args "install tea coffee"
    Then the exit code is 0

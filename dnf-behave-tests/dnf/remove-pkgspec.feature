@@ -1,3 +1,4 @@
+@dnf5
 Feature: Remove RPMs by pkgspec
 
 

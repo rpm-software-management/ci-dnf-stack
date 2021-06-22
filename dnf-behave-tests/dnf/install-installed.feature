@@ -23,6 +23,7 @@ Scenario: Install installed RPM when upgrade is available with --best
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 @bz1670776 @bz1671683
 Scenario: Install installed RPM when upgrade is available with best=True (in dnf.conf)
   Given I use repository "dnf-ci-fedora"
@@ -46,6 +47,7 @@ Scenario: Install installed RPM when upgrade is available with best=True (in dnf
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
 
 
+@dnf5
 @bz1670776 @bz1671683
 Scenario: Install installed RPM when upgrade is available with best=False (in dnf.conf)
   Given I use repository "dnf-ci-fedora"
@@ -123,6 +125,7 @@ Scenario: Install installed RPM by NEVR when upgrade is available
     And Transaction is empty
 
 
+@dnf5
 Scenario: Install installed RPM by NEVR when downgrade is available
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"

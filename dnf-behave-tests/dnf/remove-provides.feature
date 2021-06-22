@@ -15,6 +15,7 @@ Background: Install glibc
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+@dnf5
 Scenario Outline: Remove an RPM by provide <operator> e:v-r
    When I execute dnf with args "remove 'glibc <operator> <e:v-r>'"
    Then the exit code is 0
