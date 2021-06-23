@@ -95,10 +95,10 @@ Scenario Outline: edit group filelists - add package of type "<type>"
   Given I use repository "simple-base"
    When I execute dnf with args "groups-manager --load={context.dnf.fixturesdir}/data/groups-manager/comps_a.xml --save /{context.dnf.tempdir}/out.xml --id=group-a <group_modifier> vagare"
    Then the exit code is 0
-    And file "/{context.dnf.tempdir}/out.xml" contents is
+    And file "/{context.dnf.tempdir}/out.xml" matches line by line
     """
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+    <\?xml version="1\.0" encoding="UTF-8"\?>
+    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc\.//DTD Comps info//EN" "comps\.dtd">
     <comps>
       <group>
         <id>group-a</id>
@@ -107,7 +107,7 @@ Scenario Outline: edit group filelists - add package of type "<type>"
         <uservisible>true</uservisible>
         <packagelist>
           <packagereq type="default">gnomo</packagereq>
-          <packagereq type="<type>">vagare</packagereq>
+          <packagereq type="<type>"(?: requires="")?>vagare</packagereq>
         </packagelist>
       </group>
       <group>
@@ -134,10 +134,10 @@ Scenario: edit group filelists - add package with dependencies
   Given I use repository "simple-base"
    When I execute dnf with args "groups-manager --load={context.dnf.fixturesdir}/data/groups-manager/comps_a.xml --save /{context.dnf.tempdir}/out.xml --id=group-a --dependencies vagare"
    Then the exit code is 0
-    And file "/{context.dnf.tempdir}/out.xml" contents is
+    And file "/{context.dnf.tempdir}/out.xml" matches line by line
     """
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+    <\?xml version="1\.0" encoding="UTF-8"\?>
+    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc\.//DTD Comps info//EN" "comps\.dtd">
     <comps>
       <group>
         <id>group-a</id>
@@ -146,8 +146,8 @@ Scenario: edit group filelists - add package with dependencies
         <uservisible>true</uservisible>
         <packagelist>
           <packagereq type="default">gnomo</packagereq>
-          <packagereq type="default">labirinto</packagereq>
-          <packagereq type="default">vagare</packagereq>
+          <packagereq type="default"(?: requires="")?>labirinto</packagereq>
+          <packagereq type="default"(?: requires="")?>vagare</packagereq>
         </packagelist>
       </group>
       <group>
@@ -168,10 +168,10 @@ Scenario: add a new group
   Given I use repository "simple-base"
    When I execute dnf with args "groups-manager --save /{context.dnf.tempdir}/out.xml --id=new-group --name="New group" --print vagare"
    Then the exit code is 0
-    And file "/{context.dnf.tempdir}/out.xml" contents is
+    And file "/{context.dnf.tempdir}/out.xml" matches line by line
     """
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+    <\?xml version="1\.0" encoding="UTF-8"\?>
+    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc\.//DTD Comps info//EN" "comps\.dtd">
     <comps>
       <group>
         <id>new-group</id>
@@ -179,7 +179,7 @@ Scenario: add a new group
         <default>false</default>
         <uservisible>true</uservisible>
         <packagelist>
-          <packagereq type="default">vagare</packagereq>
+          <packagereq type="default"(?: requires="")?>vagare</packagereq>
         </packagelist>
       </group>
     </comps>
