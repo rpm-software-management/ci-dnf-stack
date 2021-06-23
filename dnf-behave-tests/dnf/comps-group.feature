@@ -326,7 +326,7 @@ Scenario: Install an environment with empty name
         | install-group | test-package-1.0-1.fc29.noarch    |
 
 
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group list"
@@ -357,7 +357,7 @@ Scenario: Install a group with empty packagelist
         | group-install | Test Group    |
 
 
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
@@ -378,7 +378,7 @@ Scenario: Merge groups when one has empty packagelist
        """
 
 
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: Merge environment with missing names containg a group with missing name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
@@ -393,7 +393,7 @@ Scenario: Merge environment with missing names containg a group with missing nam
        """
 
 
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
    When I execute dnf with args "group info no-name-group"
