@@ -55,6 +55,16 @@ def check_rpmdb_transaction(context, mode):
             if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
                 continue
             rpm = RPM(nevra)
+            if action == "install" and rpm not in rpmdb_transaction["install"]:
+                if rpm in rpmdb_transaction["upgrade"]:
+                    action = "upgrade"
+                elif rpm in rpmdb_transaction["downgrade"]:
+                    action = "downgrade"
+            if action == "remove" and rpm not in rpmdb_transaction["remove"]:
+                if rpm in rpmdb_transaction["upgraded"]:
+                    action = "upgraded"
+                elif rpm in rpmdb_transaction["downgraded"]:
+                    action = "downgraded"
             if action == "reinstall" and rpm not in rpmdb_transaction["reinstall"]:
                 action = "unchanged"
             if (action == "remove" and rpm not in rpmdb_transaction["remove"]
@@ -88,6 +98,11 @@ def check_rpmdb_transaction(context, mode):
                     rpmdb_transaction[action].remove(nevra)
                 elif action == "remove" and nevra in rpmdb_transaction["obsoleted"]:
                     rpmdb_transaction["obsoleted"].remove(nevra)
+                elif action == "install":
+                    if nevra in rpmdb_transaction["upgrade"]:
+                        rpmdb_transaction["upgrade"].remove(nevra)
+                    elif nevra in rpmdb_transaction["downgrade"]:
+                        rpmdb_transaction["downgrade"].remove(nevra)
 
         for action in ["install", "remove", "upgrade", "downgrade", "obsoleted"]:
             if rpmdb_transaction[action]:

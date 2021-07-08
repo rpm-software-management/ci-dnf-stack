@@ -110,23 +110,37 @@ def diff_rpm_lists(list_one, list_two):
     list_one = sorted(list_one)
     list_two = sorted(list_two)
 
+    # automaticaly detect names of installonly packages
+    # ASSUMPTION: multiple versions of a package with the same name.arch on the system means installonly the package
+    installonly_names = set()
+    prev_pkg = None
+    for pkg in list_one:
+        if prev_pkg and pkg.na == prev_pkg.na and pkg != prev_pkg:
+            installonly_names.add(pkg.na)
+        prev_pkg = pkg
+    prev_pkg = None
+    for pkg in list_two:
+        if prev_pkg and pkg.na == prev_pkg.na and pkg != prev_pkg:
+            installonly_names.add(pkg.na)
+        prev_pkg = pkg
+
     # PRESENT PACKAGES AND UNCHANGED INSTALLONLY PACKAGES
     for pkg in list_two:
         result["present"].append(pkg)
-        if (pkg in list_one) and pkg.is_installonly():
+        if (pkg in list_one) and (pkg.na in installonly_names):
             result["unchanged"].append(pkg)
     for pkg in result["unchanged"]:
         list_one.remove(pkg)
         list_two.remove(pkg)
 
-    names_one = set([i.na for i in list_one if not i.is_installonly()])
-    names_two = set([i.na for i in list_two if not i.is_installonly()])
+    names_one = set([i.na for i in list_one if i.na not in installonly_names])
+    names_two = set([i.na for i in list_two if i.na not in installonly_names])
 
     # INSTALL
     to_install = []
     for pkg in list_two:
         # installonly pkgs get always installed
-        if pkg.is_installonly():
+        if pkg.na in installonly_names:
             to_install.append(pkg)
             continue
         # detect upgrades/downgrades etc.
@@ -141,7 +155,7 @@ def diff_rpm_lists(list_one, list_two):
     to_remove = []
     for pkg in list_one:
         # installonly pkgs get always removed
-        if pkg.is_installonly():
+        if pkg.na in installonly_names:
             to_remove.append(pkg)
             continue
         # detect upgrades/downgrades etc.
@@ -152,8 +166,8 @@ def diff_rpm_lists(list_one, list_two):
         result["remove"].append(pkg)
         list_one.remove(pkg)
 
-    names_one = set([i.na for i in list_one if not i.is_installonly()])
-    names_two = set([i.na for i in list_two if not i.is_installonly()])
+    names_one = set([i.na for i in list_one if i.na not in installonly_names])
+    names_two = set([i.na for i in list_two if i.na not in installonly_names])
     assert names_one == names_two
 
     # UNCHANGED / REINSTALLED
