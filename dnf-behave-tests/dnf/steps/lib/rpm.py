@@ -58,6 +58,10 @@ class RPM(object):
         return True
 
     def __lt__(self, other):
+        if (self.na < other.na):
+            return True
+        if (self.na > other.na):
+            return False
         one = (str(self.epoch), self.version, self.release)
         two = (str(other.epoch), other.version, other.release)
         return rpm.labelCompare(one, two) <= -1
