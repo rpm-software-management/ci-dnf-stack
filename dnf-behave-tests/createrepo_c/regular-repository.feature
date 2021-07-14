@@ -138,6 +138,29 @@ Given I create file "/temp-repo/pkglist.txt" with
       | package-libs  | 0     | 0.2.1   | 1.fc29  | x86_64       |
 
 
+Scenario: create regular consistent repository with package list and absolute path
+Given I create file "/temp-repo/pkglist.txt" with
+      """
+      package-0.2.1-1.fc29.x86_64.rpm
+      package-libs-0.2.1-1.fc29.x86_64.rpm
+      """
+ When I execute createrepo_c with args "--pkglist {context.scenario.default_tmp_dir}/temp-repo/pkglist.txt {context.scenario.default_tmp_dir}/temp-repo" in "/"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                                | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
+  And primary in "/temp-repo/repodata" has only packages
+      | Name          | Epoch | Version | Release | Architecture |
+      | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
+      | package-libs  | 0     | 0.2.1   | 1.fc29  | x86_64       |
+
+
 Scenario: create regular consistent repository with package list with empty lines
 Given I create file "/temp-repo/pkglist.txt" with
       """

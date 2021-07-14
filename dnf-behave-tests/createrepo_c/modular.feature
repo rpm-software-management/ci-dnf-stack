@@ -286,6 +286,35 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | modular-package1 | 0     | 0.1     | 1       | x86_64       |
 
 
+Scenario: modular metadata are added to repodata with pkglist when running with absolute path
+Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/modular-package1-0.1-1.x86_64.rpm" to "/"
+  And I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/modular-package2-0.1-1.x86_64.rpm" to "/"
+  And I create file "/list" with
+      """
+      modular-package1-0.1-1.x86_64.rpm
+      some.modulemd-defaults.yaml
+      modules.yaml
+      stream.modulemd.yaml
+      """
+ When I execute createrepo_c with args "--pkglist {context.scenario.default_tmp_dir}/list {context.scenario.default_tmp_dir}/" in "/"
+ Then the exit code is 0
+  And stderr is empty
+  And repodata "/repodata/" are consistent
+  And repodata in "/repodata/" is
+      | Type         | File                             | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
+      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
+      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
+      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
+      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
+      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
+  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
+  And primary in "/repodata" has only packages
+      | Name             | Epoch | Version | Release | Architecture |
+      | modular-package1 | 0     | 0.1     | 1       | x86_64       |
+
+
 Scenario: using pkglist with invalid paths
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/modular-package1-0.1-1.x86_64.rpm" to "/"
   And I create file "/list" with
@@ -299,7 +328,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
  Then the exit code is 1
   And stderr is
       """
-      Critical: Failed to detect compression for file invalid-not-existing.modulemd-defaults.yaml: File invalid-not-existing.modulemd-defaults.yaml doesn't exists or not a regular file
+      Critical: Could not load module index file invalid-not-existing.modulemd-defaults.yaml: Cannot open invalid-not-existing.modulemd-defaults.yaml: File invalid-not-existing.modulemd-defaults.yaml doesn't exists or not a regular file
       """
 
 
