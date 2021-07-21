@@ -309,12 +309,6 @@ def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
         context.dnf.scenario_failed = True
 
-    # TODO workaround to avoid
-    # terminate called after throwing an instance of 'sdbus::Error'
-    # what():  [org.freedesktop.DBus.Error.NoReply] Message recipient disconnected from message bus without replying
-    if context.dnf and context.dnf.dnfdaemon_mode:
-        time.sleep(2)
-
     del context.dnf
 
 
