@@ -29,4 +29,17 @@
     <optionlist>
     </optionlist>
   </environment>
+
+  <environment>
+    <id>env-with-a-nonexistent-group</id>
+    <name>Env with a nonexistent group</name>
+    <description></description>
+    <grouplist>
+      <groupid>test-group</groupid>
+      <groupid>nonexistent-group</groupid>
+      <groupid>no-name-group</groupid>
+    </grouplist>
+    <optionlist>
+    </optionlist>
+  </environment>
 </comps>

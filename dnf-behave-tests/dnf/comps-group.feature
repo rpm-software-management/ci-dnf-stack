@@ -29,6 +29,25 @@ Scenario: Install and remove group
         | group-remove  | DNF-CI-Testgroup                  |
 
 
+Scenario: Install a group that is already installed
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
+   When I execute dnf with args "group install DNF-CI-Testgroup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install-group | filesystem-0:3.9-2.fc29.x86_64    |
+        | install-group | lame-0:3.100-4.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
+        | group-install | DNF-CI-Testgroup                  |
+   When I execute dnf with args "group install DNF-CI-Testgroup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | group-install | DNF-CI-Testgroup                  |
+
+
 Scenario: Install and remove group with excluded package
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -297,6 +316,7 @@ Scenario: List an environment with empty name
        <REPOSYNC>
        Available Environment Groups:
           <name-unset>
+          Env with a nonexistent group
        Available Groups:
           Test Group
           <name-unset>
@@ -415,3 +435,19 @@ Scenario: Mark a group and an environment without name
         | env-install   | <name-unset>                      |
         | group-install | <name-unset>                      |
         | group-install | Test Group                        |
+
+
+Scenario: Install an environment with a nonexistent group
+  Given I use repository "comps-group"
+  When I execute dnf with args "group install env-with-a-nonexistent-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | env-install   | Env with a nonexistent group      |
+        | group-install | Test Group                        |
+        | group-install | <name-unset>                      |
+        | install-group | test-package-1.0-1.fc29.noarch    |
+    And stderr is
+       """
+       no group 'nonexistent-group' from environment 'env-with-a-nonexistent-group'
+       """
