@@ -4,6 +4,8 @@ aliases:
     url: https://github.com/
   - name: fedorapkgs
     url: https://src.fedoraproject.org/rpms/
+  - name: centos-distgit
+    url: https://git.centos.org/rpms/
 
 components:
   - name: libsolv
@@ -11,8 +13,15 @@ components:
       src: github:openSUSE/libsolv.git
     distgit:
       src: fedorapkgs:libsolv.git
-      branch: origin/f32
       patches: drop
+    distgit-overrides:
+      - chroots:
+          - centos-stream-8-x86_64
+          - epel-8-x86_64
+        src: centos-distgit:libsolv.git
+        branch: c8s
+        spec-path: SPECS/libsolv.spec
+        patches-dir: SOURCES/
 
   - name: libmodulemd
     version-from: git
