@@ -2,7 +2,7 @@ Feature: Tests createrepo_c --zck
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: create empty repository with zck metadata
  When I execute createrepo_c with args "--zck ." in "/"
  Then the exit code is 0
@@ -22,7 +22,7 @@ Scenario: create empty repository with zck metadata
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: create repository with zck metadata
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
  When I execute createrepo_c with args "--zck ." in "/"
@@ -45,7 +45,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: create repository with zck metadata with bad package
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
   And I create file "/afilethatlookslike.rpm" with
@@ -72,7 +72,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: create repository with zck metadata usign dictionaries
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
 Given I create directory "/dictionaries"
@@ -121,7 +121,7 @@ Given I create directory "/dictionaries"
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+@not.with_os=rhel__ge__8
 Scenario: create repository with zck and dictionary metadata with bad package
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/"
   And I create file "/afilethatlookslike.rpm" with
