@@ -173,6 +173,9 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml --zck ." in
       | custom_metadata_zck | ${checksum}-custom_metadata.txt.zck | sha256        | zck              |
 
 
+# Requires: https://github.com/rpm-software-management/createrepo_c/pull/268
+#           https://github.com/rpm-software-management/createrepo_c/pull/276
+@not.with_os=rhel__ge__8
 Scenario: --update --keep-all-metadata keeps all additional metadata and merges new compressed modular metadata in
 Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/temp-repo"
   And I execute modifyrepo_c with args "../../updateinfo.xml ." in "/temp-repo/repodata"
