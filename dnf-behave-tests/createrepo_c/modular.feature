@@ -315,6 +315,9 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | modular-package1 | 0     | 0.1     | 1       | x86_64       |
 
 
+# Requires: https://github.com/rpm-software-management/createrepo_c/pull/268
+#           https://github.com/rpm-software-management/createrepo_c/pull/276
+@not.with_os=rhel__ge__8
 Scenario: using pkglist with invalid paths
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/modular-package1-0.1-1.x86_64.rpm" to "/"
   And I create file "/list" with
@@ -431,6 +434,9 @@ Given I create directory "/repo/"
   And file "/repo/.repodata" does not exist
 
 
+# Requires: https://github.com/rpm-software-management/createrepo_c/pull/268
+#           https://github.com/rpm-software-management/createrepo_c/pull/276
+@not.with_os=rhel__ge__8
 Scenario: Using file with an unknown compressions is an error
 Given I create directory "/repo/"
   And I execute "head -c 100 < /dev/urandom > {context.scenario.default_tmp_dir}/repo/modules.yaml.magck"
