@@ -65,7 +65,7 @@ Scenario: Installing a package using nonexistent client cert should fail
     And stderr matches line by line
     """
     Errors during downloading metadata for repository 'dnf-ci-fedora':
-      - Curl error \(58\): Problem with the local SSL certificate for https://localhost:[0-9]+/repodata/repomd.xml \[could not load PEM client certificate, OpenSSL error error:[0-9]+:system library:fopen:No such file or directory, \(no key found, wrong pass phrase, or wrong file format\?\)\]
+      - Curl error \(58\): Problem with the local SSL certificate for https://localhost:[0-9]+/repodata/repomd.xml \[could not load PEM client certificate, OpenSSL error error:[0-9]+:system library:.*:No such file or directory, \(no key found, wrong pass phrase, or wrong file format\?\)\]
     Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
@@ -82,7 +82,7 @@ Scenario: Installation with untrusted repository should fail
     And stderr matches line by line
     """
     Errors during downloading metadata for repository 'simple-base':
-      - Curl error \(60\): .* for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem: self signed certificate in certificate chain\]
+      - Curl error \(60\): .* for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem:.*\]
     Error: Failed to download metadata for repo 'simple-base': Cannot download repomd\.xml: Cannot download repodata/repomd\.xml: All mirrors were tried
     """
 
