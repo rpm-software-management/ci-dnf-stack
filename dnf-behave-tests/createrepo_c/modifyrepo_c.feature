@@ -103,8 +103,8 @@ Given I create directory "/temp-repo/"
       | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
 
 
-# createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+# createrepo_c is compiled without support for zchunk on rhel 8 and 9
+@not.with_os=rhel__ge__8
 Scenario: Modifying repo with zck compressed metadata
 Given I create directory "/temp-repo/"
   And I execute createrepo_c with args "--zck ." in "/temp-repo"

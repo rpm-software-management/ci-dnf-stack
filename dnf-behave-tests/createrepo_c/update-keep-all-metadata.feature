@@ -124,8 +124,8 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | custom_metadata | ${checksum}-custom_metadata.txt.gz | sha256        | gz               |
 
 
-# createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+# createrepo_c is compiled without support for zchunk on rhel 8 and 9
+@not.with_os=rhel__ge__8
 Scenario: --update --keep-all-metadata --groupfile overrides old groupfile and --zck generates zck versions
 Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/temp-repo"
   And I execute modifyrepo_c with args "../../custom_metadata.txt ." in "/temp-repo/repodata"
@@ -150,8 +150,8 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | custom_metadata_zck | ${checksum}-custom_metadata.txt.zck | sha256        | zck              |
 
 
-# createrepo_c is compiled without support for zchunk on rhel 8
-@not.with_os=rhel__eq__8
+# createrepo_c is compiled without support for zchunk on rhel 8 and 9
+@not.with_os=rhel__ge__8
 Scenario: --update --keep-all-metadata keeps additional metadata including zck variants
 Given I execute createrepo_c with args "--groupfile ../groupfile.xml --zck ." in "/temp-repo"
   And I execute modifyrepo_c with args "../../custom_metadata.txt --zck ." in "/temp-repo/repodata"
