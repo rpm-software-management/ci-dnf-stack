@@ -14,6 +14,7 @@ PROGPATH = os.path.abspath(os.path.dirname(sys.argv[0]))
 sys.path.append(os.path.join(PROGPATH, 'dnf-behave-tests'))
 import consts
 DESTRUCTIVE_TAGS = set(consts.DESTRUCTIVE_TAGS)
+DNF5DAEMON_TAGS = set(consts.DNF5DAEMON_TAGS)
 
 
 def command_line_parser():
@@ -332,8 +333,16 @@ class BehaveRunner(object):
             nondestructive_tests = False
 
             # if destructive tests are enabled (default), run each one separately
+            #
+            # NOTE: dnf5daemon tests are destructive but are considered so only if
+            # tag dnf5daemon is used, otherwise the tag and the destructive behavior
+            # should be ignored.
             for scenario_name, scenario_tags in scenarios:
-                if feature_tags.union(scenario_tags).intersection(DESTRUCTIVE_TAGS):
+                # If dnf5daemon tag is present, ignore the destructive behavior and
+                # run each feature file in one container
+                if "dnf5daemon" in self.tags:
+                    nondestructive_tests = True
+                elif feature_tags.union(scenario_tags).intersection(DESTRUCTIVE_TAGS):
                     if do_destructive:
                         yield (feature_name, scenario_name)
                 else:
@@ -377,8 +386,14 @@ class BehaveRunner(object):
                     i += 1
                 else:
                     run_args = param_junit(feature_name, 0)
-                    for tag in DESTRUCTIVE_TAGS:
-                        run_args.extend(['--tags', '~{}'.format(tag)])
+                    # if -t dnf5daemon: skip @destructive and @dnf5daemon
+                    if ("dnf5daemon" in self.tags) and (not do_destructive):
+                        for tag in DESTRUCTIVE_TAGS.union(DNF5DAEMON_TAGS):
+                            run_args.extend(['--tags', '~{}'.format(tag)])
+                    # if not -t dnf5daemon: skip @destructive tags and run @dnf5daemon
+                    if "dnf5daemon" not in self.tags:
+                        for tag in DESTRUCTIVE_TAGS:
+                            run_args.extend(['--tags', '~{}'.format(tag)])
 
                 run_args.append(feature_name)
 

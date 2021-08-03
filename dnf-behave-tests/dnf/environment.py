@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 
@@ -319,16 +320,17 @@ def before_all(context):
     context.dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
 
     # if "dnf5" is in the commandline tags, turn on dnf5 mode
-    # if "dnf5daemon" turn on dnfdaemon mode and dnf5 mode
-    context.dnfdaemon_mode = False
+    # if "dnf5daemon" turn on dnf5daemon mode and dnf5 mode
+    context.dnf5daemon_mode = False
     for ors in context.config.tags.ands:
         if "dnf5" in ors:
             context.dnf5_mode = True
             break
         if "dnf5daemon" in ors:
             context.dnf5_mode = True
-            context.dnfdaemon_mode = True
+            context.dnf5daemon_mode = True
             break
+
 
 
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
@@ -337,9 +339,9 @@ def before_all(context):
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 
     for ors in context.config.tags.ands:
-        if "dnf5daemon" in ors:
-            p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
-            p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
+        if "dnf5daemon" in ors and context.dnf5daemon_mode:
+            context.p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
+            context.p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
 
 
 def after_all(context):

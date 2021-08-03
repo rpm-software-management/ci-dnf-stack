@@ -10,5 +10,8 @@ DESTRUCTIVE_TAGS = [
     "destructive",
     "no_installroot",
 ]
+DNF5DAEMON_TAGS = [
+    "dnf5daemon",
+]
 
 INVALID_UTF8_CHAR = '\udcfd'

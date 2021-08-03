@@ -6,6 +6,7 @@ from __future__ import print_function
 import behave
 import os
 import re
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -491,3 +492,30 @@ repo_sack.create_repos_from_system_configuration()
 repo_sack.update_and_load_enabled_repos(True)
 """
     execute_python_script(context, libdnf5_setup_script + context.text)
+
+@behave.step("I execute dnf5daemon-client with args \"{args}\"")
+def when_I_execute_dnf5daemon_client_with_args(context, args):
+    cmd = " ".join(["dnf5daemon-client"])
+    cmd += " " + args.format(context=context)
+    run_in_context(context, cmd, can_fail=True)
+
+@behave.step("I execute dnf5daemon-client with no args")
+def when_I_execute_dnf5daemon_client_with_no_args(context):
+    cmd = " ".join(["dnf5daemon-client"])
+    run_in_context(context, cmd, can_fail=True)
+
+@behave.step("I remove dnf5daemon-server")
+def when_I_remove_dnf5daemon_server(context):
+    subprocess.call(["rpm", "-e", "dnf5daemon-server"])
+
+@behave.step("I stop dbus")
+def when_I_stop_dbus(context):
+    subprocess.call(["killall", "dbus-daemon"])
+
+@behave.step("I stop polkitd")
+def when_I_stop_polkitd(context):
+    context.p_polkitd.kill()
+
+@behave.step("I stop dnf5daemon-server")
+def when_I_stop_dnf5daemon_server(context):
+    subprocess.call(["killall", "dnf5daemon-server"])
