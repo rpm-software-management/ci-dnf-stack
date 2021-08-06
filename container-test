@@ -59,6 +59,9 @@ def command_line_parser():
     build_parser.add_argument(
         "--base", metavar="<base>",
         help='Base image to override the FROM clause in the Dockerfile.')
+    build_parser.add_argument(
+        "--container-arg", metavar="<container-arg>", dest="container_args", action="append",
+        help='Additional argument for the docker/podman build command. Can be specified multiple times.')
 
     # run command
     run_parser = subparsers.add_parser(
@@ -88,6 +91,9 @@ def command_line_parser():
     run_parser.add_argument(
         "--no-destructive", action="store_true", default=False,
         help="Disable running destructive tests (which are run by default through this script)")
+    run_parser.add_argument(
+        "--container-arg", metavar="<container-arg>", dest="container_args", action="append",
+        help='Additional argument for the docker/podman run command. Can be specified multiple times.')
     run_parser.add_argument(
         "featurefiles", metavar="<feature>", nargs="*",
         help="List of feature files to run")
@@ -329,6 +335,9 @@ class BehaveRunner(object):
 
         command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes
 
+        if self.command_line_args.container_args:
+            command += self.command_line_args.container_args
+
         if not self.command_line_args.enable_network:
             command += ['--net', 'none']
 
@@ -385,6 +394,9 @@ class BehaveRunner(object):
 
         command += ['-t', self.command_line_args.container]
         command += ['-f', self.command_line_args.docker_file, PROGPATH]
+
+        if self.command_line_args.container_args:
+            command += self.command_line_args.container_args
 
         if self.command_line_args.verbose:
             print("Running command:", command, '\n')
