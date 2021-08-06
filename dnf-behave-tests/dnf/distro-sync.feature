@@ -56,6 +56,7 @@ Given I use repository "dnf-ci-gpg"
 
 
 @bz1963732
+@not.with_os=rhel__ge__8
 Scenario: updating a broken signed pkg whose key is imported
 Given I use repository "dnf-ci-gpg"
   And I execute dnf with args "install wget"
