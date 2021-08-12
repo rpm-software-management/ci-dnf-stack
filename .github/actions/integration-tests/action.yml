@@ -7,6 +7,9 @@ inputs:
   package-urls:
     description: The URLs of RPM packages to test
     required: true
+  extra-run-args:
+    description: Extra arguments for the container-test run command
+    default: ""
 
 runs:
   using: "composite"
@@ -29,4 +32,4 @@ runs:
         ./container-test -c $CONTAINER build
 
         TESTS=($(./container-test -c $CONTAINER -s "${{inputs.suite}}" list))
-        parallel -j2 ./container-test --container "$CONTAINER" -s "${{inputs.suite}}" run "{}" ::: "${TESTS[@]}"
+        parallel -j2 ./container-test --container "$CONTAINER" -s "${{inputs.suite}}" run ${{inputs.extra-run-args}} "{}" ::: "${TESTS[@]}"
