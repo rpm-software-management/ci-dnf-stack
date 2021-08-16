@@ -279,3 +279,20 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
           - modular-package2-0:0.1-1.x86_64.rpm
       ...
       """
+
+
+@not.with_os=rhel__ge__8
+Scenario: --update without --keep-all-metadata doesn't keep additional module metadata
+Given I execute createrepo_c with args "." in "/temp-repo"
+  And I execute modifyrepo_c with args "../../modules.yaml ." in "/temp-repo/repodata"
+ When I execute createrepo_c with args "--update ." in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type            | File                               | Checksum Type | Compression Type |
+      | primary         | ${checksum}-primary.xml.gz         | sha256        | gz               |
+      | filelists       | ${checksum}-filelists.xml.gz       | sha256        | gz               |
+      | other           | ${checksum}-other.xml.gz           | sha256        | gz               |
+      | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
+      | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
+      | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
