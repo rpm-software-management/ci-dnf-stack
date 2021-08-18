@@ -91,6 +91,8 @@ def decompress_file_by_extension(src):
         return gzip.open(src, "rb").read()
     elif src.endswith(".xz"):
         return lzma.open(src, "rb").read()
+    elif src.endswith(".zst"):
+        return subprocess.run(["unzstd", "--stdout", src], capture_output=True).stdout
     elif src.endswith(".zck"):
         return subprocess.run(["unzck", "--stdout", src], capture_output=True).stdout
 
@@ -100,6 +102,8 @@ def decompress_file_by_extension(src):
 def get_compression_suffix(type_str):
     if type_str in ("gz", "zck", "xz", "bz2"):
         return "." + type_str
+    if type_str == "zstd":
+        return ".zst"
     if type_str == "-":
         return ""
     raise ValueError("Unknown compression type: " + type_str)

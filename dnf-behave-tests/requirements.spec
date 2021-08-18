@@ -29,6 +29,7 @@ BuildRequires:  python3-pip
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite
+BuildRequires:  zstd
 %if 0%{?fedora}
 BuildRequires:  python3-behave
 BuildRequires:  python3-pexpect
