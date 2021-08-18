@@ -33,6 +33,9 @@ def decompression_iter(filepath, compression_type, blocksize=65536):
         return file_as_blockiter(lzma.open(filepath, 'rb'), blocksize)
     if compression_type == "bz2":
         return file_as_blockiter(bz2.open(filepath, 'rb'), blocksize)
+    if compression_type == "zstd":
+        decompress_file_by_extension_to_dir(filepath, os.path.dirname(filepath))
+        return file_as_blockiter(open(filepath[:-4], 'rb'), blocksize)
     if compression_type == "zck":
         decompress_file_by_extension_to_dir(filepath, os.path.dirname(filepath))
         return file_as_blockiter(open(filepath[:-4], 'rb'), blocksize)
@@ -62,6 +65,17 @@ def file_as_blockiter(afile, blocksize=65536):
         while len(block) > 0:
             yield block
             block = afile.read(blocksize)
+
+
+def conmpress_extension_to_type(extension):
+    if extension[0] == ".":
+        extension = extension[1:]
+    if extension in ("gz", "zck", "xz", "bz2"):
+        return extension
+    if extension == "zst":
+        return "zstd"
+
+    return ""
 
 
 def decompress_file_by_extension_to_dir(compressed_filepath, dest_dir):

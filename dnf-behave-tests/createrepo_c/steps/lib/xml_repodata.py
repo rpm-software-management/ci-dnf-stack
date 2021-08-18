@@ -10,6 +10,7 @@ from lib.repodata_representation import OtherPackage
 from lib.repodata_representation import RepomdItem
 
 from lib.file import decompression_iter
+from lib.file import conmpress_extension_to_type
 
 import os
 import xml.etree.ElementTree as ET
@@ -32,7 +33,7 @@ def _parse_pco(elem, requires=False):
 
 def xml_parse_repodata(repodata_path, element_tag, repodata_type):
     file_extension = os.path.splitext(repodata_path)[1]
-    iterator = decompression_iter(repodata_path, file_extension[1:])
+    iterator = decompression_iter(repodata_path, conmpress_extension_to_type(file_extension))
 
     if repodata_type == "primary":
         parse_pkg_elem = parse_primary_pkg_elem
