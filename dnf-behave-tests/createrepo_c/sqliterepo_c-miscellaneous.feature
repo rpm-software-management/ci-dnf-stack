@@ -155,3 +155,18 @@ Given I execute createrepo_c with args "." in "/"
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha512        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha512        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha512        | bz2              |
+
+
+Scenario: Sqlitedbs should be created using zstd compression
+Given I execute createrepo_c with args "--no-database ." in "/"
+ When I execute sqliterepo_c with args "--compress-type zstd ." in "/"
+ Then the exit code is 0
+  And repodata "/repodata/" are consistent
+  And repodata in "/repodata/" is
+      | Type         | File                             | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
+      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
+      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary_db   | ${checksum}-primary.sqlite.zst   | sha256        | zstd             |
+      | filelists_db | ${checksum}-filelists.sqlite.zst | sha256        | zstd             |
+      | other_db     | ${checksum}-other.sqlite.zst     | sha256        | zstd             |
