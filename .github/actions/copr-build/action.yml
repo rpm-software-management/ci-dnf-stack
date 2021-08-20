@@ -7,6 +7,9 @@ inputs:
   overlay:
     description: The rpm-gitoverlay overlay name to build (default is dnf-ci)
     default: dnf-ci
+  chroot:
+    description: The chroot to build for, defaults to the same Fedora that is the Dockerfile's default
+    default: ""
 
 outputs:
   package-urls:
@@ -37,7 +40,11 @@ runs:
       run: |
         PROJECT_NAME="CI-${{github.event.repository.name}}-pr${{github.event.pull_request.number}}"
 
-        CHROOT="fedora-$(grep "ARG BASE=" Dockerfile | cut -d':' -f2)-x86_64"
+        if [ -n "${{inputs.chroot}}" ]; then
+          CHROOT="${{inputs.chroot}}"
+        else
+          CHROOT="fedora-$(grep "ARG BASE=" Dockerfile | cut -d':' -f2)-x86_64"
+        fi
 
         # if there's a git already cloned in the `gits` directory, rpm-gitoverlay will use it
         rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner="${{inputs.copr-user}}" --project="$PROJECT_NAME" --additional-repos="copr://rpmsoftwaremanagement/dnf-nightly" --chroots="$CHROOT" --delete-project-after-days=7
