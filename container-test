@@ -206,8 +206,11 @@ class BehaveRunner(object):
 
     @property
     def tags(self):
-        tags = self.command_line_args.tags
-        if self.command_line_args.noxfail:
+        if hasattr(self.command_line_args, 'tags'):
+            tags = self.command_line_args.tags
+        else:
+            tags = []
+        if hasattr(self.command_line_args, 'noxfail') and self.command_line_args.noxfail:
             tags.append('~xfail')
         return tags
 
@@ -259,11 +262,13 @@ class BehaveRunner(object):
     def dry_run(self):
         command = self.docker_bin + ['run', '--rm']
         command += self.volumes
-        command += [self.command_line_args.container, 'behave', '--dry-run']
+        command += [self.command_line_args.container, 'behave', '--dry-run', '--no-skipped']
         if getattr(self.command_line_args, 'featurefiles', []):
             command += [os.path.join(self.command_line_args.suite, a) for a in self.command_line_args.featurefiles]
         else:
             command += [self.command_line_args.suite]
+        for tag in self.tags:
+            command += ['--tags', tag]
         returncode, stdout, stderr = execute(command)
         if returncode > 0:
             msg = 'Command "{}" failed with {}'.format(' '.join(command), returncode)
