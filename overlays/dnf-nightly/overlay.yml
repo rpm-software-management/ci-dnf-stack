@@ -11,6 +11,7 @@ components:
   - name: libsolv
     git:
       src: github:openSUSE/libsolv.git
+      freeze: c773294be6b0a2425f344a8999f173fb00cfd16f
     distgit:
       src: fedorapkgs:libsolv.git
       patches: drop
