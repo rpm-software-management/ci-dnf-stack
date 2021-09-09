@@ -74,3 +74,69 @@ Scenario: Obsoletes are not disabled by exclude_from_weak
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64           |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
+
+
+@bz1699672
+@bz2005305
+Scenario: Upgrade ignores unmet weak dependencies of installed packages even when specified as a new dependency (different version + rich dep)
+  Given I use repository "exclude-from-weak"
+   When I execute dnf with args "install PackageA-1.0 --setopt=exclude_from_weak=recommended-pkg --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageA-1.0-1.x86_64                     |
+  When I execute dnf with args "upgrade PackageA --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | PackageA-2.0-1.x86_64                     |
+
+
+@bz1699672
+@bz2005305
+Scenario: Upgrades won't install supplementing package when excluded from weak before
+  Given I use repository "exclude-from-weak"
+   When I execute dnf with args "install PackageB-1.0 --setopt=exclude_from_weak=supplementing-pkg --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageB-1.0-1.x86_64                     |
+  When I execute dnf with args "upgrade PackageB --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | PackageB-2.0-1.x86_64                     |
+
+
+@bz1699672
+@bz2005305
+Scenario: Upgrades installs supplementing package when new version is supplemented
+  Given I use repository "exclude-from-weak"
+   When I execute dnf with args "install PackageD-1.0 --setopt=exclude_from_weak=supplementing-pkg-versioned --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageD-1.0-1.x86_64                     |
+  When I execute dnf with args "upgrade PackageD --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | PackageD-2.0-1.x86_64                     |
+        | install-weak  | supplementing-pkg-versioned-2.0-1.x86_64  |
+
+
+@bz1699672
+@bz2005305
+Scenario: Upgrade ignores unmet recommends of installed package even when another package recommends it
+  Given I use repository "exclude-from-weak"
+   When I execute dnf with args "install PackageA-1.0 --setopt=exclude_from_weak=recommended-pkg --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageA-1.0-1.x86_64                     |
+  When I execute dnf with args "install PackageA PackageC --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | PackageA-2.0-1.x86_64                     |
+        | install       | PackageC-2.0-1.x86_64                     |
