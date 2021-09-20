@@ -4,6 +4,7 @@ Background:
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
 
+@not.with_os=rhel__ge__8
 @bz1805260
 Scenario: Ensuring visibility of non modular rpm in presence of demodularization rpm name in latest module
    When I execute dnf with args "module enable nodejs:5"
@@ -27,6 +28,7 @@ Scenario: Ensuring visibility of non modular rpm in presence of demodularization
         npm-1:5.3.1-1.module_2011+41787af0.x86_64
         """
 
+@not.with_os=rhel__ge__8
 @bz1805260
 Scenario: Test module info contains Demodularized rpms when defined
    # Repository contains the latest module with demodularized `npm`
