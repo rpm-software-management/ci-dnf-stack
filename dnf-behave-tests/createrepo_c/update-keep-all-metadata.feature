@@ -57,7 +57,7 @@ Given I create directory "/temp-repo/"
       """
 
 
-Scenario: --update discards additional metadata
+Scenario: --update with --discard-additional-metadata discards additional metadata
 Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/temp-repo"
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
@@ -69,7 +69,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
- When I execute createrepo_c with args "--update ." in "/temp-repo"
+ When I execute createrepo_c with args "--update --discard-additional-metadata ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
@@ -282,10 +282,10 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
 
 
 @not.with_os=rhel__ge__8
-Scenario: --update without --keep-all-metadata doesn't keep additional module metadata
+Scenario: --update with --discard-additional-metadata doesn't keep additional module metadata
 Given I execute createrepo_c with args "." in "/temp-repo"
   And I execute modifyrepo_c with args "../../modules.yaml ." in "/temp-repo/repodata"
- When I execute createrepo_c with args "--update ." in "/temp-repo"
+ When I execute createrepo_c with args "--update --discard-additional-metadata ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
@@ -296,3 +296,22 @@ Given I execute createrepo_c with args "." in "/temp-repo"
       | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
       | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
       | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
+
+
+Scenario: --update keeps additional metadata by default
+Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/temp-repo"
+  And I execute modifyrepo_c with args "../../custom_metadata.txt ." in "/temp-repo/repodata"
+ When I execute createrepo_c with args "--update ." in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And repodata in "/temp-repo/repodata/" is
+      | Type                | File                                | Checksum Type | Compression Type |
+      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
+      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
+      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
+      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
+      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
+      | group               | ${checksum}-groupfile.xml           | sha256        | -                |
+      | group_gz            | ${checksum}-groupfile.xml.gz        | sha256        | gz               |
+      | custom_metadata     | ${checksum}-custom_metadata.txt.gz  | sha256        | gz               |

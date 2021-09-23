@@ -353,7 +353,7 @@ Given I create directory "/empty_repo/"
       | modules      | ${checksum}-modules.yaml.xz      | sha256        | xz               |
 
 
-Scenario: modular metadata located in repository override present metadata on --update
+Scenario: modular metadata located in repository override present metadata on --update and --discard-additional-metadata
 Given I create directory "/repo/"
   And I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x86_64/modular-package1-0.1-1.x86_64.rpm" to "/repo"
   And I copy file "{context.scenario.default_tmp_dir}/modules.yaml" to "/repo"
@@ -361,7 +361,7 @@ Given I create directory "/repo/"
   And repodata "/repo/repodata/" are consistent
   And I delete file "/repo/modules.yaml"
   And I copy file "{context.scenario.default_tmp_dir}/some.modulemd-defaults.yaml" to "/repo/some.modulemd-defaults.yaml"
- When I execute createrepo_c with args ". --update" in "/repo"
+ When I execute createrepo_c with args ". --update --discard-additional-metadata" in "/repo"
  Then the exit code is 0
   And stderr is empty
   And repodata "/repo/repodata/" are consistent
