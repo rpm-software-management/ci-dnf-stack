@@ -1,0 +1,16 @@
+---
+aliases:
+  - name: github
+    url: https://github.com/
+
+components:
+  - name: librepo
+    git:
+      src: github:rpm-software-management/librepo.git
+
+  - name: libdnf
+    git:
+      src: github:rpm-software-management/libdnf.git
+      branch: origin/dnf-5-devel
+    requires:
+      - librepo
