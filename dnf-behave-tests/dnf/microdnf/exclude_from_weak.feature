@@ -22,6 +22,7 @@ Scenario: Install step also installs weak deps
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
         | upgraded      | abcde-0:2.9.2-1.fc29.noarch               |
 
+@bz2005305
 @bz1699672
 Scenario: Install without weak dependencies, upgrades ignores unmet weak dependencies of installed packages
   Given I use repository "dnf-ci-fedora"
@@ -53,6 +54,7 @@ Scenario: Install without weak dependencies, upgrades ignores unmet weak depende
         | Action      | Package                                 |
         | install     | flac-0:1.3.3-3.fc29.x86_64              |
 
+@bz2005305
 @bz1699672
 Scenario: Install exclude_from_weak package
   Given I use repository "dnf-ci-fedora"
@@ -79,6 +81,7 @@ Scenario: Install exclude_from_weak package
         | Action        | Package                                   |
         | install       | flac-0:1.3.3-3.fc29.x86_64                |
 
+@bz2005305
 @bz1699672
 Scenario: Obsoletes are not disabled by exclude_from_weak
   Given I use repository "dnf-ci-obsoletes"
