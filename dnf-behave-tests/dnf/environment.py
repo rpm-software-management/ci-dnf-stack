@@ -279,9 +279,12 @@ def before_scenario(context, scenario):
         context.dnf = None
         return
 
+    # --define dnf5_mode=1
+    dnf5_mode = context.config.userdata.get("dnf5_mode", "no")
+    dnf5_mode = dnf5_mode in ("yes", "y", "1", "true")
+
     # if "dnf5" is in the commandline tags, turn on dnf5 mode
     # if "dnfdaemon" turn on dnfdaemon mode and dnf5 mode
-    dnf5_mode = False
     dnfdaemon_mode = False
     for ors in context.config.tags.ands:
         if "dnf5" in ors:
