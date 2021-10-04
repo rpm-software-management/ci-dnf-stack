@@ -143,3 +143,40 @@ Given I create directory "/updated-repo/"
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
+
+
+Scenario: --update with no changes doesn't update the files
+Given I execute createrepo_c with args "." in "/temp-repo"
+  And repodata "/temp-repo/repodata/" are consistent
+ When I execute createrepo_c with args "--update ." in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And stdout is
+  """
+  Directory walk started
+  Directory walk done - 4 packages
+  Loaded information about 4 packages
+  Temporary output repo path: ./.repodata/
+  Preparing sqlite DBs
+  Pool started (with 5 workers)
+  Pool finished
+  New and old repodata match, not updating.
+  """
+
+
+Scenario: --update with added distro tags updates repo
+Given I execute createrepo_c with args "." in "/temp-repo"
+  And repodata "/temp-repo/repodata/" are consistent
+ When I execute createrepo_c with args "--update --distro '12312,name' ." in "/temp-repo"
+ Then the exit code is 0
+  And repodata "/temp-repo/repodata/" are consistent
+  And stdout is
+  """
+  Directory walk started
+  Directory walk done - 4 packages
+  Loaded information about 4 packages
+  Temporary output repo path: ./.repodata/
+  Preparing sqlite DBs
+  Pool started (with 5 workers)
+  Pool finished
+  """
