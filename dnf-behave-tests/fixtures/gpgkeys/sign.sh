@@ -10,6 +10,8 @@ mkdir "${DIR}/keys"
 
 KEYSPECS=$(ls "${DIR}/keyspecs")
 for KEY_NAME in $KEYSPECS; do
+    # kill gpg-agent because path to gpg keys changes in each iteration
+    gpgconf --kill gpg-agent
 
     # set defaults
     USE_SIGN_SUBKEY=0
