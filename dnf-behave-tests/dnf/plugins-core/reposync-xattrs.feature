@@ -20,7 +20,7 @@ Given I copy repository "simple-base" for modification
         | key             | value                               |
         | baseurl         | file:///repos/simple-base-sha256    |
   # the copy with sha-1 regenerated repodata
-  And I generate repodata for repository "simple-base" with extra arguments "--checksum sha1"
+  And I generate repodata for repository "simple-base" with extra arguments "--checksum sha512"
   And I use repository "simple-base" as http
  When I execute dnf with args "reposync --repoid=simple-base-sha256 --norepopath --download-path=/synced"
  Then the exit code is 0
@@ -34,8 +34,8 @@ Given I copy repository "simple-base" for modification
       """
       # file: synced/x86_64/labirinto-1\.0-1\.fc29\.x86_64\.rpm
       user\.Librepo\.checksum\.mtime="[0-9]+"
-      user\.Librepo\.checksum\.sha1="[0-9a-f]{40}"
       user\.Librepo\.checksum\.sha256="[0-9a-f]{64}"
+      user\.Librepo\.checksum\.sha512="[0-9a-f]{128}"
       """
 
 
