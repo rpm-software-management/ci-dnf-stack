@@ -21,6 +21,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages-2/
       Preparing sqlite DBs
       Pool started (with 5 workers)
       Pool finished
+      New and old repodata match, not updating.
       """
   And repodata "/temp-repo/repodata/" are consistent
 
@@ -39,5 +40,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       Preparing sqlite DBs
       Pool started (with 5 workers)
       Pool finished
+      New and old repodata match, not updating.
       """
   And repodata "/temp-repo/repodata/" are consistent
