@@ -170,3 +170,31 @@ Scenario: Prevent conflicting entries in versionlock.list
     """
     Error: Package wget-0:1.19.5-5.fc29.* is already locked
     """
+
+
+@bz2013324
+Scenario: I can exclude mutliple packages when one is already excluded
+  Given I use repository "dnf-ci-fedora"
+    And I successfully execute dnf with args "versionlock exclude wget"
+   When I execute dnf with args "versionlock exclude abcde wget"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Adding exclude on: abcde-0:2.9.2-1.fc29.*
+    Package already locked in equivalent form: !wget-0:1.19.5-5.fc29.*
+    """
+
+
+@bz2013324
+Scenario: I can lock mutliple packages when one is already locked
+  Given I use repository "dnf-ci-fedora"
+    And I successfully execute dnf with args "versionlock add wget"
+   When I execute dnf with args "versionlock abcde wget"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Adding versionlock on: abcde-0:2.9.2-1.fc29.*
+    Package already locked in equivalent form: wget-0:1.19.5-5.fc29.*
+    """
