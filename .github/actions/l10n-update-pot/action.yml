@@ -15,6 +15,8 @@ runs:
     - name: Generate *.pot files
       shell: bash
       run: |
+        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly
+
         # generate fresh *.pot file from source
         pushd source > /dev/null
           dnf --assumeyes build-dep *.spec
