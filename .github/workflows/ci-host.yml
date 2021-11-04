@@ -29,7 +29,8 @@ jobs:
           echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${GHCR_USER} --password-stdin
 
           docker build -t ${IMAGE}:${DATE} -t ${IMAGE}:latest -<<EOF
-          FROM fedora:latest
+          # temporarily lock to f34, f35 has an issue with Copr deps
+          FROM fedora:34
           RUN dnf -y update
           RUN dnf -y install dnf-plugins-core
           RUN dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
