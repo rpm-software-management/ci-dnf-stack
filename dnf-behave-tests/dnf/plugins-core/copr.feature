@@ -77,7 +77,8 @@ Scenario: Test enabling a non-existent repo
 
       Please do not file bug reports about these packages in Fedora
       Bugzilla. In case of problems, contact the owner of this repository.
-      Error: Such repository does not exist.
+      Error: It wasn't possible to enable this project.
+      Project testuser/nonexistent does not exist.
       """
 
 
@@ -107,7 +108,7 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
 
       Please do not file bug reports about these packages in Fedora
       Bugzilla. In case of problems, contact the owner of this repository.
-      Curl error (7): Couldn't connect to server for http://localhost:2/coprs/testuser/testproject/repo/fedora-30/dnf.repo?arch=x86_64 [Failed to connect to localhost port 2: Connection refused]
+      Error: Failed to connect to http://localhost:2/coprs/testuser/testproject/repo/fedora-30/dnf.repo?arch=x86_64: Connection refused
       """
 
 
@@ -122,6 +123,11 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
       protocol = http
       port = {context.dnf.ports[copr]}
       """
+  And HTTP server GET /coprs/testuser/testproject/repo/fedora-31/dnf.repo?arch=x86_64 response headers are
+      """
+      Copr-Error-Data=eyJhdmFpbGFibGUgY2hyb290cyI6IFsiZmVkb3JhLTMwLXg4Nl82NCJdfQ==
+      """
+  And the server starts responding with HTTP status code 404
  When I execute dnf with args "copr enable testhub/testuser/testproject"
  Then the exit code is 1
   And stderr is
@@ -136,7 +142,13 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
 
       Please do not file bug reports about these packages in Fedora
       Bugzilla. In case of problems, contact the owner of this repository.
-      Error: This repository does not have any builds yet so you cannot enable it now.
+      Error: It wasn't possible to enable this project.
+      Repository 'fedora-31-x86_64' does not exist in project 'testuser/testproject'.
+      Available repositories: 'fedora-30-x86_64'
+
+      If you want to enable a non-default repository, use the following command:
+        'dnf copr enable testuser/testproject <repository>'
+      But note that the installed repo file will likely need a manual modification.
       """
 
 
