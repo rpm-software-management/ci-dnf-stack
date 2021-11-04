@@ -26,8 +26,6 @@ BuildRequires:  openssl
 BuildRequires:  python3
 BuildRequires:  python3-distro
 BuildRequires:  python3-pip
-# a missing dep of python3-pip on f35 beta, remove when unneeded
-BuildRequires:  python3-setuptools
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite
