@@ -32,3 +32,18 @@ Given I create directory "/temp-repo/"
       C_CREATEREPOLIB: Warning: read_header: rpmReadPackageFile() error
       C_CREATEREPOLIB: Warning: Cannot read package: ./emptyfilethatlookslike.rpm: rpmReadPackageFile() error
       """
+
+
+Scenario: Don't re-escape ampersand when running with --update
+Given I create symlink "/createrepo_c-ci-packages" to file "/{context.scenario.repos_location}/createrepo_c-ci-packages"
+  And I execute createrepo_c with args "." in "/"
+ When I execute createrepo_c with args "--update ." in "/"
+ Then the exit code is 0
+  And repodata "/repodata" are consistent
+  And I execute "dnf --repofrompath=test,{context.scenario.default_tmp_dir}/ --repo test repoquery --provides ampersand-provide-package"
+  And stdout is
+  """
+  ampersand-provide-package = 0.2.1-1.fc29
+  ampersand-provide-package(x86-64) = 0.2.1-1.fc29
+  font(bpgalgetigpl&gnu)
+  """
