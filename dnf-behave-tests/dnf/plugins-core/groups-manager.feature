@@ -130,6 +130,39 @@ Examples:
     | --optional        | optional  |
 
 
+@bz2013633
+Scenario Outline: Package to add to a group can be specified by "<type>"
+  Given I use repository "simple-base"
+   When I execute dnf with args "groups-manager --name="New group" --print <spec>"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+    <comps>
+      <group>
+        <id>newgroup</id>
+        <name>New group</name>
+        <default>false</default>
+        <uservisible>true</uservisible>
+        <packagelist>
+          <packagereq type="default">vagare</packagereq>
+        </packagelist>
+      </group>
+    </comps>
+    """
+    And stderr is empty
+
+Examples:
+    | type              | spec                          |
+    | NEVRA             | vagare-0:1.0-1.fc29.x86_64    |
+    | NVR               | vagare-1.0-1.fc29             |
+    | NV                | vagare-1.0                    |
+    | NA                | vagare.x86_64                 |
+    | N                 | vagare                        |
+
+
 Scenario: edit group filelists - add package with dependencies
   Given I use repository "simple-base"
    When I execute dnf with args "groups-manager --load={context.dnf.fixturesdir}/data/groups-manager/comps_a.xml --save /{context.dnf.tempdir}/out.xml --id=group-a --dependencies vagare"
