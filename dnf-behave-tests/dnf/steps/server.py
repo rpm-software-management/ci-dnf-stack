@@ -107,3 +107,12 @@ def step_http_log_contains(context):
     for e in expected:
         if e not in found:
             raise AssertionError('HTTP log does not contain "%s": %s' % (e, "\n" + "\n".join(found) + "\n"))
+
+
+@behave.step("HTTP server GET {url} response headers are")
+def step_http_server_get_response_headers(context, url):
+    lines = context.text.split("\n")
+    headers = []
+    for line in lines:
+        headers.append(tuple(line.split('=', 1)))
+    context.scenario.httpd.conf["response_headers"] = {url: headers}
