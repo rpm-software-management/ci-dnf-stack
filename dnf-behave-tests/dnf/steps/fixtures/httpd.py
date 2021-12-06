@@ -38,7 +38,7 @@ class NoLogHttpHandler(SimpleHTTPRequestHandler):
         pass
 
 
-class LoggingHttpHandler(SimpleHTTPRequestHandler):
+class HttpHandler(SimpleHTTPRequestHandler):
     def log_request(self, *args, **kwargs):
         if not self.server._conf.get('logging', False):
             return
@@ -49,9 +49,15 @@ class LoggingHttpHandler(SimpleHTTPRequestHandler):
         # process the request as usual.
         if 'status' in self.server._conf:
             self.send_response(self.server._conf['status'])
+            if self.path not in self.server._conf["response_headers"]:
+                self.end_headers()
+                return
+        if self.path in self.server._conf["response_headers"]:
+            for header in self.server._conf["response_headers"][self.path]:
+                self.send_header(header[0], header[1])
             self.end_headers()
             return
-        super(LoggingHttpHandler, self).do_GET()
+        super(HttpHandler, self).do_GET()
 
 
 class HttpServerContext(ServerContext):
@@ -71,7 +77,7 @@ class HttpServerContext(ServerContext):
     def http_server(address, path, error, log, conf):
         try:
             os.chdir(path)
-            httpd = TCPServer(address, LoggingHttpHandler)
+            httpd = TCPServer(address, HttpHandler)
             httpd._log = log
             httpd._conf = conf
             httpd.serve_forever()
@@ -97,6 +103,7 @@ class HttpServerContext(ServerContext):
         # list of AccessRecord objects
         self._log = multiprocessing.Manager().list()
         self._conf = multiprocessing.Manager().dict()
+        self._conf["response_headers"] = dict()
 
     def new_http_server(self, path):
         return self._start_server(path, self.http_server, self._log, self._conf)
