@@ -12,7 +12,7 @@ Given I create directory "/temp-repo/"
       """
       """
  When I execute createrepo_c with args "--workers 1 ." in "/temp-repo"
- Then the exit code is 0
+ Then the exit code is 2
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                                | Checksum Type | Compression Type |

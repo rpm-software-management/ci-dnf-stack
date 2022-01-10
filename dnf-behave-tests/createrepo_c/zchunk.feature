@@ -53,7 +53,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       gibberish
       """
  When I execute createrepo_c with args "--zck ." in "/"
- Then the exit code is 0
+ Then the exit code is 2
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
@@ -142,7 +142,7 @@ Given I create directory "/dictionaries"
       other foobar
       """
  When I execute createrepo_c with args "--zck --zck-dict-dir {context.scenario.default_tmp_dir}/dictionaries --simple-md-filenames ." in "/"
- Then the exit code is 0
+ Then the exit code is 2
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                 | Checksum Type | Compression Type |
