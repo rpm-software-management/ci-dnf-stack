@@ -26,15 +26,14 @@ sync_line_dnf5 = re.compile(
     r"\[[0-9]+/[0-9]+\] .* [0-9]+% \| +[0-9.]+ +[KMG]?i?B/s \| +[0-9.]+ +[KMG]?i?B \| + [0-9hms]+")
 
 def strip_reposync_dnf5(found_lines, line_number):
-    if line_number < len(found_lines) and found_lines[line_number].strip() == "Updating repositories metadata and load them:":
+    if line_number < len(found_lines) and found_lines[line_number].strip() == "Updating and loading repositories:":
         found_lines.pop(line_number)
 
     while line_number < len(found_lines) and sync_line_dnf5.fullmatch(found_lines[line_number].strip()):
         found_lines.pop(line_number)
 
-    for s in ("Waiting until sack is filled...", "Sack is filled.", ""):
-        if line_number < len(found_lines) and found_lines[line_number].strip() == s:
-            found_lines.pop(line_number)
+    if line_number < len(found_lines) and found_lines[line_number].strip() == "Repositories loaded.":
+        found_lines.pop(line_number)
 
 
 def handle_reposync(expected, found, dnf5_mode):
