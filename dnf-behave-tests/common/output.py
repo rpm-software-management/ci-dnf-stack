@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import behave
 import re
+import parse
 
 from common.lib.cmd import assert_exitcode
 from common.lib.diff import print_lines_diff
@@ -102,6 +103,26 @@ def then_stdout_is(context):
     print_lines_diff(expected, found, num_lines_equal=rs_offset)
 
     raise AssertionError("Stdout is not: %s" % context.text)
+
+
+@parse.with_pattern(r"dnf4|dnf5")
+def parse_dnf_version(text):
+    if text in ("dnf4", "dnf5"):
+        return text
+    assert False
+behave.register_type(dnf_version=parse_dnf_version)
+
+@behave.then("{dnf_version:dnf_version} stdout is")
+def then_dnf_stdout_is(context, dnf_version):
+    """
+    Check for exact match of the test's stdout only if running in the
+    appropriate mode otherwise the step is skipped.
+    """
+    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stdout_is(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stdout_is(context)
 
 
 @behave.then("stdout matches line by line")
