@@ -241,17 +241,26 @@ Scenario: Group remove does not traceback when reason change
    Then stdout contains "Leaving Shell"
 
 @bz1706382
+@dnf5
 Scenario: Group list
  Given I use repository "dnf-ci-thirdparty"
   When I execute dnf with args "group list"
   Then the exit code is 0
-   And stdout is
+   And dnf4 stdout is
     """
     <REPOSYNC>
     Available Groups:
        DNF-CI-Testgroup
        CQRlib-non-devel
        SuperRipper-and-deps
+    """
+   And dnf5 stdout is
+    """
+    <REPOSYNC>
+    ID                   Name                 Installed
+    cqrlib-non-devel     CQRlib-non-devel            no
+    dnf-ci-testgroup     DNF-CI-Testgroup            no
+    superripper-and-deps SuperRipper-and-deps        no
     """
 
 @bz1706382
@@ -307,11 +316,12 @@ Scenario: Group list ids with arg => yum compatibility
     """
 
 @bz1826198
+@dnf5
 Scenario: List an environment with empty name
   Given I use repository "comps-group"
   When I execute dnf with args "group list"
    Then the exit code is 0
-   And stdout is
+   And dnf4 stdout is
        """
        <REPOSYNC>
        Available Environment Groups:
@@ -320,6 +330,13 @@ Scenario: List an environment with empty name
        Available Groups:
           Test Group
           <name-unset>
+       """
+   And dnf5 stdout is
+       """
+       <REPOSYNC>
+       ID                   Name       Installed
+       no-name-group                          no
+       test-group           Test Group        no
        """
 
 @bz1826198
@@ -414,15 +431,29 @@ Scenario: Merge environment with missing names containg a group with missing nam
 
 
 @not.with_os=rhel__ge__8
+@dnf5
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
    When I execute dnf with args "group info no-name-group"
-   Then stdout is
+   Then dnf4 stdout is
        """
        <REPOSYNC>
        Group: <name-unset>
         Mandatory Packages:
           test-package
+       """
+    And dnf5 stdout is
+       """
+       <REPOSYNC>
+       Id                   : no-name-group
+       Name                 : 
+       Description          : 
+       Installed            : no
+       Order                : 
+       Langonly             : 
+       Uservisible          : yes
+       Repositories         : comps-group
+       Mandatory packages   : test-package
        """
 
 
