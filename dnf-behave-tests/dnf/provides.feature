@@ -37,4 +37,7 @@ Scenario: dnf provides webclient - installed and in repos package wget provides 
 Scenario: dnf provides nonexistentprovide
    When I execute dnf with args "provides nonexistentprovde"
    Then the exit code is 1
-    And stderr contains "No Matches found"
+   And stderr is
+   """
+   Error: No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+   """
