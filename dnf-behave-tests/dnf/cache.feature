@@ -27,3 +27,15 @@ Scenario: Do not error out when fail to load/store expired_repos cache
         Failed to load expired repos cache: [Errno 13] Permission denied: '/tmp/dnf/expired_repos.json'
         Failed to store expired repos cache: [Errno 13] Permission denied: '/tmp/dnf/expired_repos.json'
         """
+
+
+@bz2027445
+Scenario: Regenerate solvfile cache when solvfile version doesn't match
+  Given I use repository "simple-base"
+    And I execute dnf with args "makecache"
+   When I invalidate solvfile version of "{context.dnf.installroot}/var/cache/dnf/simple-base.solv"
+    And I execute dnf with args "repoquery --setopt=logfilelevel=10"
+   Then file "/var/log/hawkey.log" contains lines
+        """
+        .* DEBUG caching repo: simple-base .*
+        """
