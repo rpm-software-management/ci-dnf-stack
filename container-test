@@ -139,6 +139,9 @@ class BehaveRunner(object):
 
     def __call__(self):
         command = getattr(self, 'command_%s' % self.command_line_args.command, None)
+        if command == None:
+            self.command_line_parser.print_help()
+            error("No command specified")
         if not command:
             error("Command '{}' is not implemented.".format(
                 self.command_line_args.command))
