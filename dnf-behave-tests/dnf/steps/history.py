@@ -131,12 +131,12 @@ def step_impl(context, spec=None):
         print_lines_diff(expected_actions, found_actions)
         raise AssertionError("History actions mismatch")
 
-@behave.then('History info rpmdb version did not change')
+@behave.then('History info rpmdb version changed')
 def step_impl(context, spec=""):
     h_info = parsed_history_info(context, spec)
     assert (h_info['Begin rpmdb']), "End rpmdb version not found"
     assert (h_info['End rpmdb']), "End rpmdb version not found"
-    assert (h_info['End rpmdb'] == h_info['Begin rpmdb']), "Begin and end rpmdb versions are different"
+    assert (h_info['End rpmdb'] != h_info['Begin rpmdb']), "Begin and end rpmdb versions are the same"
 
 
 @behave.then('package reasons are')
