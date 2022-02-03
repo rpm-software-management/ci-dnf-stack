@@ -10,4 +10,4 @@ Scenario: Compute rpmdb version in repeatable manner
     And the exit code is 0
    Then I execute dnf with args "reinstall setup"
     And the exit code is 0
-   Then history info rpmdb version did not change
+   Then history info rpmdb version changed
