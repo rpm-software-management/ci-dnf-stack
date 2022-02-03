@@ -13,7 +13,13 @@ from common.lib.behave_ext import check_context_table
 from common.lib.checksum import sha256_checksum
 from common.lib.cmd import run_in_context
 from common.lib.diff import print_lines_diff
-from common.lib.file import copy_tree, create_file_with_contents, delete_file, ensure_directory_exists
+from common.lib.file import (
+    copy_tree,
+    create_file_with_contents,
+    delete_file,
+    ensure_directory_exists,
+    ensure_file_exists,
+)
 from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
 
@@ -360,3 +366,26 @@ def given_system(context, system):
 def given_no_osrelease(context):
     behave.use_fixture(osrelease_fixture, context)
     context.scenario.osrelease.delete()
+
+
+@behave.step("I invalidate solvfile version of \"{path}\"")
+def rewrite_solvfile_version(context, path):
+    path = path.format(context=context)
+    ensure_file_exists(path)
+    fp = open(path, "r+b")
+    # Seek 40 bytes from start of file to the beginning userdata section
+    fp.seek(40, 0)
+    userdata_dnf_magic = fp.read(4)
+    expected_dnf_magic = b'\x00dnf'
+    assert userdata_dnf_magic == expected_dnf_magic, \
+        'Provided solvfile doesn\'t contain expected userdata section with dnf magic bytes' \
+        '(found "%s" vs. expected "%s")' % (userdata_dnf_magic, expected_dnf_magic)
+
+    userdata_dnf_version = fp.read(4)
+    expected_dnf_version = b'\x001.0'
+    assert userdata_dnf_version == expected_dnf_version, \
+        'Provided solvfile doesn\'t contain expected userdata dnf version, ' \
+        '(found "%s" vs. expected "%s")' % (userdata_dnf_version, expected_dnf_version)
+
+    fp.write(bytes("\0\0\0bogus", 'utf-8'))
+    fp.close()
