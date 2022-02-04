@@ -47,7 +47,7 @@ Scenario: dnf debug-dump dumps file with configuration
       test-replace-0:3-fc29.src
       test-replace-0:3-fc29.x86_64
     %%%%RPMDB VERSIONS
-      all: 2:[0-9abcdef]{40}
+      all: [^ ]+
     """
 
 
@@ -76,5 +76,5 @@ Scenario: dnf debug-dump with --norepos skips dumping repositories contents
       kernel-0:4\.19\.1-fc29\.x86_64
       kernel-0:4\.20\.1-fc29\.x86_64
     %%%%RPMDB VERSIONS
-      all: 2:[0-9abcdef]{40}
+      all: [^ ]+
     """
