@@ -29,7 +29,7 @@ def run(cmd, shell=True, cwd=None):
     return proc.returncode, stdout, stderr
 
 
-def run_in_context(context, cmd, can_fail=False, **run_args):
+def run_in_context(context, cmd, can_fail=False, expected_exit_code=None, **run_args):
     if getattr(context, "faketime", None) is not None:
         cmd = context.faketime + cmd
 
@@ -48,6 +48,10 @@ def run_in_context(context, cmd, can_fail=False, **run_args):
 
     if not can_fail and context.cmd_exitcode != 0:
         raise AssertionError('Running command "%s" failed: %s' % (cmd, context.cmd_exitcode))
+    elif expected_exit_code is not None and int(expected_exit_code) != context.cmd_exitcode:
+        raise AssertionError(
+            'Running command "%s" had unexpected exit code: %s' % (cmd, context.cmd_exitcode)
+        )
 
 
 def assert_exitcode(context, exitcode):

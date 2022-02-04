@@ -64,7 +64,7 @@ def create_repo_conf(context, repo):
     write_repo_config(context, repo, repo_info.config)
 
 
-def generate_repodata(context, repo, extra_args=None, explicit=False):
+def generate_repodata(context, repo, extra_args=None, explicit=False, can_fail=False, expected_exit_code=None):
     repo_subst = repo.replace("$releasever", context.dnf.releasever)
     repo_info = get_repo_info(context, repo)
 
@@ -84,7 +84,7 @@ def generate_repodata(context, repo, extra_args=None, explicit=False):
     if not os.path.isdir(target_path):
         os.makedirs(target_path)
 
-    run_in_context(context, "createrepo_c %s '%s'" % (args, target_path))
+    run_in_context(context, "createrepo_c %s '%s'" % (args, target_path), can_fail, expected_exit_code)
 
     repodata_path = os.path.join(target_path, "repodata")
 
@@ -158,6 +158,18 @@ def step_generate_repodata_for_repository(context, repo):
     Generates the repository repodata (without configuring it for use).
     """
     generate_repodata(context, repo, explicit=True)
+
+
+@behave.step("I use repository \"{repo}\" generated with exit code \"{exitcode}\"")
+def step_use_repository_generated_with_exit_code(context, repo, exitcode):
+    """
+    Generates the repodata if they weren't generated yet for this run of
+    behave. Creates the repository's config file at /etc/yum.repos.d/ (inside
+    installroot).
+    Createrepo_c can fail during generating the repodata, with given exit code.
+    """
+    generate_repodata(context, repo, can_fail=True, expected_exit_code=exitcode)
+    create_repo_conf(context, repo)
 
 
 @behave.step("I use repository \"{repo}\"")
