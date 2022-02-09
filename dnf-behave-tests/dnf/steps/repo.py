@@ -168,7 +168,7 @@ def step_use_repository_generated_with_exit_code(context, repo, exitcode):
     installroot).
     Createrepo_c can fail during generating the repodata, with given exit code.
     """
-    generate_repodata(context, repo, can_fail=True, expected_exit_code=exitcode)
+    generate_repodata(context, repo, can_fail=True, expected_exit_code=int(exitcode))
     create_repo_conf(context, repo)
 
 
