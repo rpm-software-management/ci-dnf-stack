@@ -6,7 +6,7 @@ Background:
       And I use repository "dnf-ci-fedora"
       And I move the clock backward to "before boot-up"
       And I execute dnf with args "install lame kernel basesystem glibc wget"
-      And I move the clock forward to "the present"
+      And I move the clock forward to "2 hours"
       And I use repository "dnf-ci-fedora-updates"
 
 @bz1913962
