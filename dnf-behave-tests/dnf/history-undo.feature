@@ -111,3 +111,109 @@ Scenario: Undo a transaction with a package that is no longer available
     Error: The following problems occurred while running a transaction:
       Cannot find rpm nevra "filesystem-3.9-2.fc29.x86_64".
     """
+
+
+@bz2010259
+@bz2053014
+Scenario: Undoing a transaction with Reason Change
+  Given I successfully execute dnf with args "install filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "mark group filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 2      |                       | Reason Change | 1         |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | group           |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "history undo last"
+   Then the exit code is 0
+    And History is following
+        | Id     | Command               | Action        | Altered   |
+        | 3      |                       | Reason Change | 1         |
+        | 2      |                       | Reason Change | 1         |
+        | 1      |                       | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+
+
+@bz2010259
+@bz2053014
+Scenario: Undoing an older transaction with Reason Change
+  Given I successfully execute dnf with args "install filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "mark group filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 2      |                       | Reason Change | 1         |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | group           |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "install wget"
+   Then the exit code is 0
+   When I execute dnf with args "history undo last-1"
+   Then the exit code is 0
+    And History is following
+        | Id     | Command               | Action        | Altered   |
+        | 4      |                       | Reason Change | 1         |
+        | 3      |                       | Install       | 1         |
+        | 2      |                       | Reason Change | 1         |
+        | 1      |                       | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+        | wget-1.19.5-5.fc29.x86_64    | user            |
+
+
+@bz2010259
+@bz2053014
+Scenario: Undoing a transaction range with Reason Change
+  Given I successfully execute dnf with args "install filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "mark group filesystem"
+   Then History is following
+        | Id     | Command               | Action        | Altered   |
+        | 2      |                       | Reason Change | 1         |
+        | 1      | install filesystem    | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | group           |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
+   When I execute dnf with args "install wget"
+   Then the exit code is 0
+   When I execute dnf with args "history rollback 1"
+   Then the exit code is 0
+    And History is following
+        | Id     | Command               | Action        | Altered   |
+        | 4      |                       | C, E          | 2         |
+        | 3      |                       | Install       | 1         |
+        | 2      |                       | Reason Change | 1         |
+        | 1      |                       | Install       | 2         |
+    And package reasons are
+        | Package                      | Reason          |
+        | filesystem-3.9-2.fc29.x86_64 | user            |
+        | setup-2.12.1-1.fc29.noarch   | dependency      |
