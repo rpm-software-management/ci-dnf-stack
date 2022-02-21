@@ -143,3 +143,25 @@ Scenario: Upgrade ignores unmet recommends of installed package even when anothe
         | Action        | Package                                   |
         | upgrade       | PackageA-2.0-1.x86_64                     |
         | install       | PackageC-2.0-1.x86_64                     |
+
+@bz2048394
+@bz2033130
+Scenario: Upgrade will not ignores unmet recommends of installed package when the rich dependency was satisfied
+  Given I use repository "exclude-from-weak"
+   When I execute dnf with args "install PackageE-1.0 --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageE-1.0-1.x86_64                     |
+  When I execute dnf with args "install PackageB --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageB-2.0-1.x86_64                     |
+        | install-weak  | supplementing-pkg-1.0-1.x86_64            |
+  When I execute dnf with args "upgrade PackageE --setopt=exclude_from_weak_autodetect=True"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | PackageE-2.0-1.x86_64                     |
+        | install-weak  | recommended-pkg-2.0-1.x86_64              |
