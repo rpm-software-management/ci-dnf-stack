@@ -482,3 +482,26 @@ Scenario: Install an environment with a nonexistent group
        """
        no group 'nonexistent-group' from environment 'env-with-a-nonexistent-group'
        """
+
+@xfail
+@bz2066638
+Scenario: Packages that are part of another installed group are not removed
+  Given I use repository "comps-group"
+        # install test-group and no-name-group, the test-package is part of both of them
+   When I execute dnf with args "group install test-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | group-install | Test Group                        |
+        | install-group | test-package-1.0-1.fc29.noarch    |
+   When I execute dnf with args "group install no-name-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | group-install | <name-unset>                      |
+        # after test-group removal, test-package is expected to stay installed
+   When I execute dnf with args "group remove test-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package       |
+        | group-remove  | Test Group    |
