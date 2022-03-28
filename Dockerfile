@@ -18,8 +18,7 @@ COPY ./repos.d/ /etc/yum.repos.d/
 
 # enable the test-utils repo
 RUN set -x && \
-    dnf -y upgrade; \
-    dnf clean all; \
+    dnf -y --refresh upgrade; \
     dnf -y install dnf-plugins-core; \
     dnf -y copr enable rpmsoftwaremanagement/test-utils;
 
@@ -27,11 +26,8 @@ RUN set -x && \
 RUN set -x && \
     if [ "$TYPE" == "nightly" ]; then \
         dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+        dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly; \
     fi
-
-# upgrade all packages
-RUN set -x && \
-    dnf -y --refresh upgrade
 
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
