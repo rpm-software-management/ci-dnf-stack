@@ -263,6 +263,8 @@ Scenario: Group list
     superripper-and-deps SuperRipper-and-deps        no
     """
 
+# @dnf5
+# TODO(nsella) Unknown argument "--ids" for command "list"
 @bz1706382
 Scenario: Group list --ids
  Given I use repository "dnf-ci-thirdparty"
@@ -277,6 +279,8 @@ Scenario: Group list --ids
        SuperRipper-and-deps (superripper-and-deps)
     """
 
+# @dnf5
+# TODO(nsella) Unknown argument "--ids" for command "list"
 @bz1706382
 Scenario: Group list --ids with arg
  Given I use repository "dnf-ci-thirdparty"
