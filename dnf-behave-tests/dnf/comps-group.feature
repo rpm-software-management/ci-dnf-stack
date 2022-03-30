@@ -6,6 +6,8 @@ Feature: Testing groups
 #   optional: flac
 #   conditional: wget, requires filesystem-content
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install and remove group
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -29,6 +31,8 @@ Scenario: Install and remove group
         | group-remove  | DNF-CI-Testgroup                  |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install a group that is already installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -48,6 +52,8 @@ Scenario: Install a group that is already installed
         | group-install | DNF-CI-Testgroup                  |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install and remove group with excluded package
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -66,6 +72,8 @@ Scenario: Install and remove group with excluded package
         | remove-unused | setup-0:2.12.1-1.fc29.noarch      |
         | group-remove  | DNF-CI-Testgroup                  |
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1707624
 Scenario: Install installed group when group is not available
   Given I use repository "dnf-ci-thirdparty"
@@ -82,6 +90,8 @@ Scenario: Install installed group when group is not available
     And stderr contains "Module or Group 'DNF-CI-Testgroup' is not available."
     And stderr does not contain "ValueError"
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install and remove group with excluded package dependency
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -140,6 +150,8 @@ Scenario: Install condidional package if required package has been installed
         | group-install | DNF-CI-Testgroup                          |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 # basesystem requires filesystem (part of DNF-CI-Testgroup)
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use repository "dnf-ci-thirdparty"
@@ -178,6 +190,8 @@ Scenario: Group remove does not remove packages required by user installed packa
         | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Group remove does not remove user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -205,6 +219,8 @@ Scenario: Group remove does not remove user installed packages
         | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1809600
 Scenario: Group remove does not traceback when reason change
   Given I use repository "dnf-ci-thirdparty"
@@ -343,6 +359,8 @@ Scenario: List an environment with empty name
        test-group           Test Group        no
        """
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1826198
 Scenario: Install a group with empty name
   Given I use repository "comps-group"
@@ -354,6 +372,8 @@ Scenario: Install a group with empty name
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1826198
 Scenario: Install an environment with empty name
   Given I use repository "comps-group"
@@ -389,6 +409,8 @@ Scenario: List and info a group with missing packagelist
        """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install a group with empty packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group install test-group"
@@ -398,6 +420,8 @@ Scenario: Install a group with empty packagelist
         | group-install | Test Group    |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
   Given I use repository "comps-group"
@@ -472,6 +496,8 @@ Scenario: Mark a group and an environment without name
         | group-install | Test Group                        |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install an environment with a nonexistent group
   Given I use repository "comps-group"
   When I execute dnf with args "group install env-with-a-nonexistent-group"

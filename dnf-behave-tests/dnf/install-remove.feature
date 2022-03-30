@@ -159,6 +159,8 @@ Scenario: Install remove group
         | present       | water_carbonated-0:1.0-1.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install remove group with optional packages
    When I execute dnf with args "group install --with-optional Beverages"
    Then the exit code is 0
