@@ -1,6 +1,8 @@
 Feature: Testing dnf clean command
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 Scenario: Ensure that metadata are unavailable after "dnf clean all"
   Given I use repository "dnf-ci-rich" with configuration
         | key                 | value |

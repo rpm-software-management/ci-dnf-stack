@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 Feature: Tests for the repository syncing functionality
 
 @bz1763663
