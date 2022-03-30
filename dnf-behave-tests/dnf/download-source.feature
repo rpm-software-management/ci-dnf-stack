@@ -1,6 +1,8 @@
 Feature: Tests for different package download sources
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 @bz1775184
 Scenario: baseurl is used if all mirrors from mirrorlist fail
 Given I create directory "/baseurlrepo"
@@ -19,6 +21,8 @@ Given I create directory "/baseurlrepo"
   And stderr is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 @bz1775184
 Scenario: baseurl is used if mirrorlist file cannot be found
 Given I create directory "/baseurlrepo"
@@ -32,6 +36,8 @@ Given I create directory "/baseurlrepo"
   And stderr is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 @bz1775184
 Scenario: baseurl is used if mirrorlist file is empty
 Given I create directory "/baseurlrepo"
@@ -48,6 +54,8 @@ Given I create directory "/baseurlrepo"
   And stderr is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "makecache" for command "microdnf"
 Scenario: no working donwload source result in an error
 Given I create directory "/baseurlrepo"
   And I execute "createrepo_c {context.dnf.installroot}/baseurlrepo"
