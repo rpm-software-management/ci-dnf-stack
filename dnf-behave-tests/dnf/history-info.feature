@@ -13,6 +13,8 @@ Scenario: history info shows comment to transaction
   Then stdout contains "Comment        : this_is_a_comment"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1845800
 Scenario: history info for installing a group
   Given I use repository "dnf-ci-thirdparty"
@@ -28,6 +30,8 @@ Scenario: history info for installing a group
         | Install       | @dnf-ci-testgroup             |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install" for command "group"
 @bz1845800
 Scenario: history info for installing a group when there are upgrades
   Given I successfully execute dnf with args "install lame"
