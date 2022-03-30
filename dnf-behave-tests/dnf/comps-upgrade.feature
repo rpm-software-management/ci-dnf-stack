@@ -305,6 +305,8 @@ Scenario: Upgrade environment with installed optional groups
         | env-upgrade   | optional-environment               |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "upgrade" for command "group"
 Scenario: Upgrade nonexistent group
    When I execute dnf with args "group upgrade nonexistent"
    Then the exit code is 1
