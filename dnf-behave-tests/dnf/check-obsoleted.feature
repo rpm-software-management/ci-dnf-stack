@@ -1,3 +1,6 @@
+# @dnf5
+# TODO(nsella) implement command check
+# Unknown argument "check" for command "microdnf"
 Feature: Check when there is a package that obsoletes another installed package
 
 

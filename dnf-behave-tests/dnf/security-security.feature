@@ -11,6 +11,8 @@ Background: Use repository with advisories
         | install       | security_B-0:1.0-1.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "check-update" for command "microdnf"
 Scenario: Security check-update when there are no such updates
   Given I drop repository "dnf-ci-security"
     And I use repository "dnf-ci-fedora"
@@ -20,6 +22,8 @@ Scenario: Security check-update when there are no such updates
     And stdout does not contain "security_B"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "check-update" for command "microdnf"
 Scenario: Security check-update when there are such updates
    When I execute dnf with args "check-update --security"
    Then the exit code is 100

@@ -1,3 +1,6 @@
+# @dnf5
+# TODO(nsella) implement command check-update
+# Unknown argument "check-update" for command "microdnf"
 Feature: check-update commands
 
 @bz1769466
