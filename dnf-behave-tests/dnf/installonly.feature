@@ -85,6 +85,8 @@ Scenario: Remove all installonly packages but keep the latest
         | remove        | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64    |
 
+# @dnf5
+# TODO(nsella) Unknown argument "--repofrompath=r,/opt/ci/dnf-behave-tests/fixtures/repos/dnf-ci-fedora" for command "install"
 @bz1774670
 @no_installroot
 @destructive
