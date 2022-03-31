@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) Unknown argument "list" for command "microdnf"
 Feature: Test for dnf list (including all documented suboptions and yum compatibility)
 
 
