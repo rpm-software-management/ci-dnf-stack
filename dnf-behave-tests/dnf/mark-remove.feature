@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "microdnf"
 Feature: Mark remove
 
 Scenario: Marking toplevel package for removal should not remove shared dependencies

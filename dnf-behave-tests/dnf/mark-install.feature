@@ -1,12 +1,16 @@
 Feature: Mark install
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "microdnf"
 Scenario: Marking non-existing package for fails
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark install i-dont-exist"
    Then the exit code is 1
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "microdnf"
 Scenario: Marking dependency as user-installed should not remove it automatically
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"

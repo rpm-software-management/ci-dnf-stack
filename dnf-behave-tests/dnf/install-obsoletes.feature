@@ -66,6 +66,8 @@ Scenario: Upgrading obsoleted package by its obsoleter keeps userinstalled=false
         """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "microdnf"
 @bz1672618
 Scenario: Upgrading obsoleted package by its obsoleter keeps userinstalled=false (with --nobest)
   Given I use repository "dnf-ci-thirdparty"
@@ -103,6 +105,8 @@ Scenario: Upgrading obsoleted package by its obsoleter keeps userinstalled=false
         Error: No packages to list
         """
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "microdnf"
 Scenario: Install obsoleting package and inherit the best reason - user
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install glibc-profile"
