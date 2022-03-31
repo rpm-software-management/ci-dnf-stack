@@ -32,6 +32,8 @@ Scenario: Install package from installroot repository into installroot
    Then the exit code is 1
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-C" for command "install"
 @force_installroot
 Scenario: Test metadata handling in installroot
   Given I use repository "dnf-ci-install-remove"
