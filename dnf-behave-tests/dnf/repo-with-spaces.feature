@@ -45,6 +45,8 @@ Given I copy repository "repo with spaces" for modification
       | install | test-package-0:1.0-1.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--destdir=/tmp/dnf_ci_tempdir_2t0j2a0q" for command "install"
 @bz1853349
 Scenario: Download an rpm with spaces in its baseurl (the xml:base attribute of the package) to a destdir
 Given I copy repository "repo with spaces" for modification
