@@ -95,6 +95,8 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
    Then the exit code is 0
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--nogpgcheck" for command "install"
 Scenario: Install unsigned package from repository without gpgcheck set using option --nogpgcheck
   Given I configure repository "dnf-ci-gpg" with
         | key      | value |
@@ -107,6 +109,8 @@ Scenario: Install unsigned package from repository without gpgcheck set using op
         | install       | flac-0:1.3.2-8.fc29.x86_64          |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--nogpgcheck" for command "install"
 @bz1314405
 Scenario: Fail to install package with incorrect checksum when gpgcheck=0
   Given I configure repository "dnf-ci-gpg" with
