@@ -120,6 +120,8 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--qf" for command "repoquery"
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -144,6 +146,8 @@ Scenario: Do not autoremove kernel after upgrade with --best
     And Transaction is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--qf" for command "repoquery"
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --nobest
@@ -168,6 +172,8 @@ Scenario: Do not autoremove kernel after upgrade with --nobest
     And Transaction is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--qf" for command "repoquery"
 @bz1934499
 @bz1921063
 Scenario: Do not remove or change reason after remove of one of installonly packages
@@ -200,6 +206,8 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--qf" for command "repoquery"
 @bz1934499
 @bz1921063
 Scenario: Keep reason for installonly packages
