@@ -47,6 +47,8 @@ Given I use repository "dnf-ci-fedora"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "clean" for command "microdnf"
 Scenario Outline: List repo <extras alias> - installed from repo, but not available anymore
 # use temporary copy of repository dnf-ci-fedora for this test
 Given I copy repository "dnf-ci-fedora" for modification
