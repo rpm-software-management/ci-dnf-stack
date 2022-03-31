@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) Unknown argument "--repofrompath=a/b,URL" for command "microdnf"
 Feature: Test error handling related to repositories
 
 Scenario: Invalid character in ID in --repofrompath
