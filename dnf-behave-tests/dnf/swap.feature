@@ -7,6 +7,8 @@ Background: Enable repositories
   Given I use repository "dnf-ci-thirdparty"
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 Scenario: Switch packages by swap command
    When I execute dnf with args "install CQRlib-devel CQRlib"
    Then the exit code is 0
@@ -26,6 +28,8 @@ Scenario: Switch packages by swap command
         | install-weak  | flac-0:1.3.3-3.fc29.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 Scenario: Switch packages and their subpackages by swap command with wildcards
    When I execute dnf with args "install CQRlib-devel CQRlib CQRlib-extension"
    Then the exit code is 0
@@ -85,6 +89,8 @@ Scenario: Switch groups by swap command
         | group-install | SuperRipper-and-deps                      |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz2036434
 Scenario: Swap packages using rpm file path
   Given I successfully execute dnf with args "install CQRlib-devel CQRlib"

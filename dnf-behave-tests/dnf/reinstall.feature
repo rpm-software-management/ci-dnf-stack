@@ -31,6 +31,8 @@ Scenario: Reinstall an RPM from different repository
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 Scenario: Reinstall an RPM that is not available
   Given I drop repository "dnf-ci-fedora-updates"
    When I execute dnf with args "reinstall CQRlib"

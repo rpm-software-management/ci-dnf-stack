@@ -36,6 +36,8 @@ Given I use repository "simple-base"
       | upgrade       | dedalo-signed-2.0-1.fc29.x86_64       |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: updating a signed pkg without key specified
 Given I use repository "simple-base"
   And I execute dnf with args "install dedalo-signed"
@@ -46,6 +48,9 @@ Given I use repository "simple-base"
  Then the exit code is 1
 
 
+# @dnf5
+# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 Scenario: updating a broken signed pkg whose key is not imported
 Given I use repository "dnf-ci-gpg"
   And I execute dnf with args "install wget"
@@ -58,6 +63,9 @@ Given I use repository "dnf-ci-gpg"
   And stderr contains "Error: GPG check FAILED"
 
 
+# @dnf5
+# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 @bz1963732
 @not.with_os=rhel__ge__8
 Scenario: updating a broken signed pkg whose key is imported

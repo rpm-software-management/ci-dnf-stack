@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) different exit code
 Feature: Alternative packages are suggested when package is not available
 
 @bz1625586

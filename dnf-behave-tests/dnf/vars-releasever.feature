@@ -15,6 +15,8 @@ Scenario: Releasever is substituted in baseurl via a command line option
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: Releasever is substituted in baseurl via a config file
   Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f0123"
     And I create and substitute file "/etc/dnf/vars/releasever" with
@@ -48,6 +50,8 @@ Scenario: Releasever is substituted in baseurl via a value detected from 'system
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
+# @dnf5
+# TODO(nsella) different exit code
 @destructive
 Scenario: Releasever is substituted in baseurl using vars loaded from the same location (host or installroot) as repos
   Given I do not set releasever

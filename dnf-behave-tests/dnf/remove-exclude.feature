@@ -1,6 +1,7 @@
 Feature: Remove RPMs with --exclude
 
 
+@dnf5
 Scenario: Remove RPMs while excluding another RPM
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install basesystem"
@@ -18,6 +19,8 @@ Scenario: Remove RPMs while excluding another RPM
         | remove        | basesystem-0:11-6.fc29.noarch         |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: Remove RPM which is required by excluded RPM
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"

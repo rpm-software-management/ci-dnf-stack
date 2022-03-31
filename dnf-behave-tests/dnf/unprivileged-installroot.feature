@@ -3,6 +3,8 @@
 Feature: Installroot test as unprivileged user
 
 
+# @dnf5
+# TODO(nsella) different stderr
 Scenario: Fail when installing into installroot as unprivileged user
   Given I use repository "miscellaneous"
    When I execute dnf with args "--releasever=32 --installroot=/home/testuser/f32 install dummy" as an unprivileged user
@@ -13,6 +15,8 @@ Scenario: Fail when installing into installroot as unprivileged user
         """
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1843280
 Scenario: Fail when missing permissions for installroot directory
   Given I use repository "miscellaneous"

@@ -74,6 +74,8 @@ Scenario: Upgrade an RPM from the highest-priority repository
         | upgrade       | flac-0:1.3.3-2.fc29.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1733582
 Scenario: Do not upgrade installonly package from lower-priority repository
    When I execute dnf with args "install kernel-core"

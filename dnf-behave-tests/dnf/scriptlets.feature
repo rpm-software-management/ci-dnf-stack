@@ -21,6 +21,8 @@ Examples:
       | Package-posttrans-ok | posttrans scriptlet successfully done |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario Outline: Install a pkg with a failing %pre[IN|TRANS] scriptlet
   When I execute dnf with args "install <package>"
   Then the exit code is 1
@@ -33,6 +35,8 @@ Examples:
       | Package-pretrans-fail | PRETRANS  |
 
 
+# @dnf5
+# TODO(nsella) different stderr
 Scenario Outline: Install a pkg with a failing %post[in|trans] scriptlet
   When I execute dnf with args "install <package>"
   Then the exit code is 0
@@ -63,6 +67,8 @@ Examples:
       | Package-postun-ok | postun scriptlet successfully done |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: Remove a pkg with a failing %preun scriptlet
   When I execute dnf with args "install Package-preun-fail"
   Then the exit code is 0
@@ -80,6 +86,8 @@ Scenario: Remove a pkg with a failing %preun scriptlet
        | remove        | Package-preun-fail-0:1.0-1.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) different stderr
 Scenario: Remove a pkg with a failing %postun scriptlet
   When I execute dnf with args "install Package-postun-fail"
   Then the exit code is 0

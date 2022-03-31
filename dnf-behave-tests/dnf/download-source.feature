@@ -134,6 +134,8 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
 
+# @dnf5
+# TODO(nsella) different HTTP log
 @bz1817130
 Scenario: Download a package that contains special URL characters that need to be encoded (e.g. a +)
 Given I use repository "download-sources" as http

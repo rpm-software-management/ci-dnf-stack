@@ -309,6 +309,8 @@ Scenario: Group list --ids with arg
        DNF-CI-Testgroup (dnf-ci-testgroup)
     """
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1706382
 Scenario: Group list ids => yum compatibility
  Given I use repository "dnf-ci-thirdparty"
@@ -323,6 +325,8 @@ Scenario: Group list ids => yum compatibility
        SuperRipper-and-deps (superripper-and-deps)
     """
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1706382
 Scenario: Group list ids with arg => yum compatibility
  Given I use repository "dnf-ci-thirdparty"
@@ -387,6 +391,8 @@ Scenario: Install an environment with empty name
         | install-group | test-package-1.0-1.fc29.noarch    |
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @not.with_os=rhel__ge__8
 Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
@@ -443,6 +449,8 @@ Scenario: Merge groups when one has empty packagelist
        """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @not.with_os=rhel__ge__8
 Scenario: Merge environment with missing names containg a group with missing name
   Given I use repository "comps-group"

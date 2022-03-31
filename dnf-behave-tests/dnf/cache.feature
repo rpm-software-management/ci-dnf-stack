@@ -1,3 +1,6 @@
+# @dnf5
+# TODO(nsella) different stdout
+# TODO(nsella) different stderr
 Feature: Tests for cache
 
 

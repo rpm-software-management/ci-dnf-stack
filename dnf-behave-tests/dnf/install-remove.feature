@@ -129,6 +129,9 @@ Scenario: Install remove *.rpm from local path
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# No match for argument: @Beverages
 Scenario: Install remove group
    When I execute dnf with args "install @Beverages"
    Then the exit code is 0
@@ -182,6 +185,9 @@ Scenario: Install remove group with optional packages
         | remove-unused | water-0:1.0-1.x86_64              |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# No match for argument: @Beverages
 Scenario: Install remove group with already installed package with dependency
    When I execute dnf with args "install tea"
    Then the exit code is 0
@@ -207,6 +213,9 @@ Scenario: Install remove group with already installed package with dependency
         | present       | water-0:1.0-1.x86_64              |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# No match for argument: @Beverages
 Scenario: Install remove group with already installed package
    When I execute dnf with args "install water_still"
    Then the exit code is 0

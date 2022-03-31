@@ -75,6 +75,8 @@ Given I create file "/a/etc/malicious.file" with
  Then file "/etc/malicious.file" does not exist
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: present user understandable message when there is a mismatch between available repodata and packages
     Given I copy repository "simple-base" for modification
     And I use repository "simple-base" as http

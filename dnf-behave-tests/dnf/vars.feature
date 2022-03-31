@@ -1,6 +1,8 @@
 Feature: Subtitute variables
 
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1651092
 Scenario: Variables are substituted in mirrorlist URLs
   Given I use repository "dnf-ci-fedora" with configuration
@@ -20,6 +22,8 @@ Scenario: Variables are substituted in mirrorlist URLs
       | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1748841
 Scenario: Variables without {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
@@ -41,6 +45,8 @@ Scenario: Variables without {} are substituted in repo id
       """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: Variables with {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
       """

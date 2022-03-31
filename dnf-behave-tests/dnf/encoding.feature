@@ -1,6 +1,8 @@
 Feature: Test encoding
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: UTF-8 characters in .repo filename
   Given I configure dnf with
         | key      | value      |
@@ -16,6 +18,8 @@ Scenario: UTF-8 characters in .repo filename
     And stderr is empty
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1803038
 Scenario: non-UTF-8 characters in .repo filename
   Given I configure dnf with
@@ -36,6 +40,8 @@ Scenario: non-UTF-8 characters in .repo filename
         """
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: non-UTF-8 character in pkgspec
   Given I use repository "miscellaneous"
    When I execute dnf with args "install {context.invalid_utf8_char}ummy"
@@ -60,6 +66,8 @@ Scenario: non-UTF-8 character in baseurl
         """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: non-UTF-8 character in an option
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --config={context.invalid_utf8_char}"

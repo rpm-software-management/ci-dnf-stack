@@ -76,6 +76,9 @@ Scenario: I can install an RPM by $provide where $provide is key
         | install       | wget-0:1.19.5-5.fc29.x86_64               |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# No match for argument: /var/db/
 Scenario Outline: I can install an RPM by <provide type>
   Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install <provide> "

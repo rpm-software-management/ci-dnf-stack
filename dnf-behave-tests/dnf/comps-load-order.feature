@@ -2,6 +2,8 @@
 Feature: Comps are merged based on repoconf load order
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: Comps merging and repoconf load order of dnf-ci-fedora and dnf-ci-fedora-updates repo files
   Given I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora.repo" with
       """
@@ -29,6 +31,8 @@ Scenario: Comps merging and repoconf load order of dnf-ci-fedora and dnf-ci-fedo
     And stdout contains "Description: Testgroup for DNF CI testing - repo#2"
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: Comps merging and repoconf load order of dnf-ci-abc and dnf-ci-fedora repo files
   Given I create and substitute file "/etc/yum.repos.d/dnf-ci-fedora.repo" with
       """
