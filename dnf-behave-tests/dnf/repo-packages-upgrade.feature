@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) Unknown argument "repo-packages" for command "microdnf"
 Feature: repo-packages upgrade
 
 

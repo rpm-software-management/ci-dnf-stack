@@ -1,5 +1,7 @@
 Feature: repository-packages info
 
+# @dnf5
+# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
 Scenario: List info of all packages from repository
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install filesystem"
@@ -25,6 +27,8 @@ Given I use repository "dnf-ci-fedora"
  Then stdout contains "Description\s+:\s+[a-zA-Z ]*"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
 Scenario: List all installed packages from repository
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
@@ -36,6 +40,8 @@ Given I use repository "dnf-ci-fedora"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
 Scenario: Single repository package info
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
