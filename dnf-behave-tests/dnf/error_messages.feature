@@ -1,6 +1,8 @@
 Feature: Test error messages
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1888946
 Scenario: Global option 'proxy_username' is set but not 'proxy_password'
   Given I use repository "dnf-ci-fedora"
@@ -13,6 +15,8 @@ Scenario: Global option 'proxy_username' is set but not 'proxy_password'
     And stderr contains "'proxy_username' is set but not 'proxy_password'"
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1888946
 Scenario: Repository option 'proxy_username' is set but not 'proxy_password'
   Given I use repository "dnf-ci-fedora" with configuration

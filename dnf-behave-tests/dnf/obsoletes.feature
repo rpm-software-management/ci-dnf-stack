@@ -33,12 +33,16 @@ Scenario: Install of obsoleting package, even though higher version than obsolet
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: Do not install of obsoleting package using upgrade command, when obsoleted package not on the system
    When I execute dnf with args "upgrade PackageA-Obsoleter"
    Then the exit code is 1
     And Transaction is empty
 
 
+@dnf5
+# TODO(nsella) transaction table output
 @bz1818118
 Scenario: Install of obsoleting package using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -53,6 +57,8 @@ Scenario: Install of obsoleting package using upgrade command, when obsoleted pa
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageE-0:1.0-1.x86_64                   |
 
+@dnf5
+# TODO(nsella) transaction table output
 @bz1818118
 Scenario: Install of obsoleting package from commandline using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -90,6 +96,8 @@ Scenario: Install of obsoleted package
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
 
 
+@dnf5
+# TODO(nsella) transaction table output
 Scenario: Upgrade of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -138,6 +146,8 @@ Scenario: Keep reason of obsoleted package
         | PackageB-Obsoleter-1.0-1 | dependency |
 
 
+@dnf5
+# TODO(nsella) transaction table output
 Scenario: Autoremoval of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0

@@ -63,7 +63,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
- 
+
+# @dnf5
+# TODO(nsella) transaction table output
+# TODO(nsella) And file "/var/cache/dnf/merged-repo*/packages/alternator*" does not exist
 Scenario: Install from local repodata that have packages with xml:base pointing to a remote as well as local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification

@@ -6,6 +6,8 @@ Background: Set up dnf-ci-fedora repository
   And I successfully execute dnf with args "install abcde --comment this_is_a_comment"
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1773679
 Scenario: history info shows comment to transaction
   When I execute dnf with args "history info"

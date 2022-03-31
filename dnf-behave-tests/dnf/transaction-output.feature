@@ -14,6 +14,8 @@ Given I use repository "dnf-ci-thirdparty"
   And stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions\s+x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty\s+.*"
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1773436
 Scenario: Packages in transaction are sorted by NEVRA
   Given I use repository "dnf-ci-fedora"

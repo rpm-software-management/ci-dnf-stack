@@ -1,5 +1,7 @@
 Feature: Autoremoval of unneeded packages
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 Scenario: Autoremoval of package which became non-required by others
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-thirdparty"

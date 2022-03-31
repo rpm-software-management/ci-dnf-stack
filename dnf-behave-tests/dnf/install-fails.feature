@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) different exit code 0
 Feature: Installing attemps fail
 
 @bz1568965

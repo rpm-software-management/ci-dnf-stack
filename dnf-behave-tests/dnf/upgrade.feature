@@ -21,6 +21,8 @@ Background: Install RPMs
         | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @tier1
 @bz1649286
 Scenario: Upgrade one RPM
@@ -35,6 +37,8 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc flac"
@@ -47,6 +51,8 @@ Scenario: Upgrade two RPMs
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=False
@@ -75,6 +81,8 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
         | broken        | SuperRipper-0:1.3-1.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=True
@@ -103,6 +111,8 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
         | broken        | SuperRipper-0:1.3-1.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @bz1659390
 Scenario: Print information about skipped packages
   Given I use repository "dnf-ci-thirdparty-updates"
@@ -118,6 +128,8 @@ Scenario: Print information about skipped packages
    Then stdout section "Skipped:" contains "SuperRipper-1.3-1.x86_64"
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @bz1585138
 Scenario Outline: Print correct number of available updates if update <type> is given
   Given I execute dnf with args "install CQRlib-extension"
@@ -138,6 +150,8 @@ Examples:
         | --enhancement |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @bz1585138
 Scenario Outline: Print correct number of available updates if update <type> is given and updateinfo is available
   Given I use repository "dnf-ci-fedora-updates"

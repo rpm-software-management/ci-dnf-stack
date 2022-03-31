@@ -39,6 +39,8 @@ Scenario: No upgrade if same vendor not found
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1788371
 Scenario: Downgrade is unable to resolve transaction
   Given I use repository "dnf-ci-vendor-1-updates"

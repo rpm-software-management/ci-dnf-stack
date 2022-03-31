@@ -6,6 +6,8 @@ Feature: Testing group mark
 #   optional: flac
 #   conditional: wget, requires filesystem-content
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: Mark group as installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"

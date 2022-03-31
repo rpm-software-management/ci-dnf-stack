@@ -26,6 +26,8 @@ Scenario: Ensure that metadata are unavailable after "dnf clean all"
         | remove        | cream-0:1.0-1.x86_64                  |
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @tier1
 Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
@@ -64,6 +66,8 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
         """
 
 
+# @dnf5
+# TODO(nsella) transaction table output
 @tier1
 Scenario: Expire dnf cache and run repoquery when a package has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification

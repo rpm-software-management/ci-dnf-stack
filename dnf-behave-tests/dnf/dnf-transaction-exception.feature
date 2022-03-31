@@ -1,3 +1,6 @@
+# @dnf5
+# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 @no_installroot
 Feature: Test exception when dnf tries to do a transaction resolved but not valid anymore
 

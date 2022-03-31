@@ -233,6 +233,8 @@ Scenario: Keep reason for installonly packages
    Then the exit code is 0
     And Transaction is empty
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1926261
 Scenario: Value 1 of installonly_limit config option is not allowed
   Given I configure dnf with
@@ -245,6 +247,8 @@ Scenario: Value 1 of installonly_limit config option is not allowed
     Invalid configuration value: installonly_limit=1 in .*/etc/dnf/dnf.conf; value 1 is not allowed
     """
 
+@dnf5
+# TODO(nsella) transaction table output
 @bz1926261
 Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value is used instead of invalid 1)
   Given I configure dnf with

@@ -4,7 +4,8 @@ Feature: Listing available updates using the dnf updateinfo command
 Background:
   Given I use repository "dnf-ci-fedora"
 
-
+# @dnf5
+# TODO(nsella) different stderr
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -459,6 +460,8 @@ Scenario: updateinfo shows summary for advisories using direct commands (yum com
     """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1801092
 Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode (DNF version)
   Given I set dnf command to "dnf"
@@ -482,6 +485,8 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1801092
 Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode (YUM version)
   Given I set dnf command to "yum"

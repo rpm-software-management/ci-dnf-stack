@@ -1,6 +1,8 @@
 Feature: Testing that dnf clean command removes files from the cache
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Background: Fill the cache
   Given I use repository "simple-base" as http
    When I execute dnf with args "--setopt=keepcache=true install labirinto"

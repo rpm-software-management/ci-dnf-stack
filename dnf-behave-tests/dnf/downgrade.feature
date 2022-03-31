@@ -5,6 +5,8 @@ Background:
   Given I use repository "dnf-ci-fedora-updates"
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario: Downgrade one RPM
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -47,6 +49,9 @@ Scenario: Downgrade RPM that requires downgrade of dependency
         | downgrade     | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
+# TODO(nsella) different stderr
 Scenario Outline: Check <command> exit code - package does not exist
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "<command> non-existent-package"
@@ -62,6 +67,10 @@ Examples:
     | downgrade |
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
+# TODO(nsella) different stdout
+# TODO(nsella) different stderr
 Scenario: Check downgrade exit code - package not installed
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "downgrade flac"
@@ -77,6 +86,10 @@ Scenario: Check downgrade exit code - package not installed
     """
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
+# TODO(nsella) different stdout
+# TODO(nsella) different stderr
 Scenario: Check upgrade exit code - package not installed
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "upgrade flac"
@@ -93,6 +106,8 @@ Scenario: Check upgrade exit code - package not installed
     """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1759847
 Scenario: Check upgrade exit code - package already on the highest version
   Given I use repository "dnf-ci-fedora"
@@ -108,6 +123,8 @@ Scenario: Check upgrade exit code - package already on the highest version
     """
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1759847
 Scenario: Check downgrade exit code - package already on the lowest version
   Given I use repository "dnf-ci-fedora"

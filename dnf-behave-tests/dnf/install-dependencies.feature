@@ -1,3 +1,6 @@
+# @dnf5
+# TODO(nsella) transaction table output disabled
+# TODO(nsella) different stderr
 Feature: Tests for install with dependencies
 
 

@@ -37,6 +37,8 @@ Examples:
         | <=            | 0:2.28-9.fc29        |
 
 
+# @dnf5
+# TODO(nsella) different stdout
 Scenario Outline: Remove an RPM by <provide type>
    When I execute dnf with args "remove <provide>"
    Then the exit code is 0

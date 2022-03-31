@@ -1,6 +1,8 @@
 Feature: Test for installation of non-existent rpm or package
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 @bz1578369
 Scenario: Try to install a non-existent rpm
   Given I use repository "dnf-ci-fedora"
@@ -10,6 +12,8 @@ Scenario: Try to install a non-existent rpm
     And stderr contains "Could not open"
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 Scenario: Try to install a non-existent package
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install non-existent-package"
@@ -18,6 +22,8 @@ Scenario: Try to install a non-existent package
     And stderr contains "Error: Unable to find a match"
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 @bz1717429
 Scenario: Install an existent and an non-existent package
   Given I use repository "dnf-ci-fedora"

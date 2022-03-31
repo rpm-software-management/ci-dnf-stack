@@ -67,6 +67,8 @@ Scenario: Remove package from installroot
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) different stdout
 @force_installroot
 Scenario: Repolist command in installroot and with a reposdir specified
   Given I use repository "dnf-ci-install-remove"
@@ -107,6 +109,8 @@ Scenario: Upgrade package in installroot
    Then the exit code is 1
 
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1658579
 Scenario: Installroot directory is listed when there are no repos
    When I execute dnf with args "install sugar"

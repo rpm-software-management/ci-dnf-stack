@@ -1,6 +1,9 @@
 Feature: Tests for installing RPM from paths
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# Failed to access RPM "file:///opt/ci/dnf-behave-tests/fixtures/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm": No such file or directory
 Scenario Outline: I can install an RPM from path, where path is <path type>
   Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora"
    When I execute dnf with args "install <path>"
@@ -47,6 +50,9 @@ Scenario: I can install an RPM from path, when specifying the RPM multiple times
         | install       | setup-0:2.12.1-1.fc29.noarch              |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# Failed to access RPM "http://localhost:43717/noarch/setup-2.12.1-1.fc29.noarch.rpm": No such file or directory
 Scenario: I can install an RPM from url, where url is http address
   Given I use repository "dnf-ci-fedora" as http
   And I execute dnf with args "install http://localhost:{context.dnf.ports[dnf-ci-fedora]}/noarch/setup-2.12.1-1.fc29.noarch.rpm"
@@ -56,6 +62,9 @@ Scenario: I can install an RPM from url, where url is http address
         | install       | setup-0:2.12.1-1.fc29.noarch              |
 
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
+# Failed to access RPM "ftp://localhost:42937/noarch/setup-2.12.1-1.fc29.noarch.rpm": No such file or directory
 Scenario: I can install an RPM from url, where url is ftp address
   Given I use repository "dnf-ci-fedora" as ftp
   And I execute dnf with args "install ftp://localhost:{context.dnf.ports[dnf-ci-fedora]}/noarch/setup-2.12.1-1.fc29.noarch.rpm"

@@ -32,6 +32,8 @@ Scenario: Installing a package from https repository with client verification
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1605187
 @bz1713627
 Scenario: Installing a package using untrusted client cert should fail
@@ -59,6 +61,8 @@ Scenario: Installing a package using untrusted client cert should fail
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1605187
 @bz1713627
 Scenario: Installing a package using nonexistent client cert should fail
@@ -74,6 +78,8 @@ Scenario: Installing a package using nonexistent client cert should fail
     """
 
 
+# @dnf5
+# TODO(nsella) different stderr
 Scenario: Installation with untrusted repository should fail
         # https repositories use sslcacert certificates/testcerts/ca/cert.pem
   Given I use repository "simple-base" as https
@@ -91,6 +97,8 @@ Scenario: Installation with untrusted repository should fail
     """
 
 
+# @dnf5
+# TODO(nsella) different stderr
 Scenario: Untrusted cert can be overriden with sslverify=False
   Given I use repository "simple-base" as https
     And I configure repository "simple-base" with

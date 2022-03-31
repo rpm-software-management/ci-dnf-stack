@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) different stdout
 Feature: Repolist when there are no repositories
 
 

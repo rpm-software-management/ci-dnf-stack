@@ -1,12 +1,16 @@
 Feature: Install RPMs with --exclude
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 Scenario: Install an RPM that is excluded
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem --exclude filesystem"
    Then the exit code is 1
     And Transaction is empty
 
+# @dnf5
+# TODO(nsella) different exit code 0
 @bz1756473
 Scenario: Install an RPM that requires excluded RPM
   Given I use repository "dnf-ci-fedora"
@@ -22,6 +26,8 @@ Scenario: Install an RPM that requires excluded RPM
     """
 
 
+# @dnf5
+# TODO(nsella) different exit code 0
 Scenario: Install RPMs while excluding part of them
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup filesystem --exclude filesystem"
