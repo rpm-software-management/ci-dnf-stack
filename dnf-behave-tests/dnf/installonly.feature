@@ -53,6 +53,8 @@ Scenario: Install multiple versions of an installonly package and keep reason
    Then the exit code is 0
     And Transaction is empty
 
+# @dnf5
+# TODO(nsella) Unknown argument "--oldinstallonly" for command "remove"
 @bz1774670
 Scenario: Remove all installonly packages but keep the latest
    When I execute dnf with args "install kernel-core"
