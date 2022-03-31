@@ -47,6 +47,8 @@ Scenario: non-UTF-8 character in pkgspec
         """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--repofrompath=testrepo," for command "install"
 Scenario: non-UTF-8 character in baseurl
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --repofrompath=testrepo,{context.invalid_utf8_char}"
