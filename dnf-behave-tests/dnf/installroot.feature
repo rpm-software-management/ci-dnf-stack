@@ -1,6 +1,7 @@
 Feature: Installroot test
 
 
+@dnf5
 @force_installroot
 Scenario: Install package from host repository into empty installroot
   # The following two steps generate repodata for the repository without configuring it
@@ -18,6 +19,7 @@ Scenario: Install package from host repository into empty installroot
    Then the exit code is 1
 
 
+@dnf5
 @force_installroot
 Scenario: Install package from installroot repository into installroot
   Given I use repository "dnf-ci-install-remove"
@@ -45,6 +47,7 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
 
 
+@dnf5
 @force_installroot
 Scenario: Remove package from installroot
   Given I use repository "dnf-ci-install-remove"
@@ -84,6 +87,7 @@ Scenario: Repolist command in installroot and with a reposdir specified
         """
 
 
+@dnf5
 @force_installroot
 Scenario: Upgrade package in installroot
   Given I use repository "dnf-ci-install-remove"

@@ -27,6 +27,7 @@ Scenario: Upgrade an RPM from absolute path on disk
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM from relative path on disk
   Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade x86_64/glibc-2.28-26.fc29.x86_64.rpm x86_64/glibc-common-2.28-26.fc29.x86_64.rpm x86_64/glibc-all-langpacks-2.28-26.fc29.x86_64.rpm"
@@ -38,6 +39,7 @@ Scenario: Upgrade an RPM from relative path on disk
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM from path on disk containing wildcards
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc*"
@@ -49,6 +51,7 @@ Scenario: Upgrade an RPM from path on disk containing wildcards
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple times
    When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
    Then the exit code is 0
@@ -57,6 +60,7 @@ Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple tim
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
 
 
+@dnf5
 Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple times using different paths
    When I execute dnf with args "upgrade x86_64/wget-1.19.6-5.fc29.x86_64.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
    Then the exit code is 0
@@ -65,6 +69,7 @@ Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple tim
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
 
 
+@dnf5
 Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple times using symlink
   Given I copy file "{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm" to "/tmp/wget-1.19.6-5.fc29.x86_64.rpm"
     And I create symlink "/tmp/symlink.rpm" to file "/tmp/wget-1.19.6-5.fc29.x86_64.rpm"

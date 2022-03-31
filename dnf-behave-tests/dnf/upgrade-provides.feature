@@ -48,6 +48,7 @@ Scenario: Upgrade an RPM by provide
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM by file provide
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /etc/ld.so.conf"
@@ -59,6 +60,7 @@ Scenario: Upgrade an RPM by file provide
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM by file provide that is directory
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /var/db"
@@ -70,6 +72,7 @@ Scenario: Upgrade an RPM by file provide that is directory
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5
 Scenario: Upgrade an RPM by file provide containing wildcards
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade /etc/ld*.conf"

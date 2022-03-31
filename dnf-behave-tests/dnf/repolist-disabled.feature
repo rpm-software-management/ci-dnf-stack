@@ -6,12 +6,14 @@ Background:
         | enabled | 0     |
 
 
+@dnf5
 Scenario: Repolist without arguments
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout is empty
 
 
+@dnf5
 Scenario: Repolist with "enabled"
    When I execute dnf with args "repolist enabled"
    Then the exit code is 0

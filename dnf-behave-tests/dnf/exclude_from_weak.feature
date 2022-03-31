@@ -1,6 +1,7 @@
 Feature: Skip exclude_from_weak for weak deps and autodetected exclude_from_weak for unmet weak dependencies of installed packages
 
 
+@dnf5
 Scenario: Install step also installs weak deps
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install abcde"

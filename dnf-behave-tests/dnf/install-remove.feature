@@ -99,6 +99,7 @@ Scenario: Install remove two package with shared dependency
         | remove-unused | water-0:1.0-1.x86_64              |
 
 
+@dnf5
 Scenario: Install remove rpm file from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
    Then the exit code is 0
@@ -112,6 +113,7 @@ Scenario: Install remove rpm file from local path
         | remove        | water-0:1.0-1.x86_64              |
 
 
+@dnf5
 Scenario: Install remove *.rpm from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water_{{still,carbonated}}-1*.rpm"
    Then the exit code is 0

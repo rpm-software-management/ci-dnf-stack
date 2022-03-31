@@ -17,6 +17,7 @@ Examples:
         | file://                 | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm |
 
 
+@dnf5
 Scenario: I can install an RPM from path, when specifying the RPM multiple times
    When I execute dnf with args "install {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm"
    Then the exit code is 0

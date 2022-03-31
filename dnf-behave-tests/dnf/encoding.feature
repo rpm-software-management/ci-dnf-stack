@@ -69,6 +69,7 @@ Scenario: non-UTF-8 character in an option
         """
 
 
+@dnf5
 Scenario: non-UTF-8 character in an option when using corresponding locale
   Given I use repository "miscellaneous"
     And I create file "/{context.invalid_utf8_char}" with
