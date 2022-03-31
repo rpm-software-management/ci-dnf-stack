@@ -2,6 +2,7 @@
 Feature: zchunk tests
 
 
+@dnf5
 Scenario: I can install an RPM from local mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -16,6 +17,7 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+@dnf5
 @bz1886706
 Scenario: I can install an RPM from FTP mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
@@ -31,6 +33,7 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+@dnf5
 Scenario: I can install an RPM from FTP mirror with zchunk repo and disabled zchunk
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -109,6 +112,7 @@ Given I copy repository "simple-base" for modification
       | /repodata/filelists.xml.zck |
 
 
+@dnf5
 Scenario: using mirror wihtout ranges supports and zchunk results in only two GET requests per file (the first try is with range specified)
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
