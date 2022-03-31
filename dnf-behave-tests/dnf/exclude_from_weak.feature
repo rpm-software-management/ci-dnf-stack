@@ -159,6 +159,8 @@ Scenario: Upgrade ignores unmet recommends of installed package even when anothe
         | upgrade       | PackageA-2.0-1.x86_64                     |
         | install       | PackageC-2.0-1.x86_64                     |
 
+# @dnf5
+# TODO(nsella) setopt: "exclude_from_weak_autodetect=True": Option "exclude_from_weak_autodetect" not found
 @bz2048394
 @bz2033130
 Scenario: Upgrade will not ignores unmet recommends of installed package when the rich dependency was satisfied
