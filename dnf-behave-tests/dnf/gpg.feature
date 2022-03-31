@@ -29,6 +29,8 @@ Background: Add repository with gpgcheck=1
    Then the exit code is 1
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Install masterkey signed package and check GPG key was imported
    When I execute dnf with args "install setup -v"
    Then the exit code is 0
@@ -69,6 +71,8 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
     And RPMDB Transaction is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Fail to install signed package with incorrect checksum
    When I execute dnf with args "install broken-package -v"
    Then the exit code is 1

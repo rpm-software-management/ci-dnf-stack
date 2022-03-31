@@ -45,6 +45,8 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: when zchunk is enabled, prefer HTTP over FTP
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -75,6 +77,8 @@ Given I copy repository "simple-base" for modification
       | /repodata/filelists.xml.zck |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: when zchunk is enabled, prefer HTTP over FTP (reversed)
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"

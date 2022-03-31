@@ -1,6 +1,8 @@
 Feature: SSL related tests
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Installing a package from https repository
   Given I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
@@ -14,6 +16,8 @@ Scenario: Installing a package from https repository
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Installing a package from https repository with client verification
   Given I require client certificate verification with certificate "certificates/testcerts/client/cert.pem" and key "certificates/testcerts/client/key.pem"
     And I use repository "dnf-ci-fedora" as https
