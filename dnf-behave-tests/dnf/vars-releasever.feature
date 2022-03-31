@@ -6,6 +6,7 @@ Background:
         | key     | value                                                         |
         | baseurl | file://{context.dnf.installroot}/temp-repos/base-f$releasever |
 
+@dnf5
 Scenario: Releasever is substituted in baseurl via a command line option
   Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f0123"
     And I execute dnf with args "install setup --releasever=0123"
@@ -30,6 +31,7 @@ Scenario: Releasever is substituted in baseurl via a config file
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+@dnf5
 Scenario: Releasever is substituted in baseurl via a value detected from a fedora-release package
   Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/fedora-release-29-1.noarch.rpm"
     And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f29"
@@ -40,6 +42,7 @@ Scenario: Releasever is substituted in baseurl via a value detected from a fedor
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+@dnf5
 @bz1710761
 Scenario: Releasever is substituted in baseurl via a value detected from 'system-release(releasever)' provide
   Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
@@ -80,6 +83,7 @@ Scenario: Releasever is substituted in baseurl using vars loaded from the same l
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+@dnf5
 Scenario: Releasever is substituted in baseurl via vars in custom location
   Given I do not set releasever
     And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f0123"

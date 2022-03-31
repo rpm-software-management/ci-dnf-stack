@@ -16,6 +16,7 @@ Background:
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
+@dnf5
 @bz1788371
 Scenario: Upgrade sticks to vendor
   Given I use repository "dnf-ci-vendor-1-updates"
@@ -29,6 +30,7 @@ Scenario: Upgrade sticks to vendor
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
+@dnf5
 @bz1788371
 Scenario: No upgrade if same vendor not found
   Given I use repository "dnf-ci-vendor-2-updates"

@@ -5,6 +5,7 @@ Background: Enable repository
   Given I use repository "scriptlets"
 
 
+@dnf5
 Scenario Outline: Install a pkg with a successful scriptlet
    When I execute dnf with args "install <package>"
    Then the exit code is 0
@@ -51,6 +52,7 @@ Examples:
       | Package-posttrans-fail | POSTTRANS |
 
 
+@dnf5
 Scenario Outline: Remove a pkg with a successful %[pre|post]un scriptlet
   When I execute dnf with args "install <package>"
   Then the exit code is 0
