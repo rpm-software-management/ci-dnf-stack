@@ -30,6 +30,8 @@ Scenario: Mark group as installed
     And stdout contains "Installed Groups"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "group"
 Scenario: unMark group as installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
