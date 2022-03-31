@@ -19,6 +19,7 @@ Scenario: Running kernel is protected
         """
 
 
+@dnf5
 @bz1698145
 Scenario: Running kernel is not protected with config protect_running_kernel=False
    When I execute dnf with args "remove dnf-ci-kernel --setopt=protect_running_kernel=False"

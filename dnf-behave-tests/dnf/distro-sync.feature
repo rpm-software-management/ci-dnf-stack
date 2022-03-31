@@ -1,6 +1,7 @@
 Feature: distro-sync
 
 
+@dnf5
 Scenario: when there is noting to do
 Given I use repository "simple-base"
  When I execute dnf with args "distro-sync"
@@ -8,6 +9,7 @@ Given I use repository "simple-base"
   And Transaction is empty
 
 
+@dnf5
 Scenario: updating a pkg
 Given I use repository "simple-base"
   And I execute dnf with args "install labirinto"
@@ -19,6 +21,7 @@ Given I use repository "simple-base"
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
 
 
+@dnf5
 Scenario: updating a signed pkg
 Given I use repository "simple-base"
   And I execute dnf with args "install dedalo-signed"

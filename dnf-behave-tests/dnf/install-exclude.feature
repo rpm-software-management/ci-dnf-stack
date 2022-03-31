@@ -29,6 +29,7 @@ Scenario: Install RPMs while excluding part of them
     And Transaction is empty
 
 
+@dnf5
 Scenario: Install RPMs while excluding part of them (strict=false)
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup filesystem --exclude filesystem --setopt=strict=false"
@@ -38,6 +39,7 @@ Scenario: Install RPMs while excluding part of them (strict=false)
         | install       | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5
 Scenario: Install RPMs while excluding another RPM
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem --exclude glibc"

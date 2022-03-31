@@ -1,3 +1,4 @@
+@dnf5
 Feature: Upgrade all RPMs
 
 
@@ -30,7 +31,6 @@ Scenario: Upgrade all RPMs from one repository
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
 
 
-@dnf5
 Scenario: Upgrade all RPMs from one repository using '*'
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade '*'"

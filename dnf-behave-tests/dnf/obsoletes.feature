@@ -9,6 +9,7 @@ Background: Use dnf-ci-obsoletes repository
   Given I use repository "dnf-ci-obsoletes"
 
 
+@dnf5
 # PackageA has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageA-3.0-1 are valid.
 # PackageA-3.0-1 is picked because it lexicographically precedes PackageA-Obsoleter-1.0-1.
 @bz1902279
@@ -20,6 +21,7 @@ Scenario: Install of obsoleted package, but higher version than obsoleted presen
         | install       | PackageA-0:3.0-1.x86_64                   |
 
 
+@dnf5
 # PackageE has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageE-3.0-1 are valid.
 # PackageA-Obsoleter-1.0-1 is picked because it lexicographically precedes PackageE-3.0-1.
 @bz1902279
@@ -65,6 +67,7 @@ Scenario: Install of obsoleting package from commandline using upgrade command, 
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageE-0:1.0-1.x86_64                   |
 
+@dnf5
 Scenario: Upgrade of obsoleted package by package of higher version than obsoleted
    When I execute dnf with args "install PackageA-1.0"
    Then the exit code is 0
@@ -78,6 +81,7 @@ Scenario: Upgrade of obsoleted package by package of higher version than obsolet
         | upgrade       | PackageA-0:3.0-1.x86_64                   |
 
 
+@dnf5
 Scenario: Install of obsoleted package
    When I execute dnf with args "install PackageB"
    Then the exit code is 0
@@ -100,6 +104,7 @@ Scenario: Upgrade of obsoleted package
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
 
 
+@dnf5
 Scenario: Upgrade of obsoleted package if package specified by version with glob (no obsoletes applied)
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0

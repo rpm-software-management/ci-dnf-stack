@@ -50,6 +50,7 @@ Scenario: Install an RPM by provide that is lower than e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5
 Scenario: Install an RPM by provide that is lower or equal to e:vr
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
@@ -65,6 +66,7 @@ Scenario: Install an RPM by provide that is lower or equal to e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5
 Scenario: I can install an RPM by $provide where $provide is key
   Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install webclient"

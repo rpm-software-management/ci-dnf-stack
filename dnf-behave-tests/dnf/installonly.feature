@@ -5,6 +5,7 @@ Background:
   Given I use repository "dnf-ci-fedora"
 
 
+@dnf5
 @bz1668256 @bz1616191 @bz1639429
 Scenario: Install multiple versions of an installonly package with a limit of 2
   Given I set config option "installonly_limit" to "2"
@@ -33,6 +34,7 @@ Scenario: Install multiple versions of an installonly package with a limit of 2
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
 
+@dnf5
 @bz1769788
 Scenario: Install multiple versions of an installonly package and keep reason
    When I execute dnf with args "install kernel-core"

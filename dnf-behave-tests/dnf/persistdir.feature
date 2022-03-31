@@ -1,3 +1,4 @@
+@dnf5
 Feature: Track information in persistdir
 
 

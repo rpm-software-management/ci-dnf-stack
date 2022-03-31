@@ -78,6 +78,7 @@ Scenario: Fail to install signed package with incorrect checksum
     And RPMDB Transaction is empty
 
 
+@dnf5
 Scenario: Install masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
   Given I configure repository "dnf-ci-gpg" with
         | key      | value                                                                      |

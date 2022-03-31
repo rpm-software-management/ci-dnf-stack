@@ -27,7 +27,8 @@ Scenario: Install an existent and an non-existent package
     And stderr contains "Error: Unable to find a match: non-existent-package"
 
 
-@bz@1717429
+@dnf5
+@bz1717429
 Scenario: Install an existent and an non-existent package with --skip-broken
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup non-existent-package --skip-broken"

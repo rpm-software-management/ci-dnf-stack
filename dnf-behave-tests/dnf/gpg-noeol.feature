@@ -1,3 +1,4 @@
+@dnf5
 Feature: Testing gpg signed packages by keys without any EOL characters at EOF
 
 # Masterkey signed packages in repository dnf-ci-gpg-noeol:

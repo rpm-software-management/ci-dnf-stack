@@ -7,6 +7,7 @@ Given I use repository "repo with spaces"
   And I drop repository "repo with spaces"
 
 
+@dnf5
 @bz1853349
 Scenario: Install an rpm from a repo with spaces in baseurl
 Given I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
@@ -24,6 +25,7 @@ Given I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
       | install | test-package-0:1.0-1.x86_64 |
 
 
+@dnf5
 @bz1853349
 Scenario: Install an rpm with spaces in its baseurl (the xml:base attribute of the package)
 Given I copy repository "repo with spaces" for modification

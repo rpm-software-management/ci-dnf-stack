@@ -1,3 +1,4 @@
+@dnf5
 Feature: Installing and removing multilib packages
 
 
@@ -15,7 +16,6 @@ Scenario: Installing inferior arch with dependencies
       | install       | library-0:1.0-1.i686         |
 
 
-@dnf5
 Scenario: Installing inferior arch with dependencies, in two steps
  When I execute dnf with args "install library.i686"
  Then the exit code is 0

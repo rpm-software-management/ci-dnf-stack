@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test upgrading installonly packages - "installonlypkgs" configuration option
 
 
