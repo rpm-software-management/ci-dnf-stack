@@ -111,6 +111,11 @@ def check_rpmdb_transaction(context, mode):
                     action, ", ".join([str(rpm) for rpm in sorted(rpmdb_transaction[action])])))
 
 def check_dnf_transaction(context, mode):
+    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    if dnf5_mode:
+        print("=== WARNING ===")
+        print("stdout checking is disabled for transaction table with @dnf5")
+        return
     check_context_table(context, ["Action", "Package"])
 
     # check changes in DNF transaction table
