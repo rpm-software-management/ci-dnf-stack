@@ -252,3 +252,32 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.6.8-1.module_1710+b535a823.x86_64.rpm
       {context.dnf.tempdir}/repos/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm
       """
+
+
+@bz2034736
+@bz2058676
+Scenario: --oldonly doesn't print and rpm if it is contained in both new and old version of a stream
+Given I copy repository "repomanage-modular" for modification
+ When I execute dnf with args "repomanage --new {context.dnf.repos[repomanage-modular].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/repomanage-modular/noarch/xsom-0-19.20110809svn.module+el8.1.0+3366+6dfb954c.noarch.rpm
+      {context.dnf.tempdir}/repos/repomanage-modular/src/xsom-0-19.20110809svn.module+el8.1.0+3366+6dfb954c.src.rpm
+      """
+ When I execute dnf with args "repomanage --old {context.dnf.repos[repomanage-modular].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/repomanage-modular/noarch/meson-0.47.1-5.module_1993+7c0a4d1e.noarch.rpm
+      {context.dnf.tempdir}/repos/repomanage-modular/noarch/xsom-0-19.20110809svn.module+el8.1.0+3366+6dfb954c.noarch.rpm
+      {context.dnf.tempdir}/repos/repomanage-modular/src/meson-0.47.1-5.module_1993+7c0a4d1e.src.rpm
+      {context.dnf.tempdir}/repos/repomanage-modular/src/xsom-0-19.20110809svn.module+el8.1.0+3366+6dfb954c.src.rpm
+      """
+ When I execute dnf with args "repomanage --oldonly {context.dnf.repos[repomanage-modular].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/repomanage-modular/noarch/meson-0.47.1-5.module_1993+7c0a4d1e.noarch.rpm
+      {context.dnf.tempdir}/repos/repomanage-modular/src/meson-0.47.1-5.module_1993+7c0a4d1e.src.rpm
+      """
