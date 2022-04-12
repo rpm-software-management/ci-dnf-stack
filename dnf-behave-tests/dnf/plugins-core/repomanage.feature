@@ -281,3 +281,30 @@ Given I copy repository "repomanage-modular" for modification
       {context.dnf.tempdir}/repos/repomanage-modular/noarch/meson-0.47.1-5.module_1993+7c0a4d1e.noarch.rpm
       {context.dnf.tempdir}/repos/repomanage-modular/src/meson-0.47.1-5.module_1993+7c0a4d1e.src.rpm
       """
+
+
+@bz1804720
+Scenario: Show rpms from a newest module stream version from repo even if even newer stream version is enabled from a differente repo
+Given I use repository "repomanage-8.5"
+  And I execute dnf with args "module enable python36"
+  And I drop repository "repomanage-8.5"
+  And I copy repository "repomanage-8.3" for modification
+ When I execute dnf with args "repomanage {context.dnf.repos[repomanage-8.3].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/repomanage-8.3/src/python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.src.rpm
+      {context.dnf.tempdir}/repos/repomanage-8.3/x86_64/python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+      """
+
+
+Scenario: Show rpms from a newest module stream from repo even if there is enabled repo with even newer stream version
+Given I copy repository "repomanage-8.3" for modification
+  And I use repository "repomanage-8.5"
+ When I execute dnf with args "repomanage {context.dnf.repos[repomanage-8.3].path}"
+ Then the exit code is 0
+  And stdout is
+      """
+      {context.dnf.tempdir}/repos/repomanage-8.3/src/python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.src.rpm
+      {context.dnf.tempdir}/repos/repomanage-8.3/x86_64/python36-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64.rpm
+      """
