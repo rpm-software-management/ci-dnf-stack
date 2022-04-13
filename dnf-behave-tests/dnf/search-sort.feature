@@ -1,3 +1,5 @@
+# @dnf5
+# TODO(nsella) implement command search
 Feature: Sort search command output
 
 Background:
