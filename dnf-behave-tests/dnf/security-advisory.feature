@@ -20,6 +20,8 @@ Scenario: upgrade-minimal cve and advisory
         | upgrade       | advisory_B-0:1.0-2.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--advisories=DNF-BUGFIX-001" for command "upgrade"
 Scenario: upgrade advisories
    When I execute dnf with args "upgrade --advisories=DNF-BUGFIX-001 --advisories=DNF-SECURITY-004"
    Then the exit code is 0
