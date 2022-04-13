@@ -344,6 +344,10 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "list-sec" for command "microdnf"
+# TODO(nsella) Unknown argument "list-security" for command "microdnf"
+# TODO(nsella) Unknown argument "list-updateinfo" for command "microdnf"
 Scenario Outline: updateinfo lists advisories using direct commands (yum compat)
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
@@ -363,6 +367,10 @@ Examples:
     | list-updateinfo |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "list-sec" for command "microdnf"
+# TODO(nsella) Unknown argument "list-security" for command "microdnf"
+# TODO(nsella) Unknown argument "list-updateinfo" for command "microdnf"
 Scenario Outline: updateinfo shows info for advisories using direct commands (yum compat)
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
