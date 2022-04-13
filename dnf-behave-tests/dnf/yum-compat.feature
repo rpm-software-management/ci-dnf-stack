@@ -5,6 +5,8 @@ Background:
 Given I use repository "simple-base"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install-n" for command "microdnf"
 Scenario: install using install-n
  When I execute dnf with args "install-n labirinto"
  Then the exit code is 0
@@ -13,6 +15,8 @@ Scenario: install using install-n
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install-n" for command "microdnf"
 @bz1821524
 Scenario: using install-n doesn't allow additional NEVRA parts
  When I execute dnf with args "install-n labirinto.x86_64"
