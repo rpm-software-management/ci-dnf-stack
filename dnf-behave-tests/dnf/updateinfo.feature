@@ -408,6 +408,8 @@ Examples:
     | info-updateinfo |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "summary-updateinfo" for command "microdnf"
 Scenario: updateinfo shows summary for advisories using direct commands (yum compat)
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
