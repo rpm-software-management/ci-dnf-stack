@@ -1,6 +1,8 @@
 Feature: Shell install
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, install an RPM
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
@@ -14,6 +16,8 @@ Scenario: Using dnf shell, install an RPM
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 @bz1658579
 Scenario: Using dnf shell, fail to install an RPM when no repositories are enabled
    When I open dnf shell session
@@ -26,6 +30,8 @@ Scenario: Using dnf shell, fail to install an RPM when no repositories are enabl
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to install a non-existent RPM
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
@@ -37,6 +43,8 @@ Scenario: Using dnf shell, fail to install a non-existent RPM
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 @bz1773483
 Scenario: Using dnf shell, fail to install local file when goal is not empty
   Given I use repository "dnf-ci-fedora"

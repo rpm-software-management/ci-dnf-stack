@@ -15,6 +15,8 @@ Background: Install flac and filesystem
         | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, reinstall an RPM
    When I open dnf shell session
     And I execute in dnf shell "reinstall flac"
@@ -26,6 +28,8 @@ Scenario: Using dnf shell, reinstall an RPM
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, reinstall multiple RPMs
    When I open dnf shell session
     And I execute in dnf shell "reinstall flac filesystem"
@@ -38,6 +42,8 @@ Scenario: Using dnf shell, reinstall multiple RPMs
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to reinstall non-existent RPM
    When I open dnf shell session
     And I execute in dnf shell "reinstall NoSuchPackage"
@@ -50,6 +56,8 @@ Scenario: Using dnf shell, fail to reinstall non-existent RPM
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to reinstall an RPM when relevant repository is disabled
    When I open dnf shell session
     And I execute in dnf shell "repo disable dnf-ci-fedora"

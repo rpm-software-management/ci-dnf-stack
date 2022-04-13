@@ -5,6 +5,8 @@ Given I use repository "dnf-ci-fedora"
   And I use repository "dnf-ci-fedora-updates"
   And I use repository "dnf-ci-thirdparty"
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Switch packages and their subpackages by swap command (using wildcards)
  When I open dnf shell session
   And I execute in dnf shell "install CQRlib-devel CQRlib CQRlib-extension"
@@ -36,6 +38,8 @@ Scenario: Switch packages and their subpackages by swap command (using wildcards
  Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Switch groups by swap command
  When I open dnf shell session
   And I execute in dnf shell "groupinstall CQRlib-non-devel"

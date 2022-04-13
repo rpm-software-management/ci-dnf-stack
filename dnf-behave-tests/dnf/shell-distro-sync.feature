@@ -17,6 +17,8 @@ Background: Install glibc, flac, and CQRlib
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, make distro-sync for an RPM
   Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
@@ -31,6 +33,8 @@ Scenario: Using dnf shell, make distro-sync for an RPM
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, make distro-sync for mutiple RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
@@ -44,6 +48,8 @@ Scenario: Using dnf shell, make distro-sync for mutiple RPMs
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to make distro-sync when no upgrade is available
   Given I use repository "dnf-ci-fedora-updates"
     And I use repository "dnf-ci-fedora-updates-testing"
@@ -56,6 +62,8 @@ Scenario: Using dnf shell, fail to make distro-sync when no upgrade is available
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to make distro-sync for non-existent RPM
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
