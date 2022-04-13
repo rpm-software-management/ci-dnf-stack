@@ -33,6 +33,8 @@ Scenario: upgrade advisories
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--cve" for command "upgrade"
 Scenario: upgrade cves
    When I execute dnf with args "upgrade --cve CVE-001 --cve CVE-002"
    Then the exit code is 0
