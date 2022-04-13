@@ -11,6 +11,8 @@ Background: Use repository with advisories
         | install       | advisory_B-0:1.0-1.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--cve" for command "upgrade-minimal"
 Scenario: upgrade-minimal cve and advisory
    When I execute dnf with args "upgrade-minimal --cve CVE-001 --advisory DNF-BUGFIX-001"
    Then the exit code is 0
