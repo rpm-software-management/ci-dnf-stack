@@ -43,6 +43,8 @@ Scenario: upgrade cves
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--sec-severity" for command "upgrade-minimal"
 Scenario: upgrade-minimal sec-severity
    When I execute dnf with args "upgrade-minimal --sec-severity Moderate"
    Then the exit code is 0
