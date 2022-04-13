@@ -1,6 +1,8 @@
 Feature: Execute more commands in one transaction in dnf shell
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, install and remove RPMs in one transaction
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
@@ -21,6 +23,8 @@ Scenario: Using dnf shell, install and remove RPMs in one transaction
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, switch conflicting RPMs using install and remove
   Given I use repository "dnf-ci-thirdparty"
   Given I use repository "dnf-ci-fedora-updates"

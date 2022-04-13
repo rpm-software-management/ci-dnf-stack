@@ -15,6 +15,8 @@ Feature: Shell group
 #   conditional: wget, requires filesystem-content
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, install a package group
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-thirdparty"
@@ -32,6 +34,8 @@ Scenario: Using dnf shell, install a package group
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario Outline: Using dnf shell, upgrade a package group using alias <upgrade alias>
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-thirdparty"
@@ -73,6 +77,8 @@ Examples:
   | update              |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, remove a package group
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-thirdparty"
@@ -99,6 +105,8 @@ Scenario: Using dnf shell, remove a package group
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to install a non-existent package group
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session
@@ -110,6 +118,8 @@ Scenario: Using dnf shell, fail to install a non-existent package group
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to remove a non-existent package group
   Given I use repository "dnf-ci-fedora"
    When I open dnf shell session

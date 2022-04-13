@@ -17,6 +17,8 @@ Background: Install glibc, flac, and CQRlib
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, make upgrade-minimal --bugfix
   Given I use repository "dnf-ci-fedora-updates"
    When I open dnf shell session
@@ -31,6 +33,8 @@ Scenario: Using dnf shell, make upgrade-minimal --bugfix
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, make upgrade-minimal --security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session
@@ -43,6 +47,8 @@ Scenario: Using dnf shell, make upgrade-minimal --security
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario Outline: Using dnf shell, fail to upgrade-minimal <update> when no such upgrade is available
   Given I use repository "dnf-ci-fedora-updates"
     And I use repository "dnf-ci-fedora-updates-testing"
@@ -61,6 +67,8 @@ Examples:
   | --security    |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario Outline: Using dnf shell, fail upgrade-minimal <update> for non-existent RPM
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I open dnf shell session

@@ -10,6 +10,8 @@ Background: Install flac
         | install       | flac-0:1.3.2-8.fc29.x86_64                |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, remove an RPM
    When I open dnf shell session
     And I execute in dnf shell "repo enable dnf-ci-fedora"
@@ -22,6 +24,8 @@ Scenario: Using dnf shell, remove an RPM
    Then stdout contains "Leaving Shell"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to remove a non-existent RPM
    When I open dnf shell session
     And I execute in dnf shell "remove NoSuchPackage"
