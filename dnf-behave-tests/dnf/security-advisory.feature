@@ -53,6 +53,8 @@ Scenario: upgrade-minimal sec-severity
         | upgrade       | advisory_B-0:1.0-2.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--sec-severity" for command "upgrade"
 Scenario: upgrade secseverity
    When I execute dnf with args "upgrade --sec-severity Critical"
    Then the exit code is 0
