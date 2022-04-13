@@ -168,6 +168,8 @@ Given I successfully execute dnf with args "install vagare"
       """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "repoquery-n" for command "microdnf"
 Scenario: using repoquery-n
  When I execute dnf with args "repoquery-n labirinto"
  Then the exit code is 0
@@ -178,6 +180,8 @@ Scenario: using repoquery-n
       """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "repoquery-n" for command "microdnf"
 @bz1821524
 Scenario: remove using repoquery-n doesn't allow additional NEVRA parts
  When I execute dnf with args "repoquery-n labirinto-1.0"
