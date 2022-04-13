@@ -227,6 +227,11 @@ Scenario: updateinfo list all bugfix
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+# TODO(nsella) Unknown argument "--bz" for command "microdnf"
+# TODO(nsella) Unknown argument "--cve" for command "microdnf"
+# TODO(nsella) Unknown argument "--advisory" for command "microdnf"
 Scenario Outline: updateinfo list updates plus <option>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
