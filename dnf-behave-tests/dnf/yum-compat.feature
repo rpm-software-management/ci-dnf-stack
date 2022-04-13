@@ -88,6 +88,8 @@ Scenario: install using install-nevra doesn't work without full nevra
       """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "localinstall" for command "microdnf"
 Scenario: install using localinstall
  When I execute dnf with args "localinstall {context.scenario.repos_location}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm"
  Then the exit code is 0
@@ -96,6 +98,8 @@ Scenario: install using localinstall
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "localinstall" for command "microdnf"
 @bz1821524
 Scenario: install using localinstall fails with just available package name
  When I execute dnf with args "localinstall labirinto"
