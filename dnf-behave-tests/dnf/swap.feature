@@ -54,6 +54,8 @@ Scenario: Switch packages and their subpackages by swap command with wildcards
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "groupinstall" for command "microdnf"
 Scenario: Switch groups by swap command
    When I execute dnf with args "groupinstall CQRlib-non-devel"
    Then the exit code is 0
