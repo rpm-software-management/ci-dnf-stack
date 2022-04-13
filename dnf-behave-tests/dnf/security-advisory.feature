@@ -59,6 +59,8 @@ Scenario: upgrade secseverity
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--security" for command "upgrade-minimal"
 Scenario: upgrade-minimal security plus bugfix
    When I execute dnf with args "upgrade-minimal --security --bugfix"
    Then the exit code is 0
