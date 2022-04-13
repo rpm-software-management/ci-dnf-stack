@@ -111,6 +111,8 @@ Scenario: install using localinstall fails with just available package name
       """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "remove-n" for command "microdnf"
 Scenario: remove using remove-n
 Given I successfully execute dnf with args "install labirinto"
  When I execute dnf with args "remove-n labirinto"
@@ -120,6 +122,8 @@ Given I successfully execute dnf with args "install labirinto"
       | remove       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "remove-n" for command "microdnf"
 @bz1821524
 Scenario: remove using remove-n doesn't allow additional NEVRA parts
 Given I successfully execute dnf with args "install labirinto"
