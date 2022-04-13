@@ -31,6 +31,8 @@ Scenario: Security check-update when there are such updates
     And stdout does not contain "security_B"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
 Scenario: Security update
    When I execute dnf with args "update-minimal --security"
@@ -43,6 +45,8 @@ Scenario: Security update
     And Transaction is empty
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
 Scenario: Security update-minimal when exact version is not available
    When I execute dnf with args "update-minimal --security -x security_A-0:1.0-3.x86_64"
@@ -66,6 +70,8 @@ Scenario: Security update with priority setting
         | upgrade       | security_A-0:1.0-3.8.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
 Scenario: Security update-minimal with priority setting
   Given I use repository "dnf-ci-security-priority" with configuration

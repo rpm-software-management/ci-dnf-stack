@@ -23,6 +23,8 @@ Scenario: Test security option --bugfix for update
         | upgrade       | bugfix_C-0:1.0-4.x86_64   |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 Scenario: Test security option --bugfix for update-minimal
    When I execute dnf with args "update-minimal --bugfix"
    Then the exit code is 0
