@@ -90,6 +90,8 @@ Examples:
     | upgrade-minimal   | security_A-0:1.0-3.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "--security" for command "upgrade"
 # depends on backporting of https://github.com/rpm-software-management/dnf/commit/6c45861ad7f5e6a6d586025a05c39b4b7a180aa0
 Scenario Outline: Security <command> with bzs explicitly mentioned
    When I execute dnf with args "<command> --security --bz 123 --bzs=234,345"
