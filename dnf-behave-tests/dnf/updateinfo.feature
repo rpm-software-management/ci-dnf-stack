@@ -28,6 +28,8 @@ Scenario: Listing available updates
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario Outline: updateinfo <summary alias> (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -44,6 +46,8 @@ Examples:
         | --summary     |
  
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario Outline: updateinfo <summary alias> available (when there is an available update)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -64,6 +68,8 @@ Examples:
         | --summary     |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario Outline: updateinfo info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -101,6 +107,8 @@ Examples:
         | --info     |
          
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo info security (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -113,6 +121,8 @@ Scenario: updateinfo info security (when there's nothing to report)
    """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario Outline: updateinfo <list alias>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -132,6 +142,8 @@ Examples:
         | --list     |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo list all security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install glibc flac CQRlib"
@@ -146,6 +158,8 @@ Scenario: updateinfo list all security
     """
                  
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo list updates
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -181,6 +195,8 @@ Scenario: updateinfo list installed
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo list available enhancement
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -196,6 +212,8 @@ Scenario: updateinfo list available enhancement
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo list all bugfix
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -229,6 +247,8 @@ Examples:
         | --advisory  | FEDORA-2018-318f184000 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -252,6 +272,8 @@ Scenario: updateinfo info <advisory>
     """
         
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario: updateinfo info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -275,6 +297,8 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
     And stdout does not contain "glibc"
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 @bz1750528
 Scenario Outline: updateinfo lists advisories referencing CVE
   Given I successfully execute dnf with args "install glibc flac"
@@ -297,6 +321,8 @@ Examples:
     | --list cves         |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 Scenario Outline: updateinfo lists advisories referencing bugzilla
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
@@ -316,6 +342,8 @@ Examples:
     | list bzs            |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 @bz1728004
 Scenario: updateinfo show <advisory> of the running kernel after a kernel update
    When I execute dnf with args "install kernel"
