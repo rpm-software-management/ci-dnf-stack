@@ -163,6 +163,8 @@ Scenario: updateinfo list updates
     """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update" for command "microdnf"
 Scenario: updateinfo list installed
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0

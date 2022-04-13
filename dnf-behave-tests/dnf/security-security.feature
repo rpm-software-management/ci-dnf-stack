@@ -52,6 +52,8 @@ Scenario: Security update-minimal when exact version is not available
         | upgrade       | security_A-0:1.0-4.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "update" for command "microdnf"
 @bz1918475
 Scenario: Security update with priority setting
   Given I use repository "dnf-ci-security-priority" with configuration
@@ -75,6 +77,8 @@ Scenario: Security update-minimal with priority setting
         | Action        | Package                     |
         | upgrade       | security_A-0:1.0-3.1.x86_64 |
 
+# @dnf5
+# TODO(nsella) Unknown argument "update" for command "microdnf"
 Scenario Outline: Security <command>
    When I execute dnf with args "<command> --security"
    Then the exit code is 0
