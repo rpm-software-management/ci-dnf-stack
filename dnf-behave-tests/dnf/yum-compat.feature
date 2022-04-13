@@ -33,6 +33,8 @@ Scenario: using install-n doesn't allow additional NEVRA parts
       """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install-na" for command "microdnf"
 Scenario: install using install-na
  When I execute dnf with args "install-na labirinto.x86_64"
  Then the exit code is 0
@@ -41,6 +43,8 @@ Scenario: install using install-na
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "install-na" for command "microdnf"
 @bz1821524
 Scenario: using install-na doesn't allow additional nevra parts
  When I execute dnf with args "install-na labirinto-1.0-1.fc29.x86_64"
