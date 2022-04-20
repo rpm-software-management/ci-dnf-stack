@@ -16,7 +16,8 @@ Given I copy repository "dnf-ci-fedora" for modification
   And file "/var/cache/dnf/dnf-ci-fedora_with_baseurl*/packages/setup*" does not exist
 
 
-@dnf5
+# TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
+#@dnf5
 Scenario: Install from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -31,7 +32,8 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And file "/var/cache/dnf/dnf-ci-fedora*/packages/setup*" exists
 
 
-@dnf5
+# TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
+#@dnf5
 Scenario: Install from remote repodata with xml:base pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -45,7 +47,8 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
 
-@dnf5
+# TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
+#@dnf5
 Scenario: Install from local repodata with xml:base pointing to remote packages doesn't delete unused local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
