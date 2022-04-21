@@ -485,6 +485,8 @@ Scenario: Group info with a group that has missing name
        """
 
 
+# @dnf5
+# TODO(nsella) Unknown argument "mark" for command "group"
 Scenario: Mark a group and an environment without name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
