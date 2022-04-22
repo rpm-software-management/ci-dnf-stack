@@ -523,6 +523,7 @@ Scenario: Install an environment with a nonexistent group
        no group 'nonexistent-group' from environment 'env-with-a-nonexistent-group'
        """
 
+
 @xfail
 @bz2066638
 Scenario: Packages that are part of another installed group are not removed
@@ -545,3 +546,29 @@ Scenario: Packages that are part of another installed group are not removed
     And Transaction is following
         | Action        | Package       |
         | group-remove  | Test Group    |
+
+
+# @dnf5
+# TODO(nsella) Unknown argument "-C" for command "list"
+# destructive because it can create a new user on the system
+@bz2030255
+@destructive
+Scenario: 'dnf group list -C' works for unprivileged user even when decompressed groups.xml is not present in the cache
+ Given I use repository "dnf-ci-thirdparty"
+    # unprivileged user will need access to enter installroot and read files there
+   And I successfully execute "chmod go+rx {context.dnf.installroot}"
+    # unprivileged user will need tmp directory to create temporary decompressed groups.xml
+   And I create directory "/{context.dnf.installroot}/var/tmp"
+   And I successfully execute "chmod 777 {context.dnf.installroot}/var/tmp"
+   And I successfully execute dnf with args "makecache"
+  When I execute dnf with args "group list -C" as an unprivileged user
+  Then the exit code is 0
+  Then stderr does not contain "Permission denied: '{context.dnf.installroot}/var/cache/dnf/dnf-ci-thirdparty-[a-z0-9]{{16}}/repodata/gen'"
+   And stdout is
+    """
+    <REPOSYNC>
+    Available Groups:
+       DNF-CI-Testgroup
+       CQRlib-non-devel
+       SuperRipper-and-deps
+    """
