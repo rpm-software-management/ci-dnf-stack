@@ -24,6 +24,29 @@ Scenario: Variables are substituted in mirrorlist URLs
 
 # @dnf5
 # TODO(nsella) different stdout
+Scenario: Variables arch supports basearch `loongarch64` {}
+  Given I create file "/etc/dnf/vars/distrib" with
+      """
+      fedora
+      """
+    And I create file "/etc/yum.repos.d/dnf-ci-test.repo" with
+      """
+      [dnf-ci-test-$arch-$basearch]
+      name=dnf-ci-test-$distrib test repository
+      enabled=0
+      """
+   Then I set config option "arch" to "loongarch64"
+   When I execute dnf with args "repolist --disabled"
+   Then the exit code is 0
+    And stdout matches line by line
+      """
+      repo id\s+repo name
+      dnf-ci-test-loongarch64-loongarch64\s+dnf-ci-test-fedora test repository
+      """
+
+
+# @dnf5
+# TODO(nsella) different stdout
 @bz1748841
 Scenario: Variables without {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
@@ -43,7 +66,6 @@ Scenario: Variables without {} are substituted in repo id
       repo id\s+repo name
       dnf-ci-test-fedora\s+dnf-ci-test-fedora test repository
       """
-
 
 # @dnf5
 # TODO(nsella) different stdout
