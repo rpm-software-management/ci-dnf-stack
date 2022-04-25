@@ -32,7 +32,11 @@ jobs:
     strategy:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
-        suite: [dnf, createrepo_c]
+        include:
+          - { component: dnf, suite: dnf, extra-run-args: '' }
+          - { component: dnf5, suite: dnf, extra-run-args: --tags dnf5 --command microdnf5 }
+          - { component: dnf5, suite: dnf, extra-run-args: --tags dnfdaemon --command dnfdaemon-client }
+          - { component: createrepo_c, suite: createrepo_c, extra-run-args: '' }
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/rpm-software-management/dnf-ci-host
@@ -60,10 +64,11 @@ jobs:
         uses: ./.github/actions/copr-build
         with:
           copr-user: ${{steps.setup-ci.outputs.copr-user}}
-          overlay: ${{matrix.suite}}-ci
+          overlay: ${{matrix.component}}-ci
 
       - name: Run Integration Tests
         uses: ./.github/actions/integration-tests
         with:
           package-urls: ${{steps.copr-build.outputs.package-urls}}
           suite: ${{matrix.suite}}
+          extra-run-args: ${{matrix.extra-run-args}}
