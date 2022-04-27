@@ -32,6 +32,8 @@ Scenario: Builddep with simple dependency (srpm)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @not.with_os=rhel__eq__7
 Scenario: Builddep with rich dependency
     Given I use repository "dnf-ci-fedora"
@@ -109,6 +111,8 @@ Scenario: I exclude the highest verion of a package and call dnf builddep with -
         | Action                | Package                    |
         | install               | flac-0:1.3.3-2.fc29.x86_64 |
 
+# @dnf5
+# TODO(nsella) rpmdb check fail
 @bz1758459
 Scenario: I call dnf builddep with --best on a spec file with a modular dependency (tests handling modular excludes)
   Given I use repository "dnf-ci-fedora-modular"
