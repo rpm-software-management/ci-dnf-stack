@@ -50,12 +50,16 @@ Scenario: Builddep with simple dependency (files-like provide)
         | Action        | Package                           |
         | install       | glibc-0:2.28-9.fc29.x86_64        |
 
+# @dnf5
+# TODO(nsella) different exit code
 Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
       When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
       And stderr contains "No matching package to install: 'flac = 15'"
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1724668
 Scenario: Builddep on SPEC with non-available Source0
  Given I create file "{context.dnf.installroot}/missingSource.spec" with
@@ -138,6 +142,8 @@ Scenario: I call dnf builddep with --best on a spec file with a modular dependen
         | module-stream-enable   | nodejs:8                                      |
 
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1628634
 Scenario: Builddep with unavailable build dependency
     Given I use repository "dnf-ci-fedora"
