@@ -1,5 +1,3 @@
-# @dnf5
-# TODO(nsella) implement builddep
 # Unknown argument "builddep" for command "microdnf"
 Feature: Builddep
 
@@ -8,6 +6,7 @@ Background: Enable builddep plugin
     Given I enable plugin "builddep"
 
 
+@dnf5
 Scenario: Builddep with simple dependency (spec)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec"
@@ -16,6 +15,7 @@ Scenario: Builddep with simple dependency (spec)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
+@dnf5
 Scenario: Builddep with simple dependency (spec) + define
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac'"
@@ -24,6 +24,7 @@ Scenario: Builddep with simple dependency (spec) + define
         | Action        | Package                           |
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
 
+@dnf5
 Scenario: Builddep with simple dependency (srpm)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
@@ -32,8 +33,7 @@ Scenario: Builddep with simple dependency (srpm)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
+@dnf5
 @not.with_os=rhel__eq__7
 Scenario: Builddep with rich dependency
     Given I use repository "dnf-ci-fedora"
@@ -44,6 +44,7 @@ Scenario: Builddep with rich dependency
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
+@dnf5
 Scenario: Builddep with simple dependency (files-like provide)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires /etc/ld.so.conf'"
@@ -88,6 +89,7 @@ Scenario: Builddep on SPEC with non-available Source0
    Error: Some packages could not be found.
    """
 
+@dnf5
 @bz1758459
 Scenario: I exclude the highest verion of a package and call dnf builddep with --best
   Given I use repository "dnf-ci-fedora-updates"
