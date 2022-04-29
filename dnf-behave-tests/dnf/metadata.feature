@@ -77,6 +77,8 @@ Given I create file "/a/etc/malicious.file" with
 
 # @dnf5
 # TODO(nsella) different stdout
+# Requires https://github.com/rpm-software-management/librepo/commit/69d4cbcf60cae3a7bdff96fe5edc9bda6f20b2cf
+@not.with_os=rhel__eq__9
 Scenario: present user understandable message when there is a mismatch between available repodata and packages
     Given I copy repository "simple-base" for modification
     And I use repository "simple-base" as http

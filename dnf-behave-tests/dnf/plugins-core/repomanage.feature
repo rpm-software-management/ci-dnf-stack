@@ -254,6 +254,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+# Requires https://github.com/rpm-software-management/dnf-plugins-core/commit/bfc1f7f13792e6db49dc196bfd84450e8ebaaae0
+@not.with_os=rhel__eq__9
 @bz2034736
 @bz2058676
 Scenario: --oldonly doesn't print and rpm if it is contained in both new and old version of a stream
