@@ -6,8 +6,7 @@ Feature: GPG signatures
 @bz1932089
 @bz1932090
 Scenario: Refuse to install a package with broken gpg signature
-  Given I use repository "dnf-ci-broken-rpm-signature" generated with exit code "2"
-    And I configure repository "dnf-ci-broken-rpm-signature" with
+  Given I use repository "dnf-ci-broken-rpm-signature" with configuration
         | key      | value                                                                                                                                                               |
         | gpgcheck | 1                                                                                                                                                                   |
         | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public,file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public |

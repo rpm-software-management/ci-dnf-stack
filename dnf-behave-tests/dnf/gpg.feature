@@ -143,8 +143,7 @@ Scenario: Fail to install package with incorrect checksum when gpgcheck=0
 @bz1932090
 Scenario: Refuse to install a package with broken gpg signature
   Given I drop repository "dnf-ci-gpg"
-    And I use repository "dnf-ci-broken-rpm-signature" generated with exit code "2"
-    And I configure repository "dnf-ci-broken-rpm-signature" with
+    And I use repository "dnf-ci-broken-rpm-signature" with configuration
         | key      | value                                                                                                                                                               |
         | gpgcheck | 1                                                                                                                                                                   |
         | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public,file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public |
