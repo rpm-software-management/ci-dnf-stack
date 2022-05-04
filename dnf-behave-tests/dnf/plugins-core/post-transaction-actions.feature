@@ -83,3 +83,46 @@ Examples:
     | in        | install setup     |
     | out       |                   |
 
+
+@bz2023652
+Scenario: Do not traceback when reason change is in transaction
+  Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
+    """
+    *:any:echo '${{state}} ${{name}}-${{epoch}}:${{ver}}-${{rel}}.${{arch}} repo ${{repoid}}' > {context.dnf.installroot}/trans.log
+    """
+    And I use repository "installonly"
+    And I configure dnf with
+        | key                          | value         |
+        | installonlypkgs              | installonlyA  |
+        | installonly_limit            | 2             |
+   When I execute dnf with args "-v install installonlyA-1.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | install       | installonlyA-1.0-1.x86_64       |
+    And stderr does not contain "Traceback"
+    And file "/trans.log" contents is
+    """
+    install installonlyA-0:1.0-1.x86_64 repo installonly
+    """
+   When I execute dnf with args "-v install installonlyA-2.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | install       | installonlyA-2.0-1.x86_64       |
+    And stderr does not contain "Traceback"
+    And file "/trans.log" contents is
+    """
+    install installonlyA-0:2.0-1.x86_64 repo installonly
+    """
+   When I execute dnf with args "-v install installonlyA-2.2"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | install       | installonlyA-2.2-1.x86_64       |
+        | remove        | installonlyA-1.0-1.x86_64       |
+    And stderr does not contain "Traceback"
+    And file "/trans.log" contents is
+    """
+    install installonlyA-0:2.2-1.x86_64 repo installonly
+    """
