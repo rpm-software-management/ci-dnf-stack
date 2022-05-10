@@ -44,6 +44,6 @@ Scenario: reposync --remote-time stores correct timestamp in xattr
 Given I use repository "simple-base" as http
  When I execute dnf with args "reposync --repoid=simple-base --norepopath --download-path=/synced --remote-time"
  Then the exit code is 0
- # the timestamp stored in user.Librepo.checksum.mtime xattr is the same as mtime of the file
- When I execute "[ `getfattr --absolute-names --only-values -n 'user.Librepo.checksum.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `stat --format '%Y' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
+ # the timestamp stored in user.Librepo.checksum.mtime xattr is the same as mtime of the file in nanoseconds
+ When I execute "[ `getfattr --absolute-names --only-values -n 'user.Librepo.checksum.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `date +%s%N -r /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
  Then the exit code is 0
