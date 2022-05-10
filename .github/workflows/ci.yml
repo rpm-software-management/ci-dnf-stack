@@ -34,7 +34,7 @@ jobs:
       matrix:
         include:
           - { component: dnf, suite: dnf, extra-run-args: '' }
-          - { component: dnf5, suite: dnf, extra-run-args: --tags dnf5 --command microdnf5 }
+          - { component: dnf5, suite: dnf, extra-run-args: --tags dnf5 --command dnf5 }
           - { component: dnf5, suite: dnf, extra-run-args: --tags dnfdaemon --command dnfdaemon-client }
           - { component: createrepo_c, suite: createrepo_c, extra-run-args: '' }
     runs-on: ubuntu-latest
