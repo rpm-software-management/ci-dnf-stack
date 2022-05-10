@@ -72,3 +72,52 @@ Scenario: Download RPM form repository of higher priority
     And file sha256 checksums are following
         | Path                                                             | sha256                                                                                     |
         | {context.dnf.tempdir}/downloaddir/wget-1.19.5-5.fc29.x86_64.rpm  | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/wget-1.19.5-5.fc29.x86_64.rpm  |
+
+
+@bz2077864
+Scenario: skip downloading of already downloaded rpm file
+Given I use repository "simple-base" as http
+  And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+ When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+ Then the exit code is 0
+  And stdout is
+  """
+  [SKIPPED] labirinto-1.0-1.fc29.x86_64.rpm: Already downloaded
+  """
+
+
+@bz2077864
+Scenario: re-download changed rpm file
+Given I use repository "simple-base" as http
+  And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+  And I execute "echo blah > {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+ When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+ # Verify we have redownloaded the labirinto rpm and it is installable
+ Then I execute dnf with args "install {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And the exit code is 0
+
+
+@bz2077864
+Scenario: checksum cache is not used (rpm is re-downloaded) even when modified rpm has mtime and cache timestamp (sec format) in the same second
+Given I use repository "simple-base" as http
+  And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+  And I execute "echo blah > {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I execute "setfattr -n user.Librepo.checksum.mtime -v 1000000000 {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I execute "touch --date @1000000000.000011111 {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+ When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+ # Verify we have redownloaded the labirinto rpm and it is installable
+ Then I execute dnf with args "install {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And the exit code is 0
+
+
+@bz2077864
+Scenario: checksum cache is not used (rpm is re-downloaded) even when modified rpm has mtime and cache timestamp (nsec format) in the same second
+Given I use repository "simple-base" as http
+  And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+  And I execute "echo blah > {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I execute "setfattr -n user.Librepo.checksum.mtime -v 1000000000000000000 {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I execute "touch --date @1000000000.000011111 {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+ When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
+ # Verify we have redownloaded the labirinto rpm and it is installable
+ Then I execute dnf with args "install {context.dnf.tempdir}/downloaddir/labirinto-1.0-1.fc29.x86_64.rpm"
+  And the exit code is 0
