@@ -46,6 +46,7 @@ BuildRequires:  yum
 
 BuildRequires:  dnf-plugins-core
 BuildRequires:  dnf-utils
+BuildRequires:  python3-dnf-plugin-modulesync
 BuildRequires:  python3-dnf-plugin-post-transaction-actions
 BuildRequires:  python3-dnf-plugin-versionlock
 BuildRequires:  python3-dnf-plugins-core
