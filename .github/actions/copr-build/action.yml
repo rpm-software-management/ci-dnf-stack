@@ -27,6 +27,13 @@ runs:
         # otherwise, it's cloned into the gits directory for rpm-overlay to build from
         if [ ${REPO_NAME} != "ci-dnf-stack" ]; then
           cd gits/${REPO_NAME}
+        else
+          # Fix for: https://github.com/actions/checkout/issues/766 (git CVE-2022-24765)
+          # This is only needed when running from ci-dnf-stack repo because only then we run in ./ (we do not cd into gits/${REPO_NAME}),
+          # this is problematic because the working directory is owned by the github actions runner user not our container user and git
+          # doesn't allow that since the mentioned CVE.
+          # We have to explicitly state it is a safe directory or create our own subdirectory.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
         fi
 
         git config user.name github-actions
