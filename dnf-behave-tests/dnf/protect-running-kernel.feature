@@ -9,7 +9,7 @@ Background: Install fake kernel
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stdout
 @bz1698145
 Scenario: Running kernel is protected
    When I execute dnf with args "remove dnf-ci-kernel"
@@ -33,7 +33,7 @@ Scenario: Running kernel is not protected with config protect_running_kernel=Fal
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stdout
 @bz1698145
 Scenario: Running kernel is protected when in protected_packages even with config protect_running_kernel=False
    When I execute dnf with args "remove dnf-ci-kernel --setopt=protect_running_kernel=False --setopt=protected_packages=dnf-ci-kernel"
@@ -46,7 +46,7 @@ Scenario: Running kernel is protected when in protected_packages even with confi
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stdout
 @bz1698145
 Scenario: Running kernel is protected against obsoleting
    When I execute dnf with args "install dnf-ci-obsolete"

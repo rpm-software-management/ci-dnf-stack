@@ -2,7 +2,7 @@ Feature: Test for installation of non-existent rpm or package
 
 
 # @dnf5
-# TODO(nsella) different exit code 0
+# TODO(nsella) different stdout
 @bz1578369
 Scenario: Try to install a non-existent rpm
   Given I use repository "dnf-ci-fedora"
