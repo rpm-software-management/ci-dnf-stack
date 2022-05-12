@@ -9,6 +9,8 @@ Scenario: Report all missing dependencies
     Then stderr contains "nothing provides abcde needed by SuperRipper-1.0-1.x86_64"
     Then stderr contains "nothing provides nodejs needed by anitras-dance-1.0-1.x86_64"
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1599774
 Scenario: Report error when installing empty file
    Given I execute "touch empty.rpm" in "{context.dnf.installroot}/"
@@ -20,6 +22,8 @@ Scenario: Report error when installing empty file
      Could not open: empty.rpm
      """
 
+# @dnf5
+# TODO(nsella) different exit code
 @bz1616321
 Scenario: Report error when installing text file
    Given I create file "invalid.rpm" with
