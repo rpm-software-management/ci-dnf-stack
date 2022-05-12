@@ -10,7 +10,7 @@ Scenario: Install an RPM that is excluded
     And Transaction is empty
 
 # @dnf5
-# TODO(nsella) different exit code 0
+# TODO(nsella) different stderr
 @bz1756473
 Scenario: Install an RPM that requires excluded RPM
   Given I use repository "dnf-ci-fedora"

@@ -1,7 +1,7 @@
-# @dnf5
-# TODO(nsella) different exit code 0
 Feature: Installing attemps fail
 
+# @dnf5
+# TODO(nsella) different stderr
 @bz1568965
 Scenario: Report all missing dependencies
   Given I use repository "dnf-ci-thirdparty"
