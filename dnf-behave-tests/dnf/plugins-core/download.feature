@@ -82,6 +82,7 @@ Given I use repository "simple-base" as http
  Then the exit code is 0
   And stdout is
   """
+  <REPOSYNC>
   [SKIPPED] labirinto-1.0-1.fc29.x86_64.rpm: Already downloaded
   """
 
