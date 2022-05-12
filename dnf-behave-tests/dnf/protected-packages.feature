@@ -2,7 +2,7 @@ Feature: Protected packages
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 @tier1
 Scenario: Package protected via setopt cannot be removed
   Given I use repository "dnf-ci-fedora"
@@ -19,7 +19,7 @@ Scenario: Package protected via setopt cannot be removed
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 Scenario: Package with protected dependency via setopt cannot be removed
   Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install filesystem"

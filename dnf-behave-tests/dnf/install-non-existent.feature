@@ -13,7 +13,7 @@ Scenario: Try to install a non-existent rpm
 
 
 # @dnf5
-# TODO(nsella) different exit code 0
+# TODO(nsella) different stderr
 Scenario: Try to install a non-existent package
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install non-existent-package"
@@ -23,7 +23,7 @@ Scenario: Try to install a non-existent package
 
 
 # @dnf5
-# TODO(nsella) different exit code 0
+# TODO(nsella) different stderr
 @bz1717429
 Scenario: Install an existent and an non-existent package
   Given I use repository "dnf-ci-fedora"

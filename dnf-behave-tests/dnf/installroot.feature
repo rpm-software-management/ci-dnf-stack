@@ -110,7 +110,7 @@ Scenario: Upgrade package in installroot
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 @bz1658579
 Scenario: Installroot directory is listed when there are no repos
    When I execute dnf with args "install sugar"
