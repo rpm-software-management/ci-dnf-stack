@@ -22,7 +22,7 @@ Scenario: Install RPMs that are in includepkgs in repo conf
         | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
 
-# @dnf5
+@dnf5
 # TODO(nsella) different exit code
 Scenario: Fail to install RPMs when some RPM is NOT in includepkgs in main conf
   Given I use repository "dnf-ci-fedora"
@@ -61,7 +61,7 @@ Scenario: Install RPMs that are NOT in excludepkgs in repo conf
        | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
 
-# @dnf5
+@dnf5
 # TODO(nsella) different exit code
 Scenario: Fail to install RPMs when some RPM is in excludepkgs in main conf
   Given I use repository "dnf-ci-fedora"
@@ -99,7 +99,7 @@ Scenario: Install RPMs that are in includepkgs and NOT in excludepkgs in repo co
         | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
 
-# @dnf5
+@dnf5
 # TODO(nsella) different exit code
 Scenario: Fail to install RPMs when there is a non-existent RPM in includedpkgs in main conf
   Given I use repository "dnf-ci-fedora"
