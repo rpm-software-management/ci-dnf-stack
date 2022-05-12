@@ -1,5 +1,5 @@
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stdout
 Feature: Alternative packages are suggested when package is not available
 
 @bz1625586

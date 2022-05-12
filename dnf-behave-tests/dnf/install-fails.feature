@@ -34,6 +34,8 @@ Scenario: Report error when installing text file
      Could not open: invalid.rpm
      """
 
+# @dnf5
+# TODO(nsella) different stdout
 @bz1599774
 Scenario: Report error when installing non-existing RPM file
     When I execute dnf with args "install no_such_file.rpm"

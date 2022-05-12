@@ -41,7 +41,7 @@ Scenario: non-UTF-8 characters in .repo filename
 
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stdout
 Scenario: non-UTF-8 character in pkgspec
   Given I use repository "miscellaneous"
    When I execute dnf with args "install {context.invalid_utf8_char}ummy"
