@@ -363,8 +363,6 @@ Scenario: Reposync --gpgcheck removes unsigned packages
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
 
 
-# Requires: https://github.com/rpm-software-management/ci-dnf-stack/commit/62ff0d722eb1b903a6c1ad92e3d75e58ed97e129
-@not.with_os=rhel__eq__9
 @bz2009894
 Scenario: Reposync does not stop downloading packages on the first error
   Given I copy repository "simple-base" for modification
