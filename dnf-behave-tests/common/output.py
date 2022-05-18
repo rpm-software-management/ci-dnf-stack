@@ -106,77 +106,14 @@ def then_stdout_is(context):
 
 @parse.with_pattern(r"dnf4|dnf5")
 def parse_dnf_version(text):
-    if text in ("dnf4", "dnf5"):
-        return text
-    assert False
+    return text
 behave.register_type(dnf_version=parse_dnf_version)
 
 
-@behave.then("{dnf_version:dnf_version} exit code is")
-def then_dnf_exit_code_is(context, dnf_version):
-    """
-    Check for the test's exit code only if running in the
-    appropriate mode otherwise the step is skipped
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_the_exit_code_is(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_the_exit_code_is(context)
-
-
-@behave.then("{dnf_version:dnf_version} stdout is")
-def then_dnf_stdout_is(context, dnf_version):
-    """
-    Check for exact match of the test's stdout only if running in the
-    appropriate mode otherwise the step is skipped.
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stdout_is(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stdout_is(context)
-
-
-@behave.then("{dnf_version:dnf_version} stderr is")
-def then_dnf_stderr_is(context, dnf_version):
-    """
-    Check for exact match of the test's stderr only if running in the
-    appropriate mode otherwise the step is skipped.
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stderr_is(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stderr_is(context)
-
-
-@behave.then("{dnf_version:dnf_version} stdout matches line by line")
-def then_dnf_stdout_matches_line_by_line(context, dnf_version):
-    """
-    Checks that each line of stdout matches respective line in regular expressions.
-    Supports the <REPOSYNC> in the same way as the step "stdout is"
-    Works only if running in the appropriate mode otherwise the step is skipped.
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stdout_matches_line_by_line(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stdout_matches_line_by_line(context)
-
-
-@behave.then("{dnf_version:dnf_version} stderr matches line by line")
-def then_dnf_stderr_matches_line_by_line(context, dnf_version):
-    """
-    Checks that each line of stderr matches respective line in regular expressions.
-    Supports the <REPOSYNC> in the same way as the step "stderr is"
-    Works only if running in the appropriate mode otherwise the step is skipped.
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stderr_matches_line_by_line(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stderr_matches_line_by_line(context)
+@parse.with_pattern(r"stdout|stderr")
+def parse_std_stream(text):
+    return text
+behave.register_type(std_stream=parse_std_stream)
 
 
 @behave.then("stdout matches line by line")
@@ -219,3 +156,91 @@ def then_stderr_matches_line_by_line(context):
     out_lines = context.cmd_stderr.split('\n')
     regexp_lines = context.text.split('\n')
     lines_match_to_regexps_line_by_line(out_lines, regexp_lines)
+
+
+@behave.then("{dnf_version:dnf_version} exit code is")
+def then_dnf_exit_code_is(context, dnf_version):
+    """
+    Check for the test's exit code only if running in the
+    appropriate mode otherwise the step is skipped
+    """
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_the_exit_code_is(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_the_exit_code_is(context)
+
+
+@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} is")
+def then_dnf_stream_is(context, dnf_version, std_stream):
+    """
+    Check for exact match of the test's stdout/stderr
+    only if running in the appropriate mode otherwise
+    the step is skipped.
+    Produce the steps:
+        then dnf4 stdout is
+        then dnf4 stderr is
+        then dnf5 stderr is
+        then dnf5 stdout is
+    """
+    if std_stream == "stdout":
+        then_stream_is = then_stdout_is
+    if std_stream == "stderr":
+        then_stream_is = then_stderr_is
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stream_is(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stream_is(context)
+
+
+@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} matches line by line")
+def then_dnf_stream_matches_line_by_line(context, dnf_version, std_stream):
+    """
+    Checks that each line of stdout/stderr matches respective
+    line in regular expressions.
+    Supports the <REPOSYNC> in the same way as the step
+    "stdout is"
+    Works only if running in the appropriate mode otherwise
+    the step is skipped.
+    Produce the steps:
+        then dnf4 stdout matches line by line
+        then dnf4 stderr matches line by line
+        then dnf5 stderr matches line by line
+        then dnf5 stdout matches line by line
+    """
+    if std_stream == "stdout":
+        then_stream_matches_line_by_line = then_stdout_matches_line_by_line
+    if std_stream == "stderr":
+        then_stream_matches_line_by_line = then_stderr_matches_line_by_line
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stream_matches_line_by_line(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stream_matches_line_by_line(context)
+
+
+@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} is empty")
+def then_dnf_stream_is_empty(context, dnf_version, std_stream):
+    """
+    Check that stdout/stderr is empty
+    Works only if running in the appropriate mode otherwise
+    the step is skipped
+    Produce the steps:
+        then dnf4 stdout is empty
+        then dnf4 stderr is empty
+        then dnf5 stdout is empty
+        then dnf5 stderr is empty
+    """
+    if std_stream == "stdout":
+        then_stream_is_empty = then_stdout_is_empty
+    if std_stream == "stderr":
+        then_stream_is_empty = then_stderr_is_empty
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stream_is_empty(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stream_is_empty(context)
