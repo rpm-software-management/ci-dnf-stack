@@ -111,8 +111,17 @@ def when_I_execute_dnf_with_args(context, args):
     run_in_context(context, cmd, can_fail=True)
 
 
+@behave.step("I execute {dnf_version:dnf_version} with args \"{args}\"")
+def when_I_execute_dnf_variant_with_args(context, dnf_version, args):
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        when_I_execute_dnf_with_args(context, args)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        when_I_execute_dnf_with_args(context, args)
+
+
 @behave.step("I execute dnf with args \"{args}\" as an unprivileged user")
-def when_I_execute_dnf_with_args(context, args):
+def when_I_execute_dnf_with_args_unprivileged(context, args):
     """
     Creates an unpriviged user if it doesn't exist (therefore the test is
     destructive!). Runs the dnf command under this user.
