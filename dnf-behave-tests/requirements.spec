@@ -21,6 +21,7 @@ BuildRequires:  createrepo_c
 BuildRequires:  fakeuname
 BuildRequires:  findutils
 BuildRequires:  glibc-langpack-en
+BuildRequires:  glibc-langpack-de
 BuildRequires:  libfaketime
 BuildRequires:  openssl
 BuildRequires:  python3
