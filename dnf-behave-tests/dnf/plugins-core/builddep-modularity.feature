@@ -88,3 +88,38 @@ Scenario: Builddep preferes hotfix repo over the enabled stream
         | install               | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
         | install               | nodejs-1:8.11.5-1.module_2030+42747d40.x86_64     |
         | module-stream-enable  | ninja:master                                      |
+
+
+# @dnf5
+# TODO(nsella) rpmdb check fail
+@bz1758459
+Scenario: I call dnf builddep with --best on a spec file with a modular dependency (tests handling modular excludes)
+  Given I use repository "dnf-ci-fedora-modular"
+    And I use repository "dnf-ci-fedora"
+  Given I create file "dummy-pkg.spec" with
+   """
+   Name: dummy-pkg
+   Summary: dummy-pkg summary
+   Version: 1.0
+   Release: 1
+   License: GPL
+   BuildRequires: nodejs
+   %description
+   This is a dummy-pkg description
+   %build
+   %files
+   %changelog
+   """
+   When I execute dnf with args "builddep {context.dnf.installroot}/dummy-pkg.spec --best"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                 | Package                                       |
+        | install                | nodejs-1:8.11.4-1.module_2030+42747d40.x86_64 |
+        | install-dep            | setup-0:2.12.1-1.fc29.noarch                  |
+        | install-dep            | filesystem-0:3.9-2.fc29.x86_64                |
+        | install-dep            | basesystem-0:11-6.fc29.noarch                 |
+        | install-dep            | glibc-all-langpacks-0:2.28-9.fc29.x86_64      |
+        | install-dep            | glibc-common-0:2.28-9.fc29.x86_64             |
+        | install-dep            | glibc-0:2.28-9.fc29.x86_64                    |
+        | install-weak           | npm-1:8.11.4-1.module_2030+42747d40.x86_64    |
+        | module-stream-enable   | nodejs:8                                      |
