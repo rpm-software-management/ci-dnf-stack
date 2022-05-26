@@ -18,6 +18,7 @@ import time
 
 from behave import model
 from behave.formatter.ansi_escapes import escapes
+from behave.tag_matcher import ActiveTagMatcher
 
 from steps.lib.config import write_config
 from common.lib.cmd import print_last_command
@@ -254,6 +255,9 @@ def after_step(context, step):
         print_last_command(context)
 
 
+def string_to_bool(value):
+    return value in ("yes", "y", "1", "true")
+
 def before_scenario(context, scenario):
     if "xfail" in scenario.effective_tags:
         skip = True
@@ -265,12 +269,15 @@ def before_scenario(context, scenario):
         if skip:
             scenario.skip(reason="Disabled by default by @xfail.")
 
-    if context.tag_matcher.should_exclude_with(scenario.effective_tags):
+    if context.os_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip(reason="Disabled by OS version tag.")
+
+    if context.dnf_tag_matcher.should_exclude_with(scenario.effective_tags):
+        scenario.skip(reason="Disabled by DNF version tag.")
 
     # Skip if destructive and not explicitly allowed by the user
     if ((set(scenario.effective_tags) & set(consts.DESTRUCTIVE_TAGS)) and not
-            context.config.userdata.get('destructive', 'no') == 'yes'):
+            string_to_bool(context.config.userdata.get('destructive', 'no'))):
         scenario.skip(reason="Disabled by destructive tag.")
 
     # if we are skipping a scenario, don't create the environment
@@ -280,8 +287,7 @@ def before_scenario(context, scenario):
         return
 
     # --define dnf5_mode=1
-    dnf5_mode = context.config.userdata.get("dnf5_mode", "no")
-    dnf5_mode = dnf5_mode in ("yes", "y", "1", "true")
+    dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
 
     # if "dnf5" is in the commandline tags, turn on dnf5 mode
     # if "dnf5daemon" turn on dnfdaemon mode and dnf5 mode
@@ -328,7 +334,10 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    context.tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
+    dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
+
+    context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
+    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5" if dnf5_mode else "4"})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 
