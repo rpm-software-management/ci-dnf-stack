@@ -284,13 +284,13 @@ def before_scenario(context, scenario):
     dnf5_mode = dnf5_mode in ("yes", "y", "1", "true")
 
     # if "dnf5" is in the commandline tags, turn on dnf5 mode
-    # if "dnfdaemon" turn on dnfdaemon mode and dnf5 mode
+    # if "dnf5daemon" turn on dnfdaemon mode and dnf5 mode
     dnfdaemon_mode = False
     for ors in context.config.tags.ands:
         if "dnf5" in ors:
             dnf5_mode = True
             break
-        if "dnfdaemon" in ors:
+        if "dnf5daemon" in ors:
             dnf5_mode = True
             dnfdaemon_mode = True
             break
@@ -333,7 +333,7 @@ def before_all(context):
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 
     for ors in context.config.tags.ands:
-        if "dnfdaemon" in ors:
+        if "dnf5daemon" in ors:
             p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
             p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
 
