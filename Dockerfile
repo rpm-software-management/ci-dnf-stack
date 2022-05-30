@@ -48,9 +48,6 @@ RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
 RUN set -x && \
     mkdir -p /run/dbus
 
-# dnfdaemon
-COPY ./dnfdaemon-server/ /
-
 RUN set -x && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/certificates/testcerts/" && \
     rm -rf "/opt/ci/dnf-behave-tests/fixtures/gpgkeys/keys/" && \
