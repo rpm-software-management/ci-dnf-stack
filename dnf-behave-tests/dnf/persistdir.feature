@@ -1,7 +1,7 @@
-@dnf5
 Feature: Track information in persistdir
 
 
+@use.with_dnf=4
 Scenario: Persistdir is created during transaction
   Given I use repository "dnf-ci-fedora"
    Then file "/var/lib/dnf" does not exist
