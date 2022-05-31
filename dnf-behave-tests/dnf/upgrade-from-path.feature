@@ -64,6 +64,7 @@ Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple tim
 
 @dnf5
 Scenario: Upgrade an RPM from path on disk, when specifying the RPM multiple times using different paths
+  Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade x86_64/wget-1.19.6-5.fc29.x86_64.rpm {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
    Then the exit code is 0
     And Transaction is following
