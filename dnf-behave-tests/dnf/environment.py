@@ -34,7 +34,7 @@ DEFAULT_PLATFORM_ID="platform:f29"
 
 
 class DNFContext(object):
-    def __init__(self, userdata, force_installroot=False, no_installroot=False, dnf5_mode=False, dnfdaemon_mode=False):
+    def __init__(self, userdata, force_installroot=False, no_installroot=False):
         self._scenario_data = {}
 
         self.repos = {}
@@ -90,8 +90,6 @@ class DNFContext(object):
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
         self.assumeyes_option = "-y"
-        self.dnf5_mode = dnf5_mode
-        self.dnfdaemon_mode = dnfdaemon_mode
 
         self.preserve_temporary_dirs = "none"
         preserve = userdata.get("preserve", "no")
@@ -142,7 +140,7 @@ class DNFContext(object):
         return setattr(self, name, value)
 
     def get_cmd(self, context):
-        if self.dnf5_mode:
+        if context.dnf5_mode:
             result = self.get_dnf5_cmd(context)
         else:
             result = self.get_dnf4_cmd(context)
@@ -286,27 +284,10 @@ def before_scenario(context, scenario):
         context.dnf = None
         return
 
-    # --define dnf5_mode=1
-    dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
-
-    # if "dnf5" is in the commandline tags, turn on dnf5 mode
-    # if "dnf5daemon" turn on dnfdaemon mode and dnf5 mode
-    dnfdaemon_mode = False
-    for ors in context.config.tags.ands:
-        if "dnf5" in ors:
-            dnf5_mode = True
-            break
-        if "dnf5daemon" in ors:
-            dnf5_mode = True
-            dnfdaemon_mode = True
-            break
-
 
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
-                             no_installroot='no_installroot' in scenario.effective_tags,
-                             dnf5_mode = dnf5_mode,
-                             dnfdaemon_mode = dnfdaemon_mode)
+                             no_installroot='no_installroot' in scenario.effective_tags)
 
     write_config(context)
 
@@ -334,10 +315,24 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
+    # --define dnf5_mode=1
+    context.dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
+
+    # if "dnf5" is in the commandline tags, turn on dnf5 mode
+    # if "dnf5daemon" turn on dnfdaemon mode and dnf5 mode
+    context.dnfdaemon_mode = False
+    for ors in context.config.tags.ands:
+        if "dnf5" in ors:
+            context.dnf5_mode = True
+            break
+        if "dnf5daemon" in ors:
+            context.dnf5_mode = True
+            context.dnfdaemon_mode = True
+            break
+
 
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
-    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5" if dnf5_mode else "4"})
+    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5" if context.dnf5_mode else "4"})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 

@@ -80,7 +80,7 @@ def then_stdout_is(context):
     if found == [""]:
         found = []
 
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
 
     if clean_expected == clean_found:
@@ -118,7 +118,7 @@ def then_dnf_exit_code_is(context, dnf_version):
     Check for the test's exit code only if running in the
     appropriate mode otherwise the step is skipped
     """
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
         then_the_exit_code_is(context)
     if dnf_version == "dnf4" and not dnf5_mode:
@@ -131,7 +131,7 @@ def then_dnf_stdout_is(context, dnf_version):
     Check for exact match of the test's stdout only if running in the
     appropriate mode otherwise the step is skipped.
     """
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
         then_stdout_is(context)
     if dnf_version == "dnf4" and not dnf5_mode:
@@ -144,7 +144,7 @@ def then_dnf_stderr_is(context, dnf_version):
     Check for exact match of the test's stderr only if running in the
     appropriate mode otherwise the step is skipped.
     """
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
         then_stderr_is(context)
     if dnf_version == "dnf4" and not dnf5_mode:
@@ -158,7 +158,7 @@ def then_dnf_stdout_matches_line_by_line(context, dnf_version):
     Supports the <REPOSYNC> in the same way as the step "stdout is"
     Works only if running in the appropriate mode otherwise the step is skipped.
     """
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
         then_stdout_matches_line_by_line(context)
     if dnf_version == "dnf4" and not dnf5_mode:
@@ -172,7 +172,7 @@ def then_dnf_stderr_matches_line_by_line(context, dnf_version):
     Supports the <REPOSYNC> in the same way as the step "stderr is"
     Works only if running in the appropriate mode otherwise the step is skipped.
     """
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
         then_stderr_matches_line_by_line(context)
     if dnf_version == "dnf4" and not dnf5_mode:
@@ -188,7 +188,7 @@ def then_stdout_matches_line_by_line(context):
     found = context.cmd_stdout.split('\n')
     expected = context.text.split('\n')
 
-    dnf5_mode = hasattr(context, "dnf") and context.dnf.dnf5_mode
+    dnf5_mode = hasattr(context, "dnf") and context.dnf5_mode
     clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
 
     lines_match_to_regexps_line_by_line(clean_found, clean_expected)
