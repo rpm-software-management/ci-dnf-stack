@@ -69,7 +69,7 @@ def find_transaction_table_begin(context, lines):
     """
 
     # DNF 5
-    if context.dnf.dnf5_mode:
+    if context.dnf5_mode:
         trans_start_re = re.compile(r"Package +Arch +Version +Repository +Size")
         for i in range(0, len(lines) - 1):
             if trans_start_re.match(lines[i]):
@@ -116,7 +116,7 @@ def find_transaction_table_end(context, lines):
     """
 
     # DNF 5
-    if context.dnf.dnf5_mode:
+    if context.dnf5_mode:
         for i in range(0, len(lines)):
             if not lines[i].strip():
                 # empty line indicates the end of the transaction table
