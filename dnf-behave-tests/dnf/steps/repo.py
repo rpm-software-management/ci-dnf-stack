@@ -19,6 +19,7 @@ from common.lib.file import (
     delete_file,
     ensure_directory_exists,
     ensure_file_exists,
+    find_file_by_glob,
 )
 from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
@@ -383,6 +384,7 @@ def given_no_osrelease(context):
 @behave.step("I invalidate solvfile version of \"{path}\"")
 def rewrite_solvfile_version(context, path):
     path = path.format(context=context)
+    path = find_file_by_glob(path)
     ensure_file_exists(path)
     fp = open(path, "r+b")
     # Seek 40 bytes from start of file to the beginning userdata section
