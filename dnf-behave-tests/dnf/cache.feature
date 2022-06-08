@@ -1,9 +1,9 @@
-# @dnf5
-# TODO(nsella) different stdout
-# TODO(nsella) different stderr
 Feature: Tests for cache
 
 
+# @dnf5
+# TODO(nsella) different stdout
+# TODO(nsella) different stderr
 @bz1843280
 @destructive
 @no_installroot
@@ -32,6 +32,7 @@ Scenario: Do not error out when fail to load/store expired_repos cache
         """
 
 
+@not.with_dnf=5
 @bz2027445
 Scenario: Regenerate solvfile cache when solvfile version doesn't match
   Given I use repository "simple-base"
@@ -41,4 +42,18 @@ Scenario: Regenerate solvfile cache when solvfile version doesn't match
    Then file "/var/log/hawkey.log" contains lines
         """
         .* DEBUG caching repo: simple-base .*
+        """
+
+
+@not.with_dnf=4
+@dnf5
+@bz2027445
+Scenario: Regenerate solvfile cache when solvfile version doesn't match
+  Given I use repository "simple-base"
+    And I execute dnf with args "makecache"
+   When I invalidate solvfile version of "{context.dnf.installroot}/var/cache/dnf/simple-base-*/solv/simple-base.solv"
+    And I execute dnf with args "repoquery"
+   Then file "/var/log/dnf5.log" contains lines
+        """
+        .*WARNING Libsolv solvfile version doesn't match.*
         """
