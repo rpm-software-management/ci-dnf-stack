@@ -77,16 +77,19 @@ Scenario: Builddep with simple dependency (files-like provide)
         | Action        | Package                           |
         | install       | glibc-0:2.28-9.fc29.x86_64        |
 
-# @dnf5
-# TODO(nsella) different exit code
+@dnf5
 Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
-      And stderr contains "No matching package to install: 'flac = 15'"
+      And dnf4 stderr contains "No matching package to install: 'flac = 15'"
+      And dnf5 stderr is
+      """
+      Failed to resolve the transaction:
+      No match for argument: flac = 15
+      """
 
-# @dnf5
-# TODO(nsella) different exit code
+@dnf5
 @bz1724668
 Scenario: Builddep on SPEC with non-available Source0
  Given I create file "{context.dnf.installroot}/missingSource.spec" with
@@ -105,12 +108,18 @@ Scenario: Builddep on SPEC with non-available Source0
    """
   When I execute dnf with args "builddep {context.dnf.installroot}/missingSource.spec"
   Then the exit code is 1
-   And stderr matches line by line
+   And dnf4 stderr matches line by line
    """
    RPM: error: Unable to open .*/missingSource.spec: No such file or directory
    Failed to open: '.*/missingSource.spec', not a valid spec file: can't parse specfile
 
    Error: Some packages could not be found.
+   """
+   And dnf5 stderr matches line by line
+   """
+   error: Unable to open .*/missingSource.spec: No such file or directory
+   Failed to parse spec file ".*/missingSource.spec".
+   Failed to parse some inputs.
    """
 
 @dnf5
@@ -138,21 +147,26 @@ Scenario: I exclude the highest verion of a package and call dnf builddep with -
         | install               | flac-0:1.3.3-2.fc29.x86_64 |
 
 # @dnf5
-# TODO(nsella) different exit code
+# TODO(nsella) different stderr
 @bz1628634
 Scenario: Builddep with unavailable build dependency
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 1
-      And stderr is
+      And dnf4 stderr is
       """
       No matching package to install: 'this-lib-is-not-available'
       Not all dependencies satisfied
       Error: Some packages could not be found.
       """
+      And dnf5 stderr is
+      """
+      Failed to resolve the transaction:
+      No match for argument: this-lib-is-not-available
+      """
      When I execute dnf with args "builddep --skip-unavailable {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 0
-      And stderr is
+      And dnf4 stderr is
       """
       No matching package to install: 'this-lib-is-not-available'
       """
