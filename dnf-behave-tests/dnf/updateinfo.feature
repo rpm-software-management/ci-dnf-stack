@@ -4,8 +4,7 @@ Feature: Listing available updates using the dnf updateinfo command
 Background:
   Given I use repository "dnf-ci-fedora"
 
-# @dnf5
-# TODO(nsella) different stderr
+@dnf5
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -21,12 +20,20 @@ Scenario: Listing available updates
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "updateinfo list"
     And the exit code is 0
-    And stdout is
+    And dnf4 stdout is
     """
     <REPOSYNC>
     FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
     FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
     """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    Name                   Type        Severity                   Package
+    FEDORA-2018-318f184000 bugfix      none     glibc-2.28-26.fc29.x86_64
+    FEDORA-2999:002-02     enhancement Moderate  flac-1.3.3-8.fc29.x86_64
+    """
+
 
 
 # @dnf5

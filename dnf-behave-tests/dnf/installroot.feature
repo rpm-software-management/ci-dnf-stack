@@ -67,27 +67,36 @@ Scenario: Remove package from installroot
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
-# @dnf5
-# TODO(nsella) different stdout
+@dnf5
 @force_installroot
 Scenario: Repolist command in installroot and with a reposdir specified
   Given I use repository "dnf-ci-install-remove"
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout is
+    And dnf4 stdout is
         """
         repo id                         repo name
         dnf-ci-install-remove           dnf-ci-install-remove test repository
+        """
+    And dnf5 stdout is
+        """
+        repo id               repo name
+        dnf-ci-install-remove dnf-ci-install-remove test repository
         """
   Given I configure a new repository "testrepo" in "{context.dnf.tempdir}/repos.d" with
         | key     | value                                              |
         | baseurl | {context.scenario.repos_location}/dnf-ci-install-remove |
    When I execute dnf with args "--setopt=reposdir={context.dnf.tempdir}/repos.d repolist"
    Then the exit code is 0
-    And stdout is
+    And dnf4 stdout is
         """
         repo id                         repo name
         testrepo                        testrepo test repository
+        """
+    And dnf5 stdout is
+        """
+        repo id  repo name
+        testrepo testrepo test repository
         """
 
 
