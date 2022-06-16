@@ -5,11 +5,13 @@ Background:
 
 
 # simple nevra matching tests
+@dnf5
 Scenario: repoquery (no arguments, i.e. list all packages)
  When I execute dnf with args "repoquery"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.noarch
       bottom-a1-1:1.0-1.src
       bottom-a1-1:2.0-1.noarch
@@ -34,10 +36,14 @@ Scenario: repoquery (no arguments, i.e. list all packages)
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME (nonexisting package)
  When I execute dnf with args "repoquery dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 @dnf5
 Scenario: repoquery NAME
@@ -54,45 +60,57 @@ Scenario: repoquery NAME
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME-VERSION
  When I execute dnf with args "repoquery top-a-2.0"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top-a-1:2.0-1.src
       top-a-1:2.0-1.x86_64
       top-a-2:2.0-2.src
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME-VERSION-RELEASE
  When I execute dnf with args "repoquery top-a-2.0-2"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top-a-2:2.0-2.src
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME-EPOCH:VERSION-RELEASE
  When I execute dnf with args "repoquery top-a-2:2.0-2"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top-a-2:2.0-2.src
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME-EPOCH:VERSION-RELEASE old epoch
  When I execute dnf with args "repoquery top-a-1:2.0-2"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
+@dnf5
 Scenario: repoquery NAME NAME-EPOCH:VERSION-RELEASE
  When I execute dnf with args "repoquery bottom-a1 top-a-2:2.0-2"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.noarch
       bottom-a1-1:1.0-1.src
       bottom-a1-1:2.0-1.noarch
@@ -101,11 +119,13 @@ Scenario: repoquery NAME NAME-EPOCH:VERSION-RELEASE
       top-a-2:2.0-2.x86_64
       """
 
+@dnf5
 Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB-RELEASE
  When I execute dnf with args "repoquery bottom-a1-1.0 top-a-1:[12].0-1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.noarch
       bottom-a1-1:1.0-1.src
       top-a-1:1.0-1.src
@@ -175,11 +195,13 @@ Scenario: dnf repoquery --all NAME (illogical combination, --all is a compatibil
 
 
 # --available is the default, scenarios above should cover it
+@dnf5
 Scenario: dnf repoquery --available NAME
  When I execute dnf with args "repoquery --available top-a-2.0"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top-a-1:2.0-1.src
       top-a-1:2.0-1.x86_64
       top-a-2:2.0-2.src
@@ -431,6 +453,7 @@ Given I use repository "repoquery-main-multilib"
   And stdout is empty
 
 # --installed: list only installed packages
+@dnf5
 Scenario: repoquery --installed
 Given I successfully execute dnf with args "install bottom-a1"
  When I execute dnf with args "repoquery --installed"
@@ -440,11 +463,13 @@ Given I successfully execute dnf with args "install bottom-a1"
       bottom-a1-1:2.0-1.noarch
       """
 
+@dnf5
 Scenario: repoquery --installed (no such packages)
  When I execute dnf with args "repoquery --installed"
  Then the exit code is 0
   And stdout is empty
 
+@dnf5
 Scenario: repoquery --installed NAME
 Given I successfully execute dnf with args "install bottom-a1 bottom-a2"
  When I execute dnf with args "repoquery --installed bottom-a1"
@@ -454,6 +479,7 @@ Given I successfully execute dnf with args "install bottom-a1 bottom-a2"
       bottom-a1-1:2.0-1.noarch
       """
 
+@dnf5
 Scenario: repoquery --installed NAME (no such packages)
  When I execute dnf with args "repoquery --installed bottom-a1"
  Then the exit code is 0
