@@ -47,6 +47,32 @@ Scenario: Downgrade RPM that requires downgrade of dependency
         | downgrade     | glibc-0:2.28-9.fc29.x86_64                |
         | downgrade     | glibc-common-0:2.28-9.fc29.x86_64         |
         | downgrade     | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+    And package state is
+        | package                                | reason     | from_repo     |
+        | basesystem-11-6.fc29.noarch            | Dependency | dnf-ci-fedora |
+        | filesystem-3.9-2.fc29.x86_64           | Dependency | dnf-ci-fedora |
+        | glibc-2.28-9.fc29.x86_64               | User       | dnf-ci-fedora |
+        | glibc-all-langpacks-2.28-9.fc29.x86_64 | Dependency | dnf-ci-fedora |
+        | glibc-common-2.28-9.fc29.x86_64        | Dependency | dnf-ci-fedora |
+        | setup-2.12.1-1.fc29.noarch             | Dependency | dnf-ci-fedora |
+
+
+@dnf5
+Scenario: Downgrade a package that was installed via rpm
+  Given I use repository "dnf-ci-fedora"
+   When I execute rpm with args "-i --nodeps {context.scenario.repos_location}/dnf-ci-fedora-updates/x86_64/flac-1.3.3-3.fc29.x86_64.rpm"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade flac"
+   Then the exit code is 0
+    And Transaction is following
+        | Action    | Package                    |
+        | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
+   Then package reasons are
+        | Package                  | Reason  |
+        | flac-1.3.3-2.fc29.x86_64 | unknown |
+    And package state is
+        | package                  | reason        | from_repo             |
+        | flac-1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |
 
 
 # @dnf5

@@ -33,6 +33,38 @@ Scenario: Install multiple versions of an installonly package with a limit of 2
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64  |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package state is
+        | package                             | reason | from_repo                     |
+        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates         |
+        | kernel-core-4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
+
+@dnf5
+Scenario: Install and remove multiple versions of an installonly package
+  Given I set config option "installonly_limit" to "2"
+   When I execute dnf with args "install kernel-core"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
+        | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package state is
+        | package                             | reason | from_repo             |
+        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
+        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
+   When I execute dnf with args "remove kernel-core"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | remove        | kernel-core-0:4.19.15-300.fc29.x86_64 |
+        | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package state is
+        | package | reason | from_repo |
 
 @dnf5
 @bz1769788
@@ -42,6 +74,9 @@ Scenario: Install multiple versions of an installonly package and keep reason
     And Transaction is following
         | Action        | Package                               |
         | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package state is
+        | package                             | reason | from_repo             |
+        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
@@ -49,6 +84,10 @@ Scenario: Install multiple versions of an installonly package and keep reason
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package state is
+        | package                             | reason | from_repo             |
+        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
+        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
@@ -122,8 +161,7 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--qf" for command "repoquery"
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -143,13 +181,15 @@ Scenario: Do not autoremove kernel after upgrade with --best
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
         | kernel-core-4.19.15-300.fc29.x86_64    | unknown         |
+    And package state is
+        | package                             | reason        | from_repo             |
+        | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--qf" for command "repoquery"
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --nobest
@@ -169,13 +209,15 @@ Scenario: Do not autoremove kernel after upgrade with --nobest
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
         | kernel-core-4.19.15-300.fc29.x86_64    | unknown         |
+    And package state is
+        | package                             | reason        | from_repo             |
+        | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--qf" for command "repoquery"
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not remove or change reason after remove of one of installonly packages
@@ -197,6 +239,10 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
         | kernel-core-4.19.15-300.fc29.x86_64    | user            |
+    And package state is
+        | package                             | reason | from_repo             |
+        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
+        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
    When I execute dnf with args "remove kernel-core-0:4.19.15-300.fc29.x86_64"
    Then the exit code is 0
     And Transaction is following
@@ -206,10 +252,12 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
     And package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
+    And package state is
+        | package                             | reason | from_repo             |
+        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--qf" for command "repoquery"
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Keep reason for installonly packages
@@ -229,6 +277,8 @@ Scenario: Keep reason for installonly packages
     And package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
+    And package state is
+        | package | reason | from_repo |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
