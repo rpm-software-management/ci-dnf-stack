@@ -27,6 +27,8 @@ Scenario Outline: Remove an RPM by <pkgspec-type>
         | remove-unused | basesystem-0:11-6.fc29.noarch             |
         | remove-unused | glibc-common-0:2.28-9.fc29.x86_64         |
         | remove-unused | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
+    And package state is
+        | package | reason | from_repo |
 
 @tier1
 Examples: Name

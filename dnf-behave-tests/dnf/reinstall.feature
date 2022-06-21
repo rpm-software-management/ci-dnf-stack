@@ -19,6 +19,10 @@ Scenario: Reinstall an RPM from the same repository
     And Transaction is following
         | Action        | Package                                   |
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+    And package state is
+        | package                           | reason     | from_repo             |
+        | CQRlib-devel-1.1.2-16.fc29.x86_64 | User       | dnf-ci-fedora         |
+        | CQRlib-1.1.2-16.fc29.x86_64       | Dependency | dnf-ci-fedora-updates |
 
 
 Scenario: Reinstall an RPM from different repository
@@ -28,6 +32,10 @@ Scenario: Reinstall an RPM from different repository
     And Transaction is following
         | Action        | Package                                   |
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+    And package state is
+        | package                           | reason     | from_repo                     |
+        | CQRlib-devel-1.1.2-16.fc29.x86_64 | User       | dnf-ci-fedora                 |
+        | CQRlib-1.1.2-16.fc29.x86_64       | Dependency | dnf-ci-fedora-updates-testing |
 
 
 Scenario: Reinstall an RPM that is not available

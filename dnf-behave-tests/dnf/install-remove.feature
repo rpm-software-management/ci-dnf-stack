@@ -12,6 +12,10 @@ Scenario Outline: Install remove <spec type> that requires only name
         | Action        | Package                           |
         | install       | tea-0:1.0-1.x86_64                |
         | install-dep   | water-0:1.0-1.x86_64              |
+    And package state is
+        | package             | reason     | from_repo             |
+        | tea-1.0-1.x86_64    | User       | dnf-ci-install-remove |
+        | water-1.0-1.x86_64  | Dependency | dnf-ci-install-remove |
    When I execute dnf with args "install tea"
    Then the exit code is 0
     And Transaction is empty
@@ -26,6 +30,35 @@ Examples:
     | spec type         | spec          |
     | package           | tea           |
     | provide           | hot-beverage  |
+
+
+@dnf5
+Scenario: Install remove package via rpm
+  Given I use repository "dnf-ci-fedora"
+  Given I successfully execute dnf with args "install basesystem filesystem"
+   Then Transaction is following
+        | Action        | Package                           |
+        | install       | basesystem-0:11-6.fc29.noarch     |
+        | install       | filesystem-0:3.9-2.fc29.x86_64    |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
+    And package state is
+        | package                      | reason     | from_repo     |
+        | basesystem-11-6.fc29.noarch  | User       | dnf-ci-fedora |
+        | filesystem-3.9-2.fc29.x86_64 | User       | dnf-ci-fedora |
+        | setup-2.12.1-1.fc29.noarch   | Dependency | dnf-ci-fedora |
+  Given I successfully execute rpm with args "-e basesystem filesystem setup"
+   When I execute dnf with args "install basesystem"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | basesystem-0:11-6.fc29.noarch     |
+        | install-dep   | filesystem-0:3.9-2.fc29.x86_64    |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
+    And package state is
+        | package                      | reason     | from_repo     |
+        | basesystem-11-6.fc29.noarch  | User       | dnf-ci-fedora |
+        | filesystem-3.9-2.fc29.x86_64 | Dependency | dnf-ci-fedora |
+        | setup-2.12.1-1.fc29.noarch   | Dependency | dnf-ci-fedora |
 
 
 # coffee requires water and sugar == 1
@@ -127,6 +160,19 @@ Scenario: Install remove *.rpm from local path
         | Action        | Package                           |
         | remove        | water_still-0:1.0-1.x86_64        |
         | remove        | water_carbonated-0:1.0-1.x86_64   |
+
+
+@dnf5
+@xfail
+# TODO(lukash) one would probably expect the package would be userinstalled after a `dnf install`
+Scenario: Install a package that was already installed via rpm
+   When I execute rpm with args "-i {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
+   Then the exit code is 0
+   When I execute dnf with args "install water"
+   Then the exit code is 0
+    And package state is
+        | package             | reason | from_repo             |
+        | water-1.0-1.x86_64  | User   | dnf-ci-install-remove |
 
 
 # @dnf5
