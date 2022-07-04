@@ -22,3 +22,14 @@ Given I use repository "security-upgrade"
       | Action        | Package                  |
       | upgrade       | kexec-tools-0:2-2.x86_64 |
       | upgrade       | dracut-0:2-2.x86_64      |
+
+
+Scenario: --security upgrade with advisory for obsoleter when obsoleted installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install A-1-1"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package        |
+      | install       | B-0:2-2.x86_64 |
+      | obsoleted     | A-0:1-1.x86_64 |
