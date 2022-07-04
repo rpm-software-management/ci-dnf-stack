@@ -58,3 +58,17 @@ Scenario: Clear the list of installonly packages and set the package installonly
         | install       | installonlyA-0:2.0-1.x86_64           |
         | upgrade       | installonlyB-0:2.0-1.x86_64           |
         | upgrade       | kernel-core-0:4.20.6-300.fc29.x86_64  |
+
+
+Scenario: Upgrade doesn't install older installonly pkg when never version is already installed
+   Given I configure dnf with
+        | key                          | value         |
+        | installonlypkgs              | installonlyA  |
+   When I execute dnf with args "install installonlyA-2.2"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                      |
+        | install       | installonlyA-0:2.2-1.x86_64  |
+   When I execute dnf with args "upgrade installonlyA-2.0"
+   Then the exit code is 0
+    And Transaction is empty
