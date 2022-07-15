@@ -4,7 +4,7 @@ aliases:
     url: https://github.com/
 
 components:
-  - name: libdnf
+  - name: libdnf5
     git:
       src: github:rpm-software-management/libdnf.git
       branch: origin/dnf-5-devel
