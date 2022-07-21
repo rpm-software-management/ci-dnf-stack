@@ -36,8 +36,7 @@ Given I use repository "simple-base"
       | upgrade       | dedalo-signed-2.0-1.fc29.x86_64       |
 
 
-# @dnf5
-# TODO(nsella) different exit code
+@dnf5
 Scenario: updating a signed pkg without key specified
 Given I use repository "simple-base"
   And I execute dnf with args "install dedalo-signed"
@@ -48,9 +47,7 @@ Given I use repository "simple-base"
  Then the exit code is 1
 
 
-# @dnf5
-# TODO(nsella) different exit code
-# TODO(nsella) different stderr
+@dnf5
 Scenario: updating a broken signed pkg whose key is not imported
 Given I use repository "dnf-ci-gpg"
   And I execute dnf with args "install wget"
@@ -60,12 +57,15 @@ Given I use repository "dnf-ci-gpg"
       | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public |
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
-  And stderr contains "Error: GPG check FAILED"
+  And dnf4 stderr contains "Error: GPG check FAILED"
+  And dnf5 stderr matches line by line
+    """
+    GPG check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: problem opening package.
+    Signature verification failed
+    """
 
 
-# @dnf5
-# TODO(nsella) different exit code
-# TODO(nsella) different stderr
+@dnf5
 @bz1963732
 @not.with_os=rhel__ge__8
 Scenario: updating a broken signed pkg whose key is imported
@@ -78,4 +78,9 @@ Given I use repository "dnf-ci-gpg"
   And I execute rpm with args "--import {context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public"
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
-  And stderr contains "Error: GPG check FAILED"
+  And dnf4 stderr contains "Error: GPG check FAILED"
+  And dnf5 stderr matches line by line
+    """
+    GPG check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: problem opening package.
+    Signature verification failed
+    """
