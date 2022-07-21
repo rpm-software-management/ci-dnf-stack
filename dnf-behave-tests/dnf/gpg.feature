@@ -29,10 +29,9 @@ Background: Add repository with gpgcheck=1
    Then the exit code is 1
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
+@dnf5
 Scenario: Install masterkey signed package and check GPG key was imported
-   When I execute dnf with args "install setup -v"
+   When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                             |
@@ -44,9 +43,7 @@ Scenario: Install masterkey signed package and check GPG key was imported
     And stdout contains "gpg\(dnf-ci-gpg\)"
 
 
-# @dnf5
-# TODO(nsella) exit code 1
-# package gpg-pubkey is not installed
+@dnf5
 Scenario: Install subkey signed package with masterkey signed dependency
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -60,8 +57,7 @@ Scenario: Install subkey signed package with masterkey signed dependency
     And stdout contains "gpg\(dnf-ci-gpg-subkey\)"
 
 
-# @dnf5
-# TODO(nsella) exit code 1
+@dnf5
 Scenario: Fail to install signed package with incorrectly signed dependency (with key from different repository)
    When I execute dnf with args "install glibc"
    Then the exit code is 1
@@ -76,10 +72,9 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
     And RPMDB Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
+@dnf5
 Scenario: Fail to install signed package with incorrect checksum
-   When I execute dnf with args "install broken-package -v"
+   When I execute dnf with args "install broken-package"
    Then the exit code is 1
     And DNF Transaction is following
         | Action        | Package                               |
@@ -134,9 +129,7 @@ Scenario: Fail to install package with incorrect checksum when gpgcheck=0
     And RPMDB Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) different exit code
-# No match for argument: setup
+@dnf5
 @bz1915990
 @bz1932079
 @bz1932089
