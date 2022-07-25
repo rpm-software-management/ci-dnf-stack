@@ -59,3 +59,16 @@ Scenario: Variables with {} are substituted in repo id
       repo id\s+repo name
       dnf-ci-test-fedora\s+dnf-ci-test-fedora test repository
       """
+
+@bz2091636
+Scenario: Using dnf with non-files in /etc/dnf/vars
+  Given I create directory "/{context.dnf.installroot}/etc/dnf/vars/troublemaker"
+    And I use repository "dnf-ci-fedora"
+   When I execute dnf with args "repolist"
+   Then the exit code is 0
+    And stdout matches line by line
+      """
+      repo id\s+repo name
+      dnf-ci-fedora\s+dnf-ci-fedora test repository
+      """
+
