@@ -63,8 +63,6 @@ Examples:
         | command  | args      |  help     |
         | dnf      | help      |  dnf \[options] COMMAND   |
         | dnf      | --help    |  dnf \[options] COMMAND   |
-        | dnf-3    | help      |  dnf \[options] COMMAND   |
-        | dnf-3    | --help    |  dnf \[options] COMMAND   |
         | yum      | help      |  yum \[options] COMMAND   |
         | yum      | --help    |  yum \[options] COMMAND   |
         | yum-builddep | --help    |  dnf builddep \[-c \[config file]] \[-q] \[-v] \[--version]    |
