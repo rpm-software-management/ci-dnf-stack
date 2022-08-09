@@ -124,3 +124,13 @@ Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
 Total packages: 295
 """
+
+@bz2066334
+Scenario: Repolist in verbose mode with manual repository having no cpeid
+  Given I use repository "manual-test"
+    And I copy repository "manual-test" for modification
+    And I generate repodata for repository "manual-test" with extra arguments "--distro RHEL8"
+    And I use repository "manual-test"
+   When I execute dnf with args "repolist --verbose"
+   Then the exit code is 0
+    And stderr does not contain "Error: basic_string"
