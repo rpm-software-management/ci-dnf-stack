@@ -31,3 +31,22 @@ Scenario: Tests that "repoquery" downloads metadata (creates a cache) and then "
       """
       Metadata cache created.
       """
+
+
+Scenario: makecache with skip_if_unavailable=0 repo doesn't succeed
+Given I configure a new repository "non-existent" with
+      | key                 | value                               |
+      | baseurl             | https://www.not-available-repo.com/ |
+      | enabled             | 1                                   |
+      | skip_if_unavailable | 0                                   |
+ When I execute microdnf with args "makecache"
+ Then the exit code is 1
+  # stdout doesn't contain "Metadata cache created."
+  And stdout is
+      """
+      Downloading metadata...
+      """
+  And stderr is
+      """
+      error: cannot update repo 'non-existent': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Curl error (6): Couldn't resolve host name for https://www.not-available-repo.com/repodata/repomd.xml [Could not resolve host: www.not-available-repo.com]
+      """
