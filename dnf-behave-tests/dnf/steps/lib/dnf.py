@@ -25,6 +25,9 @@ OBSOLETE_REPLACING_LABEL = {
 OBSOLETE_REPLACING = re.compile(
     r"^ +(?P<label>%s) +(?P<name>[^ ]*)\.(?P<arch>[^ ]+) +(?P<evr>.*)$" \
         % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
+REPLACING_DNF5 = re.compile(
+    r"^ +(?P<label>%s) +(?P<name>[^ ]+) +(?P<arch>[^ ]+) +(?P<evr>[^ ]*) +(?P<from_repo>[^ ]*) +(?P<size>.*)$" \
+        % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
 
 
 ACTIONS_EN = {
@@ -67,16 +70,6 @@ def find_transaction_table_begin(context, lines):
      Package  Arch  Version  Repository  Size
     ==========================================
     """
-
-    # DNF 5
-    if context.dnf5_mode:
-        trans_start_re = re.compile(r"Package +Arch +Version +Repository +Size")
-        for i in range(0, len(lines) - 1):
-            if trans_start_re.match(lines[i]):
-                return i + 1
-        raise RuntimeError("Transaction table start not found")
-
-    # DNF 4
     i = 0
     while i < len(lines) - 3:
         line1 = lines[i]
@@ -114,16 +107,6 @@ def find_transaction_table_end(context, lines):
     Transaction Summary
     ===================
     """
-
-    # DNF 5
-    if context.dnf5_mode:
-        for i in range(0, len(lines)):
-            if not lines[i].strip():
-                # empty line indicates the end of the transaction table
-                return i
-        raise RuntimeError("Transaction table end not found")
-
-    # DNF 4
     for i, line in enumerate(lines):
         match = SEPARATOR_RE.match(line)
         if match:
@@ -211,6 +194,100 @@ def parse_transaction_table(context, lines):
                 # but I'm not able to reproduce this behavior outside of behave.
                 # module-install.feature
                 #line = re.sub(r'(x86_64|noarch)(?! )', r'\1 ', line)
+                match = PACKAGE_RE.match(line)
+            if not match:
+                # either next action or parsing error
+                break
+
+            lines.pop(0)
+            match_dict = match.groupdict()
+            match_dict["evr"] = normalize_epoch(match_dict["evr"])
+            nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
+            rpm = RPM(nevra)
+            result[result_action].add(rpm)
+
+    return result
+
+
+def find_transaction_table_begin_dnf5(context, lines):
+    """
+    Find a DNF5 transaction table header and return index of the following line:
+     Package  Arch  Version  Repository  Size
+    """
+    trans_start_re = re.compile(r"Package +Arch +Version +Repository +Size")
+    for i in range(0, len(lines) - 1):
+        if trans_start_re.match(lines[i]):
+            return i + 1
+    raise RuntimeError("Transaction table start not found")
+
+
+def find_transaction_table_end_dnf5(context, lines):
+    """
+    Find a DNF5 transaction table end, an empty line
+    """
+    for i in range(0, len(lines)):
+        if not lines[i].strip():
+            # empty line indicates the end of the transaction table
+            return i
+    raise RuntimeError("Transaction table end not found")
+
+
+def parse_transaction_table_dnf5(context, lines):
+    """
+    Find and parse transaction table.
+    Return {action: set([rpms])}
+    """
+    result = {}
+    for action in ACTIONS.values():
+        result[action] = set()
+    result["replaced"] = set()
+
+    table_begin = find_transaction_table_begin_dnf5(context, lines)
+    lines = lines[table_begin:]
+
+    table_end = find_transaction_table_end_dnf5(context, lines)
+    lines = lines[:table_end]
+
+    while lines:
+        line = lines.pop(0).rstrip()
+
+        match = ACTION_RE.match(line)
+        if not match:
+            raise RuntimeError("Couldn't parse transaction table action: {}".format(line))
+        line_action = match.group(1)
+        action = ACTIONS[line_action]
+
+        while True:
+            if not lines:
+                break
+
+            line = lines[0].rstrip()
+
+#            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
+#                if ACTION_RE.match(line):
+#                    break
+#                lines.pop(0)
+#                if '-stream-' in action:
+#                    if '-switch' in action:
+#                        match = MODULE_STREAM_SWITCH_RE.match(line.strip())
+#                        if not match:
+#                            raise ValueError("Couldn't parse module/stream: {}".format(line))
+#                    else:
+#                        match = MODULE_STREAM_RE.match(line.strip())
+#                        if not match:
+#                            raise ValueError("Couldn't parse module/stream: {}".format(line))
+#                    result[action].add("{0[module]}:{0[stream]}".format(match.groupdict()))
+#                else:
+#                    group = line.strip()
+#                    result[action].add(group)
+#                continue
+
+            result_action = action
+            # match the "  replacing ..." line
+            match = REPLACING_DNF5.match(line)
+            if match:
+                result_action = 'replaced'
+            else:
                 match = PACKAGE_RE.match(line)
             if not match:
                 # either next action or parsing error
