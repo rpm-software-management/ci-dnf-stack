@@ -37,6 +37,10 @@ Scenario: Install multiple versions of an installonly package with a limit of 2
         | package                             | reason | from_repo                     |
         | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates         |
         | kernel-core-4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository                    |
+        | Install | kernel-core-0:4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
+        | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System                       |
 
 @dnf5
 Scenario: Install and remove multiple versions of an installonly package
@@ -57,6 +61,9 @@ Scenario: Install and remove multiple versions of an installonly package
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
         | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository            |
+        | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
    When I execute dnf with args "remove kernel-core"
    Then the exit code is 0
     And Transaction is following
@@ -65,6 +72,10 @@ Scenario: Install and remove multiple versions of an installonly package
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
     And package state is
         | package | reason | from_repo |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository |
+        | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System    |
+        | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
 @dnf5
 @bz1769788
@@ -77,6 +88,9 @@ Scenario: Install multiple versions of an installonly package and keep reason
     And package state is
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository    |
+        | Install | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora |
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
@@ -88,6 +102,9 @@ Scenario: Install multiple versions of an installonly package and keep reason
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
         | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository            |
+        | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
@@ -184,6 +201,9 @@ Scenario: Do not autoremove kernel after upgrade with --best
     And package state is
         | package                             | reason        | from_repo             |
         | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason        | repository            |
+        | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
@@ -212,6 +232,9 @@ Scenario: Do not autoremove kernel after upgrade with --nobest
     And package state is
         | package                             | reason        | from_repo             |
         | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason        | repository            |
+        | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty
@@ -243,6 +266,9 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
         | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository            |
+        | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
    When I execute dnf with args "remove kernel-core-0:4.19.15-300.fc29.x86_64"
    Then the exit code is 0
     And Transaction is following
@@ -255,6 +281,9 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
     And package state is
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository |
+        | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
 
 @dnf5
@@ -279,6 +308,9 @@ Scenario: Keep reason for installonly packages
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
     And package state is
         | package | reason | from_repo |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                               | reason | repository |
+        | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is empty

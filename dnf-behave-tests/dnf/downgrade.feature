@@ -55,6 +55,14 @@ Scenario: Downgrade RPM that requires downgrade of dependency
         | glibc-all-langpacks-2.28-9.fc29.x86_64 | Dependency | dnf-ci-fedora |
         | glibc-common-2.28-9.fc29.x86_64        | Dependency | dnf-ci-fedora |
         | setup-2.12.1-1.fc29.noarch             | Dependency | dnf-ci-fedora |
+    And dnf5 transaction items for transaction "last" are
+        | action    | package                                   | reason       | repository    |
+        | Downgrade | glibc-0:2.28-9.fc29.x86_64                | User         | dnf-ci-fedora |
+        | Downgrade | glibc-common-0:2.28-9.fc29.x86_64         | Dependency   | dnf-ci-fedora |
+        | Downgrade | glibc-all-langpacks-0:2.28-9.fc29.x86_64  | Dependency   | dnf-ci-fedora |
+        | Replaced  | glibc-0:2.28-26.fc29.x86_64               | User         | @System       |
+        | Replaced  | glibc-all-langpacks-0:2.28-26.fc29.x86_64 | Dependency   | @System       |
+        | Replaced  | glibc-common-0:2.28-26.fc29.x86_64        | Dependency   | @System       |
 
 
 @dnf5
@@ -73,6 +81,10 @@ Scenario: Downgrade a package that was installed via rpm
     And package state is
         | package                  | reason        | from_repo             |
         | flac-1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |
+    And dnf5 transaction items for transaction "last" are
+        | action    | package                    | reason        | repository            |
+        | Downgrade | flac-0:1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |
+        | Replaced  | flac-0:1.3.3-3.fc29.x86_64 | External User | @System               |
 
 
 # @dnf5

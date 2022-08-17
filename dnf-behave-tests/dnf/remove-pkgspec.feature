@@ -29,6 +29,14 @@ Scenario Outline: Remove an RPM by <pkgspec-type>
         | remove-unused | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
     And package state is
         | package | reason | from_repo |
+    And dnf5 transaction items for transaction "last" are
+        | action | package                                  | reason | repository |
+        | Remove | basesystem-0:11-6.fc29.noarch            | Clean  | @System    |
+        | Remove | filesystem-0:3.9-2.fc29.x86_64           | Clean  | @System    |
+        | Remove | glibc-0:2.28-9.fc29.x86_64               | User   | @System    |
+        | Remove | glibc-all-langpacks-0:2.28-9.fc29.x86_64 | Clean  | @System    |
+        | Remove | glibc-common-0:2.28-9.fc29.x86_64        | Clean  | @System    |
+        | Remove | setup-0:2.12.1-1.fc29.noarch             | Clean  | @System    |
 
 @tier1
 Examples: Name
