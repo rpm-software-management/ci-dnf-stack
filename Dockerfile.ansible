@@ -2,7 +2,7 @@
 # $ podman build --build-arg TYPE=distro -t ansible -f Dockerfile.ansible
 # $ podman run --net none -it ansible ./ansible
 
-FROM fedora:35
+FROM fedora:36
 ARG TYPE=nightly
 
 # enable nightlies if requested
