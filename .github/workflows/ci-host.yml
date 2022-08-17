@@ -29,11 +29,7 @@ jobs:
           echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${GHCR_USER} --password-stdin
 
           docker build -t ${IMAGE}:${DATE} -t ${IMAGE}:latest -<<EOF
-          # TODO(lukash) temporarily lock fedora to 35 due to bugged
-          # clang-format (clang-tools-extra-0:14.0.0-1.fc36):
-          # https://github.com/llvm/llvm-project/issues/55260
-          # change back to fedora:latest when fixed
-          FROM fedora:35
+          FROM fedora:36
           RUN dnf -y update
           RUN dnf -y install dnf-plugins-core
           RUN dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
