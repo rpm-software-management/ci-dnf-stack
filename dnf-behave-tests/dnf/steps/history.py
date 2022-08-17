@@ -4,6 +4,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+import re
 
 from common.lib.behave_ext import check_context_table
 from common.lib.cmd import run_in_context
@@ -153,6 +154,42 @@ def step_impl(context):
 
     expected = [[p, r] for p, r in context.table]
     found = sorted([r.split(",") for r in context.cmd_stdout.strip().split('\n')])
+
+    if found != expected:
+        print_lines_diff(expected, found)
+        raise AssertionError("Package reasons mismatch")
+
+
+# Need to use this complex regex here, as both the first and the third column
+# may contain spaces, and a space is also a column separator
+transaction_item_re = re.compile("  (.+[^ ]) +(.+-[^ ]+) +(.+[^ ]+) +(.+)")
+
+@behave.then('dnf5 transaction items for transaction "{id}" are')
+def step_impl(context, id):
+    # we only do the check for dnf5
+    if hasattr(context, "dnf5_mode") and not context.dnf5_mode:
+        return
+
+    check_context_table(context, ["action", "package", "reason", "repository"])
+
+    cmd = context.dnf.get_cmd(context) + ["history", "info", id]
+    run_in_context(context, " ".join(cmd))
+
+    expected = [(a, p, r, repo) for a, p, r, repo in context.table]
+    found = []
+    parse = False
+    for line in context.cmd_stdout.strip().split('\n'):
+        if not parse:
+            if line.split() == ["Action", "Package", "Reason", "Repository"]:
+                parse = True
+            else:
+                continue
+        else:
+            res = transaction_item_re.match(line)
+            if res is not None:
+                found.append(res.groups())
+            else:
+                break
 
     if found != expected:
         print_lines_diff(expected, found)
