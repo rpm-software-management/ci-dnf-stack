@@ -159,3 +159,11 @@ Scenario: Builddep with unavailable build dependency
       And Transaction is following
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
+
+@dnf5
+@bz2077820
+Scenario: Builddep using macros with source rpm
+    Given I use repository "dnf-ci-fedora"
+     When I execute dnf with args "builddep -D 'dummy_param 1' {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
+     Then the exit code is 0
+      And stderr contains "Warning: -D or --define arguments have no meaning for source rpm packages."
