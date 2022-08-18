@@ -1,7 +1,6 @@
 Feature: Test transasction output
 
 
-@dnf5
 @bz1794856
 Scenario: Check whitespace between columns with long values in transaction table
 Given I use repository "dnf-ci-thirdparty"
