@@ -48,7 +48,6 @@ Scenario: Do not install of obsoleting package using upgrade command, when obsol
 
 
 @dnf5
-# TODO(nsella) transaction table output
 @bz1818118
 Scenario: Install of obsoleting package using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -96,7 +95,6 @@ Scenario: Obsoleting a package that was installed via rpm, with --nobest
         | PackageB-Obsoleter-1.0-1.x86_64 | External User | dnf-ci-obsoletes |
 
 @dnf5
-# TODO(nsella) transaction table output
 @bz1818118
 Scenario: Install of obsoleting package from commandline using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -144,7 +142,6 @@ Scenario: Install of obsoleted package
 
 
 @dnf5
-# TODO(nsella) transaction table output
 Scenario: Upgrade of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -200,7 +197,6 @@ Scenario: Keep reason of obsoleted package
 
 
 @dnf5
-# TODO(nsella) transaction table output
 Scenario: Autoremoval of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0

@@ -297,8 +297,9 @@ Scenario: Value 1 of installonly_limit config option is not allowed
     Invalid configuration value: installonly_limit=1 in .*/etc/dnf/dnf.conf; value 1 is not allowed
     """
 
-@dnf5
-# TODO(nsella) transaction table output
+# TODO(lukash) dnf5 doesn't seem to implement the limit lower bound and accepts installonly_limit = 1
+# also, the rpmdb check seems to not work correctly for this case, since it's passing without an
+# error even if the older version is being removed
 @bz1926261
 Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value is used instead of invalid 1)
   Given I configure dnf with

@@ -59,7 +59,6 @@ Scenario: Running kernel is protected against obsoleting
 
 
 @dnf5
-# TODO(nsella) transaction table output
 @bz1698145
 Scenario: Running kernel is not protected against obsoleting with config protect_running_kernel=False
    When I execute dnf with args "install dnf-ci-obsolete --setopt=protect_running_kernel=False"
