@@ -119,6 +119,10 @@ Examples:
     | out       |             |
 
 
+@xfail
+# TODO(lukash) this test relied on an injected Reason Change for installonly
+# packages, which we no longer inject instead replace with an explicit `dnf
+# mark` once the command is implement
 Scenario: Reason change is in transaction
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
