@@ -66,8 +66,7 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
         """
 
 
-# @dnf5
-# TODO(nsella) transaction table output
+@dnf5
 @tier1
 Scenario: Expire dnf cache and run repoquery when a package has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
@@ -76,6 +75,7 @@ Scenario: Expire dnf cache and run repoquery when a package has been removed mea
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         CQRlib-extension-0:1.6-2.src
         CQRlib-extension-0:1.6-2.x86_64
         SuperRipper-0:1.2-1.src
@@ -89,6 +89,7 @@ Scenario: Expire dnf cache and run repoquery when a package has been removed mea
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         CQRlib-extension-0:1.6-2.src
         CQRlib-extension-0:1.6-2.x86_64
         SuperRipper-0:1.2-1.src
@@ -102,6 +103,7 @@ Scenario: Expire dnf cache and run repoquery when a package has been removed mea
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         CQRlib-extension-0:1.6-2.src
         CQRlib-extension-0:1.6-2.x86_64
         SuperRipper-0:1.2-1.src
