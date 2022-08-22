@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) Unknown argument "update" for command "microdnf"
+@dnf5
 Feature: Upgrade using security advisories
 
 
