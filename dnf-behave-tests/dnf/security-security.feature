@@ -31,8 +31,7 @@ Scenario: Security check-update when there are such updates
     And stdout does not contain "security_B"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
+@dnf5
 @bz1918475
 Scenario: Security update
    When I execute dnf with args "upgrade-minimal --security"
@@ -45,8 +44,7 @@ Scenario: Security update
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
+@dnf5
 @bz1918475
 Scenario: Security upgrade-minimal when exact version is not available
    When I execute dnf with args "upgrade-minimal --security -x security_A-0:1.0-3.x86_64"
@@ -56,8 +54,7 @@ Scenario: Security upgrade-minimal when exact version is not available
         | upgrade       | security_A-0:1.0-4.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update" for command "microdnf"
+@dnf5
 @bz1918475
 Scenario: Security update with priority setting
   Given I use repository "dnf-ci-security-priority" with configuration
@@ -70,8 +67,7 @@ Scenario: Security update with priority setting
         | upgrade       | security_A-0:1.0-3.8.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
+@dnf5
 @bz1918475
 Scenario Outline: Security upgrade-minimal with priority setting and args: <Args>
   Given I use repository "dnf-ci-security-priority" with configuration
@@ -89,8 +85,7 @@ Examples:
     | security_A |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update" for command "microdnf"
+@dnf5
 Scenario Outline: Security <command>
    When I execute dnf with args "<command> --security"
    Then the exit code is 0
@@ -119,9 +114,7 @@ Examples:
     | update-minimal    | security_A-0:1.0-3.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--security" for command "upgrade"
-# depends on backporting of https://github.com/rpm-software-management/dnf/commit/6c45861ad7f5e6a6d586025a05c39b4b7a180aa0
+@dnf5
 Scenario Outline: Security <command> with bzs explicitly mentioned
    When I execute dnf with args "<command> --security --bz 123 --bzs=234,345"
    Then the exit code is 0
