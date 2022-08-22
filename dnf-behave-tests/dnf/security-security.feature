@@ -35,12 +35,12 @@ Scenario: Security check-update when there are such updates
 # TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
 Scenario: Security update
-   When I execute dnf with args "update-minimal --security"
+   When I execute dnf with args "upgrade-minimal --security"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
         | upgrade       | security_A-0:1.0-3.x86_64 |
-  When I execute dnf with args "update --security"
+  When I execute dnf with args "upgrade --security"
   Then the exit code is 0
     And Transaction is empty
 
@@ -48,8 +48,8 @@ Scenario: Security update
 # @dnf5
 # TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
-Scenario: Security update-minimal when exact version is not available
-   When I execute dnf with args "update-minimal --security -x security_A-0:1.0-3.x86_64"
+Scenario: Security upgrade-minimal when exact version is not available
+   When I execute dnf with args "upgrade-minimal --security -x security_A-0:1.0-3.x86_64"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
@@ -63,7 +63,7 @@ Scenario: Security update with priority setting
   Given I use repository "dnf-ci-security-priority" with configuration
       | key           | value   |
       | priority      | 1       |
-   When I execute dnf with args "update --security "
+   When I execute dnf with args "upgrade --security "
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                     |
@@ -73,15 +73,21 @@ Scenario: Security update with priority setting
 # @dnf5
 # TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 @bz1918475
-Scenario: Security update-minimal with priority setting
+Scenario Outline: Security upgrade-minimal with priority setting and args: <Args>
   Given I use repository "dnf-ci-security-priority" with configuration
       | key           | value   |
       | priority      | 1       |
-   When I execute dnf with args "update-minimal --security "
+   When I execute dnf with args "upgrade-minimal <Args> --security "
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                     |
         | upgrade       | security_A-0:1.0-3.1.x86_64 |
+
+Examples:
+    | Args       |
+    |            |
+    | security_A |
+
 
 # @dnf5
 # TODO(nsella) Unknown argument "update" for command "microdnf"
@@ -93,11 +99,24 @@ Scenario Outline: Security <command>
         | upgrade       | <package>                 |
 
 Examples:
+    | command                    | package                   |
+    | upgrade                    | security_A-0:1.0-4.x86_64 |
+    | upgrade-minimal            | security_A-0:1.0-3.x86_64 |
+    | upgrade-minimal security_A | security_A-0:1.0-3.x86_64 |
+
+
+@not.with_dnf=5
+Scenario Outline: Security <command> (dnf4 syntax compat)
+   When I execute dnf with args "<command> --security"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                   |
+        | upgrade       | <package>                 |
+
+Examples:
     | command           | package                   |
     | update            | security_A-0:1.0-4.x86_64 |
-    | upgrade           | security_A-0:1.0-4.x86_64 |
     | update-minimal    | security_A-0:1.0-3.x86_64 |
-    | upgrade-minimal   | security_A-0:1.0-3.x86_64 |
 
 
 # @dnf5
@@ -112,5 +131,5 @@ Scenario Outline: Security <command> with bzs explicitly mentioned
 
 Examples:
     | command           | package                   |
-    | update            | security_A-0:1.0-4.x86_64 |
-    | update-minimal    | security_A-0:1.0-4.x86_64 |
+    | upgrade           | security_A-0:1.0-4.x86_64 |
+    | upgrade-minimal   | security_A-0:1.0-4.x86_64 |
