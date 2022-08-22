@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test upgrade-minimal with advisory, cve, secseverity
 
 
@@ -11,8 +12,6 @@ Background: Use repository with advisories
         | install       | advisory_B-0:1.0-1.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--cve" for command "upgrade-minimal"
 Scenario: upgrade-minimal cve and advisory
    When I execute dnf with args "upgrade-minimal --cve CVE-001 --advisory DNF-BUGFIX-001"
    Then the exit code is 0
@@ -31,8 +30,6 @@ Scenario: upgrade-minimal with pkgs specified cve and advisory
         | upgrade       | advisory_B-0:1.0-2.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--advisories=DNF-BUGFIX-001" for command "upgrade"
 Scenario: upgrade advisories
    When I execute dnf with args "upgrade --advisories=DNF-BUGFIX-001 --advisories=DNF-SECURITY-004"
    Then the exit code is 0
@@ -42,8 +39,6 @@ Scenario: upgrade advisories
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--cve" for command "upgrade"
 Scenario: upgrade cves
    When I execute dnf with args "upgrade --cve CVE-001 --cve CVE-002"
    Then the exit code is 0
@@ -52,8 +47,6 @@ Scenario: upgrade cves
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--sec-severity" for command "upgrade-minimal"
 Scenario: upgrade-minimal sec-severity
    When I execute dnf4 with args "upgrade-minimal --sec-severity Moderate"
    When I execute dnf5 with args "upgrade-minimal --advisory-severities=Moderate"
@@ -72,8 +65,6 @@ Scenario: upgrade-minimal with pkgs specified sec-severity
         | upgrade       | advisory_B-0:1.0-2.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--sec-severity" for command "upgrade"
 Scenario: upgrade secseverity
    When I execute dnf4 with args "upgrade --sec-severity Critical"
    When I execute dnf5 with args "upgrade --advisory-severities Critical"
@@ -83,8 +74,6 @@ Scenario: upgrade secseverity
         | upgrade       | advisory_B-0:1.0-4.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--security" for command "upgrade-minimal"
 Scenario: upgrade-minimal security plus bugfix
    When I execute dnf with args "upgrade-minimal --security --bugfix"
    Then the exit code is 0
