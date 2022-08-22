@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test security options for update
 
 
@@ -12,8 +13,6 @@ Background: Use repository with advisories
         | install       | bugfix_C-0:1.0-1.x86_64   |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update" for command "microdnf"
 Scenario: Test security option --bugfix for update
    When I execute dnf with args "upgrade --bugfix"
    Then the exit code is 0
@@ -23,8 +22,6 @@ Scenario: Test security option --bugfix for update
         | upgrade       | bugfix_C-0:1.0-4.x86_64   |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
 Scenario: Test security option --bugfix for upgrade-minimal
    When I execute dnf with args "upgrade-minimal --bugfix"
    Then the exit code is 0
