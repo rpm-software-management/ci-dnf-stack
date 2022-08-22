@@ -22,6 +22,15 @@ Scenario: upgrade-minimal cve and advisory
         | upgrade       | advisory_B-0:1.0-2.x86_64 |
 
 
+Scenario: upgrade-minimal with pkgs specified cve and advisory
+   When I execute dnf with args "upgrade-minimal advisory_A advisory_B --cve CVE-001 --advisory DNF-BUGFIX-001"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                   |
+        | upgrade       | advisory_A-0:1.0-2.x86_64 |
+        | upgrade       | advisory_B-0:1.0-2.x86_64 |
+
+
 # @dnf5
 # TODO(nsella) Unknown argument "--advisories=DNF-BUGFIX-001" for command "upgrade"
 Scenario: upgrade advisories
@@ -46,7 +55,17 @@ Scenario: upgrade cves
 # @dnf5
 # TODO(nsella) Unknown argument "--sec-severity" for command "upgrade-minimal"
 Scenario: upgrade-minimal sec-severity
-   When I execute dnf with args "upgrade-minimal --sec-severity Moderate"
+   When I execute dnf4 with args "upgrade-minimal --sec-severity Moderate"
+   When I execute dnf5 with args "upgrade-minimal --advisory-severities=Moderate"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                   |
+        | upgrade       | advisory_B-0:1.0-2.x86_64 |
+
+
+Scenario: upgrade-minimal with pkgs specified sec-severity
+   When I execute dnf4 with args "upgrade-minimal advisory_B --sec-severity Moderate"
+   When I execute dnf5 with args "upgrade-minimal advisory_B --advisory-severities=Moderate"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
@@ -56,7 +75,8 @@ Scenario: upgrade-minimal sec-severity
 # @dnf5
 # TODO(nsella) Unknown argument "--sec-severity" for command "upgrade"
 Scenario: upgrade secseverity
-   When I execute dnf with args "upgrade --sec-severity Critical"
+   When I execute dnf4 with args "upgrade --sec-severity Critical"
+   When I execute dnf5 with args "upgrade --advisory-severities Critical"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
