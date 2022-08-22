@@ -15,7 +15,7 @@ Background: Use repository with advisories
 # @dnf5
 # TODO(nsella) Unknown argument "update" for command "microdnf"
 Scenario: Test security option --bugfix for update
-   When I execute dnf with args "update --bugfix"
+   When I execute dnf with args "upgrade --bugfix"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
@@ -25,8 +25,8 @@ Scenario: Test security option --bugfix for update
 
 # @dnf5
 # TODO(nsella) Unknown argument "update-minimal" for command "microdnf"
-Scenario: Test security option --bugfix for update-minimal
-   When I execute dnf with args "update-minimal --bugfix"
+Scenario: Test security option --bugfix for upgrade-minimal
+   When I execute dnf with args "upgrade-minimal --bugfix"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                   |
