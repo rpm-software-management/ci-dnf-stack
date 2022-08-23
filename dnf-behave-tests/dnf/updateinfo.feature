@@ -4,8 +4,8 @@ Feature: Listing available updates using the dnf updateinfo command
 Background:
   Given I use repository "dnf-ci-fedora"
 
-# @dnf5
-# TODO(nsella) different stderr
+
+@dnf5
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -36,9 +36,7 @@ Scenario: Listing available updates
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
-Scenario Outline: updateinfo <summary alias> (when there's nothing to report)
+@dnf5
 Scenario: updateinfo summary (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -64,8 +62,6 @@ Scenario: updateinfo summary (when there's nothing to report)
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 @not.with_dnf=5
 Scenario: updateinfo --summary when there's nothing to report (dnf4 compat)
    When I execute dnf with args "install glibc flac"
@@ -78,6 +74,7 @@ Scenario: updateinfo --summary when there's nothing to report (dnf4 compat)
     """
 
 
+@dnf5
 Scenario: updateinfo summary --available (when there is an available update)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -122,8 +119,8 @@ Scenario: updateinfo --summary available when there is an available update (dnf4
         1 Enhancement notice(s)
     """
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+
+@dnf5
 Scenario: updateinfo info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -251,8 +248,7 @@ Scenario: updateinfo info security (when there's nothing to report) (dnf4 compat
    """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
 Scenario: updateinfo info security (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -265,6 +261,7 @@ Scenario: updateinfo info security (when there's nothing to report)
    """
 
 
+@dnf5
 Scenario: updateinfo list
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -300,8 +297,8 @@ Scenario: updateinfo --list (dnf4 compat)
     FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
     """
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+
+@dnf5
 Scenario: updateinfo list all security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install glibc flac CQRlib"
@@ -321,8 +318,8 @@ Scenario: updateinfo list all security
     FEDORA-2018-318f184113 security Moderate CQRlib-1.1.2-16.fc29.x86_64 2019-01-20 00:00:00
     """
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+
+@dnf5
 Scenario: updateinfo list updates
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -347,8 +344,7 @@ Scenario: updateinfo list updates
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "update" for command "microdnf"
+@dnf5
 Scenario: updateinfo list installed
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -371,8 +367,7 @@ Scenario: updateinfo list installed
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
 Scenario: updateinfo list available enhancement
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -395,8 +390,7 @@ Scenario: updateinfo list available enhancement
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
 Scenario: updateinfo list all bugfix
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -416,11 +410,7 @@ Scenario: updateinfo list all bugfix
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
-# TODO(nsella) Unknown argument "--bz" for command "microdnf"
-# TODO(nsella) Unknown argument "--cve" for command "microdnf"
-# TODO(nsella) Unknown argument "--advisory" for command "microdnf"
+@dnf5
 Scenario Outline: updateinfo list updates plus <option>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -447,8 +437,6 @@ Examples:
         |        | FEDORA-2018-318f184000 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
 @not.with_dnf=5
 Scenario: updateinfo list updates plus --advisory (dnf4 compat)
    When I execute dnf with args "install glibc flac"
@@ -462,6 +450,8 @@ Scenario: updateinfo list updates plus --advisory (dnf4 compat)
     FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
     """
 
+
+@dnf5
 Scenario: updateinfo info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -515,8 +505,8 @@ Scenario: updateinfo info <advisory>
       Pacakges  : glibc-2.28-26.fc29.x86_64
     """
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+
+@dnf5
 Scenario: updateinfo info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -558,8 +548,28 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
     """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
+@bz1750528
+Scenario: updateinfo lists advisories referencing CVE
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "updateinfo list --with-cve"
+   Then the exit code is 0
+    And dnf4 stdout is
+    """
+    <REPOSYNC>
+    2999     bugfix glibc-2.28-26.fc29.x86_64
+    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64
+    """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    CVE      Type   Severity                   Package              Issued
+    2999     bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
+    CVE-2999 bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
+    """
+
+
 @not.with_dnf=5
 @bz1750528
 Scenario Outline: updateinfo lists advisories referencing CVE (dnf4 compat)
@@ -583,8 +593,25 @@ Examples:
     | --list cves         |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
+Scenario: updateinfo lists advisories referencing bugzilla
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "updateinfo list --with-bz"
+   Then the exit code is 0
+    And dnf4 stdout is
+    """
+    <REPOSYNC>
+    222 bugfix glibc-2.28-26.fc29.x86_64
+    """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    Bugzilla Type   Severity                   Package              Issued
+    222      bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
+    """
+
+
 @not.with_dnf=5
 Scenario Outline: updateinfo lists advisories referencing bugzilla (dnf4 compat)
   Given I successfully execute dnf with args "install glibc flac"
@@ -605,8 +632,7 @@ Examples:
     | list bzs            |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "updateinfo" for command "microdnf"
+@dnf5
 @bz1728004
 Scenario: updateinfo show <advisory> of the running kernel after a kernel update
    When I execute dnf with args "install kernel"
@@ -763,4 +789,26 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     <REPOSYNC>
     2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
+    """
+
+
+@dnf5
+@bz1801092
+Scenario: updateinfo lists advisories referencing CVE with dates
+  Given I successfully execute dnf with args "install glibc flac"
+    And I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "updateinfo list --with-cve"
+   Then the exit code is 0
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    CVE      Type   Severity                   Package              Issued
+    2999     bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
+    CVE-2999 bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
+    """
+    And dnf4 stdout is
+    """
+    <REPOSYNC>
+    2999     bugfix glibc-2.28-26.fc29.x86_64
+    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64
     """
