@@ -21,6 +21,7 @@ Given I enable plugin "system_upgrade"
   And I set environment variable "DNF_SYSTEM_UPGRADE_NO_REBOOT" to "1"
 
 
+@bz2054235
 Scenario: Test system-upgrade when reboot wasn't performed
  When I execute dnf with args "system-upgrade download"
  Then the exit code is 0
@@ -44,6 +45,7 @@ Scenario: Test system-upgrade when reboot wasn't performed
       """
 
 
+@bz2054235
 Scenario: Test system-upgrade basic functionality
  When I execute dnf with args "system-upgrade download"
  Then the exit code is 0
@@ -71,6 +73,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       | downgrade     | pkg-b-1.0-1.noarch    |
 
 
+@bz2054235
 Scenario: Test system-upgrade with --destdir
  When I execute dnf with args "system-upgrade download --destdir={context.dnf.tempdir}/destdir"
  Then the exit code is 0
@@ -98,6 +101,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       | downgrade     | pkg-b-1.0-1.noarch    |
 
 
+@bz2054235
 Scenario: Test system-upgrade with --no-downgrade
  When I execute dnf with args "system-upgrade download --no-downgrade"
  Then the exit code is 0
@@ -123,6 +127,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       | upgrade       | pkg-both-2.0-1.noarch |
 
 
+@bz2054235
 Scenario: Test system-upgrade transaction file not found
  When I execute dnf with args "system-upgrade download"
  Then the exit code is 0
@@ -148,6 +153,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       """
 
 
+@bz2054235
 Scenario: Test system-upgrade downloading a package from a different repo
  When I execute dnf with args "system-upgrade download"
  Then the exit code is 0
@@ -182,6 +188,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
       | downgrade     | pkg-b-1.0-1.noarch    |
 
 
+@bz2054235
 Scenario: Test system-upgrade empty transaction
 Given I successfully execute dnf with args "distro-sync"
  When I execute dnf with args "system-upgrade download"
@@ -197,3 +204,41 @@ Given I successfully execute dnf with args "distro-sync"
       """
       Error: system is not ready for upgrade
       """
+
+
+@bz2054235
+@bz2024430
+Scenario Outline: Test system-upgrade with <option> doesn't delete user files
+Given I create directory "/downloaddir"
+  And I create file "/downloaddir/precious_file1" with
+      """
+      precious content1
+      """
+  And I create directory "/downloaddir/precious_dir"
+  And I create file "/downloaddir/precious_dir/precious_file2" with
+      """
+      precious content2
+      """
+  And I execute dnf with args "system-upgrade download <option>={context.dnf.installroot}/downloaddir"
+  And I successfully execute dnf with args "system-upgrade reboot"
+  And I stop http server for repository "system-upgrade-f$releasever"
+  And I stop http server for repository "system-upgrade-2-f$releasever"
+ When I execute dnf with args "system-upgrade upgrade"
+ Then the exit code is 0
+  And transaction is following
+      | Action        | Package               |
+      | upgrade       | pkg-a-2.0-1.noarch    |
+      | upgrade       | pkg-both-2.0-1.noarch |
+      | downgrade     | pkg-b-1.0-1.noarch    |
+  And file "/downloaddir/precious_file1" exists
+  And file "/downloaddir/precious_dir/precious_file2" exists
+  And file "/downloaddir/pkg-a-2.0-1.noarch.rpm" does not exist
+  And file "/downloaddir/pkg-b-1.0-1.noarch.rpm" does not exist
+  And file "/downloaddir/pkg-both-2.0-1.noarch.rpm" does not exist
+
+Examples:
+      | option            |
+      | --destdir         |
+      | --downloaddir     |
+      | --setopt=cachedir |
+      # cachedir cannot be overwritten by user in system-upgrade, but test it to make sure
