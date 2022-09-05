@@ -7,6 +7,7 @@ Background:
     And I use repository "system-upgrade-comps-f$releasever"
 
 
+@bz2054235
 Scenario: Upgrade group when there are new package versions - upgrade packages
   Given I successfully execute dnf with args "group install A-group"
     And I set releasever to "30"
@@ -30,6 +31,7 @@ Scenario: Upgrade group when there are new package versions - upgrade packages
         | group-upgrade | A-group                            |
 
 
+@bz2054235
 Scenario: Upgrade group when there are new packages - install new packages
   Given I successfully execute dnf with args "group install AB-group"
     And I set releasever to "30"
@@ -57,6 +59,7 @@ Scenario: Upgrade group when there are new packages - install new packages
         | group-upgrade | AB-group                           |
 
 
+@bz2054235
 Scenario: Upgrade group when there were excluded packages during installation - don't install these packages
   Given I successfully execute dnf with args "group install A-group --exclude=A-mandatory,A-default,A-optional"
     And I set releasever to "30"
@@ -76,6 +79,7 @@ Scenario: Upgrade group when there were excluded packages during installation - 
         | group-upgrade | A-group                            |
 
 
+@bz2054235
 Scenario: Upgrade group when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install A-group"
     And I successfully execute dnf with args "remove A-mandatory A-default"
@@ -96,6 +100,7 @@ Scenario: Upgrade group when there were removed packages since installation - do
         | group-upgrade | A-group                            |
 
 
+@bz2054235
 Scenario: Upgrade environment when there are new groups/packages - install new groups/packages
   Given I successfully execute dnf with args "group install AB-environment"
     And I set releasever to "30"
@@ -127,6 +132,7 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | env-upgrade   | AB-environment                     |
 
 
+@bz2054235
 Scenario: Upgrade environment when there were excluded packages during installation - don't install these packages
   Given I execute dnf with args "group install A-environment --exclude=A-mandatory,A-default,A-optional"
     And I set releasever to "30"
@@ -148,6 +154,7 @@ Scenario: Upgrade environment when there were excluded packages during installat
         | env-upgrade   | A-environment                      |
 
 
+@bz2054235
 Scenario: Upgrade environment when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install A-environment"
     And I successfully execute dnf with args "remove A-mandatory A-default"
@@ -170,6 +177,7 @@ Scenario: Upgrade environment when there were removed packages since installatio
         | env-upgrade   | A-environment                      |
 
 
+@bz2054235
 Scenario: Upgrade empty group
   Given I successfully execute dnf with args "group install empty-group"
     And I set releasever to "30"
@@ -189,6 +197,7 @@ Scenario: Upgrade empty group
         | group-upgrade | empty-group                        |
 
 
+@bz2054235
 Scenario: Upgrade empty environment
   Given I successfully execute dnf with args "group install empty-environment"
     And I set releasever to "30"
@@ -208,6 +217,7 @@ Scenario: Upgrade empty environment
         | env-upgrade   | empty-environment                  |
 
 
+@bz2054235
 Scenario: Upgrade environment when all groups are removed
   Given I successfully execute dnf with args "group install A-environment"
     And I successfully execute dnf with args "group remove A-group"
