@@ -1701,8 +1701,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  When I execute dnf with args "history replay transaction.json --skip-broken"
  Then the exit code is 0
   And Transaction is following
-      | Action      | Package                  |
-      | install-dep | bottom-a1-2.0-1.noarch   |
+      | Action      | Package                   |
+      | install-dep | bottom-a1-2.0-1.noarch    |
+      | broken      | broken-dep-0:1.0-1.x86_64 |
   And History info should match
       | Key           | Value                   |
       | Return-Code   | Success                 |
