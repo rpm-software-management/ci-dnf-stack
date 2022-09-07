@@ -166,3 +166,18 @@ Given I make packages from repository "download-sources" accessible via http
       """
       GET /noarch/special-c%2b%2b-package-1.0-1.noarch.rpm
       """
+
+
+@bz2103015
+Scenario: Download a package that contains special URL characters by passing an encoded URL
+Given I use repository "download-sources" as http
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "install http://localhost:{context.dnf.ports[download-sources]}/noarch/special-c%2b%2b-package-1.0-1.noarch.rpm"
+ Then the exit code is 0
+  And HTTP log contains
+      """
+      GET /noarch/special-c%2b%2b-package-1.0-1.noarch.rpm
+      """
+  And Transaction is following
+      | Action        | Package                          |
+      | install       | special-c++-package-1.0-1.noarch |
