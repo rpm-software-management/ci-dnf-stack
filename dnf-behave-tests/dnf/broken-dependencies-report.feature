@@ -1,3 +1,4 @@
+@dnf5
 Feature: Reporting broken dependencies with various strict, best options
 
 
@@ -13,12 +14,22 @@ Scenario: Broken dependencies are reported when strict and best options are off
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install postgresql --exclude=postgresql-libs --setopt=strict=false --setopt=best=false"
    Then the exit code is 0
-    And stderr is
+    And dnf4 stderr is
     """
     Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
+      - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
+      - conflicting requests
+      - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    
+    Nothing to do.
     """
 
 
@@ -27,12 +38,22 @@ Scenario: Broken dependencies are reported when strict option is off and best op
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install postgresql --exclude=postgresql-libs --setopt=strict=false --setopt=best=true"
    Then the exit code is 0
-    And stderr is
+    And dnf4 stderr is
     """
     Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
+      - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
+      - conflicting requests
+      - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    
+    Nothing to do.
     """
 
 
@@ -41,10 +62,20 @@ Scenario: Broken dependencies are reported when skip-broken and best options are
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install postgresql --exclude=postgresql-libs --skip-broken --setopt=best=true"
    Then the exit code is 0
-    And stderr is
+    And dnf4 stderr is
     """
     Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    """
+    And dnf5 stdout is
+    """
+    <REPOSYNC>
+    Problem: package postgresql-9.6.5-1.fc29.x86_64 requires libpq.so.5()(64bit), but none of the providers can be installed
+      - package postgresql-9.6.5-1.fc29.x86_64 requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
+      - conflicting requests
+      - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
+    
+    Nothing to do.
     """
