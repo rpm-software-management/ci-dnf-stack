@@ -286,4 +286,22 @@ Scenario: Install remove group with already installed package
         | present       | water_still-0:1.0-1.x86_64        |
 
 
+@dnf5
+# coffee requires water and sugar, water is user-installed dependency
+Scenario: User-installed packages are not removed as unused dependencies
+  Given I use repository "dnf-ci-install-remove"
+    And I successfully execute dnf with args "install coffee water"
+   Then Transaction is following
+        | Action        | Package                           |
+        | install       | coffee-0:1.0-1.x86_64             |
+        | install       | water-0:1.0-1.x86_64              |
+        | install-dep   | sugar-0:1.0-1.x86_64              |
+   When I execute dnf with args "remove coffee"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | remove        | coffee-0:1.0-1.x86_64             |
+        | remove-unused | sugar-0:1.0-1.x86_64              |
+
+
 #Scenario: Install remove package from url
