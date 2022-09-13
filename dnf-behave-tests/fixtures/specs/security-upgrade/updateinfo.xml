@@ -67,4 +67,36 @@
             </collection>
         </pkglist>
     </update>
+    <update from="dnf-testing@redhat.com" status="stable" type="security" version="1">
+        <id>DNF-D-2022-9</id>
+        <title>obsoleter with one version exactly matching advisory security fix</title>
+        <release>Fedora 29</release>
+        <issue date="2019-02-22 15:30:01" />
+        <references />
+        <description>testing advisories during upgrade with obsoleteing pkg</description>
+        <pkglist>
+            <collection short="F29">
+                <name>Fedora 29</name>
+                <package name="D" version="1" release="1" epoch="0" arch="x86_64" src="https://the.url/the.package.rpm">
+                    <filename>D-1-1.x86_64.rpm</filename>
+                </package>
+            </collection>
+        </pkglist>
+    </update>
+    <update from="dnf-testing@redhat.com" status="stable" type="security" version="1">
+        <id>DNF-2019-4</id>
+        <title>obsoleter with one version exactly matching advisory security fix</title>
+        <release>Fedora 29</release>
+        <issue date="2019-02-22 15:30:01" />
+        <references />
+        <description>testing advisories during upgrade with obsoleteing pkg</description>
+        <pkglist>
+            <collection short="F29">
+                <name>Fedora 29</name>
+                <package name="F" version="1" release="1" epoch="0" arch="x86_64" src="https://the.url/the.package.rpm">
+                    <filename>F-1-1.x86_64.rpm</filename>
+                </package>
+            </collection>
+        </pkglist>
+    </update>
 </updates>
