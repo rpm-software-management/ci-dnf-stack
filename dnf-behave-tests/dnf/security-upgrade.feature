@@ -93,3 +93,67 @@ Given I use repository "security-upgrade"
       | Action        | Package        |
       | install       | F-0:2-2.x86_64 |
       | obsoleted     | E-0:1-1.x86_64 |
+
+
+@bz2124483
+Scenario: --security upgrade of a package that changes arch from noarch to x86_64
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install change-arch-noarch-1-1.noarch"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And RPMDB Transaction is following
+      | Action        | Package                  |
+      | install       | change-arch-noarch-0:2-2.x86_64 |
+      | remove        | change-arch-noarch-0:1-1.noarch |
+  And DNF Transaction is following
+      | Action        | Package                  |
+      | upgrade       | change-arch-noarch-0:2-2.x86_64 |
+
+
+@bz2124483
+Scenario: --security upgrade of a package that changes arch from x86_64 to noarch
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install change-arch-noarch-reversed-1-1.x86_64"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And RPMDB Transaction is following
+      | Action        | Package                           |
+      | install       | change-arch-noarch-reversed-0:2-2.noarch |
+      | remove        | change-arch-noarch-reversed-0:1-1.x86_64 |
+  And DNF Transaction is following
+      | Action        | Package                           |
+      | upgrade       | change-arch-noarch-reversed-0:2-2.noarch |
+
+
+@bz2124483
+Scenario: --security upgrade of a package that changes arch from i686 to x86_64 is not allowed
+Given I use repository "security-upgrade"
+  And I successfully execute dnf with args "install change-arch-1-1.i686"
+  # Make sure change-arch-2-2.x86_64 is available since we are testing we don't upgrade to it.
+  # It also has to have an available advisory. (We cannot verify that here because the updateinfo command is bugged when dealing with arch changes)
+  And I successfully execute dnf with args "repoquery change-arch-2-2.x86_64"
+  Then stdout is
+  """
+  <REPOSYNC>
+  change-arch-0:2-2.x86_64
+  """
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is empty
+
+
+@bz2124483
+Scenario: --security upgrade of a package that changes arch from x86_64 to i686 is not allowed
+Given I use repository "security-upgrade"
+  And I successfully execute dnf with args "install change-arch-reversed-1-1.x86_64"
+  # Make sure change-arch-reversed-2-2.i686 is available and has an adivosry since we are testing we don't upgrade to it.
+  # It also has to have an available advisory. (We cannot verify that here because the updateinfo command is bugged when dealing with arch changes)
+  And I successfully execute dnf with args "repoquery change-arch-reversed-2-2.i686"
+  Then stdout is
+  """
+  <REPOSYNC>
+  change-arch-reversed-0:2-2.i686
+  """
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is empty
