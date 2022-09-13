@@ -53,7 +53,7 @@ Given I use repository "security-upgrade"
       | upgrade       | dracut-0:2-2.x86_64      |
 
 
-Scenario: --security upgrade with advisory for obsoleter when obsoleted installed
+Scenario: --security upgrade with advisory for obsoleter B with two versions 1-1 and 2-2 when obsoleted A is installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install A-1-1"
  When I execute dnf with args "upgrade --security"
@@ -62,3 +62,25 @@ Given I use repository "security-upgrade"
       | Action        | Package        |
       | install       | B-0:2-2.x86_64 |
       | obsoleted     | A-0:1-1.x86_64 |
+
+
+Scenario: --security upgrade with advisory for obsoleter with one version exactly matching advisory when obsoleted installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install C-1-1"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package        |
+      | install       | D-0:1-1.x86_64 |
+      | obsoleted     | C-0:1-1.x86_64 |
+
+
+Scenario: --security upgrade with advisory for obsoleter with one bigger version than in advisory when obsoleted installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install E-1-1"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package        |
+      | install       | F-0:2-2.x86_64 |
+      | obsoleted     | E-0:1-1.x86_64 |
