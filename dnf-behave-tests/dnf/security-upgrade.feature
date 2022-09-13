@@ -226,3 +226,37 @@ Given I successfully execute dnf with args "repoquery obsoleter-change-arch-reve
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
+
+
+Scenario: --security upgrade specific package with obsoletes when obsoletes are turned off
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install E-1-1"
+  # Make sure F-2-2 is available and obsoletes E since we are testing we don't upgrade to it.
+  # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  And I successfully execute dnf with args "repoquery F-2-2.x86_64 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  E
+  """
+  When I execute dnf with args "upgrade E --security --setopt=obsoletes=false"
+ Then the exit code is 0
+  And Transaction is empty
+
+
+@xfail
+# This has likely never worked on dnf4, it will be fixed in dnf5
+Scenario: --security upgrade all packages with obsoletes when obsoletes are turned off
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install E-1-1"
+  # Make sure F-2-2 is available and obsoletes E since we are testing we don't upgrade to it.
+  # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  And I successfully execute dnf with args "repoquery F-2-2.x86_64 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  E
+  """
+  When I execute dnf with args "upgrade --security --setopt=obsoletes=false"
+ Then the exit code is 0
+  And Transaction is empty
