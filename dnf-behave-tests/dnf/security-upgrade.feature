@@ -148,3 +148,81 @@ Given I use repository "security-upgrade"
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
+
+
+@bz2124483
+Scenario: --security upgrade of a noarch package that is obsoleted by a x86_64 pkg
+Given I use repository "security-upgrade-obsoletes"
+  And I successfully execute dnf with args "install obsoleted-change-arch-noarch-1-1.noarch"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And RPMDB Transaction is following
+      | Action        | Package                                   |
+      | install       | obsoleter-change-arch-noarch-0:1-1.x86_64 |
+      | remove        | obsoleted-change-arch-noarch-0:1-1.noarch |
+  And DNF Transaction is following
+      | Action        | Package                                   |
+      | install       | obsoleter-change-arch-noarch-1-1.x86_64   |
+      | obsoleted     | obsoleted-change-arch-noarch-0:1-1.noarch |
+
+
+@bz2124483
+Scenario: --security upgrade of a x86_64 package that is obsoleted by a noarch pkg
+Given I use repository "security-upgrade-obsoletes"
+  And I successfully execute dnf with args "install obsoleted-change-arch-noarch-reversed-1-1.x86_64"
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And RPMDB Transaction is following
+      | Action        | Package                                            |
+      | install       | obsoleter-change-arch-noarch-reversed-0:1-1.noarch |
+      | remove        | obsoleted-change-arch-noarch-reversed-0:1-1.x86_64 |
+  And DNF Transaction is following
+      | Action        | Package                                            |
+      | install       | obsoleter-change-arch-noarch-reversed-1-1.noarch   |
+      | obsoleted     | obsoleted-change-arch-noarch-reversed-0:1-1.x86_64 |
+
+
+@bz2124483
+Scenario: --security upgrade of a i686 package that is obsoleted by a x86_64 pkg is not allowed
+Given I use repository "security-upgrade-obsoletes"
+  And I successfully execute dnf with args "install obsoleted-change-arch-1-1.i686"
+  # Make sure obsoleter-change-arch-1-1.x86_64 and obsoleter-change-arch-1-1.i686 are available and obsolete obsoleted-change-arch since we are testing we don't upgrade to any of them.
+  # There also should be an available advisory for obsoleter-change-arch-1-1.x86_64. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  And I successfully execute dnf with args "repoquery obsoleter-change-arch-1-1.x86_64 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  obsoleted-change-arch
+  """
+Given I successfully execute dnf with args "repoquery obsoleter-change-arch-1-1.i686 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  obsoleted-change-arch
+  """
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is empty
+
+
+@bz2124483
+Scenario: --security upgrade of a x86_64 package that is obsoleted by a i686 pkg is not allowed
+Given I use repository "security-upgrade-obsoletes"
+  And I successfully execute dnf with args "install obsoleted-change-arch-reversed-1-1.x86_64"
+  # Make sure obsoleter-change-arch-reversed-1-1.x86_64 and obsoleter-change-arch-reversed-1-1.i686 are available and obsolete obsoleted-change-arch-reversed since we are testing we don't upgrade to any of them.
+  # There also should be an available advisory for obsoleter-change-arch-reversed-1-1.i686. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  And I successfully execute dnf with args "repoquery obsoleter-change-arch-reversed-1-1.x86_64 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  obsoleted-change-arch-reversed
+  """
+Given I successfully execute dnf with args "repoquery obsoleter-change-arch-reversed-1-1.i686 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  obsoleted-change-arch-reversed
+  """
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is empty
