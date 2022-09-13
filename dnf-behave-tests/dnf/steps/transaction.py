@@ -239,8 +239,12 @@ def then_RPMDB_transaction_is_empty(context):
 def then_DNF_transaction_is_empty(context):
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
     try:
-        dnf_transaction = parse_transaction_table(context, lines)
+        if dnf5_mode:
+            dnf_transaction = parse_transaction_table_dnf5(context, lines)
+        else:
+            dnf_transaction = parse_transaction_table(context, lines)
     except RuntimeError:
         dnf_transaction = {}
     if dnf_transaction:
