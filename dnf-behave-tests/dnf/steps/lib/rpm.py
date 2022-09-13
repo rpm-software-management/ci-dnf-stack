@@ -210,4 +210,11 @@ def diff_rpm_lists(list_one, list_two):
             else:
                 result["unchanged"].append(pkg_two)
 
+    # construct 'changed' list which is used to detect if transaction was empty
+    # 'remove' packages will not be 'present' so add them
+    result["changed"] = result["present"] + result["remove"]
+    for pkg in result["unchanged"]:
+        if pkg in result["changed"]:
+            result["changed"].remove(pkg)
+
     return result
