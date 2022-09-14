@@ -11,7 +11,7 @@ Given I use repository "dnf-ci-fedora"
 Scenario: history list
  When I execute dnf with args "history list"
  Then the exit code is 0
-  And dnf4 stdout is history list
+  And stdout is history list
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
@@ -20,18 +20,20 @@ Scenario: history list
 @dnf5
 Scenario: history
  When I execute dnf with args "history"
- Then the exit code is 0
-  And dnf5 stdout is
-  """
-  <HELP>
-  """
-  And stdout is history list
+ Then dnf4 exit code is 0
+  And dnf4 stdout is history list
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
       | 1  |         | Install | 6       |
+  And dnf5 exit code is 2
+  And dnf5 stdout is
+  """
+  <HELP>
+  """
 
 
+@dnf5
 # single item tests
 Scenario: history list 2
  When I execute dnf with args "history list 2"
@@ -40,6 +42,7 @@ Scenario: history list 2
       | Id | Command | Action  | Altered |
       | 2  |         | Removed | 3       |
 
+@dnf5
 Scenario: history list last
  When I execute dnf with args "history list last"
  Then the exit code is 0
@@ -47,13 +50,20 @@ Scenario: history list last
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
 
+@dnf5
 Scenario: history last
  When I execute dnf with args "history last"
- Then the exit code is 0
-  And stdout is history list
+ Then dnf4 exit code is 0
+  And dnf4 stdout is history list
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
+  And dnf5 exit code is 2
+  And dnf5 stdout is
+  """
+  <HELP>
+  """
 
+@dnf5
 Scenario: history list last-1
  When I execute dnf with args "history list last-1"
  Then the exit code is 0
@@ -61,6 +71,7 @@ Scenario: history list last-1
       | Id | Command | Action  | Altered |
       | 2  |         | Removed | 3       |
 
+@not.with_dnf=5
 Scenario: history last-1
  When I execute dnf with args "history last-1"
  Then the exit code is 0
@@ -69,6 +80,7 @@ Scenario: history last-1
       | 2  |         | Removed | 3       |
 
 
+@not.with_dnf=5
 # range tests
 Scenario: history 1..last-1
  When I execute dnf with args "history 1..last-1"
@@ -78,6 +90,7 @@ Scenario: history 1..last-1
       | 2  |         | Removed | 3       |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history 1..last-2
  When I execute dnf with args "history 1..last-2"
  Then the exit code is 0
@@ -85,6 +98,7 @@ Scenario: history 1..last-2
       | Id | Command | Action  | Altered |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history 1..last-2
  When I execute dnf with args "history 1..last-2"
  Then the exit code is 0
@@ -92,6 +106,7 @@ Scenario: history 1..last-2
       | Id | Command | Action  | Altered |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history list 1..-1
  When I execute dnf with args "history 1..-1"
  Then the exit code is 0
@@ -100,6 +115,7 @@ Scenario: history list 1..-1
       | 2  |         | Removed | 3       |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history list 1..-2
  When I execute dnf with args "history 1..-2"
  Then the exit code is 0
@@ -107,6 +123,7 @@ Scenario: history list 1..-2
       | Id | Command | Action  | Altered |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history 2..3
  When I execute dnf with args "history 2..3"
  Then the exit code is 0
@@ -115,12 +132,14 @@ Scenario: history 2..3
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
 
+@not.with_dnf=5
 Scenario: history 10..11
  When I execute dnf with args "history 10..11"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
 
+@not.with_dnf=5
 Scenario: history last..11
  When I execute dnf with args "history last..11"
  Then the exit code is 0
@@ -129,6 +148,7 @@ Scenario: history last..11
       | 3  |         | Install | 5       |
 
 
+@not.with_dnf=5
 # "invalid" range tests
 Scenario: history 3..2
  When I execute dnf with args "history 3..2"
@@ -138,6 +158,7 @@ Scenario: history 3..2
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
 
+@not.with_dnf=5
 Scenario: history last-1..1
  When I execute dnf with args "history last-1..1"
  Then the exit code is 0
@@ -146,6 +167,7 @@ Scenario: history last-1..1
       | 2  |         | Removed | 3       |
       | 1  |         | Install | 6       |
 
+@not.with_dnf=5
 Scenario: history 11..last-1
  When I execute dnf with args "history 11..last-1"
  Then the exit code is 0
@@ -154,6 +176,7 @@ Scenario: history 11..last-1
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
 
+@not.with_dnf=5
 Scenario: history last-1..aaa
  When I execute dnf with args "history last-1..aaa"
  Then the exit code is 1
@@ -163,6 +186,7 @@ Scenario: history last-1..aaa
       Use '<number>', 'last', 'last-<number>'.
       """
 
+@not.with_dnf=5
 Scenario: history 12a..bc
  When I execute dnf with args "history 12a..bc"
  Then the exit code is 1
