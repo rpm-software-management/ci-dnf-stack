@@ -8,7 +8,6 @@ Given I use repository "dnf-ci-fedora"
   And I successfully execute dnf with args "install nodejs"
 
 
-@dnf5
 Scenario: history list
  When I execute dnf with args "history list"
  Then the exit code is 0
@@ -18,9 +17,14 @@ Scenario: history list
       | 2  |         | Removed | 3       |
       | 1  |         | Install | 6       |
 
+@dnf5
 Scenario: history
  When I execute dnf with args "history"
  Then the exit code is 0
+  And dnf5 stdout is
+  """
+  <HELP>
+  """
   And stdout is history list
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
