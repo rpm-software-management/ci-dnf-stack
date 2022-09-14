@@ -269,3 +269,20 @@ Given I use repository "security-upgrade"
   When I execute dnf with args "upgrade --security --setopt=obsoletes=false"
  Then the exit code is 0
   And Transaction is empty
+
+
+# Tests that we correctly filter packages and include both arches in transaction
+# (both have an advisory) if we didn't libsolv would fail to resolve the transaction.
+Scenario: --security upgrade with packages of multiple arches installed
+Given I use repository "security-upgrade-multilib"
+  And I successfully execute dnf with args "install B-1-1.x86_64 B-1-1.i686"
+  Then Transaction is following
+      | Action        | Package        |
+      | install       | B-0:1-1.x86_64 |
+      | install       | B-0:1-1.i686   |
+ When I execute dnf with args "upgrade --security"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package        |
+      | upgrade       | B-0:2-2.x86_64 |
+      | upgrade       | B-0:2-2.i686   |
