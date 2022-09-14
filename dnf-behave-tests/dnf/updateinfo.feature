@@ -458,3 +458,62 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
     """
+
+
+Scenario: advisory for x86_64 package is not shown as installed when noarch version of the pkg is installed
+Given I use repository "updateinfo"
+  And I execute dnf with args "install A-2-2.noarch"
+# The test requires that advisory for A-2-2.x86_64 is available
+ When I execute dnf with args "updateinfo list --installed"
+ Then the exit code is 0
+  And stdout is
+  """
+  <REPOSYNC>
+  """
+
+
+@xfail
+# This has been broken in dnf4 for a long time, it will be fixed for dnf5
+Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install C-1-1"
+ When I execute dnf with args "updateinfo list --updates"
+ Then the exit code is 0
+  And stdout is
+  """
+  <REPOSYNC>
+  DNF-D-2022-9 security      D-1-1.fc29.x86_64
+  """
+
+
+Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install C-1-1"
+  # Make sure D-1-1 is available and obsoletes C since we are testing we don't list it.
+  # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  And I successfully execute dnf with args "repoquery D-1-1.x86_64 --obsoletes"
+  Then stdout is
+  """
+  <REPOSYNC>
+  C
+  """
+ When I execute dnf with args "updateinfo list --updates --setopt=obsoletes=false"
+ Then the exit code is 0
+  And stdout is
+  """
+  <REPOSYNC>
+  """
+
+
+@xfail
+# This has been broken in dnf4 for a long time, it will be fixed for dnf5
+Scenario: advisory for noarch package is shown as an upgrade when lower arch version of the pkg is installed
+Given I use repository "security-upgrade"
+  And I execute dnf with args "install change-arch-noarch-1-1.noarch"
+ When I execute dnf with args "updateinfo list --updates"
+ Then the exit code is 0
+  And stdout is
+  """
+  <REPOSYNC>
+  DNF-2019-4 security      change-arch-noarch-2-2.fc29.x86_64
+  """
