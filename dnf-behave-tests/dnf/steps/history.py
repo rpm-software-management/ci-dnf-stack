@@ -73,8 +73,25 @@ def assert_history_list(context, cmd_stdout):
 
 
 @behave.then('stdout is history list')
-def step_impl(context):
+def then_stdout_is_history_list(context):
     assert_history_list(context, context.cmd_stdout)
+
+
+@behave.then("{dnf_version:dnf_version} stdout is history list")
+def then_dnf_is_history_list(context, dnf_version):
+    """
+    Check dnf history in stdout
+    Works only if running in the appropriate mode otherwise
+    the step is skipped
+    Produce the steps:
+        then dnf4 stdout is history list
+        then dnf5 stdout is history list
+    """
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stdout_is_history_list(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stdout_is_history_list(context)
 
 
 @behave.then('History is following')

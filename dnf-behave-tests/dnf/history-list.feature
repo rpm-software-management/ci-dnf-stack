@@ -1,4 +1,3 @@
-@dnf5
 Feature: history list
 
 Background:
@@ -9,10 +8,11 @@ Given I use repository "dnf-ci-fedora"
   And I successfully execute dnf with args "install nodejs"
 
 
+@dnf5
 Scenario: history list
  When I execute dnf with args "history list"
  Then the exit code is 0
-  And stdout is history list
+  And dnf4 stdout is history list
       | Id | Command | Action  | Altered |
       | 3  |         | Install | 5       |
       | 2  |         | Removed | 3       |
