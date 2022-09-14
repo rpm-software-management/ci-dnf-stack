@@ -8,7 +8,7 @@ import behave
 from common.lib.behave_ext import check_context_table
 from common.lib.cmd import run_in_context
 from common.lib.diff import print_lines_diff
-from lib.dnf import parse_history_info, parse_history_list
+from lib.dnf import parse_history_info, parse_history_list, parse_history_list_dnf5
 
 
 def parsed_history_info(context, spec):
@@ -35,11 +35,21 @@ def assert_history_list(context, cmd_stdout):
 
     check_context_table(context, ["Id", "Command", "Action", "Altered"])
 
-    stdout_lines = cmd_stdout.splitlines()[2:]
-    history = parse_history_list(stdout_lines)
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf5_mode:
+        stdout_lines = cmd_stdout.splitlines()[1:]
+        history = parse_history_list_dnf5(stdout_lines)
+    else:
+        stdout_lines = cmd_stdout.splitlines()[2:]
+        history = parse_history_list(stdout_lines)
 
     table_idx = 0
     for t_line in context.table:
+        # TODO since action is not in history table this trick will skip it for now
+        l_line = list(t_line)
+        l_line[2] = ""
+        t_line = behave.model.Row(["Id", "Command", "Action", "Altered"],l_line)
         try:
             h_line = history[table_idx]
         except IndexError:

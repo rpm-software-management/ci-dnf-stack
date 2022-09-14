@@ -310,6 +310,35 @@ def parse_history_list(lines):
         result.append(dict(zip(labels, [line] + [col.strip() for col in line.split('|')])))
     return result
 
+def parse_history_list_dnf5(lines):
+    result = []
+
+    r_id = "^\s+\d+\s"
+    r_date = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"
+    p_id = re.compile(r_id)
+    p_date = re.compile(r_date)
+
+    for line in lines:
+        idd = p_id.findall(line)[0]
+        date = p_date.findall(line)[0]
+        #TODO finish action
+        action = ""
+        altered = line[-1:]
+        command = line.replace(idd, "")
+        command = command.replace(date, "")
+        command = command.replace(action, "")
+        command = command.replace(altered, "")
+        result.append({
+            "_line": line,
+            "id": idd.strip(),
+            "command": command.strip(),
+            "date": date.strip(),
+            "action": action.strip(),
+            "altered": altered.strip()
+        })
+    return result
+
+
 
 def parse_history_info(lines):
     result = dict()
