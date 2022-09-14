@@ -158,17 +158,20 @@ def then_stderr_matches_line_by_line(context):
     lines_match_to_regexps_line_by_line(out_lines, regexp_lines)
 
 
-@behave.then("{dnf_version:dnf_version} exit code is")
-def then_dnf_exit_code_is(context, dnf_version):
+@behave.then("{dnf_version:dnf_version} exit code is {exitcode}")
+def then_dnf_exit_code_is(context, dnf_version, exitcode):
     """
     Check for the test's exit code only if running in the
     appropriate mode otherwise the step is skipped
+    Produce the steps:
+        then dnf4 exit code is
+        then dnf5 exit code is
     """
     dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
     if dnf_version == "dnf5" and dnf5_mode:
-        then_the_exit_code_is(context)
+        then_the_exit_code_is(context, exitcode)
     if dnf_version == "dnf4" and not dnf5_mode:
-        then_the_exit_code_is(context)
+        then_the_exit_code_is(context, exitcode)
 
 
 @behave.then("{dnf_version:dnf_version} {std_stream:std_stream} is")
