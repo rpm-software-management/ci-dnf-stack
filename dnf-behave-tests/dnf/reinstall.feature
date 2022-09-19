@@ -27,6 +27,7 @@ Scenario: Reinstall an RPM from the same repository
 
 Scenario: Reinstall an RPM from different repository
   Given I use repository "dnf-ci-fedora-updates-testing"
+    And I drop repository "dnf-ci-fedora-updates"
    When I execute dnf with args "reinstall CQRlib"
    Then the exit code is 0
     And Transaction is following
