@@ -69,23 +69,27 @@ Scenario: Running kernel is not protected against obsoleting with config protect
         | obsoleted     | dnf-ci-kernel-0:1.0-1.x86_64        |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--allowerasing" for command "install"
+@dnf5
 @bz1698145
 Scenario: Running kernel is protected against removal as conflict
    When I execute dnf with args "install dnf-ci-conflict --exclude dnf-ci-obsolete --allowerasing"
    Then the exit code is 1
-    And stderr is
+    And dnf4 stderr is
         """
         Error: 
          Problem: problem with installed package dnf-ci-kernel-1.0-1.x86_64
           - package dnf-ci-conflict-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64
           - conflicting requests
         """
+    And dnf5 stderr is
+        """
+        Failed to resolve the transaction:
+        Problem: problem with installed package 
+          - package dnf-ci-conflict-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64
+          - conflicting requests
+        """
 
-
-# @dnf5
-# TODO(nsella) Unknown argument "--allowerasing" for command "install"
+@dnf5
 @bz1698145
 Scenario: Running kernel is not protected against removal as conflict with config protect_running_kernel=False
    When I execute dnf with args "install dnf-ci-conflict --exclude dnf-ci-obsolete --allowerasing --setopt=protect_running_kernel=False"
