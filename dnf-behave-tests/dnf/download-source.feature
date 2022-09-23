@@ -72,7 +72,7 @@ Given I create directory "/baseurlrepo"
  Then the exit code is 1
   And stderr contains "Errors during downloading metadata for repository 'testrepo':"
   And stderr contains "- Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-  And stderr contains "- Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Connection refused\]"
+  And stderr contains "- Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000: Connection refused\]"
   And stderr contains "- Curl error \(37\): Couldn't read a file:// file for file:///tmp/dnf_ci_installroot_.*/I_dont_exist/repodata/repomd.xml \[Couldn't open file /tmp/dnf_ci_installroot_.*/I_dont_exist/repodata/repomd.xml\]"
   And stderr contains "Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 

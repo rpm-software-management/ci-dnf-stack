@@ -161,14 +161,14 @@ Scenario: Mirrorlist with invalid mirrors
    Then the exit code is 1
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
     And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Connection refused\]"
+    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000: Connection refused\]"
     And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
     And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Connection refused\]"
+    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000: Connection refused\]"
     And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
     And stderr contains "Ignoring repositories: dnf-ci-fedora"
