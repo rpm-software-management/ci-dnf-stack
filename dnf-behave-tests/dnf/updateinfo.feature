@@ -948,6 +948,7 @@ Scenario: updateinfo prints summary of advisories with custom type and severity
     """
 
 
+@dnf5
 Scenario: advisory for x86_64 package is not shown as installed when noarch version of the pkg is installed
 Given I use repository "updateinfo"
   And I execute dnf with args "install A-2-2.noarch"
@@ -962,18 +963,27 @@ Given I use repository "updateinfo"
 
 @xfail
 # This has been broken in dnf4 for a long time, it will be fixed for dnf5
+# It is currenly failing on dnf5 as well but should be resolved by: https://issues.redhat.com/browse/RHELPLAN-133820
 Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install C-1-1"
  When I execute dnf with args "updateinfo list --updates"
  Then the exit code is 0
-  And stdout is
+  And dnf4 stdout is
   """
   <REPOSYNC>
   DNF-D-2022-9 security      D-1-1.fc29.x86_64
   """
+  And dnf5 stdout is
+  """
+  <REPOSYNC>
+  Name         Type     Severity      Package              Issued
+  DNF-D-2022-9 security          D-1-1.x86_64 1970-01-01 00:00:00
+  """
 
 
+#@dnf5
+#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install C-1-1"
@@ -995,13 +1005,20 @@ Given I use repository "security-upgrade"
 
 @xfail
 # This has been broken in dnf4 for a long time, it will be fixed for dnf5
+# It is currenly failing on dnf5 as well but should be resolved by: https://issues.redhat.com/browse/RHELPLAN-133820
 Scenario: advisory for noarch package is shown as an upgrade when lower arch version of the pkg is installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install change-arch-noarch-1-1.noarch"
  When I execute dnf with args "updateinfo list --updates"
  Then the exit code is 0
-  And stdout is
+  And dnf4 stdout is
   """
   <REPOSYNC>
   DNF-2019-4 security      change-arch-noarch-2-2.fc29.x86_64
+  """
+  And dnf5 stdout is
+  """
+  <REPOSYNC>
+  Name       Type     Severity                       Package              Issued
+  DNF-2019-4 security          change-arch-noarch-2-2.x86_64 1970-01-01 00:00:00
   """

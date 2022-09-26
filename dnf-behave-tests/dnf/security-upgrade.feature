@@ -1,6 +1,7 @@
 Feature: --security upgrades
 
 
+@dnf5
 @bz2088149
 # More details in: https://github.com/rpm-software-management/libdnf/pull/1526
 Scenario: --security upgrade with advisories with pkgs of different arches
@@ -14,6 +15,7 @@ Given I use repository "security-upgrade"
       | upgrade       | json-c-0:2-2.x86_64         |
 
 
+@dnf5
 @bz2124483
 # This scenario is the same as the one above just with noarch packages present in the
 # repo and advisory instead of i686 this causes different behavior - it fails.
@@ -49,6 +51,7 @@ Given I use repository "security-upgrade-noarch"
  """
 
 
+@dnf5
 @2097757
 Scenario: upgrade all with --security with advisory fix available upgrades even with --nobest
 Given I use repository "security-upgrade"
@@ -61,6 +64,7 @@ Given I use repository "security-upgrade"
       | upgrade       | dracut-0:2-2.x86_64      |
 
 
+@dnf5
 Scenario: --security upgrade with advisory for obsoleter B with two versions 1-1 and 2-2 when obsoleted A is installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install A-1-1"
@@ -72,6 +76,7 @@ Given I use repository "security-upgrade"
       | obsoleted     | A-0:1-1.x86_64 |
 
 
+@dnf5
 Scenario: --security upgrade with advisory for obsoleter with one version exactly matching advisory when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install C-1-1"
@@ -83,6 +88,7 @@ Given I use repository "security-upgrade"
       | obsoleted     | C-0:1-1.x86_64 |
 
 
+@dnf5
 Scenario: --security upgrade with advisory for obsoleter with one bigger version than in advisory when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install E-1-1"
@@ -94,6 +100,7 @@ Given I use repository "security-upgrade"
       | obsoleted     | E-0:1-1.x86_64 |
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a package that changes arch from noarch to x86_64
 Given I use repository "security-upgrade"
@@ -109,6 +116,7 @@ Given I use repository "security-upgrade"
       | upgrade       | change-arch-noarch-0:2-2.x86_64 |
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a package that changes arch from x86_64 to noarch
 Given I use repository "security-upgrade"
@@ -124,6 +132,7 @@ Given I use repository "security-upgrade"
       | upgrade       | change-arch-noarch-reversed-0:2-2.noarch |
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a package that changes arch from i686 to x86_64 is not allowed
 Given I use repository "security-upgrade"
@@ -141,6 +150,7 @@ Given I use repository "security-upgrade"
   And Transaction is empty
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a package that changes arch from x86_64 to i686 is not allowed
 Given I use repository "security-upgrade"
@@ -158,6 +168,7 @@ Given I use repository "security-upgrade"
   And Transaction is empty
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a noarch package that is obsoleted by a x86_64 pkg
 Given I use repository "security-upgrade-obsoletes"
@@ -174,6 +185,7 @@ Given I use repository "security-upgrade-obsoletes"
       | obsoleted     | obsoleted-change-arch-noarch-0:1-1.noarch |
 
 
+@dnf5
 @bz2124483
 Scenario: --security upgrade of a x86_64 package that is obsoleted by a noarch pkg
 Given I use repository "security-upgrade-obsoletes"
@@ -190,6 +202,8 @@ Given I use repository "security-upgrade-obsoletes"
       | obsoleted     | obsoleted-change-arch-noarch-reversed-0:1-1.x86_64 |
 
 
+#@dnf5
+#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 @bz2124483
 Scenario: --security upgrade of a i686 package that is obsoleted by a x86_64 pkg is not allowed
 Given I use repository "security-upgrade-obsoletes"
@@ -213,6 +227,8 @@ Given I successfully execute dnf with args "repoquery obsoleter-change-arch-1-1.
   And Transaction is empty
 
 
+#@dnf5
+#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 @bz2124483
 Scenario: --security upgrade of a x86_64 package that is obsoleted by a i686 pkg is not allowed
 Given I use repository "security-upgrade-obsoletes"
@@ -236,6 +252,8 @@ Given I successfully execute dnf with args "repoquery obsoleter-change-arch-reve
   And Transaction is empty
 
 
+#@dnf5
+#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 Scenario: --security upgrade specific package with obsoletes when obsoletes are turned off
 Given I use repository "security-upgrade"
   And I execute dnf with args "install E-1-1"
@@ -252,6 +270,8 @@ Given I use repository "security-upgrade"
   And Transaction is empty
 
 
+#@dnf5
+#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 @xfail
 # This has likely never worked on dnf4, it will be fixed in dnf5
 Scenario: --security upgrade all packages with obsoletes when obsoletes are turned off
@@ -270,6 +290,7 @@ Given I use repository "security-upgrade"
   And Transaction is empty
 
 
+@dnf5
 # Tests that we correctly filter packages and include both arches in transaction
 # (both have an advisory) if we didn't libsolv would fail to resolve the transaction.
 Scenario: --security upgrade with packages of multiple arches installed
