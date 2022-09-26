@@ -22,7 +22,7 @@ Given I create directory "/modular_repo1/"
         summary: Test module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile1:
             rpms:
@@ -32,7 +32,7 @@ Given I create directory "/modular_repo1/"
             modular-package1: {rationale: 'rationale for modular-package1'}
         artifacts:
           rpms:
-          - "modular-package1-0:0.1-1.x86_64.rpm"
+          - modular-package1-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd-defaults
@@ -41,7 +41,7 @@ Given I create directory "/modular_repo1/"
         module: test-module
         stream: "modular-package1"
         profiles:
-          "test-profile1": [default]
+          test-profile1: [default]
       ...
       """
   And I create file "/modules2.yaml" with
@@ -58,7 +58,7 @@ Given I create directory "/modular_repo1/"
         summary: Test module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -68,7 +68,7 @@ Given I create directory "/modular_repo1/"
             modular-package2: {rationale: 'rationale for modular-package2'}
         artifacts:
           rpms:
-          - "modular-package2-0:0.1-1.x86_64.rpm"
+          - modular-package2-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd-defaults
@@ -77,7 +77,7 @@ Given I create directory "/modular_repo1/"
         module: test-module
         stream: "modular-package2"
         profiles:
-          "test-profile2": [default]
+          test-profile2: [default]
       ...
       """
   And I execute modifyrepo_c with args "--mdtype=modules ../../modules1.yaml ." in "/modular_repo1/repodata"
@@ -97,8 +97,8 @@ Scenario: merged repository contains streams from both source repositories
       data:
         module: test-module
         profiles:
-          "test-profile1": [default]
-          "test-profile2": [default]
+          test-profile1: [default]
+          test-profile2: [default]
       ...
       ---
       document: modulemd
@@ -113,7 +113,7 @@ Scenario: merged repository contains streams from both source repositories
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile1:
             rpms:
@@ -124,7 +124,7 @@ Scenario: merged repository contains streams from both source repositories
               rationale: rationale for modular-package1
         artifacts:
           rpms:
-          - "modular-package1-0:0.1-1.x86_64.rpm"
+          - modular-package1-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd
@@ -139,7 +139,7 @@ Scenario: merged repository contains streams from both source repositories
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -150,6 +150,6 @@ Scenario: merged repository contains streams from both source repositories
               rationale: rationale for modular-package2
         artifacts:
           rpms:
-          - "modular-package2-0:0.1-1.x86_64.rpm"
+          - modular-package2-0:0.1-1.x86_64.rpm
       ...
       """

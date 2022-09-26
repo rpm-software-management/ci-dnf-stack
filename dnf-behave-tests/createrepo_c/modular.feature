@@ -35,7 +35,7 @@ Given I create file "/modules.yaml" with
         module: test-module
         stream: "modular-package1"
         profiles:
-          "test-profile1": [default]
+          test-profile1: [default]
       ...
       """
   And I create file "/stream.modulemd.yaml" with
@@ -52,7 +52,7 @@ Given I create file "/modules.yaml" with
         summary: Test module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -71,7 +71,7 @@ Given I create file "/modules.yaml" with
         module: test-module
         stream: "modular-package2"
         profiles:
-          "test-profile2": [default]
+          test-profile2: [default]
       ...
       """
   And I create file "/some.modulemd-defaults.yaml" with
@@ -83,7 +83,7 @@ Given I create file "/modules.yaml" with
         module: stratis
         stream: "1"
         profiles:
-          "1": [default]
+          1: [default]
       ...
       ---
       document: modulemd-defaults
@@ -92,7 +92,7 @@ Given I create file "/modules.yaml" with
         module: scala
         stream: "2.10"
         profiles:
-          "2.10": [default]
+          2.10: [default]
       ...
       """
  And I create file "/modular-result.yaml" with
@@ -104,7 +104,7 @@ Given I create file "/modules.yaml" with
         module: scala
         stream: "2.10"
         profiles:
-          "2.10": [default]
+          2.10: [default]
       ...
       ---
       document: modulemd-defaults
@@ -113,7 +113,7 @@ Given I create file "/modules.yaml" with
         module: stratis
         stream: "1"
         profiles:
-          "1": [default]
+          1: [default]
       ...
       ---
       document: modulemd-defaults
@@ -121,8 +121,8 @@ Given I create file "/modules.yaml" with
       data:
         module: test-module
         profiles:
-          "test-profile1": [default]
-          "test-profile2": [default]
+          test-profile1: [default]
+          test-profile2: [default]
       ...
       ---
       document: modulemd
@@ -137,7 +137,7 @@ Given I create file "/modules.yaml" with
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile1:
             rpms:
@@ -148,7 +148,7 @@ Given I create file "/modules.yaml" with
               rationale: rationale for modular-package1
         artifacts:
           rpms:
-          - "modular-package1-0:0.1-1.x86_64.rpm"
+          - modular-package1-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd
@@ -163,7 +163,7 @@ Given I create file "/modules.yaml" with
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -174,7 +174,7 @@ Given I create file "/modules.yaml" with
               rationale: rationale for modular-package2
         artifacts:
           rpms:
-          - "modular-package2-0:0.1-1.x86_64.rpm"
+          - modular-package2-0:0.1-1.x86_64.rpm
       ...
       """
 
@@ -383,7 +383,7 @@ Given I create directory "/repo/"
         module: scala
         stream: "2.10"
         profiles:
-          "2.10": [default]
+          2.10: [default]
       ...
       ---
       document: modulemd-defaults
@@ -392,7 +392,7 @@ Given I create directory "/repo/"
         module: stratis
         stream: "1"
         profiles:
-          "1": [default]
+          1: [default]
       ...
       """
 
