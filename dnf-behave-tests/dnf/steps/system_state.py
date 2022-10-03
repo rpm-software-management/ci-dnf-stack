@@ -33,13 +33,13 @@ def package_state_is(context):
     check_context_table(context, ["package", "reason", "from_repo"])
 
     found_pkgs = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/dnf/packages.toml")) as f:
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/packages.toml")) as f:
         for k, v in toml.load(f)["packages"].items():
             found_pkgs.append((k, v["reason"]))
     found_pkgs.sort()
 
     found_nevras = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/dnf/nevras.toml")) as f:
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/nevras.toml")) as f:
         for k, v in toml.load(f)["nevras"].items():
             found_nevras.append((k, v["from_repo"]))
     found_nevras.sort()
