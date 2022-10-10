@@ -26,6 +26,8 @@ RUN set -x && \
 RUN set -x && \
     if [ "$TYPE" == "nightly" ]; then \
         dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+        # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
+        dnf -y upgrade; \
         dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly; \
     fi
 
