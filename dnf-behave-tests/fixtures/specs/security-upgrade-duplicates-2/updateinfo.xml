@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+  <update from="secresponseteam@foo.bar" type="security" version="3">
+    <id>id</id>
+    <title>title</title>
+    <issued date="2019-01-17 00:00:00"/>
+    <updated date="2019-01-17 00:00:00"/>
+    <severity>Moderate</severity>
+    <summary>summary_1</summary>
+    <description>stuff</description>
+    <pkglist>
+      <collection short="named collection">
+        <name>Bar component</name>
+        <package name="D" version="2" release="2" epoch="0" arch="x86_64" src="D-0:2-2.x86_64.rpm">
+          <filename>D-0:2-2.x86_64.rpm</filename>
+          <reboot_suggested/>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
+  <update from="secresponseteam@foo.bar" type="security" version="3">
+    <id>id</id>
+    <title>title</title>
+    <issued date="2019-01-17 00:00:00"/>
+    <updated date="2019-01-17 00:00:00"/>
+    <severity>Moderate</severity>
+    <summary>summary_1</summary>
+    <description>stuff</description>
+    <pkglist>
+      <collection short="named collection">
+        <name>Bar component</name>
+        <package name="not-present-packageE" version="2" release="2" epoch="0" arch="x86_64" src="not-present-packageE-0:2-2.x86_64.rpm">
+          <filename>not-present-packageE-0:2-2.x86_64.rpm</filename>
+          <reboot_suggested/>
+        </package>
+      </collection>
+      <collection short="named collection">
+        <name>Bar component</name>
+        <package name="not-present-packageF" version="2" release="2" epoch="0" arch="x86_64" src="not-present-packageF-0:2-2.x86_64.rpm">
+          <filename>not-present-packageF-0:2-2.x86_64.rpm</filename>
+          <reboot_suggested/>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
+</updates>

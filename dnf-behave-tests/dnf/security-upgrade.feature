@@ -306,3 +306,44 @@ Given I use repository "security-upgrade-multilib"
       | Action        | Package        |
       | upgrade       | B-0:2-2.x86_64 |
       | upgrade       | B-0:2-2.i686   |
+
+
+@dnf5
+Scenario: use collections and advisories with duplicate names/ids from one repo
+  Given I use repository "security-upgrade-duplicates-1"
+   When I execute dnf with args "install A-1-1 B-1-1 C-1-1"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | install       | A-0:1-1.x86_64 |
+        | install       | B-0:1-1.x86_64 |
+        | install       | C-0:1-1.x86_64 |
+   When I execute dnf with args "upgrade --security"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | upgrade       | A-0:2-2.x86_64 |
+        | upgrade       | B-0:2-2.x86_64 |
+        | upgrade       | C-0:2-2.x86_64 |
+
+
+@dnf5
+Scenario: use collections and advisories with duplicate names/ids from different repos
+  Given I use repository "security-upgrade-duplicates-1"
+   When I execute dnf with args "install A-1-1 B-1-1 C-1-1 D-1-1"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | install       | A-0:1-1.x86_64 |
+        | install       | B-0:1-1.x86_64 |
+        | install       | C-0:1-1.x86_64 |
+        | install       | D-0:1-1.x86_64 |
+  Given I use repository "security-upgrade-duplicates-2"
+   When I execute dnf with args "upgrade --security"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | upgrade       | A-0:2-2.x86_64 |
+        | upgrade       | B-0:2-2.x86_64 |
+        | upgrade       | C-0:2-2.x86_64 |
+        | upgrade       | D-0:2-2.x86_64 |
