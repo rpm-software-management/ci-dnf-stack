@@ -286,7 +286,8 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
 
-@dnf5
+# TODO(jkolarik): autoremove not yet available in dnf5
+# @dnf5
 @bz1934499
 @bz1921063
 Scenario: Keep reason for installonly packages
