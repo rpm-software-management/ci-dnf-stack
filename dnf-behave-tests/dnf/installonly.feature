@@ -77,7 +77,8 @@ Scenario: Install and remove multiple versions of an installonly package
         | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System    |
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
-@dnf5
+# TODO(jkolarik): autoremove not yet available in dnf5
+# @dnf5
 @bz1769788
 Scenario: Install multiple versions of an installonly package and keep reason
    When I execute dnf with args "install kernel-core"
@@ -178,7 +179,8 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
-@dnf5
+# TODO(jkolarik): autoremove not yet available in dnf5
+# @dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -209,7 +211,8 @@ Scenario: Do not autoremove kernel after upgrade with --best
     And Transaction is empty
 
 
-@dnf5
+# TODO(jkolarik): autoremove not yet available in dnf5
+# @dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --nobest
