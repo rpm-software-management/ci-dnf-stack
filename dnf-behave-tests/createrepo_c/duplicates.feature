@@ -24,13 +24,13 @@ Given I create directory "/temp-repo/subdir22"
       Pool started (with 5 workers)
       Pool finished
       """
-  And stderr is
+  And stderr matches line by line
   """
   Warning: Package 'package-0:0.2.1-1.fc29.x86_64' has duplicate metadata entries, only one should exist
-  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm'
-  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm'
-  Warning:     Sourced from location: 'subdir22/package-0.2.1-1.fc29.x86_64.rpm'
-  Warning:     Sourced from location: 'subdir333/package-0.2.1-1.fc29.x86_64.rpm'
+  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
+  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
+  Warning:     Sourced from location: 'subdir22/package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
+  Warning:     Sourced from location: 'subdir333/package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
   """
   And repodata "/temp-repo/repodata/" are consistent
 
@@ -39,11 +39,11 @@ Scenario: --update with two packages with the same NEVRA but different checksums
 Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages-2/x86_64/package-0.2.1-1.fc29.x86_64.rpm" to "/temp-repo/subdir/package-0.2.1-1.fc29.x86_64.rpm"
  When I execute createrepo_c with args "." in "/temp-repo"
  Then the exit code is 0
-  And stderr is
+  And stderr matches line by line
   """
   Warning: Package 'package-0:0.2.1-1.fc29.x86_64' has duplicate metadata entries, only one should exist
-  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm'
-  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm'
+  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
+  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
   """
  When I execute createrepo_c with args "--update ." in "/temp-repo"
  Then the exit code is 0
@@ -59,11 +59,11 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages-2/
       New and old repodata match, not updating.
       """
   And repodata "/temp-repo/repodata/" are consistent
-  And stderr is
+  And stderr matches line by line
   """
   Warning: Package 'package-0:0.2.1-1.fc29.x86_64' has duplicate metadata entries, only one should exist
-  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm'
-  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm'
+  Warning:     Sourced from location: 'package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
+  Warning:     Sourced from location: 'subdir/package-0.2.1-1.fc29.x86_64.rpm', build timestamp: .*
   """
 
 
