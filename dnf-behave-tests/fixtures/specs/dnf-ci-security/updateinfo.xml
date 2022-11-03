@@ -84,6 +84,7 @@
     <update from="dnf-testing@redhat.com" status="stable" type="security" severity="low" version="1">
         <id>DNF-2019-1</id>
         <title>security_A-1.0-2</title>
+        <severity>Low</severity>
         <release>Fedora 29</release>
         <issue date="2019-02-22 15:30:01" />
         <references>
@@ -102,6 +103,7 @@
     <update from="dnf-testing@redhat.com" status="stable" type="security" severity="moderate" version="1">
         <id>DNF-2019-2</id>
         <title>security_A-1.0-3</title>
+        <severity>Moderate</severity>
         <release>Fedora 29</release>
         <issue date="2019-02-22 15:30:01" />
         <references>
