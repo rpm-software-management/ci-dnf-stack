@@ -339,3 +339,42 @@ Given I use repository "dnf-ci-security"
       Upgrade  1 Package
       """
 
+
+@bz1939975
+Scenario: Test security severity filter with offline-upgrade when higher version of a package is available
+Given I use repository "dnf-ci-security"
+  And I execute dnf with args "install bugfix_B-1.0-1 advisory_B-1.0-3 security_A-1.0-1"
+ Then the exit code is 0
+ When I execute dnf with args "offline-upgrade download"
+ Then the exit code is 0
+  And stdout contains lines
+      """
+      Dependencies resolved.
+      ================================================================================
+       Package            Architecture   Version        Repository               Size
+      ================================================================================
+      Upgrading:
+       advisory_B         x86_64         1.0-4          dnf-ci-security         6.0 k
+       bugfix_B           x86_64         1.0-2          dnf-ci-security         6.0 k
+       security_A         x86_64         1.0-4          dnf-ci-security         6.0 k
+      
+      Transaction Summary
+      ================================================================================
+      Upgrade  3 Packages
+      """
+ When I execute dnf with args "offline-upgrade download --secseverity=Moderate"
+ Then the exit code is 0
+  And stdout contains lines
+      """
+      Dependencies resolved.
+      ================================================================================
+       Package            Architecture   Version        Repository               Size
+      ================================================================================
+      Upgrading:
+       security_A         x86_64         1.0-3          dnf-ci-security         6.0 k
+      
+      Transaction Summary
+      ================================================================================
+      Upgrade  1 Package
+      """
+
