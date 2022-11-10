@@ -8,7 +8,7 @@ URL:            None
 
 Summary:        The made up package for rich dependencies testing.
 
-Requires:       (milk if (float or oat))
+Requires:       (milk if (flour or oat))
 
 %description
 Rich dependencies testing package.
