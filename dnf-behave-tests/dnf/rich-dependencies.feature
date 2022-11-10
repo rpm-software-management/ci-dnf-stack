@@ -129,3 +129,34 @@ Scenario: Gradually removing conditional dependencies
         | remove        | milk-0:1.0-1.x86_64               |
         | unchanged     | porridge-0:1.0-1.x86_64           |
 
+
+@not.with_dnf=4
+Scenario: Command-line installation if condition is not met
+    Given I execute dnf with args "install '(milk if flour)'"
+     Then the exit code is 0
+      And Transaction is empty
+
+
+@not.with_dnf=4
+Scenario: Command-line installation if condition is met
+    Given I execute dnf with args "install flour"
+     Then the exit code is 0
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | flour-0:1.0-1.x86_64              |
+    Given I execute dnf with args "install '(milk if flour)'"
+     Then the exit code is 0
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | milk-0:1.0-1.x86_64               |
+
+
+@not.with_dnf=4
+Scenario: Command-line installation if condition is not met, but package explicitly listed
+    Given I execute dnf with args "install '(milk if flour)' flour"
+     Then the exit code is 0
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | flour-0:1.0-1.x86_64              |
+        | install       | milk-0:1.0-1.x86_64               |
+
