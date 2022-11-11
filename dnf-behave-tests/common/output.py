@@ -24,7 +24,7 @@ def strip_reposync_dnf4(found_lines, line_number):
 
 
 sync_line_dnf5 = re.compile(
-    r"\[[0-9]+/[0-9]+\] .* [0-9]+% \| +[0-9.]+ +[KMG]?i?B/s \| +[0-9.]+ +[KMG]?i?B \| + [0-9hms]+")
+    r".* [0-9]+% \| +[0-9.]+ +[KMG]?i?B/s \| +[0-9.]+ +[KMG]?i?B \| + [0-9hms]+")
 
 def strip_reposync_dnf5(found_lines, line_number):
     if line_number < len(found_lines) and found_lines[line_number].strip() == "Updating and loading repositories:":
