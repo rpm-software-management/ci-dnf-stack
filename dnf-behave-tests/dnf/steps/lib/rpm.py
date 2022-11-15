@@ -201,7 +201,7 @@ def diff_rpm_lists(list_one, list_two):
 
     for pkg_one in list_one:
         for pkg_two in list_two:
-            if pkg_one.na != pkg_two.na:
+            if pkg_one.name != pkg_two.name:
                 continue
             if pkg_one < pkg_two:
                 result["upgraded"].append(pkg_one)

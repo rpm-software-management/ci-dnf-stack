@@ -284,37 +284,3 @@ Scenario: dnf list doesn't show package with same nevra from lower-priority repo
    Then the exit code is 0
     And stdout section "Available Packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
     And stdout section "Available Packages" does not contain "dnf-ci-fedora2"
-
-
-@bz2124483
-Scenario: dnf list updates --security shows upgrades as available when it changes arch from noarch
-Given I use repository "security-upgrade"
-  And I execute dnf with args "install change-arch-noarch-1-1.noarch"
- When I execute dnf with args "list upgrades --security"
- Then the exit code is 0
-  And stdout is
-  """
-  <REPOSYNC>
-  Available Upgrades
-  change-arch-noarch.x86_64                  2-2                  security-upgrade
-  """
-
-
-@bz2124483
-Scenario: dnf list updates --security doesn't shnow an upgrade when it would require an arch change (when its not noarch)
-Given I use repository "security-upgrade"
-  And I successfully execute dnf with args "install change-arch-1-1.i686"
-  # Make sure change-arch-2-2.x86_64 is available since we are testing we don't list it.
-  # It also has to have an available advisory. (We cannot verify that here because the updateinfo command is bugged when dealing with arch changes)
-  And I successfully execute dnf with args "repoquery change-arch-2-2.x86_64"
-  Then stdout is
-  """
-  <REPOSYNC>
-  change-arch-0:2-2.x86_64
-  """
- When I execute dnf with args "list upgrades --security"
- Then the exit code is 0
-  And stdout is
-  """
-  <REPOSYNC>
-  """
