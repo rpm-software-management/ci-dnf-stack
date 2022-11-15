@@ -21,8 +21,7 @@ Background: Install RPMs
         | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
+@dnf5
 @tier1
 @bz1649286
 Scenario: Upgrade one RPM
@@ -37,8 +36,7 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
+@dnf5
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc flac"
@@ -82,7 +80,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
 
 
 # @dnf5
-# TODO(nsella) rpmdb check fail
+# TODO(nsella) stderr differs, --nobest argument not supported
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=True
@@ -112,7 +110,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
 
 
 # @dnf5
-# TODO(nsella) rpmdb check fail
+# TODO(nsella) rpmdb check fail, update command alias not supported
 @bz1659390
 Scenario: Print information about skipped packages
   Given I use repository "dnf-ci-thirdparty-updates"
@@ -129,7 +127,7 @@ Scenario: Print information about skipped packages
 
 
 # @dnf5
-# TODO(nsella) rpmdb check fail
+# TODO(nsella) update command alias not supported, stderr differs
 @bz1585138
 Scenario Outline: Print correct number of available updates if update <type> is given
   Given I execute dnf with args "install CQRlib-extension"
@@ -151,7 +149,7 @@ Examples:
 
 
 # @dnf5
-# TODO(nsella) rpmdb check fail
+# TODO(nsella) update command alias not supported, stderr differs
 @bz1585138
 Scenario Outline: Print correct number of available updates if update <type> is given and updateinfo is available
   Given I use repository "dnf-ci-fedora-updates"
