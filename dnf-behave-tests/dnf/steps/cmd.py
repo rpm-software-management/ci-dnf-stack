@@ -410,3 +410,61 @@ def then_dnf_stream_does_not_contain_lines(context, dnf_version, std_stream):
 @behave.step("I sleep for \"{duration:d}\" seconds")
 def step_sleep(context, duration):
     time.sleep(duration)
+
+
+def execute_python_script(context, script):
+    """
+    Execute arbitrary python script
+    """
+    if not sys.executable:
+        raise RuntimeError("Python executable not found.")
+
+    cmd = sys.executable + " -c"
+    cmd += " \"" + script.format(context=context).replace('"', '\\"') + "\""
+    run_in_context(context, cmd, can_fail=True)
+
+
+@behave.step("I execute python script")
+def step_execute_python_script(context):
+    """
+    Step for executing arbitrary python script
+    """
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+    execute_python_script(context, context.text)
+
+
+@behave.step("I execute python libdnf5 api script with setup")
+def execute_python_libdnf5_api_script_with_setup(context):
+    """
+    Execute snippet of python script using libdnf5 api that is
+    appended to already setup base with installroot and loaded
+    available repositories.
+    """
+    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
+
+    libdnf5_setup_script = """
+import libdnf5
+import os
+
+base = libdnf5.base.Base()
+config = base.get_config()
+vars = base.get_vars()
+
+config.installroot().set(libdnf5.conf.Option.Priority_RUNTIME, '{context.dnf.installroot}')
+config.config_file_path().set(libdnf5.conf.Option.Priority_RUNTIME, os.path.join(config.installroot().get_value(), 'etc/dnf/dnf.conf'))
+config.reposdir().set(libdnf5.conf.Option.Priority_RUNTIME, os.path.join(config.installroot().get_value(), 'etc/yum.repos.d'))
+config.varsdir().set(libdnf5.conf.Option.Priority_RUNTIME, os.path.join(config.installroot().get_value(), 'etc/dnf/vars'))
+config.cachedir().set(libdnf5.conf.Option.Priority_RUNTIME, os.path.join(config.installroot().get_value(), 'var/cache/yum'))
+
+vars.set('releasever', '{context.dnf.releasever}')
+vars.set('basearch', 'x86_64')
+
+base.load_config_from_file()
+
+base.setup()
+
+repo_sack = base.get_repo_sack()
+repo_sack.create_repos_from_system_configuration()
+repo_sack.update_and_load_enabled_repos(True)
+"""
+    execute_python_script(context, libdnf5_setup_script + context.text)
