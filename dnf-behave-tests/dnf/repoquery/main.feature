@@ -698,9 +698,31 @@ Scenario: dnf repoquery --querytags
  Then the exit code is 0
   And stdout is
       """
-      name, arch, epoch, version, release, reponame (repoid), from_repo, evr,
-      debug_name, source_name, source_debug_name,
-      installtime, buildtime, size, downloadsize, installsize,
-      provides, requires, obsoletes, conflicts, sourcerpm,
-      description, summary, license, url, reason
+      arch
+      buildtime
+      conflicts
+      debug_name
+      description
+      downloadsize
+      epoch
+      evr
+      from_repo
+      installsize
+      installtime
+      license
+      name
+      obsoletes
+      provides
+      reason
+      release
+      repoid
+      reponame
+      requires
+      size
+      source_debug_name
+      source_name
+      sourcerpm
+      summary
+      url
+      version
       """
