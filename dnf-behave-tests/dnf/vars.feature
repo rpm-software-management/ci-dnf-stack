@@ -72,3 +72,11 @@ Scenario: Using dnf with non-files in /etc/dnf/vars
       dnf-ci-fedora\s+dnf-ci-fedora test repository
       """
 
+
+@bz2141215
+Scenario: Ignoring variable files with invalid encoding
+  Given I copy file "{context.dnf.fixturesdir}/data/releasever-invalid-encoding" to "/etc/dnf/vars/releasever"
+    And I use repository "dnf-ci-fedora"
+   When I execute dnf with args "repoquery empty --setopt=varsdir={context.dnf.installroot}/etc/dnf/vars"
+   Then the exit code is 0
+    And stdout is empty
