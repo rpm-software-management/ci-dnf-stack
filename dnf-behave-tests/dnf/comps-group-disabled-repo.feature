@@ -1,10 +1,11 @@
+@dnf5
 Feature: Test group remove when repositories are disabled
 
 Background: Install group DNF-CI-Testgroup
     Given I use repository "dnf-ci-thirdparty"
       And I use repository "dnf-ci-thirdparty-2"
       And I use repository "dnf-ci-fedora"
-     When I execute dnf with args "group install DNF-CI-Testgroup"
+     When I execute dnf with args "group install dnf-ci-testgroup"
      Then the exit code is 0
       And Transaction is following
           | Action        | Package                           |
@@ -15,7 +16,7 @@ Background: Install group DNF-CI-Testgroup
           | group-install | DNF-CI-Testgroup                  |
 
 Scenario: Remove group with disabled repository
-   When I execute dnf with args "group remove DNF-CI-Testgroup --disablerepo=dnf-ci-thirdparty"
+   When I execute dnf with args "group remove dnf-ci-testgroup --disablerepo=dnf-ci-thirdparty"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -27,7 +28,7 @@ Scenario: Remove group with disabled repository
 
 @bz2064341
 Scenario: Remove group with no enabed repository
-   When I execute dnf with args "group remove DNF-CI-Testgroup --disablerepo=\*"
+   When I execute dnf with args "group remove dnf-ci-testgroup --disablerepo=\*"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |

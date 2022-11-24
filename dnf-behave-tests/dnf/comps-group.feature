@@ -31,12 +31,14 @@ Scenario: Install and remove group using group name
         | group-remove  | DNF-CI-Testgroup                  |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+# The rest of scenarios use a group id to specify the group.
+# This way scenarios can be used for both dnf4 and dnf5 testing.
+
+@dnf5
 Scenario: Install and remove group
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install DNF-CI-Testgroup"
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -45,7 +47,7 @@ Scenario: Install and remove group
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
         | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
         | group-install | DNF-CI-Testgroup                  |
-   When I execute dnf with args "group remove DNF-CI-Testgroup"
+   When I execute dnf with args "group remove dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -56,12 +58,11 @@ Scenario: Install and remove group
         | group-remove  | DNF-CI-Testgroup                  |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Install a group that is already installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install DNF-CI-Testgroup"
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -70,26 +71,25 @@ Scenario: Install a group that is already installed
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
         | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
         | group-install | DNF-CI-Testgroup                  |
-   When I execute dnf with args "group install DNF-CI-Testgroup"
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | group-install | DNF-CI-Testgroup                  |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Install and remove group with excluded package
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install --exclude=lame DNF-CI-Testgroup"
+   When I execute dnf with args "group install --exclude=lame dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | install-group | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
         | group-install | DNF-CI-Testgroup                  |
-   When I execute dnf with args "group remove DNF-CI-Testgroup"
+   When I execute dnf with args "group remove dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -97,30 +97,33 @@ Scenario: Install and remove group with excluded package
         | remove-unused | setup-0:2.12.1-1.fc29.noarch      |
         | group-remove  | DNF-CI-Testgroup                  |
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 @bz1707624
 Scenario: Install installed group when group is not available
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install --exclude=lame DNF-CI-Testgroup"
+   When I execute dnf with args "group install --exclude=lame dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | install-group | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
         | group-install | DNF-CI-Testgroup                  |
-   When I execute dnf with args "group install --disablerepo=dnf-ci-thirdparty DNF-CI-Testgroup"
+   When I execute dnf with args "group install --disablerepo=dnf-ci-thirdparty dnf-ci-testgroup"
    Then the exit code is 1
-    And stderr contains "Module or Group 'DNF-CI-Testgroup' is not available."
+    And dnf4 stderr contains "Module or Group 'dnf-ci-testgroup' is not available."
+    And dnf5 stderr is
+    """
+    Failed to resolve the transaction:
+    No match for argument: dnf-ci-testgroup
+    """
     And stderr does not contain "ValueError"
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Install and remove group with excluded package dependency
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install --exclude=setup DNF-CI-Testgroup"
+   When I execute dnf with args "group install --exclude=setup dnf-ci-testgroup"
    Then the exit code is 1
     And stderr contains "Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed"
 
@@ -175,8 +178,11 @@ Scenario: Install condidional package if required package has been installed
         | group-install | DNF-CI-Testgroup                          |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+#@dnf5
+# TODO(nsella) Reason change not captured in dnf5 transaction parser
+#  Changing reason:
+#   filesystem                   x86_64 3.9-2.fc29   @System         0.0   B
+#     Group -> Dependency
 # basesystem requires filesystem (part of DNF-CI-Testgroup)
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use repository "dnf-ci-thirdparty"
@@ -215,8 +221,7 @@ Scenario: Group remove does not remove packages required by user installed packa
         | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Group remove does not remove user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -226,7 +231,7 @@ Scenario: Group remove does not remove user installed packages
         | Action        | Package                                   |
         | install       | filesystem-0:3.9-2.fc29.x86_64            |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
-   When I execute dnf with args "group install DNF-CI-Testgroup"
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -234,7 +239,7 @@ Scenario: Group remove does not remove user installed packages
         | install-dep   | lame-libs-0:3.100-4.fc29.x86_64           |
         | group-install | DNF-CI-Testgroup                          |
         # filesystem package should be kept because they are user installed
-   When I execute dnf with args "group remove DNF-CI-Testgroup"
+   When I execute dnf with args "group remove dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -245,7 +250,7 @@ Scenario: Group remove does not remove user installed packages
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
 
 # @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+# TODO(nsella) "shell" command not implemented
 @bz1809600
 Scenario: Group remove does not traceback when reason change
   Given I use repository "dnf-ci-thirdparty"
@@ -389,7 +394,7 @@ Scenario: List an environment with empty name
        """
 
 # @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+# TODO(nsella) Replace emty name with "<name-unset>" missing
 @bz1826198
 Scenario: Install a group with empty name
   Given I use repository "comps-group"
@@ -440,8 +445,7 @@ Scenario: List and info a group with missing packagelist
        """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Install a group with empty packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group install test-group"
@@ -452,7 +456,7 @@ Scenario: Install a group with empty packagelist
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+# TODO(nsella) Merged group produces different package set
 @not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
   Given I use repository "comps-group"
