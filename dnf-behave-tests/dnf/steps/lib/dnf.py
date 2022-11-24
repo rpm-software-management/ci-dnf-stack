@@ -44,7 +44,9 @@ ACTIONS_EN = {
     "Skipping packages with conflicts": "conflict",
     "Installing group/module packages": "install-group",
     "Installing Groups": "group-install",
+    "Installing groups": "group-install",
     "Removing Groups": "group-remove",
+    "Removing groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
     "Installing Environment Groups": "env-install",
     "Removing Environment Groups": "env-remove",
@@ -263,24 +265,24 @@ def parse_transaction_table_dnf5(context, lines):
 
             line = lines[0].rstrip()
 
-#            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
-#                if ACTION_RE.match(line):
-#                    break
-#                lines.pop(0)
-#                if '-stream-' in action:
-#                    if '-switch' in action:
-#                        match = MODULE_STREAM_SWITCH_RE.match(line.strip())
-#                        if not match:
-#                            raise ValueError("Couldn't parse module/stream: {}".format(line))
-#                    else:
-#                        match = MODULE_STREAM_RE.match(line.strip())
-#                        if not match:
-#                            raise ValueError("Couldn't parse module/stream: {}".format(line))
-#                    result[action].add("{0[module]}:{0[stream]}".format(match.groupdict()))
-#                else:
-#                    group = line.strip()
-#                    result[action].add(group)
-#                continue
+            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
+                if ACTION_RE.match(line):
+                    break
+                lines.pop(0)
+                if '-stream-' in action:
+                    if '-switch' in action:
+                        match = MODULE_STREAM_SWITCH_RE.match(line.strip())
+                        if not match:
+                            raise ValueError("Couldn't parse module/stream: {}".format(line))
+                    else:
+                        match = MODULE_STREAM_RE.match(line.strip())
+                        if not match:
+                            raise ValueError("Couldn't parse module/stream: {}".format(line))
+                    result[action].add("{0[module]}:{0[stream]}".format(match.groupdict()))
+                else:
+                    group = line.strip()
+                    result[action].add(group)
+                continue
 
             result_action = action
             # match the "  replacing ..." line
