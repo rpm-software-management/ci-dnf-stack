@@ -13,39 +13,19 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       flac                  x86_64   1.3.3-3.fc29      dnf-ci-fedora-updates   6.4 k
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  4 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --advisory FEDORA-2018-318f184000"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  3 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
 
 
 @bz1939975
@@ -55,44 +35,19 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package           Arch      Version             Repository                Size
-      ================================================================================
-      Installing:
-       kernel            x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates    6.2 k
-      Upgrading:
-       flac              x86_64    1.3.3-3.fc29        dnf-ci-fedora-updates    6.4 k
-      Installing dependencies:
-       kernel-core       x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     51 k
-       kernel-modules    x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     47 k
-      
-      Transaction Summary
-      ================================================================================
-      Install  3 Packages
-      Upgrade  1 Package
-
-      """
+  And DNF transaction is following
+      | Action      | Package                                    |
+      | install     | kernel-0:4.19.15-300.fc29.x86_64           |
+      | upgrade     | flac-0:1.3.3-3.fc29.x86_64                 |
+      | install-dep | kernel-core-0:4.19.15-300.fc29.x86_64      |
+      | install-dep | kernel-modules-0:4.19.15-300.fc29.x86_64   |
  When I execute dnf with args "offline-upgrade download --bugfix"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package           Arch      Version             Repository                Size
-      ================================================================================
-      Installing:
-       kernel            x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates    6.2 k
-      Installing dependencies:
-       kernel-core       x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     51 k
-       kernel-modules    x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     47 k
-      
-      Transaction Summary
-      ================================================================================
-      Install  3 Packages
-      """
+  And DNF transaction is following
+      | Action      | Package                                    |
+      | install     | kernel-0:4.19.15-300.fc29.x86_64           |
+      | install-dep | kernel-core-0:4.19.15-300.fc29.x86_64      |
+      | install-dep | kernel-modules-0:4.19.15-300.fc29.x86_64   |
 
 
 @bz1939975
@@ -102,39 +57,19 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       flac                  x86_64   1.3.3-3.fc29      dnf-ci-fedora-updates   6.4 k
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  4 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --bz=222"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  3 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
 
 
 @bz1939975
@@ -144,39 +79,19 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       flac                  x86_64   1.3.3-3.fc29      dnf-ci-fedora-updates   6.4 k
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  4 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --cve=CVE-2999"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package               Arch     Version           Repository               Size
-      ================================================================================
-      Upgrading:
-       glibc                 x86_64   2.28-26.fc29      dnf-ci-fedora-updates    11 k
-       glibc-all-langpacks   x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.3 k
-       glibc-common          x86_64   2.28-26.fc29      dnf-ci-fedora-updates   6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  3 Packages
-      """
+  And DNF transaction is following
+      | Action   | Package                                    |
+      | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
+      | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
+      | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
 
 
 @bz1939975
@@ -187,41 +102,17 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package           Arch      Version             Repository                Size
-      ================================================================================
-      Installing:
-       kernel            x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates    6.2 k
-      Upgrading:
-       flac              x86_64    1.3.9-1.fc29        enhancement-test         6.4 k
-      Installing dependencies:
-       kernel-core       x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     51 k
-       kernel-modules    x86_64    4.19.15-300.fc29    dnf-ci-fedora-updates     47 k
-      
-      Transaction Summary
-      ================================================================================
-      Install  3 Packages
-      Upgrade  1 Package
-
-      """
+  And DNF transaction is following
+      | Action      | Package                                    |
+      | install     | kernel-0:4.19.15-300.fc29.x86_64           |
+      | upgrade     | flac-0:1.3.9-1.fc29.x86_64                 |
+      | install-dep | kernel-core-0:4.19.15-300.fc29.x86_64      |
+      | install-dep | kernel-modules-0:4.19.15-300.fc29.x86_64   |
  When I execute dnf with args "offline-upgrade download --enhancement"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package     Architecture  Version                Repository               Size
-      ================================================================================
-      Upgrading:
-       flac        x86_64        1.3.9-1.fc29           enhancement-test        6.4 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  1 Package
-      """
+  And DNF transaction is following
+      | Action      | Package                                    |
+      | upgrade     | flac-0:1.3.9-1.fc29.x86_64                 |
 
 
 @bz1939975
@@ -232,35 +123,15 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package         Arch       Version             Repository                 Size
-      ================================================================================
-      Upgrading:
-       flac            x86_64     1.3.3-3.fc29        dnf-ci-fedora-updates     6.4 k
-       somepackage     x86_64     1.1-1               newpackage-test           6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  2 Packages
-      """
+  And DNF transaction is following
+      | Action      | Package                               |
+      | upgrade     | flac-0:1.3.3-3.fc29.x86_64            |
+      | upgrade     | somepackage-0:1.1-1.x86_64            |
  When I execute dnf with args "offline-upgrade download --newpackage"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package             Architecture   Version       Repository               Size
-      ================================================================================
-      Upgrading:
-       somepackage         x86_64         1.1-1         newpackage-test         6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  1 Package
-      """
+  And DNF transaction is following
+      | Action      | Package                               |
+      | upgrade     | somepackage-0:1.1-1.x86_64            |
 
 
 @bz1939975
@@ -270,35 +141,15 @@ Given I use repository "security-upgrade"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package         Architecture    Version        Repository                 Size
-      ================================================================================
-      Upgrading:
-       B               x86_64          2-2            security-upgrade          6.0 k
-       dracut          x86_64          2-2            security-upgrade          6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  2 Packages
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | B-0:2-2.x86_64                 |
+      | upgrade     | dracut-0:2-2.x86_64            |
  When I execute dnf with args "offline-upgrade download --security"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package     Architecture     Version          Repository                  Size
-      ================================================================================
-      Upgrading:
-       B           x86_64           2-2              security-upgrade           6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  1 Package
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | B-0:2-2.x86_64                 |
 
 
 @bz1939975
@@ -308,36 +159,16 @@ Given I use repository "dnf-ci-security"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package            Architecture   Version        Repository               Size
-      ================================================================================
-      Upgrading:
-       advisory_B         x86_64         1.0-4          dnf-ci-security         6.0 k
-       bugfix_B           x86_64         1.0-2          dnf-ci-security         6.0 k
-       security_A         x86_64         1.0-4          dnf-ci-security         6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  3 Packages
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | advisory_B-0:1.0-4.x86_64      |
+      | upgrade     | bugfix_B-0:1.0-2.x86_64        |
+      | upgrade     | security_A-0:1.0-4.x86_64      |
  When I execute dnf with args "offline-upgrade download --secseverity=Critical"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package            Architecture   Version        Repository               Size
-      ================================================================================
-      Upgrading:
-       advisory_B         x86_64         1.0-4          dnf-ci-security         6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  1 Package
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | advisory_B-0:1.0-4.x86_64      |
 
 
 @bz1939975
@@ -347,34 +178,14 @@ Given I use repository "dnf-ci-security"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package            Architecture   Version        Repository               Size
-      ================================================================================
-      Upgrading:
-       advisory_B         x86_64         1.0-4          dnf-ci-security         6.0 k
-       bugfix_B           x86_64         1.0-2          dnf-ci-security         6.0 k
-       security_A         x86_64         1.0-4          dnf-ci-security         6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  3 Packages
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | advisory_B-0:1.0-4.x86_64      |
+      | upgrade     | bugfix_B-0:1.0-2.x86_64        |
+      | upgrade     | security_A-0:1.0-4.x86_64      |
  When I execute dnf with args "offline-upgrade download --secseverity=Moderate"
  Then the exit code is 0
-  And stdout contains lines
-      """
-      Dependencies resolved.
-      ================================================================================
-       Package            Architecture   Version        Repository               Size
-      ================================================================================
-      Upgrading:
-       security_A         x86_64         1.0-3          dnf-ci-security         6.0 k
-      
-      Transaction Summary
-      ================================================================================
-      Upgrade  1 Package
-      """
+  And DNF transaction is following
+      | Action      | Package                        |
+      | upgrade     | security_A-0:1.0-3.x86_64      |
 
