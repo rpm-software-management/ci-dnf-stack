@@ -347,3 +347,69 @@ Scenario: use collections and advisories with duplicate names/ids from different
         | upgrade       | B-0:2-2.x86_64 |
         | upgrade       | C-0:2-2.x86_64 |
         | upgrade       | D-0:2-2.x86_64 |
+
+
+@dnf5
+Scenario: use both advisories even if they are duplicates but with different issued and updated dates (from one repo)
+  Given I use repository "security-upgrade-duplicates-1"
+   When I execute dnf with args "install E-1-1"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | install       | E-0:1-1.x86_64 |
+   When I execute dnf with args "updateinfo list"
+   # dnf5 shows only one date because libsolv provides only one in metadata,
+   # it is the latest of issued vs updated date.
+   Then dnf5 stdout is
+   """
+   <REPOSYNC>
+   Name      Type     Severity      Package              Issued
+   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+   """
+   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
+   # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
+   # -> output is deduplicated
+   Then dnf4 stdout is
+   """
+   <REPOSYNC>
+   custom_id Moderate/Sec. E-2-2.x86_64
+   """
+   When I execute dnf with args "upgrade --security"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | upgrade       | E-0:2-2.x86_64 |
+
+
+@dnf5
+Scenario: use all (3) advisories even if they are duplicates but with different issued and updated dates (from diff repos)
+  Given I use repository "security-upgrade-duplicates-1"
+   When I execute dnf with args "install E-1-1"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | install       | E-0:1-1.x86_64 |
+    And I use repository "security-upgrade-duplicates-2"
+   When I execute dnf with args "updateinfo list"
+   Then dnf5 stdout is
+   """
+   <REPOSYNC>
+   Name      Type     Severity      Package              Issued
+   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+   """
+   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
+   # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
+   # -> output is deduplicated
+   Then dnf4 stdout is
+   """
+   <REPOSYNC>
+   custom_id Moderate/Sec. E-2-2.x86_64
+   """
+   When I execute dnf with args "upgrade --security"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | upgrade       | E-0:2-2.x86_64 |
