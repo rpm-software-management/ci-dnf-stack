@@ -413,3 +413,34 @@ Scenario: use all (3) advisories even if they are duplicates but with different 
    Then Transaction is following
         | Action        | Package        |
         | upgrade       | E-0:2-2.x86_64 |
+
+
+@dnf5
+Scenario: use both advisories even if they are duplicates but with just summary different (from diff repos)
+  Given I use repository "security-upgrade-duplicates-1"
+   When I execute dnf with args "install F-1-1"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | install       | F-0:1-1.x86_64 |
+    And I use repository "security-upgrade-duplicates-2"
+   When I execute dnf with args "updateinfo list"
+   Then dnf5 stdout is
+   """
+   <REPOSYNC>
+   Name        Type     Severity      Package              Issued
+   custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
+   custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
+   """
+   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
+   # here only the summary differs -> output is deduplicated
+   Then dnf4 stdout is
+   """
+   <REPOSYNC>
+   custom_id_F Moderate/Sec. F-2-2.x86_64
+   """
+   When I execute dnf with args "upgrade --security"
+   Then the exit code is 0
+   Then Transaction is following
+        | Action        | Package        |
+        | upgrade       | F-0:2-2.x86_64 |
