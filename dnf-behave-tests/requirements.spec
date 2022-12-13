@@ -29,7 +29,6 @@ BuildRequires:  python3-distro
 BuildRequires:  python3-pip
 # a missing dep of python3-pip on f35 beta, remove when unneeded
 BuildRequires:  python3-setuptools
-BuildRequires:  python3-toml
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite
@@ -37,6 +36,16 @@ BuildRequires:  sqlite
 BuildRequires:  python3-behave
 BuildRequires:  python3-pexpect
 BuildRequires:  zchunk
+%endif
+
+%if 0%{?dnf5}
+# dnf5 tests need toml to check system state
+BuildRequires:  python3-toml
+
+# dnfdaemon
+BuildRequires:  dbus-daemon
+BuildRequires:  python3-dbus
+BuildRequires:  polkit
 %endif
 
 # tested packages
@@ -60,10 +69,6 @@ BuildRequires:  dnf-plugin-swidtags
 
 BuildRequires:  microdnf
 
-# dnfdaemon
-BuildRequires:  dbus-daemon
-BuildRequires:  python3-dbus
-BuildRequires:  polkit
 
 # debugging tools (always installed for simplicity)
 BuildRequires: less
