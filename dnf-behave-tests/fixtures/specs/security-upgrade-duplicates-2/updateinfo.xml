@@ -61,4 +61,22 @@
       </collection>
     </pkglist>
   </update>
+  <update from="secresponseteam@foo.bar" type="security" version="3">
+    <id>custom_id_F</id>
+    <title>custom_title_F</title>
+    <issued date="2002-12-17 00:00:00"/>
+    <updated date="2019-08-19 22:00:00"/>
+    <severity>Moderate</severity>
+    <summary>different custom summary F</summary>
+    <description>custom description</description>
+    <pkglist>
+      <collection short="custom collection">
+        <name>custom component F</name>
+        <package name="F" version="2" release="2" epoch="0" arch="x86_64" src="F-0:2-2.x86_64.rpm">
+          <filename>F-0:2-2.x86_64.rpm</filename>
+          <reboot_suggested/>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
 </updates>
