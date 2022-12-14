@@ -33,10 +33,10 @@ jobs:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
         include:
-          - { component: dnf, suite: dnf, extra-run-args: '' }
-          - { component: dnf5, suite: dnf, extra-run-args: --tags dnf5 --command dnf5 }
-          - { component: dnf5, suite: dnf, extra-run-args: --tags dnf5daemon --command dnf5daemon-client }
-          - { component: createrepo_c, suite: createrepo_c, extra-run-args: '' }
+          - { component: dnf, build-type: '', suite: dnf, extra-run-args: '' }
+          - { component: dnf5, build-type: dnf5, suite: dnf, extra-run-args: --tags dnf5 --command dnf5 }
+          - { component: dnf5, build-type: dnf5, suite: dnf, extra-run-args: --tags dnf5daemon --command dnf5daemon-client }
+          - { component: createrepo_c, build-type: '', suite: createrepo_c, extra-run-args: '' }
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/rpm-software-management/dnf-ci-host
@@ -72,3 +72,4 @@ jobs:
           package-urls: ${{steps.copr-build.outputs.package-urls}}
           suite: ${{matrix.suite}}
           extra-run-args: ${{matrix.extra-run-args}}
+          build-type: ${{matrix.build-type}}
