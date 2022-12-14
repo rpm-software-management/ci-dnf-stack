@@ -31,12 +31,27 @@ RUN set -x && \
         dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly; \
     fi
 
+# enable dnf5 if requested
+RUN set -x && \
+    if [ "$TYPE" == "dnf5" ]; then \
+        dnf -y copr enable rpmsoftwaremanagement/dnf5-unstable; \
+        #  enable dnf-nightly as well to get librepo and libsolv
+        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+        # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
+        dnf -y upgrade; \
+        dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf5-unstable; \
+    fi
+
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
 # install test suite dependencies
 RUN set -x && \
-    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    if [ "$TYPE" == "dnf5" ]; then \
+        dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec --define 'dnf5 1' ; \
+    else \
+        dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec --define 'dnf5 0' ; \
+    fi; \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
