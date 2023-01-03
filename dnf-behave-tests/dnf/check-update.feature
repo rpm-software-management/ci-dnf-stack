@@ -45,3 +45,21 @@ Given I use repository "check-update"
   """
   <REPOSYNC>
   """
+
+
+@bz2151910
+Scenario: check-update does not report source packages as upgrades
+Given I use repository "dnf-ci-fedora"
+  And I use repository "dnf-ci-fedora-updates"
+  # exclude binary abcde-2.9.3-1.fc29.noarch package, only source package abcde-2.9.3-1.fc29.src is left in updates repo
+  And I configure dnf with
+      | key                          | value                            |
+      | exclude                      | abcde-2.9.3-1.fc29.noarch        |
+  And I successfully execute dnf with args "install abcde-2.9.2-1.fc29.noarch"
+ When I execute dnf with args "check-update abcde"
+ # abcde-2.9.3-1.fc29.src is not reported as an upgrade
+ Then the exit code is 0
+  And stdout is
+  """
+  <REPOSYNC>
+  """
