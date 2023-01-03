@@ -704,16 +704,20 @@ Scenario: dnf repoquery --querytags
       debug_name
       description
       downloadsize
+      enhances
       epoch
       evr
       from_repo
+      group
       installsize
       installtime
       license
       name
       obsoletes
+      packager
       provides
       reason
+      recommends
       release
       repoid
       reponame
@@ -722,7 +726,10 @@ Scenario: dnf repoquery --querytags
       source_debug_name
       source_name
       sourcerpm
+      suggests
       summary
+      supplements
       url
+      vendor
       version
       """
