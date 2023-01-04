@@ -457,7 +457,7 @@ def execute_transaction(goal,description):
     downloader.download(True, True)
     transaction_callbacks = libdnf5.rpm.TransactionCallbacks()
     transaction_callbacks_ptr = libdnf5.rpm.TransactionCallbacksUniquePtr(transaction_callbacks)
-    transaction.run(transaction_callbacks_ptr, description, None, None)
+    transaction.run(transaction_callbacks_ptr, description)
 
 base = libdnf5.base.Base()
 config = base.get_config()
