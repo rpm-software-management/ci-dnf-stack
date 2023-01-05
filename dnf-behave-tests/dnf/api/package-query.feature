@@ -32,3 +32,19 @@ Given I use repository "simple-base"
  Then the exit code is 1
   And stdout is empty
   And stderr contains "TypeError: Wrong number or type of arguments for overloaded function 'PackageQuery_filter_name'."
+
+
+Scenario: Package from query returns correct reason value
+Given I use repository "simple-base"
+ When I execute python libdnf5 api script with setup
+      """
+      query = libdnf5.rpm.PackageQuery(base)
+      query.filter_name(["vagare"])
+      package = next(iter(query))
+      print(package.get_reason())
+      """
+ Then the exit code is 0
+  And stdout is
+      """
+      0
+      """
