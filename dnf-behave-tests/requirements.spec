@@ -42,28 +42,18 @@ BuildRequires:  zchunk
 # tested packages
 BuildRequires:  createrepo_c
 
-BuildRequires:  dnf
-BuildRequires:  dnf-automatic
-BuildRequires:  yum
-
-BuildRequires:  dnf-plugins-core
-BuildRequires:  dnf-utils
-BuildRequires:  python3-dnf-plugin-modulesync
-BuildRequires:  python3-dnf-plugin-post-transaction-actions
-BuildRequires:  python3-dnf-plugin-versionlock
-BuildRequires:  python3-dnf-plugins-core
-
-%if 0%{?fedora}
-BuildRequires:  python3-dnf-plugin-system-upgrade
-BuildRequires:  dnf-plugin-swidtags
-%endif
-
-BuildRequires:  microdnf
-
 # dnfdaemon
 BuildRequires:  dbus-daemon
 BuildRequires:  python3-dbus
 BuildRequires:  polkit
+
+BuildRequires:  dnf5
+BuildRequires:  dnf5-plugins
+BuildRequires:  dnf5daemon-server
+BuildRequires:  dnf5daemon-client
+BuildRequires:  dnf5-plugins
+# dnf5 python api tests need libdnf5 python bindings
+BuildRequires:  python3-libdnf5
 
 # debugging tools (always installed for simplicity)
 BuildRequires: less
