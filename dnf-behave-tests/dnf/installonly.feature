@@ -33,10 +33,6 @@ Scenario: Install multiple versions of an installonly package with a limit of 2
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64  |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
-    And package state is
-        | package                             | reason | from_repo                     |
-        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates         |
-        | kernel-core-4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository                    |
         | Install | kernel-core-0:4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
@@ -57,10 +53,6 @@ Scenario: Install and remove multiple versions of an installonly package
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
-    And package state is
-        | package                             | reason | from_repo             |
-        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
-        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository            |
         | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
@@ -70,8 +62,6 @@ Scenario: Install and remove multiple versions of an installonly package
         | Action        | Package                               |
         | remove        | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
-    And package state is
-        | package | reason | from_repo |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository |
         | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System    |
@@ -86,9 +76,6 @@ Scenario: Install multiple versions of an installonly package and keep reason
     And Transaction is following
         | Action        | Package                               |
         | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
-    And package state is
-        | package                             | reason | from_repo             |
-        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository    |
         | Install | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora |
@@ -99,10 +86,6 @@ Scenario: Install multiple versions of an installonly package and keep reason
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
-    And package state is
-        | package                             | reason | from_repo             |
-        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
-        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository            |
         | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
@@ -200,9 +183,6 @@ Scenario: Do not autoremove kernel after upgrade with --best
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
         | kernel-core-4.19.15-300.fc29.x86_64    | unknown         |
-    And package state is
-        | package                             | reason        | from_repo             |
-        | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason        | repository            |
         | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
@@ -232,9 +212,6 @@ Scenario: Do not autoremove kernel after upgrade with --nobest
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
         | kernel-core-4.19.15-300.fc29.x86_64    | unknown         |
-    And package state is
-        | package                             | reason        | from_repo             |
-        | kernel-core-4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason        | repository            |
         | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | External User | dnf-ci-fedora-updates |
@@ -265,10 +242,6 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
         | kernel-core-4.19.15-300.fc29.x86_64    | user            |
-    And package state is
-        | package                             | reason | from_repo             |
-        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
-        | kernel-core-4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository            |
         | Install | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | dnf-ci-fedora-updates |
@@ -281,9 +254,6 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
     And package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | user            |
-    And package state is
-        | package                             | reason | from_repo             |
-        | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository |
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
@@ -310,8 +280,6 @@ Scenario: Keep reason for installonly packages
     And package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
-    And package state is
-        | package | reason | from_repo |
     And dnf5 transaction items for transaction "last" are
         | action  | package                               | reason | repository |
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |

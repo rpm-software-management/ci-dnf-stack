@@ -9,9 +9,6 @@ Scenario: Install an obsoleted RPM
     And Transaction is following
         | Action        | Package                                   |
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
-    And package state is
-        | package                       | reason | from_repo         |
-        | glibc-profile-2.3.1-10.x86_64 | User   | dnf-ci-thirdparty |
     And dnf5 transaction items for transaction "last" are
         | action  | package                         | reason     | repository        |
         | Install | glibc-profile-0:2.3.1-10.x86_64 | User       | dnf-ci-thirdparty |
@@ -31,14 +28,6 @@ Scenario: Install an obsoleted RPM when the obsoleting RPM is available
         | install-dep   | basesystem-0:11-6.fc29.noarch             |
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-    And package state is
-        | package                                | reason     | from_repo     |
-        | glibc-2.28-9.fc29.x86_64               | User       | dnf-ci-fedora |
-        | setup-2.12.1-1.fc29.noarch             | Dependency | dnf-ci-fedora |
-        | filesystem-3.9-2.fc29.x86_64           | Dependency | dnf-ci-fedora |
-        | basesystem-11-6.fc29.noarch            | Dependency | dnf-ci-fedora |
-        | glibc-common-2.28-9.fc29.x86_64        | Dependency | dnf-ci-fedora |
-        | glibc-all-langpacks-2.28-9.fc29.x86_64 | Dependency | dnf-ci-fedora |
     And dnf5 transaction items for transaction "last" are
         | action  | package                                  | reason     | repository    |
         | Install | glibc-0:2.28-9.fc29.x86_64               | User       | dnf-ci-fedora |

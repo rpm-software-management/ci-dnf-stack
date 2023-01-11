@@ -19,9 +19,6 @@ Scenario: Install of obsoleted package, but higher version than obsoleted presen
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageA-0:3.0-1.x86_64                   |
-    And package state is
-        | package               | reason | from_repo        |
-        | PackageA-3.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action  | package                 | reason | repository       |
         | Install | PackageA-0:3.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -37,9 +34,6 @@ Scenario: Install of obsoleting package, even though higher version than obsolet
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageA-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action  | package                           | reason | repository       |
         | Install | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -67,9 +61,6 @@ Scenario: Install of obsoleting package using upgrade command, when obsoleted pa
         | Action        | Package                                   |
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageE-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageA-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason | repository       |
         | Install  | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -86,9 +77,6 @@ Scenario: Obsoleting a package that was installed via rpm, with --best
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason        | repository       |
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | User          | dnf-ci-obsoletes |
@@ -104,9 +92,6 @@ Scenario: Obsoleting a package that was installed via rpm, with --nobest
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason        | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | External User | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason        | repository       |
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | External User | dnf-ci-obsoletes |
@@ -126,9 +111,6 @@ Scenario: Install of obsoleting package from commandline using upgrade command, 
         | Action        | Package                                   |
         | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageE-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason | from_repo    |
-        | PackageA-Obsoleter-1.0-1.x86_64 | User   | @commandline |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason | repository   |
         | Install  | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | @commandline |
@@ -146,9 +128,6 @@ Scenario: Upgrade of obsoleted package by package of higher version than obsolet
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | PackageA-0:3.0-1.x86_64                   |
-    And package state is
-        | package               | reason | from_repo        |
-        | PackageA-3.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                 | reason | repository       |
         | Upgrade  | PackageA-0:3.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -162,9 +141,6 @@ Scenario: Install of obsoleted package
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action  | package                           | reason | repository       |
         | Install | PackageB-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -183,9 +159,6 @@ Scenario: Upgrade of obsoleted package
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason | repository       |
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -204,9 +177,6 @@ Scenario: Upgrade of obsoleted package if package specified by version with glob
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | PackageB-0:2.0-1.x86_64                   |
-    And package state is
-        | package               | reason | from_repo        |
-        | PackageB-2.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                 | reason | repository       |
         | Upgrade  | PackageB-0:2.0-1.x86_64 | User   | dnf-ci-obsoletes |
@@ -244,9 +214,6 @@ Scenario: Autoremoval of obsoleted package
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
-    And package state is
-        | package                         | reason | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason | repository       |
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
