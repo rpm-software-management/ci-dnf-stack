@@ -22,14 +22,14 @@ RUN set -x && \
     dnf -y install dnf-plugins-core; \
     dnf -y copr enable rpmsoftwaremanagement/test-utils;
 
-# enable nightlies if requested
+# enable dnf5
 RUN set -x && \
-    if [ "$TYPE" == "nightly" ]; then \
-        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-        # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
-        dnf -y upgrade; \
-        dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly; \
-    fi
+    dnf -y copr enable rpmsoftwaremanagement/dnf5-unstable; \
+    #  enable dnf-nightly as well to get librepo and libsolv
+    dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
+    dnf -y upgrade; \
+    dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf5-unstable;
 
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
