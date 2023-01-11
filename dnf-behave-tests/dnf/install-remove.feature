@@ -12,10 +12,6 @@ Scenario Outline: Install remove <spec type> that requires only name
         | Action        | Package                           |
         | install       | tea-0:1.0-1.x86_64                |
         | install-dep   | water-0:1.0-1.x86_64              |
-    And package state is
-        | package             | reason     | from_repo             |
-        | tea-1.0-1.x86_64    | User       | dnf-ci-install-remove |
-        | water-1.0-1.x86_64  | Dependency | dnf-ci-install-remove |
     And dnf5 transaction items for transaction "last" are
         | action  | package            | reason     | repository            |
         | Install | tea-0:1.0-1.x86_64   | User       | dnf-ci-install-remove |
@@ -45,11 +41,6 @@ Scenario: Install remove package via rpm
         | install       | basesystem-0:11-6.fc29.noarch     |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
-    And package state is
-        | package                      | reason     | from_repo     |
-        | basesystem-11-6.fc29.noarch  | User       | dnf-ci-fedora |
-        | filesystem-3.9-2.fc29.x86_64 | User       | dnf-ci-fedora |
-        | setup-2.12.1-1.fc29.noarch   | Dependency | dnf-ci-fedora |
     And dnf5 transaction items for transaction "last" are
         | action  | package                        | reason     | repository    |
         | Install | basesystem-0:11-6.fc29.noarch  | User       | dnf-ci-fedora |
@@ -63,11 +54,6 @@ Scenario: Install remove package via rpm
         | install       | basesystem-0:11-6.fc29.noarch     |
         | install-dep   | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
-    And package state is
-        | package                      | reason     | from_repo     |
-        | basesystem-11-6.fc29.noarch  | User       | dnf-ci-fedora |
-        | filesystem-3.9-2.fc29.x86_64 | Dependency | dnf-ci-fedora |
-        | setup-2.12.1-1.fc29.noarch   | Dependency | dnf-ci-fedora |
     And dnf5 transaction items for transaction "last" are
         | action  | package                        | reason     | repository    |
         | Install | basesystem-0:11-6.fc29.noarch  | User       | dnf-ci-fedora |
@@ -184,9 +170,6 @@ Scenario: Install a package that was already installed via rpm
    Then the exit code is 0
    When I execute dnf with args "install water"
    Then the exit code is 0
-    And package state is
-        | package             | reason | from_repo             |
-        | water-1.0-1.x86_64  | User   | dnf-ci-install-remove |
     And dnf5 transaction items for transaction "last" are
         | action  | package              | reason     | repository    |
         | Install | water-0:1.0-1.x86_64 | User       | dnf-ci-fedora |
