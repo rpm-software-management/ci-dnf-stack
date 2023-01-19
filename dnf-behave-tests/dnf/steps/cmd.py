@@ -451,11 +451,9 @@ def execute_transaction(goal,description):
     for tspkg in transaction.get_transaction_packages():
         print(tspkg.get_package().get_nevra(), ":", libdnf5.base.transaction.transaction_item_action_to_string(tspkg.get_action()))
     downloader = libdnf5.repo.PackageDownloader()
-    downloader_callbacks = libdnf5.repo.DownloadCallbacks()
-    downloader_callbacks_ptr = libdnf5.repo.DownloadCallbacksUniquePtr(downloader_callbacks)
     for tspkg in transaction.get_transaction_packages():
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
-            downloader.add(tspkg.get_package(), downloader_callbacks_ptr)
+            downloader.add(tspkg.get_package())
     downloader.download(True, True)
     transaction_callbacks = libdnf5.rpm.TransactionCallbacks()
     transaction_callbacks_ptr = libdnf5.rpm.TransactionCallbacksUniquePtr(transaction_callbacks)
