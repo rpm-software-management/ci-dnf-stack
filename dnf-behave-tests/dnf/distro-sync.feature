@@ -20,6 +20,15 @@ Given I use repository "simple-base"
       | Action        | Package                               |
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
 
+@dnf5
+Scenario: Ignore excluded packages - not fail on excluded best candidate
+Given I use repository "simple-base"
+  And I execute dnf with args "install labirinto"
+  And I use repository "simple-updates"
+ When I execute dnf with args "distro-sync --setopt=excludepkgs=labirinto-2.0-1.fc29.x86_64 --setopt=best=True"
+ Then the exit code is 0
+  And Transaction is empty
+
 
 @dnf5
 Scenario: updating a signed pkg
