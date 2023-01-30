@@ -2,6 +2,7 @@
 Feature: dnf-automatic reboots
 
 
+@bz2124793
 Background:
 Given I delete file "/etc/yum.repos.d/*.repo" with globs
   And I create file "/etc/dnf/dnf.conf" with
