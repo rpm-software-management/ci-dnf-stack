@@ -2,7 +2,6 @@
 Feature: dnf-automatic reboots
 
 
-@bz2124793
 Background:
 Given I delete file "/etc/yum.repos.d/*.repo" with globs
   And I create file "/etc/dnf/dnf.conf" with
@@ -14,6 +13,7 @@ Given I delete file "/etc/yum.repos.d/*.repo" with globs
   And I successfully execute dnf with args "install labirinto"
   And I use repository "simple-updates"
 
+@bz2124793
 Scenario: dnf-automatic does not reboot when reboot = never
   Given I create file "/etc/dnf/automatic.conf" with
     """
@@ -34,6 +34,7 @@ Scenario: dnf-automatic does not reboot when reboot = never
       I LOVE REBOOTING
       """
 
+@bz2124793
 Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
   Given I create file "/etc/dnf/automatic.conf" with
     """
@@ -54,6 +55,7 @@ Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
       I LOVE REBOOTING
       """
 
+@bz2124793
 Scenario: dnf-automatic reboots when reboot = when-needed and important package changed
   Given I create file "/etc/dnf/automatic.conf" with
     """
@@ -74,6 +76,7 @@ Scenario: dnf-automatic reboots when reboot = when-needed and important package 
       I LOVE REBOOTING
       """
 
+@bz2124793
 Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing important changed
   Given I create file "/etc/dnf/automatic.conf" with
     """
@@ -94,6 +97,7 @@ Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing im
       I LOVE REBOOTING
       """
 
+@bz2124793
 Scenario: dnf-automatic shows error message when reboot command failed
   Given I create file "/etc/dnf/automatic.conf" with
     """
