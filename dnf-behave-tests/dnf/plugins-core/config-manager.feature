@@ -337,3 +337,12 @@ Scenario: config-manager --save preserves comments and empty lines
 
         # trailing comment
         """
+
+
+Scenario: dump the "main" section
+  Given I configure dnf with
+        | key                   | value      |
+        | best                  | 0          |
+   When I execute dnf with args "config-manager --dump main"
+   Then the exit code is 0
+    And stdout contains "best = 0"
