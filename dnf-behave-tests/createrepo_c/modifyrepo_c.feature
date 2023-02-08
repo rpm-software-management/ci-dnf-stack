@@ -31,9 +31,6 @@ Given I create directory "/temp-repo/"
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
 
 
@@ -64,9 +61,6 @@ Given I create directory "/temp-repo/"
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
 
 
@@ -97,9 +91,6 @@ Given I create directory "/temp-repo/"
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
 
 
@@ -135,8 +126,5 @@ Given I create directory "/temp-repo/"
       | primary             | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists           | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other               | ${checksum}-other.xml.zck        | sha256        | zck              |
-      | primary_db          | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules             | ${checksum}-modules.yaml.zck     | sha256        | zck              |
 

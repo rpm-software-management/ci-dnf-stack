@@ -12,9 +12,6 @@ Scenario: create empty repository with zck metadata
       | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -33,9 +30,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -60,9 +54,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -97,9 +88,6 @@ Given I create directory "/dictionaries"
       | primary             | primary.xml.gz       | sha256        | gz               |
       | filelists           | filelists.xml.gz     | sha256        | gz               |
       | other               | other.xml.gz         | sha256        | gz               |
-      | primary_db          | primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | other.sqlite.bz2     | sha256        | bz2              |
       | primary_zck         | primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | filelists.xml.zck    | sha256        | zck              |
       | other_zck           | other.xml.zck        | sha256        | zck              |
@@ -149,9 +137,6 @@ Given I create directory "/dictionaries"
       | primary             | primary.xml.gz       | sha256        | gz               |
       | filelists           | filelists.xml.gz     | sha256        | gz               |
       | other               | other.xml.gz         | sha256        | gz               |
-      | primary_db          | primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db        | filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db            | other.sqlite.bz2     | sha256        | bz2              |
       | primary_zck         | primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | filelists.xml.zck    | sha256        | zck              |
       | other_zck           | other.xml.zck        | sha256        | zck              |
