@@ -6,7 +6,7 @@ Given I create symlink "/createrepo_c-ci-packages" to file "/{context.scenario.r
 
 
 Scenario: Sqlitedbs already exist, sqliterepo_c without --foce should faild
-Given I execute createrepo_c with args "." in "/"
+Given I execute createrepo_c with args ". --database" in "/"
   And repodata "/repodata/" are consistent
  When I execute sqliterepo_c with args "." in "/"
  Then the exit code is 1
@@ -92,7 +92,7 @@ Given I execute createrepo_c with args "." in "/"
 
 
 Scenario: Sqlitedbs should be created using --force with different compresion --xz and old ones should be kept --keep-old
-Given I execute createrepo_c with args "." in "/"
+Given I execute createrepo_c with args ". --database" in "/"
  When I execute sqliterepo_c with args "--force --xz --keep-old ." in "/"
  Then the exit code is 0
   And repodata "/repodata/" are consistent
@@ -125,7 +125,7 @@ Given I execute createrepo_c with args "." in "/"
 
 
 Scenario: Sqlitedbs should be created using --force and --local-sqlite, --keep-old, --xz
-Given I execute createrepo_c with args "." in "/"
+Given I execute createrepo_c with args ". --database" in "/"
  When I execute sqliterepo_c with args "--force --local-sqlite --xz --keep-old ." in "/"
  Then the exit code is 0
   And repodata "/repodata/" are consistent
