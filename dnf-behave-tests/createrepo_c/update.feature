@@ -20,9 +20,6 @@ Given I create directory "/empty-repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update on empty repo with simplified filenames
@@ -36,9 +33,6 @@ Given I create directory "/empty-repo/"
       | primary      | primary.xml.gz       | sha256        | gz               |
       | filelists    | filelists.xml.gz     | sha256        | gz               |
       | other        | other.xml.gz         | sha256        | gz               |
-      | primary_db   | primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update discards additional metadata
@@ -57,9 +51,6 @@ Given I create directory "/empty-repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
  When I execute createrepo_c with args "--update ." in "/empty-repo"
@@ -70,9 +61,6 @@ Given I create directory "/empty-repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update on repo with packages
@@ -86,9 +74,6 @@ Given I execute createrepo_c with args "." in "/temp-repo"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update twice on repo with packages
@@ -105,9 +90,6 @@ Given I execute createrepo_c with args "." in "/temp-repo"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update with --update-md-path
@@ -121,9 +103,6 @@ Given I create directory "/updated-repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update with --update-md-path twice
@@ -140,9 +119,6 @@ Given I create directory "/updated-repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update with no changes doesn't update the files
@@ -157,7 +133,6 @@ Given I execute createrepo_c with args "." in "/temp-repo"
   Directory walk done - 4 packages
   Loaded information about 4 packages
   Temporary output repo path: ./.repodata/
-  Preparing sqlite DBs
   Pool started (with 5 workers)
   Pool finished
   New and old repodata match, not updating.
@@ -176,7 +151,6 @@ Given I execute createrepo_c with args "." in "/temp-repo"
   Directory walk done - 4 packages
   Loaded information about 4 packages
   Temporary output repo path: ./.repodata/
-  Preparing sqlite DBs
   Pool started (with 5 workers)
   Pool finished
   """

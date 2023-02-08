@@ -20,9 +20,6 @@ Scenario: Merged repository has xz compression
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | updateinfo   | ${checksum}-updateinfo.xml.xz    | sha256        | xz               |
 
 
@@ -36,7 +33,4 @@ Scenario: Merged repository has zstd compression
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.zst   | sha256        | zstd             |
-      | filelists_db | ${checksum}-filelists.sqlite.zst | sha256        | zstd             |
-      | other_db     | ${checksum}-other.sqlite.zst     | sha256        | zstd             |
       | updateinfo   | ${checksum}-updateinfo.xml.zst   | sha256        | zstd             |

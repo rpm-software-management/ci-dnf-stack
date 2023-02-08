@@ -21,9 +21,6 @@ Scenario: repository with packages in subdirs
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
   And primary in "/temp-repo/repodata" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -41,9 +38,6 @@ Scenario: repository with packages in subdirs while skipping symlinks
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
   And primary in "/temp-repo/repodata" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -59,9 +53,6 @@ Scenario: repository with packages in subdirs while excluding packages
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
   And primary in "/temp-repo/repodata" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -83,9 +74,6 @@ Given I create directory "/temp-repo/d.rpm"
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
   And primary in "/temp-repo/repodata" has only packages
       | Name            | Epoch | Version | Release | Architecture |
       | package         | 0     | 0.2.1   | 1.fc29  | x86_64       |
