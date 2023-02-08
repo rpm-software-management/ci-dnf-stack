@@ -191,9 +191,6 @@ Given I create directory "/empty_repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
 
 
@@ -210,9 +207,6 @@ Given I create directory "/repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
 
 
@@ -227,9 +221,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
 
@@ -250,9 +241,6 @@ Given I create directory "/repo/a/b"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/repo/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
 
@@ -276,9 +264,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
   And primary in "/repodata" has only packages
@@ -305,9 +290,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
   And primary in "/repodata" has only packages
@@ -347,9 +329,6 @@ Given I create directory "/empty_repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | modules      | ${checksum}-modules.yaml.xz      | sha256        | xz               |
 
 
@@ -370,9 +349,6 @@ Given I create directory "/repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And file "/repo/repodata/[a-z0-9]*-modules.yaml.gz" contents is
       """
@@ -415,9 +391,6 @@ Given I create directory "/repo/"
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
   And the text file contents of "/modular-result.yaml" and "/repo/repodata/[a-z0-9]*-modules.yaml.gz" do not differ
 

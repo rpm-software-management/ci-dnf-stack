@@ -19,7 +19,6 @@ Scenario: --update-md-path doesn't work without --update
       Directory walk started
       Directory walk done - 1 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started \(with 5 workers\)
       Pool finished
       """
@@ -42,7 +41,6 @@ Scenario: Invalid path passed to --update-md-path doesn't cause a crash
       Loading metadata from md-path: /i/lead/nowhere
       Loaded information about 0 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started \(with 5 workers\)
       Pool finished
       """
@@ -64,7 +62,6 @@ Given I create directory "/side-repo/"
       Loading metadata from md-path: //tmp/createrepo_c_ci_tempdir_.*/side-repo
       Loaded information about 2 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started \(with 5 workers\)
       Pool finished
       """
@@ -85,7 +82,6 @@ Given I create directory "/side-repo/"
       Loading metadata from md-path: //tmp/createrepo_c_ci_tempdir_.*/side-repo
       Loaded information about 1 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started \(with 5 workers\)
       Pool finished
       """
@@ -111,7 +107,6 @@ Given I create directory "/side-repo/"
       Loading metadata from md-path: //tmp/createrepo_c_ci_tempdir_.*/side-repo
       Loaded information about 2 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started \(with 5 workers\)
       Pool finished
       """

@@ -10,9 +10,6 @@ Scenario: Empty repo with --general-compress-type zstd compression
       | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
-      | primary_db   | ${checksum}-primary.sqlite.zst    | sha256        | zstd             |
-      | filelists_db | ${checksum}-filelists.sqlite.zst  | sha256        | zstd             |
-      | other_db     | ${checksum}-other.sqlite.zst      | sha256        | zstd             |
 
 
 Scenario: Repo with --general-compress-type zstd compression
@@ -26,9 +23,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
-      | primary_db   | ${checksum}-primary.sqlite.zst    | sha256        | zstd             |
-      | filelists_db | ${checksum}-filelists.sqlite.zst  | sha256        | zstd             |
-      | other_db     | ${checksum}-other.sqlite.zst      | sha256        | zstd             |
   And primary in "/repodata/" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -51,9 +45,6 @@ Given I create file "/groupfile.xml" with
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.zst   | sha256        | zstd             |
-      | filelists_db | ${checksum}-filelists.sqlite.zst | sha256        | zstd             |
-      | other_db     | ${checksum}-other.sqlite.zst     | sha256        | zstd             |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_zstd   | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
   And primary in "/repodata/" doesn't have any packages
@@ -71,9 +62,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
-      | primary_db   | ${checksum}-primary.sqlite.zst    | sha256        | zstd             |
-      | filelists_db | ${checksum}-filelists.sqlite.zst  | sha256        | zstd             |
-      | other_db     | ${checksum}-other.sqlite.zst      | sha256        | zstd             |
   And primary in "/repodata/" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |

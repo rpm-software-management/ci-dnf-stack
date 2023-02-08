@@ -64,9 +64,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
  When I execute createrepo_c with args "--update --discard-additional-metadata ." in "/temp-repo"
@@ -77,9 +74,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
 
 
 Scenario: --update --keep-all-metadata keeps all additional metadata
@@ -95,9 +89,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.gz         | sha256        | gz               |
       | filelists       | ${checksum}-filelists.xml.gz       | sha256        | gz               |
       | other           | ${checksum}-other.xml.gz           | sha256        | gz               |
-      | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
-      | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
-      | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
       | group           | ${checksum}-groupfile.xml          | sha256        | -                |
       | group_gz        | ${checksum}-groupfile.xml.gz       | sha256        | gz               |
       | updateinfo      | ${checksum}-updateinfo.xml.gz      | sha256        | gz               |
@@ -116,9 +107,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.gz         | sha256        | gz               |
       | filelists       | ${checksum}-filelists.xml.gz       | sha256        | gz               |
       | other           | ${checksum}-other.xml.gz           | sha256        | gz               |
-      | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
-      | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
-      | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
       | group           | ${checksum}-groupfile2.xml         | sha256        | -                |
       | group_gz        | ${checksum}-groupfile2.xml.gz      | sha256        | gz               |
       | custom_metadata | ${checksum}-custom_metadata.txt.gz | sha256        | gz               |
@@ -140,9 +128,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | filelists_zck       | ${checksum}-filelists.xml.zck       | sha256        | zck              |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
       | other_zck           | ${checksum}-other.xml.zck           | sha256        | zck              |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | group               | ${checksum}-groupfile2.xml          | sha256        | -                |
       | group_gz            | ${checksum}-groupfile2.xml.gz       | sha256        | gz               |
       | group_zck           | ${checksum}-groupfile2.xml.zck      | sha256        | zck              |
@@ -163,9 +148,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml --zck ." in
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | group               | ${checksum}-groupfile.xml           | sha256        | -                |
       | group_gz            | ${checksum}-groupfile.xml.gz        | sha256        | gz               |
       | group_zck           | ${checksum}-groupfile.xml.zck       | sha256        | zck              |
@@ -216,9 +198,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.gz         | sha256        | gz               |
       | filelists       | ${checksum}-filelists.xml.gz       | sha256        | gz               |
       | other           | ${checksum}-other.xml.gz           | sha256        | gz               |
-      | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
-      | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
-      | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
       | group           | ${checksum}-groupfile.xml          | sha256        | -                |
       | group_gz        | ${checksum}-groupfile.xml.gz       | sha256        | gz               |
       | updateinfo      | ${checksum}-updateinfo.xml.gz      | sha256        | gz               |
@@ -293,9 +272,6 @@ Given I execute createrepo_c with args "." in "/temp-repo"
       | primary         | ${checksum}-primary.xml.gz         | sha256        | gz               |
       | filelists       | ${checksum}-filelists.xml.gz       | sha256        | gz               |
       | other           | ${checksum}-other.xml.gz           | sha256        | gz               |
-      | primary_db      | ${checksum}-primary.sqlite.bz2     | sha256        | bz2              |
-      | filelists_db    | ${checksum}-filelists.sqlite.bz2   | sha256        | bz2              |
-      | other_db        | ${checksum}-other.sqlite.bz2       | sha256        | bz2              |
 
 
 Scenario: --update keeps additional metadata by default
@@ -309,9 +285,6 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
       | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
       | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | primary_db          | ${checksum}-primary.sqlite.bz2      | sha256        | bz2              |
-      | filelists_db        | ${checksum}-filelists.sqlite.bz2    | sha256        | bz2              |
-      | other_db            | ${checksum}-other.sqlite.bz2        | sha256        | bz2              |
       | group               | ${checksum}-groupfile.xml           | sha256        | -                |
       | group_gz            | ${checksum}-groupfile.xml.gz        | sha256        | gz               |
       | custom_metadata     | ${checksum}-custom_metadata.txt.gz  | sha256        | gz               |

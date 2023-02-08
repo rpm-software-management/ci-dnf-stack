@@ -20,7 +20,6 @@ Given I create directory "/temp-repo/subdir22"
       Directory walk started
       Directory walk done - 4 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started (with 5 workers)
       Pool finished
       """
@@ -53,7 +52,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages-2/
       Directory walk done - 2 packages
       Loaded information about 2 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started (with 5 workers)
       Pool finished
       New and old repodata match, not updating.
@@ -80,7 +78,6 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
       Directory walk done - 2 packages
       Loaded information about 1 packages
       Temporary output repo path: ./.repodata/
-      Preparing sqlite DBs
       Pool started (with 5 workers)
       Pool finished
       New and old repodata match, not updating.

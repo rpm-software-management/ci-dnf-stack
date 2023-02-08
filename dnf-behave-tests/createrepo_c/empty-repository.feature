@@ -22,9 +22,6 @@ Scenario: Repo from empty directory with relative path
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
 
 
@@ -36,9 +33,6 @@ Scenario: Repo from empty directory with absolute path
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
 
 
@@ -76,9 +70,6 @@ Scenario: Repo with --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
 
@@ -92,9 +83,6 @@ Scenario: Repo with --groupfile and --checksum sha
       | primary      | ${checksum}-primary.xml.gz       | sha224        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha224        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha224        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha224        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha224        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha224        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha224        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha224        | gz               |
 
@@ -108,9 +96,6 @@ Scenario: Repo with --simple-md-filenames and --groupfile
       | primary      | primary.xml.gz       | sha256        | gz               |
       | filelists    | filelists.xml.gz     | sha256        | gz               |
       | other        | other.xml.gz         | sha256        | gz               |
-      | primary_db   | primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | other.sqlite.bz2     | sha256        | bz2              |
       | group        | groupfile.xml        | sha256        | -                |
       | group_gz     | groupfile.xml.gz     | sha256        | gz               |
 
@@ -124,9 +109,6 @@ Scenario: Repo with --unique-md-filenames and --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
 
@@ -140,9 +122,6 @@ Scenario: Repo with --xz compression and --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
@@ -156,9 +135,6 @@ Scenario: Repo with --compress-type bz2 and --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_bz2    | ${checksum}-groupfile.xml.bz2    | sha256        | bz2              |
 
@@ -172,9 +148,6 @@ Scenario: Repo with --compress-type gz
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.gz    | sha256        | gz               |
-      | filelists_db | ${checksum}-filelists.sqlite.gz  | sha256        | gz               |
-      | other_db     | ${checksum}-other.sqlite.gz      | sha256        | gz               |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
 
@@ -188,9 +161,6 @@ Scenario: Repo with --compress-type xz
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
@@ -204,9 +174,6 @@ Scenario: Repo with --repomd-checksum and --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha224        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha224        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha224        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha224        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha224        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha224        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha224        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha224        | gz               |
 
@@ -220,9 +187,6 @@ Scenario: Repo with --checksum --repomd-checksum and --groupfile
       | primary      | ${checksum}-primary.xml.gz       | sha512        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha512        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha512        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha512        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha512        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha512        | bz2              |
       | group        | ${checksum}-groupfile.xml        | sha512        | -                |
       | group_gz     | ${checksum}-groupfile.xml.gz     | sha512        | gz               |
 
@@ -236,9 +200,6 @@ Scenario: Repo with --general-compress-type and --groupfile
       | primary      | ${checksum}-primary.xml.xz       | sha256        | xz               |
       | filelists    | ${checksum}-filelists.xml.xz     | sha256        | xz               |
       | other        | ${checksum}-other.xml.xz         | sha256        | xz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
@@ -252,9 +213,6 @@ Scenario: Repo without compression and --groupfile
       | primary      | ${checksum}-primary.xml.xz       | sha256        | xz               |
       | filelists    | ${checksum}-filelists.xml.xz     | sha256        | xz               |
       | other        | ${checksum}-other.xml.xz         | sha256        | xz               |
-      | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
-      | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
-      | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
       | group        | ${checksum}-groupfile.xml        | sha256        | -                |
       | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
@@ -267,9 +225,6 @@ Scenario: Repo from empty directory with --distro DISTRO-TAG
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -287,9 +242,6 @@ Scenario: Repo from empty directory with --distro CPEID,Footag
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -307,9 +259,6 @@ Scenario: Repo from empty directory with multiple --distro CPEID,Footag
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -328,9 +277,6 @@ Scenario: Repo from empty directory with multiple --content contenttag
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -349,9 +295,6 @@ Scenario: Repo from empty directory with multiple --repo repotag
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -370,9 +313,6 @@ Scenario: Repo from empty directory with --revision XYZ
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And file "/temp-repo/repodata/repomd.xml" contains lines
       """
@@ -389,8 +329,5 @@ Given I create symlink "/temp-repo/package-0.2.1-1.fc29.x86_64.rpm" to file "/{c
       | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
       | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
       | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
-      | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
-      | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
   And repodata "/temp-repo/repodata/" are consistent
   And primary in "/temp-repo/repodata/" doesn't have any packages
