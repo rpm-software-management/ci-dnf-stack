@@ -51,7 +51,7 @@ BuildRequires:  dnf5
 BuildRequires:  dnf5-plugins
 BuildRequires:  dnf5daemon-server
 BuildRequires:  dnf5daemon-client
-BuildRequires:  dnf5-plugins
+BuildRequires:  libdnf5-plugin-actions
 # dnf5 python api tests need libdnf5 python bindings
 BuildRequires:  python3-libdnf5
 
