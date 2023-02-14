@@ -455,9 +455,8 @@ def execute_transaction(goal,description):
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
             downloader.add(tspkg.get_package())
     downloader.download(True, True)
-    transaction_callbacks = libdnf5.rpm.TransactionCallbacks()
-    transaction_callbacks_ptr = libdnf5.rpm.TransactionCallbacksUniquePtr(transaction_callbacks)
-    transaction.run(transaction_callbacks_ptr, description)
+    transaction.set_description(description)
+    transaction.run()
 
 base = libdnf5.base.Base()
 config = base.get_config()
