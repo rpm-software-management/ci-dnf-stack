@@ -205,6 +205,10 @@ class BehaveRunner(object):
         return self._volumes
 
     @property
+    def capabilities(self):
+        return ['--cap-add', 'CAP_SYS_CHROOT']
+
+    @property
     def tags(self):
         if hasattr(self.command_line_args, 'tags'):
             tags = self.command_line_args.tags
@@ -300,6 +304,7 @@ class BehaveRunner(object):
         '''
         command = self.docker_bin + ['run', '-it', '--rm']
         command += self.volumes
+        command += self.capabilities
         command += [self.command_line_args.container, 'bash']
         subprocess.call(command)
 
@@ -338,7 +343,7 @@ class BehaveRunner(object):
             return ['--junit-directory="/junit/{}_{}"'.format(feature_name, i)]
 
 
-        command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes
+        command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
 
         if self.command_line_args.container_args:
             command += self.command_line_args.container_args
