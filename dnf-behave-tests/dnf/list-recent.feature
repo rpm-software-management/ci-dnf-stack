@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) Unknown argument "list" for command "microdnf"
+@dnf5
 Feature: Test dnf list --recent
 
 
@@ -15,20 +14,15 @@ Background: prepare repository with recent package labirinto
     And I use repository "simple-base"
 
 
-Scenario Outline: dnf list <option>
-   When I execute dnf with args "list <option>"
+Scenario: dnf list --recent
+   When I execute dnf with args "list --recent"
    Then the exit code is 0
     And stdout matches line by line
     """
     <REPOSYNC>
-    Recently Added Packages
+    Recently added packages
     labirinto\.x86_64\s+1\.0-1\.fc29\s+simple-base
     """
-
-Examples:
-    | option    |
-    | recent    |
-    | --recent  |
 
 
 Scenario: dnf list package that is not recently added
@@ -44,5 +38,5 @@ Scenario: dnf list package that is not recently added
     """
     And stderr is
     """
-    Error: No matching Packages to list
+    No matching packages to list
     """

@@ -1,7 +1,6 @@
 Feature: Testing DNF metadata handling
 
-# @dnf5
-# TODO(nsella) Unknown argument "list" for command "microdnf"
+@dnf5
 @bz1644283
 Scenario: update expired metadata on first dnf update
 Given I create directory "/temp-repos/temp-repo"
@@ -11,7 +10,7 @@ Given I create directory "/temp-repos/temp-repo"
       | metadata_expire | 1s                                             |
   And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
  Then the exit code is 0
- When I execute dnf with args "list all"
+ When I execute dnf with args "list"
  Then the exit code is 0
   And stdout contains "testrepo"
 Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/temp-repo/dnf-ci-fedora"
@@ -20,9 +19,9 @@ Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/te
  Then the exit code is 0
  #Ensure metadata are expired
   And I execute "sleep 2s"
- Then I execute dnf with args "update"
+ Then I execute dnf with args "upgrade"
  Then the exit code is 0
- Then I execute dnf with args "list all"
+ Then I execute dnf with args "list"
  Then the exit code is 0
   And stdout contains "\s+wget.src\s+1.19.5-5.fc29\s+testrepo"
 

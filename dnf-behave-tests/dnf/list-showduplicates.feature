@@ -1,4 +1,4 @@
-# @dnf5
+@dnf5
 # TODO(nsella) Unknown argument "list" for command "microdnf"
 Feature: for list --showduplicates option
 
@@ -21,9 +21,10 @@ Scenario: Test for list with --showduplicates when the package is installed
  Then stdout matches line by line
  """
  <REPOSYNC>
- Installed Packages
- flac.x86_64\s+1.3.2-8.fc29\s+@dnf-ci-fedora
- Available Packages
+ Installed packages
+ flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
+
+ Available packages
  flac.src\s+1.3.2-8.fc29\s+dnf-ci-fedora
  flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
  flac.src\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
@@ -48,9 +49,10 @@ Scenario: Test for list without --showduplicates when the package is installed
  Then stdout matches line by line
  """
  <REPOSYNC>
- Installed Packages
- flac.x86_64\s+1.3.2-8.fc29\s+@dnf-ci-fedora
- Available Packages
+ Installed packages
+ flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
+
+ Available packages
  flac.src\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
  flac.x86_64\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
  """
@@ -63,7 +65,7 @@ Scenario: Test for list with --showduplicates when the package is not installed
  Then stdout matches line by line
  """
  <REPOSYNC>
- Available Packages
+ Available packages
  flac.src\s+1.3.2-8.fc29\s+dnf-ci-fedora
  flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
  flac.src\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
@@ -84,7 +86,7 @@ Scenario: Test for list without --showduplicates when the package is not install
  Then stdout matches line by line
  """
  <REPOSYNC>
- Available Packages
+ Available packages
  flac.src\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
  flac.x86_64\s+1.4.0-1.fc29\s+dnf-ci-fedora-updates-testing
  """
@@ -103,7 +105,7 @@ Scenario: Test for list --available --showduplicates when package is installed a
  Then stdout matches line by line
  """
  <REPOSYNC>
- Available Packages
+ Available packages
  flac.src\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
  flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
  flac.src\s+1.3.3-2.fc29\s+dnf-ci-fedora-updates
@@ -114,4 +116,7 @@ Scenario: Test for list --available --showduplicates when package is installed a
  When I drop repository "dnf-ci-fedora-updates"
   And I execute dnf with args "list --available --showduplicates flac"
  Then the exit code is 1
-  And stdout is empty
+ And stderr is
+ """
+ No matching packages to list
+ """
