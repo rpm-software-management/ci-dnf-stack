@@ -8,7 +8,7 @@ import shutil
 import sys
 import tempfile
 
-# add the behave tests root to python path so that the `common` module can be found
+# add the behaved tests root to python path so that the `common` module can be found
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
 import common
