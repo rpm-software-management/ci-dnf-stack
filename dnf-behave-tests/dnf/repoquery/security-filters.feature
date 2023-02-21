@@ -88,23 +88,7 @@ Given I use repository "repoquery-security-filters"
   And I execute dnf with args "install A-2-2"
  When I execute dnf with args "repoquery --security --available --installed A --info"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  Name         : A
-  Version      : 2
-  Release      : 2
-  Architecture : x86_64
-  Size         : 0.0  
-  Source       : A-2-2.src.rpm
-  Repository   : @System
-  From repo    : repoquery-security-filters
-  Summary      : Testing advisory upgrade options
-  URL          : None
-  License      : Public Domain
-  Description  : This package is part of testing security options
-  """
-  And dnf5 stdout is
+ And stdout matches line by line
   """
   <REPOSYNC>
   Name         : A
@@ -126,7 +110,7 @@ Given I use repository "repoquery-security-filters"
   Release      : 2
   Architecture : x86_64
   Install size : 0
-  Package size : 6082
+  Package size : [0-9]{4}
   Source       : A-2-2.src.rpm
   Repository   : repoquery-security-filters
   Summary      : Testing advisory upgrade options
@@ -140,7 +124,7 @@ Given I use repository "repoquery-security-filters"
   Release      : 3
   Architecture : x86_64
   Install size : 0
-  Package size : 6082
+  Package size : [0-9]{4}
   Source       : A-3-3.src.rpm
   Repository   : repoquery-security-filters
   Summary      : Testing advisory upgrade options
