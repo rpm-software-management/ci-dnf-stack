@@ -146,8 +146,7 @@ Scenario: I exclude the highest verion of a package and call dnf builddep with -
         | Action                | Package                    |
         | install               | flac-0:1.3.3-2.fc29.x86_64 |
 
-# @dnf5
-# TODO(nsella) different stderr
+@dnf5
 @bz1628634
 Scenario: Builddep with unavailable build dependency
     Given I use repository "dnf-ci-fedora"
