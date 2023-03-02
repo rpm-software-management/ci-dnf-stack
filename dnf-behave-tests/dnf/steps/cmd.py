@@ -473,11 +473,11 @@ base = libdnf5.base.Base()
 config = base.get_config()
 vars = base.get_vars()
 
-config.installroot().set('{context.dnf.installroot}')
-config.config_file_path().set(os.path.join(config.installroot().get_value(), 'etc/dnf/dnf.conf'))
-config.reposdir().set(os.path.join(config.installroot().get_value(), 'etc/yum.repos.d'))
-config.varsdir().set(os.path.join(config.installroot().get_value(), 'etc/dnf/vars'))
-config.cachedir().set(os.path.join(config.installroot().get_value(), 'var/cache/yum'))
+config.installroot = '{context.dnf.installroot}'
+config.config_file_path = os.path.join(config.installroot, 'etc/dnf/dnf.conf')
+config.reposdir = os.path.join(config.installroot, 'etc/yum.repos.d')
+config.varsdir = os.path.join(config.installroot, 'etc/dnf/vars')
+config.cachedir = os.path.join(config.installroot, 'var/cache/yum')
 
 vars.set('releasever', '{context.dnf.releasever}')
 vars.set('basearch', 'x86_64')
