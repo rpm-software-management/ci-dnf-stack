@@ -9,7 +9,10 @@ Given I use repository "dnf-ci-fedora"
 Scenario: dnf list nonexistentpkg
  When I execute dnf with args "list non-existent-pkg"
  Then the exit code is 1
- Then stderr contains "No matching packages to list"
+  And stderr is
+  """
+  No matching packages to list
+  """
 
 
 @dnf5
@@ -30,7 +33,12 @@ Scenario: dnf list --extras (installed pkgs, not from known repos)
 Given I drop repository "dnf-ci-fedora"
   And I execute dnf with args "list --extras"
  Then the exit code is 0
- Then stdout section "Extra packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Extra packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -39,15 +47,24 @@ Scenario: dnf list setup (when setup is installed)
  Then the exit code is 0
 Given I drop repository "dnf-ci-fedora"
  When I execute dnf with args "list setup"
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout does not contain "Available packages"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
 Scenario: dnf list setup (when setup is not installed but it is available)
  When I execute dnf with args "list setup"
- Then stdout does not contain "Installed packages"
- Then stdout section "Available packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Available packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -56,28 +73,43 @@ Scenario: dnf list --installed setup (when setup is installed)
  Then the exit code is 0
 Given I drop repository "dnf-ci-fedora"
  When I execute dnf with args "list --installed setup"
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout does not contain "Available packages"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
-Scenario: List --installed alias packages from all enabled repositories 
+Scenario: List --installed alias packages from all enabled repositories
  When I execute dnf with args "install glibc"
  Then the exit code is 0
  When I execute dnf with args "list --installed"
  Then the exit code is 0
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "glibc-all-langpacks.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  filesystem.x86_64 +3.9-2.fc29 +dnf-ci-fedora
+  glibc.x86_64 +2.28-9.fc29 +dnf-ci-fedora
+  glibc-all-langpacks.x86_64 +2.28-9.fc29 +dnf-ci-fedora
+  glibc-common.x86_64 +2.28-9.fc29 +dnf-ci-fedora
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
 Scenario: dnf list --available setup (when setup is available)
  When I execute dnf with args "list --available setup"
- Then stdout does not contain "Installed packages"
- Then stdout section "Available packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Available packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -85,8 +117,17 @@ Scenario: dnf list setup basesystem (when basesystem is not installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
  When I execute dnf with args "list setup basesystem"
- Then stdout section "Available packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+
+  Available packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  basesystem.src +11-6.fc29 +dnf-ci-fedora
+  setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -94,9 +135,12 @@ Scenario: dnf list installed setup basesystem (when basesystem is not installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
  When I execute dnf with args "list --installed setup basesystem"
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout does not contain "Available packages"
- Then stdout does not contain "basesystem"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 # Change in behavior compared to dnf4 - Available section contains all available
@@ -106,8 +150,15 @@ Scenario: dnf list available setup basesystem (when basesystem is available)
  When I execute dnf with args "install setup"
  Then the exit code is 0
  When I execute dnf with args "list --available setup basesystem"
- Then stdout section "Available packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
- Then stdout does not contain "Installed packages"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Available packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  basesystem.src +11-6.fc29 +dnf-ci-fedora
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -116,21 +167,39 @@ Scenario: dnf list setup basesystem (when both are installed)
  Then the exit code is 0
  When I execute dnf with args "list setup basesystem"
  Then the exit code is 0
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+
+  Available packages
+  basesystem.src +11-6.fc29 +dnf-ci-fedora
+  setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+  """
  When I execute dnf with args "list --installed setup basesystem"
  Then the exit code is 0
- Then stdout section "Installed packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
- Then stdout does not contain "Available packages"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
  When I execute dnf with args "list --available setup.noarch basesystem.noarch"
  Then the exit code is 0
- Then stdout section "Available packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Available packages
+  basesystem.noarch +11-6.fc29 +dnf-ci-fedora
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 
 @dnf5
-Scenario: dnf list glibc\* 
+Scenario: dnf list glibc\*
  When I execute dnf with args "install glibc"
  Then the exit code is 0
 Given I use repository "dnf-ci-fedora-updates"
@@ -149,34 +218,50 @@ Scenario Outline: dnf list <upgrades alias>
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list <upgrades alias>"
  Then the exit code is 0
- Then stdout section "Available upgrades" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
- Then stdout section "Available upgrades" contains "glibc-common.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
- Then stdout section "Available upgrades" contains "glibc-all-langpacks.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Available upgrades
+  glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates
+  glibc-all-langpacks.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates
+  glibc-common.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates
+  """
 
 Examples:
         | upgrades alias     |
         | --upgrades         |
         | --updates          |
-        
+
 
 @dnf5
 Scenario: dnf list upgrades glibc (when glibc is not installed)
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list --upgrades glibc"
  Then the exit code is 1
- Then stderr contains "No matching packages to list"
- Then stdout does not contain "Upgraded packages"
+  And stderr is
+  """
+  No matching packages to list
+  """
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  """
 
 
-# TODO(mblaha) --obsoletes output is not printing the obsoleted version yet
+@dnf5
 Scenario: dnf list --obsoletes
  When I execute dnf with args "install glibc"
  Then the exit code is 0
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list --obsoletes"
  Then the exit code is 0
- Then stdout section "Obsoleting packages" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
- Then stdout section "Obsoleting packages" contains "\sglibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+  And stdout matches line by line
+  """
+  <REPOSYNC>
+  Obsoleting packages
+  glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates
+  \s+glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora
+  """
 
 
 @dnf5
@@ -185,7 +270,10 @@ Scenario: dnf list obsoletes setup (when setup is not obsoleted)
  Then the exit code is 0
  When I execute dnf with args "list --obsoletes setup"
  Then the exit code is 1
- Then stderr contains "No matching packages to list"
+  And stderr is
+  """
+  No matching packages to list
+  """
 
 
 # TODO(mblaha) - the test does not respect dnf_command and runs dnf4 in subprocess
@@ -207,8 +295,12 @@ Scenario: dnf list respects repo priorities
         | priority      | 100     |
    When I execute dnf with args "list flac.x86_64"
    Then the exit code is 0
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
-    And stdout section "Available packages" does not contain "1.3.3"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    Available packages
+    flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
+    """
 
 
 @dnf5
@@ -219,10 +311,15 @@ Scenario: dnf list --showduplicates lists all (even from lower-priority repo)
         | priority      | 100     |
    When I execute dnf with args "list flac.x86_64 --showduplicates"
    Then the exit code is 0
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates"
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.3-2.fc29\s+dnf-ci-fedora-updates"
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    Available packages
+    flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
+    flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
+    flac.x86_64\s+1.3.3-2.fc29\s+dnf-ci-fedora-updates
+    flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates
+    """
 
 
 @dnf5
@@ -235,7 +332,12 @@ Scenario: dnf list doesn't show any available packages when there are no upgrade
     And I successfully execute dnf with args "install flac-1.3.3-1.fc29"
    When I execute dnf with args "list flac.x86_64"
    Then the exit code is 0
-    And stdout section "Available packages" does not contain "flac"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    Installed packages
+    flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
+    """
 
 
 @dnf5
@@ -247,11 +349,15 @@ Scenario: dnf list shows available packages when there are upgrades in the highe
     And I successfully execute dnf with args "install flac-1.3.3-1.fc29"
    When I execute dnf with args "list flac.x86_64"
    Then the exit code is 0
-    And stdout section "Installed packages" contains "flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates"
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates"
-    And stdout section "Available packages" does not contain "1.3.2"
-    And stdout section "Available packages" does not contain "1.3.3-1"
-    And stdout section "Available packages" does not contain "1.3.3-2"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    Installed packages
+    flac.x86_64\s+1.3.3-1.fc29\s+dnf-ci-fedora-updates
+
+    Available packages
+    flac.x86_64\s+1.3.3-3.fc29\s+dnf-ci-fedora-updates
+    """
 
 
 @dnf5
@@ -263,8 +369,12 @@ Scenario: dnf list doesn't show package with same nevra from lower-priority repo
         | priority      | 100                                      |
    When I execute dnf with args "list flac.x86_64"
    Then the exit code is 0
-    And stdout section "Available packages" contains "flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora"
-    And stdout section "Available packages" does not contain "dnf-ci-fedora2"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    Available packages
+    flac.x86_64\s+1.3.2-8.fc29\s+dnf-ci-fedora
+    """
 
 
 # TODO(mblaha) --security not supported for list command
