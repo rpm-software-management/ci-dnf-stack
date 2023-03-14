@@ -19,6 +19,11 @@ storage and comparison, use of Rest with FTP servers and Range with
 HTTP servers to retrieve files over slow or unstable connections,
 support for Proxy servers, and configurability.
 
+%install
+mkdir -p %{buildroot}%{_bindir}
+touch %{buildroot}%{_bindir}/wget-binary
+
 %files
+%{_bindir}/wget-binary
 
 %changelog
