@@ -97,3 +97,13 @@ Examples:
         | file provide                 | /etc/ld.so.conf  |
         | file provide with wildcards  | /etc/ld*conf     |
         | directory provide            | /var/db/         |
+
+@dnf5
+Scenario: Install package using binary name
+#  wget provides binary wget-bivary, but it is not explicitly in provides
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install wget-binary"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                  |
+        | install       | wget-0:1.19.5-5.fc29.x86_64              |
