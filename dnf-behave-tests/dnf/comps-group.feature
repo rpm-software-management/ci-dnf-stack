@@ -601,3 +601,28 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
        CQRlib-non-devel
        SuperRipper-and-deps
     """
+
+
+@dnf5
+@bz2173929
+Scenario: dnf5 group list: empty output when run for the second time
+ Given I use repository "advisories-and-groups"
+  When I execute dnf with args "clean metadata"
+   And I execute dnf with args "group list"
+  Then the exit code is 0
+   And dnf5 stdout is
+    """
+    <REPOSYNC>
+    ID                   Name         Installed
+    test-group-1         Test Group 1        no
+    test-group-2         Test Group 2        no
+    """
+  When I execute dnf with args "group list"
+  Then the exit code is 0
+   And dnf5 stdout is
+    """
+    <REPOSYNC>
+    ID                   Name         Installed
+    test-group-1         Test Group 1        no
+    test-group-2         Test Group 2        no
+    """
