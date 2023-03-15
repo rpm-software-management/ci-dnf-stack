@@ -10,34 +10,44 @@ Background: Use dnf-ci-obsoletes repository
 
 
 @dnf5
-# PackageA has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageA-3.0-1 are valid.
-# PackageA-3.0-1 is picked because it lexicographically precedes PackageA-Obsoleter-1.0-1.
+# PackageE has a split in its upgrade-path, PackageA-Obsoleter-1.0-1 obsoletes
+# non-best version of PackageE < 2
 @bz1902279
-Scenario: Install of obsoleted package, but higher version than obsoleted present
-   When I execute dnf with args "install PackageA"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                                   |
-        | install       | PackageA-0:3.0-1.x86_64                   |
-    And dnf5 transaction items for transaction "last" are
-        | action  | package                 | reason | repository       |
-        | Install | PackageA-0:3.0-1.x86_64 | User   | dnf-ci-obsoletes |
-
-
-@dnf5
-# PackageE has a split in its upgrade-path both PackageA-Obsoleter-1.0-1 and PackageE-3.0-1 are valid.
-# PackageA-Obsoleter-1.0-1 is picked because it lexicographically precedes PackageE-3.0-1.
-@bz1902279
-Scenario: Install of obsoleting package, even though higher version than obsoleted present
+@bz2183279
+Scenario: Install obsoleted package, even though obsoleter of older version is present
    When I execute dnf with args "install PackageE"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | PackageA-Obsoleter-0:1.0-1.x86_64         |
+        | install       | PackageE-0:3.0-1.x86_64                   |
     And dnf5 transaction items for transaction "last" are
         | action  | package                           | reason | repository       |
-        | Install | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
+        | Install | PackageE-0:3.0-1.x86_64           | User   | dnf-ci-obsoletes |
 
+
+@dnf5
+Scenario: Install alphabetically first of obsoleters when installing obsoleted package
+   When I execute dnf with args "install PackageF"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageF-Obsoleter-0:3.0-1.x86_64         |
+
+
+@dnf5
+Scenario: Upgrade a package with multiple obsoleters will install all of them
+  Given I execute dnf with args "install PackageF-1.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageF-0:1.0-1.x86_64                   |
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | install       | PackageF-Obsoleter-0:3.0-1.x86_64         |
+        | install       | PackageF-Obsoleter-Second-0:3.0-1.x86_64  |
+        | obsoleted     | PackageF-0:1.0-1.x86_64                   |
 
 # @dnf5
 # TODO(nsella) different exit code
