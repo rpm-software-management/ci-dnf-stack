@@ -41,7 +41,10 @@ Scenario: Install an existent and an non-existent package with --skip-unavailabl
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup non-existent-package --skip-unavailable"
    Then the exit code is 0
-    And stdout contains "No match for argument: non-existent-package"
+    And stderr is
+    """
+    No match for argument: non-existent-package
+    """
     And Transaction is following
         | Action        | Package                                   |
         | install       | setup-0:2.12.1-1.fc29.noarch              |
