@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command search
+@dnf5
 Feature: Search command
 
 
@@ -10,7 +9,7 @@ Background:
 Scenario: without keyword
    When I execute dnf with args "search"
    Then the exit code is 2
-   And stderr contains "search: error: the following arguments are required: KEYWORD"
+   And stdout contains "Missing positional argument \"patterns\" for command \"search\""
 
 
 Scenario: with keyword
@@ -18,14 +17,15 @@ Scenario: with keyword
    Then the exit code is 0
    And stdout is
    """
-   ======================== Name & Summary Matched: setup =========================
-   setup.noarch : A set of system configuration and setup files
-   setup.src : A set of system configuration and setup files
+   <REPOSYNC>
+   Matched fields: name (exact), summary
+    setup.noarch: A set of system configuration and setup files
+    setup.src: A set of system configuration and setup files
    """
 
 
 @bz1742926
-Scenario: with installed and availiable newest package doesn't duplicate results
+Scenario: with installed and available newest package doesn't duplicate results
    When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
@@ -35,13 +35,17 @@ Scenario: with installed and availiable newest package doesn't duplicate results
    Then the exit code is 0
    And stdout is
    """
-   ======================== Name & Summary Matched: setup =========================
-   setup.noarch : A set of system configuration and setup files
-   setup.src : A set of system configuration and setup files
+   <REPOSYNC>
+   Matched fields: name (exact), summary
+    setup.noarch: A set of system configuration and setup files
+    setup.src: A set of system configuration and setup files
    """
 
 
-Scenario: with installed and availiable newest package and --showduplicates duplicates results
+# TODO(jkolarik): Do we want this in DNF5? Current package query behavior seems different 
+# and here are two same NEVRAs...
+@not.with_dnf=5
+Scenario: with installed and available newest package and --showduplicates duplicates results
    When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
@@ -55,4 +59,43 @@ Scenario: with installed and availiable newest package and --showduplicates dupl
    setup-2.12.1-1.fc29.noarch : A set of system configuration and setup files
    setup-2.12.1-1.fc29.noarch : A set of system configuration and setup files
    setup-2.12.1-1.fc29.src : A set of system configuration and setup files
+   """
+
+
+Scenario: Only one occurence of a package is in the output when more versions are available
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "search flac"
+   Then the exit code is 0
+   And stdout is
+   """
+   <REPOSYNC>
+   Matched fields: name (exact)
+    flac.src: An encoder/decoder for the Free Lossless Audio Codec
+    flac.x86_64: An encoder/decoder for the Free Lossless Audio Codec
+   Matched fields: name
+    flac-libs.x86_64: Libraries for the Free Lossless Audio Codec
+   """
+
+
+Scenario: All versions of a package are in the output when using the --showduplicates option
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "search flac --showduplicates"
+   Then the exit code is 0
+   And stdout is
+   """
+   <REPOSYNC>
+   Matched fields: name (exact)
+    flac-0:1.3.2-8.fc29.src: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.2-8.fc29.x86_64: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-1.fc29.src: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-1.fc29.x86_64: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-2.fc29.src: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-2.fc29.x86_64: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-3.fc29.src: An encoder/decoder for the Free Lossless Audio Codec
+    flac-0:1.3.3-3.fc29.x86_64: An encoder/decoder for the Free Lossless Audio Codec
+   Matched fields: name
+    flac-libs-0:1.3.2-8.fc29.x86_64: Libraries for the Free Lossless Audio Codec
+    flac-libs-0:1.3.3-1.fc29.x86_64: Libraries for the Free Lossless Audio Codec
+    flac-libs-0:1.3.3-2.fc29.x86_64: Libraries for the Free Lossless Audio Codec
+    flac-libs-0:1.3.3-3.fc29.x86_64: Libraries for the Free Lossless Audio Codec
    """
