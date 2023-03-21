@@ -81,3 +81,25 @@ Scenario: Running kernel is not protected against removal as conflict with confi
         | Action        | Package                             |
         | install       | dnf-ci-conflict-0:1.0-1.x86_64      |
         | remove-dep    | dnf-ci-kernel-0:1.0-1.x86_64        |
+
+@bz2178329
+Scenario: If the oldest installed kernel is a running one it is not replaced on upgrade
+   Given I configure dnf with
+        | key                           | value                         |
+        | installonlypkgs               | installonlypkg(dnf-ci-kernel) |
+        | installonly_limit             | 3                             |
+    And I use repository "protect-running-kernel-updates"
+    And I execute dnf with args "install dnf-ci-kernel-2.0 dnf-ci-kernel-3.0"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | dnf-ci-kernel-0:2.0-1.x86_64      |
+        | install       | dnf-ci-kernel-0:3.0-1.x86_64      |
+   When I execute dnf with args "upgrade dnf-ci-kernel"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | unchanged     | dnf-ci-kernel-0:1.0-1.x86_64      |
+        | remove        | dnf-ci-kernel-0:2.0-1.x86_64      |
+        | unchanged     | dnf-ci-kernel-0:3.0-1.x86_64      |
+        | install       | dnf-ci-kernel-0:4.0-1.x86_64      |
