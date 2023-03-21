@@ -1,4 +1,3 @@
-@no_installroot
 @dnf5
 Feature: Protect running kernel
 
