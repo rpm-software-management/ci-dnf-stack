@@ -590,8 +590,8 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
       """
 
        Problem: problem with installed package broken-deps-1:1.0-1.x86_64
-        - nothing provides broken-dep-1 needed by broken-deps-1:1.0-1.x86_64
-        - nothing provides broken-dep-2 >= 2.0 needed by broken-deps-1:1.0-1.x86_64
+        - nothing provides broken-dep-1 needed by broken-deps-1:1.0-1.x86_64 from @System
+        - nothing provides broken-dep-2 >= 2.0 needed by broken-deps-1:1.0-1.x86_64 from @System
       """
 
 

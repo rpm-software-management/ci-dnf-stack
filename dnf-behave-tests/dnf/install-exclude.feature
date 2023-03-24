@@ -19,9 +19,9 @@ Scenario: Install an RPM that requires excluded RPM
     And stderr is
     """
     Error: 
-     Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
+     Problem: package filesystem-3.9-2.fc29.x86_64 from dnf-ci-fedora requires setup, but none of the providers can be installed
       - conflicting requests
-      - package setup-2.12.1-1.fc29.noarch is filtered out by exclude filtering
+      - package setup-2.12.1-1.fc29.noarch from dnf-ci-fedora is filtered out by exclude filtering
     """
 
 
