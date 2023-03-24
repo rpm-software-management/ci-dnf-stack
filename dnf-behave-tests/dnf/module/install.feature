@@ -71,8 +71,8 @@ Scenario: Installing a module and its dependencies, non-modular dependency is no
    Then the exit code is 1
     And stderr contains lines
         """
-        Problem: package meson-0.47.1-5.module_1993+7c0a4d1e.noarch requires ninja-build, but none of the providers can be installed
-        - nothing provides rtld(GNU_HASH) needed by ninja-build-1.8.2-4.module_1991+4e5efe2f.x86_64
+        Problem: package meson-0.47.1-5.module_1993+7c0a4d1e.noarch from dnf-ci-fedora-modular requires ninja-build, but none of the providers can be installed
+        - nothing provides rtld(GNU_HASH) needed by ninja-build-1.8.2-4.module_1991+4e5efe2f.x86_64 from dnf-ci-fedora-modular
         """
 
 

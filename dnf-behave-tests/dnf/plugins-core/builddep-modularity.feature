@@ -52,7 +52,7 @@ Scenario: Builddep reports error where required package is available only in non
     """
     Error: 
      Problem: conflicting requests
-      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is filtered out by modular filtering
+      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 from dnf-ci-fedora-modular is filtered out by modular filtering
     """
 
 
