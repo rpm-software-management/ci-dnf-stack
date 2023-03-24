@@ -69,7 +69,8 @@ Scenario: Running kernel is protected against removal as conflict
         """
         Error: 
          Problem: problem with installed package dnf-ci-kernel-1.0-1.x86_64
-          - package dnf-ci-conflict-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64
+          - package dnf-ci-conflict-1.0-1.x86_64 from protect-running-kernel conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64 from @System
+          - package dnf-ci-conflict-1.0-1.x86_64 from protect-running-kernel conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64 from protect-running-kernel
           - conflicting requests
         """
 

@@ -18,4 +18,5 @@ Scenario: Undo module install with dependent userinstalled package
    # the transaction is not supposed to reinstall required packages, but to fail
    Then the exit code is 1
     And stdout does not contain "Reinstalling\s+: postgresql-server-9\.6\.8-1\.module_1710\+b535a823"
-    And stderr contains "package postgresql-test-9\.6\.8-1\.module_1710\+b535a823\.x86_64 requires postgresql-server\(x86-64\) = 9\.6\.8-1\.module_1710\+b535a823, but none of the providers can be installed"
+    And stderr contains "package postgresql-test-9\.6\.8-1\.module_1710\+b535a823\.x86_64 from @System requires postgresql-server\(x86-64\) = 9\.6\.8-1\.module_1710\+b535a823, but none of the providers can be installed"
+    And stderr contains "package postgresql-test-9\.6\.8-1\.module_1710\+b535a823\.x86_64 from dnf-ci-fedora-modular requires postgresql-server\(x86-64\) = 9\.6\.8-1\.module_1710\+b535a823, but none of the providers can be installed"

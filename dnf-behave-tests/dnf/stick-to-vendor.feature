@@ -58,7 +58,8 @@ Scenario: Downgrade is unable to resolve transaction
    allow_vendor_change is disabled. This option is currently not supported for downgrade and distro-sync commands
    Error: 
     Problem: problem with installed package vendor-1.1-1.x86_64
-     - cannot install both vendor-1.0-1.x86_64 and vendor-1.1-1.x86_64
+     - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from @System
+     - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from dnf-ci-vendor-1-updates
      - conflicting requests
    """
 
