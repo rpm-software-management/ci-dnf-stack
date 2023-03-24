@@ -34,8 +34,8 @@ Given I use repository "security-upgrade-noarch"
  And dnf4 stderr is
  """
  Error: 
-  Problem: cannot install both json-c-2-2.x86_64 and json-c-2-2.noarch
-   - package bind-libs-lite-2-2.x86_64 requires libjson-c.so.4()(64bit), but none of the providers can be installed
+  Problem: cannot install both json-c-2-2.x86_64 from security-upgrade-noarch and json-c-2-2.noarch from security-upgrade-noarch
+   - package bind-libs-lite-2-2.x86_64 from security-upgrade-noarch requires libjson-c.so.4()(64bit), but none of the providers can be installed
    - cannot install the best update candidate for package json-c-1-1.x86_64
    - cannot install the best update candidate for package bind-libs-lite-1-1.x86_64
  """

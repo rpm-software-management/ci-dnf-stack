@@ -67,7 +67,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
     And stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
     """
     And Transaction is following
         | Action        | Package                                   |
@@ -95,7 +95,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     """
     Error: 
      Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
     """
    When I execute dnf with args "upgrade --nobest"
    Then the exit code is 0
