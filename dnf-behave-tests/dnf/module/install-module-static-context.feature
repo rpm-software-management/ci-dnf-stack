@@ -110,15 +110,15 @@ Scenario: Install and upgrade from context with broken dependencies => static_co
   """
   Modular dependency problem:
 
-   Problem: module nodejs:5:30180801080004:6c81f848.x86_64 requires module(postgresql:9.8), but none of the providers can be installed
-    - module postgresql:9.6:30180816142114:7c81f878.x86_64 conflicts with module(postgresql) provided by postgresql:9.8:20180816142114:9c81f899.x86_64
-    - module postgresql:9.8:20180816142114:9c81f899.x86_64 conflicts with module(postgresql) provided by postgresql:9.6:30180816142114:7c81f878.x86_64
+   Problem: module nodejs:5:30180801080004:6c81f848.x86_64 from dnf-ci-static-context-requires-change-updates requires module(postgresql:9.8), but none of the providers can be installed
+    - module postgresql:9.6:30180816142114:7c81f878.x86_64 from dnf-ci-static-context-requires-change conflicts with module(postgresql) provided by postgresql:9.8:20180816142114:9c81f899.x86_64 from dnf-ci-static-context-requires-change-updates
+    - module postgresql:9.8:20180816142114:9c81f899.x86_64 from dnf-ci-static-context-requires-change-updates conflicts with module(postgresql) provided by postgresql:9.6:30180816142114:7c81f878.x86_64 from dnf-ci-static-context-requires-change
     - cannot install the best candidate for the job
     - conflicting requests
   Error: 
-   Problem: package nodejs-postgresql-1:6.5.1-2.module_3012+41787ba4_V3.x86_64 requires postgresql = 9.8.1, but none of the providers can be installed
+   Problem: package nodejs-postgresql-1:6.5.1-2.module_3012+41787ba4_V3.x86_64 from dnf-ci-static-context-requires-change-updates requires postgresql = 9.8.1, but none of the providers can be installed
     - cannot install the best update candidate for package nodejs-postgresql-1:5.4.1-2.module_2011+41787af1_V3.x86_64
-    - package postgresql-9.8.1-1.module_9790+c535b823_V3.x86_64 is filtered out by modular filtering
+    - package postgresql-9.8.1-1.module_9790+c535b823_V3.x86_64 from dnf-ci-static-context-requires-change-updates is filtered out by modular filtering
   """
     And Transaction is empty
    When I execute dnf with args "module switch-to postgresql:9.8"

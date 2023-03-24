@@ -285,9 +285,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And stderr is
       """
       Error: 
-       Problem: package top-a-1:2.0-1.x86_64 requires bottom-a1 = 2.0-1, but none of the providers can be installed
-        - cannot install both bottom-a1-2.0-1.noarch and bottom-a1-1.0-1.noarch
+       Problem: package top-a-1:2.0-1.x86_64 from transaction-sr requires bottom-a1 = 2.0-1, but none of the providers can be installed
+        - cannot install both bottom-a1-2.0-1.noarch from transaction-sr and bottom-a1-1.0-1.noarch from transaction-sr
         - conflicting requests
+
       """
 
 
@@ -312,7 +313,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
       Error: 
        Problem: conflicting requests
-        - nothing provides nonexistent needed by broken-dep-1.0-1.x86_64
+        - nothing provides nonexistent needed by broken-dep-1.0-1.x86_64 from transaction-sr
       """
 
 
