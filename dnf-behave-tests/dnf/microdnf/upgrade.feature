@@ -109,7 +109,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     """
     error: Could not depsolve transaction; 1 problem detected:
      Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
     """
    When I execute microdnf with args "upgrade --nobest"
    Then the exit code is 0
