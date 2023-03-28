@@ -626,3 +626,51 @@ Scenario: dnf5 group list: empty output when run for the second time
     test-group-1         Test Group 1        no
     test-group-2         Test Group 2        no
     """
+
+@dnf5
+# This typically covers situations where initial system state is created from
+# dnf4 history db - dnf5 is not able to create installed groups *.xml files
+# because dnf4 does not store their content anywhere.
+Scenario: dnf can list installed groups even without their xml definitions present, group available
+  Given I use repository "comps-group"
+    And I successfully execute dnf with args "group install test-group"
+    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/test-group.xml"
+   When I execute dnf with args "group info --installed"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Id                   : test-group
+    Name                 : Test Group
+    Description          : Test Group description.
+    Installed            : yes
+    Order                : 
+    Langonly             : 
+    Uservisible          : yes
+    Repositories         : @System
+    Mandatory packages   : test-package
+    """
+
+@dnf5
+# In case the group is not available in repositories, minimal solvable is created
+# from the system state.
+Scenario: dnf can list installed groups even without their xml definitions present, group not available
+  Given I use repository "comps-group"
+    And I successfully execute dnf with args "group install test-group"
+    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/test-group.xml"
+    And I drop repository "comps-group"
+   When I execute dnf with args "group info --installed"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Id                   : test-group
+    Name                 : 
+    Description          : 
+    Installed            : yes
+    Order                : 
+    Langonly             : 
+    Uservisible          : yes
+    Repositories         : @System
+    Default packages     : test-package
+    """
