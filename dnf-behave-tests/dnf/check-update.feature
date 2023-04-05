@@ -1,7 +1,5 @@
-# @dnf5
-# TODO(nsella) implement command check-update
-# Unknown argument "check-update" for command "microdnf"
-Feature: check-update commands
+@dnf5
+Feature: check-upgrade commands
 
 @bz1769466
 Scenario: check for updates according to priority
@@ -17,7 +15,7 @@ Given I use repository "dnf-ci-fedora"
       | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
       | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 Given I use repository "dnf-ci-fedora-updates"
- When I execute dnf with args "check-update"
+ When I execute dnf with args "check-upgrade"
  Then the exit code is 100
  Then stdout contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
  Then stdout contains "glibc-common.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora-updates"
@@ -25,7 +23,7 @@ Given I use repository "dnf-ci-fedora-updates"
 Given I use repository "dnf-ci-fedora-updates" with configuration
       | key           | value   |
       | priority      | 100     |
- When I execute dnf with args "check-update"
+ When I execute dnf with args "check-upgrade"
  Then the exit code is 0
  When I execute dnf with args "upgrade"
  Then the exit code is 0
@@ -33,22 +31,23 @@ Given I use repository "dnf-ci-fedora-updates" with configuration
 
 
 @bz2101421
-Scenario: --security check-update doesn't show pkgs from resolved advisories (when obsoletes are involved)
+Scenario: --security check-upgrade doesn't show pkgs from resolved advisories (when obsoletes are involved)
 Given I use repository "check-update"
   And I execute dnf with args "install A-1-1"
- When I execute dnf with args "update --security"
+ When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
- When I execute dnf with args "check-update --security"
+ When I execute dnf with args "check-upgrade --security"
  Then the exit code is 0
   And stdout is
   """
   <REPOSYNC>
+  No security updates needed, but 1 update(s) available
   """
 
 
 @bz2151910
-Scenario: check-update does not report source packages as upgrades
+Scenario: check-upgrade does not report source packages as upgrades
 Given I use repository "dnf-ci-fedora"
   And I use repository "dnf-ci-fedora-updates"
   # exclude binary abcde-2.9.3-1.fc29.noarch package, only source package abcde-2.9.3-1.fc29.src is left in updates repo
@@ -56,7 +55,7 @@ Given I use repository "dnf-ci-fedora"
       | key                          | value                            |
       | exclude                      | abcde-2.9.3-1.fc29.noarch        |
   And I successfully execute dnf with args "install abcde-2.9.2-1.fc29.noarch"
- When I execute dnf with args "check-update abcde"
+ When I execute dnf with args "check-upgrade abcde"
  # abcde-2.9.3-1.fc29.src is not reported as an upgrade
  Then the exit code is 0
   And stdout is
