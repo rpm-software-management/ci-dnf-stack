@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test security options for update
 
 
@@ -11,9 +12,7 @@ Background: Use repository with advisories
         | install       | security_B-0:1.0-1.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "check-update" for command "microdnf"
-Scenario: Security check-update when there are no such updates
+Scenario: Security check-upgrade when there are no such updates
   Given I drop repository "dnf-ci-security"
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "check-update --security"
@@ -22,16 +21,13 @@ Scenario: Security check-update when there are no such updates
     And stdout does not contain "security_B"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "check-update" for command "microdnf"
-Scenario: Security check-update when there are such updates
-   When I execute dnf with args "check-update --security"
+Scenario: Security check-upgrade when there are such updates
+   When I execute dnf with args "check-upgrade --security"
    Then the exit code is 100
     And stdout contains "security_A.*1\.0-4\s+dnf-ci-security"
     And stdout does not contain "security_B"
 
 
-@dnf5
 @bz1918475
 Scenario: Security update
    When I execute dnf with args "upgrade-minimal --security"
@@ -44,7 +40,6 @@ Scenario: Security update
     And Transaction is empty
 
 
-@dnf5
 @bz1918475
 Scenario: Security upgrade-minimal when exact version is not available
    When I execute dnf with args "upgrade-minimal --security -x security_A-0:1.0-3.x86_64"
@@ -54,7 +49,6 @@ Scenario: Security upgrade-minimal when exact version is not available
         | upgrade       | security_A-0:1.0-4.x86_64 |
 
 
-@dnf5
 @bz1918475
 Scenario: Security update with priority setting
   Given I use repository "dnf-ci-security-priority" with configuration
@@ -67,7 +61,6 @@ Scenario: Security update with priority setting
         | upgrade       | security_A-0:1.0-3.8.x86_64 |
 
 
-@dnf5
 @bz1918475
 Scenario Outline: Security upgrade-minimal with priority setting and args: <Args>
   Given I use repository "dnf-ci-security-priority" with configuration
@@ -85,7 +78,6 @@ Examples:
     | security_A |
 
 
-@dnf5
 Scenario Outline: Security <command>
    When I execute dnf with args "<command> --security"
    Then the exit code is 0
@@ -114,7 +106,6 @@ Examples:
     | update-minimal    | security_A-0:1.0-3.x86_64 |
 
 
-@dnf5
 Scenario Outline: Security <command> with bzs explicitly mentioned
    When I execute dnf with args "<command> --security --bz 123 --bzs=234,345"
    Then the exit code is 0
