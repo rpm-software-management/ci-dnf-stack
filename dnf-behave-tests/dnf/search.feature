@@ -9,7 +9,7 @@ Background:
 Scenario: without keyword
    When I execute dnf with args "search"
    Then the exit code is 2
-   And stdout contains "Missing positional argument \"patterns\" for command \"search\""
+   And stderr contains "Missing positional argument \"patterns\" for command \"search\""
 
 
 Scenario: with keyword
