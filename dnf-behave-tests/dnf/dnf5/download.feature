@@ -55,9 +55,6 @@ Scenario: Download with resolve and alldeps options
 Scenario: Download with alldeps options
   Given I set working directory to "{context.dnf.tempdir}"
    When I execute dnf with args "download abcde --alldeps"
-   Then stderr is
-   """
-   Option alldeps should be used with resolve
-   """
+   Then stderr contains "Option \"--alldeps\" should be used with \"--resolve\""
     And the exit code is 2
 
