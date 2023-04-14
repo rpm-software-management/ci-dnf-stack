@@ -451,7 +451,7 @@ def execute_transaction(goal,description):
     transaction = goal.resolve()
     for tspkg in transaction.get_transaction_packages():
         print(tspkg.get_package().get_nevra(), ":", libdnf5.base.transaction.transaction_item_action_to_string(tspkg.get_action()))
-    downloader = libdnf5.repo.PackageDownloader()
+    downloader = libdnf5.repo.PackageDownloader(goal.get_base())
     for tspkg in transaction.get_transaction_packages():
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
             downloader.add(tspkg.get_package())
@@ -463,7 +463,7 @@ def test_transaction(goal):
     transaction = goal.resolve()
     for tspkg in transaction.get_transaction_packages():
         print(tspkg.get_package().get_nevra(), ":", libdnf5.base.transaction.transaction_item_action_to_string(tspkg.get_action()))
-    downloader = libdnf5.repo.PackageDownloader()
+    downloader = libdnf5.repo.PackageDownloader(goal.get_base())
     for tspkg in transaction.get_transaction_packages():
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
             downloader.add(tspkg.get_package())
