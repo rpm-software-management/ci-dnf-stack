@@ -77,8 +77,7 @@ Scenario: Install and remove multiple versions of an installonly package
         | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System    |
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
-# TODO(jkolarik): autoremove not yet available in dnf5
-# @dnf5
+@dnf5
 @bz1769788
 Scenario: Install multiple versions of an installonly package and keep reason
    When I execute dnf with args "install kernel-core"
@@ -93,7 +92,7 @@ Scenario: Install multiple versions of an installonly package and keep reason
         | action  | package                               | reason | repository    |
         | Install | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora |
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade --nobest"
+   When I execute dnf with args "upgrade --no-best"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -179,8 +178,7 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
-# TODO(jkolarik): autoremove not yet available in dnf5
-# @dnf5
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -211,17 +209,16 @@ Scenario: Do not autoremove kernel after upgrade with --best
     And Transaction is empty
 
 
-# TODO(jkolarik): autoremove not yet available in dnf5
-# @dnf5
+@dnf5
 @bz1934499
 @bz1921063
-Scenario: Do not autoremove kernel after upgrade with --nobest
+Scenario: Do not autoremove kernel after upgrade with --no-best
    When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/kernel-core-4.18.16-300.fc29.x86_64.rpm"
    Then package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | unknown         |
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "upgrade --nobest"
+   When I execute dnf with args "upgrade --no-best"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -289,8 +286,7 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
 
-# TODO(jkolarik): autoremove not yet available in dnf5
-# @dnf5
+@dnf5
 @bz1934499
 @bz1921063
 Scenario: Keep reason for installonly packages

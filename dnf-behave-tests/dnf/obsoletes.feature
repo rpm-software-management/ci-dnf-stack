@@ -239,8 +239,7 @@ Scenario: Keep reason of obsoleted package
         | PackageB-Obsoleter-1.0-1 | dependency |
 
 
-# TODO(jkolarik): autoremove not yet available in dnf5
-# @dnf5
+@dnf5
 Scenario: Autoremoval of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0

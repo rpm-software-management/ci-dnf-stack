@@ -1,8 +1,7 @@
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "microdnf"
-Feature: Mark remove
+@dnf5
+Feature: Mark dependency
 
-Scenario: Marking toplevel package for removal should not remove shared dependencies
+Scenario: Marking toplevel package as dependency should not remove shared dependencies on autoremove
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install nss_hesiod libnsl"
    Then the exit code is 0
@@ -16,7 +15,7 @@ Scenario: Marking toplevel package for removal should not remove shared dependen
         | install-dep   | glibc-0:2.28-9.fc29.x86_64                |
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-   When I execute dnf with args "mark remove libnsl"
+   When I execute dnf with args "mark dependency libnsl"
    Then the exit code is 0
    When I execute dnf with args "autoremove"
    Then the exit code is 0
