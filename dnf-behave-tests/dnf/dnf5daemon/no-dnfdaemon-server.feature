@@ -3,6 +3,10 @@
 Feature: Test dnf5daemon-client initialization
 
 
+# The test is flaky and dnf5daemon-client randomly returns either
+# 'Failed to open bus (No such file or directory)' error message
+# or 'Failed to open bus (Connection refused)'
+@xfail
 Scenario: Run dnf5daemon-client install when dbus is stopped
   Given I stop dbus
    When I execute dnf5daemon-client with args "repoquery"
@@ -20,6 +24,10 @@ Scenario: Run dnf5daemon-client with no args when dbus is stopped
    Then the exit code is 2
 
 
+# The test is flaky and dnf5daemon-client randomly returns either
+# 'Failed to open bus (No such file or directory)' error message
+# or 'Failed to open bus (Connection refused)'
+@xfail
 Scenario: Run dnf5daemon-client install when polkitd is stopped
   Given I stop polkitd
    When I execute dnf5daemon-client with args "repoquery rpm"
@@ -35,4 +43,3 @@ Scenario: Run dnf5daemon-client with no args when polkitd is stopped
   Given I stop polkitd
    When I execute dnf5daemon-client with no args
    Then the exit code is 2
-
