@@ -568,6 +568,7 @@ Scenario: repoquery --srpm NAME
       """
 
 
+@dnf5
 # --unneeded
 Scenario: repoquery --unneeded
 Given I successfully execute dnf with args "install top-a-1.0"
