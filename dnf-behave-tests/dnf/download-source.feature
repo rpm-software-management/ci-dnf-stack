@@ -99,8 +99,7 @@ Given I create directory "/baseurlrepo"
       | install       | setup-0:2.12.1-1.fc29.noarch |
 
 
-# TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
-#@dnf5
+@dnf5
 Scenario: Install from local repodata with locations pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -117,8 +116,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And file "/var/cache/dnf/dnf-ci-fedora*/packages/setup*" exists
 
 
-# TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
-#@dnf5
+@dnf5
 Scenario: Install from remote repodata with locations pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
