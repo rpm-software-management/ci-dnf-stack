@@ -39,12 +39,11 @@ Background: Enable comps-upgrade-1 nad install dummy
   Given I use repository "comps-upgrade-1"
     And I successfully execute dnf with args "install dummy"
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Upgrade group when there are new package versions - upgrade packages
-  Given I successfully execute dnf with args "group install 'A-group - repo#1'"
+  Given I successfully execute dnf with args "group install a-group"
     And I use repository "comps-upgrade-2"
-   When I execute dnf with args "group upgrade 'A-group - repo#1'"
+   When I execute dnf with args "group upgrade a-group"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
@@ -123,8 +122,7 @@ Scenario: Upgrade group to new metadata and back - always install new packages
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Upgrade group when there were excluded packages during installation - don't install these packages
    When I execute dnf with args "group install AB-group --exclude=A-mandatory,A-default,A-optional,A-conditional-true"
    Then the exit code is 0
@@ -138,8 +136,7 @@ Scenario: Upgrade group when there were excluded packages during installation - 
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Upgrade group when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install AB-group"
     And I successfully execute dnf with args "remove A-mandatory A-default A-conditional-true"
@@ -256,8 +253,7 @@ Scenario: Upgrade environment when there were removed packages since installatio
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 @bz1872586
 Scenario: Upgrade empty group
   Given I successfully execute dnf with args "group install empty-group"
@@ -305,24 +301,22 @@ Scenario: Upgrade environment with installed optional groups
         | env-upgrade   | optional-environment               |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "upgrade" for command "group"
+@dnf5
 Scenario: Upgrade nonexistent group
    When I execute dnf with args "group upgrade nonexistent"
    Then the exit code is 1
     And Transaction is empty
     And stderr is
         """
-        Module or Group 'nonexistent' is not installed.
-        Error: No group marked for upgrade.
+        Failed to resolve the transaction:
+        No match for argument: nonexistent
         """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Upgrade nonexistent and existent group
   Given I successfully execute dnf with args "group install empty-group"
-   When I execute dnf with args "group upgrade nonexistent empty-group"
+   When I execute dnf with args "group upgrade nonexistent empty-group --skip-unavailable"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |
