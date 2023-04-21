@@ -48,6 +48,7 @@ ACTIONS_EN = {
     "Removing Groups": "group-remove",
     "Removing groups": "group-remove",
     "Upgrading Groups": "group-upgrade",
+    "Upgrading groups": "group-upgrade",
     "Installing Environment Groups": "env-install",
     "Removing Environment Groups": "env-remove",
     "Upgrading Environment Groups": "env-upgrade",

@@ -109,7 +109,7 @@ Scenario: Install installed group when group is not available
         | install-group | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
         | group-install | DNF-CI-Testgroup                  |
-   When I execute dnf with args "group install --disablerepo=dnf-ci-thirdparty dnf-ci-testgroup"
+   When I execute dnf with args "group install --disable-repo=dnf-ci-thirdparty dnf-ci-testgroup"
    Then the exit code is 1
     And dnf4 stderr contains "Module or Group 'dnf-ci-testgroup' is not available."
     And dnf5 stderr is

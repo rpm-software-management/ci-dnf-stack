@@ -16,7 +16,7 @@ Background: Install group DNF-CI-Testgroup
           | group-install | DNF-CI-Testgroup                  |
 
 Scenario: Remove group with disabled repository
-   When I execute dnf with args "group remove dnf-ci-testgroup --disablerepo=dnf-ci-thirdparty"
+   When I execute dnf with args "group remove dnf-ci-testgroup --disable-repo=dnf-ci-thirdparty"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -28,7 +28,7 @@ Scenario: Remove group with disabled repository
 
 @bz2064341
 Scenario: Remove group with no enabed repository
-   When I execute dnf with args "group remove dnf-ci-testgroup --disablerepo=\*"
+   When I execute dnf with args "group remove dnf-ci-testgroup --disable-repo=\*"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
