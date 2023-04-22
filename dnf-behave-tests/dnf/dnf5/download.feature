@@ -58,3 +58,14 @@ Scenario: Download with alldeps options
    Then stderr contains "Option \"--alldeps\" should be used with \"--resolve\""
     And the exit code is 2
 
+@not.with_dnf=4
+@dnf5
+Scenario: Download when package is available from multiple repositories
+  Given I use repository "dnf-ci-fedora-updates"
+  Given I set working directory to "{context.dnf.tempdir}"
+   When I execute dnf with args "download abcde --resolve"
+   Then the exit code is 0
+    And file "/{context.dnf.tempdir}/abcde-2.9.3-1.fc29.src.rpm" exists
+    And file "/{context.dnf.tempdir}/abcde-2.9.3-1.fc29.noarch.rpm" exists
+    And file "/{context.dnf.tempdir}/flac-1.3.3-3.fc29.x86_64.rpm" exists
+    And file "/{context.dnf.tempdir}/wget-1.19.6-5.fc29.x86_64.rpm" exists
