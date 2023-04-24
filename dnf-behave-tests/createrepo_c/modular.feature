@@ -331,7 +331,7 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
  Then the exit code is 1
   And stderr is
       """
-      Critical: Could not load module index file invalid-not-existing.modulemd-defaults.yaml: Cannot open invalid-not-existing.modulemd-defaults.yaml: File invalid-not-existing.modulemd-defaults.yaml doesn't exists or not a regular file
+      Critical: Could not load module index file invalid-not-existing.modulemd-defaults.yaml: Cannot open invalid-not-existing.modulemd-defaults.yaml: File invalid-not-existing.modulemd-defaults.yaml doesn't exist or not a regular file
       """
 
 
