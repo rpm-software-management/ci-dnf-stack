@@ -53,10 +53,9 @@ Scenario: Upgrade group when there are new package versions - upgrade packages
         | group-upgrade | A-group - repo#2                   |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade group when there are no new packages - nothing is installed
-  Given I successfully execute dnf with args "group mark install AB-group"
+  Given I successfully execute dnf with args "group install --no-packages AB-group"
    When I execute dnf with args "group upgrade AB-group"
    Then the exit code is 0
     And Transaction is following
@@ -64,10 +63,9 @@ Scenario: Upgrade group when there are no new packages - nothing is installed
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade group when there are new packages - install new packages
-  Given I successfully execute dnf with args "group mark install AB-group"
+  Given I successfully execute dnf with args "group install --no-packages AB-group"
     And I drop repository "comps-upgrade-1"
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-group"
@@ -80,10 +78,9 @@ Scenario: Upgrade group when there are new packages - install new packages
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade group when there are both old and new packages - install only new packages
-  Given I successfully execute dnf with args "group mark install AB-group"
+  Given I successfully execute dnf with args "group install --no-packages AB-group"
       # I don't drop repository comps-upgrade-1, so the comps are merged
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-group"
