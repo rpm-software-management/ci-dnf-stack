@@ -25,7 +25,7 @@ Examples:
       | --someunknownparam                           | Argument parsing failed: Unknown option --someunknownparam      |
       | --checksum foobarunknownchecksum .           | Unknown/Unsupported checksum type "foobarunknownchecksum"       |
       | --compress-type foobarunknowncompression .   | Unknown/Unsupported compression type "foobarunknowncompression" |
-      | --groupfile badgroupfile .                   | groupfile ./badgroupfile doesn't exists                         |
-      | --pkglist badpkglist .                       | pkglist file "badpkglist" doesn't exists                        |
+      | --groupfile badgroupfile .                   | groupfile ./badgroupfile doesn't exist                          |
+      | --pkglist badpkglist .                       | pkglist file "badpkglist" doesn't exist                         |
       | --retain-old-md-by-age 1 --retain-old-md 1 . | --retain-old-md-by-age cannot be combined with --retain-old-md  |
       | --retain-old-md-by-age 55Z .                 | Bad time unit "Z"                                               |
