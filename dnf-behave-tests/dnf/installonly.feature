@@ -345,3 +345,26 @@ Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value i
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+
+
+@dnf5
+@bz2163474
+Scenario: Do not bypass installonly limit when installing kernel-core through provide
+  Given I set config option "installonly_limit" to "2"
+    And I successfully execute dnf with args "install kernel"
+    And I use repository "dnf-ci-fedora-updates"
+    And I successfully execute dnf with args "upgrade"
+    And I use repository "dnf-ci-fedora-updates-testing"
+   When I execute dnf with args "install kernel-core-uname-r --debugsolver"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                  |
+        | install       | kernel-core-0:4.20.6-300.fc29.x86_64     |
+        | install       | kernel-0:4.20.6-300.fc29.x86_64          |
+        | install       | kernel-modules-0:4.20.6-300.fc29.x86_64  |
+        | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | remove        | kernel-modules-0:4.18.16-300.fc29.x86_64 |
+        | remove        | kernel-0:4.18.16-300.fc29.x86_64         |
+        | remove        | kernel-modules-0:4.18.16-300.fc29.x86_64 |
