@@ -93,10 +93,9 @@ Scenario: Upgrade group when there are both old and new packages - install only 
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade group to new metadata and back - always install new packages
-  Given I successfully execute dnf with args "group mark install AB-group"
+  Given I successfully execute dnf with args "group install --no-packages AB-group"
     And I drop repository "comps-upgrade-1"
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-group"
@@ -116,6 +115,9 @@ Scenario: Upgrade group to new metadata and back - always install new packages
         | install-group | A-mandatory-0:1.0-1.x86_64         |
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
+        | remove        | B-mandatory-0:1.0-1.x86_64         |
+        | remove        | B-default-0:1.0-1.x86_64           |
+        | remove        | B-conditional-true-0:1.0-1.x86_64  |
         | group-upgrade | AB-group                           |
 
 
