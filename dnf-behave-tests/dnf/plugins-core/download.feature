@@ -5,6 +5,7 @@ Background:
   Given I enable plugin "download"
 
 
+@dnf5
 @bz1463723
 Scenario: Download an existing RPM in file:// mode
   Given I use repository "dnf-ci-fedora"
@@ -87,6 +88,7 @@ Given I use repository "simple-base" as http
   """
 
 
+@dnf5
 @bz2077864
 Scenario: re-download changed rpm file
 Given I use repository "simple-base" as http
@@ -98,6 +100,7 @@ Given I use repository "simple-base" as http
   And the exit code is 0
 
 
+@dnf5
 @bz2077864
 Scenario: checksum cache is not used (rpm is re-downloaded) even when modified rpm has mtime and cache timestamp (sec format) in the same second
 Given I use repository "simple-base" as http
@@ -111,6 +114,7 @@ Given I use repository "simple-base" as http
   And the exit code is 0
 
 
+@dnf5
 @bz2077864
 Scenario: checksum cache is not used (rpm is re-downloaded) even when modified rpm has mtime and cache timestamp (nsec format) in the same second
 Given I use repository "simple-base" as http
