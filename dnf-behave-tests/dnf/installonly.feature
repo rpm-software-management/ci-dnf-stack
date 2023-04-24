@@ -317,3 +317,53 @@ Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value i
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+
+
+@bz2163474
+Scenario: Do not bypass installonly limit (2) when installing kernel-core through provide
+  Given I set config option "installonly_limit" to "2"
+    And I successfully execute dnf with args "install kernel"
+    And I use repository "dnf-ci-fedora-updates"
+    And I successfully execute dnf with args "upgrade"
+    And I use repository "dnf-ci-fedora-updates-testing"
+    When I execute dnf with args "install kernel-core-uname-r"
+   Then the exit code is 0
+   # For some reason libsolv installs kernel and kernel-modules, while this is desired behavior it is
+   # somewhat confusing. There is no requirement for it. If in the future libsolv is changed to install
+   # only kernel-core it is still valid.
+    And Transaction is following
+        | Action        | Package                                  |
+        | install       | kernel-0:4.20.6-300.fc29.x86_64          |
+        | install-dep   | kernel-core-0:4.20.6-300.fc29.x86_64     |
+        | install-dep   | kernel-modules-0:4.20.6-300.fc29.x86_64  |
+        | unchanged     | kernel-0:4.19.15-300.fc29.x86_64    |
+        | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | unchanged     | kernel-modules-0:4.19.15-300.fc29.x86_64    |
+        | remove-dep    | kernel-0:4.18.16-300.fc29.x86_64         |
+        | remove        | kernel-core-0:4.18.16-300.fc29.x86_64 |
+        | remove-dep    | kernel-modules-0:4.18.16-300.fc29.x86_64 |
+
+
+@bz2163474
+Scenario: Do not bypass installonly limit (default 3) when installing kernel-core through provide
+  Given I drop repository "dnf-ci-fedora"
+    And I use repository "kernel"
+    And I successfully execute dnf with args "install kernel-1.0.0"
+    And I successfully execute dnf with args "install kernel-2.0.0"
+    And I successfully execute dnf with args "install kernel-3.0.0"
+    When I execute dnf with args "install kernel-core-uname-r"
+   Then the exit code is 0
+   # For some reason libsolv installs kernel and kernel-modules, while this is desired behavior it is
+   # somewhat confusing. There is no requirement for it. If in the future libsolv is changed to install
+   # only kernel-core it is still valid.
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-0:4.0.0-1.fc29.x86_64          |
+        | install-dep   | kernel-core-0:4.0.0-1.fc29.x86_64     |
+        | install-dep   | kernel-modules-0:4.0.0-1.fc29.x86_64  |
+        | unchanged     | kernel-0:2.0.0-1.fc29.x86_64    |
+        | unchanged     | kernel-core-0:2.0.0-1.fc29.x86_64    |
+        | unchanged     | kernel-modules-0:2.0.0-1.fc29.x86_64    |
+        | remove-dep    | kernel-0:1.0.0-1.fc29.x86_64         |
+        | remove        | kernel-core-0:1.0.0-1.fc29.x86_64 |
+        | remove-dep    | kernel-modules-0:1.0.0-1.fc29.x86_64 |
