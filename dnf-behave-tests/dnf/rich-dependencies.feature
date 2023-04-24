@@ -129,3 +129,12 @@ Scenario: Gradually removing conditional dependencies
         | remove        | milk-0:1.0-1.x86_64               |
         | unchanged     | porridge-0:1.0-1.x86_64           |
 
+
+@bz2185061
+Scenario: Install pkg with weak complex deps and don't install the condition pkg with broken deps
+    Given I execute dnf with args "install breakfast"
+     Then the exit code is 0
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | breakfast-0:1.0-1.x86_64          |
+        | install-weak  | water-0:1.0-1.x86_64              |
