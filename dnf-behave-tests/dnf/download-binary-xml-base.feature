@@ -1,8 +1,5 @@
+@dnf5
 Feature: dnf download command on packages with xml:base
-
-
-Background:
-  Given I enable plugin "download"
 
 
 Scenario: Download packages from local repository with local xml:base
