@@ -90,7 +90,7 @@ Scenario: Download an existing RPM in file:// mode with all dependencies into a 
   Given I use repository "dnf-ci-fedora"
 # Add dnf-ci-fedora-updates repository with identical metadata of dnf-ci-fedora
     And I use repository "dnf-ci-fedora-updates" with configuration
-        | key             | value                                       |
+        | key             | value                                                 |
         | baseurl         | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora  |
    When I execute dnf with args "download basesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
@@ -139,11 +139,8 @@ Given I use repository "simple-base" as http
   And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
  When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
  Then the exit code is 0
-  And stdout is
-  """
-  <REPOSYNC>
-  [SKIPPED] labirinto-1.0-1.fc29.x86_64.rpm: Already downloaded
-  """
+  And stdout contains "labirinto-0:1.0-1.fc29.src             100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
+  And stdout contains "labirinto-0:1.0-1.fc29.x86_64          100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
 
 
 @bz2077864
