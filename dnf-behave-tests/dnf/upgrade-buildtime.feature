@@ -1,3 +1,4 @@
+@dnf5daemon
 @dnf5
 Feature: Upgrade packages with the same NEVRA but different build times
 

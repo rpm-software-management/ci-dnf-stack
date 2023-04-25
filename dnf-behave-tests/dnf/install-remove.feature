@@ -77,6 +77,7 @@ Scenario: Install remove package via rpm
 
 # coffee requires water and sugar == 1
 @dnf5
+@dnf5daemon
 Scenario: Install remove package that requires exact version
    When I execute dnf with args "install coffee"
    Then the exit code is 0
@@ -96,6 +97,7 @@ Scenario: Install remove package that requires exact version
 
 # chockolate  requires sugar>=2 and milk==1
 @dnf5
+@dnf5daemon
 Scenario: Install remove package that requires version >=
    When I execute dnf with args "install chockolate"
    Then the exit code is 0
@@ -122,6 +124,7 @@ Scenario: Install remove package that requires version >=, not satisfiable
 
 # both coffee and tea require water
 @dnf5
+@dnf5daemon
 Scenario: Install remove two package with shared dependency
    When I execute dnf with args "install tea coffee"
    Then the exit code is 0
@@ -147,6 +150,7 @@ Scenario: Install remove two package with shared dependency
 
 
 @dnf5
+@dnf5daemon
 Scenario: Install remove rpm file from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
    Then the exit code is 0
@@ -161,6 +165,7 @@ Scenario: Install remove rpm file from local path
 
 
 @dnf5
+@dnf5daemon
 Scenario: Install remove *.rpm from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water_{{still,carbonated}}-1*.rpm"
    Then the exit code is 0
@@ -304,6 +309,7 @@ Scenario: Install remove group with already installed package
 
 
 @dnf5
+@dnf5daemon
 # coffee requires water and sugar, water is user-installed dependency
 Scenario: User-installed packages are not removed as unused dependencies
   Given I use repository "dnf-ci-install-remove"

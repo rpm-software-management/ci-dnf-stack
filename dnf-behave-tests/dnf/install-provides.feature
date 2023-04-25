@@ -1,6 +1,7 @@
 Feature: Install RPMs by provides
 
 
+@dnf5daemon
 @dnf5
 Scenario: Install an RPM by provide that equals to e:v-r
   Given I use repository "dnf-ci-fedora"
@@ -12,6 +13,7 @@ Scenario: Install an RPM by provide that equals to e:v-r
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Install an RPM by provide that is greater than e:vr
   Given I use repository "dnf-ci-fedora"
@@ -23,6 +25,7 @@ Scenario: Install an RPM by provide that is greater than e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Install an RPM by provide that is greater or equal to e:vr
   Given I use repository "dnf-ci-fedora"
@@ -34,6 +37,7 @@ Scenario: Install an RPM by provide that is greater or equal to e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Install an RPM by provide that is lower than e:vr
   Given I use repository "dnf-ci-fedora"
@@ -50,6 +54,7 @@ Scenario: Install an RPM by provide that is lower than e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Install an RPM by provide that is lower or equal to e:vr
   Given I use repository "dnf-ci-fedora"
@@ -66,6 +71,7 @@ Scenario: Install an RPM by provide that is lower or equal to e:vr
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@dnf5daemon
 @dnf5
 Scenario: I can install an RPM by $provide where $provide is key
   Given I use repository "dnf-ci-fedora"
@@ -92,12 +98,16 @@ Scenario Outline: I can install an RPM by <provide type>
        | install-dep   | filesystem-0:3.9-2.fc29.x86_64            |
        | install-dep   | basesystem-0:11-6.fc29.noarch             |
 
+@dnf5daemon
 Examples:
         | provide type                 | provide          |
         | file provide                 | /etc/ld.so.conf  |
         | file provide with wildcards  | /etc/ld*conf     |
+
+Examples:
         | directory provide            | /var/db/         |
 
+@dnf5daemon
 @dnf5
 Scenario: Install package using binary name
 #  wget provides binary wget-bivary, but it is not explicitly in provides

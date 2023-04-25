@@ -1,6 +1,6 @@
 @dnf5
+@dnf5daemon
 Feature: Tests for installing RPM from paths
-
 
 Scenario Outline: I can install an RPM from path, where path is <path type>
   Given I set working directory to "{context.dnf.fixturesdir}/repos/dnf-ci-fedora"

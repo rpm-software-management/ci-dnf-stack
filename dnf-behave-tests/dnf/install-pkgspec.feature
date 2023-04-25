@@ -1,3 +1,4 @@
+@dnf5daemon
 @dnf5
 Feature: Install RPMs by pkgspec
 

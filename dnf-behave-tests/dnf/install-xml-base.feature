@@ -1,6 +1,7 @@
 Feature: Install packages with base:xml set
 
 
+@dnf5daemon
 @dnf5
 Scenario: Installed packages from local repository with local xml:base are not cached
 Given I copy repository "dnf-ci-fedora" for modification
@@ -18,6 +19,7 @@ Given I copy repository "dnf-ci-fedora" for modification
 
 # TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
 #@dnf5
+@dnf5daemon
 Scenario: Install from local repodata with xml:base pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -34,6 +36,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 
 # TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
 #@dnf5
+@dnf5daemon
 Scenario: Install from remote repodata with xml:base pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -49,6 +52,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 
 # TODO(lukash) dnf5 fails on stderr not being empty, fixed in librpm, re-enable after it's released
 #@dnf5
+@dnf5daemon
 Scenario: Install from local repodata with xml:base pointing to remote packages doesn't delete unused local packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
