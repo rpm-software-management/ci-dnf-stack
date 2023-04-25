@@ -1,6 +1,7 @@
 Feature: Installroot test
 
 
+@dnf5daemon
 @dnf5
 @force_installroot
 Scenario: Install package from host repository into empty installroot
@@ -19,6 +20,7 @@ Scenario: Install package from host repository into empty installroot
    Then the exit code is 1
 
 
+@dnf5daemon
 @dnf5
 @force_installroot
 Scenario: Install package from installroot repository into installroot
@@ -49,6 +51,7 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
 
 
+@dnf5daemon
 @dnf5
 @force_installroot
 Scenario: Remove package from installroot
@@ -91,6 +94,7 @@ Scenario: Repolist command in installroot and with a reposdir specified
         """
 
 
+@dnf5daemon
 @dnf5
 @force_installroot
 Scenario: Upgrade package in installroot

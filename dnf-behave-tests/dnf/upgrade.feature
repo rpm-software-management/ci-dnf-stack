@@ -21,6 +21,7 @@ Background: Install RPMs
         | install-weak  | FlacBetterEncoder-0:1.0-1.x86_64          |
 
 
+@dnf5daemon
 @dnf5
 @tier1
 @bz1649286
@@ -36,6 +37,7 @@ Scenario: Upgrade one RPM
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"

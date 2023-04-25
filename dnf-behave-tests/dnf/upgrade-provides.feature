@@ -15,6 +15,7 @@ Background: Install glibc
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
+@dnf5daemon
 @dnf5
 Scenario Outline: Upgrade an RPM by provide <operator> e:v-r
   Given I use repository "dnf-ci-fedora-updates"
@@ -36,6 +37,7 @@ Examples:
   | <=            | 0:2.28-26.fc29       |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Upgrade an RPM by provide
   Given I use repository "dnf-ci-fedora-updates"
@@ -48,6 +50,7 @@ Scenario: Upgrade an RPM by provide
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Upgrade an RPM by file provide
   Given I use repository "dnf-ci-fedora-updates"
@@ -72,6 +75,7 @@ Scenario: Upgrade an RPM by file provide that is directory
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
 
 
+@dnf5daemon
 @dnf5
 Scenario: Upgrade an RPM by file provide containing wildcards
   Given I use repository "dnf-ci-fedora-updates"

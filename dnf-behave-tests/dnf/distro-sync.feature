@@ -1,6 +1,7 @@
 Feature: distro-sync
 
 
+@dnf5daemon
 @dnf5
 Scenario: when there is noting to do
 Given I use repository "simple-base"
@@ -9,6 +10,7 @@ Given I use repository "simple-base"
   And Transaction is empty
 
 
+@dnf5daemon
 @dnf5
 Scenario: updating a pkg
 Given I use repository "simple-base"
@@ -20,6 +22,7 @@ Given I use repository "simple-base"
       | Action        | Package                               |
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
 
+@dnf5daemon
 @dnf5
 Scenario: Ignore excluded packages - not fail on excluded best candidate
 Given I use repository "simple-base"
@@ -30,6 +33,7 @@ Given I use repository "simple-base"
   And Transaction is empty
 
 
+@dnf5daemon
 @dnf5
 Scenario: updating a signed pkg
 Given I use repository "simple-base"
