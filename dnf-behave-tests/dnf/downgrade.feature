@@ -1,3 +1,4 @@
+@dnf5
 Feature: Downgrade command
 
 
@@ -5,8 +6,6 @@ Background:
   Given I use repository "dnf-ci-fedora-updates"
 
 
-# @dnf5
-# TODO(nsella) different stdout
 Scenario: Downgrade one RPM
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -25,9 +24,12 @@ Scenario: Downgrade one RPM
         | downgrade     | flac-0:1.3.3-1.fc29.x86_64                |
    When I execute dnf with args "downgrade flac"
    Then the exit code is 0
-    And stderr contains "Package flac of lowest version already installed, cannot downgrade it."
+    And stderr is
+    """
+    The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
+    """
 
-@dnf5
+
 Scenario: Downgrade RPM that requires downgrade of dependency
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
@@ -65,7 +67,6 @@ Scenario: Downgrade RPM that requires downgrade of dependency
         | Replaced  | glibc-common-0:2.28-26.fc29.x86_64        | Dependency   | @System       |
 
 
-@dnf5
 Scenario: Downgrade a package that was installed via rpm
   Given I use repository "dnf-ci-fedora"
    When I execute rpm with args "-i --nodeps {context.scenario.repos_location}/dnf-ci-fedora-updates/x86_64/flac-1.3.3-3.fc29.x86_64.rpm"
@@ -86,7 +87,6 @@ Scenario: Downgrade a package that was installed via rpm
         | Downgrade | flac-0:1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |
         | Replaced  | flac-0:1.3.3-3.fc29.x86_64 | External User | @System               |
 
-@dnf5
 Scenario: Downgrade list of packages, none of them has a downgrade available
    When I execute dnf with args "install abcde wget"
    Then the exit code is 0
@@ -95,13 +95,12 @@ Scenario: Downgrade list of packages, none of them has a downgrade available
     And stdout contains "Nothing to do."
     And stderr is
     """
-    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
-    Package "abcde.noarch" of lowest version already installed, cannot downgrade it.
+    The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
+    The lowest available version of the "abcde.noarch" package is already installed, cannot downgrade it.
     """
     And Transaction is empty
 
 
-@dnf5
 Scenario: Downgrade list of packages, one of them is not available
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -115,7 +114,6 @@ Scenario: Downgrade list of packages, one of them is not available
     And Transaction is empty
 
 
-@dnf5
 Scenario: Downgrade list of packages with --skip-unavailable, one of them is not available
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -130,7 +128,6 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
         | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
 
 
-@dnf5
 Scenario: Downgrade list of packages, one of them is not installed
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -144,7 +141,6 @@ Scenario: Downgrade list of packages, one of them is not installed
     And Transaction is empty
 
 
-@dnf5
 Scenario: Downgrade list of packages with --skip-unavailable, one of them is not installed
    When I execute dnf with args "install flac"
    Then the exit code is 0
@@ -159,7 +155,6 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
         | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
 
 
-@dnf5
 Scenario: Downgrade mixture of not available/not installed/not downgradable/downgradable packages
    When I execute dnf with args "install flac wget"
    Then the exit code is 0
@@ -169,13 +164,12 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
-    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
+    The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
     Packages for argument 'abcde' available, but not installed.
     """
     And Transaction is empty
 
 
-@dnf5
 Scenario: Downgrade mixture of not available/not installed/not downgradable/downgradable packages with --skip-unavailable
    When I execute dnf with args "install flac wget"
    Then the exit code is 0
@@ -184,7 +178,7 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
     And stderr is
     """
     No match for argument: nosuchpkg
-    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
+    The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
     Packages for argument 'abcde' available, but not installed.
     """
     And Transaction is following
@@ -192,16 +186,15 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
         | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) different exit code 0
-# TODO(nsella) different stderr
+# https://github.com/rpm-software-management/dnf5/issues/524
 Scenario Outline: Check <command> exit code - package does not exist
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "<command> non-existent-package"
    Then the exit code is 1
     And stderr is
     """
-    Error: No packages marked for <command>.
+    Failed to resolve the transaction:
+    No match for argument: non-existent-package
     """
 
 Examples:
@@ -210,47 +203,22 @@ Examples:
     | downgrade |
 
 
-# @dnf5
-# TODO(nsella) different exit code 0
-# TODO(nsella) different stdout
-# TODO(nsella) different stderr
-Scenario: Check downgrade exit code - package not installed
+Scenario Outline: Check <command> exit code - package not installed
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "downgrade flac"
+   When I execute dnf with args "<command> flac"
    Then the exit code is 1
-    And stdout is
-    """
-    <REPOSYNC>
-    Packages for argument flac available, but not installed.
-    """
     And stderr is
     """
-    Error: No packages marked for downgrade.
+    Failed to resolve the transaction:
+    Packages for argument 'flac' available, but not installed.
     """
 
-
-# @dnf5
-# TODO(nsella) different exit code 0
-# TODO(nsella) different stdout
-# TODO(nsella) different stderr
-Scenario: Check upgrade exit code - package not installed
-  Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "upgrade flac"
-   Then the exit code is 1
-    And stdout is
-    """
-    <REPOSYNC>
-    No match for argument: flac
-    """
-    And stderr is
-    """
-    Package flac available, but not installed.
-    Error: No packages marked for upgrade.
-    """
+Examples:
+    | command   |
+    | upgrade   |
+    | downgrade |
 
 
-# @dnf5
-# TODO(nsella) different stdout
 @bz1759847
 Scenario: Check upgrade exit code - package already on the highest version
   Given I use repository "dnf-ci-fedora"
@@ -260,14 +228,10 @@ Scenario: Check upgrade exit code - package already on the highest version
     And stdout is
     """
     <REPOSYNC>
-    Dependencies resolved.
     Nothing to do.
-    Complete!
     """
 
 
-# @dnf5
-# TODO(nsella) different stdout
 @bz1759847
 Scenario: Check downgrade exit code - package already on the lowest version
   Given I use repository "dnf-ci-fedora"
@@ -277,11 +241,9 @@ Scenario: Check downgrade exit code - package already on the lowest version
     And stdout is
     """
     <REPOSYNC>
-    Dependencies resolved.
     Nothing to do.
-    Complete!
     """
     And stderr is
     """
-    Package flac of lowest version already installed, cannot downgrade it.
+    The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
     """

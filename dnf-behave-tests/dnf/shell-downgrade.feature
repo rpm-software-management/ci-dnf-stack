@@ -54,7 +54,8 @@ Scenario: Using dnf shell, fail to downgrade an RPM of the lowest version
    When I open dnf shell session
     And I execute in dnf shell "downgrade setup"
    Then Transaction is empty
-    And stdout contains "Package setup of lowest version already installed, cannot downgrade it\."
+    # the following message is already updated for dnf5
+    And stderr contains "The lowest available version of the \"setup.x86_64\" package is already installed, cannot downgrade it."
    When I execute in dnf shell "run"
    Then Transaction is empty
    When I execute in dnf shell "exit"
