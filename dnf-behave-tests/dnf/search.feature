@@ -42,26 +42,6 @@ Scenario: with installed and available newest package doesn't duplicate results
    """
 
 
-# TODO(jkolarik): Do we want this in DNF5? Current package query behavior seems different 
-# and here are two same NEVRAs...
-@not.with_dnf=5
-Scenario: with installed and available newest package and --showduplicates duplicates results
-   When I execute dnf with args "install setup"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | setup-0:2.12.1-1.fc29.noarch          |
-   When I execute dnf with args "search setup --showduplicates"
-   Then the exit code is 0
-   And stdout is
-   """
-   ======================== Name & Summary Matched: setup =========================
-   setup-2.12.1-1.fc29.noarch : A set of system configuration and setup files
-   setup-2.12.1-1.fc29.noarch : A set of system configuration and setup files
-   setup-2.12.1-1.fc29.src : A set of system configuration and setup files
-   """
-
-
 Scenario: Only one occurence of a package is in the output when more versions are available
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "search flac"
