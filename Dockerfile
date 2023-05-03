@@ -36,7 +36,7 @@ COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
 # install test suite dependencies
 RUN set -x && \
-    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec --exclude=dnf5 && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
