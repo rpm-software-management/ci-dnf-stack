@@ -2,7 +2,7 @@ Feature: Testing dnf clean command
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+# TODO(nsella) -C not available for dnf5
 Scenario: Ensure that metadata are unavailable after "dnf clean all"
   Given I use repository "dnf-ci-rich" with configuration
         | key                 | value |
@@ -26,8 +26,7 @@ Scenario: Ensure that metadata are unavailable after "dnf clean all"
         | remove        | cream-0:1.0-1.x86_64                  |
 
 
-# @dnf5
-# TODO(nsella) different stdout
+@dnf5
 @tier1
 Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
@@ -36,6 +35,7 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         SuperRipper-0:1.2-1.src
         SuperRipper-0:1.2-1.x86_64
         SuperRipper-0:1.3-1.src
@@ -48,6 +48,7 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         SuperRipper-0:1.2-1.src
         SuperRipper-0:1.2-1.x86_64
         SuperRipper-0:1.3-1.src
@@ -60,6 +61,7 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         SuperRipper-0:1.2-1.src
         SuperRipper-0:1.3-1.src
         SuperRipper-0:1.3-1.x86_64

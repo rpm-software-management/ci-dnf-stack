@@ -1,8 +1,7 @@
+@dnf5
 Feature: Testing that dnf clean command removes files from the cache
 
 
-# @dnf5
-# TODO(nsella) different stdout
 Background: Fill the cache
   Given I use repository "simple-base" as http
    When I execute dnf with args "--setopt=keepcache=true install labirinto"
@@ -15,16 +14,14 @@ Background: Fill the cache
    Then stdout matches line by line
    """
    \.
-   \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
-   \./simple-base-filenames\.solvx
-   \./simple-base\.solv
+   \./simple-base-[0-9a-f]{16}/solv
+   \./simple-base-[0-9a-f]{16}/solv/simple-base\.solv
    """
 
 
@@ -34,10 +31,6 @@ Scenario: Cleanup of the whole cache (dnf clean all)
    Then stdout matches line by line
    """
    \.
-   \./expired_repos\.json
-   \./simple-base-[0-9a-f]{16}
-   \./simple-base-[0-9a-f]{16}/packages
-   \./simple-base-[0-9a-f]{16}/repodata
    """
 
 
@@ -47,11 +40,9 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
    Then stdout matches line by line
    """
    \.
-   \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
-   \./simple-base-[0-9a-f]{16}/repodata
    """
 
 
@@ -61,15 +52,12 @@ Scenario: Cached packages cleanup (dnf clean packages)
    Then stdout matches line by line
    """
    \.
-   \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
-   \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
-   \./simple-base-filenames\.solvx
-   \./simple-base\.solv
+   \./simple-base-[0-9a-f]{16}/solv
+   \./simple-base-[0-9a-f]{16}/solv/simple-base\.solv
    """
 
 
@@ -79,12 +67,10 @@ Scenario: Database cached cleanup (dnf clean dbcache)
    Then stdout matches line by line
    """
    \.
-   \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
    """
