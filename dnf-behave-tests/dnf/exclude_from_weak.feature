@@ -18,8 +18,7 @@ Scenario: Install step also installs weak deps
         | Action        | Package                                   |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz2005305
 @bz1699672
 Scenario: Install without weak dependencies, upgrades ignores unmet weak dependencies of installed packages
@@ -43,8 +42,7 @@ Scenario: Install without weak dependencies, upgrades ignores unmet weak depende
         | Action      | Package                                 |
         | install     | flac-0:1.3.3-3.fc29.x86_64              |
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz2005305
 @bz1699672
 Scenario: Install exclude_from_weak package
@@ -67,8 +65,7 @@ Scenario: Install exclude_from_weak package
         | Action        | Package                                  |
         | install       | flac-0:1.3.3-3.fc29.x86_64               |
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz2005305
 @bz1699672
 Scenario: Obsoletes are not disabled by exclude_from_weak
@@ -86,8 +83,7 @@ Scenario: Obsoletes are not disabled by exclude_from_weak
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
 
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz1699672
 @bz2005305
 Scenario: Upgrade ignores unmet weak dependencies of installed packages even when specified as a new dependency (different version + rich dep)
@@ -104,8 +100,7 @@ Scenario: Upgrade ignores unmet weak dependencies of installed packages even whe
         | upgrade       | PackageA-2.0-1.x86_64                     |
 
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz1699672
 @bz2005305
 Scenario: Upgrades won't install supplementing package when excluded from weak before
@@ -122,8 +117,7 @@ Scenario: Upgrades won't install supplementing package when excluded from weak b
         | upgrade       | PackageB-2.0-1.x86_64                     |
 
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz1699672
 @bz2005305
 Scenario: Upgrades installs supplementing package when new version is supplemented
@@ -141,8 +135,7 @@ Scenario: Upgrades installs supplementing package when new version is supplement
         | install-weak  | supplementing-pkg-versioned-2.0-1.x86_64  |
 
 
-# @dnf5
-# TODO(nsella) Option "exclude_from_weak" not found
+@dnf5
 @bz1699672
 @bz2005305
 Scenario: Upgrade ignores unmet recommends of installed package even when another package recommends it
@@ -159,8 +152,7 @@ Scenario: Upgrade ignores unmet recommends of installed package even when anothe
         | upgrade       | PackageA-2.0-1.x86_64                     |
         | install       | PackageC-2.0-1.x86_64                     |
 
-# @dnf5
-# TODO(nsella) setopt: "exclude_from_weak_autodetect=True": Option "exclude_from_weak_autodetect" not found
+@dnf5
 @bz2048394
 @bz2033130
 Scenario: Upgrade will not ignores unmet recommends of installed package when the rich dependency was satisfied
