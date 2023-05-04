@@ -82,7 +82,6 @@ Examples:
         | repository-packages | repo-packages                |
         | repository-packages | repository-pkgs              |
         | search              | search                       |
-        | search              | se                           |
         | shell               | shell                        |
         | shell               | sh                           |
         | swap                | swap                         |
@@ -103,3 +102,13 @@ Examples:
         | upgrade-minimal     | upgrade-minimal              |
         | upgrade-minimal     | update-minimal               |
         | upgrade-minimal     | up-min                       |
+
+@dnf5
+Scenario Outline: "<alias>" is not an alias for "<command>"
+   When I execute dnf with args "<alias>"
+   Then the exit code is 2
+    And stderr contains "Unknown argument \"<alias>\" for command "
+
+Examples:
+        | command             | alias                        |
+        | search              | se                           |
