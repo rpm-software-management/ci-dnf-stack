@@ -97,8 +97,8 @@ Scenario: merged repository contains streams from both source repositories
       data:
         module: test-module
         profiles:
-          "test-profile1": [default]
-          "test-profile2": [default]
+          test-profile1: [default]
+          test-profile2: [default]
       ...
       ---
       document: modulemd
@@ -113,7 +113,7 @@ Scenario: merged repository contains streams from both source repositories
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile1:
             rpms:
@@ -124,7 +124,7 @@ Scenario: merged repository contains streams from both source repositories
               rationale: rationale for modular-package1
         artifacts:
           rpms:
-          - "modular-package1-0:0.1-1.x86_64.rpm"
+          - modular-package1-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd
@@ -139,7 +139,7 @@ Scenario: merged repository contains streams from both source repositories
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -150,6 +150,6 @@ Scenario: merged repository contains streams from both source repositories
               rationale: rationale for modular-package2
         artifacts:
           rpms:
-          - "modular-package2-0:0.1-1.x86_64.rpm"
+          - modular-package2-0:0.1-1.x86_64.rpm
       ...
       """
