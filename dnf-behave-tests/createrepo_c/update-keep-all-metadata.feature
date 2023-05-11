@@ -239,7 +239,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile1:
             rpms:
@@ -250,7 +250,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
               rationale: rationale for modular-package1
         artifacts:
           rpms:
-          - "modular-package1-0:0.1-1.x86_64.rpm"
+          - modular-package1-0:0.1-1.x86_64.rpm
       ...
       ---
       document: modulemd
@@ -265,7 +265,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
           Made up module
         license:
           module:
-          - "MIT"
+          - MIT
         profiles:
           test-profile2:
             rpms:
@@ -276,7 +276,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
               rationale: rationale for modular-package2
         artifacts:
           rpms:
-          - "modular-package2-0:0.1-1.x86_64.rpm"
+          - modular-package2-0:0.1-1.x86_64.rpm
       ...
       """
 
