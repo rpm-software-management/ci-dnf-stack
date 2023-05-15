@@ -1,8 +1,7 @@
-@dnf5daemon
 @dnf5
 Feature: Install different version of installed RPMs
 
-@dnf5
+@dnf5daemon
 Scenario: Install higher versions of installed RPMs
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install glibc"
@@ -24,7 +23,7 @@ Scenario: Install higher versions of installed RPMs
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64         |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
 
-@dnf5
+@dnf5daemon
 Scenario: Install lower versions of installed RPMs
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
@@ -46,7 +45,6 @@ Scenario: Install lower versions of installed RPMs
         | downgrade     | glibc-common-0:2.28-9.fc29.x86_64          |
         | downgrade     | glibc-all-langpacks-0:2.28-9.fc29.x86_64   |
 
-@dnf5
 Scenario: Install lower versions of installed RPMs and no-allow-downgrade
 #  expected to fail due to operation requires downgrade dependencies
   Given I use repository "dnf-ci-fedora"
