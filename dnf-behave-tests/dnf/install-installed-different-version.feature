@@ -23,7 +23,6 @@ Scenario: Install higher versions of installed RPMs
         | upgrade       | glibc-common-0:2.28-26.fc29.x86_64         |
         | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
 
-@dnf5daemon
 Scenario: Install lower versions of installed RPMs
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
