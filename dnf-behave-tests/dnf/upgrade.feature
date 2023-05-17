@@ -51,6 +51,68 @@ Scenario: Upgrade two RPMs
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
+@dnf5
+Scenario: Upgrade list of packages, none of them has an upgrade available
+   When I execute dnf with args "upgrade flac abcde"
+   Then the exit code is 0
+    And stdout contains "Nothing to do."
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Upgrade list of packages, one of them is not available
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade flac nosuchpkg"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    No match for argument: nosuchpkg
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Upgrade list of packages with --skip-unavailable, one of them is not available
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade --skip-unavailable nosuchpkg flac"
+   Then the exit code is 0
+    And stderr is
+    """
+    No match for argument: nosuchpkg
+    """
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
+
+
+@dnf5
+Scenario: Upgrade list of packages, one of them is not installed
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade flac dwm"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Packages for argument 'dwm' available, but not installed.
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Upgrade list of packages with --skip-unavailable, one of them is not installed
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "upgrade --skip-unavailable dwm flac"
+   Then the exit code is 0
+    And stderr is
+    """
+    Packages for argument 'dwm' available, but not installed.
+    """
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
+
+
 # @dnf5
 # TODO(nsella) rpmdb check fail
 @tier1
