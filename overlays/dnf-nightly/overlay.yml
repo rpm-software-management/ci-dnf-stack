@@ -13,7 +13,7 @@ components:
       src: github:openSUSE/libsolv.git
     distgit:
       src: fedorapkgs:libsolv.git
-      patches: drop
+      patches: keep
     distgit-overrides:
       - chroots:
           - centos-stream-8-x86_64
