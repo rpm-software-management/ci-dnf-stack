@@ -52,6 +52,8 @@ BuildRequires:  python3-dnf-plugin-modulesync
 BuildRequires:  python3-dnf-plugin-post-transaction-actions
 BuildRequires:  python3-dnf-plugin-versionlock
 BuildRequires:  python3-dnf-plugins-core
+BuildRequires:  python3-dnf-plugin-leaves
+BuildRequires:  python3-dnf-plugin-show-leaves
 
 %if 0%{?fedora}
 BuildRequires:  python3-dnf-plugin-system-upgrade
