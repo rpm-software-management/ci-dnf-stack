@@ -86,6 +86,111 @@ Scenario: Downgrade a package that was installed via rpm
         | Downgrade | flac-0:1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |
         | Replaced  | flac-0:1.3.3-3.fc29.x86_64 | External User | @System               |
 
+@dnf5
+Scenario: Downgrade list of packages, none of them has a downgrade available
+   When I execute dnf with args "install abcde wget"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade wget abcde"
+   Then the exit code is 0
+    And stdout contains "Nothing to do."
+    And stderr is
+    """
+    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
+    Package "abcde.noarch" of lowest version already installed, cannot downgrade it.
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Downgrade list of packages, one of them is not available
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade flac nosuchpkg"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    No match for argument: nosuchpkg
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Downgrade list of packages with --skip-unavailable, one of them is not available
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade --skip-unavailable flac nosuchpkg"
+   Then the exit code is 0
+    And stderr is
+    """
+    No match for argument: nosuchpkg
+    """
+    And Transaction is following
+        | Action    | Package                    |
+        | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
+
+
+@dnf5
+Scenario: Downgrade list of packages, one of them is not installed
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade flac abcde"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Packages for argument 'abcde' available, but not installed.
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Downgrade list of packages with --skip-unavailable, one of them is not installed
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade --skip-unavailable flac abcde"
+   Then the exit code is 0
+    And stderr is
+    """
+    Packages for argument 'abcde' available, but not installed.
+    """
+    And Transaction is following
+        | Action    | Package                    |
+        | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
+
+
+@dnf5
+Scenario: Downgrade mixture of not available/not installed/not downgradable/downgradable packages
+   When I execute dnf with args "install flac wget"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade nosuchpkg flac wget abcde"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    No match for argument: nosuchpkg
+    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
+    Packages for argument 'abcde' available, but not installed.
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: Downgrade mixture of not available/not installed/not downgradable/downgradable packages with --skip-unavailable
+   When I execute dnf with args "install flac wget"
+   Then the exit code is 0
+   When I execute dnf with args "downgrade --skip-unavailable nosuchpkg flac wget abcde"
+   Then the exit code is 0
+    And stderr is
+    """
+    No match for argument: nosuchpkg
+    Package "wget.x86_64" of lowest version already installed, cannot downgrade it.
+    Packages for argument 'abcde' available, but not installed.
+    """
+    And Transaction is following
+        | Action    | Package                    |
+        | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
+
 
 # @dnf5
 # TODO(nsella) different exit code 0
