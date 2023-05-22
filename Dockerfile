@@ -41,7 +41,8 @@ RUN set -x && \
 
 # install local RPMs if available
 COPY ./rpms/ /opt/ci/rpms/
-RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+#  Remove also microdnf because it is obsoleted in Fedora 38+ by dnf5 therefore cannot be install
+RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm /opt/ci/rpms/microdnf-*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
         dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
