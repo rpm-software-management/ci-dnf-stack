@@ -39,8 +39,8 @@ components:
     requires:
       - dnf
 
-  - name: microdnf
+  - name: dnf5
     git:
-      src: github:rpm-software-management/microdnf.git
+      src: github:rpm-software-management/dnf5.git
     requires:
-      - libdnf
+      - librepo
