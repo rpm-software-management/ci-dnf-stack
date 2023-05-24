@@ -20,8 +20,15 @@ runs:
     - name: Run Integration Tests
       shell: bash
       run: |
-        # Temporary workaround for an issue: https://github.com/containers/crun/issues/1226
-        dnf downgrade crun-1.8.3 -y
+        # Nested container (podman) in container requires that the root
+        # cgroup is empty: https://github.com/containers/crun/issues/1226
+        # Move all running processes into a sub-cgroup.
+        mkdir /sys/fs/cgroup/init
+        pgrep '.*' |
+        while read pid; do
+          # pids can only be written one at a time
+          echo $pid > /sys/fs/cgroup/init/cgroup.procs;
+        done
 
         # needed for podman user containers to work
         export STORAGE_OPTS='overlay2.mount_program=/usr/bin/fuse-overlayfs'
