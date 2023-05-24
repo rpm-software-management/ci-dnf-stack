@@ -34,6 +34,8 @@ jobs:
           RUN dnf -y install dnf-plugins-core
           RUN dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
           RUN dnf -y install rpm-gitoverlay fuse-overlayfs parallel podman wget clang-tools-extra
+          # needed for moving of PIDs in integration-tests
+          RUN dnf -y install procps-ng
           RUN dnf clean all  # remove dnf cache to make the image smaller
           EOF
 
