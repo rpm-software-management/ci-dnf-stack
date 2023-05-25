@@ -282,8 +282,6 @@ Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
 
 
-# Requires: https://github.com/rpm-software-management/dnf-plugins-core/commit/89403c17a04ac8157e02efe271c08a18c2805308
-@not.with_os=rhel__ge__8
 @bz1961217
 Scenario: The packages with minorbump part of release are correctly locked
   Given I use repository "miscellaneous"
