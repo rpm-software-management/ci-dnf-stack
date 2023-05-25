@@ -104,33 +104,33 @@ Given I use repository "repoquery-security-filters"
   License      : Public Domain
   Description  : This package is part of testing security options
 
-  Name         : A
-  Epoch        : 0
-  Version      : 2
-  Release      : 2
-  Architecture : x86_64
-  Install size : 0
-  Package size : [0-9]{4}
-  Source       : A-2-2.src.rpm
-  Repository   : repoquery-security-filters
-  Summary      : Testing advisory upgrade options
-  URL          : None
-  License      : Public Domain
-  Description  : This package is part of testing security options
+  Name          : A
+  Epoch         : 0
+  Version       : 2
+  Release       : 2
+  Architecture  : x86_64
+  Install size  : 0
+  Download size : [0-9]{4}
+  Source        : A-2-2.src.rpm
+  Repository    : repoquery-security-filters
+  Summary       : Testing advisory upgrade options
+  URL           : None
+  License       : Public Domain
+  Description   : This package is part of testing security options
 
-  Name         : A
-  Epoch        : 0
-  Version      : 3
-  Release      : 3
-  Architecture : x86_64
-  Install size : 0
-  Package size : [0-9]{4}
-  Source       : A-3-3.src.rpm
-  Repository   : repoquery-security-filters
-  Summary      : Testing advisory upgrade options
-  URL          : None
-  License      : Public Domain
-  Description  : This package is part of testing security options
+  Name          : A
+  Epoch         : 0
+  Version       : 3
+  Release       : 3
+  Architecture  : x86_64
+  Install size  : 0
+  Download size : [0-9]{4}
+  Source        : A-3-3.src.rpm
+  Repository    : repoquery-security-filters
+  Summary       : Testing advisory upgrade options
+  URL           : None
+  License       : Public Domain
+  Description   : This package is part of testing security options
   """
 
 
