@@ -455,7 +455,7 @@ def execute_transaction(goal,description):
     for tspkg in transaction.get_transaction_packages():
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
             downloader.add(tspkg.get_package())
-    downloader.download(True, True)
+    downloader.download()
     transaction.set_description(description)
     transaction.run()
 
@@ -467,7 +467,7 @@ def test_transaction(goal):
     for tspkg in transaction.get_transaction_packages():
         if libdnf5.base.transaction.transaction_item_action_is_inbound(tspkg.get_action()):
             downloader.add(tspkg.get_package())
-    downloader.download(True, True)
+    downloader.download()
     return transaction.test()
 
 base = libdnf5.base.Base()
