@@ -27,6 +27,7 @@ RUN set -x && \
     dnf -y copr enable rpmsoftwaremanagement/dnf5-unstable; \
     #  enable dnf-nightly as well to get librepo and libsolv
     dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+    dnf -y install dnf5-plugins; \
     # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
     dnf -y upgrade; \
     dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf5-unstable;
