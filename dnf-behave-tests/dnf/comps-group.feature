@@ -309,64 +309,17 @@ Scenario: Group list
     superripper-and-deps SuperRipper-and-deps        no
     """
 
-# @dnf5
-# TODO(nsella) Unknown argument "--ids" for command "list"
+@dnf5
 @bz1706382
-Scenario: Group list --ids
+Scenario: Group list with arg
  Given I use repository "dnf-ci-thirdparty"
-  When I execute dnf with args "group list --ids"
+  When I execute dnf with args "group list dnf-ci-testgroup"
   Then the exit code is 0
    And stdout is
     """
     <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup (dnf-ci-testgroup)
-       CQRlib-non-devel (cqrlib-non-devel)
-       SuperRipper-and-deps (superripper-and-deps)
-    """
-
-# @dnf5
-# TODO(nsella) Unknown argument "--ids" for command "list"
-@bz1706382
-Scenario: Group list --ids with arg
- Given I use repository "dnf-ci-thirdparty"
-  When I execute dnf with args "group list --ids dnf-ci-testgroup"
-  Then the exit code is 0
-   And stdout is
-    """
-    <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup (dnf-ci-testgroup)
-    """
-
-# @dnf5
-# TODO(nsella) different stdout
-@bz1706382
-Scenario: Group list ids => yum compatibility
- Given I use repository "dnf-ci-thirdparty"
-  When I execute dnf with args "group list ids"
-  Then the exit code is 0
-   And stdout is
-    """
-    <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup (dnf-ci-testgroup)
-       CQRlib-non-devel (cqrlib-non-devel)
-       SuperRipper-and-deps (superripper-and-deps)
-    """
-
-# @dnf5
-# TODO(nsella) different stdout
-@bz1706382
-Scenario: Group list ids with arg => yum compatibility
- Given I use repository "dnf-ci-thirdparty"
-  When I execute dnf with args "group list ids dnf-ci-testgroup"
-  Then the exit code is 0
-   And stdout is
-    """
-    <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup (dnf-ci-testgroup)
+    ID                   Name             Installed
+    dnf-ci-testgroup     DNF-CI-Testgroup        no
     """
 
 @bz1826198
