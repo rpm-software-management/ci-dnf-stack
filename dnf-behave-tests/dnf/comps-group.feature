@@ -346,8 +346,7 @@ Scenario: List an environment with empty name
        test-group           Test Group        no
        """
 
-# @dnf5
-# TODO(nsella) Replace emty name with "<name-unset>" missing
+@dnf5
 @bz1826198
 Scenario: Install a group with empty name
   Given I use repository "comps-group"
@@ -359,8 +358,7 @@ Scenario: Install a group with empty name
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 @bz1826198
 Scenario: Install an environment with empty name
   Given I use repository "comps-group"
@@ -448,7 +446,6 @@ Scenario: Merge environment with missing names containg a group with missing nam
        """
 
 
-@not.with_os=rhel__ge__8
 @dnf5
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
@@ -476,11 +473,11 @@ Scenario: Group info with a group that has missing name
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+# TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
 Scenario: Mark a group and an environment without name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
-   When I execute dnf with args "group mark no-name-group no-name-env"
+   When I execute dnf with args "group install --no-packages no-name-group no-name-env"
    Then Transaction is following
         | Action        | Package                           |
         | env-install   | <name-unset>                      |
@@ -488,8 +485,7 @@ Scenario: Mark a group and an environment without name
         | group-install | Test Group                        |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Install an environment with a nonexistent group
   Given I use repository "comps-group"
   When I execute dnf with args "group install env-with-a-nonexistent-group"
@@ -502,7 +498,7 @@ Scenario: Install an environment with a nonexistent group
         | install-group | test-package-1.0-1.fc29.noarch    |
     And stderr is
        """
-       no group 'nonexistent-group' from environment 'env-with-a-nonexistent-group'
+       No match for group from environment: nonexistent-group
        """
 
 

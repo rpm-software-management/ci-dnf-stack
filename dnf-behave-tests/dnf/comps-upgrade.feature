@@ -146,10 +146,9 @@ Scenario: Upgrade group when there were removed packages since installation - do
         | group-upgrade | AB-group                           |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade environment when there are no new groups/packages - nothing is installed
-  Given I successfully execute dnf with args "group mark install AB-environment"
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
    When I execute dnf with args "group upgrade AB-environment"
    Then the exit code is 0
     And Transaction is following
@@ -158,10 +157,9 @@ Scenario: Upgrade environment when there are no new groups/packages - nothing is
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade environment when there are new groups/packages - install new groups/packages
-  Given I successfully execute dnf with args "group mark install AB-environment"
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
     And I drop repository "comps-upgrade-1"
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-environment"
@@ -175,10 +173,10 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+#@dnf5
+# TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
 Scenario: Upgrade environment when there are both old and new groups/packages - install only new groups/packages
-  Given I successfully execute dnf with args "group mark install AB-environment"
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
       # I don't drop repository comps-environment-upgrade-1, so the comps are merged
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-environment"
@@ -193,10 +191,9 @@ Scenario: Upgrade environment when there are both old and new groups/packages - 
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade environment to new metadata and back - always install new groups/packages
-  Given I successfully execute dnf with args "group mark install AB-environment"
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
     And I drop repository "comps-upgrade-1"
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group upgrade AB-environment"
@@ -221,10 +218,9 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 Scenario: Upgrade environment when there were excluded packages during installation - don't install these packages
-  Given I successfully execute dnf with args "group mark install AB-environment"
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
    When I execute dnf with args "group install AB-environment --exclude=A-mandatory,A-default,A-optional,A-conditional-true"
    Then the exit code is 0
     And Transaction is following
@@ -239,8 +235,7 @@ Scenario: Upgrade environment when there were excluded packages during installat
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 Scenario: Upgrade environment when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install AB-environment"
     And I successfully execute dnf with args "remove A-mandatory A-default A-conditional-true"
@@ -263,8 +258,7 @@ Scenario: Upgrade empty group
         | group-upgrade | empty-group                        |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 @bz1872586
 Scenario: Upgrade empty environment
   Given I successfully execute dnf with args "group install empty-environment"
@@ -274,12 +268,11 @@ Scenario: Upgrade empty environment
         | Action        | Package                            |
         | env-upgrade   | empty-environment                  |
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
+@dnf5
 @bz1872586
 Scenario: Upgrade environment when all groups are removed
   Given I successfully execute dnf with args "group install AB-environment"
-    And I successfully execute dnf with args "group remove 'A-group - repo#1'"
+    And I successfully execute dnf with args "group remove a-group"
    When I execute dnf with args "group upgrade AB-environment"
    Then the exit code is 0
     And Transaction is following
@@ -287,11 +280,10 @@ Scenario: Upgrade environment when all groups are removed
         | env-upgrade   | AB-environment                     |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "mark" for command "group"
+@dnf5
 @bz1872586
 Scenario: Upgrade environment with installed optional groups
-  Given I successfully execute dnf with args "group mark install optional-environment a-group"
+  Given I successfully execute dnf with args "group install --no-packages optional-environment a-group"
    When I execute dnf with args "group upgrade optional-environment"
    Then the exit code is 0
     And Transaction is following
