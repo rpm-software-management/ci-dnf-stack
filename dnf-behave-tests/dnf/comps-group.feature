@@ -128,35 +128,35 @@ Scenario: Install and remove group with excluded package dependency
     And stderr contains "Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed"
 
 
-@xfail
+@dnf5
 @bz1673851
 Scenario: Install condidional package if required package is about to be installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install @DNF-CI-Testgroup filesystem-content"
+   When I execute dnf with args "install @dnf-ci-testgroup filesystem-content"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | install       | filesystem-content-0:3.9-2.fc29.x86_64    |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | lame-0:3.100-4.fc29.x86_64                |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | lame-libs-0:3.100-4.fc29.x86_64           |
-        | install       | wget-0:1.19.5-5.fc29.x86_64               |
         | group-install | DNF-CI-Testgroup                          |
-   When I execute dnf with args "group remove DNF-CI-Testgroup"
+        | install-group | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-group | lame-0:3.100-4.fc29.x86_64                |
+        | install-group | wget-0:1.19.5-5.fc29.x86_64               |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64           |
+   When I execute dnf with args "group remove dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | remove        | setup-0:2.12.1-1.fc29.noarch              |
+        | group-remove  | DNF-CI-Testgroup                          |
         | remove        | filesystem-0:3.9-2.fc29.x86_64            |
         | remove        | lame-0:3.100-4.fc29.x86_64                |
-        | remove        | lame-libs-0:3.100-4.fc29.x86_64           |
         | remove        | wget-0:1.19.5-5.fc29.x86_64               |
-        | group-remove  | DNF-CI-Testgroup                          |
+        | remove-unused | lame-libs-0:3.100-4.fc29.x86_64           |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
 
 
-@xfail
+@dnf5
 @bz1673851
 Scenario: Install condidional package if required package has been installed
   Given I use repository "dnf-ci-thirdparty"
@@ -166,16 +166,16 @@ Scenario: Install condidional package if required package has been installed
     And Transaction is following
         | Action        | Package                                   |
         | install       | filesystem-content-0:3.9-2.fc29.x86_64    |
-   When I execute dnf with args "group install DNF-CI-Testgroup "
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
-        | install       | setup-0:2.12.1-1.fc29.noarch              |
-        | install       | filesystem-0:3.9-2.fc29.x86_64            |
-        | install       | lame-0:3.100-4.fc29.x86_64                |
-        | install       | lame-libs-0:3.100-4.fc29.x86_64           |
-        | install       | wget-0:1.19.5-5.fc29.x86_64               |
         | group-install | DNF-CI-Testgroup                          |
+        | install-group | filesystem-0:3.9-2.fc29.x86_64            |
+        | install-group | lame-0:3.100-4.fc29.x86_64                |
+        | install-group | wget-0:1.19.5-5.fc29.x86_64               |
+        | install-dep   | lame-libs-0:3.100-4.fc29.x86_64           |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
 #@dnf5
@@ -553,7 +553,7 @@ Scenario: Install an environment with a nonexistent group
        """
 
 
-@xfail
+@dnf5
 @bz2066638
 Scenario: Packages that are part of another installed group are not removed
   Given I use repository "comps-group"
