@@ -1,10 +1,10 @@
+@dnf5
 Feature: Install remove test
 
 Background: Use install-remove repository
   Given I use repository "dnf-ci-install-remove"
 
 # tea requires water and provides hot-beverage
-@dnf5
 Scenario Outline: Install remove <spec type> that requires only name
    When I execute dnf with args "install <spec>"
    Then the exit code is 0
@@ -36,7 +36,6 @@ Examples:
     | provide           | hot-beverage  |
 
 
-@dnf5
 Scenario: Install remove package via rpm
   Given I use repository "dnf-ci-fedora"
   Given I successfully execute dnf with args "install basesystem filesystem"
@@ -76,7 +75,6 @@ Scenario: Install remove package via rpm
 
 
 # coffee requires water and sugar == 1
-@dnf5
 @dnf5daemon
 Scenario: Install remove package that requires exact version
    When I execute dnf with args "install coffee"
@@ -96,7 +94,6 @@ Scenario: Install remove package that requires exact version
 
 
 # chockolate  requires sugar>=2 and milk==1
-@dnf5
 @dnf5daemon
 Scenario: Install remove package that requires version >=
    When I execute dnf with args "install chockolate"
@@ -123,7 +120,6 @@ Scenario: Install remove package that requires version >=, not satisfiable
 
 
 # both coffee and tea require water
-@dnf5
 @dnf5daemon
 Scenario: Install remove two package with shared dependency
    When I execute dnf with args "install tea coffee"
@@ -149,7 +145,6 @@ Scenario: Install remove two package with shared dependency
         | remove-unused | water-0:1.0-1.x86_64              |
 
 
-@dnf5
 @dnf5daemon
 Scenario: Install remove rpm file from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
@@ -164,7 +159,6 @@ Scenario: Install remove rpm file from local path
         | remove        | water-0:1.0-1.x86_64              |
 
 
-@dnf5
 @dnf5daemon
 Scenario: Install remove *.rpm from local path
    When I execute dnf with args "install {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water_{{still,carbonated}}-1*.rpm"
@@ -181,7 +175,6 @@ Scenario: Install remove *.rpm from local path
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
-@dnf5
 @xfail
 # TODO(lukash) one would probably expect the package would be userinstalled after a `dnf install`
 Scenario: Install a package that was already installed via rpm
@@ -197,11 +190,8 @@ Scenario: Install a package that was already installed via rpm
         | Install | water-0:1.0-1.x86_64 | User       | dnf-ci-fedora |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
-# No match for argument: @Beverages
 Scenario: Install remove group
-   When I execute dnf with args "install @Beverages"
+   When I execute dnf with args "install @beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -209,17 +199,20 @@ Scenario: Install remove group
         | install-group | tea-0:1.0-1.x86_64                |
         | install-group | water_still-0:1.0-1.x86_64        |
         | install-dep   | water-0:1.0-1.x86_64              |
-   When I execute dnf with args "group list Beverages"
+   When I execute dnf with args "group list beverages"
    Then the exit code is 0
-    And stdout does not contain "Available Groups"
-    And stdout contains "Beverages"
-    And stdout contains "Installed Groups"
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    ID +Name +Installed
+    beverages +Beverages +yes
+    """
    When I execute dnf with args "install water_carbonated"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | install       | water_carbonated-0:1.0-1.x86_64   |
-   When I execute dnf with args "group remove Beverages"
+   When I execute dnf with args "group remove beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -230,10 +223,8 @@ Scenario: Install remove group
         | present       | water_carbonated-0:1.0-1.x86_64   |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "install" for command "group"
 Scenario: Install remove group with optional packages
-   When I execute dnf with args "group install --with-optional Beverages"
+   When I execute dnf with args "group install --with-optional beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -242,7 +233,7 @@ Scenario: Install remove group with optional packages
         | install-group | water_still-0:1.0-1.x86_64        |
         | install-group | water_carbonated-0:1.0-1.x86_64   |
         | install-dep   | water-0:1.0-1.x86_64              |
-   When I execute dnf with args "remove @Beverages"
+   When I execute dnf with args "remove @beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -253,9 +244,6 @@ Scenario: Install remove group with optional packages
         | remove-unused | water-0:1.0-1.x86_64              |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
-# No match for argument: @Beverages
 Scenario: Install remove group with already installed package with dependency
    When I execute dnf with args "install tea"
    Then the exit code is 0
@@ -263,7 +251,7 @@ Scenario: Install remove group with already installed package with dependency
         | Action        | Package                           |
         | install       | tea-0:1.0-1.x86_64                |
         | install-dep   | water-0:1.0-1.x86_64              |
-   When I execute dnf with args "install @Beverages"
+   When I execute dnf with args "install @beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -271,7 +259,7 @@ Scenario: Install remove group with already installed package with dependency
         | install-group | water_still-0:1.0-1.x86_64        |
         | present       | tea-0:1.0-1.x86_64                |
         | present       | water-0:1.0-1.x86_64              |
-   When I execute dnf with args "group remove Beverages"
+   When I execute dnf with args "group remove beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -281,16 +269,13 @@ Scenario: Install remove group with already installed package with dependency
         | present       | water-0:1.0-1.x86_64              |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
-# No match for argument: @Beverages
 Scenario: Install remove group with already installed package
    When I execute dnf with args "install water_still"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | install       | water_still-0:1.0-1.x86_64        |
-   When I execute dnf with args "install @Beverages"
+   When I execute dnf with args "install @beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -298,7 +283,7 @@ Scenario: Install remove group with already installed package
         | install-group | tea-0:1.0-1.x86_64                |
         | install-dep   | water-0:1.0-1.x86_64              |
         | present       | water_still-0:1.0-1.x86_64        |
-   When I execute dnf with args "group remove Beverages"
+   When I execute dnf with args "group remove beverages"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
@@ -308,7 +293,6 @@ Scenario: Install remove group with already installed package
         | present       | water_still-0:1.0-1.x86_64        |
 
 
-@dnf5
 @dnf5daemon
 # coffee requires water and sugar, water is user-installed dependency
 Scenario: User-installed packages are not removed as unused dependencies
