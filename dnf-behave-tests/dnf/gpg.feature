@@ -70,6 +70,11 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
     And RPMDB Transaction is empty
+    And stderr matches line by line
+    """
+    PGP check for package "basesystem-11-6\.fc29\.noarch" \(.*/basesystem-11-6\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Public key is not installed\.
+    Signature verification failed
+    """
 
 
 @dnf5
@@ -80,6 +85,11 @@ Scenario: Fail to install signed package with incorrect checksum
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
+    And stderr matches line by line
+    """
+    PGP check for package "broken-package-0\.2\.4-1\.fc29\.noarch" \(.*/broken-package-0\.2\.4-1\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Problem occurred when opening the package\.
+    Signature verification failed
+    """
 
 
 @dnf5
@@ -99,34 +109,41 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
    Then the exit code is 0
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--nogpgcheck" for command "install"
-Scenario: Install unsigned package from repository without gpgcheck set using option --nogpgcheck
-  Given I configure repository "dnf-ci-gpg" with
-        | key      | value |
-        | gpgcheck |       |
-        | gpgkey   |       |
-   When I execute dnf with args "install flac --nogpgcheck"
+@dnf5
+Scenario: Attempt to install unsigned package from repo with gpgcheck=1
+   When I execute dnf with args "install flac"
+   Then the exit code is 1
+    And stderr matches line by line
+    """
+    PGP check for package "flac-1\.3\.2-8\.fc29\.x86_64" \(.*/flac-1\.3\.2-8\.fc29\.x86_64\.rpm\) from repo "dnf-ci-gpg" has failed: The package is not signed\.
+    Signature verification failed
+    """
+
+
+@dnf5
+Scenario: Install unsigned package from repository without gpgcheck set using option --no-gpgchecks
+   When I execute dnf with args "install flac --no-gpgchecks"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                             |
         | install       | flac-0:1.3.2-8.fc29.x86_64          |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--nogpgcheck" for command "install"
+@dnf5
 @bz1314405
-Scenario: Fail to install package with incorrect checksum when gpgcheck=0
+Scenario: Fail to install package with incorrect checksum with --no-gpgchecks
   Given I configure repository "dnf-ci-gpg" with
         | key      | value |
         | gpgcheck |       |
         | gpgkey   |       |
-   When I execute dnf with args "install broken-package --nogpgcheck"
+   When I execute dnf with args "install broken-package --no-gpgchecks"
    Then the exit code is 1
     And DNF Transaction is following
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
+    # we should test also stderr here but it looks like error message went to stdout
+    And stdout contains "Transaction failed: Rpm transaction failed."
 
 
 @dnf5
