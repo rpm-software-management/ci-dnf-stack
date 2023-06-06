@@ -54,7 +54,7 @@ runs:
         fi
 
         # if there's a git already cloned in the `gits` directory, rpm-gitoverlay will use it
-        rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner="${{inputs.copr-user}}" --project="$PROJECT_NAME" --additional-repos="copr://rpmsoftwaremanagement/dnf-nightly" --chroots="$CHROOT" --delete-project-after-days=7
+        rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s "overlays/${{inputs.overlay}}" rpm copr --owner="${{inputs.copr-user}}" --project="$PROJECT_NAME" --additional-repos="copr://rpmsoftwaremanagement/dnf-nightly copr://rpmsoftwaremanagement/dnf5-unstable" --chroots="$CHROOT" --delete-project-after-days=7
 
         # delete the Copr secret just to be on the safe(er) side when running potentially untrusted PR code (albeit in a container, which should be secure)
         rm -rf "$HOME/.config/copr"
