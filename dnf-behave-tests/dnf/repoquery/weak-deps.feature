@@ -1,3 +1,4 @@
+@dnf5
 Feature: Tests for repoquery weak deps related functionality:
  --recommends, --supplements, --suggests, --enhances,
  --whatrecommends, --whatsupplements, --whatsuggests, --whatenhances
@@ -29,6 +30,7 @@ Scenario: repoquery --recommends NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       b1
       b1 > 1.0
       b2 = 2.0
@@ -39,6 +41,7 @@ Scenario: repoquery --recommends NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       b1
       """
 
@@ -47,6 +50,7 @@ Scenario: repoquery --recommends NAMEGLOB-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       b1 > 1.0
       b2 = 2.0
       """
@@ -54,7 +58,10 @@ Scenario: repoquery --recommends NAMEGLOB-VERSION
 Scenario: repoquery --recommends NAME (nonexisting package)
  When I execute dnf with args "repoquery --recommends dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --supplements
@@ -63,6 +70,7 @@ Scenario: repoquery --supplements NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       c1
       c1 >= 1.0
       c2 = 2.0
@@ -73,6 +81,7 @@ Scenario: repoquery --supplements NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       c1
       """
 
@@ -81,6 +90,7 @@ Scenario: repoquery --supplements NAMEGLOB-VERSIONGLOB
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       c1
       c1 >= 1.0
       c2 = 1.0
@@ -90,7 +100,10 @@ Scenario: repoquery --supplements NAMEGLOB-VERSIONGLOB
 Scenario: repoquery --supplements NAME (nonexisting package)
  When I execute dnf with args "repoquery --supplements dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --suggests
@@ -99,6 +112,7 @@ Scenario: repoquery --suggests NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       d1
       d1 < 1.0
       d2 = 2.0
@@ -109,6 +123,7 @@ Scenario: repoquery --suggests NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       d1
       """
 
@@ -117,13 +132,17 @@ Scenario: repoquery --suggests NAMEGLOB-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       d1
       """
 
 Scenario: repoquery --suggests NAME (nonexisting package)
  When I execute dnf with args "repoquery --suggests dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --enhances
@@ -132,6 +151,7 @@ Scenario: repoquery --enhances NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a1
       a1 <= 1.0
       a2 = 2.0
@@ -142,6 +162,7 @@ Scenario: repoquery --enhances NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a1
       """
 
@@ -150,17 +171,20 @@ Scenario: repoquery --enhances NAMEGLOB-VERSIONGLOB
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a1
       """
 
 Scenario: repoquery --enhances NAME (nonexisting package)
  When I execute dnf with args "repoquery --enhances dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --whatrecommends
-@dnf5
 Scenario: repoquery --whatrecommends NAME
  When I execute dnf with args "repoquery --whatrecommends b2"
  Then the exit code is 0
@@ -171,7 +195,6 @@ Scenario: repoquery --whatrecommends NAME
       a2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrecommends NAMEGLOB
  When I execute dnf with args "repoquery --whatrecommends b?"
  Then the exit code is 0
@@ -183,7 +206,6 @@ Scenario: repoquery --whatrecommends NAMEGLOB
       a2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrecommends NAMEGLOB > VERSION
  When I execute dnf with args "repoquery --whatrecommends 'b? < 1.0'"
  Then the exit code is 0
@@ -194,7 +216,6 @@ Scenario: repoquery --whatrecommends NAMEGLOB > VERSION
       a2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrecommends NAME (nonexisting package)
  When I execute dnf with args "repoquery --whatrecommends dummy"
  Then the exit code is 0
@@ -205,7 +226,6 @@ Scenario: repoquery --whatrecommends NAME (nonexisting package)
 
 
 # --whatsupplements
-@dnf5
 Scenario: repoquery --whatsupplements NAME
  When I execute dnf with args "repoquery --whatsupplements c2"
  Then the exit code is 0
@@ -216,7 +236,6 @@ Scenario: repoquery --whatsupplements NAME
       b2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsupplements NAMEGLOB
  When I execute dnf with args "repoquery --whatsupplements c[2]"
  Then the exit code is 0
@@ -227,7 +246,6 @@ Scenario: repoquery --whatsupplements NAMEGLOB
       b2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsupplements NAMEGLOB >= VERSION
  When I execute dnf with args "repoquery --whatsupplements 'c[2] >= 1.5'"
  Then the exit code is 0
@@ -237,7 +255,6 @@ Scenario: repoquery --whatsupplements NAMEGLOB >= VERSION
       b2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsupplements NAME (nonexisting package)
  When I execute dnf with args "repoquery --whatsupplements dummy"
  Then the exit code is 0
@@ -248,7 +265,6 @@ Scenario: repoquery --whatsupplements NAME (nonexisting package)
 
 
 # --whatsuggests
-@dnf5
 Scenario: repoquery --whatsuggests NAME
  When I execute dnf with args "repoquery --whatsuggests d2"
  Then the exit code is 0
@@ -259,7 +275,6 @@ Scenario: repoquery --whatsuggests NAME
       c2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsuggests NAMEGLOB
  When I execute dnf with args "repoquery --whatsuggests d[12]"
  Then the exit code is 0
@@ -271,7 +286,6 @@ Scenario: repoquery --whatsuggests NAMEGLOB
       c2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsuggests NAME >= VERSION
  When I execute dnf with args "repoquery --whatsuggests 'd1 >= 3.14'"
  Then the exit code is 0
@@ -282,7 +296,6 @@ Scenario: repoquery --whatsuggests NAME >= VERSION
       c2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatsuggests NAME (nonexisting package)
  When I execute dnf with args "repoquery --whatsuggests dummy"
  Then the exit code is 0
@@ -293,7 +306,6 @@ Scenario: repoquery --whatsuggests NAME (nonexisting package)
 
 
 # --whatenhances
-@dnf5
 Scenario: repoquery --whatenhances NAME
  When I execute dnf with args "repoquery --whatenhances a2"
  Then the exit code is 0
@@ -304,7 +316,6 @@ Scenario: repoquery --whatenhances NAME
       d2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatenhances NAMEGLOB
  When I execute dnf with args "repoquery --whatenhances a[2]"
  Then the exit code is 0
@@ -315,7 +326,6 @@ Scenario: repoquery --whatenhances NAMEGLOB
       d2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatenhances NAMEGLOB >= VERSION
  When I execute dnf with args "repoquery --whatenhances 'a? >= 3.0'"
  Then the exit code is 0
@@ -326,7 +336,6 @@ Scenario: repoquery --whatenhances NAMEGLOB >= VERSION
       d2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatenhances NAME (nonexisting package)
  When I execute dnf with args "repoquery --whatenhances dummy"
  Then the exit code is 0
@@ -337,7 +346,6 @@ Scenario: repoquery --whatenhances NAME (nonexisting package)
 
 
 # --whatdepends
-@dnf5
 Scenario: repoquery --whatdepends NAME (requires + enhances)
  When I execute dnf with args "repoquery --whatdepends a1"
  Then the exit code is 0
@@ -350,7 +358,6 @@ Scenario: repoquery --whatdepends NAME (requires + enhances)
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAME (requires + recommends)
  When I execute dnf with args "repoquery --whatdepends b1"
  Then the exit code is 0
@@ -363,7 +370,6 @@ Scenario: repoquery --whatdepends NAME (requires + recommends)
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAME (requires + supplements)
  When I execute dnf with args "repoquery --whatdepends c1"
  Then the exit code is 0
@@ -376,7 +382,6 @@ Scenario: repoquery --whatdepends NAME (requires + supplements)
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAME (requires + suggests)
  When I execute dnf with args "repoquery --whatdepends d1"
  Then the exit code is 0
@@ -389,7 +394,6 @@ Scenario: repoquery --whatdepends NAME (requires + suggests)
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAME > VERSION
  When I execute dnf with args "repoquery --whatdepends 'd2 > 1.4'"
  Then the exit code is 0
@@ -399,7 +403,6 @@ Scenario: repoquery --whatdepends NAME > VERSION
       c2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAMEGLOB < VERSION
  When I execute dnf with args "repoquery --whatdepends '[abc]2 < 1.5'"
  Then the exit code is 0
@@ -411,7 +414,6 @@ Scenario: repoquery --whatdepends NAMEGLOB < VERSION
       d1-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAMEGLOB >= VERSION (ranged matching)
 When I execute dnf with args "repoquery --whatdepends '[abc]1 <= 1.0'"
  Then the exit code is 0
@@ -429,7 +431,6 @@ When I execute dnf with args "repoquery --whatdepends '[abc]1 <= 1.0'"
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatdepends NAME
  When I execute dnf with args "repoquery --exactdeps --whatdepends c1"
  Then the exit code is 0
@@ -441,7 +442,6 @@ Scenario: repoquery --exactdeps --whatdepends NAME
       b2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatdepends NAME (no nonexact deps)
  When I execute dnf with args "repoquery --exactdeps --whatdepends d1"
  Then the exit code is 0
@@ -454,7 +454,6 @@ Scenario: repoquery --exactdeps --whatdepends NAME (no nonexact deps)
       top-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatdepends NAME (nonexisting package)
  When I execute dnf with args "repoquery --whatdepends dummy"
  Then the exit code is 0
