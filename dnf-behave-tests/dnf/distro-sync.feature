@@ -97,3 +97,69 @@ Given I use repository "dnf-ci-gpg"
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
     Signature verification failed
     """
+
+
+@dnf5
+Scenario: distro-sync list of packages, one of them is not available
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "distro-sync flac nosuchpkg"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    No match for argument: nosuchpkg
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: distro-sync list of packages with --skip-unavailable, one of them is not available
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "distro-sync --skip-unavailable flac nosuchpkg"
+   Then the exit code is 0
+    And stderr is
+    """
+    No match for argument: nosuchpkg
+    """
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
+
+
+@dnf5
+Scenario: distro-sync list of packages, one of them is not installed
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "distro-sync flac dwm"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Packages for argument 'dwm' available, but not installed.
+    """
+    And Transaction is empty
+
+
+@dnf5
+Scenario: distro-sync list of packages with --skip-unavailable, one of them is not installed
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "distro-sync --skip-unavailable dwm flac"
+   Then the exit code is 0
+    And stderr is
+    """
+    Packages for argument 'dwm' available, but not installed.
+    """
+    And Transaction is following
+        | Action        | Package                                   |
+        | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
