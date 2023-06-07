@@ -503,6 +503,23 @@ Scenario: Install an environment with a nonexistent group
 
 
 @dnf5
+Scenario: Install an environment using @^environment syntax
+  Given I use repository "comps-group"
+  When I execute dnf with args "install @^env-with-a-nonexistent-group"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | env-install   | Env with a nonexistent group      |
+        | group-install | Test Group                        |
+        | group-install | <name-unset>                      |
+        | install-group | test-package-1.0-1.fc29.noarch    |
+    And stderr is
+       """
+       No match for group from environment: nonexistent-group
+       """
+
+
+@dnf5
 @bz2066638
 Scenario: Packages that are part of another installed group are not removed
   Given I use repository "comps-group"
