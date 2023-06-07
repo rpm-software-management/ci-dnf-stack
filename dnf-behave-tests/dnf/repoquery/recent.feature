@@ -1,3 +1,4 @@
+@dnf5
 Feature: Tests for dnf repoquery --recent option
 
 
@@ -17,7 +18,10 @@ Background: prepare repository with recent package labirinto
 Scenario: dnf repoquery --recent vagare (when there's no such recent pkg)
    When I execute dnf with args "repoquery --recent vagare"
    Then the exit code is 0
-    And stdout is empty
+    And stdout is
+    """
+    <REPOSYNC>
+    """
 
 
 Scenario: dnf repoquery --recent labirinto (when recent pkg exists)
@@ -25,6 +29,7 @@ Scenario: dnf repoquery --recent labirinto (when recent pkg exists)
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     labirinto-0:1.0-1.fc29.x86_64
     """
 
@@ -34,5 +39,6 @@ Scenario: dnf repoquery --recent --installed labirinto (when recent pkg exists)
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     labirinto-0:1.0-1.fc29.x86_64
     """
