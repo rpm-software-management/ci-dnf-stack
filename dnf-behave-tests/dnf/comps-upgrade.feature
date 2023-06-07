@@ -170,8 +170,25 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | install-group | B-default-0:1.0-1.x86_64           |
         | install-group | B-conditional-true-0:1.0-1.x86_64  |
         | group-install | B-group                            |
+        | group-remove  | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
+
+@dnf5
+Scenario: Upgrade environment - user-installed groups are not removed
+  Given I successfully execute dnf with args "group install --no-packages AB-environment"
+    And I successfully execute dnf with args "group install --no-packages a-group"
+    And I drop repository "comps-upgrade-1"
+    And I use repository "comps-upgrade-2"
+   When I execute dnf with args "group upgrade AB-environment"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | install-group | B-mandatory-0:1.0-1.x86_64         |
+        | install-group | B-default-0:1.0-1.x86_64           |
+        | install-group | B-conditional-true-0:1.0-1.x86_64  |
+        | group-install | B-group                            |
+        | env-upgrade   | AB-environment                     |
 
 #@dnf5
 # TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
@@ -204,6 +221,7 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | B-default-0:1.0-1.x86_64           |
         | install-group | B-conditional-true-0:1.0-1.x86_64  |
         | group-install | B-group                            |
+        | group-remove  | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
   Given I drop repository "comps-upgrade-2"
     And I use repository "comps-upgrade-1"
@@ -215,6 +233,10 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
         | group-install | A-group - repo#1                   |
+        | group-remove  | B-group                            |
+        | remove        | B-mandatory-0:1.0-1.x86_64         |
+        | remove        | B-default-0:1.0-1.x86_64           |
+        | remove        | B-conditional-true-0:1.0-1.x86_64  |
         | env-upgrade   | AB-environment                     |
 
 
