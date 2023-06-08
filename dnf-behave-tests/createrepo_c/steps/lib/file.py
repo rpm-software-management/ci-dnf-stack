@@ -2,6 +2,7 @@
 
 import hashlib
 import os
+import tempfile
 
 from common.lib.file import decompress_file_by_extension
 
@@ -34,11 +35,11 @@ def decompression_iter(filepath, compression_type, blocksize=65536):
     if compression_type == "bz2":
         return file_as_blockiter(bz2.open(filepath, 'rb'), blocksize)
     if compression_type == "zstd":
-        decompress_file_by_extension_to_dir(filepath, os.path.dirname(filepath))
-        return file_as_blockiter(open(filepath[:-4], 'rb'), blocksize)
+        tmp_file = decompress_file_by_extension_to_dir(filepath, tempfile.mkdtemp())
+        return file_as_blockiter(open(tmp_file, 'rb'), blocksize)
     if compression_type == "zck":
-        decompress_file_by_extension_to_dir(filepath, os.path.dirname(filepath))
-        return file_as_blockiter(open(filepath[:-4], 'rb'), blocksize)
+        tmp_file = decompress_file_by_extension_to_dir(filepath, tempfile.mkdtemp())
+        return file_as_blockiter(open(tmp_file, 'rb'), blocksize)
 
     return file_as_blockiter(open(filepath, 'rb'), blocksize)
 
