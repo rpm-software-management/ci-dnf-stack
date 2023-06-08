@@ -89,7 +89,7 @@ Scenario: merged repository contains streams from both source repositories
  Then the exit code is 0
   And stderr is empty
   And repodata "/merged_repo/repodata/" are consistent
-  And file "/merged_repo/repodata/[a-z0-9]*-modules.yaml.gz" contents is
+  And file "/merged_repo/repodata/[a-z0-9]*-modules.yaml.zst" contents is
       """
       ---
       document: modulemd-defaults

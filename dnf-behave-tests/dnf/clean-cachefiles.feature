@@ -20,8 +20,8 @@ Background: Fill the cache
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
-   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
+   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.zst
+   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.zst
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
    \./simple-base-filenames\.solvx
    \./simple-base\.solv
@@ -65,8 +65,8 @@ Scenario: Cached packages cleanup (dnf clean packages)
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
-   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
+   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.zst
+   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.zst
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
    \./simple-base-filenames\.solvx
    \./simple-base\.solv
@@ -84,7 +84,7 @@ Scenario: Database cached cleanup (dnf clean dbcache)
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/repodata
-   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.gz
-   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.gz
+   \./simple-base-[0-9a-f]{16}/repodata/filelists\.xml\.zst
+   \./simple-base-[0-9a-f]{16}/repodata/primary\.xml\.zst
    \./simple-base-[0-9a-f]{16}/repodata/repomd\.xml
    """

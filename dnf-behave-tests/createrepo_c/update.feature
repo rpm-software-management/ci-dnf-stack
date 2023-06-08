@@ -17,9 +17,9 @@ Given I create directory "/empty-repo/"
   And repodata "/empty-repo/repodata/" are consistent
   And repodata in "/empty-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update on empty repo with simplified filenames
@@ -30,9 +30,9 @@ Given I create directory "/empty-repo/"
   And repodata "/empty-repo/repodata/" are consistent
   And repodata in "/empty-repo/repodata/" is
       | Type         | File                 | Checksum Type | Compression Type |
-      | primary      | primary.xml.gz       | sha256        | gz               |
-      | filelists    | filelists.xml.gz     | sha256        | gz               |
-      | other        | other.xml.gz         | sha256        | gz               |
+      | primary      | primary.xml.zst      | sha256        | zstd             |
+      | filelists    | filelists.xml.zst    | sha256        | zstd             |
+      | other        | other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update discards additional metadata
@@ -47,20 +47,20 @@ Given I create directory "/empty-repo/"
   And I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/empty-repo"
   And repodata "/empty-repo/repodata/" are consistent
   And repodata in "/empty-repo/repodata/" is
-      | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
+      | Type         | File                              | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml         | sha256        | -                |
+      | group_zst    | ${checksum}-groupfile.xml.zst     | sha256        | zstd             |
  When I execute createrepo_c with args "--update ." in "/empty-repo"
  Then the exit code is 0
   And repodata "/empty-repo/repodata/" are consistent
   And repodata in "/empty-repo/repodata/" is
-      | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | Type         | File                              | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
 
 
 Scenario: --update on repo with packages
@@ -71,9 +71,9 @@ Given I execute createrepo_c with args "." in "/temp-repo"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update twice on repo with packages
@@ -87,9 +87,9 @@ Given I execute createrepo_c with args "." in "/temp-repo"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update with --update-md-path
@@ -100,9 +100,9 @@ Given I create directory "/updated-repo/"
   And repodata "/updated-repo/repodata/" are consistent
   And repodata in "/updated-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update with --update-md-path twice
@@ -116,9 +116,9 @@ Given I create directory "/updated-repo/"
   And repodata "/updated-repo/repodata/" are consistent
   And repodata in "/updated-repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
 
 
 Scenario: --update with no changes doesn't update the files

@@ -23,9 +23,9 @@ Given I execute createrepo_c with args "--no-database ." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
@@ -38,9 +38,9 @@ Given I execute createrepo_c with args "--simple-md-filenames --no-database ." i
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                 | Checksum Type | Compression Type |
-      | primary      | primary.xml.gz       | sha256        | gz               |
-      | filelists    | filelists.xml.gz     | sha256        | gz               |
-      | other        | other.xml.gz         | sha256        | gz               |
+      | primary      | primary.xml.zst      | sha256        | zstd             |
+      | filelists    | filelists.xml.zst    | sha256        | zstd             |
+      | other        | other.xml.zst        | sha256        | zstd             |
       | primary_db   | primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | other.sqlite.bz2     | sha256        | bz2              |
@@ -53,9 +53,9 @@ Given I execute createrepo_c with args "--simple-md-filenames --database ." in "
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                 | Checksum Type | Compression Type |
-      | primary      | primary.xml.gz       | sha256        | gz               |
-      | filelists    | filelists.xml.gz     | sha256        | gz               |
-      | other        | other.xml.gz         | sha256        | gz               |
+      | primary      | primary.xml.zst      | sha256        | zstd             |
+      | filelists    | filelists.xml.zst    | sha256        | zstd             |
+      | other        | other.xml.zst        | sha256        | zstd             |
       | primary_db   | primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | other.sqlite.bz2     | sha256        | bz2              |
@@ -68,9 +68,9 @@ Given I execute createrepo_c with args "." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
       | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
       | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
@@ -83,9 +83,9 @@ Given I execute createrepo_c with args "." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.gz    | sha256        | gz               |
       | filelists_db | ${checksum}-filelists.sqlite.gz  | sha256        | gz               |
       | other_db     | ${checksum}-other.sqlite.gz      | sha256        | gz               |
@@ -97,10 +97,10 @@ Given I execute createrepo_c with args ". --database" in "/"
  Then the exit code is 0
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
-      | Type         | File                 | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | Type         | File                             | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.xz    | sha256        | xz               |
       | filelists_db | ${checksum}-filelists.sqlite.xz  | sha256        | xz               |
       | other_db     | ${checksum}-other.sqlite.xz      | sha256        | xz               |
@@ -116,9 +116,9 @@ Given I execute createrepo_c with args "." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
@@ -131,9 +131,9 @@ Given I execute createrepo_c with args ". --database" in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
@@ -149,9 +149,9 @@ Given I execute createrepo_c with args "." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha512        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha512        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha512        | bz2              |
@@ -164,9 +164,9 @@ Given I execute createrepo_c with args "--no-database ." in "/"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.zst   | sha256        | zstd             |
       | filelists_db | ${checksum}-filelists.sqlite.zst | sha256        | zstd             |
       | other_db     | ${checksum}-other.sqlite.zst     | sha256        | zstd             |
