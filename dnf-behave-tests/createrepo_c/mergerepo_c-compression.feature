@@ -17,9 +17,9 @@ Scenario: Merged repository has xz compression
   And repodata "/merged_repo/repodata/" are consistent
   And repodata in "/merged_repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.xz       | sha256        | xz               |
+      | filelists    | ${checksum}-filelists.xml.xz     | sha256        | xz               |
+      | other        | ${checksum}-other.xml.xz         | sha256        | xz               |
       | updateinfo   | ${checksum}-updateinfo.xml.xz    | sha256        | xz               |
 
 
