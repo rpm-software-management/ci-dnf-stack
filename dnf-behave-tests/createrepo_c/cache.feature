@@ -11,9 +11,9 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
   And primary in "/repodata" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -24,9 +24,9 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
   And primary in "/repodata" has only packages
       | Name          | Epoch | Version | Release | Architecture |
       | package       | 0     | 0.2.1   | 1.fc29  | x86_64       |

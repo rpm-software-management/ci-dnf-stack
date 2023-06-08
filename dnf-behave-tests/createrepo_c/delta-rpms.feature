@@ -9,10 +9,10 @@ Scenario: --deltas on empty repo
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | prestodelta   | ${checksum}-prestodelta.xml.gz      | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | prestodelta   | ${checksum}-prestodelta.xml.zst     | sha256        | zstd             |
 
 
 Scenario: --deltas on repo
@@ -22,10 +22,10 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | prestodelta   | ${checksum}-prestodelta.xml.gz      | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | prestodelta   | ${checksum}-prestodelta.xml.zst     | sha256        | zstd             |
 
 
 Scenario: --deltas with empty --oldpackagedirs on repo
@@ -36,10 +36,10 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | prestodelta   | ${checksum}-prestodelta.xml.gz      | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | prestodelta   | ${checksum}-prestodelta.xml.zst     | sha256        | zstd             |
 
 
 Scenario: --deltas with --oldpackagedirs on repo generates drpm
@@ -51,10 +51,10 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages-2/
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | prestodelta   | ${checksum}-prestodelta.xml.gz      | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | prestodelta   | ${checksum}-prestodelta.xml.zst     | sha256        | zstd             |
   And file "/drpms/package-0.2.1-1.fc29_0.3.1-1.fc29.x86_64.drpm" exists
 
 
@@ -68,10 +68,10 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type          | File                                | Checksum Type | Compression Type |
-      | primary       | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists     | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other         | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | prestodelta   | ${checksum}-prestodelta.xml.gz      | sha256        | gz               |
+      | primary       | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists     | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other         | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | prestodelta   | ${checksum}-prestodelta.xml.zst     | sha256        | zstd             |
   And file "/drpms/zstd-package-0.2.1-1.fc29_0.3.1-1.fc29.x86_64.drpm" exists
   And I successfully execute "rpm -qp --qf '%{{PAYLOADCOMPRESSOR}}\n' {context.scenario.default_tmp_dir}/drpms/zstd-package-0.2.1-1.fc29_0.3.1-1.fc29.x86_64.drpm"
   And stdout is

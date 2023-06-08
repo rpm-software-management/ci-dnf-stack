@@ -188,10 +188,10 @@ Given I create directory "/empty_repo/"
   And repodata "/empty_repo/repodata/" are consistent
   And repodata in "/empty_repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
 
 
 Scenario: modular metadata are added to repository with a package
@@ -204,10 +204,10 @@ Given I create directory "/repo/"
   And repodata "/repo/repodata/" are consistent
   And repodata in "/repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
 
 
 Scenario: multiple modular metadata are merged
@@ -218,11 +218,11 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.zst" and "/modular-result.yaml" do not differ
 
 
 Scenario: modular metadata located in repository in subdirectories are added to repodata
@@ -238,11 +238,11 @@ Given I create directory "/repo/a/b"
   And repodata "/repo/repodata/" are consistent
   And repodata in "/repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And the text file contents of "/repo/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And the text file contents of "/repo/repodata/[a-z0-9]*-modules.yaml.zst" and "/modular-result.yaml" do not differ
 
 
 Scenario: modular metadata are added to repodata with pkglist
@@ -261,11 +261,11 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.zst" and "/modular-result.yaml" do not differ
   And primary in "/repodata" has only packages
       | Name             | Epoch | Version | Release | Architecture |
       | modular-package1 | 0     | 0.1     | 1       | x86_64       |
@@ -287,11 +287,11 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.gz" and "/modular-result.yaml" do not differ
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And the text file contents of "/repodata/[a-z0-9]*-modules.yaml.zst" and "/modular-result.yaml" do not differ
   And primary in "/repodata" has only packages
       | Name             | Epoch | Version | Release | Architecture |
       | modular-package1 | 0     | 0.1     | 1       | x86_64       |
@@ -326,9 +326,9 @@ Given I create directory "/empty_repo/"
   And repodata "/empty_repo/repodata/" are consistent
   And repodata in "/empty_repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | modules      | ${checksum}-modules.yaml.xz      | sha256        | xz               |
 
 
@@ -346,11 +346,11 @@ Given I create directory "/repo/"
   And repodata "/repo/repodata/" are consistent
   And repodata in "/repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And file "/repo/repodata/[a-z0-9]*-modules.yaml.gz" contents is
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And file "/repo/repodata/[a-z0-9]*-modules.yaml.zst" contents is
       """
       ---
       document: modulemd-defaults
@@ -388,11 +388,11 @@ Given I create directory "/repo/"
   And repodata "/repo/repodata/" are consistent
   And repodata in "/repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules      | ${checksum}-modules.yaml.gz      | sha256        | gz               |
-  And the text file contents of "/modular-result.yaml" and "/repo/repodata/[a-z0-9]*-modules.yaml.gz" do not differ
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules      | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+  And the text file contents of "/modular-result.yaml" and "/repo/repodata/[a-z0-9]*-modules.yaml.zst" do not differ
 
 
 @bz1906831

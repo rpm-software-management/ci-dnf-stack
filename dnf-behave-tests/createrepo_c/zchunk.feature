@@ -9,9 +9,9 @@ Scenario: create empty repository with zck metadata
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -27,9 +27,9 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -51,9 +51,9 @@ Given I copy file "{context.scenario.repos_location}/createrepo_c-ci-packages/x8
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary_zck         | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other_zck           | ${checksum}-other.xml.zck        | sha256        | zck              |
@@ -85,9 +85,9 @@ Given I create directory "/dictionaries"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                 | Checksum Type | Compression Type |
-      | primary             | primary.xml.gz       | sha256        | gz               |
-      | filelists           | filelists.xml.gz     | sha256        | gz               |
-      | other               | other.xml.gz         | sha256        | gz               |
+      | primary             | primary.xml.zst      | sha256        | zstd             |
+      | filelists           | filelists.xml.zst    | sha256        | zstd             |
+      | other               | other.xml.zst        | sha256        | zstd             |
       | primary_zck         | primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | filelists.xml.zck    | sha256        | zck              |
       | other_zck           | other.xml.zck        | sha256        | zck              |
@@ -134,9 +134,9 @@ Given I create directory "/dictionaries"
   And repodata "/repodata/" are consistent
   And repodata in "/repodata/" is
       | Type                | File                 | Checksum Type | Compression Type |
-      | primary             | primary.xml.gz       | sha256        | gz               |
-      | filelists           | filelists.xml.gz     | sha256        | gz               |
-      | other               | other.xml.gz         | sha256        | gz               |
+      | primary             | primary.xml.zst      | sha256        | zstd             |
+      | filelists           | filelists.xml.zst    | sha256        | zstd             |
+      | other               | other.xml.zst        | sha256        | zstd             |
       | primary_zck         | primary.xml.zck      | sha256        | zck              |
       | filelists_zck       | filelists.xml.zck    | sha256        | zck              |
       | other_zck           | other.xml.zck        | sha256        | zck              |

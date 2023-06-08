@@ -17,10 +17,10 @@ Scenario: merged repository doesn't contain sqlite db by default
   And repodata "/merged_repo/repodata/" are consistent
   And repodata in "/merged_repo/repodata/" is
       | Type         | File                          | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz    | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz  | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz      | sha256        | gz               |
-      | updateinfo   | ${checksum}-updateinfo.xml.gz | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst   | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst     | sha256        | zstd             |
+      | updateinfo   | ${checksum}-updateinfo.xml.zst| sha256        | zstd             |
   And primary in "/merged_repo/repodata" has only packages
       | Name         | Epoch | Version | Release | Architecture |
       | package      | 0     | 0.2.1   | 1.fc29  | x86_64       |
@@ -34,10 +34,10 @@ Scenario: merged repository has sqlite db if specified
   And repodata "/merged_repo/repodata/" are consistent
   And repodata in "/merged_repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | updateinfo   | ${checksum}-updateinfo.xml.gz    | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | updateinfo   | ${checksum}-updateinfo.xml.zst   | sha256        | zstd             |
       | primary_db   | ${checksum}-primary.sqlite.bz2   | sha256        | bz2              |
       | filelists_db | ${checksum}-filelists.sqlite.bz2 | sha256        | bz2              |
       | other_db     | ${checksum}-other.sqlite.bz2     | sha256        | bz2              |
