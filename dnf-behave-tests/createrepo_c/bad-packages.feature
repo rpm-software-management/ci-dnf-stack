@@ -16,9 +16,9 @@ Given I create directory "/temp-repo/"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                                | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
   And primary in "/temp-repo/repodata" has only packages
       | Name      | Epoch | Version | Release | Architecture |
       | package   | 0     | 0.2.1   | 1.fc29  | x86_64       |

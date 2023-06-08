@@ -30,7 +30,7 @@ Scenario: Merged repository has zstd compression
   And repodata "/merged_repo/repodata/" are consistent
   And repodata in "/merged_repo/repodata/" is
       | Type         | File                             | Checksum Type | Compression Type |
-      | primary      | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists    | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other        | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | updateinfo   | ${checksum}-updateinfo.xml.zst   | sha256        | zstd             |

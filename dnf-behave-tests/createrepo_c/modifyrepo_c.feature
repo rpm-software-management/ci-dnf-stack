@@ -28,10 +28,10 @@ Given I create directory "/temp-repo/"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                                | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | modules             | ${checksum}-modules.yaml.zst        | sha256        | zstd             |
 
 
 Scenario: Modifying repo with compressed metadata of the same compression type
@@ -58,10 +58,10 @@ Given I create directory "/temp-repo/"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                                | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | modules             | ${checksum}-modules.yaml.zst        | sha256        | zstd             |
 
 
 Scenario: Modifying repo with compressed metadata of different compression type
@@ -88,10 +88,10 @@ Given I create directory "/temp-repo/"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                                | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz          | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz        | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz            | sha256        | gz               |
-      | modules             | ${checksum}-modules.yaml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
+      | modules             | ${checksum}-modules.yaml.zst        | sha256        | zstd             |
 
 
 # createrepo_c is compiled without support for zchunk on rhel 8 and 9
@@ -120,9 +120,9 @@ Given I create directory "/temp-repo/"
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
+      | primary             | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst        | sha256        | zstd             |
       | primary             | ${checksum}-primary.xml.zck      | sha256        | zck              |
       | filelists           | ${checksum}-filelists.xml.zck    | sha256        | zck              |
       | other               | ${checksum}-other.xml.zck        | sha256        | zck              |

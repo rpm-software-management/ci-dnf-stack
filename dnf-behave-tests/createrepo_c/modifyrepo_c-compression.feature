@@ -20,13 +20,13 @@ Given I create directory "/temp-repo/"
       - MIT
       ...
       """
- When I execute modifyrepo_c with args "--compress-type zstd ../modules.yaml.xz ./repodata" in "/temp-repo"
+ When I execute modifyrepo_c with args "--compress-type gz ../modules.yaml.xz ./repodata" in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
   And repodata in "/temp-repo/repodata/" is
       | Type                | File                             | Checksum Type | Compression Type |
-      | primary             | ${checksum}-primary.xml.gz       | sha256        | gz               |
-      | filelists           | ${checksum}-filelists.xml.gz     | sha256        | gz               |
-      | other               | ${checksum}-other.xml.gz         | sha256        | gz               |
-      | modules             | ${checksum}-modules.yaml.zst     | sha256        | zstd             |
+      | primary             | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists           | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other               | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | modules             | ${checksum}-modules.yaml.gz      | sha256        | gz               |
 
