@@ -30,6 +30,7 @@ Background: Add repository with gpgcheck=1
 
 
 @dnf5
+@dnf5daemon
 Scenario: Install masterkey signed package and check GPG key was imported
    When I execute dnf with args "install setup"
    Then the exit code is 0
@@ -44,6 +45,7 @@ Scenario: Install masterkey signed package and check GPG key was imported
 
 
 @dnf5
+@dnf5daemon
 Scenario: Install subkey signed package with masterkey signed dependency
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
@@ -58,6 +60,7 @@ Scenario: Install subkey signed package with masterkey signed dependency
 
 
 @dnf5
+# XXX stderr @dnf5daemon
 Scenario: Fail to install signed package with incorrectly signed dependency (with key from different repository)
    When I execute dnf with args "install glibc"
    Then the exit code is 1
@@ -78,6 +81,7 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
 
 
 @dnf5
+# XXX stderr @dnf5daemon
 Scenario: Fail to install signed package with incorrect checksum
    When I execute dnf with args "install broken-package"
    Then the exit code is 1
@@ -93,6 +97,7 @@ Scenario: Fail to install signed package with incorrect checksum
 
 
 @dnf5
+@dnf5daemon
 Scenario: Install masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
   Given I configure repository "dnf-ci-gpg" with
         | key      | value                                                                      |
@@ -110,6 +115,7 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
 
 
 @dnf5
+# XXX stderr @dnf5daemon
 Scenario: Attempt to install unsigned package from repo with gpgcheck=1
    When I execute dnf with args "install flac"
    Then the exit code is 1
