@@ -1,3 +1,4 @@
+@dnf5
 Feature: Listing available updates using the dnf updateinfo command
 
 
@@ -5,7 +6,6 @@ Background:
   Given I use repository "dnf-ci-fedora"
 
 
-@dnf5
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -36,7 +36,6 @@ Scenario: Listing available updates
     """
 
 
-@dnf5
 Scenario: updateinfo summary (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -74,7 +73,6 @@ Scenario: updateinfo --summary when there's nothing to report (dnf4 compat)
     """
 
 
-@dnf5
 Scenario: updateinfo summary --available (when there is an available update)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -120,7 +118,6 @@ Scenario: updateinfo --summary available when there is an available update (dnf4
     """
 
 
-@dnf5
 Scenario: updateinfo info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -248,7 +245,6 @@ Scenario: updateinfo info security (when there's nothing to report) (dnf4 compat
    """
 
 
-@dnf5
 Scenario: updateinfo info security (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -261,7 +257,6 @@ Scenario: updateinfo info security (when there's nothing to report)
    """
 
 
-@dnf5
 Scenario: updateinfo list
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -298,7 +293,6 @@ Scenario: updateinfo --list (dnf4 compat)
     """
 
 
-@dnf5
 Scenario: updateinfo list all security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install glibc flac CQRlib"
@@ -319,7 +313,6 @@ Scenario: updateinfo list all security
     """
 
 
-@dnf5
 Scenario: updateinfo list updates
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -344,7 +337,6 @@ Scenario: updateinfo list updates
     """
 
 
-@dnf5
 Scenario: updateinfo list installed
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -367,7 +359,6 @@ Scenario: updateinfo list installed
     """
 
 
-@dnf5
 Scenario: updateinfo list available enhancement
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -390,7 +381,6 @@ Scenario: updateinfo list available enhancement
     """
 
 
-@dnf5
 Scenario: updateinfo list all bugfix
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -410,7 +400,6 @@ Scenario: updateinfo list all bugfix
     """
 
 
-@dnf5
 Scenario Outline: updateinfo list updates plus <option>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -451,7 +440,6 @@ Scenario: updateinfo list updates plus --advisory (dnf4 compat)
     """
 
 
-@dnf5
 Scenario: updateinfo info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -506,7 +494,6 @@ Scenario: updateinfo info <advisory>
     """
 
 
-@dnf5
 Scenario: updateinfo info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -548,7 +535,6 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
     """
 
 
-@dnf5
 @bz1750528
 Scenario: updateinfo lists advisories referencing CVE
   Given I successfully execute dnf with args "install glibc flac"
@@ -593,7 +579,6 @@ Examples:
     | --list cves         |
 
 
-@dnf5
 Scenario: updateinfo lists advisories referencing bugzilla
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
@@ -632,7 +617,6 @@ Examples:
     | list bzs            |
 
 
-@dnf5
 @bz1728004
 Scenario: updateinfo show <advisory> of the running kernel after a kernel update
    When I execute dnf with args "install kernel"
@@ -792,7 +776,6 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     """
 
 
-@dnf5
 @bz1801092
 Scenario: updateinfo lists advisories referencing CVE with dates
   Given I successfully execute dnf with args "install glibc flac"
@@ -814,7 +797,6 @@ Scenario: updateinfo lists advisories referencing CVE with dates
     """
 
 
-@dnf5
 Scenario: updateinfo lists advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
@@ -833,7 +815,6 @@ Scenario: updateinfo lists advisories with custom type and severity
     """
 
 
-@dnf5
 Scenario: updateinfo prints info for advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
@@ -925,7 +906,6 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     """
 
 
-@dnf5
 Scenario: updateinfo prints summary of advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
@@ -948,7 +928,6 @@ Scenario: updateinfo prints summary of advisories with custom type and severity
     """
 
 
-@dnf5
 Scenario: advisory for x86_64 package is not shown as installed when noarch version of the pkg is installed
 Given I use repository "updateinfo"
   And I execute dnf with args "install A-2-2.noarch"
@@ -982,8 +961,6 @@ Given I use repository "security-upgrade"
   """
 
 
-#@dnf5
-#TODO(amatej): Unknown argument "--obsoletes" for command "repoquery"
 Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install C-1-1"
