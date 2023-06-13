@@ -73,8 +73,8 @@ Given I use repository "dnf-ci-gpg"
   And dnf4 stderr contains "Error: GPG check FAILED"
   And dnf5 stderr matches line by line
     """
+    Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
-    Signature verification failed
     """
 
 
@@ -94,8 +94,8 @@ Given I use repository "dnf-ci-gpg"
   And dnf4 stderr contains "Error: GPG check FAILED"
   And dnf5 stderr matches line by line
     """
+    Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
-    Signature verification failed
     """
 
 

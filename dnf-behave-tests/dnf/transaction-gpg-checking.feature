@@ -24,4 +24,4 @@ Scenario: Check GPG signatures with recovery when keys are imported
     And Transaction is following
         | Action        | Package                        |
         | install       | setup-0:2.12.1-1.fc29.noarch   |
-    And stdout contains "Keys were successfully imported."
+    And stdout contains "The key was successfully imported."
