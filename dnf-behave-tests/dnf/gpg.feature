@@ -75,8 +75,8 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
     And RPMDB Transaction is empty
     And stderr matches line by line
     """
+    Transaction failed: Signature verification failed
     PGP check for package "basesystem-11-6\.fc29\.noarch" \(.*/basesystem-11-6\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Public key is not installed\.
-    Signature verification failed
     """
 
 
@@ -91,8 +91,8 @@ Scenario: Fail to install signed package with incorrect checksum
     And RPMDB Transaction is empty
     And stderr matches line by line
     """
+    Transaction failed: Signature verification failed
     PGP check for package "broken-package-0\.2\.4-1\.fc29\.noarch" \(.*/broken-package-0\.2\.4-1\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Problem occurred when opening the package\.
-    Signature verification failed
     """
 
 
@@ -121,8 +121,8 @@ Scenario: Attempt to install unsigned package from repo with gpgcheck=1
    Then the exit code is 1
     And stderr matches line by line
     """
+    Transaction failed: Signature verification failed
     PGP check for package "flac-1\.3\.2-8\.fc29\.x86_64" \(.*/flac-1\.3\.2-8\.fc29\.x86_64\.rpm\) from repo "dnf-ci-gpg" has failed: The package is not signed\.
-    Signature verification failed
     """
 
 
@@ -148,8 +148,7 @@ Scenario: Fail to install package with incorrect checksum with --no-gpgchecks
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
-    # we should test also stderr here but it looks like error message went to stdout
-    And stdout contains "Transaction failed: Rpm transaction failed."
+    And stderr contains "Transaction failed: Rpm transaction failed."
 
 
 @dnf5
