@@ -1,3 +1,4 @@
+@dnf5
 Feature: Tests for the basic repoquery dependencies functionality:
     --requires, --provides, --conflicts, --obsoletes, --requires-pre
     --whatrequires, --whatprovides, --whatconflicts, --whatobsoletes
@@ -12,6 +13,7 @@ Scenario: repoquery --requires NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       /a/bottom4-file
       bottom1-prov1
       bottom1-prov2 = 1.0
@@ -25,39 +27,49 @@ Scenario: repoquery --requires NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom1-prov2 = 1.0
       bottom2 = 1:1.0-1
       bottom3
       """
 
+# missing --resolve option
+@xfail
 Scenario: repoquery --requires --resolve NAME
  When I execute dnf with args "repoquery --requires --resolve middle1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
       bottom4-1:1.0-1.x86_64
       """
 
+# missing --resolve option
+@xfail
 Scenario: repoquery --requires --resolve NAMEGLOB
  When I execute dnf with args "repoquery --requires --resolve middle[1]"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
       bottom4-1:1.0-1.x86_64
       """
 
+# missing --recursive and --resolve option
+@xfail
 Scenario: repoquery --requires --resolve --recursive NAME
  When I execute dnf with args "repoquery --requires --resolve --recursive top1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
@@ -66,11 +78,14 @@ Scenario: repoquery --requires --resolve --recursive NAME
       middle2-1:2.0-1.x86_64
       """
 
+# missing --recursive and --resolve option
+@xfail
 Scenario: repoquery --requires --resolve --recursive NAME-VERSION
  When I execute dnf with args "repoquery --requires --resolve --recursive top1-2.0"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom4-1:1.0-1.x86_64
@@ -78,11 +93,14 @@ Scenario: repoquery --requires --resolve --recursive NAME-VERSION
       middle2-1:2.0-1.x86_64
       """
 
+# missing --recursive, --resolve and --tree option
+@xfail
 Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
  When I execute dnf with args "repoquery --requires --resolve --recursive --tree top1-2.0"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       top1-1:2.0-1.src
       top1-1:2.0-1.x86_64
        \_ middle1-1:2.0-1.x86_64 [3: /a/bottom4-file, bottom2 = 1:1.0-1, bottom1-prov2 >= 2.0]
@@ -98,6 +116,7 @@ Scenario: repoquery --requires NAME-VERSION NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom1-prov2 = 1.0
       bottom1-prov3 <= 1.2
@@ -112,6 +131,7 @@ Scenario: repoquery --requires NAMEGLOB-VERSION NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom1-prov2 = 1.0
       bottom1-prov3 <= 1.2
@@ -126,6 +146,7 @@ Scenario: repoquery --requires with requires(pre/post/preun/postun)
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom3-prov1
       bottom4-prov1
@@ -138,11 +159,11 @@ Scenario: repoquery --requires with requires(pre/post/preun/postun)
  Then the exit code is 0
   And stdout is
       """
-
-      bottom1-prov1
-      bottom3-prov1
-      bottom4-prov1
+      <REPOSYNC>
       bottom5-prov1
+      bottom4-prov1
+      bottom3-prov1
+      bottom1-prov1
       """
 
 
@@ -152,6 +173,7 @@ Scenario: repoquery --provides NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a-common-provide
       bottom1 = 1:1.0-1
       bottom1 = 1:2.0-1
@@ -168,6 +190,7 @@ Scenario: repoquery --provides NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a-common-provide
       bottom1 = 1:1.0-1
       bottom1(x86-64) = 1:1.0-1
@@ -180,6 +203,7 @@ Scenario: repoquery --provides NAMEGLOB-VERSIONGLOB
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       a-common-provide
       bottom2 = 1:1.0-1
       bottom2 = 1:2.0-1
@@ -195,6 +219,7 @@ Scenario: repoquery --conflicts NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1
       bottom3 < 2.0
       bottom3 = 1:1.0-1
@@ -205,6 +230,7 @@ Scenario: repoquery --conflicts NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1
       bottom3 = 1:1.0-1
       """
@@ -214,6 +240,7 @@ Scenario: repoquery --conflicts NAMEGLOB-VERSIONGLOB
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1
       bottom3 < 2.0
       bottom3 = 1:1.0-1
@@ -226,6 +253,7 @@ Scenario: repoquery --obsoletes NAME
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1 < 7
       bottom2
       bottom2 = 1:2.0-1
@@ -236,6 +264,7 @@ Scenario: repoquery --obsoletes NAME-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1 < 7
       bottom2
       """
@@ -245,13 +274,13 @@ Scenario: repoquery --obsoletes NAMEGLOB-VERSION
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1 < 7
       bottom2
       """
 
 @bz1782906
 # --whatrequires
-@dnf5
 Scenario: repoquery --whatrequires NAME
  When I execute dnf with args "repoquery --whatrequires bottom1"
  Then the exit code is 0
@@ -265,7 +294,6 @@ Scenario: repoquery --whatrequires NAME
       """
 
 @bz1782906
-@dnf5
 Scenario: repoquery --whatrequires NAME-VERSION
  When I execute dnf with args "repoquery --whatrequires bottom1-2.0"
  Then the exit code is 0
@@ -277,7 +305,6 @@ Scenario: repoquery --whatrequires NAME-VERSION
       """
 
 @bz1782906
-@dnf5
 Scenario: repoquery --whatrequires NEVRA
  When I execute dnf with args "repoquery --whatrequires bottom2-1:1.0-1.x86_64"
  Then the exit code is 0
@@ -289,9 +316,8 @@ Scenario: repoquery --whatrequires NEVRA
       """
 
 @bz1782906
-# This fails with dnf5 because it doesn't load filelists by default
 Scenario: repoquery --whatrequires NAME (file provide)
- When I execute dnf with args "repoquery --whatrequires bottom4"
+        When I execute dnf with args "repoquery --whatrequires bottom4 --setopt=optional_metadata_types=filelists"
  Then the exit code is 0
   And stdout is
       """
@@ -300,7 +326,6 @@ Scenario: repoquery --whatrequires NAME (file provide)
       middle3-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrequires PROVIDE_NAME
  When I execute dnf with args "repoquery --whatrequires bottom1-prov2"
  Then the exit code is 0
@@ -311,7 +336,6 @@ Scenario: repoquery --whatrequires PROVIDE_NAME
       middle1-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrequires PROVIDE_NAME = VERSION
  When I execute dnf with args "repoquery --whatrequires 'bottom1-prov2 = 2.0'"
  Then the exit code is 0
@@ -321,6 +345,8 @@ Scenario: repoquery --whatrequires PROVIDE_NAME = VERSION
       middle1-1:2.0-1.x86_64
       """
 
+# missing --recursive option
+@xfail
 Scenario: repoquery --whatrequires --recursive PROVIDE_NAME
  When I execute dnf with args "repoquery --recursive --whatrequires bottom1-prov2"
  Then the exit code is 0
@@ -333,7 +359,6 @@ Scenario: repoquery --whatrequires --recursive PROVIDE_NAME
       top1-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAME
  When I execute dnf with args "repoquery --exactdeps --whatrequires bottom1-prov3"
  Then the exit code is 0
@@ -344,7 +369,6 @@ Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAME
       middle2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAMEGLOB
  When I execute dnf with args "repoquery --exactdeps --whatrequires bottom1-prov[23]"
  Then the exit code is 0
@@ -357,7 +381,6 @@ Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAMEGLOB
       middle2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAME >= VERSION (matches)
  When I execute dnf with args "repoquery --exactdeps --whatrequires 'bottom1-prov3 >= 11'"
  Then the exit code is 0
@@ -367,7 +390,6 @@ Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAME >= VERSION (matches)
       middle2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --exactdeps --whatrequires PROVIDE_NAME < VERSION (doesn't match)
  When I execute dnf with args "repoquery --exactdeps --whatrequires 'bottom1-prov3 < 1'"
  Then the exit code is 0
@@ -389,7 +411,6 @@ Scenario: repoquery --whatrequires NAME --whatrequires NAME
       middle2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatrequires NAME (buildrequires, srpm)
  When I execute dnf with args "repoquery --whatrequires bottom5-prov1"
  Then the exit code is 0
@@ -401,7 +422,6 @@ Scenario: repoquery --whatrequires NAME (buildrequires, srpm)
       """
 
 @bz1812596
-@dnf5
 Scenario: repoquery --whatrequires NEVRA (buildrequires, srpm)
  When I execute dnf with args "repoquery --whatrequires bottom5"
  Then the exit code is 0
@@ -415,7 +435,6 @@ Scenario: repoquery --whatrequires NEVRA (buildrequires, srpm)
 
 
 # --whatprovides
-@dnf5
 Scenario: repoquery --whatprovides NAME
  When I execute dnf with args "repoquery --whatprovides bottom1-prov1"
  Then the exit code is 0
@@ -425,7 +444,6 @@ Scenario: repoquery --whatprovides NAME
       bottom1-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME (versioned provide in multiple packages)
  When I execute dnf with args "repoquery --whatprovides bottom1-prov2"
  Then the exit code is 0
@@ -436,7 +454,6 @@ Scenario: repoquery --whatprovides NAME (versioned provide in multiple packages)
       bottom1-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME (a provide present in different packages)
  When I execute dnf with args "repoquery --whatprovides a-common-provide"
  Then the exit code is 0
@@ -448,7 +465,6 @@ Scenario: repoquery --whatprovides NAME (a provide present in different packages
       bottom2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME = VERSION
  When I execute dnf with args "repoquery --whatprovides 'bottom1-prov2 = 2.0'"
  Then the exit code is 0
@@ -458,7 +474,6 @@ Scenario: repoquery --whatprovides NAME = VERSION
       bottom1-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME = VERSION (non-versioned provide)
  When I execute dnf with args "repoquery --whatprovides 'bottom2-prov1 = 1.3'"
  Then the exit code is 0
@@ -469,7 +484,6 @@ Scenario: repoquery --whatprovides NAME = VERSION (non-versioned provide)
       bottom2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME <= VERSION (matches)
  When I execute dnf with args "repoquery --whatprovides 'bottom1-prov3 <= 1.2'"
  Then the exit code is 0
@@ -479,7 +493,6 @@ Scenario: repoquery --whatprovides NAME <= VERSION (matches)
       bottom1-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatprovides NAME > VERSION (doesn't match)
  When I execute dnf with args "repoquery --whatprovides 'bottom1-prov3 > 1.3'"
  Then the exit code is 0
@@ -488,7 +501,6 @@ Scenario: repoquery --whatprovides NAME > VERSION (doesn't match)
   <REPOSYNC>
   """
 
-@dnf5
 Scenario: repoquery --whatprovides NAMEGLOB <= VERSION
  When I execute dnf with args "repoquery --whatprovides 'bottom[1-3]-prov? >= 1.2'"
  Then the exit code is 0
@@ -515,7 +527,6 @@ Scenario: repoquery --whatprovides NAME = VERSION --whatprovides NAME
       """
 
 @bz1667898
-@dnf5
 Scenario: repoquery --whatprovides NAME = version, NAME
  When I execute dnf with args "repoquery --whatprovides 'bottom1-prov2 = 2.0, bottom3-prov1'"
  Then the exit code is 0
@@ -529,7 +540,6 @@ Scenario: repoquery --whatprovides NAME = version, NAME
 
 
 # --whatconflicts
-@dnf5
 Scenario: repoquery --whatconflicts NAME
  When I execute dnf with args "repoquery --whatconflicts bottom1"
  Then the exit code is 0
@@ -540,7 +550,6 @@ Scenario: repoquery --whatconflicts NAME
       bottom2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatconflicts NAME (versioned conflict)
  When I execute dnf with args "repoquery --whatconflicts bottom3"
  Then the exit code is 0
@@ -551,7 +560,6 @@ Scenario: repoquery --whatconflicts NAME (versioned conflict)
       bottom2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatconflicts NAME = VERSION
  When I execute dnf with args "repoquery --whatconflicts 'bottom3 = 1:1.0-1'"
  Then the exit code is 0
@@ -561,7 +569,6 @@ Scenario: repoquery --whatconflicts NAME = VERSION
       bottom2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatconflicts NAME < VERSION (one match)
  When I execute dnf with args "repoquery --whatconflicts 'bottom3 < 0.5'"
  Then the exit code is 0
@@ -571,7 +578,6 @@ Scenario: repoquery --whatconflicts NAME < VERSION (one match)
       bottom2-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatconflicts NAME < VERSION (two matches)
  When I execute dnf with args "repoquery --whatconflicts 'bottom3 < 1:1.5'"
  Then the exit code is 0
@@ -584,7 +590,6 @@ Scenario: repoquery --whatconflicts NAME < VERSION (two matches)
 
 # --whatconflicts and --whatobsoletes doesn't support globs for dnf4
 @not.with_dnf=4
-@dnf5
 Scenario: repoquery --whatconflicts NAMEGLOB < VERSIONGLOB (two matches)
  When I execute dnf with args "repoquery --whatconflicts 'bottom[3] < 1:1.5'"
  Then the exit code is 0
@@ -608,7 +613,6 @@ Scenario: repoquery --whatconflicts NAME --whatconflicts NAME = VERSION
 
 
 # --whatobsoletes
-@dnf5
 Scenario: repoquery --whatobsoletes NAME
  When I execute dnf with args "repoquery --whatobsoletes bottom2"
  Then the exit code is 0
@@ -619,7 +623,6 @@ Scenario: repoquery --whatobsoletes NAME
       bottom3-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatobsoletes NAME = VERSION (version obsolete exists)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom2 = 1:2.0-1'"
  Then the exit code is 0
@@ -630,7 +633,6 @@ Scenario: repoquery --whatobsoletes NAME = VERSION (version obsolete exists)
       bottom3-1:2.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatobsoletes NAME = VERSION (version obsolete doesn't exist)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom2 = 2.0'"
  Then the exit code is 0
@@ -640,7 +642,6 @@ Scenario: repoquery --whatobsoletes NAME = VERSION (version obsolete doesn't exi
       bottom3-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatobsoletes NAME = VERSION (matches a range)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom1 = 4'"
  Then the exit code is 0
@@ -650,7 +651,6 @@ Scenario: repoquery --whatobsoletes NAME = VERSION (matches a range)
       bottom3-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --whatobsoletes NAME = VERSION (doesn't match a range)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom1 = 8'"
  Then the exit code is 0
@@ -659,7 +659,6 @@ Scenario: repoquery --whatobsoletes NAME = VERSION (doesn't match a range)
   <REPOSYNC>
   """
 
-@dnf5
 Scenario: repoquery --whatobsoletes NAME <= VERSION (matches)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom1 <= 4'"
  Then the exit code is 0
@@ -671,7 +670,6 @@ Scenario: repoquery --whatobsoletes NAME <= VERSION (matches)
 
 # --whatconflicts and --whatobsoletes doesn't support globs for dnf4
 @not.with_dnf=4
-@dnf5
 Scenario: repoquery --whatobsoletes NAMEGLOB <= VERSION (matches)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom[1] <= 4'"
  Then the exit code is 0
@@ -682,7 +680,6 @@ Scenario: repoquery --whatobsoletes NAMEGLOB <= VERSION (matches)
       """
 
 @bz1667898
-@dnf5
 Scenario: repoquery --whatobsoletes NAME, NAME = VERSION
  When I execute dnf with args "repoquery --whatobsoletes 'middle1, bottom2 = 2.0'"
  Then the exit code is 0
@@ -701,6 +698,7 @@ Scenario: repoquery --requires-pre
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom3-prov1
       """
@@ -712,6 +710,7 @@ Given I successfully execute dnf with args "install middle3"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom1-prov1
       bottom3-prov1
       bottom4-prov1
