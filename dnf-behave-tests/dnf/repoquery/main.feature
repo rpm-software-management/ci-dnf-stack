@@ -210,20 +210,25 @@ Scenario: dnf repoquery --available NAME
 
 
 # --arch
+@dnf5
 Scenario: repoquery --arch ARCH
  When I execute dnf with args "repoquery --arch noarch"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.noarch
       bottom-a1-1:2.0-1.noarch
       """
 
+@dnf5
 Scenario: repoquery --arch ARCH (nonexisting arch)
  When I execute dnf with args "repoquery --arch yesarch"
  Then the exit code is 0
-  And stdout is empty
-
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 # --cacheonly
 Scenario: repoquery -C (without any cache)
@@ -389,20 +394,27 @@ Scenario: deplist --latest-limit (deplist is an alias for repoquery --deplist)
 
 
 # --extras: installed pkgs, not from known repos
+@dnf5
 Scenario: repoquery --extras
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/dummy-1.0-1.x86_64.rpm"
  When I execute dnf with args "repoquery --extras"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       dummy-1:1.0-1.x86_64
       """
 
+@dnf5
 Scenario: repoquery --extras (no such packages)
  When I execute dnf with args "repoquery --extras"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+  """
+  <REPOSYNC>
+  """
 
+@dnf5
 Scenario: repoquery --extras NAME (package is installed)
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/dummy-1.0-1.x86_64.rpm"
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/weird-1.0-1.x86_64.rpm"
@@ -410,15 +422,21 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       dummy-1:1.0-1.x86_64
       """
 
+@dnf5
 Scenario: repoquery --extras NAME (package is not installed)
  When I execute dnf with args "repoquery --extras dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+  """
+  <REPOSYNC>
+  """
 
    # --extras: installed pkgs, different NEVRA in available repository
+@dnf5
 Scenario: dnf repoquery --extras (when there are such pkgs with different NEVRA in repository)
 Given I drop repository "repoquery-main"
  When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/x86_64/mid-a1-1.0-1.x86_64.rpm"
@@ -426,31 +444,41 @@ Given I drop repository "repoquery-main"
  When I execute dnf with args "repoquery --installed"
  Then stdout is
  """
+ <REPOSYNC>
  mid-a1-1:1.0-1.x86_64
  """
 Given I use repository "repoquery-main"
  When I execute dnf with args "repoquery --extras"
- Then stdout is empty
+ Then stdout is
+  """
+  <REPOSYNC>
+  """
 
   # --extras: installed pkgs, no NA in available repository
+@dnf5
 Scenario: dnf repoquery --extras (no NA in available repository)
  When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/i686/mid-a1-1.0-1.i686.rpm"
  Then the exit code is 0
  When I execute dnf with args "repoquery --installed"
  Then stdout is
  """
+ <REPOSYNC>
  mid-a1-1:1.0-1.i686
  """
  When I execute dnf with args "repoquery --extras"
  Then the exit code is 0
   And stdout is
  """
+ <REPOSYNC>
  mid-a1-1:1.0-1.i686
  """
 Given I use repository "repoquery-main-multilib"
  When I execute dnf with args "repoquery --extras"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+  """
+  <REPOSYNC>
+  """
 
 # --installed: list only installed packages
 @dnf5
@@ -540,11 +568,13 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 
 # --srpm
+@dnf5
 Scenario: repoquery --srpm
  When I execute dnf with args "repoquery --srpm"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.src
       bottom-a1-1:2.0-1.src
       bottom-a2-1:1.0-1.src
@@ -558,11 +588,13 @@ Scenario: repoquery --srpm
       top-a-2:2.0-2.src
       """
 
+@dnf5
 Scenario: repoquery --srpm NAME
  When I execute dnf with args "repoquery --srpm bottom-a1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:1.0-1.src
       bottom-a1-1:2.0-1.src
       """
@@ -597,40 +629,53 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
 
 
 # --upgrades: lists packages that upgrade installed packages
+@dnf5
 Scenario: repoquery --upgrades
 Given I successfully execute dnf with args "install bottom-a1-1.0"
  When I execute dnf with args "repoquery --upgrades"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:2.0-1.noarch
       bottom-a1-1:2.0-1.src
       """
 
+@dnf5
 Scenario: repoquery --upgrades (no such packages)
 Given I successfully execute dnf with args "install bottom-a2-1.0"
  When I execute dnf with args "repoquery --upgrades"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
+@dnf5
 Scenario: repoquery --upgrades NAME
 Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a3-1.0"
  When I execute dnf with args "repoquery --upgrades bottom-a1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1:2.0-1.noarch
       bottom-a1-1:2.0-1.src
       """
 
+@dnf5
 Scenario: repoquery --upgrades NAME (no such packages)
 Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a2-1.0"
  When I execute dnf with args "repoquery --upgrades bottom-a2"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --userinstalled
+@dnf5
 Scenario: repoquery --userinstalled
 Given I successfully execute dnf with args "install top-a"
  When I execute dnf with args "repoquery --userinstalled"
