@@ -32,7 +32,7 @@ Given I copy repository "simple-base" for modification
  Then the exit code is 0
   And HTTP log contains
       """
-      GET /repodata/primary.xml.gz
+      GET /repodata/primary.xml.zst
       """
 
 

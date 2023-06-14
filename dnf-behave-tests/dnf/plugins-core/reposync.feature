@@ -56,7 +56,7 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
 @bz1895059
 Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
-    And I execute "modifyrepo_c --remove group_gz /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
+    And I execute "modifyrepo_c --remove group_zst /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
     And I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --downloadcomps"
    Then the exit code is 0
@@ -224,8 +224,8 @@ Scenario: Reposync preserves remote timestamps of metadata files
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --download-metadata --remote-time"
    Then the exit code is 0
-    And the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
-    And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
+    And the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.zst" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.zst" do not differ
+    And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.zst" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.zst" do not differ
 
 
 @bz1686602
@@ -253,11 +253,11 @@ Scenario: Reposync --urls and --download-metadata switches
     And stdout matches line by line
     """
     <REPOSYNC>
-    http://localhost:[0-9]+/repodata/primary.xml.gz
-    http://localhost:[0-9]+/repodata/filelists.xml.gz
-    http://localhost:[0-9]+/repodata/other.xml.gz
+    http://localhost:[0-9]+/repodata/primary.xml.zst
+    http://localhost:[0-9]+/repodata/filelists.xml.zst
+    http://localhost:[0-9]+/repodata/other.xml.zst
     http://localhost:[0-9]+/repodata/comps.xml
-    http://localhost:[0-9]+/repodata/comps.xml.gz
+    http://localhost:[0-9]+/repodata/comps.xml.zst
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
     http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.2-1\.src\.rpm
