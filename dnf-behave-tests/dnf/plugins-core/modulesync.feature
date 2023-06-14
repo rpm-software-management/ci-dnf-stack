@@ -25,7 +25,6 @@ Scenario: I can download a module
     Directory walk done - 5 packages
     Loaded information about 0 packages
     Temporary output repo path: {context.dnf.installroot}/modulesync/.repodata/
-    Preparing sqlite DBs
     Pool started (with 5 workers)
     Pool finished
     """
@@ -48,7 +47,6 @@ Scenario: I can download a module using --downloaddir
     Directory walk done - 6 packages
     Loaded information about 0 packages
     Temporary output repo path: {context.dnf.installroot}/modulesync/.repodata/
-    Preparing sqlite DBs
     Pool started (with 5 workers)
     Pool finished
     """
@@ -72,7 +70,6 @@ Scenario: I can download a module with option newest only
     Directory walk done - 5 packages
     Loaded information about 0 packages
     Temporary output repo path: {context.dnf.installroot}/modulesync/.repodata/
-    Preparing sqlite DBs
     Pool started (with 5 workers)
     Pool finished
     """
@@ -98,7 +95,6 @@ Scenario: I can download a module and init a modular repository with modulesync
     Directory walk done - 8 packages
     Loaded information about 0 packages
     Temporary output repo path: {context.dnf.installroot}/modulesync/.repodata/
-    Preparing sqlite DBs
     Pool started (with 5 workers)
     Pool finished
     """
