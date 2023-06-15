@@ -45,8 +45,7 @@ Given I create file "/groupfile.xml" with
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_zstd   | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
+      | group        | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
   And primary in "/repodata/" doesn't have any packages
 
 

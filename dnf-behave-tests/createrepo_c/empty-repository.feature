@@ -70,8 +70,7 @@ Scenario: Repo with --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
 
 
 Scenario: Repo with --groupfile and --checksum sha
@@ -83,8 +82,7 @@ Scenario: Repo with --groupfile and --checksum sha
       | primary      | ${checksum}-primary.xml.zst      | sha224        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha224        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha224        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha224        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha224        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha224        | zstd             |
 
 
 Scenario: Repo with --simple-md-filenames and --groupfile
@@ -96,8 +94,7 @@ Scenario: Repo with --simple-md-filenames and --groupfile
       | primary      | primary.xml.zst      | sha256        | zstd             |
       | filelists    | filelists.xml.zst    | sha256        | zstd             |
       | other        | other.xml.zst        | sha256        | zstd             |
-      | group        | groupfile.xml        | sha256        | -                |
-      | group_gz     | groupfile.xml.zst    | sha256        | zstd             |
+      | group        | groupfile.xml.zst    | sha256        | zstd             |
 
 
 Scenario: Repo with --unique-md-filenames and --groupfile
@@ -109,8 +106,7 @@ Scenario: Repo with --unique-md-filenames and --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
 
 
 Scenario: Repo with --xz compression and --groupfile
@@ -122,8 +118,7 @@ Scenario: Repo with --xz compression and --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
+      | group        | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
 
 Scenario: Repo with --compress-type bz2 and --groupfile
@@ -135,8 +130,7 @@ Scenario: Repo with --compress-type bz2 and --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_bz2    | ${checksum}-groupfile.xml.bz2    | sha256        | bz2              |
+      | group        | ${checksum}-groupfile.xml.bz2    | sha256        | bz2              |
 
 
 Scenario: Repo with --compress-type gz
@@ -148,8 +142,7 @@ Scenario: Repo with --compress-type gz
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
+      | group        | ${checksum}-groupfile.xml.gz     | sha256        | gz               |
 
 
 Scenario: Repo with --compress-type xz
@@ -161,8 +154,7 @@ Scenario: Repo with --compress-type xz
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
+      | group        | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
 
 Scenario: Repo with --repomd-checksum and --groupfile
@@ -174,8 +166,7 @@ Scenario: Repo with --repomd-checksum and --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha224        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha224        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha224        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha224        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha224        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha224        | zstd             |
 
 
 Scenario: Repo with --checksum --repomd-checksum and --groupfile
@@ -187,8 +178,7 @@ Scenario: Repo with --checksum --repomd-checksum and --groupfile
       | primary      | ${checksum}-primary.xml.zst      | sha512        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha512        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha512        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha512        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha512        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha512        | zstd             |
 
 
 Scenario: Repo with --general-compress-type and --groupfile
@@ -200,8 +190,7 @@ Scenario: Repo with --general-compress-type and --groupfile
       | primary      | ${checksum}-primary.xml.xz       | sha256        | xz               |
       | filelists    | ${checksum}-filelists.xml.xz     | sha256        | xz               |
       | other        | ${checksum}-other.xml.xz         | sha256        | xz               |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
+      | group        | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
 
 Scenario: Repo without compression and --groupfile
@@ -213,8 +202,7 @@ Scenario: Repo without compression and --groupfile
       | primary      | ${checksum}-primary.xml.xz       | sha256        | xz               |
       | filelists    | ${checksum}-filelists.xml.xz     | sha256        | xz               |
       | other        | ${checksum}-other.xml.xz         | sha256        | xz               |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_xz     | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
+      | group        | ${checksum}-groupfile.xml.xz     | sha256        | xz               |
 
 
 Scenario: Repo from empty directory with --distro DISTRO-TAG
