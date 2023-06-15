@@ -51,8 +51,7 @@ Given I create directory "/empty-repo/"
       | primary      | ${checksum}-primary.xml.zst       | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst     | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst         | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml         | sha256        | -                |
-      | group_zst    | ${checksum}-groupfile.xml.zst     | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst     | sha256        | zstd             |
  When I execute createrepo_c with args "--update ." in "/empty-repo"
  Then the exit code is 0
   And repodata "/empty-repo/repodata/" are consistent

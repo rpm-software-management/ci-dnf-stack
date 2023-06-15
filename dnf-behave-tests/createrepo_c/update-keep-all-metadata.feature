@@ -64,8 +64,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
       | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
       | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
-      | group        | ${checksum}-groupfile.xml        | sha256        | -                |
-      | group_gz     | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
  When I execute createrepo_c with args "--update --discard-additional-metadata ." in "/temp-repo"
  Then the exit code is 0
   And repodata "/temp-repo/repodata/" are consistent
@@ -89,8 +88,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.zst        | sha256        | zstd             |
       | filelists       | ${checksum}-filelists.xml.zst      | sha256        | zstd             |
       | other           | ${checksum}-other.xml.zst          | sha256        | zstd             |
-      | group           | ${checksum}-groupfile.xml          | sha256        | -                |
-      | group_gz        | ${checksum}-groupfile.xml.zst      | sha256        | zstd             |
+      | group           | ${checksum}-groupfile.xml.zst      | sha256        | zstd             |
       | updateinfo      | ${checksum}-updateinfo.xml.zst     | sha256        | zstd             |
       | custom_metadata | ${checksum}-custom_metadata.txt.zst| sha256        | zstd             |
       | modules         | ${checksum}-modules.yaml.zst       | sha256        | zstd             |
@@ -107,8 +105,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.zst        | sha256        | zstd             |
       | filelists       | ${checksum}-filelists.xml.zst      | sha256        | zstd             |
       | other           | ${checksum}-other.xml.zst          | sha256        | zstd             |
-      | group           | ${checksum}-groupfile2.xml         | sha256        | -                |
-      | group_gz        | ${checksum}-groupfile2.xml.zst     | sha256        | zstd             |
+      | group           | ${checksum}-groupfile2.xml.zst     | sha256        | zstd             |
       | custom_metadata | ${checksum}-custom_metadata.txt.zst| sha256        | zstd             |
 
 
@@ -128,8 +125,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | filelists_zck       | ${checksum}-filelists.xml.zck       | sha256        | zck              |
       | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
       | other_zck           | ${checksum}-other.xml.zck           | sha256        | zck              |
-      | group               | ${checksum}-groupfile2.xml          | sha256        | -                |
-      | group_gz            | ${checksum}-groupfile2.xml.zst      | sha256        | zstd             |
+      | group               | ${checksum}-groupfile2.xml.zst      | sha256        | zstd             |
       | group_zck           | ${checksum}-groupfile2.xml.zck      | sha256        | zck              |
       | custom_metadata     | ${checksum}-custom_metadata.txt.zst | sha256        | zstd             |
       | custom_metadata_zck | ${checksum}-custom_metadata.txt.zck | sha256        | zck              |
@@ -148,8 +144,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml --zck ." in
       | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
       | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
       | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
-      | group               | ${checksum}-groupfile.xml           | sha256        | -                |
-      | group_gz            | ${checksum}-groupfile.xml.zst       | sha256        | zstd             |
+      | group               | ${checksum}-groupfile.xml.zst       | sha256        | zstd             |
       | group_zck           | ${checksum}-groupfile.xml.zck       | sha256        | zck              |
       | custom_metadata     | ${checksum}-custom_metadata.txt.zst | sha256        | zstd             |
       | custom_metadata_zck | ${checksum}-custom_metadata.txt.zck | sha256        | zck              |
@@ -198,8 +193,7 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary         | ${checksum}-primary.xml.zst        | sha256        | zstd             |
       | filelists       | ${checksum}-filelists.xml.zst      | sha256        | zstd             |
       | other           | ${checksum}-other.xml.zst          | sha256        | zstd             |
-      | group           | ${checksum}-groupfile.xml          | sha256        | -                |
-      | group_gz        | ${checksum}-groupfile.xml.zst      | sha256        | zstd             |
+      | group           | ${checksum}-groupfile.xml.zst      | sha256        | zstd             |
       | updateinfo      | ${checksum}-updateinfo.xml.zst     | sha256        | zstd             |
       | custom_metadata | ${checksum}-custom_metadata.txt.zst| sha256        | zstd             |
       | modules         | ${checksum}-modules.yaml.zst       | sha256        | zstd             |
@@ -285,6 +279,5 @@ Given I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/tem
       | primary             | ${checksum}-primary.xml.zst         | sha256        | zstd             |
       | filelists           | ${checksum}-filelists.xml.zst       | sha256        | zstd             |
       | other               | ${checksum}-other.xml.zst           | sha256        | zstd             |
-      | group               | ${checksum}-groupfile.xml           | sha256        | -                |
-      | group_gz            | ${checksum}-groupfile.xml.zst       | sha256        | zstd             |
+      | group               | ${checksum}-groupfile.xml.zst       | sha256        | zstd             |
       | custom_metadata     | ${checksum}-custom_metadata.txt.zst | sha256        | zstd             |
