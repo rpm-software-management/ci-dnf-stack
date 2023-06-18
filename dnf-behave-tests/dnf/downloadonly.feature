@@ -1,3 +1,4 @@
+@dnf5
 Feature: Only download rpms with --downloadonly and store them in cache
 
 Scenario: Install/reinstall/upgrade work correctly with --downloadonly option
