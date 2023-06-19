@@ -36,6 +36,9 @@ def strip_reposync_dnf5(found_lines, line_number):
     if line_number < len(found_lines) and found_lines[line_number].strip() == "Repositories loaded.":
         found_lines.pop(line_number)
 
+    # For command-line repos
+    while line_number < len(found_lines) and sync_line_dnf5.fullmatch(found_lines[line_number].strip()):
+        found_lines.pop(line_number)
 
 def handle_reposync(expected, found, dnf5_mode):
     line_number = 0
