@@ -177,7 +177,7 @@ Scenario: updateinfo info
       Type      : cve
       Url       : https://foobar/foobarupdate_1
     Collection  : 
-      Pacakges  : glibc-2.28-26.fc29.x86_64
+      Packages  : glibc-2.28-26.fc29.x86_64
 
     Name        : FEDORA-2999:002-02
     Title       : flac enhacements
@@ -195,7 +195,7 @@ Scenario: updateinfo info
       Type      : self
       Url       : https://foobar/foobarupdate_1
     Collection  : 
-      Pacakges  : flac-1.3.3-8.fc29.x86_64
+      Packages  : flac-1.3.3-8.fc29.x86_64
     """
 
 
@@ -490,7 +490,7 @@ Scenario: updateinfo info <advisory>
       Type      : cve
       Url       : https://foobar/foobarupdate_1
     Collection  : 
-      Pacakges  : glibc-2.28-26.fc29.x86_64
+      Packages  : glibc-2.28-26.fc29.x86_64
     """
 
 
@@ -531,7 +531,7 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
       Type      : self
       Url       : https://foobar/foobarupdate_1
     Collection  : 
-      Pacakges  : flac-1.3.3-8.fc29.x86_64
+      Packages  : flac-1.3.3-8.fc29.x86_64
     """
 
 
@@ -840,7 +840,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
       Type      : bugzilla
       Url       : https://bugzilla.redhat.com/show_bug.cgi?id=1696529
     Collection  : 
-      Pacakges  : labirinto-1.56.2-1.fc30.i686
+      Packages  : labirinto-1.56.2-1.fc30.i686
                 : labirinto-1.56.2-1.fc30.x86_64
                 : labirinto-1.56.2-1.fc30.src
 
@@ -855,7 +855,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     Message     : 
     Rights      : Copyright (C) 2020 Red Hat, Inc. and others.
     Collection  : 
-      Pacakges  : labirinto-1.56.2-6.fc30.i686
+      Packages  : labirinto-1.56.2-6.fc30.i686
                 : labirinto-1.56.2-6.fc30.src
                 : labirinto-1.56.2-6.fc30.x86_64
 
@@ -870,7 +870,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     Message     : 
     Rights      : Copyright (C) 2020 Red Hat, Inc. and others.
     Collection  : 
-      Pacakges  : labirinto-1.56.2-6.fc30.i686
+      Packages  : labirinto-1.56.2-6.fc30.i686
                 : labirinto-1.56.2-6.fc30.src
                 : labirinto-1.56.2-6.fc30.x86_64
 
@@ -885,7 +885,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     Message     : 
     Rights      : Copyright (C) 2020 Red Hat, Inc. and others.
     Collection  : 
-      Pacakges  : labirinto-1.56.2-6.fc30.i686
+      Packages  : labirinto-1.56.2-6.fc30.i686
                 : labirinto-1.56.2-6.fc30.src
                 : labirinto-1.56.2-6.fc30.x86_64
 
@@ -900,7 +900,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     Message     : 
     Rights      : Copyright (C) 2020 Red Hat, Inc. and others.
     Collection  : 
-      Pacakges  : labirinto-1.56.2-6.fc30.i686
+      Packages  : labirinto-1.56.2-6.fc30.i686
                 : labirinto-1.56.2-6.fc30.src
                 : labirinto-1.56.2-6.fc30.x86_64
     """
