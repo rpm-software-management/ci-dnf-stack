@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) Unknown argument "--repofrompath=a/b,URL" for command "microdnf"
+@dnf5
 Feature: Test error handling related to repositories
 
 Scenario: Invalid character in ID in --repofrompath
@@ -7,5 +6,5 @@ Scenario: Invalid character in ID in --repofrompath
  Then the exit code is 1
   And stderr is
       """
-      Error: Invalid repository id "a/b": invalid character '/' at position 2.
+      Invalid repository id "a/b": unexpected character '/'
       """
