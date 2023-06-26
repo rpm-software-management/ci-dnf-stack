@@ -530,56 +530,76 @@ Scenario: repoquery --installed NAME (no such packages)
 
 
 # --location
+@dnf5
 @bz1639827
 Scenario: repoquery --location NAME
  When I execute dnf with args "repoquery --location top-a-2.0"
  Then the exit code is 0
   And stdout matches line by line
       """
+      <REPOSYNC>
       .+/fixtures/repos/repoquery-main/src/top-a-2.0-1.src.rpm$
       .+/fixtures/repos/repoquery-main/src/top-a-2.0-2.src.rpm$
       .+/fixtures/repos/repoquery-main/x86_64/top-a-2.0-1.x86_64.rpm$
       .+/fixtures/repos/repoquery-main/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
+@dnf5
 Scenario: repoquery --location NAME (in an HTTP repo)
 Given I use repository "repoquery-main" as https
  When I execute dnf with args "repoquery --location top-a-2.0"
  Then the exit code is 0
   And stdout matches line by line
       """
+      <REPOSYNC>
       https://localhost:[0-9]+/src/top-a-2.0-1.src.rpm$
       https://localhost:[0-9]+/src/top-a-2.0-2.src.rpm$
       https://localhost:[0-9]+/x86_64/top-a-2.0-1.x86_64.rpm$
       https://localhost:[0-9]+/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
+@dnf5
 Scenario: repoquery --location NAME (no such package)
  When I execute dnf with args "repoquery --location dummy"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
+@dnf5
 @bz1873146
 Scenario: repoquery --location for local package with file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location file://{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
+@dnf5
 @bz1873146
 Scenario: repoquery --location for local package without file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location /{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
+@dnf5
 @bz1873146
 Scenario: repoquery --location NAME for --installed is empty (no traceback)
 Given I successfully execute dnf with args "install bottom-a1"
  When I execute dnf with args "repoquery --installed bottom-a1 --location"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --srpm
