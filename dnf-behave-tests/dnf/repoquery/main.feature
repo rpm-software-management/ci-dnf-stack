@@ -722,50 +722,79 @@ Given I successfully execute dnf with args "install top-a"
 
 
 # --queryformat
+@dnf5
 Scenario: repoquery --queryformat NVR
- When I execute dnf with args "repoquery --queryformat %{{name}}-%{{version}}-%{{release}} bottom-a1"
+ When I execute dnf with args "repoquery --queryformat "%{{name}}-%{{version}}-%{{release}}\n" bottom-a1"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1.0-1
       bottom-a1-2.0-1
       """
 
-# note: %{{installtime}}, %{{buildtime}}, %{{size}}, %{{downloadsize}}, %{{installsize}} untested as they vary
+# note: %{{installtime}}, %{{buildtime}}, %{{downloadsize}}, %{{installsize}} and %{{location}} untested as they vary
+@dnf5
 Scenario: repoquery --queryformat EVERYTHING
- When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}}' top*.x86_64"
+ When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}} | %{{depends}} | %{{files}} | %{{full_nevra}} | %{{prereq_ignoreinst}} | %{{requires_pre}} | %{{regular_requires}}\n\n' top*.x86_64"
  Then the exit code is 0
   And stdout is
       """
-      top-a | x86_64 | 1 | 1.0 | 1 | repoquery-main | repoquery-main | 1:1.0-1 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 1:1.0-1
-      top-a(x86-64) = 1:1.0-1 | bottom-a1 = 1:1.0-1
+      <REPOSYNC>
+      top-a | x86_64 | 1 | 1.0 | 1 | repoquery-main test repository | repoquery-main | 1:1.0-1 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 1:1.0-1
+      top-a(x86-64) = 1:1.0-1
+       | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
       mid-a1 >= 2
-      mid-a2 = 1:1.0-1 |  |  | top-a-1.0-1.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
-      top-a | x86_64 | 1 | 2.0 | 1 | repoquery-main | repoquery-main | 1:2.0-1 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 1:2.0-1
-      top-a(x86-64) = 1:2.0-1 | bottom-a1 = 1:1.0-1
+       |  |  | top-a-1.0-1.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | None | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
       mid-a1 >= 2
-      mid-a2 = 1:1.0-1 |  |  | top-a-2.0-1.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
-      top-a | x86_64 | 2 | 2.0 | 2 | repoquery-main | repoquery-main | 2:2.0-2 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 2:2.0-2
-      top-a(x86-64) = 2:2.0-2 | bottom-a1 = 1:1.0-1
-      mid-a1 >= 2 |  |  | top-a-2.0-2.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | (none)
+       |  | top-a-1:1.0-1.x86_64 |  |  | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
+      mid-a1 >= 2
+
+
+      top-a | x86_64 | 1 | 2.0 | 1 | repoquery-main test repository | repoquery-main | 1:2.0-1 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 1:2.0-1
+      top-a(x86-64) = 1:2.0-1
+       | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
+      mid-a1 >= 2
+       |  |  | top-a-2.0-1.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | None | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
+      mid-a1 >= 2
+       |  | top-a-1:2.0-1.x86_64 |  |  | bottom-a1 = 1:1.0-1
+      mid-a2 = 1:1.0-1
+      mid-a1 >= 2
+
+
+      top-a | x86_64 | 2 | 2.0 | 2 | repoquery-main test repository | repoquery-main | 2:2.0-2 | top-a-debuginfo | top-a | top-a-debuginfo | top-a = 2:2.0-2
+      top-a(x86-64) = 2:2.0-2
+       | bottom-a1 = 1:1.0-1
+      mid-a1 >= 2
+       |  |  | top-a-2.0-2.src.rpm | Dummy. | Top level package (depends on others). | Public Domain | None | None | bottom-a1 = 1:1.0-1
+      mid-a1 >= 2
+       |  | top-a-2:2.0-2.x86_64 |  |  | bottom-a1 = 1:1.0-1
+      mid-a1 >= 2
       """
 
 
 # install bottom-a1 using dnf (i.e. has record in history database)
 # install bottom-a2 using rpm (no record in history database)
+@dnf5
 @bz1898968
 @bz1879168
 Scenario: repoquery --queryformat from_repo
 Given I successfully execute dnf with args "install bottom-a1"
   And I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/bottom-a2-1.0-1.x86_64.rpm"
- When I execute dnf with args "repoquery --available --installed --queryformat '%{{name}}-%{{version}}-%{{release}} %{{repoid}} -%{{from_repo}}-' bottom-*"
+ When I execute dnf with args "repoquery --available --installed --queryformat '%{{name}}-%{{version}}-%{{release}} %{{repoid}} -%{{from_repo}}-\n' bottom-*"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       bottom-a1-1.0-1 repoquery-main --
       bottom-a1-2.0-1 @System -repoquery-main-
       bottom-a1-2.0-1 repoquery-main --
-      bottom-a2-1.0-1 @System --
+      bottom-a2-1.0-1 @System -<unknown>-
       bottom-a2-1.0-1 repoquery-main --
       bottom-a3-1.0-1 repoquery-main --
       bottom-a3-2.0-1 repoquery-main --
@@ -773,37 +802,45 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 
 # --querytags
+@dnf5
 @bz1744073
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"
  Then the exit code is 0
   And stdout is
       """
+      <REPOSYNC>
       arch
       buildtime
       conflicts
       debug_name
+      depends
       description
       downloadsize
       enhances
       epoch
       evr
+      files
       from_repo
+      full_nevra
       group
       installsize
       installtime
       license
+      location
       name
       obsoletes
       packager
+      prereq_ignoreinst
       provides
       reason
       recommends
+      regular_requires
       release
       repoid
       reponame
       requires
-      size
+      requires_pre
       source_debug_name
       source_name
       sourcerpm
