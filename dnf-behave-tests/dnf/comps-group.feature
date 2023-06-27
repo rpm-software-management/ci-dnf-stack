@@ -544,14 +544,14 @@ Scenario: Packages that are part of another installed group are not removed
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "-C" for command "list"
+# TODO(jkolarik): Cache files are now created with root-only mask
 # destructive because it can create a new user on the system
 @bz2030255
 @destructive
 Scenario: 'dnf group list -C' works for unprivileged user even when decompressed groups.xml is not present in the cache
  Given I use repository "dnf-ci-thirdparty"
     # unprivileged user will need access to enter installroot and read files there
-   And I successfully execute "chmod go+rx {context.dnf.installroot}"
+   And I successfully execute "chmod go+rwx {context.dnf.installroot}"
     # unprivileged user will need tmp directory to create temporary decompressed groups.xml
    And I create directory "/{context.dnf.installroot}/var/tmp"
    And I successfully execute "chmod 777 {context.dnf.installroot}/var/tmp"
