@@ -140,35 +140,6 @@ Given I successfully execute dnf with args "install labirinto"
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "autoremove-n" for command "microdnf"
-Scenario: install using autoremove-n
-Given I successfully execute dnf with args "install vagare"
- When I execute dnf with args "autoremove-n vagare"
- Then the exit code is 0
-  And Transaction is following
-      | Action        | Package                       |
-      | remove-unused | labirinto-0:1.0-1.fc29.x86_64 |
-      | remove        | vagare-0:1.0-1.fc29.x86_64    |
-
-
-# @dnf5
-# TODO(nsella) Unknown argument "autoremove-n" for command "microdnf"
-@bz1821524
-Scenario: remove using autoremove-n doesn't allow additional NEVRA parts
-Given I successfully execute dnf with args "install vagare"
- When I execute dnf with args "autoremove-n vagare-1.0"
- Then the exit code is 0
-  And Transaction is empty
-  And Stdout is
-      """
-      No match for argument: vagare-1.0
-      Dependencies resolved.
-      Nothing to do.
-      Complete!
-      """
-
-
-# @dnf5
 # TODO(nsella) Unknown argument "repoquery-n" for command "microdnf"
 Scenario: using repoquery-n
  When I execute dnf with args "repoquery-n labirinto"
