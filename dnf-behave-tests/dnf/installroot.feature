@@ -34,8 +34,7 @@ Scenario: Install package from installroot repository into installroot
    Then the exit code is 1
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-C" for command "install"
+@dnf5
 @force_installroot
 Scenario: Test metadata handling in installroot
   Given I use repository "dnf-ci-install-remove"
@@ -43,11 +42,11 @@ Scenario: Test metadata handling in installroot
    Then the exit code is 0
    When I execute "rm -rf {context.dnf.installroot}/var/cache/dnf" in "{context.dnf.installroot}"
    Then the exit code is 0
-   When I execute dnf with args "install -C water_still"
+   When I execute dnf with args "repoquery -C water_still"
    Then the exit code is 1
    When I execute dnf with args "makecache"
    Then the exit code is 0
-   When I execute dnf with args "install -C water_still"
+   When I execute dnf with args "repoquery -C water_still"
    Then the exit code is 0
 
 

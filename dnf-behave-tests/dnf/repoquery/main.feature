@@ -231,36 +231,47 @@ Scenario: repoquery --arch ARCH (nonexisting arch)
       """
 
 # --cacheonly
+@dnf5
 Scenario: repoquery -C (without any cache)
  When I execute dnf with args "repoquery --available -C"
  Then the exit code is 1
- Then stdout is empty
+ Then stdout is
+      """
+      <REPOSYNC>
+      """
  Then stderr is
       """
-      Error: Cache-only enabled but no cache for 'repoquery-main'
+      Cache-only enabled but no cache for repository "repoquery-main"
       """
 
+@dnf5
 Scenario: repoquery -Cq (without any cache)
  When I execute dnf with args "repoquery --available -Cq"
  Then the exit code is 1
- Then stdout is empty
+ Then stdout is
+      """
+      <REPOSYNC>
+      """
  Then stderr is
       """
-      Error: Cache-only enabled but no cache for 'repoquery-main'
+      Cache-only enabled but no cache for repository "repoquery-main"
       """
 
+@dnf5
 Scenario: repoquery -C (with cache)
 Given I successfully execute dnf with args "makecache"
  When I execute dnf with args "repoquery -C mid*"
  Then the exit code is 0
  Then stdout is
       """
+      <REPOSYNC>
       mid-a1-1:1.0-1.src
       mid-a1-1:1.0-1.x86_64
       mid-a2-1:1.0-1.src
       mid-a2-1:1.0-1.x86_64
       """
 
+@dnf5
 Scenario: repoquery -C (with cache, installed package)
 Given I successfully execute dnf with args "makecache"
 Given I successfully execute dnf with args "install bottom-a1"
@@ -274,12 +285,16 @@ Given I successfully execute dnf with args "install bottom-a1"
       bottom-a1-1:2.0-1.noarch
       """
 
+@dnf5
 Scenario: repoquery -C (with cache, but disabled repository)
 Given I successfully execute dnf with args "makecache"
 Given I drop repository "repoquery-main"
  When I execute dnf with args "repoquery --available -C"
  Then the exit code is 0
-  And stdout is empty
+  And stdout is
+      """
+      <REPOSYNC>
+      """
 
 
 # --deplist
