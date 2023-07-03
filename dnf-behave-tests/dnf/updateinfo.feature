@@ -999,3 +999,16 @@ Given I use repository "security-upgrade"
   Name       Type     Severity                       Package              Issued
   DNF-2019-4 security          change-arch-noarch-2-2.x86_64 1970-01-01 00:00:00
   """
+
+
+Scenario: advisory list --contains-pkgs doesn't list other packages (including running kernel)
+Given I successfully execute dnf with args "install kernel flac glibc"
+  And I fake kernel release to "4.18.16-300.fc29.x86_64"
+  And I use repository "dnf-ci-fedora-updates"
+ When I execute dnf with args "updateinfo list --contains-pkgs=flac"
+ Then stdout is
+  """
+  <REPOSYNC>
+  Name               Type        Severity                  Package              Issued
+  FEDORA-2999:002-02 enhancement Moderate flac-1.3.3-8.fc29.x86_64 2019-01-17 00:00:00
+  """
