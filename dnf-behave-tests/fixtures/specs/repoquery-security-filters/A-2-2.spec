@@ -2,6 +2,7 @@ Name:           A
 Epoch:          0
 Version:        2
 Release:        2
+Vendor:         dnf-ci-vendor2
 
 License:        Public Domain
 URL:            None
