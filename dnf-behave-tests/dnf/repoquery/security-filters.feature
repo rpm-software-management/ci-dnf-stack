@@ -91,46 +91,49 @@ Given I use repository "repoquery-security-filters"
  And stdout matches line by line
   """
   <REPOSYNC>
-  Name         : A
-  Epoch        : 0
-  Version      : 2
-  Release      : 2
-  Architecture : x86_64
-  Install size : 0
-  Source       : A-2-2.src.rpm
-  Repository   : @System
-  Summary      : Testing advisory upgrade options
-  URL          : None
-  License      : Public Domain
-  Description  : This package is part of testing security options
+  Name            : A
+  Epoch           : 0
+  Version         : 2
+  Release         : 2
+  Architecture    : x86_64
+  Installed size  : 0.0   B
+  Source          : A-2-2.src.rpm
+  From repository : repoquery-security-filters
+  Summary         : Testing advisory upgrade options
+  URL             : None
+  License         : Public Domain
+  Description     : This package is part of testing security options
+  Vendor          : dnf-ci-vendor2
 
-  Name          : A
-  Epoch         : 0
-  Version       : 2
-  Release       : 2
-  Architecture  : x86_64
-  Install size  : 0
-  Download size : [0-9]{4}
-  Source        : A-2-2.src.rpm
-  Repository    : repoquery-security-filters
-  Summary       : Testing advisory upgrade options
-  URL           : None
-  License       : Public Domain
-  Description   : This package is part of testing security options
+  Name            : A
+  Epoch           : 0
+  Version         : 2
+  Release         : 2
+  Architecture    : x86_64
+  Download size   : *
+  Installed size  : 0.0   B
+  Source          : A-2-2.src.rpm
+  Repository      : repoquery-security-filters
+  Summary         : Testing advisory upgrade options
+  URL             : None
+  License         : Public Domain
+  Description     : This package is part of testing security options
+  Vendor          : dnf-ci-vendor2
 
-  Name          : A
-  Epoch         : 0
-  Version       : 3
-  Release       : 3
-  Architecture  : x86_64
-  Install size  : 0
-  Download size : [0-9]{4}
-  Source        : A-3-3.src.rpm
-  Repository    : repoquery-security-filters
-  Summary       : Testing advisory upgrade options
-  URL           : None
-  License       : Public Domain
-  Description   : This package is part of testing security options
+  Name            : A
+  Epoch           : 0
+  Version         : 3
+  Release         : 3
+  Architecture    : x86_64
+  Download size   : *
+  Installed size  : 0.0   B
+  Source          : A-3-3.src.rpm
+  Repository      : repoquery-security-filters
+  Summary         : Testing advisory upgrade options
+  URL             : None
+  License         : Public Domain
+  Description     : This package is part of testing security options
+  Vendor          : dnf-ci-vendor3
   """
 
 
