@@ -323,16 +323,16 @@ def parse_history_info(lines):
 
     it = iter(lines)
     for line in it:
-        if ' : ' in line:
-            key, val = [s.strip() for s in line.split(' : ', 1)]
-            result[key] = val
-        elif line == "Packages Altered:":
+        if line.lower().startswith("packages altered"):
+            next(it)
             for line in it:
-                if not line.startswith("    "):
+                if not line.startswith("  "):
                     break
                 result[None].append(line.strip())
-
             break
+        elif ' : ' in line:
+            key, val = [s.strip() for s in line.split(' : ', 1)]
+            result[key] = val
 
     return result
 
