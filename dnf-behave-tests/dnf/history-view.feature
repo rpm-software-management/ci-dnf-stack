@@ -3,6 +3,8 @@ Feature: Transaction history userinstalled, list and info
 Background:
   Given I use repository "dnf-ci-fedora"
 
+
+@dnf5
 Scenario: List userinstalled packages
    When I execute dnf with args "install abcde basesystem"
    Then the exit code is 0
@@ -24,23 +26,24 @@ Scenario: List userinstalled packages
         | wget-1.19.5-5.fc29.x86_64    | dependency      |
 
 
+@dnf5
 Scenario: History info
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "install setup"
    Then History info should match
-        | Key           | Value                         |
-        | Command Line  | install setup                 |
-        | Return-Code   | Success                       |
-        | Install       | setup-2.12.1-1.fc29.noarch    |
+        | Key           | Value                           |
+        | Description   | install setup                   |
+        | Status        | Ok                              |
+        | Install       | setup-0:2.12.1-1.fc29.noarch    |
    When I execute dnf with args "remove abcde"
    Then the exit code is 0
     And History info should match
-        | Key           | Value                     |
-        | Command Line  | remove abcde              |
-        | Return-Code   | Success                   |
-        | Removed       | abcde-2.9.2-1.fc29.noarch |
-        | Removed       | flac-1.3.2-8.fc29.x86_64  |
-        | Removed       | wget-1.19.5-5.fc29.x86_64 |
+        | Key           | Value                       |
+        | Description   | remove abcde                |
+        | Status        | Ok                          |
+        | Remove        | abcde-0:2.9.2-1.fc29.noarch |
+        | Remove        | flac-0:1.3.2-8.fc29.x86_64  |
+        | Remove        | wget-0:1.19.5-5.fc29.x86_64 |
 
 
 Scenario: History info in range - transaction merging
@@ -82,37 +85,40 @@ Scenario: History info in range - transaction merging
         | Reinstall     | wget-1.19.5-5.fc29.x86_64 |
 
 
+@dnf5
 Scenario: History info of package
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
    Then History info "last-1" should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Install       | abcde-2.9.2-1.fc29.noarch |
-        | Install       | flac-1.3.2-8.fc29.x86_64  |
-        | Install       | wget-1.19.5-5.fc29.x86_64 |
+        | Key           | Value                       |
+        | Status        | Ok                          |
+        | Install       | abcde-0:2.9.2-1.fc29.noarch |
+        | Install       | wget-0:1.19.5-5.fc29.x86_64 |
+        | Install       | flac-0:1.3.2-8.fc29.x86_64  |
     And History info "last" should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Removed       | abcde-2.9.2-1.fc29.noarch |
-        | Removed       | flac-1.3.2-8.fc29.x86_64  |
-        | Removed       | wget-1.19.5-5.fc29.x86_64 |
+        | Key           | Value                       |
+        | Status        | Ok                          |
+        | Remove        | abcde-0:2.9.2-1.fc29.noarch |
+        | Remove        | flac-0:1.3.2-8.fc29.x86_64  |
+        | Remove        | wget-0:1.19.5-5.fc29.x86_64 |
 
 
+@dnf5
 Scenario: history info aaa (nonexistent package)
    When I execute dnf with args "history info aaa"
-   Then the exit code is 0
-    And stdout is
+   Then the exit code is 1
+    And stderr is
         """
-        No transaction which manipulates package 'aaa' was found.
+        Invalid transaction ID range "aaa", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
         """
 
 
+@dnf5
 Scenario: history info aaa (nonexistent package)
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "history info aaa"
-   Then the exit code is 0
-    And stdout is
+   Then the exit code is 1
+    And stderr is
         """
-        No transaction which manipulates package 'aaa' was found.
+        Invalid transaction ID range "aaa", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
         """
