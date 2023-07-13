@@ -83,18 +83,18 @@ def step_impl(context, history_range=None):
 @behave.then('History info should match')
 @behave.then('History info "{spec}" should match')
 def step_impl(context, spec=None):
-    IN = ['Command Line',]
+    IN = ['Description',]
     ACTIONS = [
         'Install',
-        'Removed',
         'Upgrade',
-        'Upgraded',
-        'Reinstall',
-        'Reinstalled',
         'Downgrade',
-        'Downgraded',
-        'Obsoleted',
-        'Reason Change'
+        'Reinstall',
+        'Remove',
+        'Replaced',
+        'Reason Change',
+        'Enable',
+        'Disable',
+        'Reset',
     ]
 
     check_context_table(context, ["Key", "Value"])
