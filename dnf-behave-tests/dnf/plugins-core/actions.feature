@@ -19,39 +19,39 @@ Scenario: Test substitutions and settings of libdnf variables, configuration opt
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
     # Print the value of the configuration option "defaultyes"
-    pre_base_setup:::/bin/sh -c echo\ 'pre_base_setup:\ conf.defaultyes=${{conf.defaultyes}}'\ >>\ {context.dnf.installroot}/actions.log
+    pre_base_setup::::/bin/sh -c echo\ 'pre_base_setup:\ conf.defaultyes=${{conf.defaultyes}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # A substitution will take place. The resulting action is the same as the previous one, it is filtered out.
-    pre_base_setup:::/bin/sh -c echo\ 'pre_base_setup:\ conf.defaultyes=${{conf.defaultyes}}'\ >>\ {context.dnf.installroot}/actions.log
+    pre_base_setup::::/bin/sh -c echo\ 'pre_base_setup:\ conf.defaultyes=${{conf.defaultyes}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Create libdnf variable "test1" with value "Value1",
     # set configuration option "defaultyes" to 'true',
     # create temporary actions plugin variable "test_variable" with value "Value2"
-    pre_base_setup:::/bin/sh -c echo\ -e\ "var.test1=Value1\\nconf.defaultyes=true\\ntmp.test_variable=Value2"
+    pre_base_setup::::/bin/sh -c echo\ -e\ "var.test1=Value1\\nconf.defaultyes=true\\ntmp.test_variable=Value2"
 
     # Print value of: libdnf variable "test1", configuration option "defaultyes", plugin temporary variable "test_variable"
-    post_base_setup:::/bin/sh -c echo\ 'post_base_setup:\ var.test1=${{var.test1}}\ conf.defaultyes=${{conf.defaultyes}}\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_base_setup::::/bin/sh -c echo\ 'post_base_setup:\ var.test1=${{var.test1}}\ conf.defaultyes=${{conf.defaultyes}}\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Delete temporary plugin variable "test_variable"
-    post_base_setup:::/bin/sh -c echo\ -e\ "tmp.test_variable"
+    post_base_setup::::/bin/sh -c echo\ -e\ "tmp.test_variable"
 
     # Nothing will be done. We cannot print the value of the plugin's temporary variable "test_variable" because it does not exist - it was deleted by a previous action.
-    post_base_setup:::/bin/sh -c echo\ 'post_base_setup:\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_base_setup::::/bin/sh -c echo\ 'post_base_setup:\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Print the value of the libdnf variable "releasever"
-    post_base_setup:::/bin/sh -c echo\ 'post_base_setup:\ var.releasever=${{var.releasever}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_base_setup::::/bin/sh -c echo\ 'post_base_setup:\ var.releasever=${{var.releasever}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Create temporary actions plugin variable "test_variable" with value "Value_set_in_pre_transaction"
-    pre_transaction:::/bin/sh -c echo\ -e\ "tmp.test_variable=Value_set_in_pre_transaction"
+    pre_transaction::::/bin/sh -c echo\ -e\ "tmp.test_variable=Value_set_in_pre_transaction"
 
     # Print a line for each package in the transaction - before executing the transaction
-    pre_transaction:*::/bin/sh -c echo\ 'pre_transaction:\ ${{pkg.action}}\ ${{pkg.name}}-${{pkg.epoch}}:${{pkg.version}}-${{pkg.release}}.${{pkg.arch}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
+    pre_transaction:*:::/bin/sh -c echo\ 'pre_transaction:\ ${{pkg.action}}\ ${{pkg.name}}-${{pkg.epoch}}:${{pkg.version}}-${{pkg.release}}.${{pkg.arch}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Print a line for each package in the transaction - after the transaction
-    post_transaction:*::/bin/sh -c echo\ 'post_transaction:\ ${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_transaction:*:::/bin/sh -c echo\ 'post_transaction:\ ${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
 
     # Print value of the temporary plugin variable "test_variable"
-    post_transaction:::/bin/sh -c echo\ 'post_transaction:\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_transaction::::/bin/sh -c echo\ 'post_transaction:\ tmp.test_variable=${{tmp.test_variable}}'\ >>\ {context.dnf.installroot}/actions.log
     """
    When I execute dnf with args "install setup"
    Then the exit code is 0
@@ -72,7 +72,7 @@ Scenario: Test substitutions and settings of libdnf variables, configuration opt
 Scenario Outline: I can filter on package or file: "<filter>"
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
-    pre_transaction:<filter>::/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
+    pre_transaction:<filter>:::/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
     """
    When I execute dnf with args "install glibc"
    Then the exit code is 0
@@ -100,7 +100,7 @@ Examples:
 Scenario Outline: I can filter on transaction direction - inbound/outbound
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
-    post_transaction:*:<direction>:/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.name}}'\ >>\ {context.dnf.installroot}/actions.log
+    post_transaction:*:<direction>::/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.name}}'\ >>\ {context.dnf.installroot}/actions.log
     """
     And I create file "/actions.log" with
     """
@@ -126,7 +126,7 @@ Examples:
 Scenario: Reason change is in transaction
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
-    pre_transaction:*::/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
+    pre_transaction:*:::/bin/sh -c echo\ '${{pkg.action}}\ ${{pkg.full_nevra}}\ repo\ ${{pkg.repo_id}}'\ >>\ {context.dnf.installroot}/actions.log
     """
     And I use repository "installonly"
     And I configure dnf with
