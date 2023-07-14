@@ -345,3 +345,23 @@ Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value i
         | Action        | Package                               |
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+
+@dnf5
+@bz2221308 @gh_dnf5_720
+Scenario Outline: Dnf can downgrade kernel using "<command>" command.
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "install kernel-core-4.19.15-300.fc29.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
+   When I execute dnf with args "<command> <args>"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
+
+Examples:
+    | command       | args                                  |
+    | downgrade     | kernel-core                           |
+    | install       | kernel-core-4.18.16-300.fc29.x86_64   |
