@@ -619,34 +619,41 @@ Examples:
 
 @bz1728004
 Scenario: updateinfo show <advisory> of the running kernel after a kernel update
-   When I execute dnf with args "install kernel"
+   # install older kernel
+  Given I use repository "dnf-ci-fedora-updates"
+    And I fake kernel release to "4.18.16-300.fc29.x86_64"
+    And I successfully execute dnf with args "install kernel-4.18.16-300.fc29"
    Then Transaction is following
         | Action        | Package                                  |
         | install       | kernel-0:4.18.16-300.fc29.x86_64         |
         | install-dep   | kernel-core-0:4.18.16-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.18.16-300.fc29.x86_64 |
-  Given I use repository "dnf-ci-fedora-updates"
-    And I execute dnf4 with args "updateinfo list kernel"
-    And I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
+   # updated kernel is available
+   When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2019-348e185000 bugfix kernel-4.19.15-300.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type   Severity                        Package              Issued
     FEDORA-2019-348e185000 bugfix Moderate kernel-4.19.15-300.fc29.x86_64 2019-01-17 00:00:00
     """
-   When I execute dnf with args "upgrade kernel"
+  Given I successfully execute dnf with args "upgrade kernel"
    Then Transaction is following
         | Action        | Package                                  |
         | install       | kernel-0:4.19.15-300.fc29.x86_64         |
         | install-dep   | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.19.15-300.fc29.x86_64 |
-   When I execute dnf4 with args "updateinfo list kernel"
+   # updated kernel is installed, but the running kernel is still the older one
+   When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    Name                   Type   Severity                        Package              Issued
+    FEDORA-2019-348e185000 bugfix Moderate kernel-4.19.15-300.fc29.x86_64 2019-01-17 00:00:00
+    """
+  Given I fake kernel release to "4.19.15-300.fc29.x86_64"
+   # updated kernel is installed and running
    When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
    Then the exit code is 0
     And stdout is
