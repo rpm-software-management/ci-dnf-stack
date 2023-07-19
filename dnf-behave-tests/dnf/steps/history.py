@@ -188,8 +188,6 @@ def step_impl(context, id):
             res = transaction_item_re.match(line)
             if res is not None:
                 found.append(res.groups())
-            else:
-                break
 
     if found != expected:
         print_lines_diff(expected, found)
