@@ -45,3 +45,29 @@ Scenario: merged repository has sqlite db if specified
       | Name         | Epoch | Version | Release | Architecture |
       | package      | 0     | 0.2.1   | 1.fc29  | x86_64       |
       | package-libs | 0     | 0.2.1   | 1.fc29  | x86_64       |
+
+
+Scenario: merged repository has comps metadata
+Given I create file "/groupfile.xml" with
+      """
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+      <comps>
+      </comps>
+      """
+  And I create directory "/repo3/"
+  And I execute createrepo_c with args "--groupfile ../groupfile.xml ." in "/repo3"
+ When I execute mergerepo_c with args "--repo {context.scenario.default_tmp_dir}/repo1 --repo {context.scenario.default_tmp_dir}/repo3" in "/"
+ Then the exit code is 0
+  And stderr is empty
+  And repodata "/merged_repo/repodata/" are consistent
+  And repodata in "/merged_repo/repodata/" is
+      | Type         | File                             | Checksum Type | Compression Type |
+      | primary      | ${checksum}-primary.xml.zst      | sha256        | zstd             |
+      | filelists    | ${checksum}-filelists.xml.zst    | sha256        | zstd             |
+      | other        | ${checksum}-other.xml.zst        | sha256        | zstd             |
+      | updateinfo   | ${checksum}-updateinfo.xml.zst   | sha256        | zstd             |
+      | group        | ${checksum}-groupfile.xml.zst    | sha256        | zstd             |
+  And primary in "/merged_repo/repodata" has only packages
+      | Name         | Epoch | Version | Release | Architecture |
+      | package      | 0     | 0.2.1   | 1.fc29  | x86_64       |
