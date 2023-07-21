@@ -122,6 +122,8 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
     And stderr is
     """
     No match for argument: nosuchpkg
+
+    Warning: skipped PGP checks for 1 package(s).
     """
     And Transaction is following
         | Action    | Package                    |
@@ -149,6 +151,8 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
     And stderr is
     """
     Packages for argument 'abcde' available, but not installed.
+
+    Warning: skipped PGP checks for 1 package(s).
     """
     And Transaction is following
         | Action    | Package                    |
@@ -180,6 +184,8 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
     No match for argument: nosuchpkg
     The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
     Packages for argument 'abcde' available, but not installed.
+
+    Warning: skipped PGP checks for 1 package(s).
     """
     And Transaction is following
         | Action    | Package                    |

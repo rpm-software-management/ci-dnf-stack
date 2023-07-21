@@ -15,5 +15,6 @@ Scenario: An error is reported when a package with a file conflict is tried to b
     And stderr is
     """
     Transaction failed: Rpm transaction failed.
+    Warning: skipped PGP checks for 1 package(s).
       - file /usr/lib/package/conflicting-file from install of package-two-0:1.0-1.x86_64 conflicts with file from package package-one-0:1.0-1.x86_64
     """

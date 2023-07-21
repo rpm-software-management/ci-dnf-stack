@@ -109,7 +109,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I delete directory "/{context.dnf.repos[dnf-ci-fedora].path}/noarch"
  When I execute dnf with args "--setopt=keepcache=true install setup"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+  """
+  Warning: skipped PGP checks for 1 package(s).
+  """
   And Transaction is following
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |
@@ -126,7 +129,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I delete directory "/{context.dnf.repos[dnf-ci-fedora].path}/noarch"
  When I execute dnf with args "install setup"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+  """
+  Warning: skipped PGP checks for 1 package(s).
+  """
   And Transaction is following
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |

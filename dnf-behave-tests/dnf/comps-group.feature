@@ -499,6 +499,8 @@ Scenario: Install an environment with a nonexistent group
     And stderr is
        """
        No match for group from environment: nonexistent-group
+
+       Warning: skipped PGP checks for 1 package(s).
        """
 
 
@@ -516,6 +518,8 @@ Scenario: Install an environment using @^environment syntax
     And stderr is
        """
        No match for group from environment: nonexistent-group
+
+       Warning: skipped PGP checks for 1 package(s).
        """
 
 
