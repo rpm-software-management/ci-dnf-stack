@@ -30,22 +30,19 @@ Scenario: List userinstalled packages
 Scenario: History info
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "install setup"
-   Then History info should match
-        | Key           | Value                           |
-        | Description   | install setup                   |
-        | Status        | Ok                              |
-        | Install       | setup-0:2.12.1-1.fc29.noarch    |
+    Then dnf5 transaction items for transaction "last" are
+        | action  | package                         | reason     | repository        |
+        | Install | setup-0:2.12.1-1.fc29.noarch    | User       | dnf-ci-fedora     |
    When I execute dnf with args "remove abcde"
    Then the exit code is 0
-    And History info should match
-        | Key           | Value                       |
-        | Description   | remove abcde                |
-        | Status        | Ok                          |
-        | Remove        | abcde-0:2.9.2-1.fc29.noarch |
-        | Remove        | flac-0:1.3.2-8.fc29.x86_64  |
-        | Remove        | wget-0:1.19.5-5.fc29.x86_64 |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                         | reason     | repository |
+        | Remove  | abcde-0:2.9.2-1.fc29.noarch     | User       | @System    |
+        | Remove  | flac-0:1.3.2-8.fc29.x86_64      | Clean      | @System    |
+        | Remove  | wget-0:1.19.5-5.fc29.x86_64     | Clean      | @System    |
 
 
+@dnf5
 Scenario: History info in range - transaction merging
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
@@ -53,57 +50,68 @@ Scenario: History info in range - transaction merging
    When I use repository "dnf-ci-fedora-updates"
     And I execute dnf with args "update"
    Then the exit code is 0
-    And History info should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Upgrade       | abcde-2.9.3-1.fc29.noarch |
-        | Upgraded      | abcde-2.9.2-1.fc29.noarch |
-        | Upgrade       | flac-1.3.3-3.fc29.x86_64  |
-        | Upgraded      | flac-1.3.2-8.fc29.x86_64  |
-        | Upgrade       | wget-1.19.6-5.fc29.x86_64 |
-        | Upgraded      | wget-1.19.5-5.fc29.x86_64 |
-    And History info "last-1..last" should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Install       | abcde-2.9.3-1.fc29.noarch |
-        | Install       | flac-1.3.3-3.fc29.x86_64  |
-        | Install       | wget-1.19.6-5.fc29.x86_64 |
-    And History info "last-2..last" should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Upgraded      | abcde-2.9.2-1.fc29.noarch |
-        | Upgrade       | abcde-2.9.3-1.fc29.noarch |
-        | Upgraded      | flac-1.3.2-8.fc29.x86_64  |
-        | Upgrade       | flac-1.3.3-3.fc29.x86_64  |
-        | Upgraded      | wget-1.19.5-5.fc29.x86_64 |
-        | Upgrade       | wget-1.19.6-5.fc29.x86_64 |
-    And History info "last-2..last-1" should match
-        | Key           | Value                     |
-        | Return-Code   | Success                   |
-        | Reinstall     | abcde-2.9.2-1.fc29.noarch |
-        | Reinstall     | flac-1.3.2-8.fc29.x86_64  |
-        | Reinstall     | wget-1.19.5-5.fc29.x86_64 |
+    And dnf5 transaction items for transaction "last" are
+        | action   | package                         | reason          | repository            |
+        | Upgrade  | abcde-0:2.9.3-1.fc29.noarch     | User            | dnf-ci-fedora-updates |
+        | Upgrade  | flac-0:1.3.3-3.fc29.x86_64      | Weak Dependency | dnf-ci-fedora-updates |
+        | Upgrade  | wget-0:1.19.6-5.fc29.x86_64     | Dependency      | dnf-ci-fedora-updates |
+        | Replaced | abcde-0:2.9.2-1.fc29.noarch     | User            | @System               |
+        | Replaced | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | @System               |
+        | Replaced | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | @System               |
+    And dnf5 transaction items for transaction "last-1..last" are
+        | action   | package                         | reason          | repository            |
+        | Upgrade  | abcde-0:2.9.3-1.fc29.noarch     | User            | dnf-ci-fedora-updates |
+        | Upgrade  | flac-0:1.3.3-3.fc29.x86_64      | Weak Dependency | dnf-ci-fedora-updates |
+        | Upgrade  | wget-0:1.19.6-5.fc29.x86_64     | Dependency      | dnf-ci-fedora-updates |
+        | Replaced | abcde-0:2.9.2-1.fc29.noarch     | User            | @System               |
+        | Replaced | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | @System               |
+        | Replaced | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | @System               |
+        | Install  | abcde-0:2.9.2-1.fc29.noarch     | User            | dnf-ci-fedora         |
+        | Install  | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | dnf-ci-fedora         |
+        | Install  | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | dnf-ci-fedora         |
+    And dnf5 transaction items for transaction "last-2..last" are
+        | action   | package                         | reason          | repository            |
+        | Upgrade  | abcde-0:2.9.3-1.fc29.noarch     | User            | dnf-ci-fedora-updates |
+        | Upgrade  | flac-0:1.3.3-3.fc29.x86_64      | Weak Dependency | dnf-ci-fedora-updates |
+        | Upgrade  | wget-0:1.19.6-5.fc29.x86_64     | Dependency      | dnf-ci-fedora-updates |
+        | Replaced | abcde-0:2.9.2-1.fc29.noarch     | User            | @System               |
+        | Replaced | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | @System               |
+        | Replaced | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | @System               |
+        | Install  | abcde-0:2.9.2-1.fc29.noarch     | User            | dnf-ci-fedora         |
+        | Install  | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | dnf-ci-fedora         |
+        | Install  | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | dnf-ci-fedora         |
+        | Remove   | abcde-0:2.9.2-1.fc29.noarch     | User            | @System               |
+        | Remove   | flac-0:1.3.2-8.fc29.x86_64      | Clean           | @System               |
+        | Remove   | wget-0:1.19.5-5.fc29.x86_64     | Clean           | @System               |
+    And dnf5 transaction items for transaction "last-2..last-1" are
+        | action   | package                         | reason          | repository            |
+        | Install  | abcde-0:2.9.2-1.fc29.noarch     | User            | dnf-ci-fedora         |
+        | Install  | wget-0:1.19.5-5.fc29.x86_64     | Dependency      | dnf-ci-fedora         |
+        | Install  | flac-0:1.3.2-8.fc29.x86_64      | Weak Dependency | dnf-ci-fedora         |
+        | Remove   | abcde-0:2.9.2-1.fc29.noarch     | User            | @System               |
+        | Remove   | flac-0:1.3.2-8.fc29.x86_64      | Clean           | @System               |
+        | Remove   | wget-0:1.19.5-5.fc29.x86_64     | Clean           | @System               |
 
 
 @dnf5
 Scenario: History info of package
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
-   Then History info "last-1" should match
-        | Key           | Value                       |
-        | Status        | Ok                          |
-        | Install       | abcde-0:2.9.2-1.fc29.noarch |
-        | Install       | wget-0:1.19.5-5.fc29.x86_64 |
-        | Install       | flac-0:1.3.2-8.fc29.x86_64  |
-    And History info "last" should match
-        | Key           | Value                       |
-        | Status        | Ok                          |
-        | Remove        | abcde-0:2.9.2-1.fc29.noarch |
-        | Remove        | flac-0:1.3.2-8.fc29.x86_64  |
-        | Remove        | wget-0:1.19.5-5.fc29.x86_64 |
+   Then dnf5 transaction items for transaction "last-1" are
+        | action  | package                     | reason          | repository    |
+        | Install | abcde-0:2.9.2-1.fc29.noarch | User            | dnf-ci-fedora |
+        | Install | wget-0:1.19.5-5.fc29.x86_64 | Dependency      | dnf-ci-fedora |
+        | Install | flac-0:1.3.2-8.fc29.x86_64  | Weak Dependency | dnf-ci-fedora |
+    And dnf5 transaction items for transaction "last" are
+        | action  | package                         | reason     | repository |
+        | Remove  | abcde-0:2.9.2-1.fc29.noarch     | User       | @System    |
+        | Remove  | flac-0:1.3.2-8.fc29.x86_64      | Clean      | @System    |
+        | Remove  | wget-0:1.19.5-5.fc29.x86_64     | Clean      | @System    |
 
 
-@dnf5
+# @dnf5
+# This is a test for listing transactions by package, this is not yet implemented in dnf5.
+# Transaction commands need a --contains-pkgs option
 Scenario: history info aaa (nonexistent package)
    When I execute dnf with args "history info aaa"
    Then the exit code is 1
@@ -113,7 +121,9 @@ Scenario: history info aaa (nonexistent package)
         """
 
 
-@dnf5
+# @dnf5
+# This is a test for listing transactions by package, this is not yet implemented in dnf5.
+# Transaction commands need a --contains-pkgs option
 Scenario: history info aaa (nonexistent package)
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "history info aaa"
