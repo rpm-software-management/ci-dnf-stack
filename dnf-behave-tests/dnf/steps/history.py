@@ -80,6 +80,8 @@ def step_impl(context, history_range=None):
     assert_history_list(context, context.cmd_stdout)
 
 
+#TODO(amatej): This should be removed once the step is no longer used in transaction-sr/replay.feature.
+#              The step is duplicate of 'dnf5 transaction items for transaction "last" are'.
 @behave.then('History info should match')
 @behave.then('History info "{spec}" should match')
 def step_impl(context, spec=None):
