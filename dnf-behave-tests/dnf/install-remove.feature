@@ -311,4 +311,28 @@ Scenario: User-installed packages are not removed as unused dependencies
         | remove-unused | sugar-0:1.0-1.x86_64              |
 
 
+@dnf5daemon
+Scenario: Install with glob
+   When I execute dnf with args "install 'water_*'"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | install       | water_still-0:1.0-1.x86_64        |
+        | install       | water_carbonated-0:1.0-1.x86_64   |
+   When I execute dnf with args "remove 'water_*'"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                           |
+        | remove        | water_still-0:1.0-1.x86_64        |
+        | remove        | water_carbonated-0:1.0-1.x86_64   |
+
+
+# There is no --advisories=... option for dnf5daemon-client yet.
+# @dnf5daemon
+# https://github.com/rpm-software-management/dnf5/issues/766
+Scenario: Install with glob and empty advisory
+   When I execute dnf with args "install 'water_*' --advisories=nonexistent"
+   Then the exit code is 0
+    And Transaction is empty
+
 #Scenario: Install remove package from url
