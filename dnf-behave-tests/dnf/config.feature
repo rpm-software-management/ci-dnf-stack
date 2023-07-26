@@ -299,3 +299,165 @@ Scenario: Reposdir option in dnf.conf file in host
         | Action        | Package                           |
         | install       | vagare-1.0-1.fc29.x86_64          |
         | install-dep   | labirinto-1.0-1.fc29.x86_64       |
+
+
+@dnf5
+Scenario: Test including another config file
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/test/dnf.conf" with
+        """
+        [main]
+        exclude=filesystem
+        """
+    And I include configuration path "/test/dnf.conf" in dnf.conf
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
+
+
+@dnf5
+Scenario: Test including another config file located outside the installroot
+  Given I use repository "dnf-ci-fedora"
+    And I create file "//test/dnf.conf" with
+        """
+        [main]
+        exclude=filesystem
+        """
+    And I include configuration path "/test/dnf.conf" in dnf.conf
+   When I execute dnf with args "install filesystem --use-host-config"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
+
+
+@dnf5
+Scenario: The order of configs depends on the order of inclusions
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/test/dnf1.conf" with
+        """
+        [main]
+        exclude=filesystem
+        """
+    And I create file "/test/dnf2.conf" with
+        """
+        [main]
+        exclude=,
+        """
+    And I include configuration path "/test/dnf1.conf" in dnf.conf
+    And I include configuration path "/test/dnf2.conf" in dnf.conf
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 0
+
+
+@dnf5
+Scenario: The order of configs depends on the order of inclusions
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/test/dnf1.conf" with
+        """
+        [main]
+        exclude=filesystem
+        """
+    And I create file "/test/dnf2.conf" with
+        """
+        [main]
+        exclude=,
+        """
+    And I include configuration path "/test/dnf2.conf" in dnf.conf
+    And I include configuration path "/test/dnf1.conf" in dnf.conf
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
+
+
+@dnf5
+Scenario: The default config overrides the included config
+  Given I use repository "dnf-ci-fedora"
+    And I configure dnf with
+        | key                | value      |
+        | exclude            | filesystem |
+    And I create file "/test/dnf.conf" with
+        """
+        [main]
+        exclude=,
+        """
+    And I include configuration path "/test/dnf.conf" in dnf.conf
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
+
+
+@dnf5
+Scenario: The config that includes another config overrides the included config
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/test/dnf1.conf" with
+        """
+        #!include_config /test/dnf2.conf
+        [main]
+        exclude=filesystem
+        """
+    And I create file "/test/dnf2.conf" with
+        """
+        [main]
+        exclude=,
+        """
+    And I include configuration path "/test/dnf1.conf" in dnf.conf
+   When I execute dnf with args "install filesystem"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
+
+
+@dnf5
+Scenario: The including configs using globs
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/test/dnf1.conf" with
+        """
+        [main]
+        exclude=filesystem
+        """
+    And I create file "/test/dnf2.conf" with
+        """
+        [main]
+        exclude=yum
+        """
+    And I create file "/test/something_else.conf" with
+        """
+        [main]
+        exclude=wget
+        """
+    And I include configuration path "/test/dnf*.conf" in dnf.conf
+# This fails, because the yum exclude overrides the filesystem exclude
+#   When I execute dnf with args "install filesystem"
+#   Then the exit code is 1
+#    And stderr is
+#        """
+#        Failed to resolve the transaction:
+#        Argument 'filesystem' matches only excluded packages.
+#        """
+   When I execute dnf with args "install yum"
+   Then the exit code is 1
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        Argument 'yum' matches only excluded packages.
+        """
+   When I execute dnf with args "install wget"
+   Then the exit code is 0

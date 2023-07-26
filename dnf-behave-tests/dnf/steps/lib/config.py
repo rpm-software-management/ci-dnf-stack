@@ -13,6 +13,11 @@ def write_config(context):
     ensure_directory_exists(config_dir)
 
     conf_text = ""
+
+    # put in the config includes
+    for include in context.dnf.config_includes:
+        conf_text += "#!include_config %s\n" % include
+
     # sort and put [main] first
     for section, values in \
             sorted(list(context.dnf.config.items()), key=lambda i: "" if i[0] == "[main]" else i[0]):

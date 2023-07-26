@@ -48,6 +48,7 @@ class DNFContext(object):
                 "best": "True"
             }
         }
+        self.config_includes = list()
 
         # Since protected_packages don't work in installroot override host configuration
         if not no_installroot:

@@ -34,3 +34,12 @@ def step_configure_dnf(context):
         context.dnf.config[section][k] = v
 
     write_config(context)
+
+
+@behave.step("I include configuration path \"{path}\" in dnf.conf")
+def step_include_configuration_file_in_dnf_conf(context, path):
+    """
+    Adds the path to the list of includes in dnf.conf
+    """
+    context.dnf.config_includes.append(path)
+    write_config(context)
