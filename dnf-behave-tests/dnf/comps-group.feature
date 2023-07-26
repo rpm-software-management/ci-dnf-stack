@@ -184,6 +184,11 @@ Scenario: Install condidional package if required package has been installed
 #   filesystem                   x86_64 3.9-2.fc29   @System         0.0   B
 #     Group -> Dependency
 # basesystem requires filesystem (part of DNF-CI-Testgroup)
+#
+# TODO(emrakova) replace name DNF-CI-Testgroup with ID dnf-ci-testgroup
+#  and update transaction when 
+#  https://github.com/rpm-software-management/ci-dnf-stack/issues/1344
+#  will be resolved
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -372,9 +377,7 @@ Scenario: Install an environment with empty name
         | install-group | test-package-1.0-1.fc29.noarch    |
 
 
-# @dnf5
-# TODO(nsella) different stdout
-@not.with_os=rhel__ge__8
+@dnf5
 Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group list"
@@ -382,17 +385,21 @@ Scenario: List and info a group with missing packagelist
     And stdout is
        """
        <REPOSYNC>
-       Available Environment Groups:
-          <name-unset>
-       Available Groups:
-          Test Group
+       ID                   Name       Installed
+       test-group           Test Group        no
        """
    When I execute dnf with args "group info test-group"
    Then stdout is
        """
        <REPOSYNC>
-       Group: Test Group
-        Description: Test Group description updated.
+       Id                   : test-group
+       Name                 : Test Group
+       Description          : Test Group description updated.
+       Installed            : no
+       Order                : 
+       Langonly             : 
+       Uservisible          : yes
+       Repositories         : comps-group-merging
        """
 
 
@@ -429,20 +436,23 @@ Scenario: Merge groups when one has empty packagelist
        """
 
 
-# @dnf5
-# TODO(nsella) different stdout
-@not.with_os=rhel__ge__8
+@dnf5
+# there is related issue
+# https://github.com/rpm-software-management/dnf5/issues/724
 Scenario: Merge environment with missing names containg a group with missing name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
-   When I execute dnf with args "group info no-name-env"
+   When I execute dnf with args "environment info no-name-env"
    Then stdout is
        """
        <REPOSYNC>
-       Environment Group: <name-unset>
-        Mandatory Groups:
-          <name-unset>
-          Test Group
+       Id                   : no-name-env
+       Name                 : 
+       Description          : 
+       Order                : 
+       Installed            : False
+       Repositories         : comps-group, comps-group-merging
+       Required groups      : no-name-group
        """
 
 
@@ -543,8 +553,7 @@ Scenario: Packages that are part of another installed group are not removed
         | group-remove  | Test Group    |
 
 
-# @dnf5
-# TODO(jkolarik): Cache files are now created with root-only mask
+@dnf5
 # destructive because it can create a new user on the system
 @bz2030255
 @destructive
@@ -562,10 +571,10 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
    And stdout is
     """
     <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup
-       CQRlib-non-devel
-       SuperRipper-and-deps
+    ID                   Name                 Installed
+    cqrlib-non-devel     CQRlib-non-devel            no
+    dnf-ci-testgroup     DNF-CI-Testgroup            no
+    superripper-and-deps SuperRipper-and-deps        no
     """
 
 
