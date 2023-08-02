@@ -6,8 +6,7 @@ Background:
   Given I use repository "dnf-ci-fedora"
 
 
-@wip
-@dnfdaemon
+@dnf5daemon
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -103,6 +102,7 @@ Scenario: updateinfo --summary available when there is an available update (dnf4
     """
 
 
+@dnf5daemon
 Scenario: advisory info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -206,6 +206,7 @@ Scenario: updateinfo info security (when there's nothing to report) (dnf4 compat
    """
 
 
+@dnf5daemon
 Scenario: advisory info security (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -218,6 +219,7 @@ Scenario: advisory info security (when there's nothing to report)
    """
 
 
+@dnf5daemon
 Scenario: advisory list
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -254,6 +256,7 @@ Scenario: updateinfo --list (dnf4 compat)
     """
 
 
+@dnf5daemon
 Scenario: advisory list all security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install glibc flac CQRlib"
@@ -269,6 +272,7 @@ Scenario: advisory list all security
     """
 
 
+@dnf5daemon
 Scenario: advisory list updates
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -287,6 +291,7 @@ Scenario: advisory list updates
     """
 
 
+@dnf5daemon
 Scenario: advisory list installed
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -304,6 +309,7 @@ Scenario: advisory list installed
     """
 
 
+@dnf5daemon
 Scenario: advisory list available enhancement
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -320,6 +326,7 @@ Scenario: advisory list available enhancement
     """
 
 
+@dnf5daemon
 Scenario: advisory list all bugfix
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -334,6 +341,7 @@ Scenario: advisory list all bugfix
     """
 
 
+@dnf5daemon
 Scenario Outline: advisory list updates plus <option>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -349,9 +357,9 @@ Scenario Outline: advisory list updates plus <option>
 
 Examples:
         | option | value                  |
-        | --bz   | 222                    |
-        | --cve  | 2999                   |
-        | --cve  | CVE-2999               |
+        | --bzs  | 222                    |
+        | --cves | 2999                   |
+        | --cves | CVE-2999               |
         |        | FEDORA-2018-318f184000 |
 
 
@@ -369,6 +377,7 @@ Scenario: updateinfo list updates plus --advisory (dnf4 compat)
     """
 
 
+@dnf5daemon
 Scenario: advisory info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -408,6 +417,7 @@ Scenario: advisory info <advisory>
     """
 
 
+@dnf5daemon
 Scenario: advisory info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
@@ -689,6 +699,7 @@ Scenario: advisory lists advisories referencing CVE with dates
     """
 
 
+@dnf5daemon
 Scenario: advisory lists advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
@@ -820,6 +831,7 @@ Scenario: advisory prints summary of advisories with custom type and severity
     """
 
 
+@dnf5daemon
 Scenario: advisory for x86_64 package is not shown as installed when noarch version of the pkg is installed
 Given I use repository "updateinfo"
   And I execute dnf with args "install A-2-2.noarch"
@@ -893,6 +905,7 @@ Given I use repository "security-upgrade"
   """
 
 
+@dnf5daemon
 Scenario: advisory list --contains-pkgs doesn't list other packages (including running kernel)
 Given I successfully execute dnf with args "install kernel flac glibc"
   And I fake kernel release to "4.18.16-300.fc29.x86_64"
