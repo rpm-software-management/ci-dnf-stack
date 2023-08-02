@@ -42,6 +42,14 @@ Scenario: Install RPMs that are NOT in excludepkgs in main conf
        | Action        | Package                          |
        | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
+# https://github.com/rpm-software-management/dnf5/issues/763
+Scenario: Install RPMs that has the same binary as excluded package name
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install flac-libs --setopt=excludepkgs=flac-libs-binary"
+   Then the exit code is 0
+    And Transaction is following
+       | Action        | Package                          |
+       | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
 
 Scenario: Install RPMs that are NOT in excludepkgs in repo conf
   Given I use repository "dnf-ci-fedora"

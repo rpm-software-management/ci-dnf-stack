@@ -31,5 +31,6 @@ This package contains the FLAC libraries.
 %files
 
 %files libs
+%ghost %attr(644,-,-) %{_bindir}/flac-libs-binary
 
 %changelog
