@@ -1,11 +1,13 @@
 @dnf5
-Feature: Listing available updates using the dnf updateinfo command
+Feature: Listing available updates using the dnf advisory command
 
 
 Background:
   Given I use repository "dnf-ci-fedora"
 
 
+@wip
+@dnfdaemon
 Scenario: Listing available updates
    When I execute dnf with args "install glibc flac"
    Then Transaction is following
@@ -19,15 +21,9 @@ Scenario: Listing available updates
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64        |
     And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   Then I execute dnf with args "updateinfo list"
+   Then I execute dnf with args "advisory list"
     And the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
-    FEDORA-2018-318f184000 bugfix      glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type        Severity                   Package              Issued
@@ -36,16 +32,12 @@ Scenario: Listing available updates
     """
 
 
-Scenario: updateinfo summary (when there's nothing to report)
+Scenario: advisory summary (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
-   When I execute dnf with args "updateinfo summary"
+   When I execute dnf with args "advisory summary"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Available advisory information summary:
@@ -62,10 +54,10 @@ Scenario: updateinfo summary (when there's nothing to report)
 
 
 @not.with_dnf=5
-Scenario: updateinfo --summary when there's nothing to report (dnf4 compat)
+Scenario: advisory --summary when there's nothing to report (dnf4 compat)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
-   When I execute dnf with args "updateinfo --summary"
+   When I execute dnf with args "advisory --summary"
    Then the exit code is 0
     And dnf4 stdout is
     """
@@ -73,20 +65,13 @@ Scenario: updateinfo --summary when there's nothing to report (dnf4 compat)
     """
 
 
-Scenario: updateinfo summary --available (when there is an available update)
+Scenario: advisory summary --available (when there is an available update)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo summary --available"
+   When I execute dnf with args "advisory summary --available"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    Updates Information Summary: available
-        1 Bugfix notice(s)
-        1 Enhancement notice(s)
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Available advisory information summary:
@@ -118,37 +103,13 @@ Scenario: updateinfo --summary available when there is an available update (dnf4
     """
 
 
-Scenario: updateinfo info
+Scenario: advisory info
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo info --available"
+   When I execute dnf with args "advisory info --available"
    Then the exit code is 0
-    And dnf4 stdout matches line by line
-    """
-    <REPOSYNC>
-    ===============================================================================
-      flac enhacements
-    ===============================================================================
-      Update ID: FEDORA-2999:002-02
-           Type: enhancement
-        Updated: 2019-01-1\d \d\d:00:00
-    Description: Enhance some stuff
-       Severity: Moderate
-
-    ===============================================================================
-      glibc bug fix
-    ===============================================================================
-      Update ID: FEDORA-2018-318f184000
-           Type: bugfix
-        Updated: 2019-01-1\d \d\d:00:00
-           Bugs: 222 - 222
-           CVEs: 2999
-               : CVE-2999
-    Description: Fix some stuff
-       Severity: none
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name        : FEDORA-2018-318f184000
@@ -245,11 +206,11 @@ Scenario: updateinfo info security (when there's nothing to report) (dnf4 compat
    """
 
 
-Scenario: updateinfo info security (when there's nothing to report)
+Scenario: advisory info security (when there's nothing to report)
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo info --security"
+   When I execute dnf with args "advisory info --security"
    Then the exit code is 0
    And stdout is
    """
@@ -257,11 +218,11 @@ Scenario: updateinfo info security (when there's nothing to report)
    """
 
 
-Scenario: updateinfo list
+Scenario: advisory list
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list"
+   When I execute dnf with args "advisory list"
    Then the exit code is 0
     And dnf4 stdout is
     """
@@ -293,19 +254,14 @@ Scenario: updateinfo --list (dnf4 compat)
     """
 
 
-Scenario: updateinfo list all security
+Scenario: advisory list all security
   Given I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install glibc flac CQRlib"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --all --security"
+   When I execute dnf with args "advisory list --all --security"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    i FEDORA-2018-318f184113 Moderate/Sec. CQRlib-1.1.2-16.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type     Severity                     Package              Issued
@@ -313,22 +269,16 @@ Scenario: updateinfo list all security
     """
 
 
-Scenario: updateinfo list updates
+Scenario: advisory list updates
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "upgrade glibc flac"
     And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates-testing"
-   When I execute dnf with args "updateinfo list --updates"
+   When I execute dnf with args "advisory list --updates"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
-    FEDORA-2018-318f184112 enhancement flac-1.4.0-1.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type        Severity                  Package              Issued
@@ -337,21 +287,16 @@ Scenario: updateinfo list updates
     """
 
 
-Scenario: updateinfo list installed
+Scenario: advisory list installed
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
    Then I execute dnf with args "upgrade glibc flac"
     And the exit code is 0
   Given I use repository "dnf-ci-fedora-updates-testing"
-   When I execute dnf with args "updateinfo list --installed"
+   When I execute dnf with args "advisory list --installed"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type   Severity                   Package              Issued
@@ -359,20 +304,14 @@ Scenario: updateinfo list installed
     """
 
 
-Scenario: updateinfo list available enhancement
+Scenario: advisory list available enhancement
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
   Given I use repository "dnf-ci-fedora-updates-testing"
-   When I execute dnf with args "updateinfo list --available --enhancement"
+   When I execute dnf with args "advisory list --available --enhancement"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2999:002-02     enhancement flac-1.3.3-8.fc29.x86_64
-    FEDORA-2018-318f184112 enhancement flac-1.4.0-1.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type        Severity                  Package              Issued
@@ -381,18 +320,13 @@ Scenario: updateinfo list available enhancement
     """
 
 
-Scenario: updateinfo list all bugfix
+Scenario: advisory list all bugfix
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --all --bugfix"
+   When I execute dnf with args "advisory list --all --bugfix"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-      FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type   Severity                   Package              Issued
@@ -400,18 +334,13 @@ Scenario: updateinfo list all bugfix
     """
 
 
-Scenario Outline: updateinfo list updates plus <option>
+Scenario Outline: advisory list updates plus <option>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --updates <option> <value>"
+   When I execute dnf with args "advisory list --updates <option> <value>"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    FEDORA-2018-318f184000 bugfix glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name                   Type   Severity                   Package              Issued
@@ -440,28 +369,13 @@ Scenario: updateinfo list updates plus --advisory (dnf4 compat)
     """
 
 
-Scenario: updateinfo info <advisory>
+Scenario: advisory info <advisory>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo info FEDORA-2018-318f184000"
+   When I execute dnf with args "advisory info FEDORA-2018-318f184000"
    Then the exit code is 0
-    And dnf4 stdout matches line by line
-    """
-    <REPOSYNC>
-    ===============================================================================
-      glibc bug fix
-    ===============================================================================
-      Update ID: FEDORA-2018-318f184000
-           Type: bugfix
-        Updated: 2019-01-1\d \d\d:00:00
-           Bugs: 222 - 222
-           CVEs: 2999
-               : CVE-2999
-    Description: Fix some stuff
-       Severity: none
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name        : FEDORA-2018-318f184000
@@ -494,25 +408,13 @@ Scenario: updateinfo info <advisory>
     """
 
 
-Scenario: updateinfo info <advisory-with-respin-suffix>
+Scenario: advisory info <advisory-with-respin-suffix>
    When I execute dnf with args "install glibc flac"
    Then the exit code is 0
   Given I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo info FEDORA-2999:002-02"
+   When I execute dnf with args "advisory info FEDORA-2999:002-02"
    Then the exit code is 0
-    And dnf4 stdout matches line by line
-    """
-    <REPOSYNC>
-    ===============================================================================
-      flac enhacements
-    ===============================================================================
-      Update ID: FEDORA-2999:002-02
-           Type: enhancement
-        Updated: 2019-01-1\d \d\d:00:00
-    Description: Enhance some stuff
-       Severity: Moderate
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Name        : FEDORA-2999:002-02
@@ -536,18 +438,12 @@ Scenario: updateinfo info <advisory-with-respin-suffix>
 
 
 @bz1750528
-Scenario: updateinfo lists advisories referencing CVE
+Scenario: advisory lists advisories referencing CVE
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --with-cve"
+   When I execute dnf with args "advisory list --with-cve"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    2999     bugfix glibc-2.28-26.fc29.x86_64
-    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     CVE      Type   Severity                   Package              Issued
@@ -579,17 +475,12 @@ Examples:
     | --list cves         |
 
 
-Scenario: updateinfo lists advisories referencing bugzilla
+Scenario: advisory lists advisories referencing bugzilla
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --with-bz"
+   When I execute dnf with args "advisory list --with-bz"
    Then the exit code is 0
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    222 bugfix glibc-2.28-26.fc29.x86_64
-    """
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     Bugzilla Type   Severity                   Package              Issued
@@ -618,7 +509,7 @@ Examples:
 
 
 @bz1728004
-Scenario: updateinfo show <advisory> of the running kernel after a kernel update
+Scenario: advisory show <advisory> of the running kernel after a kernel update
    # install older kernel
   Given I use repository "dnf-ci-fedora-updates"
     And I fake kernel release to "4.18.16-300.fc29.x86_64"
@@ -629,7 +520,7 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
         | install-dep   | kernel-core-0:4.18.16-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.18.16-300.fc29.x86_64 |
    # updated kernel is available
-   When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
+   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stdout is
     """
@@ -644,7 +535,7 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
         | install-dep   | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.19.15-300.fc29.x86_64 |
    # updated kernel is installed, but the running kernel is still the older one
-   When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
+   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stdout is
     """
@@ -654,7 +545,7 @@ Scenario: updateinfo show <advisory> of the running kernel after a kernel update
     """
   Given I fake kernel release to "4.19.15-300.fc29.x86_64"
    # updated kernel is installed and running
-   When I execute dnf5 with args "updateinfo list --contains-pkgs=kernel"
+   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stdout is
     """
@@ -784,31 +675,25 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
 
 
 @bz1801092
-Scenario: updateinfo lists advisories referencing CVE with dates
+Scenario: advisory lists advisories referencing CVE with dates
   Given I successfully execute dnf with args "install glibc flac"
     And I use repository "dnf-ci-fedora-updates"
-   When I execute dnf with args "updateinfo list --with-cve"
+   When I execute dnf with args "advisory list --with-cve"
    Then the exit code is 0
-    And dnf5 stdout is
+    And stdout is
     """
     <REPOSYNC>
     CVE      Type   Severity                   Package              Issued
     2999     bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
     CVE-2999 bugfix none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
     """
-    And dnf4 stdout is
-    """
-    <REPOSYNC>
-    2999     bugfix glibc-2.28-26.fc29.x86_64
-    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64
-    """
 
 
-Scenario: updateinfo lists advisories with custom type and severity
+Scenario: advisory lists advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
     And I use repository "advisories-updates"
-   When I execute dnf with args "updateinfo list"
+   When I execute dnf with args "advisory list"
    Then the exit code is 0
     And dnf5 stdout is
     """
@@ -822,11 +707,11 @@ Scenario: updateinfo lists advisories with custom type and severity
     """
 
 
-Scenario: updateinfo prints info for advisories with custom type and severity
+Scenario: advisory prints info for advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
     And I use repository "advisories-updates"
-   When I execute dnf with args "updateinfo info"
+   When I execute dnf with args "advisory info"
    Then the exit code is 0
     And dnf5 stdout is
     """
@@ -913,7 +798,7 @@ Scenario: updateinfo prints info for advisories with custom type and severity
     """
 
 
-Scenario: updateinfo prints summary of advisories with custom type and severity
+Scenario: advisory prints summary of advisories with custom type and severity
   Given I use repository "advisories-base"
     And I execute dnf with args "install labirinto"
     And I use repository "advisories-updates"
@@ -939,7 +824,7 @@ Scenario: advisory for x86_64 package is not shown as installed when noarch vers
 Given I use repository "updateinfo"
   And I execute dnf with args "install A-2-2.noarch"
 # The test requires that advisory for A-2-2.x86_64 is available
- When I execute dnf with args "updateinfo list --installed"
+ When I execute dnf with args "advisory list --installed"
  Then the exit code is 0
   And stdout is
   """
@@ -968,18 +853,18 @@ Given I use repository "security-upgrade"
   """
 
 
-Scenario: updateinfo --updates with advisory for obsoleter when obsoleted installed
+Scenario: advisory --updates with advisory for obsoleter when obsoleted installed
 Given I use repository "security-upgrade"
   And I execute dnf with args "install C-1-1"
   # Make sure D-1-1 is available and obsoletes C since we are testing we don't list it.
-  # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
+  # There also should be an available advisory for it. (We cannot verify that here because the advisory command is bugged when dealing with obsoletes)
   And I successfully execute dnf with args "repoquery D-1-1.x86_64 --obsoletes"
   Then stdout is
   """
   <REPOSYNC>
   C
   """
- When I execute dnf with args "updateinfo list --updates --setopt=obsoletes=false"
+ When I execute dnf with args "advisory list --updates --setopt=obsoletes=false"
  Then the exit code is 0
   And stdout is
   """
@@ -1012,7 +897,7 @@ Scenario: advisory list --contains-pkgs doesn't list other packages (including r
 Given I successfully execute dnf with args "install kernel flac glibc"
   And I fake kernel release to "4.18.16-300.fc29.x86_64"
   And I use repository "dnf-ci-fedora-updates"
- When I execute dnf with args "updateinfo list --contains-pkgs=flac"
+ When I execute dnf with args "advisory list --contains-pkgs=flac"
  Then stdout is
   """
   <REPOSYNC>
