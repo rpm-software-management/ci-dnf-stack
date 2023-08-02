@@ -34,10 +34,8 @@ Scenario: repoquery --requires NAME-VERSION
       bottom3
       """
 
-# missing --resolve option
-@xfail
 Scenario: repoquery --requires --resolve NAME
- When I execute dnf with args "repoquery --requires --resolve middle1"
+ When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires middle1"
  Then the exit code is 0
   And stdout is
       """
@@ -48,10 +46,8 @@ Scenario: repoquery --requires --resolve NAME
       bottom4-1:1.0-1.x86_64
       """
 
-# missing --resolve option
-@xfail
 Scenario: repoquery --requires --resolve NAMEGLOB
- When I execute dnf with args "repoquery --requires --resolve middle[1]"
+ When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires middle[1]"
  Then the exit code is 0
   And stdout is
       """
@@ -62,10 +58,8 @@ Scenario: repoquery --requires --resolve NAMEGLOB
       bottom4-1:1.0-1.x86_64
       """
 
-# missing --recursive and --resolve option
-@xfail
 Scenario: repoquery --requires --resolve --recursive NAME
- When I execute dnf with args "repoquery --requires --resolve --recursive top1"
+ When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires --recursive top1"
  Then the exit code is 0
   And stdout is
       """
@@ -78,10 +72,8 @@ Scenario: repoquery --requires --resolve --recursive NAME
       middle2-1:2.0-1.x86_64
       """
 
-# missing --recursive and --resolve option
-@xfail
 Scenario: repoquery --requires --resolve --recursive NAME-VERSION
- When I execute dnf with args "repoquery --requires --resolve --recursive top1-2.0"
+ When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires --recursive top1-2.0"
  Then the exit code is 0
   And stdout is
       """
@@ -93,7 +85,7 @@ Scenario: repoquery --requires --resolve --recursive NAME-VERSION
       middle2-1:2.0-1.x86_64
       """
 
-# missing --recursive, --resolve and --tree option
+# missing --tree option
 @xfail
 Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
  When I execute dnf with args "repoquery --requires --resolve --recursive --tree top1-2.0"
@@ -345,8 +337,6 @@ Scenario: repoquery --whatrequires PROVIDE_NAME = VERSION
       middle1-1:2.0-1.x86_64
       """
 
-# missing --recursive option
-@xfail
 Scenario: repoquery --whatrequires --recursive PROVIDE_NAME
  When I execute dnf with args "repoquery --recursive --whatrequires bottom1-prov2"
  Then the exit code is 0
