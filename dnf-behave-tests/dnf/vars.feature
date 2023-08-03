@@ -20,6 +20,16 @@ Scenario: Variables are substituted in mirrorlist URLs
       | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+Scenario: Read-only variables cannot be set
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "--setvar=releasever_major=1"
+   Then the exit code is 2
+    And stderr is
+    """
+    setvar: Variable "releasever_major" is read-only. Add "--help" for more information about the arguments.
+    """
+
+
 Scenario: Variables arch supports basearch `loongarch64` {}
   Given I create file "/etc/dnf/vars/distrib" with
       """
