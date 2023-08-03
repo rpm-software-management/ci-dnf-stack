@@ -1,7 +1,7 @@
+@dnf5
 Feature: Subtitute variables
 
 
-@dnf5
 @bz1651092
 Scenario: Variables are substituted in mirrorlist URLs
   Given I use repository "dnf-ci-fedora" with configuration
@@ -20,9 +20,6 @@ Scenario: Variables are substituted in mirrorlist URLs
       | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
-# @dnf5
-# TODO(nsella) different stdout
-# TODO(jmracek) Problem with double substitution in section name
 Scenario: Variables arch supports basearch `loongarch64` {}
   Given I create file "/etc/dnf/vars/distrib" with
       """
@@ -43,7 +40,6 @@ Scenario: Variables arch supports basearch `loongarch64` {}
       """
 
 
-@dnf5
 @bz1748841
 Scenario: Variables without {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
@@ -64,7 +60,6 @@ Scenario: Variables without {} are substituted in repo id
       dnf-ci-test-fedora\s+dnf-ci-test-fedora test repository
       """
 
-@dnf5
 Scenario: Variables with {} are substituted in repo id
   Given I create file "/etc/dnf/vars/distrib" with
       """
@@ -84,7 +79,6 @@ Scenario: Variables with {} are substituted in repo id
       dnf-ci-test-fedora\s+dnf-ci-test-fedora test repository
       """
 
-# @dnf5
 @bz2091636
 Scenario: Using dnf with non-files in /etc/dnf/vars
   Given I create directory "/{context.dnf.installroot}/etc/dnf/vars/troublemaker"
@@ -97,11 +91,13 @@ Scenario: Using dnf with non-files in /etc/dnf/vars
       dnf-ci-fedora\s+dnf-ci-fedora test repository
       """
 
-# @dnf5
 @bz2141215
 Scenario: Ignoring variable files with invalid encoding
   Given I copy file "{context.dnf.fixturesdir}/data/releasever-invalid-encoding" to "/etc/dnf/vars/releasever"
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "repoquery empty --setopt=varsdir={context.dnf.installroot}/etc/dnf/vars"
    Then the exit code is 0
-    And stdout is empty
+   And stdout is
+   """
+   <REPOSYNC>
+   """
