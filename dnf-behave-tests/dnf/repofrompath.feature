@@ -69,6 +69,7 @@ Scenario: Variables in the repo id are substituted
    NEW_REPO_RLS NEW_REPO_RLS
    """
 
+# https://github.com/rpm-software-management/dnf5/issues/794
 Scenario: Repofrompath does not modify existing repo with the same id
  Given I use repository "simple-base"
   When I execute dnf with args "repo list --repofrompath=simple-base,/the/path"
@@ -76,4 +77,14 @@ Scenario: Repofrompath does not modify existing repo with the same id
    And stderr is
    """
    Failed to create repo "simple-base": Id is present more than once in the configuration
+   """
+
+# https://github.com/rpm-software-management/dnf5/issues/793
+Scenario: Repofrompath repos are enabled even with --disablerepo=*
+  When I execute dnf with args "repo list --disablerepo=* --repofrompath=NEW_REPO,THE_PATH"
+  Then the exit code is 0
+   And stdout is
+   """
+   repo id  repo name
+   NEW_REPO NEW_REPO
    """
