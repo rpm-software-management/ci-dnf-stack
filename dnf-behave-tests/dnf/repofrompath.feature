@@ -68,3 +68,12 @@ Scenario: Variables in the repo id are substituted
    repo id      repo name
    NEW_REPO_RLS NEW_REPO_RLS
    """
+
+Scenario: Repofrompath does not modify existing repo with the same id
+ Given I use repository "simple-base"
+  When I execute dnf with args "repo list --repofrompath=simple-base,/the/path"
+  Then the exit code is 1
+   And stderr is
+   """
+   Failed to create repo "simple-base": Id is present more than once in the configuration
+   """
