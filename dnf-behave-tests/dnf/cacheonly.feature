@@ -74,3 +74,42 @@ Scenario: Local key is imported during installation with -C option
         | Action        | Package                        |
         | install       | setup-0:2.12.1-1.fc29.noarch   |
     And stdout contains "The key was successfully imported."
+
+
+@no_installroot
+Scenario: Use system cache dir when cacheonly enabled
+  Given I successfully execute dnf with args "makecache"
+   When I execute dnf with args "-C repoquery dwm" as an unprivileged user
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    dwm-0:6.1-1.src
+    dwm-0:6.1-1.x86_64
+    """
+
+
+@no_installroot
+Scenario: Use system cache when available even without cacheonly
+  Given I successfully execute dnf with args "makecache"
+   When I execute dnf with args "repoquery dwm" as an unprivileged user
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    dwm-0:6.1-1.src
+    dwm-0:6.1-1.x86_64
+    """
+
+
+@no_installroot
+Scenario: Use user cache if present
+   When I execute dnf with args "makecache" as an unprivileged user
+    And I execute dnf with args "-C repoquery dwm" as an unprivileged user
+   Then the exit code is 0
+    And stdout is
+    """
+    <REPOSYNC>
+    dwm-0:6.1-1.src
+    dwm-0:6.1-1.x86_64
+    """
