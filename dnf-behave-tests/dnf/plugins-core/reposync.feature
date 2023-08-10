@@ -28,7 +28,7 @@ Scenario: Reposync with --downloadcomps option
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --downloadcomps"
    Then the exit code is 0
     And stdout contains "comps.xml for repository dnf-ci-thirdparty-updates saved"
-    And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
+    And the text file contents of "/{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst" do not differ
    When I execute "createrepo_c --no-database --simple-md-filenames --groupfile comps.xml ." in "{context.dnf.tempdir}/dnf-ci-thirdparty-updates"
    Then the exit code is 0
   Given I configure a new repository "testrepo" with
@@ -56,11 +56,12 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
 @bz1895059
 Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
-    And I execute "modifyrepo_c --remove group_zst /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
+    And I execute "modifyrepo_c --remove group /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
+    And I execute "modifyrepo_c --no-compress --mdtype group /{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst /{context.dnf.repos[dnf-ci-thirdparty-updates].path}/repodata"
     And I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --downloadcomps"
    Then the exit code is 0
-    And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
+    And the text file contents of "/{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst" do not differ
 
 
 @bz1676726
@@ -69,7 +70,7 @@ Scenario: Reposync with --downloadcomps and --metadata-path options
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --metadata-path={context.dnf.tempdir}/downloadedmetadata --downloadcomps"
    Then the exit code is 0
     And stdout contains "comps.xml for repository dnf-ci-thirdparty-updates saved"
-    And the files "{context.dnf.tempdir}/downloadedmetadata/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
+    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/dnf-ci-thirdparty-updates/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst" do not differ
 
 
 Scenario: Reposync with --download-metadata option
@@ -256,7 +257,6 @@ Scenario: Reposync --urls and --download-metadata switches
     http://localhost:[0-9]+/repodata/primary.xml.zst
     http://localhost:[0-9]+/repodata/filelists.xml.zst
     http://localhost:[0-9]+/repodata/other.xml.zst
-    http://localhost:[0-9]+/repodata/comps.xml
     http://localhost:[0-9]+/repodata/comps.xml.zst
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
     http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
