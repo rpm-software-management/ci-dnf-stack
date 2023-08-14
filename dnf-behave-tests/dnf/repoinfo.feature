@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) different stdout
+@dnf5
 Feature: Repoinfo
 
 
@@ -14,107 +13,181 @@ Background: Using repositories dnf-ci-fedora and dnf-ci-thirdparty-updates
         | enabled | 0     |
 
 @bz1793950
-Scenario: Repolist without arguments
-   When I execute dnf with args "repoinfo"
+Scenario: Repo info without arguments
+   When I execute dnf with args "repo info"
    Then the exit code is 0
     And stdout matches line by line
 """
-Repo-id            : dnf-ci-fedora
-Repo-name          : dnf-ci-fedora test repository
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 289
-Repo-available-pkgs: 289
-Repo-size          : 2\.[0-9] M
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+<REPOSYNC>
+Repo ID              : dnf-ci-fedora
+Name                 : dnf-ci-fedora test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+URLs                 :
+  Base URL           : .*/fixtures/repos/dnf-ci-fedora
+PGP                  :
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        :
+  Available packages : 289
+  Total packages     : 289
+  Size               : 2.1 MiB
+  Revision           : 1550000000
+  Updated            : .*
 
-Repo-id            : dnf-ci-thirdparty-updates
-Repo-name          : dnf-ci-thirdparty-updates test repository
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 6
-Repo-available-pkgs: 6
-Repo-size          : 3[0-9] k
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
-Total packages: 295
+Repo ID              : dnf-ci-thirdparty-updates
+Name                 : dnf-ci-thirdparty-updates test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
+URLs                 :
+  Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
+PGP                  :
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        :
+  Available packages : 6
+  Total packages     : 6
+  Size               : 37.0 KiB
+  Revision           : 1550000000
+  Updated            : .*
 """
 
 @bz1793950
-Scenario: Repoinfo without arguments and option --all
-   When I execute dnf with args "repoinfo --all"
+Scenario: Repo info without arguments and option --all
+   When I execute dnf with args "repo info --all"
    Then the exit code is 0
     And stdout matches line by line
 """
-Repo-id            : dnf-ci-fedora
-Repo-name          : dnf-ci-fedora test repository
-Repo-status        : enabled
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 289
-Repo-available-pkgs: 289
-Repo-size          : 2\.[0-9] M
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+<REPOSYNC>
+Repo ID             : dnf-ci-fedora-updates
+Name                : dnf-ci-fedora-updates test repository
+Status              : disabled
+Priority            : 99
+Cost                : 1000
+Type                : available
+Metadata expire     : .*
+Skip if unavailable : false
+Config file         : .*/etc/yum.repos.d/dnf-ci-fedora-updates.repo
+URLs                : 
+  Base URL          : .*/fixtures/repos/dnf-ci-fedora-updates
+PGP                 : 
+  Verify repodata   : false
+  Verify packages   : false
 
-Repo-id            : dnf-ci-fedora-updates
-Repo-name          : dnf-ci-fedora-updates test repository
-Repo-status        : disabled
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora-updates
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora-updates.repo
-
-Repo-id            : dnf-ci-thirdparty
-Repo-name          : dnf-ci-thirdparty test repository
-Repo-status        : disabled
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty.repo
-
-Repo-id            : dnf-ci-thirdparty-updates
-Repo-name          : dnf-ci-thirdparty-updates test repository
-Repo-status        : enabled
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 6
-Repo-available-pkgs: 6
-Repo-size          : 3[0-9] k
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
-Total packages: 295
+Repo ID              : dnf-ci-fedora
+Name                 : dnf-ci-fedora test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+URLs                 : 
+  Base URL           : .*/fixtures/repos/dnf-ci-fedora
+PGP                  : 
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        : 
+  Available packages : 289
+  Total packages     : 289
+  Size               : 2.1 MiB
+  Revision           : 1550000000
+  Updated            : .*
+ 
+Repo ID              : dnf-ci-thirdparty-updates
+Name                 : dnf-ci-thirdparty-updates test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
+URLs                 : 
+  Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
+PGP                  : 
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        : 
+  Available packages : 6
+  Total packages     : 6
+  Size               : 37.0 KiB
+  Revision           : 1550000000
+  Updated            : .*
+ 
+Repo ID             : dnf-ci-thirdparty
+Name                : dnf-ci-thirdparty test repository
+Status              : disabled
+Priority            : 99
+Cost                : 1000
+Type                : available
+Metadata expire     : .*
+Skip if unavailable : false
+Config file         : .*/etc/yum.repos.d/dnf-ci-thirdparty.repo
+URLs                : 
+  Base URL          : .*/fixtures/repos/dnf-ci-thirdparty
+PGP                 : 
+  Verify repodata   : false
+  Verify packages   : false
 """
 
 @bz1793950
 Scenario: Repoinfo without arguments but with excludes
-   When I execute dnf with args "repoinfo -x=*"
+   When I execute dnf with args "repo info --exclude=*"
    Then the exit code is 0
     And stdout matches line by line
 """
-Repo-id            : dnf-ci-fedora
-Repo-name          : dnf-ci-fedora test repository
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 289
-Repo-available-pkgs: 0
-Repo-size          : 2\.[0-9] M
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+<REPOSYNC>
+Repo ID              : dnf-ci-fedora
+Name                 : dnf-ci-fedora test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+URLs                 :
+  Base URL           : .*/fixtures/repos/dnf-ci-fedora
+PGP                  :
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        :
+  Available packages : 0
+  Total packages     : 289
+  Size               : 2.1 MiB
+  Revision           : 1550000000
+  Updated            : .*
 
-Repo-id            : dnf-ci-thirdparty-updates
-Repo-name          : dnf-ci-thirdparty-updates test repository
-Repo-revision      : 1550000000
-Repo-updated       : .*
-Repo-pkgs          : 6
-Repo-available-pkgs: 0
-Repo-size          : 3[0-9] k
-Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
-Repo-expire        : .*
-Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
-Total packages: 295
+Repo ID              : dnf-ci-thirdparty-updates
+Name                 : dnf-ci-thirdparty-updates test repository
+Status               : enabled
+Priority             : 99
+Cost                 : 1000
+Type                 : available
+Metadata expire      : .*
+Skip if unavailable  : false
+Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
+URLs                 :
+  Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
+PGP                  :
+  Verify repodata    : false
+  Verify packages    : false
+Repodata info        :
+  Available packages : 0
+  Total packages     : 6
+  Size               : 37.0 KiB
+  Revision           : 1550000000
+  Updated            : .*
 """
