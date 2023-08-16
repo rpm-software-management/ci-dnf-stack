@@ -27,6 +27,18 @@ Scenario: Install an RPM by provide that is greater than e:vr
 
 @dnf5daemon
 @dnf5
+Scenario: Install an RPM by provide that is greater than e:vr without space
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install 'filesystem >0:3.9-2'"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
+
+
+@dnf5daemon
+@dnf5
 Scenario: Install an RPM by provide that is greater or equal to e:vr
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem >= 0:3.9-2'"
