@@ -347,3 +347,21 @@ Scenario: use collections and advisories with duplicate names/ids from different
         | upgrade       | B-0:2-2.x86_64 |
         | upgrade       | C-0:2-2.x86_64 |
         | upgrade       | D-0:2-2.x86_64 |
+
+
+@bz2212838
+# This test relies on a specific order of hardcoded libsolv ids for architectures. If it is changed and i686 has lower id than x86_64
+# it will no longer test anything (always passing) because used installed Query will be in the correct order automatically.
+Scenario: Do not upgrade packages with resolved security advisories when multiple arches are present
+  Given I use repository "security-upgrade"
+    # First install i686 arch so that the package has lower libsolv id which puts it before the x86_64 package in the installed Query.
+    And I successfully execute dnf with args "install libnsl-1-1.i686"
+    And I successfully execute dnf with args "install libnsl-1-1.x86_64"
+    # During advisory query filtering the packages have to be sorted by name and arch (effectively reversing the order here)
+    # otherwise advisory for libnsl-1-1 will not be detected as resolved and it will upgrade the packages.
+   When I execute dnf with args "upgrade --security"
+   Then transaction is empty
+    And stderr is
+        """
+        No security updates needed, but 1 update available
+        """
