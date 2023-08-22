@@ -163,4 +163,24 @@
             </collection>
         </pkglist>
     </update>
+
+    <update from="dnf-testing@redhat.com" status="stable" type="security" version="1">
+        <id>DNF-2019-99</id>
+        <title>upgrade all packages in all archs</title>
+        <release>Fedora 29</release>
+        <issue date="2019-02-22 15:30:01" />
+        <references />
+        <description>When WIP</description>
+        <pkglist>
+            <collection short="F29">
+                <name>Fedora 29</name>
+                <package name="libnsl" version="1" release="1" epoch="0" arch="i686" src="https://the.url/the.package.rpm">
+                    <filename>libnsl-1-1.i686.rpm</filename>
+                </package>
+                <package name="libnsl" version="1" release="1" epoch="0" arch="x86_64" src="https://the.url/the.package.rpm">
+                    <filename>libnsl-1-1.x86_64.rpm</filename>
+                </package>
+            </collection>
+        </pkglist>
+    </update>
 </updates>
