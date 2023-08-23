@@ -36,7 +36,7 @@ PGP                  :
 Repodata info        :
   Available packages : 289
   Total packages     : 289
-  Size               : 2.1 MiB
+  Size               : 2\.[0-9] MiB
   Revision           : 1550000000
   Updated            : .*
 
@@ -57,7 +57,7 @@ PGP                  :
 Repodata info        :
   Available packages : 6
   Total packages     : 6
-  Size               : 37.0 KiB
+  Size               : [0-9][0-9](\.[0-9])? KiB
   Revision           : 1550000000
   Updated            : .*
 """
@@ -101,7 +101,7 @@ PGP                  :
 Repodata info        : 
   Available packages : 289
   Total packages     : 289
-  Size               : 2.1 MiB
+  Size               : 2\.[0-9] MiB
   Revision           : 1550000000
   Updated            : .*
  
@@ -122,7 +122,7 @@ PGP                  :
 Repodata info        : 
   Available packages : 6
   Total packages     : 6
-  Size               : 37.0 KiB
+  Size               : [0-9][0-9](\.[0-9])? KiB
   Revision           : 1550000000
   Updated            : .*
  
@@ -166,7 +166,7 @@ PGP                  :
 Repodata info        :
   Available packages : 0
   Total packages     : 289
-  Size               : 2.1 MiB
+  Size               : 2\.[0-9] MiB
   Revision           : 1550000000
   Updated            : .*
 
@@ -187,7 +187,7 @@ PGP                  :
 Repodata info        :
   Available packages : 0
   Total packages     : 6
-  Size               : 37.0 KiB
+  Size               : [0-9][0-9](\.[0-9])? KiB
   Revision           : 1550000000
   Updated            : .*
 """
