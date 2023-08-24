@@ -53,6 +53,7 @@ ACTIONS_EN = {
     "Installing environmental groups": "env-install",
     "Installing Environment Groups": "env-install",
     "Removing Environment Groups": "env-remove",
+    "Removing environmental groups": "env-remove",
     "Upgrading Environment Groups": "env-upgrade",
     "Upgrading environmental groups": "env-upgrade",
     "Installing module profiles": "module-profile-install",
