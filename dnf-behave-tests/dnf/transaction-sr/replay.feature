@@ -14,13 +14,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "top-d-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -40,13 +40,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | top-d-1.0-1.x86_64      |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
-      | top-d-1.0-1.x86_64     | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
+      | top-d-1.0-1.x86_64     | User            |
 
 
 Scenario: Replay an install transaction from a non-existent repository
@@ -57,7 +57,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "nonexistent"
               }
           ],
@@ -75,12 +75,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | bottom-a1-2.0-1.noarch  |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | user            |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | User            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 Scenario: Replay an upgrade transaction
@@ -91,19 +91,19 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -124,12 +124,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Upgraded      | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
 
 
 Scenario: Replay a reinstall transaction
@@ -140,13 +140,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Reinstall",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Reinstalled",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -165,11 +165,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Reinstalled   | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 
@@ -182,13 +182,13 @@ Given I successfully execute dnf with args "upgrade top-a"
               {
                   "action": "Downgrade",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Downgraded",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -207,12 +207,12 @@ Given I successfully execute dnf with args "upgrade top-a"
       | Downgraded    | top-a-1:2.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 Scenario: Replay a remove transaction
@@ -223,7 +223,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Removed",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -241,10 +241,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Removed       | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
 
 
 Scenario: Replay a reason change transaction
@@ -255,7 +255,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -270,11 +270,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Reason Change | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | Dependency      |
 
 
 Scenario: Replay a reason change transaction on a not-installed package
@@ -285,7 +285,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -300,11 +300,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Reason Change | top-b-1.0-1.x86_64      |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 Scenario: Replay a reason change transaction on a package being installed
@@ -315,13 +315,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -337,12 +337,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | top-b-1.0-1.x86_64      |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
-      | top-b-1.0-1.x86_64     | group           |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
+      | top-b-1.0-1.x86_64     | Group           |
 
 
 Scenario: Replay a reason change transaction on a package being removed
@@ -353,13 +353,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Removed",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -375,10 +375,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Removed       | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
 
 
 Scenario: Replay installing a group
@@ -413,25 +413,25 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -456,13 +456,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | @test-group             |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
-      | top-b-1.0-1.x86_64     | group           |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
+      | top-b-1.0-1.x86_64     | Group           |
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -504,19 +504,19 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -539,12 +539,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | @test-group             |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -587,7 +587,7 @@ Given I successfully execute dnf with args "install @test-group"
               {
                   "action": "Removed",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "@System"
               }
           ],
@@ -607,12 +607,12 @@ Given I successfully execute dnf with args "install @test-group"
       | Removed       | @test-group             |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -659,13 +659,13 @@ Given I successfully execute dnf with args "install @test-group"
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -686,13 +686,13 @@ Given I successfully execute dnf with args "install @test-group"
       | Upgrade       | @test-group             |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
-      | top-b-1.0-1.x86_64     | group           |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
+      | top-b-1.0-1.x86_64     | Group           |
   And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -747,19 +747,19 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "top-c-2.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "mid-a2-2.0-1.x86_64",
-                  "reason": "weak-dependency",
+                  "reason": "Weak Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "mid-a2-1.0-1.x86_64",
-                  "reason": "weak-dependency",
+                  "reason": "Weak Dependency",
                   "repo_id": "@System"
               }
           ],
@@ -784,12 +784,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | @test-env               |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-2.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
-      | top-c-2.0-1.x86_64     | group           |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-2.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
+      | top-c-2.0-1.x86_64     | Group           |
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -840,19 +840,19 @@ Given I successfully execute dnf with args "install @test-env"
               {
                   "action": "Removed",
                   "nevra": "bottom-a3-1.0-1.x86_64",
-                  "reason": "clean",
+                  "reason": "Clean",
                   "repo_id": "@System"
               },
               {
                   "action": "Removed",
                   "nevra": "mid-a2-2.0-1.x86_64",
-                  "reason": "clean",
+                  "reason": "Clean",
                   "repo_id": "@System"
               },
               {
                   "action": "Removed",
                   "nevra": "top-c-2.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "@System"
               }
           ],
@@ -878,9 +878,9 @@ Given I successfully execute dnf with args "install @test-env"
       | Removed       | @test-env               |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | top-a-1:1.0-1.x86_64   | User            |
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -934,25 +934,25 @@ Given I successfully execute dnf with args "install @test-env"
               {
                   "action": "Upgrade",
                   "nevra": "mid-a2-2.0-1.x86_64",
-                  "reason": "weak-dependency",
+                  "reason": "Weak Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "mid-a2-1.0-1.x86_64",
-                  "reason": "weak-dependency",
+                  "reason": "Weak Dependency",
                   "repo_id": "@System"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-c-2.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-c-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "@System"
               }
           ],
@@ -978,12 +978,12 @@ Given I successfully execute dnf with args "install @test-env"
       | Upgrade       | @test-env               |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-2.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
-      | top-c-2.0-1.x86_64     | group           |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-2.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
+      | top-c-2.0-1.x86_64     | Group           |
   And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
   And stdout is
       """
@@ -1002,13 +1002,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "installonly-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "installonly-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -1028,13 +1028,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | installonly-2.0-1.x86_64 |
   And package reasons are
       | Package                  | Reason          |
-      | bottom-a2-1.0-1.x86_64   | dependency      |
-      | bottom-a3-1.0-1.x86_64   | dependency      |
-      | installonly-1.0-1.x86_64 | user            |
-      | installonly-2.0-1.x86_64 | user            |
-      | mid-a1-1.0-1.x86_64      | dependency      |
-      | mid-a2-1.0-1.x86_64      | weak-dependency |
-      | top-a-1:1.0-1.x86_64     | user            |
+      | bottom-a2-1.0-1.x86_64   | Dependency      |
+      | bottom-a3-1.0-1.x86_64   | Dependency      |
+      | installonly-1.0-1.x86_64 | User            |
+      | installonly-2.0-1.x86_64 | User            |
+      | mid-a1-1.0-1.x86_64      | Dependency      |
+      | mid-a2-1.0-1.x86_64      | Weak Dependency |
+      | top-a-1:1.0-1.x86_64     | User            |
 
 
 Scenario: Replay a transaction removing multiple installonly packages
@@ -1046,13 +1046,13 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
               {
                   "action": "Removed",
                   "nevra": "installonly-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               },
               {
                   "action": "Removed",
                   "nevra": "installonly-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1072,11 +1072,11 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
       | Removed       | installonly-1.0-1.x86_64 |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 Scenario: Replay a transaction installing and removing an installonly package
@@ -1088,13 +1088,13 @@ Given I successfully execute dnf with args "install installonly-1.0"
               {
                   "action": "Install",
                   "nevra": "installonly-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Removed",
                   "nevra": "installonly-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1114,12 +1114,12 @@ Given I successfully execute dnf with args "install installonly-1.0"
       | Removed       | installonly-1.0-1.x86_64 |
   And package reasons are
       | Package                  | Reason          |
-      | bottom-a2-1.0-1.x86_64   | dependency      |
-      | bottom-a3-1.0-1.x86_64   | dependency      |
+      | bottom-a2-1.0-1.x86_64   | Dependency      |
+      | bottom-a3-1.0-1.x86_64   | Dependency      |
       | installonly-2.0-1.x86_64 | unknown         |
-      | mid-a1-1.0-1.x86_64      | dependency      |
-      | mid-a2-1.0-1.x86_64      | weak-dependency |
-      | top-a-1:1.0-1.x86_64     | user            |
+      | mid-a1-1.0-1.x86_64      | Dependency      |
+      | mid-a2-1.0-1.x86_64      | Weak Dependency |
+      | top-a-1:1.0-1.x86_64     | User            |
 
 
 Scenario: Replay a transaction obsoleting a package
@@ -1131,13 +1131,13 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
               {
                   "action": "Install",
                   "nevra": "obsoleting-x-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Obsoleted",
                   "nevra": "obsoleted-a-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1157,12 +1157,12 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
       | Obsoleted     | obsoleted-a-1.0-1.x86_64  |
   And package reasons are
       | Package                   | Reason          |
-      | bottom-a2-1.0-1.x86_64    | dependency      |
-      | bottom-a3-1.0-1.x86_64    | dependency      |
-      | mid-a1-1.0-1.x86_64       | dependency      |
-      | mid-a2-1.0-1.x86_64       | weak-dependency |
-      | obsoleting-x-2.0-1.x86_64 | user            |
-      | top-a-1:1.0-1.x86_64      | user            |
+      | bottom-a2-1.0-1.x86_64    | Dependency      |
+      | bottom-a3-1.0-1.x86_64    | Dependency      |
+      | mid-a1-1.0-1.x86_64       | Dependency      |
+      | mid-a2-1.0-1.x86_64       | Weak Dependency |
+      | obsoleting-x-2.0-1.x86_64 | User            |
+      | top-a-1:1.0-1.x86_64      | User            |
 
 
 Scenario: Replay a transaction obsoleting multiple packages
@@ -1174,25 +1174,25 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
               {
                   "action": "Install",
                   "nevra": "obsoleting-x-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Obsoleted",
                   "nevra": "obsoleted-a-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               },
               {
                   "action": "Obsoleted",
                   "nevra": "obsoleted-b-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               },
               {
                   "action": "Install",
                   "nevra": "obsoleting-y-2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -1216,13 +1216,13 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
       | Install       | obsoleting-y-2.0-1.x86_64 |
   And package reasons are
       | Package                   | Reason          |
-      | bottom-a2-1.0-1.x86_64    | dependency      |
-      | bottom-a3-1.0-1.x86_64    | dependency      |
-      | mid-a1-1.0-1.x86_64       | dependency      |
-      | mid-a2-1.0-1.x86_64       | weak-dependency |
-      | obsoleting-x-2.0-1.x86_64 | user            |
-      | obsoleting-y-2.0-1.x86_64 | user            |
-      | top-a-1:1.0-1.x86_64      | user            |
+      | bottom-a2-1.0-1.x86_64    | Dependency      |
+      | bottom-a3-1.0-1.x86_64    | Dependency      |
+      | mid-a1-1.0-1.x86_64       | Dependency      |
+      | mid-a2-1.0-1.x86_64       | Weak Dependency |
+      | obsoleting-x-2.0-1.x86_64 | User            |
+      | obsoleting-y-2.0-1.x86_64 | User            |
+      | top-a-1:1.0-1.x86_64      | User            |
 
 
 Scenario: Replay an upgrade transaction where a package that is being upgraded has a different reason
@@ -1234,25 +1234,25 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
               {
                   "action": "Upgrade",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "bottom-a1-1.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "@System"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1274,12 +1274,12 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | Upgraded      | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | user            |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | User            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
 
 
 Scenario: Replay a transaction with an arch change
@@ -1297,7 +1297,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
               {
                   "action": "Upgraded",
                   "nevra": "archchange-1.0-1.noarch",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1321,11 +1321,11 @@ Given I successfully execute dnf with args "install archchange-1.0"
   And package reasons are
       | Package                 | Reason          |
       | archchange-2.0-1.x86_64 | unknown         |
-      | bottom-a2-1.0-1.x86_64  | dependency      |
-      | bottom-a3-1.0-1.x86_64  | dependency      |
-      | mid-a1-1.0-1.x86_64     | dependency      |
-      | mid-a2-1.0-1.x86_64     | weak-dependency |
-      | top-a-1:1.0-1.x86_64    | user            |
+      | bottom-a2-1.0-1.x86_64  | Dependency      |
+      | bottom-a3-1.0-1.x86_64  | Dependency      |
+      | mid-a1-1.0-1.x86_64     | Dependency      |
+      | mid-a2-1.0-1.x86_64     | Weak Dependency |
+      | top-a-1:1.0-1.x86_64    | User            |
 
 
 Scenario: Replay a transaction with multiple actions per NEVRA
@@ -1361,19 +1361,19 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
               {
                   "action": "Reason Change",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Reinstall",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Reinstalled",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "group",
+                  "reason": "Group",
                   "repo_id": "@System"
               }
           ],
@@ -1395,14 +1395,14 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
       | Removed       | @test-group               |
   And package reasons are
       | Package                 | Reason          |
-      | bottom-a1-2.0-1.noarch  | dependency      |
-      | bottom-a2-1.0-1.x86_64  | dependency      |
-      | bottom-a3-1.0-1.x86_64  | dependency      |
-      | mid-a1-1.0-1.x86_64     | dependency      |
-      | mid-a2-1.0-1.x86_64     | weak-dependency |
-      | supertop-b-1.0-1.x86_64 | user            |
-      | top-a-1:2.0-1.x86_64    | user            |
-      | top-b-1.0-1.x86_64      | dependency      |
+      | bottom-a1-2.0-1.noarch  | Dependency      |
+      | bottom-a2-1.0-1.x86_64  | Dependency      |
+      | bottom-a3-1.0-1.x86_64  | Dependency      |
+      | mid-a1-1.0-1.x86_64     | Dependency      |
+      | mid-a2-1.0-1.x86_64     | Weak Dependency |
+      | supertop-b-1.0-1.x86_64 | User            |
+      | top-a-1:2.0-1.x86_64    | User            |
+      | top-b-1.0-1.x86_64      | Dependency      |
 
 
 Scenario: ignore-installed: Replay an upgrade transaction where a package that is being installed is already on the system in a lower version
@@ -1414,19 +1414,19 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1453,12 +1453,12 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | Upgraded      | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | user            |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | User            |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
 
 
 Scenario: ignore-installed: Replaying an already installed transaction results in noop
@@ -1469,31 +1469,31 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a2-1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "bottom-a3-1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "mid-a1-1.0-1.x86_64",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "mid-a2-1.0-1.x86_64",
-                  "reason": "weak-dependency",
+                  "reason": "Weak Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -1522,25 +1522,25 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Upgrade",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "bottom-a1-1.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "@System"
               },
               {
                   "action": "Upgrade",
                   "nevra": "top-a-1:2.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Upgraded",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "@System"
               }
           ],
@@ -1566,12 +1566,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Upgraded      | top-a-1:1.0-1.x86_64    |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:2.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:2.0-1.x86_64   | User            |
 
 
 Scenario: ignore-installed: Replay a remove transaction where a package that is being removed is not installed on the system
@@ -1582,7 +1582,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Removed",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "@System"
               }
           ],
@@ -1607,13 +1607,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "does-not-exist-1.0-1.noarch",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -1636,12 +1636,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | bottom-a1-2.0-1.noarch  |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
 
 
 Scenario: skip-unavailable: Replay a transaction reinstalling a non-available package
@@ -1654,13 +1654,13 @@ Given I successfully execute dnf with args "install bottom-a1-2.0"
               {
                   "action": "Reinstall",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Reinstalled",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "@System"
               }
           ],
@@ -1685,13 +1685,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
               {
                   "action": "Install",
                   "nevra": "bottom-a1-2.0-1.noarch",
-                  "reason": "dependency",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
                   "action": "Install",
                   "nevra": "broken-dep-1.0-1.x86_64",
-                  "reason": "user",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               }
           ],
@@ -1710,9 +1710,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Install       | bottom-a1-2.0-1.noarch  |
   And package reasons are
       | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | dependency      |
-      | bottom-a2-1.0-1.x86_64 | dependency      |
-      | bottom-a3-1.0-1.x86_64 | dependency      |
-      | mid-a1-1.0-1.x86_64    | dependency      |
-      | mid-a2-1.0-1.x86_64    | weak-dependency |
-      | top-a-1:1.0-1.x86_64   | user            |
+      | bottom-a1-2.0-1.noarch | Dependency      |
+      | bottom-a2-1.0-1.x86_64 | Dependency      |
+      | bottom-a3-1.0-1.x86_64 | Dependency      |
+      | mid-a1-1.0-1.x86_64    | Dependency      |
+      | mid-a2-1.0-1.x86_64    | Weak Dependency |
+      | top-a-1:1.0-1.x86_64   | User            |
