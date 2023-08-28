@@ -21,6 +21,7 @@ Scenario: Update core packages
           Core libraries or services have been updated since boot-up:
             * glibc
             * kernel
+            * kernel-core
 
           Reboot is required to fully utilize these updates.
           More information: https://access.redhat.com/solutions/27943
