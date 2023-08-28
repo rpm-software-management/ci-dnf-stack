@@ -94,7 +94,7 @@ def i_fake_kernel_release(context, release):
     """
     assert os.path.exists('/usr/bin/fakeuname'), (
         'Fakeuname binary must be installed (provided by fakeuname from '
-        'rpmsoftwaremanagement/dnf-nightly copr repo)')
+        'rpmsoftwaremanagement/test-utils copr repo)')
     context.fake_kernel_release = "fakeuname {} ".format(release)
 
 
