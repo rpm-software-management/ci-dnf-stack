@@ -140,7 +140,7 @@ Scenario: repoquery top[!n-z]{d,aaa,it}
       topgit-1:1.17.6-1.x86_64
       """
 
-# @dnf5
+@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*
  When I execute dnf with args "repoquery *top[-a-f]*"
@@ -157,7 +157,7 @@ Scenario: repoquery *top[-a-f]*
       """
 
 
-# @dnf5
+@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 # <name-version> globs
 Scenario: repoquery *top[-a-f]*-1.0
@@ -172,7 +172,7 @@ Scenario: repoquery *top[-a-f]*-1.0
       toped-1:1.0-1.x86_64
       """
 
-# @dnf5
+@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*-1.[1-4]*
  When I execute dnf with args "repoquery *top[-a-f]*-1.[1-4]*"
@@ -207,4 +207,15 @@ Scenario: repoquery *top*-1.{17,23,99}*
       desktop-utils-1:1.23.9-1.x86_64
       topgit-1:1.17.6-1.src
       topgit-1:1.17.6-1.x86_64
+      """
+
+@dnf5
+Scenario: repoquery desktop-utils-[1-5].23.9
+ When I execute dnf with args "repoquery desktop-utils-[1-5].23.9"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      desktop-utils-1:1.23.9-1.src
+      desktop-utils-1:1.23.9-1.x86_64
       """
