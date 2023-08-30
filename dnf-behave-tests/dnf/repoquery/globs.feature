@@ -184,7 +184,7 @@ Scenario: repoquery *top[-a-f]*-1.[1-4]*
       desktop-utils-1:1.23.9-1.x86_64
       """
 
-# @dnf5
+@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*-1.[!1-4]*.x86_64
  When I execute dnf with args "repoquery *top[-a-f]*-1.[!1-4]*.x86_64"
@@ -217,5 +217,51 @@ Scenario: repoquery desktop-utils-[1-5].23.9
       """
       <REPOSYNC>
       desktop-utils-1:1.23.9-1.src
+      desktop-utils-1:1.23.9-1.x86_64
+      """
+
+@dnf5
+Scenario: repoquery with argument with epoch 0 and replaced '-' by wild card
+#  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
+ Given I use repository "dnf-ci-fedora"
+ When I execute dnf with args "repoquery postgresql-devel-0:9.6.5*1.fc29.x86_64"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      postgresql-devel-0:9.6.5-1.fc29.x86_64
+      """
+
+@dnf5
+Scenario: repoquery with argument without epoch 0 and replaced '-' by wild card
+#  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
+ Given I use repository "dnf-ci-fedora"
+ When I execute dnf with args "repoquery postgresql-devel-9.6.5*1.fc29.x86_64"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      postgresql-devel-0:9.6.5-1.fc29.x86_64
+      """
+
+@dnf5
+Scenario: repoquery with argument with epoch 1 and replaced '-' by wild card
+#  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
+ When I execute dnf with args "repoquery desktop-utils-1:1.23.9*1.x86_64"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      desktop-utils-1:1.23.9-1.x86_64
+      """
+
+@dnf5
+Scenario: repoquery with argument without epoch 1 and replaced '-' by wild card
+#  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
+ When I execute dnf with args "repoquery desktop-utils-1.23.9*1.x86_64"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
       desktop-utils-1:1.23.9-1.x86_64
       """
