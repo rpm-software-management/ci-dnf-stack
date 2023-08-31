@@ -34,6 +34,22 @@ Scenario: Download with resolve option when a dependency is installed
     And file "/{context.dnf.tempdir}/wget-1.19.5-5.fc29.x86_64.rpm" does not exist
 
 
+@bz2066851
+Scenario: Download with resolve respects install_weak_deps=false
+  Given I use repository "dnf-ci-fedora"
+    And I set working directory to "{context.dnf.tempdir}"
+    And I configure dnf with
+        | key                | value  |
+        | install_weak_deps  | false  |
+   When I execute dnf with args "download abcde --resolve"
+   Then the exit code is 0
+    And file "/{context.dnf.tempdir}/abcde-2.9.2-1.fc29.src.rpm" exists
+    And file "/{context.dnf.tempdir}/abcde-2.9.2-1.fc29.noarch.rpm" exists
+    And file "/{context.dnf.tempdir}/flac-1.3.2-8.fc29.x86_64.rpm" does not exist
+    And file "/{context.dnf.tempdir}/lame-3.100-4.fc29.x86_64.rpm" does not exist
+    And file "/{context.dnf.tempdir}/wget-1.19.5-5.fc29.x86_64.rpm" exists
+
+
 Scenario: Download with resolve and alldeps options
   Given I use repository "dnf-ci-fedora"
     And I set working directory to "{context.dnf.tempdir}"
