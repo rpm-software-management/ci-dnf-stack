@@ -69,21 +69,6 @@ Scenario: Repo info without arguments and option --all
     And stdout matches line by line
 """
 <REPOSYNC>
-Repo ID             : dnf-ci-fedora-updates
-Name                : dnf-ci-fedora-updates test repository
-Status              : disabled
-Priority            : 99
-Cost                : 1000
-Type                : available
-Metadata expire     : .*
-Skip if unavailable : false
-Config file         : .*/etc/yum.repos.d/dnf-ci-fedora-updates.repo
-URLs                : 
-  Base URL          : .*/fixtures/repos/dnf-ci-fedora-updates
-PGP                 : 
-  Verify repodata   : false
-  Verify packages   : false
-
 Repo ID              : dnf-ci-fedora
 Name                 : dnf-ci-fedora test repository
 Status               : enabled
@@ -105,6 +90,36 @@ Repodata info        :
   Revision           : 1550000000
   Updated            : .*
  
+Repo ID             : dnf-ci-fedora-updates
+Name                : dnf-ci-fedora-updates test repository
+Status              : disabled
+Priority            : 99
+Cost                : 1000
+Type                : available
+Metadata expire     : .*
+Skip if unavailable : false
+Config file         : .*/etc/yum.repos.d/dnf-ci-fedora-updates.repo
+URLs                : 
+  Base URL          : .*/fixtures/repos/dnf-ci-fedora-updates
+PGP                 : 
+  Verify repodata   : false
+  Verify packages   : false
+ 
+Repo ID             : dnf-ci-thirdparty
+Name                : dnf-ci-thirdparty test repository
+Status              : disabled
+Priority            : 99
+Cost                : 1000
+Type                : available
+Metadata expire     : .*
+Skip if unavailable : false
+Config file         : .*/etc/yum.repos.d/dnf-ci-thirdparty.repo
+URLs                : 
+  Base URL          : .*/fixtures/repos/dnf-ci-thirdparty
+PGP                 : 
+  Verify repodata   : false
+  Verify packages   : false
+
 Repo ID              : dnf-ci-thirdparty-updates
 Name                 : dnf-ci-thirdparty-updates test repository
 Status               : enabled
@@ -125,21 +140,6 @@ Repodata info        :
   Size               : [0-9][0-9](\.[0-9])? KiB
   Revision           : 1550000000
   Updated            : .*
- 
-Repo ID             : dnf-ci-thirdparty
-Name                : dnf-ci-thirdparty test repository
-Status              : disabled
-Priority            : 99
-Cost                : 1000
-Type                : available
-Metadata expire     : .*
-Skip if unavailable : false
-Config file         : .*/etc/yum.repos.d/dnf-ci-thirdparty.repo
-URLs                : 
-  Base URL          : .*/fixtures/repos/dnf-ci-thirdparty
-PGP                 : 
-  Verify repodata   : false
-  Verify packages   : false
 """
 
 @bz1793950
