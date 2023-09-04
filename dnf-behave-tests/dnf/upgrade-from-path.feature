@@ -18,7 +18,6 @@ Background: Install glibc, wget
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 
-# TODO(nsella) different exit code
 Scenario: Upgrade an RPM from absolute path on disk
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/glibc-2.28-26.fc29.x86_64.rpm"
