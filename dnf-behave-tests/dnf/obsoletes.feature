@@ -319,3 +319,35 @@ Scenario: Both packages are installed when group contains both obsoleter and obs
       - cannot install the best candidate for the job
       - conflicting requests
     """
+
+# https://issues.redhat.com/browse/RHEL-1448
+# NewPkg-1.0 obsoletes "ObsoletedPkg"
+# NewPkg-4.0 obsoletes "ObsoletedPkg < 3"
+@dnf5
+Scenario Outline: I can still upgrade the system even when old package with unversioned obsolete is present - "<command>"
+  Given I use repository "unversioned-obsoletes"
+    And I successfully execute dnf with args "install NewPkg ObsoletedPkg-4.0"
+    And I set working directory to "{context.dnf.tempdir}"
+   Then Transaction is following
+        | Action        | Package                           |
+        | install       | NewPkg-4.0-1.x86_64               |
+        | install       | ObsoletedPkg-4.0-1.x86_64         |
+   When I execute dnf with args "<command> --debugsolver"
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr does not contain "cannot install both NewPkg-1\.0-1\.x86_64.*NewPkg-4\.0-1\.x86_64"
+    # check debugsolver data that update job does not contain version of NewPkg older
+    # than the installed one
+    And file "/{context.dnf.tempdir}/debugdata/packages/testcase.t" contains lines
+        """
+        job update oneof .* \[forcebest,targeted,setevr,setarch\]
+        """
+    And file "/{context.dnf.tempdir}/debugdata/packages/testcase.t" does not contain lines
+        """
+        job update oneof .*NewPkg-1\.0-1\.x86_64@unversioned-obsoletes.* \[forcebest,targeted,setevr,setarch\]
+        """
+
+Examples:
+    | command               |
+    | upgrade               |
+    | upgrade NewPkg        |
