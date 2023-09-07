@@ -1,3 +1,4 @@
+# TODO (emrakova): dnf5: has to be updated when localization is resolved
 # destructive because it creates/overwrites /usr/share/locale/de/LC_MESSAGES/dnf.mo file
 @destructive
 Feature: Upgrade packages already downloaded to the cache
