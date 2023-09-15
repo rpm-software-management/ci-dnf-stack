@@ -79,3 +79,30 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
    """
+
+
+# Test that a package that was cached in the previous transaction (the 'vagare' package)
+# will be left untouched by the following successful remove operation (the 'labirinto' package)
+@bz2237883
+Scenario: Cached packages are not removed after remove command with keepcache set to false
+  Given I successfully execute dnf with args "install labirinto"
+   Then Transaction is following
+        | Action        | Package                                   |
+        | install       | labirinto-0:1.0-1.fc29.x86_64             |
+   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   Then stdout is empty
+  Given I successfully execute dnf with args "install vagare --downloadonly"
+   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   Then stdout matches line by line
+   """
+   \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
+   """
+  Given I successfully execute dnf with args "remove labirinto"
+   Then Transaction is following
+        | Action        | Package                                   |
+        | remove        | labirinto-0:1.0-1.fc29.x86_64             |
+   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   Then stdout matches line by line
+   """
+   \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
+   """
