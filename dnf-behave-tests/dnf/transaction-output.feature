@@ -68,17 +68,6 @@ Scenario: Packages in transaction are sorted by NEVRA
         Installing       : wget-1.19.5-5.fc29.x86_64                             9/11
         Installing       : abcde-2.9.2-1.fc29.noarch                            10/11
         Installing       : SuperRipper-1.0-1.x86_64                             11/11
-        Verifying        : abcde-2.9.2-1.fc29.noarch                             1/11
-        Verifying        : basesystem-11-6.fc29.noarch                           2/11
-        Verifying        : filesystem-3.9-2.fc29.x86_64                          3/11
-        Verifying        : flac-1.3.2-8.fc29.x86_64                              4/11
-        Verifying        : glibc-2.28-9.fc29.x86_64                              5/11
-        Verifying        : glibc-all-langpacks-2.28-9.fc29.x86_64                6/11
-        Verifying        : glibc-common-2.28-9.fc29.x86_64                       7/11
-        Verifying        : setup-2.12.1-1.fc29.noarch                            8/11
-        Verifying        : wget-1.19.5-5.fc29.x86_64                             9/11
-        Verifying        : FlacBetterEncoder-1.0-1.x86_64                       10/11
-        Verifying        : SuperRipper-1.0-1.x86_64                             11/11
 
       Installed:
         FlacBetterEncoder-1.0-1.x86_64      SuperRipper-1.0-1.x86_64
