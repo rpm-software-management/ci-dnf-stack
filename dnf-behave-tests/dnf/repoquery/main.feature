@@ -801,6 +801,21 @@ Given I successfully execute dnf with args "install bottom-a1"
       """
 
 
+@dnf5
+Scenario: repoquery --queryformat upper-case tags
+ When I execute dnf with args "repoquery --queryformat '%{{NAME}}-%{{VERSION}}-%{{release}} %{{RePoId}}\n' bottom-*"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      bottom-a1-1.0-1 repoquery-main
+      bottom-a1-2.0-1 repoquery-main
+      bottom-a2-1.0-1 repoquery-main
+      bottom-a3-1.0-1 repoquery-main
+      bottom-a3-2.0-1 repoquery-main
+      """
+
+
 # --querytags
 @dnf5
 @bz1744073
