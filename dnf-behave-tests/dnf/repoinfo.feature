@@ -135,3 +135,28 @@ Repodata info        :
   Revision           : 1550000000
   Updated            : .*
 """
+
+
+Scenario: Repoinfo with additional values
+  Given I successfully execute dnf with args "repo info dnf-ci-fedora --add-values=priority,type,gpgcheck"
+   Then stdout matches line by line
+"""
+<REPOSYNC>
+Repo ID              : dnf-ci-fedora
+Name                 : dnf-ci-fedora test repository
+Status               : enabled
+Priority             : 99
+Type                 : available
+Metadata expire      : .*
+Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
+URLs                 : 
+  Base URL           : .*/fixtures/repos/dnf-ci-fedora
+PGP                  : 
+  Verify packages    : false
+Repodata info        : 
+  Available packages : 289
+  Total packages     : 289
+  Size               : 2\.[0-9] MiB
+  Revision           : 1550000000
+  Updated            : .*
+"""
