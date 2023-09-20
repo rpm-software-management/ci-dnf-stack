@@ -40,7 +40,9 @@ jobs:
            https://raw.githubusercontent.com/rpm-software-management/dnf5/main/dnf5.spec
           RUN dnf -y install ccache
           # needed for pre-commit hooks
-          RUN dnf -y install git python3-pip rpmlint
+          # glibc-langpack-en is installed as a workaround
+          # see https://bugzilla.redhat.com/show_bug.cgi?id=2239860
+          RUN dnf -y install git python3-pip rpmlint glibc-langpack-en
           RUN dnf clean all  # remove dnf cache to make the image smaller
           EOF
 
