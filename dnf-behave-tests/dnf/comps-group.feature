@@ -553,7 +553,6 @@ Scenario: Install an environment with a nonexistent group
        """
 
 
-@xfail
 @bz2066638
 Scenario: Packages that are part of another installed group are not removed
   Given I use repository "comps-group"
