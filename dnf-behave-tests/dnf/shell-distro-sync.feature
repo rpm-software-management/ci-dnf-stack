@@ -69,7 +69,7 @@ Scenario: Using dnf shell, fail to make distro-sync for non-existent RPM
    When I open dnf shell session
     And I execute in dnf shell "distro-sync non-existent"
    Then Transaction is empty
-    And stdout contains "No package.*installed"
+    And stdout contains "No match for argument:.*"
     And stdout contains "No packages marked for distribution synchronization"
    When I execute in dnf shell "run"
    Then Transaction is empty
