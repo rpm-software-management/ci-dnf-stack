@@ -84,3 +84,17 @@ Given I use repository "dnf-ci-gpg"
     GPG check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: problem opening package.
     Signature verification failed
     """
+
+
+@bz2011850
+Scenario: Reporting installed package from disabled repository as not installed
+  Given I use repository "simple-base"
+    And I use repository "simple-updates"
+    And I successfully execute dnf with args "install vagare"
+   When I execute dnf with args "distro-sync vagare --disablerepo simple-base"
+   Then the exit code is 1
+    And stdout is 
+    """
+    <REPOSYNC>
+    No match for argument: vagare
+    """
