@@ -98,3 +98,15 @@ Scenario: Reporting installed package from disabled repository as not installed
     <REPOSYNC>
     No match for argument: vagare
     """
+
+
+Scenario: Downgrade to an older version to match the richdeps
+  Given I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora-updates"
+    And I use repository "dnf-ci-fedora-updates-testing"
+    And I successfully execute dnf with args "install flac-1.3.3-3.fc29"
+   When I execute dnf with args "distro-sync 'flac < 1.4.0' --disablerepo dnf-ci-fedora-updates"
+   Then the exit code is 0
+    And Transaction is following
+      | Action        | Package                        |
+      | downgrade     | flac-1.3.2-8.fc29.x86_64       |
