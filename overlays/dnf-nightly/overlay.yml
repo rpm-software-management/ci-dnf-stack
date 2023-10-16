@@ -86,3 +86,11 @@ components:
       src: github:rpm-software-management/microdnf.git
     requires:
       - libdnf
+
+  - name: dnf5
+    git:
+      src: github:rpm-software-management/dnf5.git
+    requires:
+      - libsolv
+      - librepo
+      - libmodulemd
