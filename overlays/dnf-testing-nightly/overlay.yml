@@ -1,0 +1,24 @@
+aliases:
+  - name: github
+    url: https://github.com/
+  - name: fedorapkgs
+    url: https://src.fedoraproject.org/rpms/
+  - name: centos-distgit
+    url: https://git.centos.org/rpms/
+
+components:
+
+  - name: libdnf
+    git:
+      src: github:rpm-software-management/libdnf.git
+      branch: origin/dnf-4-master
+
+  - name: dnf
+    git:
+      src: github:rpm-software-management/dnf.git
+    requires:
+      - libdnf
+
+  - name: dnf5
+    git:
+      src: github:rpm-software-management/dnf5.git
