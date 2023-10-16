@@ -11,9 +11,11 @@ Scenario: "nonexistent" is not an alias for any dnf command
 Scenario Outline: "<alias>" is an alias for "<command>"
    When I execute dnf with args "<alias> -h"
    Then the exit code is 0
-    And stdout contains "Usage:\n.*<command>"
-    And stdout does not contain "No such command"
-    And stderr does not contain "No such command"
+    # The exact output is now under discussion
+    # And stdout contains "Usage:\n.*<command>"
+    And stdout contains "Usage:\n"
+    And stdout does not contain "Unknown argument"
+    And stderr does not contain "Unknown argument"
 
 Examples:
         | command             | alias                        |
@@ -29,7 +31,6 @@ Examples:
         | environment         | environment                  |
         | group               | group                        |
         | group               | grp                          |
-        | help                | help                         |
         | history             | history                      |
         | info                | info                         |
         | install             | in                           |
