@@ -15,10 +15,12 @@ jobs:
     strategy:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
-        project: [dnf-nightly, dnf5-unstable]
+        project: [dnf-nightly, dnf5-unstable, dnf5-testing-nightly]
         variant: ['', -sanitizers]
         exclude:
           - project: dnf5-unstable
+            variant: -sanitizers
+          - project: dnf5-testing-nightly
             variant: -sanitizers
     steps:
       - name: Check out sources
