@@ -32,6 +32,12 @@ RUN set -x && \
     dnf -y upgrade; \
     dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf5-unstable;
 
+RUN set -x && \
+    if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
+       dnf -y copr enable $COPR; \
+       dnf -y install $COPR_RPMS; \
+    fi
+
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 

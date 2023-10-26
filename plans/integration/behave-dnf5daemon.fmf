@@ -1,0 +1,7 @@
+summary: Run Behave Test Suite - DNF5DAEMON
+execute:
+    how: tmt
+    script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test run \
+        --tags dnf5daemon \
+        --command dnf5daemon-client
