@@ -1,0 +1,7 @@
+summary: Run Behave Test Suite - DNF5
+execute:
+    how: tmt
+    script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test run \
+        --tags dnf5 \
+        --command dnf5
