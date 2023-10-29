@@ -1,0 +1,38 @@
+summary: Basic smoke test
+adjust:
+    - when: distro == fedora-37
+      environment:
+          BASE: "fedora:37"
+    - when: distro == fedora-38
+      environment:
+          BASE: "fedora:38"
+    - when: distro == fedora-39
+      environment:
+          BASE: "fedora:39"
+    - when: distro == fedora-rawhide
+      environment:
+          BASE: "fedora:rawhide"
+
+prepare:
+    - name: Install packages to build fedora container
+      how: install
+      package: [git, podman]
+
+    - name: download latest ci-dnf-stack from PR
+      how: shell
+      script:
+        - git clone https://github.com/rpm-software-management/ci-dnf-stack $TMT_PLANS_DATA/ci-dnf-stack
+        - git -C $TMT_PLANS_DATA/ci-dnf-stack remote add pull-request $PACKIT_SOURCE_URL
+        - git -C $TMT_PLANS_DATA/ci-dnf-stack fetch pull-request
+        - git -C $TMT_PLANS_DATA/ci-dnf-stack checkout --track pull-request/$PACKIT_SOURCE_BRANCH
+
+    - name: build testing container
+      how: shell
+      script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test build \
+        --base $BASE \
+        --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
+        --container-arg="--env=RPMS=$PACKIT_COPR_RPMS"
+execute:
+    script:
+        - $TMT_PLANS_DATA/ci-dnf-stack/container-test run --tags dnf5 --command dnf5 upgrade.feature
