@@ -1,21 +1,16 @@
-@no_installroot
+@dnf5
 Feature: dnf-automatic reboots
 
-
 Background:
-Given I delete file "/etc/yum.repos.d/*.repo" with globs
-  And I create file "/etc/dnf/dnf.conf" with
-    """
-    [main]
-    plugins=0
-    """
+Given I enable plugin "automatic"
   And I use repository "simple-base"
   And I successfully execute dnf with args "install labirinto"
   And I use repository "simple-updates"
 
+
 @bz2124793
 Scenario: dnf-automatic does not reboot when reboot = never
-  Given I create file "/etc/dnf/automatic.conf" with
+  Given I create file "/etc/dnf/dnf5-plugins/automatic.conf" with
     """
     [commands]
     reboot = never
@@ -24,7 +19,7 @@ Scenario: dnf-automatic does not reboot when reboot = never
     [emitters]
     emit_via = stdio
     """
-   When I execute dnf-automatic with args "--installupdates"
+   When I execute dnf with args "automatic --installupdates"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -36,7 +31,7 @@ Scenario: dnf-automatic does not reboot when reboot = never
 
 @bz2124793
 Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
-  Given I create file "/etc/dnf/automatic.conf" with
+  Given I create file "/etc/dnf/dnf5-plugins/automatic.conf" with
     """
     [commands]
     reboot = when-changed
@@ -45,7 +40,7 @@ Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
     [emitters]
     emit_via = stdio
     """
-   When I execute dnf-automatic with args "--installupdates"
+   When I execute dnf with args "automatic --installupdates"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -57,7 +52,7 @@ Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
 
 @bz2124793
 Scenario: dnf-automatic reboots when reboot = when-needed and important package changed
-  Given I create file "/etc/dnf/automatic.conf" with
+  Given I create file "/etc/dnf/dnf5-plugins/automatic.conf" with
     """
     [commands]
     reboot = when-needed
@@ -69,7 +64,7 @@ Scenario: dnf-automatic reboots when reboot = when-needed and important package 
     And I use repository "dnf-ci-fedora"
     And I successfully execute dnf with args "install kernel"
     And I use repository "dnf-ci-fedora-updates"
-   When I execute dnf-automatic with args "--installupdates"
+   When I execute dnf with args "automatic --installupdates"
    Then the exit code is 0
     And stdout contains lines:
       """
@@ -78,7 +73,7 @@ Scenario: dnf-automatic reboots when reboot = when-needed and important package 
 
 @bz2124793
 Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing important changed
-  Given I create file "/etc/dnf/automatic.conf" with
+  Given I create file "/etc/dnf/dnf5-plugins/automatic.conf" with
     """
     [commands]
     reboot = when-needed
@@ -87,7 +82,7 @@ Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing im
     [emitters]
     emit_via = stdio
     """
-   When I execute dnf-automatic with args "--installupdates"
+   When I execute dnf with args "automatic --installupdates"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -99,7 +94,7 @@ Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing im
 
 @bz2124793
 Scenario: dnf-automatic shows error message when reboot command failed
-  Given I create file "/etc/dnf/automatic.conf" with
+  Given I create file "/etc/dnf/dnf5-plugins/automatic.conf" with
     """
     [commands]
     reboot = when-changed
@@ -108,7 +103,7 @@ Scenario: dnf-automatic shows error message when reboot command failed
     [emitters]
     emit_via = stdio
     """
-   When I execute dnf-automatic with args "--installupdates"
+   When I execute dnf with args "automatic --installupdates"
    Then the exit code is 1
     And Transaction is following
         | Action        | Package                               |
