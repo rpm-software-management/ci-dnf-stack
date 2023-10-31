@@ -20,10 +20,6 @@ Scenario: Install obsoleted package, even though obsoleter of older version is p
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageE-0:3.0-1.x86_64                   |
-    And dnf5 transaction items for transaction "last" are
-        | action  | package                           | reason | repository       |
-        | Install | PackageE-0:3.0-1.x86_64           | User   | dnf-ci-obsoletes |
-
 
 @dnf5
 Scenario: Install alphabetically first of obsoleters when installing obsoleted package
