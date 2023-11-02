@@ -4,13 +4,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
-import glob
 import os
-
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
+import toml
 
 from common.lib.behave_ext import check_context_table
 from lib.dnf import parse_module_list
@@ -46,19 +41,22 @@ def check_module_list(context):
 
 
 def get_modules_state(installroot):
-    cfgdir = os.path.join(installroot, 'etc/dnf/modules.d')
-    cfg = ConfigParser()
-    cfg.read(glob.glob(cfgdir + '/*.module'))
-    cfg_dict = dict()
-    for section in cfg.sections():
-        section_dict = dict(cfg.items(section))
-        if section_dict.get('profiles'):
-            section_dict['profiles'] = set(
-                [p.strip() for p in section_dict['profiles'].split(',')])
-        else:
-            section_dict['profiles'] = set()
-        cfg_dict[section] = section_dict
-    return cfg_dict
+    found_modules = dict()
+    states_filepath = os.path.join(installroot, "usr/lib/sysimage/libdnf5/modules.toml")
+    if not os.path.exists(states_filepath):
+        return found_modules
+    with open(states_filepath) as f:
+        for section_name, section_dict in toml.load(f)["modules"].items():
+            module_dict = dict()
+            if section_dict.get("state"):
+                module_dict["state"] = section_dict["state"].lower()
+            if section_dict.get("enabled_stream"):
+                module_dict["stream"] = section_dict["enabled_stream"]
+            if section_dict.get("installed_profiles"):
+                module_dict["profiles"] = set(
+                    [p.strip() for p in section_dict["installed_profiles"].split(',')])
+            found_modules[section_name] = module_dict
+    return found_modules
 
 
 @behave.given("I set default module platformid to \"{platformid}\"")
