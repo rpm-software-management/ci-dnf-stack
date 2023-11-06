@@ -12,31 +12,27 @@ from lib.dnf import parse_module_list
 
 
 def check_module_list(context):
-    check_context_table(context, ["Repository", "Name", "Stream", "Profiles"])
+    check_context_table(context, ["Name", "Stream", "Profiles"])
 
     lines = context.cmd_stdout.splitlines()
     modules = parse_module_list(lines)
 
-    for repository, name, stream, profiles_txt in context.table: 
-        if not repository or not name or not stream:
-            raise ValueError("Invalid row in modules table. Repository, name and "
-                             "stream columns are required")
+    for name, stream, profiles_txt in context.table:
+        if not name or not stream:
+            raise ValueError("Invalid row in modules table. Name and stream columns are required")
         if profiles_txt:
             profiles = set([p.strip() for p in profiles_txt.split(',')])
         else:
             profiles = None
-        if not repository in modules:
-            raise AssertionError("No modules found for repository '{}'".format(repository))
-        for idx,module in enumerate(modules[repository]):
+        for idx, module in enumerate(modules):
             if module['name'] == name \
                and module['stream'] == stream \
                and (module['profiles'] == profiles if profiles else True):
-                modules[repository].pop(idx)
+                modules.pop(idx)
                 break
         else:
             raise AssertionError(
-                "Module '{}:{}' with profiles '{}' not found in repository '{}'.".format(
-                    name, stream, profiles_txt, repository))
+                "Module '{}:{}' with profiles '{}' not found.".format(name, stream, profiles_txt))
     return modules
 
 
@@ -82,18 +78,12 @@ def step_impl(context):
 
 @behave.then("module list is")
 def step_impl(context):
-    remained = []
-    for repository, modules in check_module_list(context).items():
-        if modules:
-            remained.extend(modules)
-    if remained:
-        modules = ["{}:{}/{} in repository '{}'".format(m['name'], m['stream'],
-                                                        m['profiles'],
-                                                        m['repository'])
-                   for m in remained]
-
+    modules = check_module_list(context)
+    if modules:
+        remaining_modules = ["{}:{}/{}".format(m['name'], m['stream'], m['profiles'])
+                             for m in modules]
         raise AssertionError("Following modules were not captured in the table: %s" % (
-            '\n'.join(modules)))
+            '\n'.join(remaining_modules)))
 
 
 @behave.then("modules state is following")

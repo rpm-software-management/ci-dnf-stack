@@ -340,8 +340,7 @@ def parse_history_info(lines):
 def parse_module_list(lines):
     """
     Parse `module list` command output.
-    Returns {repository: [{'name': module_name, 'stream': module_stream,
-                           'profiles': set([module profiles])}]}
+    Returns [{'name': module_name, 'stream': module_stream, 'profiles': set([module profiles])}]
     """
     def get_column(idx, columns, line):
         if idx < (len(columns) - 1):
@@ -349,35 +348,27 @@ def parse_module_list(lines):
         else:
             return line[columns[idx:]].strip()
 
-    result = dict()
-    idx = 0
-    repository = None
-    while idx < len(lines) - 2:
-        line1 = lines[idx].strip()
-        line2 = lines[idx + 1].strip()
-        if not line1:
-            # empty line separates the repositories
-            repository = None
-        match = MODULE_LIST_HEADER_RE.match(line2)
-        if match:
-            # table header for a new repository found
-            # FIXME line1 contains the repository name, while what we need here
-            # is the id. This assumes the id is the first word of the name,
-            # which happens to be the case for repos generated for the tests.
-            repository = line1.split(" ")[0]
-            columns=[match.start(i+1) for i in range(4)]
-            result[repository] = []
-            idx += 2
+    result = []
+    columns = []
+    header_found = False
+
+    for line in lines:
+        # Find header first
+        if not header_found:
+            match = MODULE_LIST_HEADER_RE.match(line)
+            if match:
+                columns = [match.start(i + 1) for i in range(4)]
+                header_found = True
             continue
-        if repository:
-            # record module line for repository
-            module = dict()
-            module['repository'] = repository
-            module['name'] = get_column(0, columns, line1)
-            module['stream'] = get_column(1, columns, line1)
-            module['profiles'] = set(
-                [p.strip()
-                 for p in get_column(2, columns, line1).split(',')])
-            result[repository].append(module)
-        idx += 1
+
+        # Empty line separates the module list from the hint line
+        if not line.strip():
+            break
+
+        module = dict()
+        module['name'] = get_column(0, columns, line)
+        module['stream'] = get_column(1, columns, line)
+        module['profiles'] = set([p.strip() for p in get_column(2, columns, line).split(',')])
+        result.append(module)
+
     return result
