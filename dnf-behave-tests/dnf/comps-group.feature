@@ -557,7 +557,9 @@ Scenario: Packages that are part of another installed group are not removed
         | group-remove  | Test Group    |
 
 
-@dnf5
+# @dnf5
+# TODO(jkolarik): Cache files are now created with root-only mask
+# TODO(jkolarik): Enable after resolving the https://github.com/rpm-software-management/dnf5/issues/1000
 # destructive because it can create a new user on the system
 @bz2030255
 @destructive
