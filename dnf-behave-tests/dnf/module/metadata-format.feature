@@ -31,6 +31,7 @@ Given I use repository "additional-field-modulemd"
       """
 
 
+@dnf5
 @bz2004853
 @bz2007166
 @bz2007167
@@ -41,6 +42,7 @@ Given I use repository "additional-field-modulemd"
  When I execute dnf with args "repoquery nodejs"
  Then stdout is
       """
+      <REPOSYNC>
       nodejs-1:5.3.1-1.module_2011+41787af0.src
       nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
       """

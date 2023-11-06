@@ -34,6 +34,7 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs    | enabled   | 10        |           |
 
 
+@dnf5
 Scenario: two stream changes, one of which is obsoletes, do not throw exception
 Given I execute dnf with args "module enable nodejs:5"
  When I use repository "dnf-ci-fedora-modular-obsoletes"
@@ -41,7 +42,7 @@ Given I execute dnf with args "module enable nodejs:5"
  Then the exit code is 0
   And modules state is following
       | Module    | State     | Stream    | Profiles  |
-      | nodejs    |           |           |           |
+      | nodejs    | available |           |           |
 
 
 Scenario: stream is resetted according to obsoletes in new metadata

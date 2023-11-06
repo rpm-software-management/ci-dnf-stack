@@ -133,16 +133,16 @@ Scenario: Fail to enable a non-existent module stream
     And stderr contains "missing groups or modules: nodejs:1"
 
 
+@dnf5
 Scenario: Fail to enable a module stream when not specifying anything
-  Given I set dnf command to "dnf"
    When I execute dnf with args "module enable"
-   Then the exit code is 1
+   Then the exit code is 2
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
-        Error: dnf module enable: too few arguments
+        Missing positional argument "specs" for command "enable". Add "--help" for more information about the arguments.
         """
 
 
