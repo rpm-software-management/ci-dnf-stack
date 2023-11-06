@@ -50,6 +50,7 @@ Given I use repository "dnf-ci-fedora"
     | install                   | ninja-build-0:1.8.2-5.fc29.x86_64 |
 
 
+@dnf5
 Scenario: ursine pkg is preferred over module without default
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install dwm"
@@ -59,6 +60,7 @@ Given I use repository "dnf-ci-fedora"
     | install                   | dwm-0:6.1-1.x86_64                |
 
 
+@dnf5
 Scenario: RPMs from non-active streams are not available
  When I execute dnf with args "module disable nodejs:8" 
  Then I execute dnf with args "list --available dwm.x86_64"

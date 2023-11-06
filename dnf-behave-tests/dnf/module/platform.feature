@@ -24,6 +24,7 @@ Given I delete file "/etc/os-release"
   And stderr contains "nothing provides module\(pseudoplatform:6.0\) needed by module dwm:6.0:20180813144159:.x86_64"
 
 
+@dnf5
 Scenario: I can't see pseudo-module in module listing
  When I execute dnf with args "module enable dwm:6.0"
  Then the exit code is 0

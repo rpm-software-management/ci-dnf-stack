@@ -72,6 +72,7 @@ Scenario: Enabling a default stream depending on a non-default stream
         | beverage     | enabled   | soda       |           |
         | fluid        | enabled   | water      |           |
 
+@dnf5
 Scenario: Enabling a non-default stream depending on a default stream
   Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
         """
@@ -106,6 +107,7 @@ Scenario: Enabling a non-default stream depending on a default stream
         | fluid        | enabled   | water      |           |
 
 
+@dnf5
 # rely on merging bz1649261 fix
 Scenario: Enabling a disabled stream depending on a default stream
   Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
@@ -146,6 +148,7 @@ Scenario: Enabling a disabled stream depending on a default stream
         | fluid        | enabled   | water      |           |
 
 
+@dnf5
 # rely on merging bz1649261 fix
 Scenario: Enabling a disabled stream depending on a non-default stream
   Given I create file "/etc/dnf/modules.defaults.d/defaults.yaml" with
@@ -321,6 +324,7 @@ Scenario: Cannot enable a stream depending on a disabled module
         | ingredience  | disabled  |            |           |
 
 
+@dnf5
 Scenario: Enable a module stream dependent on a module with a default stream
    When I execute dnf with args "module enable food-type:edible"
    Then the exit code is 0
@@ -334,6 +338,7 @@ Scenario: Enable a module stream dependent on a module with a default stream
         | ingredience  | enabled   | orange     |           |
 
 
+@dnf5
 Scenario: Enable a module stream dependent on a module without default stream
   Given I use repository "dnf-ci-fedora-modular-updates"
    When I execute dnf with args "module enable nodejs:12"

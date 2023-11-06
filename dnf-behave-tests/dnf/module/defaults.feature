@@ -13,16 +13,17 @@ Scenario: The default stream is used when enabling a module
         | nodejs    | enabled   | 8         |           |
 
 
+@dnf5
 @bz1629702
 Scenario: The default streams are identified in the output of module list
    When I execute dnf with args "module list nodejs"
    Then the exit code is 0
     And module list is
-        | Repository            | Name      | Stream    | Profiles     |
-        | dnf-ci-fedora-modular | nodejs    | 5         | development, minimal, default |
-        | dnf-ci-fedora-modular | nodejs    | 8 [d]     | development, minimal, default [d] |
-        | dnf-ci-fedora-modular | nodejs    | 10        | development, minimal, default [d] |
-        | dnf-ci-fedora-modular | nodejs    | 11        | development, minimal, default |
+        | Name      | Stream    | Profiles     |
+        | nodejs    | 5         | development, minimal, default |
+        | nodejs    | 8 [d]     | development, minimal, default [d] |
+        | nodejs    | 10        | development, minimal, default [d] |
+        | nodejs    | 11        | development, minimal, default |
 
 
 @bz1618553
