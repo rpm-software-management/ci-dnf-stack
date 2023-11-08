@@ -44,6 +44,27 @@
       </collection>
     </pkglist>
   </update>
+  <update from="secresponseteam@foo.bar" status="final" type="enhancement" version="3">
+    <id>FEDORA-2999:003-03</id>
+    <title>lz4 enhacements</title>
+    <issued date="2019-01-17 00:00:00"/>
+    <updated date="2019-01-17 00:00:00"/>
+    <severity>Moderate</severity>
+    <summary>summary_1</summary>
+    <description>Enhance some stuff, reboot_suggested=True</description>
+    <references>
+        <reference href="https://foobar/foobarupdate_1" id="1" type="self" title="update_1"/>
+    </references>
+    <pkglist>
+      <collection short="named collection">
+        <name>Bar component</name>
+        <package name="lz4" version="1.8.2" release="2.fc29" epoch="0" arch="x86_64" src="lz4-0:1.8.2-2.fc29.x86_64.rpm">
+          <filename>lz4-0:1.8.2-2.fc29.x86_64.rpm</filename>
+          <reboot_suggested>True</reboot_suggested>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
   <update from="secresponseteam@foo.bar" status="final" type="bugfix" version="3">
     <id>FEDORA-2019-348e185000</id>
     <title>kernel bug fix</title>
