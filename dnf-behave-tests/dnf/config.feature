@@ -138,10 +138,10 @@ Scenario: Test usage of not existing config file
     And stderr contains "Config file.*does not exist"
 
 
+@dnf5
 @bz1722493
 Scenario: Lines that contain only whitespaces do not spoil previous config options
-  Given I enable plugin "config_manager"
-    And I create file "/test/dnf.conf" with
+  Given I create file "/test/dnf.conf" with
     # the "empty" line between gpgcheck and baseurl intentionally contains spaces
     """
     [main]
@@ -152,7 +152,7 @@ Scenario: Lines that contain only whitespaces do not spoil previous config optio
          
     baseurl=http://some.url/
     """
-   When I execute dnf with args "-c {context.dnf.installroot}/test/dnf.conf config-manager testingrepo --dump"
+   When I execute dnf with args "--config={context.dnf.installroot}/test/dnf.conf --dump-repo-config=testingrepo"
    Then stdout contains lines
    """
    gpgcheck = 1
