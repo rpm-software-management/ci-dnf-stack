@@ -655,3 +655,14 @@ Scenario: dnf can list installed groups even without their xml definitions prese
     Repositories         : @System
     Default packages     : test-package
     """
+
+# https://github.com/rpm-software-management/dnf5/issues/917
+@dnf5
+Scenario: Remove group that is not installed
+ Given I use repository "dnf-ci-thirdparty"
+  When I execute dnf with args "group remove dnf-ci-testgroup"
+  Then the exit code is 0
+   And stderr is
+   """
+   No groups to remove for argument: dnf-ci-testgroup
+   """
