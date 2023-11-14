@@ -27,13 +27,13 @@ RUN set -x && \
     dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     dnf -y install dnf5-plugins; \
     # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
-    dnf -y upgrade; \
-    dnf -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly;
+    dnf5 -y upgrade; \
+    dnf5 -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly;
 
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
-       dnf -y copr enable $COPR; \
-       dnf -y install $COPR_RPMS; \
+       dnf5 -y copr enable $COPR; \
+       dnf5 -y install $COPR_RPMS; \
     fi
 
 # copy test suite
@@ -41,14 +41,14 @@ COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
 # install test suite dependencies
 RUN set -x && \
-    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    dnf5 -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
 COPY ./rpms/ /opt/ci/rpms/
 RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
+        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
 
 # create directory for dbus daemon socket
