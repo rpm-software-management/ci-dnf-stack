@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+from common.lib.tag_matcher import VersionedActiveTagMatcher
+from common.lib.os_version import detect_os_version
+from common.lib.file import ensure_directory_exists
+from common.lib.cmd import print_last_command
+from steps.lib.config import write_config
+from behave.tag_matcher import ActiveTagMatcher
+from behave.formatter.ansi_escapes import escapes
+from behave import model
+import time
+import consts
+import common
 from __future__ import print_function
 
 import os
@@ -12,26 +23,12 @@ import tempfile
 # add the behave tests root to python path so that the `common` module can be found
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
-import common
-import consts
-import subprocess
-import time
-
-from behave import model
-from behave.formatter.ansi_escapes import escapes
-from behave.tag_matcher import ActiveTagMatcher
-
-from steps.lib.config import write_config
-from common.lib.cmd import print_last_command
-from common.lib.file import ensure_directory_exists
-from common.lib.os_version import detect_os_version
-from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
 DEFAULT_DNF_COMMAND = "dnf"
 DEFAULT_REPOS_LOCATION = os.path.join(consts.FIXTURES_DIR, "repos")
-DEFAULT_RELEASEVER="29"
-DEFAULT_PLATFORM_ID="platform:f29"
+DEFAULT_RELEASEVER = "29"
+DEFAULT_PLATFORM_ID = "platform:f29"
 
 
 class DNFContext(object):
@@ -171,7 +168,7 @@ class DNFContext(object):
             result.append("--enableplugin='{0}'".format(plugin))
 
         setopts = self._get("setopts") or {}
-        for key,value in setopts.items():
+        for key, value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
 
         return result
@@ -236,7 +233,7 @@ class DNFContext(object):
             result.append("--enableplugin='{0}'".format(plugin))
 
         setopts = self._get("setopts") or {}
-        for key,value in setopts.items():
+        for key, value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
 
         result.append("--setopt=reposdir=%s" % self.installroot + "/etc/yum.repos.d")
@@ -285,7 +282,6 @@ def before_scenario(context, scenario):
         context.dnf = None
         return
 
-
     context.dnf = DNFContext(context.config.userdata,
                              force_installroot='force_installroot' in scenario.tags,
                              no_installroot='no_installroot' in scenario.effective_tags)
@@ -330,8 +326,6 @@ def before_all(context):
             context.dnf5_mode = True
             context.dnf5daemon_mode = True
             break
-
-
 
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
     context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5" if context.dnf5_mode else "4"})

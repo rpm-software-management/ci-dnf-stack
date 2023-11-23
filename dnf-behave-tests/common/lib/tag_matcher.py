@@ -33,7 +33,7 @@ class VersionedActiveTagMatcher(ActiveTagMatcher):
         op = getattr(operator, tag_oper)
         result = op(current_value, tag_value)
         if is_negated:
-            result = not(result)
+            result = not (result)
         return result
 
     def is_tag_group_enabled(self, group_category, group_tag_pairs):

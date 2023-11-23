@@ -87,7 +87,7 @@ def decompress_file_by_extension_to_dir(compressed_filepath, dest_dir):
 
     basename = os.path.basename(compressed_filepath)
     dst = os.path.join(dest_dir, basename)
-    dst = os.path.splitext(dst)[0] #remove compression extension
+    dst = os.path.splitext(dst)[0]  # remove compression extension
 
     open(dst, "wb").write(content)
     return dst

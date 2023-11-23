@@ -32,5 +32,3 @@ def lines_match_to_regexps_line_by_line(out_lines, regexp_lines):
 
     if regexp_lines:  # there are some unprocessed regexps
         raise AssertionError("No more line to match regexp '%s'" % regexp_lines[0])
-
-

@@ -94,7 +94,8 @@ def main(argv):
 
         # THIS IS THE ESSENTIAL PART OF THE REPRODUCER, WRITING DOWN BROKEN DATA THAT IS INCORRECTLY HANDLED BY RPM
         # the following tag is stored in STORE data indexed by rpm.RPMTAG_HEADERSIGNATURES above
-        f_new.write(struct.pack('>iiii', rpm.RPMTAG_HEADERSIGNATURES, RPM_BIN_TYPE, -TRAILER_LENGTH * 2, TRAILER_LENGTH))
+        f_new.write(struct.pack('>iiii', rpm.RPMTAG_HEADERSIGNATURES,
+                    RPM_BIN_TYPE, -TRAILER_LENGTH * 2, TRAILER_LENGTH))
 
         # remember the current position, we'll write rpm header here in the next steps
         hdr_start = f_new.tell()

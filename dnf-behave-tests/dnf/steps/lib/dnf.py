@@ -23,11 +23,11 @@ OBSOLETE_REPLACING_LABEL = {
     'cs_CZ': 'nahrazování',
 }
 OBSOLETE_REPLACING = re.compile(
-    r"^ +(?P<label>%s) +(?P<name>[^ ]*)\.(?P<arch>[^ ]+) +(?P<evr>.*)$" \
-        % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
+    r"^ +(?P<label>%s) +(?P<name>[^ ]*)\.(?P<arch>[^ ]+) +(?P<evr>.*)$"
+    % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
 REPLACING_DNF5 = re.compile(
-    r"^ +(?P<label>%s) +(?P<name>[^ ]+) +(?P<arch>[^ ]+) +(?P<evr>[^ ]*) +(?P<from_repo>[^ ]*) +(?P<size>.*)$" \
-        % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
+    r"^ +(?P<label>%s) +(?P<name>[^ ]+) +(?P<arch>[^ ]+) +(?P<evr>[^ ]*) +(?P<from_repo>[^ ]*) +(?P<size>.*)$"
+    % '|'.join(OBSOLETE_REPLACING_LABEL.values()))
 
 
 ACTIONS_EN = {
@@ -199,7 +199,7 @@ def parse_transaction_table(context, lines):
                 # between arch and version and matching fails,
                 # but I'm not able to reproduce this behavior outside of behave.
                 # module-install.feature
-                #line = re.sub(r'(x86_64|noarch)(?! )', r'\1 ', line)
+                # line = re.sub(r'(x86_64|noarch)(?! )', r'\1 ', line)
                 match = PACKAGE_RE.match(line)
             if not match:
                 # either next action or parsing error
@@ -344,7 +344,7 @@ def parse_module_list(lines):
     """
     def get_column(idx, columns, line):
         if idx < (len(columns) - 1):
-            return line[columns[idx]:columns[idx+1]].strip()
+            return line[columns[idx]:columns[idx + 1]].strip()
         else:
             return line[columns[idx:]].strip()
 

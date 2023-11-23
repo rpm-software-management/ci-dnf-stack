@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+from common.lib.tag_matcher import VersionedActiveTagMatcher
+from common.lib.os_version import detect_os_version
+from common.lib.cmd import print_last_command
+from behave.formatter.ansi_escapes import escapes
+from behave import model
+import consts
+import common
 from __future__ import print_function
 
 import os
@@ -11,15 +18,6 @@ import tempfile
 # add the behave tests root to python path so that the `common` module can be found
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
-import common
-import consts
-
-from behave import model
-from behave.formatter.ansi_escapes import escapes
-
-from common.lib.cmd import print_last_command
-from common.lib.os_version import detect_os_version
-from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
 class TempDirManager(object):

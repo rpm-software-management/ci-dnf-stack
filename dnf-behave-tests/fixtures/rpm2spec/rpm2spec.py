@@ -42,9 +42,9 @@ PACKAGES = [
     ["fedora", "libzstd", "dnf-ci-fedora-updates"],
 
     # dnf-ci-fedora-modular
-#    ["fedora-modular", "nodejs", "dnf-ci-fedora-modular"],
-#    ["fedora-modular", "postgresql", "dnf-ci-fedora-modular"],
-    
+    #    ["fedora-modular", "nodejs", "dnf-ci-fedora-modular"],
+    #    ["fedora-modular", "postgresql", "dnf-ci-fedora-modular"],
+
     # dnf-ci-fedora-modular-updates
     ["updates-modular", "nodejs", "dnf-ci-fedora-modular-updates"],
     ["updates-modular", "postgresql", "dnf-ci-fedora-modular-updates"],

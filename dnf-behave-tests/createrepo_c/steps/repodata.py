@@ -43,28 +43,28 @@ def keys_do_not_differ(prim, flist, oth):
 
 
 def repodata_do_not_differ(prim1, prim2, flist1, flist2, oth1, oth2):
-        # Compare packages by checksums
-        if prim1.keys() != prim2.keys():
-            print_lines_diff(prim1.keys(), prim2.keys())
-            raise AssertionError("Primary repodata have different package sets.")
+    # Compare packages by checksums
+    if prim1.keys() != prim2.keys():
+        print_lines_diff(prim1.keys(), prim2.keys())
+        raise AssertionError("Primary repodata have different package sets.")
 
-        # Compare packages by name
-        if prim1.packages() != prim2.packages():
-            print_lines_diff(prim1.packages(), prim2.packages())
-            raise AssertionError("Primary repodata have different sets of package names.")
+    # Compare packages by name
+    if prim1.packages() != prim2.packages():
+        print_lines_diff(prim1.packages(), prim2.packages())
+        raise AssertionError("Primary repodata have different sets of package names.")
 
-        diff = prim1.diff(prim2)
-        if diff:
-            raise AssertionError("Primary repodata are different.\n"
-                                 "Difference: %s" % (diff))
-        diff = flist1.diff(flist2)
-        if diff:
-            raise AssertionError("Filelists repodata are different.\n"
-                                 "Difference: %s" % (diff))
-        diff = oth1.diff(oth2)
-        if diff:
-            raise AssertionError("Other repodata are different.\n"
-                                 "Difference: %s" % (diff))
+    diff = prim1.diff(prim2)
+    if diff:
+        raise AssertionError("Primary repodata are different.\n"
+                             "Difference: %s" % (diff))
+    diff = flist1.diff(flist2)
+    if diff:
+        raise AssertionError("Filelists repodata are different.\n"
+                             "Difference: %s" % (diff))
+    diff = oth1.diff(oth2)
+    if diff:
+        raise AssertionError("Other repodata are different.\n"
+                             "Difference: %s" % (diff))
 
 
 @behave.step("repodata \"{path}\" are consistent")
@@ -123,7 +123,6 @@ def repodata_are_consistent(context, path):
     primary = xml_parse_repodata(prim_path, "{%s}package" % ns["pri_ns"], "primary")
     filelists = xml_parse_repodata(filelists_path, "{%s}package" % ns["fil_ns"], "filelists")
     other = xml_parse_repodata(other_path, "{%s}package" % ns["oth_ns"], "other")
-
 
     keys_do_not_differ(primary, filelists, other)
 
@@ -203,12 +202,12 @@ def repodata_in_path_is(context, path):
                 filepath = filepath[:-(len(compression_suffix))]
             if tmp:
                 if filepath.endswith(".sqlite"):
-                    assert("SQLite" in str(tmp))
+                    assert ("SQLite" in str(tmp))
                 elif filepath.endswith(".xml"):
-                    assert("xml" in str(tmp))
+                    assert ("xml" in str(tmp))
                 elif filepath.endswith(".yaml"):
                     # Assume all yaml files are modulemd documents
-                    assert("modulemd" in str(tmp))
+                    assert ("modulemd" in str(tmp))
                 elif filepath.endswith(".txt"):
                     pass
                 else:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+from steps.fixtures.server import ServerContext
 from __future__ import print_function
 
 from behave import fixture
@@ -16,8 +17,6 @@ if PY3:
 else:
     from SimpleHTTPServer import SimpleHTTPRequestHandler
     from SocketServer import TCPServer
-
-from steps.fixtures.server import ServerContext
 
 
 class AccessRecord(object):
@@ -138,7 +137,7 @@ if __name__ == '__main__':
         os.path.realpath(os.path.join(certpath, 'server/key.pem')),
         False)
     curl = 'curl --cacert {} https://{}:{}/'.format(cacert, host, port)
-    #curl = 'wget --ca-certificate {} https://{}:{}/'.format(cacert, host, port)
+    # curl = 'wget --ca-certificate {} https://{}:{}/'.format(cacert, host, port)
     print(curl)
     print(os.system(curl))
     ctx.shutdown()

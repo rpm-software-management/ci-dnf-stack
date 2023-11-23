@@ -229,7 +229,8 @@ def then_file_sha256_checksums_are_following(context):
             checksum = sha256_checksum(open(checksum_path, "rb").read())
 
         if file_checksum != checksum:
-            raise AssertionError("File sha256 checksum doesn't match (expected: %s, actual: %s): %s" % (checksum, file_checksum, path))
+            raise AssertionError("File sha256 checksum doesn't match (expected: %s, actual: %s): %s" %
+                                 (checksum, file_checksum, path))
 
 
 @behave.step("I create \"{compression}\" compressed file \"{filepath}\" with")

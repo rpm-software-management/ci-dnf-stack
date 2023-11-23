@@ -68,7 +68,7 @@ def check_rpmdb_transaction(context, mode):
             if action == "reinstall" and rpm not in rpmdb_transaction["reinstall"]:
                 action = "unchanged"
             if (action == "remove" and rpm not in rpmdb_transaction["remove"]
-                and rpm in rpmdb_transaction["obsoleted"]):
+                    and rpm in rpmdb_transaction["obsoleted"]):
                 action = "obsoleted"
             elif (action == "obsoleted" and rpm not in rpmdb_transaction["obsoleted"]
                   and rpm in rpmdb_transaction["remove"]):
@@ -108,7 +108,7 @@ def check_rpmdb_transaction(context, mode):
             if rpmdb_transaction[action]:
                 raise AssertionError(
                     "[rpmdb] Following packages weren't captured in the table for action '%s': %s" % (
-                    action, ", ".join([str(rpm) for rpm in sorted(rpmdb_transaction[action])])))
+                        action, ", ".join([str(rpm) for rpm in sorted(rpmdb_transaction[action])])))
 
 def check_dnf_transaction(context, mode):
     check_context_table(context, ["Action", "Package"])
@@ -141,7 +141,7 @@ def check_dnf_transaction(context, mode):
             delta = rpms.difference(context_table[action])
             if delta:
                 raise AssertionError(
-                        "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
+                    "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
                         action, ", ".join([str(rpm) for rpm in sorted(delta)])))
 
 
@@ -183,7 +183,7 @@ def check_dnf5_transaction(context, mode):
             delta = rpms.difference(context_table[action])
             if delta:
                 raise AssertionError(
-                        "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
+                    "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
                         action, ", ".join([str(rpm) for rpm in sorted(delta)])))
 
 

@@ -9,6 +9,7 @@ import os
 
 class OSRelease(object):
     """Represents the os-release(5) file."""
+
     def __init__(self, path):
         self._path = path
         self._backup = None

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import print_function
+import consts
 
 import argparse
 import os
@@ -12,7 +13,6 @@ PROGPATH = os.path.abspath(os.path.dirname(sys.argv[0]))
 
 # add behave tests root to python path so the `consts` module can be imported
 sys.path.append(os.path.join(PROGPATH, 'dnf-behave-tests'))
-import consts
 DESTRUCTIVE_TAGS = set(consts.DESTRUCTIVE_TAGS)
 DNF5DAEMON_TAGS = set(consts.DNF5DAEMON_TAGS)
 
@@ -120,14 +120,14 @@ def execute(command):
     Execute the `command` in a new process, wait for process to finish and
     return (exit code, [captured sdout lines], [captured stderr lines])
     '''
-    #print('Running: ', ' '.join(command), file=sys.stderr)
+    # print('Running: ', ' '.join(command), file=sys.stderr)
     process = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out_encoding = sys.stdout.encoding or 'utf-8'
     stdout, stderr = process.communicate()
-    return process.returncode,\
-           stdout.decode(out_encoding).split('\n'),\
-           stderr.decode(out_encoding).split('\n')
+    return process.returncode, \
+        stdout.decode(out_encoding).split('\n'), \
+        stderr.decode(out_encoding).split('\n')
 
 
 class BehaveRunner(object):
@@ -146,7 +146,7 @@ class BehaveRunner(object):
         if not command:
             error("Command '{}' is not implemented.".format(
                 self.command_line_args.command))
-        #print(self.command_line_args)
+        # print(self.command_line_args)
         command()
 
     @property
@@ -203,7 +203,7 @@ class BehaveRunner(object):
                                  self.command_line_args.suite),
                     os.path.join('/opt/ci/dnf-behave-tests', self.command_line_args.suite))])
             if hasattr(self.command_line_args, 'junit_directory') \
-                and self.command_line_args.junit_directory:
+                    and self.command_line_args.junit_directory:
                 self._volumes.extend(['--volume', '{}:/junit:z'.format(
                     self.command_line_args.junit_directory)])
         return self._volumes
@@ -289,7 +289,6 @@ class BehaveRunner(object):
             error(msg)
         return self.parse_behave_dry_run(stdout)
 
-
     def command_list(self):
         '''
         List all features available in the container.
@@ -353,7 +352,6 @@ class BehaveRunner(object):
 
         def param_junit(feature_name, i):
             return ['--junit-directory="/junit/{}_{}"'.format(feature_name, i)]
-
 
         command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
 
