@@ -1,15 +1,14 @@
+@dnf5
 Feature: Install RPMs with --exclude
 
 
-@dnf5
 Scenario: Install an RPM that is excluded
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem --exclude filesystem"
    Then the exit code is 1
     And Transaction is empty
 
-# @dnf5
-# TODO(nsella) different stderr
+
 @bz1756473
 Scenario: Install an RPM that requires excluded RPM
   Given I use repository "dnf-ci-fedora"
@@ -18,14 +17,13 @@ Scenario: Install an RPM that requires excluded RPM
     And Transaction is empty
     And stderr is
     """
-    Error: 
-     Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
+    Failed to resolve the transaction:
+    Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
       - conflicting requests
       - package setup-2.12.1-1.fc29.noarch is filtered out by exclude filtering
     """
 
 
-@dnf5
 Scenario: Install RPMs while excluding part of them
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup filesystem --exclude filesystem"
@@ -33,7 +31,6 @@ Scenario: Install RPMs while excluding part of them
     And Transaction is empty
 
 
-@dnf5
 Scenario: Install RPMs while excluding part of them (strict=false)
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup filesystem --exclude filesystem --setopt=strict=false"
@@ -43,7 +40,6 @@ Scenario: Install RPMs while excluding part of them (strict=false)
         | install       | setup-0:2.12.1-1.fc29.noarch          |
 
 
-@dnf5
 Scenario: Install RPMs while excluding another RPM
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem --exclude glibc"
