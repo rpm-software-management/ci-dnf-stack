@@ -41,3 +41,13 @@ Scenario: Report error when installing non-existing RPM file
      """
      Failed to access RPM "no_such_file.rpm": No such file or directory
      """
+
+Scenario: Cannot install source rpm
+   Given I use repository "simple-base"
+    When I execute dnf with args "install vagare.src"
+    Then the exit code is 1
+     And stderr is
+     """
+     Failed to resolve the transaction:
+     Argument 'vagare.src' matches only source packages.
+     """
