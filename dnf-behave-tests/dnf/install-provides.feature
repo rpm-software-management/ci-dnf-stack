@@ -1,8 +1,8 @@
+@dnf5
 Feature: Install RPMs by provides
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that equals to e:v-r
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem = 0:3.9-2.fc29'"
@@ -14,7 +14,6 @@ Scenario: Install an RPM by provide that equals to e:v-r
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that is greater than e:vr
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem > 0:3.9-2'"
@@ -26,7 +25,6 @@ Scenario: Install an RPM by provide that is greater than e:vr
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that is greater than e:vr without space
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem >0:3.9-2'"
@@ -38,7 +36,6 @@ Scenario: Install an RPM by provide that is greater than e:vr without space
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that is greater or equal to e:vr
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install 'filesystem >= 0:3.9-2'"
@@ -50,7 +47,6 @@ Scenario: Install an RPM by provide that is greater or equal to e:vr
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that is lower than e:vr
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
@@ -67,7 +63,6 @@ Scenario: Install an RPM by provide that is lower than e:vr
 
 
 @dnf5daemon
-@dnf5
 Scenario: Install an RPM by provide that is lower or equal to e:vr
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
@@ -84,7 +79,6 @@ Scenario: Install an RPM by provide that is lower or equal to e:vr
 
 
 @dnf5daemon
-@dnf5
 Scenario: I can install an RPM by $provide where $provide is key
   Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install webclient"
@@ -94,9 +88,6 @@ Scenario: I can install an RPM by $provide where $provide is key
         | install       | wget-0:1.19.5-5.fc29.x86_64               |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
-# No match for argument: /var/db/
 Scenario Outline: I can install an RPM by <provide type>
   Given I use repository "dnf-ci-fedora"
     And I execute dnf with args "install <provide> "
@@ -120,7 +111,6 @@ Examples:
         | directory provide            | /var/db/         |
 
 @dnf5daemon
-@dnf5
 Scenario: Install package using binary name
 #  wget provides binary wget-bivary, but it is not explicitly in provides
   Given I use repository "dnf-ci-fedora"
