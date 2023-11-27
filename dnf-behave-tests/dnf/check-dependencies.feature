@@ -1,6 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command check
-# Unknown argument "check" for command "microdnf"
+@dnf5
 Feature: Check when there is a package with missing dependency
 
 
@@ -9,17 +7,20 @@ Scenario Outline: Check <option>
    Then the exit code is 0
    When I execute dnf with args "check <option>"
    Then the exit code is 1
-    And stdout contains "filesystem-3.9-2.fc29.x86_64 has missing requires of setup"
+    And stdout is
+    """
+    filesystem-0:3.9-2.fc29.x86_64
+     missing require "setup"
+    """
     And stderr is
-        """
-        Error: Check discovered 1 problem(s)
-        """
+    """
+    Check discovered 1 problem(s) in 1 package(s)
+    """
 
 Examples:
         | option             |
         # no option defaults to "all"
         |                    |
-        | all                |
         | --dependencies     |
 
 
@@ -35,7 +36,6 @@ Examples:
         | option             |
         | --duplicates       |
         | --obsoleted        |
-        | --provides         |
 
 
 @bz1543449
@@ -57,11 +57,12 @@ Scenario: Removed requires(pre) dependency is reported if it is also requires
    Then the exit code is 1
     And stdout is
     """
-    package-requires-and-requires-pre-1.0-1.x86_64 has missing requires of dependency-1
+    package-requires-and-requires-pre-0:1.0-1.x86_64
+     missing require "dependency-1"
     """
     And stderr is
     """
-    Error: Check discovered 1 problem(s)
+    Check discovered 1 problem(s) in 1 package(s)
     """
 
 
@@ -73,11 +74,12 @@ Scenario: Removed requires(pre) dependency is reported if it is also requires(pr
    Then the exit code is 1
     And stdout is
     """
-    package-requires-pre-and-requires-preun-1.0-1.x86_64 has missing requires of dependency-1
+    package-requires-pre-and-requires-preun-0:1.0-1.x86_64
+     missing require "dependency-1"
     """
     And stderr is
     """
-    Error: Check discovered 1 problem(s)
+    Check discovered 1 problem(s) in 1 package(s)
     """
 
 
@@ -89,10 +91,11 @@ Scenario: Removed scriptlet preun and postun dependencies are reported as missin
    Then the exit code is 1
     And stdout is
     """
-    package-requires-all-scriptlets-1.0-1.x86_64 has missing requires of dependency-3
-    package-requires-all-scriptlets-1.0-1.x86_64 has missing requires of dependency-4
+    package-requires-all-scriptlets-0:1.0-1.x86_64
+     missing require "dependency-3"
+     missing require "dependency-4"
     """
     And stderr is
     """
-    Error: Check discovered 2 problem(s)
+    Check discovered 2 problem(s) in 1 package(s)
     """
