@@ -1,6 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command check
-# Unknown argument "check" for command "microdnf"
+@dnf5
 Feature: Check when there are multiple problems
 
 
@@ -23,60 +21,62 @@ Background: Force installation of an RPM that will cause problems with dependenc
 Scenario: Check
    When I execute dnf with args "check"
    Then the exit code is 1
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is a duplicate with glibc-2.28-26.fc29.x86_64"
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is obsoleted by glibc-2.28-26.fc29.x86_64"
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-common = 2.28-26.fc29"
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-langpack = 2.28-26.fc29"
+    And stdout is
+        """
+        glibc-0:2.28-26.fc29.x86_64
+         missing require "glibc-common = 2.28-26.fc29"
+         missing require "glibc-langpack = 2.28-26.fc29"
+         duplicate with "glibc-0:2.28-9.fc29.x86_64"
+        glibc-0:2.28-9.fc29.x86_64
+         obsoleted by "glibc < 2.28-10.fc29" from "glibc-0:2.28-26.fc29.x86_64"
+         duplicate with "glibc-0:2.28-26.fc29.x86_64"
+        """
     And stderr is
         """
-        Error: Check discovered 4 problem(s)
+        Check discovered 5 problem(s) in 2 package(s)
         """
 
-Scenario: Check all
-   When I execute dnf with args "check all"
-   Then the exit code is 1
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is a duplicate with glibc-2.28-26.fc29.x86_64"
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is obsoleted by glibc-2.28-26.fc29.x86_64"
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-common = 2.28-26.fc29"
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-langpack = 2.28-26.fc29"
-    And stderr is
-        """
-        Error: Check discovered 4 problem(s)
-        """
 
 Scenario: Check --dependencies
    When I execute dnf with args "check --dependencies"
    Then the exit code is 1
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-common = 2.28-26.fc29"
-    And stdout contains "glibc-2.28-26.fc29.x86_64 has missing requires of glibc-langpack = 2.28-26.fc29"
+    And stdout is
+        """
+        glibc-0:2.28-26.fc29.x86_64
+         missing require "glibc-common = 2.28-26.fc29"
+         missing require "glibc-langpack = 2.28-26.fc29"
+        """
     And stderr is
         """
-        Error: Check discovered 2 problem(s)
+        Check discovered 2 problem(s) in 1 package(s)
         """
 
 
 Scenario: Check --duplicates
    When I execute dnf with args "check --duplicates"
    Then the exit code is 1
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is a duplicate with glibc-2.28-26.fc29.x86_64"
+    And stdout is
+        """
+        glibc-0:2.28-26.fc29.x86_64
+         duplicate with "glibc-0:2.28-9.fc29.x86_64"
+        glibc-0:2.28-9.fc29.x86_64
+         duplicate with "glibc-0:2.28-26.fc29.x86_64"
+        """
     And stderr is
         """
-        Error: Check discovered 1 problem(s)
+        Check discovered 2 problem(s) in 2 package(s)
         """
 
 
 Scenario: Check --obsoleted
    When I execute dnf with args "check --obsoleted"
    Then the exit code is 1
-    And stdout contains "glibc-2.28-9.fc29.x86_64 is obsoleted by glibc-2.28-26.fc29.x86_64"
+    And stdout is
+        """
+        glibc-0:2.28-9.fc29.x86_64
+         obsoleted by "glibc < 2.28-10.fc29" from "glibc-0:2.28-26.fc29.x86_64"
+        """
     And stderr is
         """
-        Error: Check discovered 1 problem(s)
+        Check discovered 1 problem(s) in 1 package(s)
         """
-
-
-Scenario: Check --provides
-   When I execute dnf with args "check --provides"
-   Then the exit code is 0
-    And stdout is empty
-    And stderr is empty

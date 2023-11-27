@@ -1,6 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command check
-# Unknown argument "check" for command "microdnf"
+@dnf5
 Feature: Check when there are duplicate packages
 
 
@@ -18,17 +16,22 @@ Background: Force installation of two different versions of an RPM
 Scenario Outline: Check <option>
    When I execute dnf with args "check <option>"
    Then the exit code is 1
-    And stdout contains "flac-1.3.3-1.fc29.x86_64 is a duplicate with flac-1.3.3-3.fc29.x86_64"
+    And stdout is
+        """
+        flac-0:1.3.3-1.fc29.x86_64
+         duplicate with "flac-0:1.3.3-3.fc29.x86_64"
+        flac-0:1.3.3-3.fc29.x86_64
+         duplicate with "flac-0:1.3.3-1.fc29.x86_64"
+        """
     And stderr is
         """
-        Error: Check discovered 1 problem(s)
+        Check discovered 2 problem(s) in 2 package(s)
         """
 
 Examples:
         | option             |
         # no option defaults to "all"
         |                    |
-        | all                |
         | --duplicates       |
 
 
@@ -42,4 +45,3 @@ Examples:
         | option             |
         | --dependencies     |
         | --obsoleted        |
-        | --provides         |

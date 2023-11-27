@@ -1,6 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command check
-# Unknown argument "check" for command "microdnf"
+@dnf5
 Feature: Check when there is no problem
 
 
@@ -14,8 +12,6 @@ Examples:
         | option             |
         # no option defaults to "all"
         |                    |
-        | all                |
         | --dependencies     |
         | --duplicates       |
         | --obsoleted        |
-        | --provides         |

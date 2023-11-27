@@ -1,6 +1,4 @@
-# @dnf5
-# TODO(nsella) implement command check
-# Unknown argument "check" for command "microdnf"
+@dnf5
 Feature: Check when there is a package that obsoletes another installed package
 
 
@@ -23,17 +21,20 @@ Background: Force installation of an obsoleted RPM
 Scenario Outline: Check <option>
    When I execute dnf with args "check <option>"
    Then the exit code is 1
-    And stdout contains "glibc-profile-2.3.1-10.x86_64 is obsoleted by glibc-2.28-9.fc29.x86_64"
+    And stdout is
+        """
+        glibc-profile-0:2.3.1-10.x86_64
+         obsoleted by "glibc-profile < 2.4" from "glibc-0:2.28-9.fc29.x86_64"
+        """
     And stderr is
         """
-        Error: Check discovered 1 problem(s)
+        Check discovered 1 problem(s) in 1 package(s)
         """
 
 Examples:
         | option             |
         # no option defaults to "all"
         |                    |
-        | all                |
         | --obsoleted        |
 
 
@@ -47,4 +48,3 @@ Examples:
         | option             |
         | --dependencies     |
         | --duplicates       |
-        | --provides         |
