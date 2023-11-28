@@ -46,3 +46,21 @@ Given I use repository "repoquery-main"
       <REPOSYNC>
       """
 
+Scenario: don't resolve globs in installonlypkgs options
+#  it is important to ensure the identical behavior with libsolv
+Given I use repository "repoquery-main"
+  And I execute dnf with args "install top-a-2.0-2"
+  And I execute rpm with args "-i --nodeps {context.scenario.repos_location}/repoquery-main/x86_64/bottom-a3-1.0-1.x86_64.rpm"
+  And I execute rpm with args "-i --nodeps {context.scenario.repos_location}/repoquery-main/x86_64/bottom-a3-2.0-1.x86_64.rpm"
+  And I configure dnf with
+      | key                          | value      |
+      | installonlypkgs              | bottom-a3* |
+ When I execute dnf with args "repoquery --duplicates"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      bottom-a3-1:1.0-1.x86_64
+      bottom-a3-1:2.0-1.x86_64
+      """
+
