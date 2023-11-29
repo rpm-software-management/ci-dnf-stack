@@ -132,5 +132,5 @@ Scenario: Fail when explicitly requested config file doesn't exist
     And stderr is
         """
         Configuration file "/etc/dnf/libdnf5.conf.d/test.conf" not found
-         filesystem error: cannot open file: No such file or directory [/etc/dnf/libdnf5.conf.d/test.conf]
+         cannot open file: (2) - No such file or directory [/etc/dnf/libdnf5.conf.d/test.conf]
         """
