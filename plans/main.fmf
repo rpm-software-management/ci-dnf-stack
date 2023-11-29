@@ -1,5 +1,7 @@
 summary: Prepare CI DNF Stack
 
+tag: integration
+
 prepare:
     - name: Install packages to build fedora container
       how: install

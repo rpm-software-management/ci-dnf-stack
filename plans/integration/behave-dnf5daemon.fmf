@@ -1,4 +1,5 @@
 summary: Run Behave Test Suite - DNF5DAEMON
+tag: dnf5daemon
 execute:
     how: tmt
     script: |

@@ -1,8 +1,7 @@
-summary: Run Behave Test Suite - DNF5
-tag: dnf5
+summary: Run Behave Test Suite - CREATEREPO_C
+tag: createrepo_c
 execute:
     how: tmt
     script: |
         $TMT_PLANS_DATA/ci-dnf-stack/container-test run \
-        --tags dnf5 \
-        --command dnf5
+        --suite createrepo_c
