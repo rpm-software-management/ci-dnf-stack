@@ -16,7 +16,7 @@ prepare:
         if [ "$PACKIT_UPSTREAM_NAME" -eq "ci-dnf-stack" ]; then \
           git -C $TMT_PLANS_DATA/ci-dnf-stack remote add pull-request $PACKIT_SOURCE_URL \
           git -C $TMT_PLANS_DATA/ci-dnf-stack fetch pull-request \
-          git -C $TMT_PLANS_DATA/ci-dnf-stack checkout --track \ pull-request/$PACKIT_SOURCE_BRANCH
+          git -C $TMT_PLANS_DATA/ci-dnf-stack checkout --track pull-request/$PACKIT_SOURCE_BRANCH
         fi
 
     - name: Build testing container
