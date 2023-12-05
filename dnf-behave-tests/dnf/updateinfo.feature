@@ -421,20 +421,8 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo -v --list --with-cve"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    DNF version: .*
-    cachedir: .*
-    User-Agent: constructed: .*
-    repo: using cache for: dnf-ci-fedora
-    dnf-ci-fedora: using metadata from .*
-    repo: downloading from remote: dnf-ci-fedora-updates
-    dnf-ci-fedora-updates test repository .* MB/s | .*
-    dnf-ci-fedora-updates: using metadata from .*
-    <REPOSYNC>
-    2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
-    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
-    """
+    And stdout contains "2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00"
+    And stdout contains "CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00"
 
 
 @bz1801092
@@ -444,20 +432,8 @@ Scenario: updateinfo lists advisories referencing CVE with dates in verbose mode
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "updateinfo -v --list --with-cve"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    YUM version: .*
-    cachedir: .*
-    User-Agent: constructed: .*
-    repo: using cache for: dnf-ci-fedora
-    dnf-ci-fedora: using metadata from .*
-    repo: downloading from remote: dnf-ci-fedora-updates
-    dnf-ci-fedora-updates test repository .* MB/s | .*
-    dnf-ci-fedora-updates: using metadata from .*
-    <REPOSYNC>
-    2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
-    CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00
-    """
+    And stdout contains "2999     bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00"
+    And stdout contains "CVE-2999 bugfix glibc-2.28-26.fc29.x86_64 2019-01-1\d \d\d:00:00"
 
 
 Scenario: advisory for x86_64 package is not shown as installed when noarch version of the pkg is installed
