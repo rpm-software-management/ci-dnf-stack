@@ -38,7 +38,7 @@ Examples:
         | leaves              | leaves                       |
         | list                | list                         |
         | list                | ls                           |
-        | makecache           | makecache                    |
+        | makecache           | mc                           |
         | mark                | mark                         |
         | module              | module                       |
         | reinstall           | rei                          |
