@@ -180,3 +180,12 @@ Scenario: Builddep using macros with source rpm
      When I execute dnf with args "builddep -D 'dummy_param 1' {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
      Then the exit code is 0
       And stderr contains "Warning: -D or --define arguments have no meaning for source rpm packages."
+
+@dnf5
+Scenario: Builddep where package BuildRequires a pkg spec that contains glob characters
+    Given I use repository "builddep"
+     When I execute dnf with args "builddep requires-glob"
+     Then the exit code is 0
+      And Transaction is following
+          | Action        | Package                    |
+          | install       | provides-glob-0:1-1.x86_64 |
