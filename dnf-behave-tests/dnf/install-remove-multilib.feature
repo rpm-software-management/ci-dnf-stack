@@ -74,3 +74,14 @@ Scenario: Installing an older version of x86_64 pulls in a newer version of i686
       | install       | foo-1.0-1.x86_64               |
       | install-dep   | python3-foo-1.0-1.x86_64       |
       | install-dep   | python3-foo-clibs-1.0-1.x86_64 |
+
+
+@bz2172292
+Scenario: undo install transaction when another arch is installed
+Given I successfully execute dnf with args "install perduto.i686"
+  And I successfully execute dnf with args "install perduto.x86_64"
+ When I execute dnf with args "history undo last"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package                        |
+      | remove        | perduto-0:1.0-1.fc29.x86_64    |
