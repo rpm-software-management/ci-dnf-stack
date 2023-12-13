@@ -26,6 +26,7 @@ Scenario: The default streams are identified in the output of module list
         | nodejs    | 11        | development, minimal, default |
 
 
+@dnf5
 @bz1618553
 Scenario: Default profiles are identified in the output of dnf info
    When I execute dnf with args "module info nodejs"

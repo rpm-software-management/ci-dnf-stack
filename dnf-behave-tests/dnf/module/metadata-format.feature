@@ -1,3 +1,4 @@
+@dnf5
 Feature: libmodulemd document format tests
 
 
@@ -31,7 +32,6 @@ Given I use repository "additional-field-modulemd"
       """
 
 
-@dnf5
 @bz2004853
 @bz2007166
 @bz2007167
