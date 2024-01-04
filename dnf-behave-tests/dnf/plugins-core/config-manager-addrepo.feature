@@ -18,7 +18,7 @@ Scenario: test "addrepo" from "baseurl", "enabled=1" is set by default
     And file "/etc/yum.repos.d/something.com_os_.repo" contents is
         """
         [something.com_os_]
-        name=created by dnf5 config-manager
+        name=something.com_os_ - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -30,7 +30,7 @@ Scenario: test "addrepo" from "baseurl" with user defined repository id (--id=)
     And file "/etc/yum.repos.d/test.repo" contents is
         """
         [test]
-        name=created by dnf5 config-manager
+        name=test - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -42,7 +42,7 @@ Scenario: test "addrepo" from "baseurl" with user defined destination file name 
     And file "/etc/yum.repos.d/test.repo" contents is
         """
         [something.com_os_]
-        name=created by dnf5 config-manager
+        name=something.com_os_ - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -54,7 +54,7 @@ Scenario: "addrepo" from "baseurl" with user defined destination file name, test
     And file "/etc/yum.repos.d/test.repo" contents is
         """
         [something.com_os_]
-        name=created by dnf5 config-manager
+        name=something.com_os_ - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -72,7 +72,7 @@ Scenario: test "addrepo" from "baseurl", set more options
     And file "/etc/yum.repos.d/something.com_os_.repo" contents is
         """
         [something.com_os_]
-        name=created by dnf5 config-manager
+        name=something.com_os_ - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         gpgcheck=1
@@ -86,7 +86,7 @@ Scenario: test "addrepo" from "baseurl", set option multiple times with the same
     And file "/etc/yum.repos.d/something.com_os_.repo" contents is
         """
         [something.com_os_]
-        name=created by dnf5 config-manager
+        name=something.com_os_ - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         gpgcheck=1
@@ -126,7 +126,7 @@ Scenario: test "addrepo" from "baseurl", destination directory does not exist, "
     And file "/etc/yum.repos.d/test.repo" contents is
         """
         [test]
-        name=created by dnf5 config-manager
+        name=test - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -171,7 +171,7 @@ Scenario: test "addrepo" from "baseurl", overwrite existing repo file (--overwri
     And file "/etc/yum.repos.d/repo1.repo" contents is
         """
         [repo1]
-        name=created by dnf5 config-manager
+        name=repo1 - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -188,7 +188,7 @@ Scenario: test "addrepo" from "baseurl", add repo to existing file (--add-or-rep
         enabled=1
         baseurl=http://something1.com/os/
         [test]
-        name=created by dnf5 config-manager
+        name=test - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
@@ -201,7 +201,7 @@ Scenario: test "addrepo" from "baseurl", replace repo in existing file (--add-or
     And file "/etc/yum.repos.d/repo1.repo" contents is
         """
         [repo1]
-        name=created by dnf5 config-manager
+        name=repo1 - Created by dnf5 config-manager
         enabled=1
         baseurl=http://something.com/os/
         """
