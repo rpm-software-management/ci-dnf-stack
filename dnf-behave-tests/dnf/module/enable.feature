@@ -5,6 +5,7 @@ Background:
   Given I use repository "dnf-ci-fedora-modular"
 
 
+@dnf5
 Scenario Outline: Enable a module stream by <modulespec-type>
    When I execute dnf with args "module enable <modulespec>"
    Then the exit code is 0

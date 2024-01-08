@@ -5,6 +5,7 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
+@dnf5
 Scenario: The default stream is used when enabling a module
    When I execute dnf with args "module enable nodejs"
    Then the exit code is 0
