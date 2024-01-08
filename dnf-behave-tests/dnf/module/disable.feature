@@ -82,6 +82,7 @@ Examples:
     | version           | nodejs:10:20180920144631  |
 
 
+@dnf5
 @bz1613910
 Scenario: It is possible to disable an enabled default stream
    When I execute dnf with args "module enable nodejs"
@@ -97,8 +98,8 @@ Scenario: It is possible to disable an enabled default stream
    When I execute dnf with args "module list nodejs"
    Then the exit code is 0
     And module list contains
-        | Repository                    | Name          | Stream    | Profiles                      |
-        | dnf-ci-fedora-modular         | nodejs        | 8 [d][x]     | development, minimal, default [d]|
+        | Name          | Stream       | Profiles                          |
+        | nodejs        | 8 [d][x]     | development, minimal, default [d] |
 
 
 @bz1653623

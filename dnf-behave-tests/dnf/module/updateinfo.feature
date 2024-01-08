@@ -49,6 +49,7 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       """
 
 
+@dnf5
 @bz1804234
 Scenario: having installed packages from one collection and enabled all modules from another doesn't activate advisory
 Given I use repository "dnf-ci-fedora"
