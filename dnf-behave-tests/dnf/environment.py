@@ -49,10 +49,6 @@ class DNFContext(object):
             }
         }
 
-        # Since protected_packages don't work in installroot override host configuration
-        if not no_installroot:
-            self.config["[main]"]["protected_packages"] = ","
-
         self.tempdir = tempfile.mkdtemp(prefix="dnf_ci_tempdir_")
         # some tests need to be run inside the installroot, it can be forced
         # per scenario by using @force_installroot decorator
