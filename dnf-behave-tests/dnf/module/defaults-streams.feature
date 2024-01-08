@@ -5,6 +5,7 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
+@dnf5
 @bz1657213
 Scenario: The default stream is enabled when requiring module is enabled
    When I execute dnf with args "module enable meson:master"
