@@ -1,3 +1,4 @@
+@dnf5
 Feature: Installing package from ursine repo
 
 Background: Enable repositories
@@ -18,12 +19,12 @@ Scenario: I can see installed non-modular content listed in dnf list installed
   Given I successfully execute dnf with args "install wget"
    When I execute dnf with args "list --installed"
    Then the exit code is 0
-    And stdout contains "wget\.x86_64\s+1\.19\.5-5\.fc29\s+@dnf-ci-fedora"
+    And stdout contains "wget\.x86_64\s+1\.19\.5-5\.fc29\s+dnf-ci-fedora"
    When I execute dnf with args "module enable DnfCiModuleNoDefaults:stable"
    Then the exit code is 0
    When I execute dnf with args "list --installed"
    Then the exit code is 0
-    And stdout contains "wget\.x86_64\s+1\.19\.5-5\.fc29\s+@dnf-ci-fedora"
+    And stdout contains "wget\.x86_64\s+1\.19\.5-5\.fc29\s+dnf-ci-fedora"
 
 
 Scenario: I can't reinstall installed non-modular content which is masked by active modular content
@@ -31,7 +32,7 @@ Scenario: I can't reinstall installed non-modular content which is masked by act
     And I successfully execute dnf with args "module enable DnfCiModuleNoDefaults:stable"
    When I execute dnf with args "reinstall wget"
    Then the exit code is 1
-    And stdout contains "Installed package wget-1.19.5-5.fc29.x86_64 \(from dnf-ci-fedora\) not available."
+    And stderr contains "Packages for argument 'wget' installed and available, but in a different version => cannot reinstall"
 
 
 Scenario: I can remove installed non-modular content

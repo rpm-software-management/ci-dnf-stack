@@ -1,6 +1,7 @@
 Feature: Installing package from module
 
 
+@dnf5
 Scenario: I can install a specific package from a module
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
@@ -12,6 +13,7 @@ Scenario: I can install a specific package from a module
         | install                   | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
 
 
+@dnf5
 Scenario: I can install a package from modular repo not belonging to a module
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install solveigs-song"
@@ -98,6 +100,7 @@ Scenario: a package from a non-enabled module is preferred when default stream i
     And stderr contains "Error: No matching Modules to list"
 
 
+@dnf5
 Scenario: rpm from enabled stream is preferred regardless of NVRs
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
