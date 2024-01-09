@@ -1,22 +1,17 @@
+@dnf5
 Feature: Tests excluding capabilities of the versionlock plugin
 
 
 Background: Set up versionlock infrastructure in the installroot
-  Given I enable plugin "versionlock"
-  # plugins do not honor installroot when searching their configuration
-  # following steps are merely to set up versionlock plugin inside installroot
-  And I configure dnf with
-    | key            | value                                     |
-    | pluginconfpath | {context.dnf.installroot}/etc/dnf/plugins |
-  And I create and substitute file "/etc/dnf/plugins/versionlock.conf" with
+  Given I create file "/etc/dnf/versionlock.toml" with
     """
-    [main]
-    enabled = 1
-    locklist = {context.dnf.installroot}/etc/dnf/plugins/versionlock.list
-    """
-  And I create file "/etc/dnf/plugins/versionlock.list" with
-    """
-    !wget-0:1.19.6-5.fc29.*
+    version = "1.0"
+    [[packages]]
+    name = "wget"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "!="
+    value = "0:1.19.6-5.fc29"
     """
   # check that both excluded and newer versions of the package are available
   Given I use repository "dnf-ci-fedora"
@@ -25,6 +20,7 @@ Background: Set up versionlock infrastructure in the installroot
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     wget-0:1.19.5-5.fc29.src
     wget-0:1.19.5-5.fc29.x86_64
     wget-0:1.19.6-5.fc29.src

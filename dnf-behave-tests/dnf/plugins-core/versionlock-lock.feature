@@ -1,22 +1,17 @@
+@dnf5
 Feature: Tests locking capabilities of the versionlock plugin
 
 
 Background: Set up versionlock infrastructure in the installroot
-  Given I enable plugin "versionlock"
-  # plugins do not honor installroot when searching their configuration
-  # all the next steps are merely to set up versionlock plugin inside installroot
-  And I configure dnf with
-    | key            | value                                     |
-    | pluginconfpath | {context.dnf.installroot}/etc/dnf/plugins |
-  And I create and substitute file "/etc/dnf/plugins/versionlock.conf" with
+  Given I create file "/etc/dnf/versionlock.toml" with
     """
-    [main]
-    enabled = 1
-    locklist = {context.dnf.installroot}/etc/dnf/plugins/versionlock.list
-    """
-  And I create file "/etc/dnf/plugins/versionlock.list" with
-    """
-    wget-0:1.19.5-5.fc29.*
+    version = "1.0"
+    [[packages]]
+    name = "wget"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "0:1.19.5-5.fc29"
     """
   # check that both locked and newer versions of the package are available
   Given I use repository "dnf-ci-fedora"
@@ -25,6 +20,7 @@ Background: Set up versionlock infrastructure in the installroot
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     wget-0:1.19.5-5.fc29.src
     wget-0:1.19.5-5.fc29.x86_64
     wget-0:1.19.6-5.fc29.src
@@ -34,16 +30,14 @@ Background: Set up versionlock infrastructure in the installroot
 
 Scenario: I can list all versions of locked package
    When I execute dnf with args "list --showduplicates wget"
-   Then stdout is
-   # there are intentional trailing spaces after dnf-ci-fedora
-   # TODO fix output in the list command
+   Then stdout matches line by line
     """
     <REPOSYNC>
-    Available Packages
-    wget.src                    1.19.5-5.fc29                  dnf-ci-fedora        
-    wget.x86_64                 1.19.5-5.fc29                  dnf-ci-fedora        
-    wget.src                    1.19.6-5.fc29                  dnf-ci-fedora-updates
-    wget.x86_64                 1.19.6-5.fc29                  dnf-ci-fedora-updates
+    Available packages
+    wget.src +1.19.5-5.fc29 +dnf-ci-fedora
+    wget.x86_64 +1.19.5-5.fc29 +dnf-ci-fedora
+    wget.src +1.19.6-5.fc29 +dnf-ci-fedora-updates
+    wget.x86_64 +1.19.6-5.fc29 +dnf-ci-fedora-updates
     """
 
 
@@ -93,9 +87,15 @@ Scenario: I can remove the installed locked version of the package
 @bz1780370
 Scenario: I can remove installed package when other version is locked
   Given I successfully execute dnf with args "install wget-1.19.5"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    wget-0:2.0.0-1.fc29.*
+    version = "1.0"
+    [[packages]]
+    name = "wget"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "0:2.0.0-1.fc29"
     """
    When I execute dnf with args "remove wget"
    Then the exit code is 0
@@ -109,61 +109,56 @@ Scenario: Locking does not require that the package exists in a repository
   Given I drop repository "dnf-ci-fedora"
    When I execute dnf with args "install wget"
    Then the exit code is 1
-    And stdout is
-    """
-    <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: wget
-    """
     And stderr is
     """
-    Error: Unable to find a match: wget
+    Failed to resolve the transaction:
+    Argument 'wget' matches only packages excluded by versionlock.
     """
-
-
-@bz1643676
-Scenario Outline: Version accepts pattern <pattern> in the lock file
-  Given I create file "/etc/dnf/plugins/versionlock.list" with
-    """
-    <pattern>
-    """
-   When I execute dnf with args "install wget"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                               |
-        | install       | wget-0:1.19.5-5.fc29.x86_64           |
-
-Examples:
-    | pattern           |
-    | wget-0:1.19.5*    |
-    | wget-0:1.19.5-*   |
 
 
 @bz1726712
 Scenario: I can upgrade to the locked version of the package when older version is installed
   Given I successfully execute dnf with args "install wget-1.19.5"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    wget-0:1.19.6-5.fc29.*
+    version = "1.0"
+    [[packages]]
+    name = "wget"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "0:1.19.6-5.fc29"
     """
-   When I execute dnf with args "update wget"
+   When I execute dnf with args "upgrade wget"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64           |
 
 
-Scenario: Versionlock can lock only parts of the package version
+Scenario: Versionlock can lock the package version to an interval
   Given I use repository "dnf-ci-fedora"
     And I use repository "dnf-ci-fedora-updates"
     And I use repository "dnf-ci-fedora-updates-testing"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    flac-1.3.*
+    version = "1.0"
+    [[packages]]
+    name = "flac"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = ">="
+    value = "1.3"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "<"
+    value = "1.4"
     """
    When I execute dnf with args "repoquery flac"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     flac-0:1.3.2-8.fc29.src
     flac-0:1.3.2-8.fc29.x86_64
     flac-0:1.3.3-1.fc29.src
@@ -193,36 +188,50 @@ Scenario: Check-update command does not report updates filtered out by the versi
   Given I use repository "dnf-ci-fedora-updates"
     And I use repository "dnf-ci-fedora-updates-testing"
   # no versionlock rule for the flac package
-  Given I create file "/etc/dnf/plugins/versionlock.list" with
+  Given I create file "/etc/dnf/versionlock.toml" with
     """
     """
-   When I execute dnf with args "check-update"
+   When I execute dnf with args "check-upgrade"
    Then the exit code is 100
     And stdout is
     """
     <REPOSYNC>
-
-    flac.x86_64              1.4.0-1.fc29              dnf-ci-fedora-updates-testing
+    flac.x86_64 1.4.0-1.fc29 dnf-ci-fedora-updates-testing
     """
   # flac package versionlocked on specific minor version
-  Given I create file "/etc/dnf/plugins/versionlock.list" with
+  Given I create file "/etc/dnf/versionlock.toml" with
     """
-    flac-0:1.3.*
+    version = "1.0"
+    [[packages]]
+    name = "flac"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = ">="
+    value = "1.3"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "<"
+    value = "1.4"
     """
-   When I execute dnf with args "check-update"
+   When I execute dnf with args "check-upgrade"
    Then the exit code is 100
     And stdout is
     """
     <REPOSYNC>
-
-    flac.x86_64                  1.3.3-3.fc29                  dnf-ci-fedora-updates
+    flac.x86_64 1.3.3-3.fc29 dnf-ci-fedora-updates
     """
   # flac package versionlocked on specific version
-  Given I create file "/etc/dnf/plugins/versionlock.list" with
+  Given I create file "/etc/dnf/versionlock.toml" with
     """
-    flac-0:1.3.2-8.fc29.*
+    version = "1.0"
+    [[packages]]
+    name = "flac"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "1.3.2-8.fc29"
     """
-   When I execute dnf with args "check-update"
+   When I execute dnf with args "check-upgrade"
    Then the exit code is 0
     And stdout is
     """
@@ -234,9 +243,15 @@ Scenario: Check-update command does not report updates filtered out by the versi
 @bz1627124
 Scenario: The locked version of the package cannot get obsoleted
   Given I use repository "dnf-ci-obsoletes"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    PackageB-0:1.0-1.*
+    version = "1.0"
+    [[packages]]
+    name = "PackageB"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "1.0-1"
     """
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -252,9 +267,15 @@ Scenario: The locked version of the package cannot get obsoleted
 @bz1627124
 Scenario: The locked version of the package cannot get obsoleted by upgrade of other package
   Given I use repository "dnf-ci-obsoletes"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    PackageC-0:1.0-1.*
+    version = "1.0"
+    [[packages]]
+    name = "PackageC"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "1.0-1"
     """
    When I execute dnf with args "install PackageC-1.0 PackageD-1.0"
    Then the exit code is 0
@@ -270,10 +291,21 @@ Scenario: The locked version of the package cannot get obsoleted by upgrade of o
 @bz1957280
 Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is not filtered out and can be installed
   Given I use repository "dnf-ci-obsoletes"
-    And I create file "/etc/dnf/plugins/versionlock.list" with
+    And I create file "/etc/dnf/versionlock.toml" with
     """
-    PackageB-0:1.0-1.*
-    PackageB-Obsoleter-0:1.0-1.*
+    version = "1.0"
+    [[packages]]
+    name = "PackageB"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "1.0-1"
+    [[packages]]
+    name = "PackageB-Obsoleter"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "1.0-1"
     """
    When I execute dnf with args "install PackageB-Obsoleter"
    Then the exit code is 0
@@ -286,11 +318,21 @@ Scenario: When both obsoleted and obsoleter are locked, the obsoleter package is
 Scenario: The packages with minorbump part of release are correctly locked
   Given I use repository "miscellaneous"
     And I successfully execute dnf with args "install minorbump-0:1.0-1.fc29.x86_64"
-    And I successfully execute dnf with args "versionlock minorbump"
+    And I create file "/etc/dnf/versionlock.toml" with
+    """
+    version = "1.0"
+    [[packages]]
+    name = "minorbump"
+    [[packages.conditions]]
+    key = "evr"
+    comparator = "="
+    value = "0:1.0-1.fc29"
+    """
         # check that minorbump is available with version higher then locked
     And I successfully execute dnf with args "repoquery minorbump"
    Then stdout is
     """
+    <REPOSYNC>
     minorbump-0:1.0-1.fc29.1.src
     minorbump-0:1.0-1.fc29.1.x86_64
     minorbump-0:1.0-1.fc29.src
