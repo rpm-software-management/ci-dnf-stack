@@ -3,6 +3,7 @@ tag: dnf5daemon
 execute:
     how: tmt
     script: |
-        $TMT_PLANS_DATA/ci-dnf-stack/container-test run \
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        -c dnf5-testing-container run \
         --tags dnf5daemon \
         --command dnf5daemon-client

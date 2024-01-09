@@ -1,0 +1,12 @@
+summary: Prepare the DNF5 environment
+
+prepare+:
+    - name: Build DNF5 testing container
+      how: shell
+      script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        -c dnf5-testing-container build \
+        --base $( echo "$@distro" | tr '-' ':') \
+        --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
+        --container-arg="--env=COPR_RPMS=$PACKIT_COPR_RPMS"
+

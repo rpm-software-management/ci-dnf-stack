@@ -1,0 +1,18 @@
+summary: Prepare the DNF4 environment
+
+prepare+:
+    - name: Checkout DNF4 branch
+      how: shell
+      script: |
+        if [ "$PACKIT_UPSTREAM_NAME" == "dnf" ]; then
+            git -C $TMT_PLANS_DATA/ci-dnf-stack checkout dnf-4-stack
+        fi
+
+    - name: Build DNF4 testing container
+      how: shell
+      script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        -c dnf4-testing-container build \
+        --base $( echo "$@distro" | tr '-' ':') \
+        --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
+        --container-arg="--env=COPR_RPMS=$PACKIT_COPR_RPMS"
