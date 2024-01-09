@@ -1,0 +1,31 @@
+summary: Prepare CI DNF Stack
+
+tag: integration
+
+prepare:
+    - name: Install packages to build fedora container
+      how: install
+      package: [git, podman]
+
+    - name: Download latest ci-dnf-stack from PR
+      how: shell
+      script:
+        - git clone https://github.com/rpm-software-management/ci-dnf-stack $TMT_PLANS_DATA/ci-dnf-stack
+
+    - name: Checkout PR branch if packit call is from ci-dnf-stack
+      how: shell
+      script: |
+        if [ "$PACKIT_UPSTREAM_NAME" == "ci-dnf-stack" ]; then
+          git -C $TMT_PLANS_DATA/ci-dnf-stack remote add pull-request $PACKIT_SOURCE_URL
+          git -C $TMT_PLANS_DATA/ci-dnf-stack fetch pull-request
+          git -C $TMT_PLANS_DATA/ci-dnf-stack checkout --track pull-request/$PACKIT_SOURCE_BRANCH
+          git -C $TMT_PLANS_DATA/ci-dnf-stack rebase $PACKIT_TARGET_BRANCH
+        fi
+
+    - name: Build testing container
+      how: shell
+      script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test build \
+        --base $( echo "$@distro" | tr '-' ':') \
+        --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
+        --container-arg="--env=COPR_RPMS=$PACKIT_COPR_RPMS"
