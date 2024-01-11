@@ -24,7 +24,7 @@ jobs:
             variant: -sanitizers
     steps:
       - name: Check out sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup CI
         id: setup-ci

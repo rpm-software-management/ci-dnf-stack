@@ -28,7 +28,7 @@ runs:
         # printed, Github won't hide it anymore.
         COPR_USER=${{inputs.copr-user}}
         if [ "${{inputs.fail-without-copr}}" = true -a -z "$COPR_USER" ]; then echo "COPR_USER secret is required to run the CI."; exit 1; fi
-        echo "::set-output name=copr-user::$COPR_USER"
+        echo "copr-user=$COPR_USER" >> $GITHUB_OUTPUT
 
         if [ "${{inputs.fail-without-copr}}" = true -a -z "${{inputs.copr-api-token}}" ]; then echo "COPR_API_TOKEN secret is required to run the CI."; exit 1; fi
         mkdir -p "$HOME/.config"

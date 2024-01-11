@@ -61,4 +61,4 @@ runs:
 
         # convert newlines to spaces (output variable assignment below doesn't support newlines)
         PACKAGE_URLS="$(tr '\n' ' ' < rpmlist)"
-        echo "::set-output name=package-urls::$PACKAGE_URLS"
+        echo "package-urls=$PACKAGE_URLS" >> $GITHUB_OUTPUT
