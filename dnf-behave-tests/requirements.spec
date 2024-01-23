@@ -57,7 +57,9 @@ BuildRequires:  python3-dnf-plugin-show-leaves
 
 %if 0%{?fedora}
 BuildRequires:  python3-dnf-plugin-system-upgrade
+%if 0%{?fedora} < 39
 BuildRequires:  dnf-plugin-swidtags
+%endif
 %endif
 
 BuildRequires:  microdnf

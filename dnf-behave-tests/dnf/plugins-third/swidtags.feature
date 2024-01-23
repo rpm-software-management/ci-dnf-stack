@@ -1,5 +1,5 @@
 # the swidtags plugin is available only in Fedora
-@use.with_os=fedora__ge__30
+@use.with_os=fedora__le__38
 Feature: Smoke test for swidtags dnf plugin
 
 
