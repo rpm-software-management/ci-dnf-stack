@@ -39,6 +39,16 @@ Scenario: repoquery --requires --resolve NAME
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
+      """
+
+Scenario: repoquery --requires --resolve NAME with file deps
+ When I execute dnf with args "repoquery --requires --resolve middle1 --setopt=optional_metadata_types=filelists"
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom1-1:2.0-1.x86_64
+      bottom2-1:1.0-1.x86_64
+      bottom3-1:2.0-1.x86_64
       bottom4-1:1.0-1.x86_64
       """
 
@@ -50,7 +60,6 @@ Scenario: repoquery --requires --resolve NAMEGLOB
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
-      bottom4-1:1.0-1.x86_64
       """
 
 Scenario: repoquery --requires --resolve --recursive NAME
@@ -61,7 +70,6 @@ Scenario: repoquery --requires --resolve --recursive NAME
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
       bottom3-1:2.0-1.x86_64
-      bottom4-1:1.0-1.x86_64
       middle1-1:2.0-1.x86_64
       middle2-1:2.0-1.x86_64
       """
@@ -73,7 +81,6 @@ Scenario: repoquery --requires --resolve --recursive NAME-VERSION
       """
       bottom1-1:2.0-1.x86_64
       bottom2-1:1.0-1.x86_64
-      bottom4-1:1.0-1.x86_64
       middle1-1:2.0-1.x86_64
       middle2-1:2.0-1.x86_64
       """
@@ -88,7 +95,6 @@ Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
        \_ middle1-1:2.0-1.x86_64 [3: /a/bottom4-file, bottom2 = 1:1.0-1, bottom1-prov2 >= 2.0]
        |   \_ bottom1-1:2.0-1.x86_64 [0: ]
        |   \_ bottom2-1:1.0-1.x86_64 [0: ]
-       |   \_ bottom4-1:1.0-1.x86_64 [0: ]
        \_ middle2-1:2.0-1.x86_64 [1: bottom1-prov3 <= 1.2]
        |   \_ bottom1-1:2.0-1.x86_64 [0: ]
       """
@@ -289,15 +295,25 @@ Scenario: repoquery --whatrequires NEVRA
       """
 
 @bz1782906
-# This fails with dnf5 because it doesn't load filelists by default
+# Filelists need to be loaded explicitly
 Scenario: repoquery --whatrequires NAME (file provide)
- When I execute dnf with args "repoquery --whatrequires bottom4"
+ When I execute dnf with args "repoquery --whatrequires bottom4 --setopt=optional_metadata_types=filelists"
  Then the exit code is 0
   And stdout is
       """
       <REPOSYNC>
       middle1-1:2.0-1.x86_64
       middle3-1:1.0-1.x86_64
+      """
+
+# Filelists are loaded automatically
+Scenario: repoquery --whatrequires NAME (filename provide)
+ When I execute dnf with args "repoquery --whatrequires /a/bottom4-file"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      middle1-1:2.0-1.x86_64
       """
 
 @dnf5

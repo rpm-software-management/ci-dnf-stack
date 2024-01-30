@@ -68,20 +68,6 @@ Scenario: Upgrade an RPM by file provide
         | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
 
 @bz1905471
-Scenario: Upgrade an RPM by file provide that is directory
-  Given I use repository "dnf-ci-fedora-updates"
-   When I execute microdnf with args "upgrade /var/db"
-   Then the exit code is 0
-    And microdnf transaction is
-        | Action        | Package                                   |
-        | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
-        | upgraded      | glibc-0:2.28-9.fc29.x86_64                |
-        | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
-        | upgraded      | glibc-common-0:2.28-9.fc29.x86_64         |
-        | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-        | upgraded      | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-
-@bz1905471
 Scenario: Upgrade an RPM by file provide containing wildcards
   Given I use repository "dnf-ci-fedora-updates"
    When I execute microdnf with args "upgrade /etc/ld*.conf"
