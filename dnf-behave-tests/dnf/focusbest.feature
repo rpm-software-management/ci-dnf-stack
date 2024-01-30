@@ -2,6 +2,9 @@
 Feature: Always use the latest packages even for dependecies
 
 
+# The focusbest behavior has been reverted.
+# It might become an option in the future.
+@xfail
 Scenario: prefer installing latests dependencies rather than smaller transaction
   Given I use repository "focusbest"
     And I successfully execute dnf with args "install krb5-libs-1.0"
