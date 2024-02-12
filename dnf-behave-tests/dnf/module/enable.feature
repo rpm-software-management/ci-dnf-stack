@@ -40,3 +40,26 @@ Scenario: Enable a module stream that was already enabled
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
         | nodejs    | enabled   | 8         |           |
+
+
+@dnf5
+Scenario: Enable a different stream of an already enabled module when module_stream_switch=true
+  Given I configure dnf with
+        | key                  | value |
+        | module_stream_switch | True  |
+   When I execute dnf with args "module enable nodejs:8"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-stream-enable     | nodejs:8           |
+    And modules state is following
+        | Module    | State     | Stream    | Profiles  |
+        | nodejs    | enabled   | 8         |           |
+   When I execute dnf with args "module enable nodejs:10"
+   Then the exit code is 0
+    And Transaction is following
+        | Action                   | Package            |
+        | module-stream-switch     | nodejs:8 -> 10     |
+    And modules state is following
+        | Module    | State     | Stream    | Profiles  |
+        | nodejs    | enabled   | 10        |           |

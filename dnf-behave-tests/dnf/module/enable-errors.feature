@@ -5,8 +5,8 @@ Background:
   Given I use repository "dnf-ci-fedora-modular-updates"
 
 
-Scenario: Fail to enable a different stream of an already enabled module (dnf)
-  Given I set dnf command to "dnf"
+@dnf5
+Scenario: Fail to enable a different stream of an already enabled module
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
     And Transaction is following
@@ -22,32 +22,12 @@ Scenario: Fail to enable a different stream of an already enabled module (dnf)
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        Failed to resolve the transaction:
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
-Scenario: Fail to enable a different stream of an already enabled module (yum)
-  Given I set dnf command to "yum"
-   When I execute dnf with args "module enable nodejs:8"
-   Then the exit code is 0
-    And Transaction is following
-        | Action                   | Package            |
-        | module-stream-enable     | nodejs:8           |
-    And modules state is following
-        | Module    | State     | Stream    | Profiles  |
-        | nodejs    | enabled   | 8         |           |
-   When I execute dnf with args "module enable nodejs:10"
-   Then the exit code is 1
-    And modules state is following
-        | Module    | State     | Stream    | Profiles  |
-        | nodejs    | enabled   | 8         |           |
-    And stderr is
-        """
-        The operation would result in switching of module 'nodejs' stream '8' to stream '10'
-        Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
-        It is recommended to rather remove all installed content from the module, and reset the module using 'yum module reset <module_name>' command. After you reset the module, you can install the other stream.
-        """
 
 Scenario: Fail to install a different stream of an already enabled module
   Given I set dnf command to "dnf"
