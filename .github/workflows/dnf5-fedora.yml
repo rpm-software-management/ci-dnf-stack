@@ -1,0 +1,40 @@
+---
+name: DNF5 Fedora container build
+on:
+  schedule:
+    - cron:  '0 2 * * *'  # at 2am UTC
+
+  # allow to run the workflow manually from GitHub web interface
+  workflow_dispatch:
+
+jobs:
+  container-build:
+    name: Container build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build the container
+        run: |
+          # hack: Github replaces secrets with *** in the whole output.
+          # If there's a comment (#) at the end of the secret
+          # (e.g. "rpm-sofware-management #"), this will clean it up and
+          # since it is no longer the whole secret being printed, Github
+          # won't hide it anymore.
+          GHCR_USER=${{secrets.GHCR_USER}}
+
+          if [ -z "$GHCR_USER" ]; then exit 0; fi
+
+          DATE=`date "+%F"`
+          IMAGE="ghcr.io/${GHCR_USER}/dnf5-fedora"
+
+          echo ${{secrets.GITHUB_TOKEN}} | docker login ghcr.io -u ${GHCR_USER} --password-stdin
+
+          docker build -t ${IMAGE}:${DATE} -t ${IMAGE}:latest -<<EOF
+          FROM fedora:latest
+          RUN dnf -y update
+          RUN dnf -y install dnf5 dnf5-plugins
+          RUN dnf clean all  # remove dnf cache to make the image smaller
+          EOF
+
+          docker push ${IMAGE}:${DATE}
+          docker push ${IMAGE}:latest
+
