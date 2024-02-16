@@ -95,7 +95,10 @@ Scenario: If the oldest installed kernel is a running one it is not replaced on 
         | Action        | Package                           |
         | install       | dnf-ci-kernel-0:2.0-1.x86_64      |
         | install       | dnf-ci-kernel-0:3.0-1.x86_64      |
-   When I execute dnf with args "upgrade dnf-ci-kernel"
+   # Just like the tests above we need to exlude dnf-ci-obsolete, otherwise solver wants to
+   # use it and obsolete the running kernel which fails because it is protected.
+   # This test doesn't test obsoletes.
+   When I execute dnf with args "upgrade --exclude dnf-ci-obsolete  dnf-ci-kernel"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
