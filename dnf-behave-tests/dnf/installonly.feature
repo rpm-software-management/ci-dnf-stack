@@ -377,14 +377,9 @@ Scenario: Do not bypass installonly limit (2) when installing kernel-core throug
     And I use repository "dnf-ci-fedora-updates-testing"
    When I execute dnf with args "install kernel-core-uname-r"
    Then the exit code is 0
-   # For some reason libsolv installs kernel and kernel-modules, while this is desired behavior it is
-   # somewhat confusing. There is no requirement for it. If in the future libsolv is changed to install
-   # only kernel-core it is still valid.
     And Transaction is following
         | Action        | Package                                  |
-        | install       | kernel-0:4.20.6-300.fc29.x86_64          |
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64     |
-        | install       | kernel-modules-0:4.20.6-300.fc29.x86_64  |
         | unchanged     | kernel-0:4.19.15-300.fc29.x86_64         |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | unchanged     | kernel-modules-0:4.19.15-300.fc29.x86_64 |
@@ -403,14 +398,9 @@ Scenario: Do not bypass installonly limit (default 3) when installing kernel-cor
     And I successfully execute dnf with args "install kernel-3.0.0"
    When I execute dnf with args "install kernel-core-uname-r"
    Then the exit code is 0
-   # For some reason libsolv installs kernel and kernel-modules, while this is desired behavior it is
-   # somewhat confusing. There is no requirement for it. If in the future libsolv is changed to install
-   # only kernel-core it is still valid.
     And Transaction is following
         | Action        | Package                              |
-        | install       | kernel-0:4.0.0-1.fc29.x86_64         |
         | install       | kernel-core-0:4.0.0-1.fc29.x86_64    |
-        | install-dep   | kernel-modules-0:4.0.0-1.fc29.x86_64 |
         | unchanged     | kernel-0:2.0.0-1.fc29.x86_64         |
         | unchanged     | kernel-core-0:2.0.0-1.fc29.x86_64    |
         | unchanged     | kernel-modules-0:2.0.0-1.fc29.x86_64 |
