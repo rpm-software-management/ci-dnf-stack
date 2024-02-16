@@ -43,6 +43,8 @@ jobs:
           # glibc-langpack-en is installed as a workaround
           # see https://bugzilla.redhat.com/show_bug.cgi?id=2239860
           RUN dnf -y install git python3-pip rpmlint glibc-langpack-en
+          # needed for moving of PIDs in integration-tests
+          RUN dnf -y install procps-ng
           RUN dnf clean all  # remove dnf cache to make the image smaller
           EOF
 
