@@ -23,7 +23,8 @@ Scenario: Repolist without arguments
     And stdout does not contain "dnf-ci-thirdparty\s+dnf-ci-thirdparty"
 
 
-@dnf5daemon
+# TODO(nsella) disable this until dnf5daemon-client suports `repo list` or some ad hoc test is created
+# @dnf5daemon
 Scenario: Repo list with "--enabled"
    When I execute dnf with args "repo list --enabled"
    Then the exit code is 0
