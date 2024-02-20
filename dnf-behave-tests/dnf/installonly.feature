@@ -407,3 +407,21 @@ Scenario: Do not bypass installonly limit (default 3) when installing kernel-cor
         | remove-dep    | kernel-0:1.0.0-1.fc29.x86_64         |
         | remove        | kernel-core-0:1.0.0-1.fc29.x86_64    |
         | remove-dep    | kernel-modules-0:1.0.0-1.fc29.x86_64 |
+
+
+@dnf5
+@bz2263675
+Scenario: Handle over-limit custom kernel without installonlypkg(kernel) provide
+  Given I drop repository "dnf-ci-fedora"
+    And I use repository "kernel-custom"
+    And I successfully execute dnf with args "install kernel-6.5.10"
+    And I successfully execute dnf with args "install kernel-6.5.12"
+    And I successfully execute dnf with args "install kernel-6.6.3"
+    And I execute rpm with args "-i {context.dnf.fixturesdir}/repos/kernel-custom/x86_64/kernel-6.7.0+-7.x86_64.rpm"
+   When I execute dnf with args "upgrade 'kernel*'"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | install       | kernel-0:6.7.4-200.fc29.x86_64  |
+        | remove        | kernel-0:6.5.10-300.fc29.x86_64 |
+        | remove        | kernel-0:6.5.12-300.fc29.x86_64 |
