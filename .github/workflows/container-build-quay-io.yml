@@ -1,0 +1,58 @@
+---
+name: Build DNF5 containers on quay.io
+on:
+  schedule:
+    - cron: '0 4 * * *' # at 4am UTC, 2 hours after nightlies are built
+  workflow_dispatch:
+
+
+# from https://github.com/marketplace/actions/push-to-registry
+jobs:
+  build:
+    name: Build and push image
+    strategy:
+      fail_fast: false
+      matrix:
+        name:
+          - dnf5
+          - dnf5-nightly
+          - dnf5-testing
+          - dnf5-testing-nightly
+        tag:
+          - 38
+          - 39
+          - stable
+          - latest
+          - rawhide
+
+    runs_on: ubuntu:20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: rpmsoftwaremanagement/fedora-${{ matrix.name }}
+        tags: ${{ matrix.tag }}
+        containerfiles: |
+          .containerfiles/Containerfile
+        build_args:
+          TAG=${{ matrix.tag }}
+          NAME=${{ matrix.name }}
+
+    # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+    # in which case 'username' and 'password' can be omitted.
+    - name: Push To quay.io
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: quay.io/rpmsoftwaremanagement
+        username: ${{ secrets.QUAY_IO_REGISTRY_USERNAME }}
+        password: ${{ secrets.QUAY_IO_REGISTRY_PASSWORD }}
+
+    - name: Print image url
+      run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
