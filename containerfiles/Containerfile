@@ -1,0 +1,26 @@
+FROM fedora:$TAG
+
+ARG TAG
+ARG NAME
+
+RUN dnf -y update \
+    && dnf -y install 'dnf-command(copr)' \
+
+    # enable nightly repositories
+    && if [ "$NAME" == "dnf5-nightly" ]; then \
+        dnf copr -y enable rpmsoftwaremanagement/dnf-nightly ; \
+    fi \
+
+    # enable testing repositories
+    && if [ "$NAME" == "dnf5-testing" ] || [ "$NAME" == "dnf5-testing-nightly" ]; then \
+        dnf copr -y enable rpmsoftwaremanagement/"$NAME" ; \
+    fi \
+
+    # install all the DNF5 stack
+    && dnf -y install dnf5 dnf-data dnf5-plugins \
+
+    # clean installed packages
+    # from this on we need to be careful to specify which dnf to use
+    && dnf4 -y remove 'dnf-command(copr)' \
+    && dnf4 clean all \
+    && dnf5 clean all
