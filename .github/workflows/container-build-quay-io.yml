@@ -21,24 +21,25 @@ jobs:
         tag:
           - 38
           - 39
-          - stable
+          - 40
+          - 41
           - latest
           - rawhide
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: rpmsoftwaremanagement/fedora-${{ matrix.name }}
+        image: fedora-${{ matrix.name }}
         tags: ${{ matrix.tag }}
         containerfiles: |
-          .containerfiles/Containerfile
-        build-args:
+          containerfiles/Containerfile
+        build-args: |
           TAG=${{ matrix.tag }}
           NAME=${{ matrix.name }}
 
