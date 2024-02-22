@@ -11,7 +11,7 @@ jobs:
   build:
     name: Build and push image
     strategy:
-      fail_fast: false
+      fail-fast: false
       matrix:
         name:
           - dnf5
@@ -25,7 +25,7 @@ jobs:
           - latest
           - rawhide
 
-    runs_on: ubuntu:20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
         tags: ${{ matrix.tag }}
         containerfiles: |
           .containerfiles/Containerfile
-        build_args:
+        build-args:
           TAG=${{ matrix.tag }}
           NAME=${{ matrix.name }}
 
