@@ -1,6 +1,7 @@
+ARG TAG
+
 FROM fedora:$TAG
 
-ARG TAG
 ARG NAME
 
 RUN dnf -y update \
