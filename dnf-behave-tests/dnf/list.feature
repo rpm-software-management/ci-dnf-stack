@@ -54,6 +54,18 @@ Given I drop repository "dnf-ci-fedora"
   setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
   """
 
+@dnf5
+Scenario: dnf list is case insensitive
+ When I execute dnf with args "install setup"
+ Then the exit code is 0
+Given I drop repository "dnf-ci-fedora"
+ When I execute dnf with args "list SETUP"
+ Then stdout matches line by line
+  """
+  <REPOSYNC>
+  Installed packages
+  setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+  """
 
 @dnf5
 Scenario: dnf list setup (when setup is not installed but it is available)
