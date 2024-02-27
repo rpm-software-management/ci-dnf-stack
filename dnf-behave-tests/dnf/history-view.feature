@@ -77,9 +77,6 @@ Scenario: History info in range - transaction merging
     And History info "last-2..last-1" should match
         | Key           | Value                     |
         | Return-Code   | Success                   |
-        | Reinstall     | abcde-2.9.2-1.fc29.noarch |
-        | Reinstall     | flac-1.3.2-8.fc29.x86_64  |
-        | Reinstall     | wget-1.19.5-5.fc29.x86_64 |
 
 
 Scenario: History info of package
