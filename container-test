@@ -420,6 +420,11 @@ class BehaveRunner(object):
         if self.command_line_args.base is not None:
             command += ['--build-arg', 'BASE={}'.format(self.command_line_args.base)]
 
+        if self.command_line_args.suite == "dnf5":
+            command += ['--build-arg', 'BUILD_WITH=dnf5']
+        else:
+            command += ['--build-arg', 'BUILD_WITH=dnf']
+
         command += ['-t', self.command_line_args.container]
         command += ['-f', self.command_line_args.docker_file, PROGPATH]
 

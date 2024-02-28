@@ -5,6 +5,7 @@ prepare+:
       how: shell
       script: |
         $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        --suite dnf5 \
         -c dnf5-testing-container build \
         --base $( echo "$@distro" | tr '-' ':') \
         --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \

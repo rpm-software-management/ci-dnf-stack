@@ -2,8 +2,8 @@
 # $ podman build --build-arg TYPE=distro -t ci-dnf-stack -f Dockerfile
 # $ podman run --net none -it ci-dnf-stack behave dnf
 #
-# Build for DNF4
-# $ podman build --build-arg DNF=dnf -t ci-dnf-stack -f Dockerfile
+# To build for DNF5 be sure to use the dnf5 suite
+# $ podman -s dnf5 build -t ci-dnf-stack -f Dockerfile
 #
 # Build for a specific Fedora version
 # $ podman build --build-arg BASE=fedora:38 -t ci-dnf-stack -f Dockerfile
@@ -13,7 +13,9 @@ FROM $BASE
 
 ENV LANG C.UTF-8
 ARG TYPE=nightly
-ARG DNF
+
+ARG BUILD_WITH
+ENV DNF=${BUILD_WITH:-dnf}
 
 # disable deltas and weak deps
 RUN set -x && \
