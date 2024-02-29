@@ -1,6 +1,7 @@
+@dnf5
 @no_installroot
 @destructive
-Feature: Repolist when all repositories are disabled
+Feature: Repo list (alias repolist) for containers, all repos are disabled
 
 
 Background:
@@ -15,14 +16,14 @@ Scenario: Repolist without arguments
     And stdout is empty
 
 
-Scenario: Repolist with "--enabled"
-   When I execute microdnf with args "repolist --enabled"
+Scenario: Repo list with "--enabled"
+   When I execute microdnf with args "repo list --enabled"
    Then the exit code is 0
     And stdout is empty
 
 
-Scenario: Repolist with "--disabled"
-   When I execute microdnf with args "repolist --disabled"
+Scenario: Repo list with "--disabled"
+   When I execute microdnf with args "repo list --disabled"
    Then the exit code is 0
     And stdout is
       """
@@ -31,8 +32,8 @@ Scenario: Repolist with "--disabled"
       """
 
 
-Scenario: Repolist with "--all"
-   When I execute microdnf with args "repolist --all"
+Scenario: Repo list with "--all"
+   When I execute microdnf with args "repo list --all"
    Then the exit code is 0
     And stdout is
       """
@@ -41,11 +42,11 @@ Scenario: Repolist with "--all"
       """
 
 
-Scenario: Repolist with "--enabled --disabled"
-   When I execute microdnf with args "repolist --enabled --disabled"
-   Then the exit code is 0
-    And stdout is
+Scenario: Repo list with "--disabled --enabled"
+   When I execute microdnf with args "repo list --disabled --enabled"
+   Then the exit code is 2
+    And stdout is empty
+    And stderr is
       """
-      repo id       repo name                       status
-      dnf-ci-fedora dnf-ci-fedora test repository disabled
+      "--enabled" not allowed together with named argument "--disabled". Add "--help" for more information about the arguments.
       """
