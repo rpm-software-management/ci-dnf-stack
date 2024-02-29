@@ -103,7 +103,7 @@ Scenario: unset/remove an existing variable
       """
 
 
-Scenario: unset/remove an existing variable, removing non-existent variable is OK
+Scenario: unset/remove an existing variable, removing non-existent variable is OK, but a warning is written
   Given I create file "/etc/dnf/vars/mvar1" with
       """
       orig_value1
@@ -118,4 +118,17 @@ Scenario: unset/remove an existing variable, removing non-existent variable is O
     And file "/etc/dnf/vars/mvar2" contents is 
       """
       orig_value2
+      """
+    And stderr is
+      """
+      config-manager: Request to remove variable but it is not present in the vars directory: nonexistvar
+      """
+
+
+Scenario: removing non-existent variable (directory with variables not found) is OK, but a warning is written
+   When I execute dnf with args "config-manager unsetvar nonexistvar"
+   Then the exit code is 0
+    And stderr is
+      """
+      config-manager: Request to remove variable but vars directory was not found: {context.dnf.installroot}/etc/dnf/vars
       """

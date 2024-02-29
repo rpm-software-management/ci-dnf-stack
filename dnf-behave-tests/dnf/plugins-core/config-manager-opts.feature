@@ -130,7 +130,28 @@ Scenario: unset/remove an main option
       """
 
 
-Scenario: unset/remove an main option, trying to unset an not set option is OK
+Scenario: unset/remove unsupported main option is OK, but a warning is written
+  Given I create file "/etc/dnf/dnf.conf" with
+      """
+      [main]
+      best=True
+      unsupported=1
+      skip_unavailable=True
+      """
+   When I execute dnf with args "config-manager unsetopt best unsupported"
+   Then the exit code is 0
+    And file "/etc/dnf/dnf.conf" contents is 
+      """
+      [main]
+      skip_unavailable=True
+      """
+    And stderr is
+      """
+      config-manager: Request to remove unsupported main option: unsupported
+      """
+
+
+Scenario: unset/remove an main option, trying to unset an not set option is OK, but a warning is written
   Given I create file "/etc/dnf/dnf.conf" with
       """
       [main]
@@ -143,6 +164,20 @@ Scenario: unset/remove an main option, trying to unset an not set option is OK
       """
       [main]
       skip_unavailable=True
+      """
+    And stderr is
+      """
+      config-manager: Request to remove main option but it is not present in the config file: installroot
+      """
+
+
+Scenario: trying to unset an not set main option (config file is not found) is OK, but a warning is written
+  Given I delete file "/etc/dnf/dnf.conf"
+   When I execute dnf with args "config-manager unsetopt best"
+   Then the exit code is 0
+    And stderr is
+      """
+      config-manager: Request to remove main option but config file not found: {context.dnf.installroot}/etc/dnf/dnf.conf
       """
 
 
@@ -321,7 +356,68 @@ Scenario: repository configuration overrides - unset/remove option, globs in rep
       """
 
 
-Scenario: repository configuration overrides - unset/remove option, trying to unset an not set option is OK
+Scenario: repository configuration overrides - unset/remove unsupported option is OK, but a warning is written
+  Given I create file "/etc/dnf/repos.override.d/99-config_manager.repo" with
+      """
+      [repo1]
+      enabled=0
+      unsupported=1
+      priority=40
+      skip_if_unavailable=1
+      [repo2]
+      enabled=1
+      priority=50
+      skip_if_unavailable=0
+      """
+   When I execute dnf with args "config-manager unsetopt repo1.unsupported repo1.priority"
+   Then the exit code is 0
+    And file "/etc/dnf/repos.override.d/99-config_manager.repo" contents is
+      """
+      [repo1]
+      enabled=0
+      skip_if_unavailable=1
+      [repo2]
+      enabled=1
+      priority=50
+      skip_if_unavailable=0
+      """
+    And stderr is
+      """
+      config-manager: Request to remove unsupported repository option: repo1.unsupported
+      """
+
+
+Scenario: repository configuration overrides - unset/remove option, repoid not in overrides is OK, but a warning is written
+  Given I create file "/etc/dnf/repos.override.d/99-config_manager.repo" with
+      """
+      [repo1]
+      enabled=0
+      priority=40
+      skip_if_unavailable=1
+      [repo2]
+      enabled=1
+      priority=50
+      skip_if_unavailable=0
+      """
+   When I execute dnf with args "config-manager unsetopt test_repo.priority repo1.priority"
+   Then the exit code is 0
+    And file "/etc/dnf/repos.override.d/99-config_manager.repo" contents is
+      """
+      [repo1]
+      enabled=0
+      skip_if_unavailable=1
+      [repo2]
+      enabled=1
+      priority=50
+      skip_if_unavailable=0
+      """
+    And stderr is
+      """
+      config-manager: Request to remove repository option but repoid is not present in the overrides: test_repo
+      """
+
+
+Scenario: repository configuration overrides - unset/remove option, trying to unset an not set option is OK, but a warning is written
   Given I create file "/etc/dnf/repos.override.d/99-config_manager.repo" with
       """
       [repo1]
@@ -344,6 +440,19 @@ Scenario: repository configuration overrides - unset/remove option, trying to un
       enabled=1
       priority=50
       skip_if_unavailable=0
+      """
+    And stderr is
+      """
+      config-manager: Request to remove repository option but it is not present in the overrides: repo1.cost
+      """
+
+
+Scenario: repository configuration overrides - unset/remove option, no file with overrides found is OK, but a warning is written
+   When I execute dnf with args "config-manager unsetopt repo1.cost"
+   Then the exit code is 0
+    And stderr is
+      """
+      config-manager: Request to remove repository option but file with overrides not found: {context.dnf.installroot}/etc/dnf/repos.override.d/99-config_manager.repo
       """
 
 
