@@ -1,0 +1,8 @@
+summary: Run Behave Test Suite - CREATEREPO_C
+tag: createrepo_c
+execute:
+    how: tmt
+    script: |
+        $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        --suite createrepo_c \
+        -c container-test-$PACKIT_SOURCE_BRANCH-$PACKIT_TARGET_BRANCH run
