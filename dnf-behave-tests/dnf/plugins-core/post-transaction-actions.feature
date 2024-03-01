@@ -85,17 +85,20 @@ Examples:
 
 
 @bz2023652
+# In a transaction containing installonly packages, dnf can add a reason change to store the correct reason value
+# in the software database for the remaining installed versions of the installonly packages (dnf implementation details).
+# "Reason change" is not part of the rpm transaction and is ignored by the tested plugin.
 Scenario: Do not traceback when reason change is in transaction
   Given I create and substitute file "/etc/dnf/plugins/post-transaction-actions.d/test.action" with
     """
-    *:any:echo '${{state}} ${{name}}-${{epoch}}:${{ver}}-${{rel}}.${{arch}} repo ${{repoid}}' > {context.dnf.installroot}/trans.log
+    *:any:echo '${{state}} ${{name}}-${{epoch}}:${{ver}}-${{rel}}.${{arch}} repo ${{repoid}}' >> {context.dnf.installroot}/trans.log
     """
     And I use repository "installonly"
     And I configure dnf with
         | key                          | value         |
         | installonlypkgs              | installonlyA  |
         | installonly_limit            | 2             |
-   When I execute dnf with args "-v install installonlyA-1.0"
+   When I execute dnf with args "install installonlyA-1.0"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                         |
@@ -105,7 +108,7 @@ Scenario: Do not traceback when reason change is in transaction
     """
     install installonlyA-0:1.0-1.x86_64 repo installonly
     """
-   When I execute dnf with args "-v install installonlyA-2.0"
+   When I execute dnf with args "install installonlyA-2.0"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                         |
@@ -113,9 +116,10 @@ Scenario: Do not traceback when reason change is in transaction
     And stderr does not contain "Traceback"
     And file "/trans.log" contents is
     """
+    install installonlyA-0:1.0-1.x86_64 repo installonly
     install installonlyA-0:2.0-1.x86_64 repo installonly
     """
-   When I execute dnf with args "-v install installonlyA-2.2"
+   When I execute dnf with args "install installonlyA-2.2"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                         |
@@ -124,5 +128,8 @@ Scenario: Do not traceback when reason change is in transaction
     And stderr does not contain "Traceback"
     And file "/trans.log" contents is
     """
+    install installonlyA-0:1.0-1.x86_64 repo installonly
+    install installonlyA-0:2.0-1.x86_64 repo installonly
+    remove installonlyA-0:1.0-1.x86_64 repo @System
     install installonlyA-0:2.2-1.x86_64 repo installonly
     """
