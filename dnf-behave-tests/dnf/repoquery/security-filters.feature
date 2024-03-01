@@ -105,35 +105,35 @@ Given I use repository "repoquery-security-filters"
   Description     : This package is part of testing security options
   Vendor          : dnf-ci-vendor2
 
-  Name            : A
-  Epoch           : 0
-  Version         : 2
-  Release         : 2
-  Architecture    : x86_64
-  Download size   : *
-  Installed size  : 0.0   B
-  Source          : A-2-2.src.rpm
-  Repository      : repoquery-security-filters
-  Summary         : Testing advisory upgrade options
-  URL             : None
-  License         : Public Domain
-  Description     : This package is part of testing security options
-  Vendor          : dnf-ci-vendor2
+  Name           : A
+  Epoch          : 0
+  Version        : 2
+  Release        : 2
+  Architecture   : x86_64
+  Download size  : *
+  Installed size : 0.0   B
+  Source         : A-2-2.src.rpm
+  Repository     : repoquery-security-filters
+  Summary        : Testing advisory upgrade options
+  URL            : None
+  License        : Public Domain
+  Description    : This package is part of testing security options
+  Vendor         : dnf-ci-vendor2
 
-  Name            : A
-  Epoch           : 0
-  Version         : 3
-  Release         : 3
-  Architecture    : x86_64
-  Download size   : *
-  Installed size  : 0.0   B
-  Source          : A-3-3.src.rpm
-  Repository      : repoquery-security-filters
-  Summary         : Testing advisory upgrade options
-  URL             : None
-  License         : Public Domain
-  Description     : This package is part of testing security options
-  Vendor          : dnf-ci-vendor3
+  Name           : A
+  Epoch          : 0
+  Version        : 3
+  Release        : 3
+  Architecture   : x86_64
+  Download size  : *
+  Installed size : 0.0   B
+  Source         : A-3-3.src.rpm
+  Repository     : repoquery-security-filters
+  Summary        : Testing advisory upgrade options
+  URL            : None
+  License        : Public Domain
+  Description    : This package is part of testing security options
+  Vendor         : dnf-ci-vendor3
   """
 
 
