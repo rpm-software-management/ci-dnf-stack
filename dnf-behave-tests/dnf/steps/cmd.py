@@ -486,7 +486,7 @@ config.cachedir = os.path.join(config.installroot, 'var/cache/yum')
 vars.set('releasever', '{context.dnf.releasever}')
 vars.set('basearch', 'x86_64')
 
-base.load_config_from_file()
+base.load_config()
 
 base.setup()
 
