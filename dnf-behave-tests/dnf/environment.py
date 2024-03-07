@@ -235,8 +235,6 @@ class DNFContext(object):
         for key,value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
 
-        result.append("--setopt=reposdir=%s" % self.installroot + "/etc/yum.repos.d")
-        result.append("--setopt=config_file_path=%s" % self.installroot + "/etc/dnf/dnf.conf")
         result.append("--setopt=cachedir=%s" % self.installroot + "/var/cache/dnf")
 
         return result
