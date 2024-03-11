@@ -256,6 +256,55 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | package                             | reason | from_repo             |
         | kernel-core-4.18.16-300.fc29.x86_64 | User   | dnf-ci-fedora         |
 
+# https://issues.redhat.com/browse/RHEL-15902
+# The test expects that installed packages in pool are in order in which they were installed. This is required for fail
+# without patch but it is not guaranteed by RPM
+Scenario: Do not remove or change reason after remove of one of installonly packages - more complex
+   When I execute dnf with args "install abcde"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | abcde-0:2.9.2-1.fc29.noarch           |
+        | install-dep   | wget-0:1.19.5-5.fc29.x86_64           |
+        | install-weak  | flac-0:1.3.2-8.fc29.x86_64            |
+   # We need to have a different packages then kernel installed and with a different reasons then user to ensure that
+   # the "kernel" package reason is unexpectedly inherited from "abcde" package. The package abcd or its dependencies
+   # must  be installed first to ensure that they will be in the first position in query and not the kernel package.
+   When I execute dnf with args "mark remove abcde"
+   Then the exit code is 0
+    And package reasons are
+        | Package                                | Reason          |
+        | abcde-2.9.2-1.fc29.noarch              | dependency      |
+        | flac-1.3.2-8.fc29.x86_64               | weak-dependency |
+        | wget-1.19.5-5.fc29.x86_64              | dependency      |
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "install kernel-core-0:4.18.16-300.fc29.x86_64 kernel-core-0:4.19.15-300.fc29.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | kernel-core-0:4.18.16-300.fc29.x86_64 |
+        | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
+   When I execute dnf with args "upgrade kernel-core"
+   Then the exit code is 0
+    And package reasons are
+        | Package                                | Reason          |
+        | abcde-2.9.2-1.fc29.noarch              | dependency      |
+        | flac-1.3.2-8.fc29.x86_64               | weak-dependency |
+        | kernel-core-4.18.16-300.fc29.x86_64    | user            |
+        | kernel-core-4.19.15-300.fc29.x86_64    | user            |
+        | wget-1.19.5-5.fc29.x86_64              | dependency      |
+   When I execute dnf with args "remove kernel-core-0:4.19.15-300.fc29.x86_64"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | remove        | kernel-core-0:4.19.15-300.fc29.x86_64 |
+        | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
+    And package reasons are
+        | Package                                 | Reason          |
+        |  abcde-2.9.2-1.fc29.noarch              | dependency      |
+        |  flac-1.3.2-8.fc29.x86_64               | weak-dependency |
+        |  kernel-core-4.18.16-300.fc29.x86_64    | user            |
+        |  wget-1.19.5-5.fc29.x86_64              | dependency      |
 
 @dnf5
 @bz1934499
