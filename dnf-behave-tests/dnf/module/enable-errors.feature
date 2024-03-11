@@ -25,7 +25,6 @@ Scenario: Fail to enable a different stream of an already enabled module
         Failed to resolve the transaction:
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
-        It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 
@@ -48,7 +47,6 @@ Scenario: Fail to install a different stream of an already enabled module
         """
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
-        It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 
@@ -72,7 +70,6 @@ Scenario: Fail to install a different stream of an already enabled module using 
         """
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
-        It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
 @dnf5
