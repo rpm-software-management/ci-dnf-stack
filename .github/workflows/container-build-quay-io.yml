@@ -8,8 +8,8 @@ on:
 
 # from https://github.com/marketplace/actions/push-to-registry
 jobs:
-  build:
-    name: Build and push image
+  build-multiplatform-container-file:
+    name: Build images # Build and push multi-platform images
     strategy:
       fail-fast: false
       matrix:
@@ -25,23 +25,44 @@ jobs:
           - 41
           - latest
           - rawhide
+        platform:
+          - linux/amd64
+          - linux/arm64
+          - linux/ppc64le
+          - linux/s390x
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install qemu dependency
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qemu-user-static
+
     - name: Build Image
-      id: build-image
+      id: build_image_multiplatform
       uses: redhat-actions/buildah-build@v2
       with:
         image: fedora-${{ matrix.name }}
         tags: ${{ matrix.tag }}
+        platforms: ${{ matrix.platform }}
         containerfiles: |
           containerfiles/Containerfile
         build-args: |
           TAG=${{ matrix.tag }}
           NAME=${{ matrix.name }}
+
+    - name: Echo Outputs
+      run: |
+        echo "Image: ${{ steps.build_image_multiplatform.outputs.image }}"
+        echo "Tags: ${{ steps.build_image_multiplatform.outputs.tags }}"
+        echo "Tagged Image: ${{ steps.build_image_multiplatform.outputs.image-with-tag }}"
+
+    - name: Run image
+      run: |
+        podman run --rm ${{ steps.build_image_multiplatform.outputs.image }}:${{ matrix.tag }}
 
     # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
     # in which case 'username' and 'password' can be omitted.
@@ -49,8 +70,8 @@ jobs:
       id: push-to-quay
       uses: redhat-actions/push-to-registry@v2
       with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
+        image: ${{ steps.build_image_multiplatform.outputs.image }}
+        tags: ${{ steps.build_image_multiplatform.outputs.tags }}
         registry: quay.io/rpmsoftwaremanagement
         username: ${{ secrets.QUAY_IO_REGISTRY_USERNAME }}
         password: ${{ secrets.QUAY_IO_REGISTRY_PASSWORD }}
