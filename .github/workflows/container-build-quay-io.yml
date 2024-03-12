@@ -16,8 +16,8 @@ jobs:
         name:
           - dnf5
           - dnf5-nightly
-          - dnf5-testing
-          - dnf5-testing-nightly
+          #- dnf5-testing
+          #- dnf5-testing-nightly
         tag:
           - 38
           - 39
