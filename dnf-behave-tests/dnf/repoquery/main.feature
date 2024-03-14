@@ -673,7 +673,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       """
       <REPOSYNC>
       bottom-a1-1:2.0-1.noarch
-      bottom-a1-1:2.0-1.src
       """
 
 @dnf5
@@ -695,7 +694,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a3-1.0"
       """
       <REPOSYNC>
       bottom-a1-1:2.0-1.noarch
-      bottom-a1-1:2.0-1.src
       """
 
 @dnf5
