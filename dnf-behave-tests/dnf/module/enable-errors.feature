@@ -95,6 +95,7 @@ Scenario: Fail to install a different stream of an already enabled module using 
         It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
         """
 
+@dnf5
 @bz1814831
 Scenario: Fail to enable a module stream when specifying only module
    When I execute dnf with args "module enable nodejs"
@@ -104,13 +105,13 @@ Scenario: Fail to enable a module stream when specifying only module
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
-        Argument 'nodejs' matches 4 streams ('8', '10', '11', '12') of module 'nodejs', but none of the streams are enabled or default
-        Unable to resolve argument nodejs
-        Error: Problems in request:
-        broken groups or modules: nodejs
+        Failed to resolve the transaction:
+        Unable to resolve argument 'nodejs':
+          - Argument 'nodejs' matches 4 streams ('10', '11', '12', '8') of module 'nodejs', but none of the streams are enabled or default.
         """
 
 
+@dnf5
 @bz1629655
 Scenario: Fail to enable a module stream when specifying wrong version
    When I execute dnf with args "module enable nodejs:8:99"
@@ -118,10 +119,14 @@ Scenario: Fail to enable a module stream when specifying wrong version
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr contains "Error: Problems in request:"
-    And stderr contains "missing groups or modules: nodejs:8:99"
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        No match for argument: nodejs:8:99
+        """
 
 
+@dnf5
 @bz1629655
 Scenario: Fail to enable a non-existent module stream
    When I execute dnf with args "module enable nodejs:1"
@@ -129,8 +134,11 @@ Scenario: Fail to enable a non-existent module stream
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr contains "Error: Problems in request:"
-    And stderr contains "missing groups or modules: nodejs:1"
+    And stderr is
+        """
+        Failed to resolve the transaction:
+        No match for argument: nodejs:1
+        """
 
 
 @dnf5
@@ -146,6 +154,7 @@ Scenario: Fail to enable a module stream when not specifying anything
         """
 
 
+@dnf5
 @bz1581267
 Scenario: Fail to enable a module stream when specifying more streams of the same module
    When I execute dnf with args "module enable nodejs:8 nodejs:10"
@@ -153,10 +162,10 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
     And Transaction is empty
     And modules state is following
         | Module    | State     | Stream    | Profiles  |
-    And stderr contains "Cannot enable multiple streams for module 'nodejs'"
-    And stderr contains "Unable to resolve argument nodejs:10"
-    And stderr contains "Error: Problems in request:"
-    And stderr contains "broken groups or modules: nodejs:10"
+    And stderr is
+        """
+        Cannot enable multiple streams for module 'nodejs'
+        """
 
 
 @not.with_os=rhel__eq__8
@@ -230,6 +239,7 @@ Scenario: Enabling a stream depending on a disabled stream should fail
     And stderr contains "module fluid:water:1:.x86_64 is disabled"
 
 
+@dnf5
 # side-dish:chip requires fluid:oil
 # beverage:beer requires fluid:water
 @not.with_os=rhel__eq__8
@@ -242,6 +252,7 @@ Scenario: Enabling two modules both requiring different streams of another modul
     And stderr contains "module beverage:beer:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
 
 
+@dnf5
 # beverage:beer requires fluid:water
 @bz1651280
 @not.with_os=rhel__eq__8

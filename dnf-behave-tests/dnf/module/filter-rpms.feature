@@ -22,6 +22,7 @@ Given I use repository "dnf-ci-fedora"
     | module-stream-enable      | ninja:master                                      |
 
 
+@dnf5
 Scenario: enabled module is preferred over ursine pkg
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module enable ninja" 
@@ -39,6 +40,7 @@ Given I use repository "dnf-ci-fedora"
     | install-dep               | basesystem-0:11-6.fc29.noarch                     |
 
 
+@dnf5
 Scenario: disabled module is not used
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module disable ninja" 

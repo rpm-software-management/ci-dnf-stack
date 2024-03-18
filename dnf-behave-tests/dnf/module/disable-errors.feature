@@ -1,3 +1,4 @@
+@dnf5
 Feature: Disabling module - error handling
 
 
@@ -13,9 +14,8 @@ Scenario Outline: Disabling a module by referring the <spec> should fail
    Then the exit code is 1
     And stderr contains lines
     """
-    Unable to resolve argument <modulespec>
-    Error: Problems in request:
-    missing groups or modules: <modulespec>
+    Failed to resolve the transaction:
+    No match for argument: <modulespec>
     """
 
 Examples:

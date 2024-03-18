@@ -24,6 +24,7 @@ Scenario: hotfix content updates are used when installing a module stream
         | install-group             | nodejs-1:8.11.5-1.module_2030+42747d40.x86_64 |
 
 
+@dnf5
 Scenario: hotfix content update is used when installing a package
   Given I use repository "dnf-ci-fedora-modular-hotfix"
    When I execute dnf with args "module enable nodejs:8"

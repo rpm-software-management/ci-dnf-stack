@@ -1,3 +1,4 @@
+@dnf5
 Feature: Enabling module streams
 
 
@@ -5,7 +6,6 @@ Background:
   Given I use repository "dnf-ci-fedora-modular"
 
 
-@dnf5
 Scenario Outline: Enable a module stream by <modulespec-type>
    When I execute dnf with args "module enable <modulespec>"
    Then the exit code is 0
@@ -25,7 +25,6 @@ Examples:
   | glob:glob:glob                  | node*:*:*0801*                |
 
 
-@dnf5
 Scenario: Enable a module stream that was already enabled
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0

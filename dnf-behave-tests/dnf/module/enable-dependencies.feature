@@ -189,6 +189,7 @@ Scenario: Enabling a disabled stream depending on a non-default stream
         | fluid        | enabled   | water      |           |
 
 
+@dnf5
 @bz1622566
 Scenario: Enabling a non-default stream depending on a non-default stream
    When I execute dnf with args "module enable food-type:meat"
@@ -203,6 +204,7 @@ Scenario: Enabling a non-default stream depending on a non-default stream
         | ingredience  | enabled   | chicken    |           |
 
 
+@dnf5
 Scenario: Enable a module and its dependencies by specifying profile
    When I execute dnf with args "module enable food-type:meat/default"
    Then the exit code is 0
@@ -240,6 +242,7 @@ Scenario: Enable a module and its dependencies by specifying profile
 #        | food-type    | disabled  |            |           |
 #        | ingredience  | disabled  |            |           |
 
+@dnf5
 @not.with_os=rhel__eq__8
 Scenario: Module cannot be disabled if there are other enabled streams requiring it
    When I execute dnf with args "module enable food-type:meat"
@@ -254,7 +257,7 @@ Scenario: Module cannot be disabled if there are other enabled streams requiring
         | ingredience  | enabled   | chicken    |           |
    When I execute dnf with args "module disable ingredience:chicken"
    Then the exit code is 1
-    And stderr contains "Error: Problems in request:"
+    And stderr contains "Failed to resolve the transaction:"
     And stderr contains "Modular dependency problems:"
     And stderr contains "Problem: module food-type:meat:1:.x86_64 requires module\(ingredience:chicken\)"
     And modules state is following
@@ -263,6 +266,7 @@ Scenario: Module cannot be disabled if there are other enabled streams requiring
         | ingredience  | enabled   | chicken    |           |
 
 
+@dnf5
 Scenario: Enable the default stream of a module and its dependencies
    When I execute dnf with args "module enable food-type"
    Then the exit code is 0
@@ -300,6 +304,7 @@ Scenario: Enable the default stream of a module and its dependencies
 #        | food-type    | enabled   | meat       |           |
 #        | ingredience  | enabled   | chicken    |           |
 
+@dnf5
 # rely on merging bz1649261 fix
 @not.with_os=rhel__eq__8
 Scenario: Cannot enable a stream depending on a disabled module
@@ -315,7 +320,7 @@ Scenario: Cannot enable a stream depending on a disabled module
         | ingredience  | disabled  |            |           |
    When I execute dnf with args "module enable food-type:meat"
    Then the exit code is 1
-    And stderr contains "Error: Problems in request:"
+    And stderr contains "Failed to resolve the transaction:"
     And stderr contains "Modular dependency problems:"
     And stderr contains "module ingredience:chicken:1:.x86_64 is disabled"
     And modules state is following

@@ -16,6 +16,7 @@ Given I create file "/etc/os-release" with
  And I do not set default module platformid
 
 
+@dnf5
 @not.with_os=rhel__eq__8
 Scenario: I can't enable module requiring different platform pseudo module
 Given I delete file "/etc/os-release"
@@ -51,14 +52,15 @@ Scenario: I can't list info for the pseudo-module
    """
 
 
+@dnf5
 Scenario: I can't enable pseudo-module
  When I execute dnf with args "module enable pseudoplatform:6.0"
  Then the exit code is 1
-  And stderr contains lines
-  """
-   Error: Problems in request:
-   missing groups or modules: pseudoplatform:6.0
-  """
+  And stderr is
+      """
+      Failed to resolve the transaction:
+      No match for argument: pseudoplatform:6.0
+      """
 
 
   Scenario: I can't install pseudo-module
@@ -71,15 +73,15 @@ Scenario: I can't enable pseudo-module
   """
 
 
+@dnf5
 Scenario: I can't disable pseudo-module
  When I execute dnf with args "module  disable pseudoplatform:6.0"
  Then the exit code is 1
-  And stderr contains lines
-  """
-   Unable to resolve argument pseudoplatform:6.0
-   Error: Problems in request:
-   missing groups or modules: pseudoplatform:6.0
-  """
+  And stderr is
+      """
+      Failed to resolve the transaction:
+      No match for argument: pseudoplatform:6.0
+      """
 
 
 Scenario: I can't update pseudo-module
