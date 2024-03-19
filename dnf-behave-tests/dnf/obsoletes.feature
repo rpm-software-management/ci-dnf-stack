@@ -305,17 +305,13 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
 Scenario: Both packages are installed when group contains both obsoleter and obsoleted packages and obsoletes are switched off
    When I execute dnf with args "group install obsoleter-obsoleted --setopt=obsoletes=False"
    Then the exit code is 1
-    And dnf4 stderr is
-    """
-    Error:
-     Problem: package PackageD-2.0-1.x86_64 obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64
-      - cannot install the best candidate for the job
-      - conflicting requests
-    """
-    And dnf5 stderr is
+    And stderr is
     """
     Failed to resolve the transaction:
     Problem: package PackageD-2.0-1.x86_64 obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64
       - cannot install the best candidate for the job
       - conflicting requests
+    You can try to add to command line:
+      --no-best to not limit the transaction to the best candidates
+      --skip-broken to skip uninstallable packages
     """

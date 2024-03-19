@@ -21,6 +21,8 @@ Scenario: Try to install a non-existent package
     """
     Failed to resolve the transaction:
     No match for argument: non-existent-package
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
 
 
@@ -33,6 +35,8 @@ Scenario: Install an existent and an non-existent package
     """
     Failed to resolve the transaction:
     No match for argument: non-existent-package
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
 
 

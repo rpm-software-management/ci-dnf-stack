@@ -319,7 +319,7 @@ Scenario: Upgrade nonexistent group
    When I execute dnf with args "group upgrade nonexistent"
    Then the exit code is 1
     And Transaction is empty
-    And stderr is
+    And stderr contains lines
         """
         Failed to resolve the transaction:
         No match for argument: nonexistent

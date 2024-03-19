@@ -111,6 +111,8 @@ Scenario: distro-sync list of packages, one of them is not available
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
     And Transaction is empty
 

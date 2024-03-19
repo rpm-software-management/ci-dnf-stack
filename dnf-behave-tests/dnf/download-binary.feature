@@ -38,14 +38,14 @@ Scenario: Download an existing RPM with dependencies
 @bz1844925
 Scenario: Error when failed to resolve dependencies
    When I execute dnf with args "download filesystem --resolve --exclude setup"
-   Then the exit code is 1
-    And stderr is
+    Then stderr is
         """
         Failed to resolve the transaction:
         Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
           - conflicting requests
           - package setup-2.12.1-1.fc29.noarch is filtered out by exclude filtering
         """
+   Then the exit code is 1
 
 
 Scenario: Download an existing RPM with dependencies into a --destdir

@@ -6,7 +6,7 @@ Scenario Outline: Marking non-existent package as <type> fails
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark <type> nosuchpkg"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
@@ -25,7 +25,7 @@ Scenario: Marking as group for non-existent package or non-existent group fails
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark group dnf-ci-testgroup nosuchpkg"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
@@ -33,7 +33,7 @@ Scenario: Marking as group for non-existent package or non-existent group fails
    When I execute dnf with args "install lame"
     And I execute dnf with args "mark group nosuchgrp lame"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Group state for "nosuchgrp" not found.
     """
@@ -44,7 +44,7 @@ Scenario: Marking available but not installed package fails
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark user lame"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: lame
@@ -60,7 +60,7 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
     And package reasons are
         | Package                      | Reason  |
         | lame-3.100-4.fc29.x86_64     | user    |
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg

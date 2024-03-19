@@ -87,6 +87,8 @@ Scenario: Builddep with simple dependency (non-existent)
       """
       Failed to resolve the transaction:
       No match for argument: flac = 15
+      You can try to add to command line:
+        --skip-unavailable to skip unavailable packages
       """
 
 @dnf5
@@ -152,16 +154,12 @@ Scenario: Builddep with unavailable build dependency
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 1
-      And dnf4 stderr is
-      """
-      No matching package to install: 'this-lib-is-not-available'
-      Not all dependencies satisfied
-      Error: Some packages could not be found.
-      """
-      And dnf5 stderr is
+      And stderr is
       """
       Failed to resolve the transaction:
       No match for argument: this-lib-is-not-available
+      You can try to add to command line:
+        --skip-unavailable to skip unavailable packages
       """
      When I execute dnf with args "builddep --skip-unavailable {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 0
