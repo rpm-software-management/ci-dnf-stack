@@ -21,6 +21,8 @@ Scenario: Install an RPM that requires excluded RPM
     Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
       - conflicting requests
       - package setup-2.12.1-1.fc29.noarch is filtered out by exclude filtering
+    You can try to add to command line:
+      --skip-broken to skip uninstallable packages
     """
 
 

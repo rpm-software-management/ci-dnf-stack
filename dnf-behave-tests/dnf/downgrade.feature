@@ -110,6 +110,8 @@ Scenario: Downgrade list of packages, one of them is not available
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
     And Transaction is empty
 
@@ -170,6 +172,8 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
     No match for argument: nosuchpkg
     The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
     Packages for argument 'abcde' available, but not installed.
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
     And Transaction is empty
 
@@ -201,6 +205,8 @@ Scenario Outline: Check <command> exit code - package does not exist
     """
     Failed to resolve the transaction:
     No match for argument: non-existent-package
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
 
 Examples:

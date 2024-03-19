@@ -48,6 +48,8 @@ Scenario: Running kernel is protected against obsoleting
         """
         Failed to resolve the transaction:
         Problem: The operation would result in removing of running kernel: dnf-ci-kernel-0:1.0-1.x86_64
+        You can try to add to command line:
+          --skip-broken to skip uninstallable packages
         """
 
 
@@ -71,6 +73,8 @@ Scenario: Running kernel is protected against removal as conflict
         Problem: problem with installed package 
           - package dnf-ci-conflict-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64
           - conflicting requests
+        You can try to add to command line:
+          --skip-broken to skip uninstallable packages
         """
 
 @bz1698145

@@ -68,6 +68,8 @@ Scenario: Upgrade list of packages, one of them is not available
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
+    You can try to add to command line:
+      --skip-unavailable to skip unavailable packages
     """
     And Transaction is empty
 
@@ -164,6 +166,8 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     Failed to resolve the transaction:
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
       - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+    You can try to add to command line:
+      --no-best to not limit the transaction to the best candidates
     """
    When I execute dnf with args "upgrade --no-best"
    Then the exit code is 0

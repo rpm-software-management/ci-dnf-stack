@@ -32,21 +32,15 @@ Given I use repository "security-upgrade-noarch"
       | install       | json-c-0:1-1.x86_64         |
  When I execute dnf with args "upgrade --security"
  Then the exit code is 1
- And dnf4 stderr is
- """
- Error: 
-  Problem: cannot install both json-c-2-2.x86_64 and json-c-2-2.noarch
-   - package bind-libs-lite-2-2.x86_64 requires libjson-c.so.4()(64bit), but none of the providers can be installed
-   - cannot install the best update candidate for package json-c-1-1.x86_64
-   - cannot install the best update candidate for package bind-libs-lite-1-1.x86_64
- """
- And dnf5 stderr is
+ And stderr is
  """
  Failed to resolve the transaction:
  Problem: cannot install both json-c-2-2.noarch and json-c-2-2.x86_64
    - package bind-libs-lite-2-2.x86_64 requires libjson-c.so.4()(64bit), but none of the providers can be installed
    - cannot install the best update candidate for package json-c-1-1.x86_64
    - cannot install the best update candidate for package bind-libs-lite-1-1.x86_64
+ You can try to add to command line:
+   --no-best to not limit the transaction to the best candidates
  """
 
 
