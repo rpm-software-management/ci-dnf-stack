@@ -10,11 +10,13 @@ Background: Enable repository and set excludes in configuration
         | exclude | lame, lz4 |
 
 
+@dnf5
 Scenario: Test that excludes from config file are applied
    When I execute dnf with args "repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     wget-0:1.19.6-5.fc29.src
@@ -22,51 +24,62 @@ Scenario: Test that excludes from config file are applied
     """
 
 
+@dnf5
 Scenario: Test adding of excludes
    When I execute dnf with args "--exclude=lz4 --exclude=wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 Scenario: Test adding of excludes using --setopt
    When I execute dnf with args "--setopt=excludepkgs=lz4 --setopt=excludepkgs=wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 Scenario: Test adding of excludes short notation
    When I execute dnf with args "--exclude=lz4,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 Scenario: Test adding of excludes short notation using --setopt
    When I execute dnf with args "--setopt=excludepkgs=lz4,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test removing of existing excludes
    When I execute dnf with args "--exclude= repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -79,11 +92,14 @@ Scenario: Test removing of existing excludes
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test removing of existing excludes using --setopt
    When I execute dnf with args "--setopt=excludepkgs= repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -96,11 +112,14 @@ Scenario: Test removing of existing excludes using --setopt
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test replacing of existing excludes
    When I execute dnf with args "--exclude= --exclude=lz4 --exclude=wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -108,11 +127,14 @@ Scenario: Test replacing of existing excludes
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test replacing of existing excludes using --setopt
    When I execute dnf with args "--setopt=excludepkgs= --setopt=excludepkgs=lz4 --setopt=excludepkgs=wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -120,11 +142,14 @@ Scenario: Test replacing of existing excludes using --setopt
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test replacing of existing excludes short notation
    When I execute dnf with args "--exclude=,lz4,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -132,11 +157,14 @@ Scenario: Test replacing of existing excludes short notation
     """
 
 
+# dnf5 does not correctly reset config file options from command line
+# https://github.com/rpm-software-management/dnf5/issues/1331
 Scenario: Test replacing of existing excludes short notation using --setopt
    When I execute dnf with args "--setopt=excludepkgs=,lz4,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     lame-0:3.100-5.fc29.src
@@ -144,45 +172,53 @@ Scenario: Test replacing of existing excludes short notation using --setopt
     """
 
 
+@dnf5
 @bz1788154
 Scenario: Test adding excludes (empty values in the middle of short notation are ignored)
    When I execute dnf with args "--exclude=lz4,,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 @bz1788154
 Scenario: Test adding excludes (empty values in the middle of short notation are ignored) using --setopt
    When I execute dnf with args "--setopt=excludepkgs=lz4,,wget repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 @bz1788154
 Scenario: Test adding excludes (empty value at the end of short notation is ignored)
    When I execute dnf with args "--exclude=lz4,wget, repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
 
 
+@dnf5
 @bz1788154
 Scenario: Test adding excludes (empty value at the end of short notation is ignored) using --setopt
    When I execute dnf with args "--setopt=excludepkgs=lz4,wget, repoquery abcde lame lz4 wget"
    Then the exit code is 0
     And stdout is
     """
+    <REPOSYNC>
     abcde-0:2.9.3-1.fc29.noarch
     abcde-0:2.9.3-1.fc29.src
     """
