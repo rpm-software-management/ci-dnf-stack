@@ -73,6 +73,12 @@ def step_delete_directory(context, dirpath):
     delete_directory(full_path)
 
 
+@behave.step('directory "{dirpath}" is empty')
+def directory_is_empty(context, dirpath):
+    full_path = prepend_installroot(context, dirpath)
+    return bool(os.listdir(full_path))
+
+
 @behave.step('file "{filepath}" exists')
 def file_exists(context, filepath):
     full_path = prepend_installroot(context, filepath)
