@@ -20,6 +20,7 @@ Scenario: Test removal of dependency when clean_requirements_on_remove=false
         | remove        | filesystem-0:3.9-2.fc29.x86_64    |
 
 
+@dnf5
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
@@ -29,14 +30,12 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
    Then the exit code is 1
     And stderr is
     """
-    Error: Unable to find a match: filesystem
-    """
-    And stdout is
-    """
-    <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: filesystem
+    Failed to resolve the transaction:
+    Argument 'filesystem' matches only excluded packages.
     """
 
+
+@dnf5    
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
@@ -51,7 +50,11 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
    Then the exit code is 0
    When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install dwm"
    Then the exit code is 1
-    And stdout contains "All matches were filtered out by exclude filtering for argument: dwm"
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Argument 'dwm' matches only excluded packages.
+    """
 
 
 Scenario: Reposdir option in dnf.conf file in installroot
@@ -101,7 +104,8 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot i
     And I create directory "/othertestrepos"
    When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 1
-    And stderr contains "Error: There are no enabled repositories in "
+    And stderr contains "No match for argument: filesystem"
+    And stdout contains "No repositories were loaded from the installroot. To use the configuration and repositories of the host system, pass --use-host-config."
   Given I delete directory "/othertestrepos"
    When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
    Then the exit code is 0
@@ -130,12 +134,13 @@ Scenario: Reposdir option set by --setopt
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
+@dnf5
 @bz1512457
 Scenario: Test usage of not existing config file
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "--config {context.dnf.installroot}/non/existing/dnf.conf list"
    Then the exit code is 1
-    And stderr contains "Config file.*does not exist"
+    And stderr contains "Configuration file.*not found"
 
 
 @dnf5
@@ -168,7 +173,7 @@ Scenario: Dnf can use config file from remote location
     baseurl=http://some.url/
     """
     And I set up a http server for directory "/remotedir"
-    When I execute dnf with args "-c http://localhost:{context.dnf.ports[/remotedir]}/remote.conf repolist repo-from-remote-config"
+    When I execute dnf with args "--config http://localhost:{context.dnf.ports[/remotedir]}/remote.conf repo list repo-from-remote-config"
    Then the exit code is 0
     And stdout is
     """
@@ -177,34 +182,23 @@ Scenario: Dnf can use config file from remote location
     """
 
 
+@dnf5
 @bz1721091
 Scenario: Dnf prints reasonable error when remote config file is not downloadable
   Given I create directory "/remotedir"
     And I set up a http server for directory "/remotedir"
    # 404 not found
-   When I execute dnf with args "-c http://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   When I execute dnf with args "--config http://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repo list repo-from-remote-config"
    Then the exit code is 1
-   And stderr matches line by line
-   """
-   Config error: Configuration file URL "http://localhost:[\d]+/does-not-exist\.conf" could not be downloaded:
-     Status code: 404 for http://localhost:[\d]+/does-not-exist\.conf
-   """
+   And stderr contains "Configuration file.*not found"
    # unsupported protocol
-   When I execute dnf with args "-c xxxx://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   When I execute dnf with args "--config xxxx://localhost:{context.dnf.ports[/remotedir]}/does-not-exist.conf repo list repo-from-remote-config"
    Then the exit code is 1
-   And stderr matches line by line
-   """
-   Config error: Configuration file URL "xxxx://localhost:[\d]+/does-not-exist\.conf" could not be downloaded:
-     Curl error \(1\): Unsupported protocol for xxxx://localhost:[\d]+/does-not-exist\.conf \[Protocol "xxxx" not supported or disabled in libcurl\]
-   """
+   And stderr contains "Configuration file.*not found"
    # host unknown
-   When I execute dnf with args "-c http://the_host:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
+   When I execute dnf with args "--config http://the_host:{context.dnf.ports[/remotedir]}/does-not-exist.conf repo list repo-from-remote-config"
    Then the exit code is 1
-   And stderr matches line by line
-   """
-   Config error: Configuration file URL "http://the_host:[\d]+/does-not-exist\.conf" could not be downloaded:
-     Curl error \(6\): Couldn't resolve host name for http://the_host:[\d]+/does-not-exist\.conf \[Could not resolve host: the_host\]
-   """
+   And stderr contains "Configuration file.*not found"
 
 
 @no_installroot
@@ -229,7 +223,7 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
 
 
 @no_installroot
-Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.conf file
+Scenario: Create dnf.conf file and test if host is taking option --config /test/dnf.conf file
   Given I use repository "simple-base"
     And I create file "/etc/dnf/dnf.conf" with
     """
@@ -241,13 +235,13 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
     [main]
     exclude=dedalo-signed
     """
-   When I execute dnf with args "-c /test/dnf.conf install vagare"
+   When I execute dnf with args "--config /test/dnf.conf install vagare"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
         | install       | vagare-1.0-1.fc29.x86_64              |
         | install-dep   | labirinto-1.0-1.fc29.x86_64           |
-   When I execute dnf with args "-c /test/dnf.conf install dedalo-signed"
+   When I execute dnf with args "--config /test/dnf.conf install dedalo-signed"
    Then the exit code is 1
     And stdout is
     """

@@ -1,5 +1,5 @@
 @dnf5
-Feature: Subtitute variables
+Feature: Substitute variables
 
 
 @bz1651092
@@ -41,7 +41,7 @@ Scenario: Variables arch supports basearch `loongarch64` {}
       name=dnf-ci-test-$distrib test repository
       enabled=0
       """
-   When I execute dnf with args "repolist --disabled --setvar=arch=loongarch64"
+   When I execute dnf with args "repo list --disabled --setvar=arch=loongarch64"
    Then the exit code is 0
     And stdout matches line by line
       """
@@ -62,7 +62,7 @@ Scenario: Variables without {} are substituted in repo id
       name=dnf-ci-test-$distrib test repository
       enabled=0
       """
-   When I execute dnf with args "repolist --disabled"
+   When I execute dnf with args "repo list --disabled"
    Then the exit code is 0
     And stdout matches line by line
       """
@@ -81,7 +81,7 @@ Scenario: Variables with {} are substituted in repo id
       name=dnf-ci-test-${distrib} test repository
       enabled=0
       """
-   When I execute dnf with args "repolist --disabled"
+   When I execute dnf with args "repo list --disabled"
    Then the exit code is 0
     And stdout matches line by line
       """
@@ -93,7 +93,7 @@ Scenario: Variables with {} are substituted in repo id
 Scenario: Using dnf with non-files in /etc/dnf/vars
   Given I create directory "/{context.dnf.installroot}/etc/dnf/vars/troublemaker"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout matches line by line
       """
