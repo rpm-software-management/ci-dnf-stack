@@ -1,8 +1,7 @@
 Feature: Test encoding
 
 
-# @dnf5
-# TODO(nsella) different stdout
+@dnf5
 Scenario: UTF-8 characters in .repo filename
   Given I configure dnf with
         | key      | value      |
@@ -12,14 +11,14 @@ Scenario: UTF-8 characters in .repo filename
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora  |
     And I copy file "{context.dnf.installroot}/testrepos/testrepo.repo" to "testrepos/ř.repo"
     And I delete file "/testrepos/testrepo.repo"
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout contains "testrepo\s+testrepo test repository"
     And stderr is empty
 
 
-# @dnf5
-# TODO(nsella) different stderr
+@dnf5
+# dnf5 is OK with that in comparison with dnf4
 @bz1803038
 Scenario: non-UTF-8 characters in .repo filename
   Given I configure dnf with
@@ -30,14 +29,10 @@ Scenario: non-UTF-8 characters in .repo filename
         | baseurl | {context.scenario.repos_location}/dnf-ci-fedora  |
     And I copy file "{context.dnf.installroot}/testrepos/testrepo.repo" to "testrepos/{context.invalid_utf8_char}.repo"
     And I delete file "/testrepos/testrepo.repo"
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
-    And stdout is empty
-    And stderr is
-        """
-        Warning: failed loading '{context.dnf.installroot}/testrepos/\udcfd.repo', skipping.
-        No repositories available
-        """
+    And stdout contains "testrepo\s+testrepo test repository"
+    And stderr is empty
 
 
 # @dnf5
@@ -93,9 +88,7 @@ Scenario: non-UTF-8 character in an option when using corresponding locale
         | install       | dummy-1:1.0-1.x86_64       |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--list" for command "repoquery"
-# Requires: https://github.com/rpm-software-management/libdnf/commit/6c2ac6786a423c00750a44805ade0268dd6d19e5
+@dnf5
 @not.with_os=rhel__eq__9
 @bz1893176
 Scenario: non-UTF-8 character in filename in an installed package

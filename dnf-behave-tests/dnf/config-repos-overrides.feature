@@ -24,7 +24,7 @@ Scenario: Test the overrides in "/usr/share/dnf5/repos.override.d"
       [dnf-ci-fedora-updates]
       enabled=1
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout does not contain "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout does not contain "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
@@ -43,7 +43,7 @@ Scenario: The conf file in "/etc/dnf/repos.override.d" hides the file of the sam
       [dnf-ci-thirdparty]
       enabled=1
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout contains "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
@@ -75,7 +75,7 @@ Scenario: The configuration files are applied in alphabetical order by their nam
       [dnf-ci-fedora]
       enabled=0
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout does not contain "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout does not contain "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
@@ -92,7 +92,7 @@ Scenario: Test globs in repoid
       [d?f-[a-c]i-fed*]
       enabled=1
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout does not contain "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
@@ -113,7 +113,7 @@ Scenario: Test vars in repoid
       [dnf-ci-${distrib}-updates]
       enabled=1
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout does not contain "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout does not contain "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
@@ -138,7 +138,7 @@ Scenario: Test vars in configuration
       [dnf-ci-fedora-updates]
       enabled=${enabled}
       """
-   When I execute dnf with args "repolist"
+   When I execute dnf with args "repo list"
    Then the exit code is 0
     And stdout does not contain "dnf-ci-fedora\s+dnf-ci-fedora"
     And stdout does not contain "dnf-ci-thirdparty-updates\s+dnf-ci-thirdparty-updates"
