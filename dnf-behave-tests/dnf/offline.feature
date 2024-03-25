@@ -169,3 +169,59 @@ Given I successfully execute dnf with args "offline reboot"
       | install-group | lame-0:3.100-4.fc29.x86_64        |
       | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
       | group-install | DNF-CI-Testgroup                  |
+
+
+Scenario: Test offline-distrosync
+Given I use repository "simple-base"
+  And I execute dnf with args "install labirinto"
+  And I use repository "simple-updates"
+ When I execute dnf with args "offline-distrosync download"
+ Then the exit code is 0
+  And DNF Transaction is following
+      | Action        | Package                               |
+      | upgrade       | labirinto-2.0-1.fc29.x86_64           |
+  And stdout contains lines
+      """
+      Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
+      """
+ When I execute dnf with args "offline-distrosync status"
+ Then the exit code is 0
+  And stdout contains lines
+      """
+      An offline transaction was initiated by the following command:
+      Run `dnf5 offline reboot` to reboot and perform the offline transaction.
+      """
+Given I successfully execute dnf with args "offline-distrosync reboot"
+ When I execute dnf with args "offline _execute"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package                               |
+      | upgrade       | labirinto-2.0-1.fc29.x86_64           |
+
+
+Scenario: Test offline-upgrade
+Given I use repository "simple-base"
+  And I execute dnf with args "install labirinto"
+  And I use repository "simple-updates"
+ When I execute dnf with args "offline-upgrade download"
+ Then the exit code is 0
+  And DNF Transaction is following
+      | Action        | Package                               |
+      | upgrade       | labirinto-2.0-1.fc29.x86_64           |
+  And stdout contains lines
+      """
+      Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
+      """
+ When I execute dnf with args "offline-upgrade status"
+ Then the exit code is 0
+  And stdout contains lines
+      """
+      An offline transaction was initiated by the following command:
+      Run `dnf5 offline reboot` to reboot and perform the offline transaction.
+      """
+Given I successfully execute dnf with args "offline-upgrade reboot"
+ When I execute dnf with args "offline _execute"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package                               |
+      | upgrade       | labirinto-2.0-1.fc29.x86_64           |
