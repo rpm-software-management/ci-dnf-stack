@@ -292,19 +292,12 @@ Scenario: Group remove does not traceback when reason change
 
 @bz1706382
 @dnf5
+@dnf5daemon
 Scenario: Group list
  Given I use repository "dnf-ci-thirdparty"
   When I execute dnf with args "group list"
   Then the exit code is 0
-   And dnf4 stdout is
-    """
-    <REPOSYNC>
-    Available Groups:
-       DNF-CI-Testgroup
-       CQRlib-non-devel
-       SuperRipper-and-deps
-    """
-   And dnf5 stdout is
+   And stdout is
     """
     <REPOSYNC>
     ID                   Name                 Installed
@@ -314,6 +307,7 @@ Scenario: Group list
     """
 
 @dnf5
+@dnf5daemon
 @bz1706382
 Scenario: Group list with arg
  Given I use repository "dnf-ci-thirdparty"
@@ -377,6 +371,7 @@ Scenario: Install an environment with empty name
 
 
 @dnf5
+@dnf5daemon
 Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group list"
@@ -456,17 +451,11 @@ Scenario: Merge environment with missing names containg a group with missing nam
 
 
 @dnf5
+@dnf5daemon
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
    When I execute dnf with args "group info no-name-group"
-   Then dnf4 stdout is
-       """
-       <REPOSYNC>
-       Group: <name-unset>
-        Mandatory Packages:
-          test-package
-       """
-    And dnf5 stdout is
+   Then stdout is
        """
        <REPOSYNC>
        Id                   : no-name-group
@@ -582,13 +571,14 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
 
 
 @dnf5
+@dnf5daemon
 @bz2173929
 Scenario: dnf5 group list: empty output when run for the second time
  Given I use repository "advisories-and-groups"
   When I execute dnf with args "clean metadata"
    And I execute dnf with args "group list"
   Then the exit code is 0
-   And dnf5 stdout is
+   And stdout is
     """
     <REPOSYNC>
     ID                   Name         Installed
@@ -597,7 +587,7 @@ Scenario: dnf5 group list: empty output when run for the second time
     """
   When I execute dnf with args "group list"
   Then the exit code is 0
-   And dnf5 stdout is
+   And stdout is
     """
     <REPOSYNC>
     ID                   Name         Installed
