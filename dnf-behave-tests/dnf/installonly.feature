@@ -162,6 +162,21 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
+Scenario: When there are no old installonly packages to be removed, exit with 0
+   When I execute dnf with args "remove --oldinstallonly"
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr is empty
+    And stdout is
+        """
+        <REPOSYNC>
+        No old installonly packages found for removal.
+        Dependencies resolved.
+        Nothing to do.
+        Complete!
+        """
+
+
 # TODO(jkolarik): autoremove not yet available in dnf5
 # @dnf5
 @bz1934499
