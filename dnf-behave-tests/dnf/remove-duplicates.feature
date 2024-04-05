@@ -52,3 +52,20 @@ Scenario: Remove a duplicate RPM and reinstall an existing RPM when a copy is av
         | Action        | Package                               |
         | reinstall     | flac-0:1.3.3-3.fc29.x86_64            |
         | obsoleted     | flac-0:1.3.3-1.fc29.x86_64            |
+ 
+
+@RHEL-6424
+Scenario: When there are no duplicates to be removed, exit with 0
+   When I execute dnf with args "remove --duplicates"
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr is empty
+    And stdout is
+        """
+        <REPOSYNC>
+        No duplicated packages found for removal.
+        Dependencies resolved.
+        Nothing to do.
+        Complete!
+        """
+
