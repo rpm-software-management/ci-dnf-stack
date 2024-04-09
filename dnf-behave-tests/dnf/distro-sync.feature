@@ -169,3 +169,26 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
+
+
+@dnf5
+Scenario: distro-sync all with a broken dependency and without best
+  Given I use repository "upgrade-dependent"
+    And I successfully execute dnf with args "install labirinto"
+    And I drop repository "upgrade-dependent"
+    And I use repository "broken-distrosync"
+   When I execute dnf with args "distro-sync --no-best"
+   Then the exit code is 1
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Problem: package labirinto-2.0-1.noarch requires labirinto-libs = 2.0-1, but none of the providers can be installed
+      - labirinto-libs-2.0-1.noarch does not belong to a distupgrade repository
+      - problem with installed package 
+    You can try to add to command line:
+      --skip-broken to skip uninstallable packages
+    """
+    And stdout is
+    """
+    <REPOSYNC>
+    """
