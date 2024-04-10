@@ -123,6 +123,8 @@ Scenario: Fail to enable a module stream when specifying wrong version
         """
         Failed to resolve the transaction:
         No match for argument: nodejs:8:99
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
         """
 
 
@@ -138,6 +140,8 @@ Scenario: Fail to enable a non-existent module stream
         """
         Failed to resolve the transaction:
         No match for argument: nodejs:1
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
         """
 
 
