@@ -60,6 +60,8 @@ Scenario: I can't enable pseudo-module
       """
       Failed to resolve the transaction:
       No match for argument: pseudoplatform:6.0
+      You can try to add to command line:
+        --skip-unavailable to skip unavailable packages
       """
 
 
@@ -81,6 +83,8 @@ Scenario: I can't disable pseudo-module
       """
       Failed to resolve the transaction:
       No match for argument: pseudoplatform:6.0
+      You can try to add to command line:
+        --skip-unavailable to skip unavailable packages
       """
 
 
