@@ -50,18 +50,9 @@ Examples:
         | repoquery           | repoquery                    |
         | repoquery           | rq                           |
         | search              | search                       |
+        | search              | se                           |
         | swap                | swap                         |
         | upgrade             | up                           |
         | upgrade             | update                       |
         | upgrade             | upgrade                      |
         | upgrade             | upgrade-minimal              |
-
-@dnf5
-Scenario Outline: "<alias>" is not an alias for "<command>"
-   When I execute dnf with args "<alias>"
-   Then the exit code is 2
-    And stderr contains "Unknown argument \"<alias>\" for command "
-
-Examples:
-        | command             | alias                        |
-        | search              | se                           |
