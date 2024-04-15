@@ -195,7 +195,7 @@ Scenario: Dnf prints reasonable error when remote config file is not downloadabl
    And stderr matches line by line
    """
    Config error: Configuration file URL "xxxx://localhost:[\d]+/does-not-exist\.conf" could not be downloaded:
-     Curl error \(1\): Unsupported protocol for xxxx://localhost:[\d]+/does-not-exist\.conf \[Protocol "xxxx" not supported or disabled in libcurl\]
+     Curl error \(1\): Unsupported protocol for xxxx://localhost:[\d]+/does-not-exist\.conf \[Protocol "xxxx" not supported.*\]
    """
    # host unknown
    When I execute dnf with args "-c http://the_host:{context.dnf.ports[/remotedir]}/does-not-exist.conf repolist repo-from-remote-config"
