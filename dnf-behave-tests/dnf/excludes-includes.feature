@@ -133,3 +133,13 @@ Scenario: Install RPMs that are in includepkgs in main conf and NOT in excludepk
     And Transaction is following
         | Action        | Package                          |
         | install       | flac-libs-0:1.3.2-8.fc29.x86_64  |
+
+
+@bz2275530
+Scenario: Install local RPM when repository includepkgs are restricted
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/http-parser-2.4.0-1.fc29.x86_64.rpm --setopt=dnf-ci-fedora.includepkgs=pkg*"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                            |
+        | install       | http-parser-0:2.4.0-1.fc29.x86_64  |
