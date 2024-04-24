@@ -1,3 +1,4 @@
+@dnf5
 Feature: Config option: best
 
 
@@ -54,7 +55,7 @@ Scenario: When installing with best=1 set in dnf.conf, fail on broken packages, 
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "install glibc -x glibc-common-0:2.28-26.fc29.x86_64"
    Then the exit code is 1
-    And stdout contains "try to add .*'--nobest' to use not only best candidate packages"
+    And stderr contains "  --no-best to not limit the transaction to the best candidates"
 
 
 @bz1670776 @bz1671683
