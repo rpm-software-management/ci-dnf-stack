@@ -147,6 +147,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
         | upgrade       | wget-1:1.19.5-5.fc29.x86_64               |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
+        | broken        | SuperRipper-1.3-1.x86_64                  |
 
 
 @dnf5
@@ -180,6 +181,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
         | upgrade       | wget-1:1.19.5-5.fc29.x86_64               |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
+        | broken        | SuperRipper-1.3-1.x86_64                  |
     And stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
@@ -198,6 +200,7 @@ Scenario: Print information about skipped packages
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
+        | broken        | SuperRipper-1.3-1.x86_64                  |
    Then stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
