@@ -21,11 +21,9 @@ Scenario: Broken dependencies are reported when strict and best options are off
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
     """
-    And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+    And Transaction is following
+        | Action                | Package                           |
+        | broken                | postgresql-9.6.5-1.fc29.x86_64    |
 
 
 @bz2088422
@@ -40,11 +38,9 @@ Scenario: Broken dependencies are reported when strict option is off and best op
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
     """
-    And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+    And Transaction is following
+        | Action                | Package                           |
+        | broken                | postgresql-9.6.5-1.fc29.x86_64    |
 
 
 @bz2088422
@@ -59,8 +55,6 @@ Scenario: Broken dependencies are reported when skip-broken and best options are
       - conflicting requests
       - package postgresql-libs-9.6.5-1.fc29.x86_64 is filtered out by exclude filtering
     """
-    And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+    And Transaction is following
+        | Action                | Package                           |
+        | broken                | postgresql-9.6.5-1.fc29.x86_64    |

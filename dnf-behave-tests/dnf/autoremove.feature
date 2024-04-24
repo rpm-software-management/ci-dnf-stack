@@ -19,7 +19,7 @@ Scenario: Autoremoval of package which became non-required by others
     And Transaction is following
         | Action        | Package                           |
         | upgrade       | SuperRipper-0:1.2-1.x86_64        |
-        #| broken        | SuperRipper-0:1.3-1.x86_64        | # TODO(mblaha) broken packages are not captured in dnf5 transaction
+        | broken        | SuperRipper-0:1.3-1.x86_64        |
    When I execute dnf with args "autoremove"
    Then the exit code is 0
     And Transaction is following
