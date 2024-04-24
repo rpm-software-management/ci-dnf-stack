@@ -5,7 +5,6 @@ Feature: Test for modulesync command
 Background:
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
-    And I enable plugin "modulesync"
 
 
 Scenario: I can download a module

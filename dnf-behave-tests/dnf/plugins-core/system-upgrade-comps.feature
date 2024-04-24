@@ -3,8 +3,7 @@ Feature: Test the system-upgrade plugin with comps
 
 
 Background:
-  Given I enable plugin "system_upgrade"
-    And I use repository "system-upgrade-comps-f$releasever"
+  Given I use repository "system-upgrade-comps-f$releasever"
 
 
 @bz2054235

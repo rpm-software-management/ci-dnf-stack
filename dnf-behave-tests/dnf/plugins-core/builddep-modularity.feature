@@ -1,8 +1,7 @@
 Feature: Tests for builddep command on modular system
 
-Background: Enable builddep plugin
-  Given I enable plugin "builddep"
-    And I use repository "dnf-ci-fedora"
+Background:
+  Given I use repository "dnf-ci-fedora"
 
 # dnf-ci-fedora-modular repo:
 #   module ninja:master [d] contains ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64

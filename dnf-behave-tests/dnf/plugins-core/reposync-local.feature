@@ -1,10 +1,6 @@
 Feature: Tests for reposync command with local repository
 
 
-Background:
-  Given I enable plugin "reposync"
-
-
 Scenario: Base functionality of reposync on local repository
   Given I use repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"

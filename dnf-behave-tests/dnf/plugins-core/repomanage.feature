@@ -1,10 +1,6 @@
 Feature: Tests for repomanage command
 
 
-Background:
-Given I enable plugin "repomanage"
-
-
 Scenario: basic functionality of repomanage --new
 Given I copy repository "dnf-ci-thirdparty-updates" for modification
  When I execute dnf with args "repomanage --new {context.dnf.repos[dnf-ci-thirdparty-updates].path}"

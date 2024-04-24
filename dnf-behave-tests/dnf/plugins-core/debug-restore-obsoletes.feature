@@ -2,8 +2,7 @@ Feature: Test for debug plugin - restoring obsoleted package
 
 
 Scenario: Restoring obsoleted package
-  Given I enable plugin "debug"
-    And I use repository "debug-plugin"
+  Given I use repository "debug-plugin"
     And I successfully execute dnf with args "install test-obsoleted-1"
     And I successfully execute dnf with args "debug-dump {context.dnf.tempdir}/dump.txt"
    When I execute dnf with args "update"

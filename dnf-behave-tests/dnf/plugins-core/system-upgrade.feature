@@ -2,13 +2,12 @@
 Feature: Test the system-upgrade plugin
 
 Background:
-Given I enable plugin "system_upgrade"
   # Install the initial package versions first, then set the (target)
   # releasever and switch the repositories to http (so that system-upgrade
   # actually downloads the packages instead of using the local path). It is not
   # possible to set up an http server for a repository with two different
   # releasever variations.
-  And I use repository "system-upgrade-f$releasever" with configuration
+Given I use repository "system-upgrade-f$releasever" with configuration
       | key         | value |
       | priority    | 1     |
   And I use repository "system-upgrade-2-f$releasever" with configuration

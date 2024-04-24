@@ -2,7 +2,6 @@ Feature: Tests for the debuginfo-install plugin
 
 Background:
 Given I use repository "debuginfo-install"
-  And I enable plugin "debuginfo-install"
 
 @bz1585137
 Scenario: reports an error for a non-existent package

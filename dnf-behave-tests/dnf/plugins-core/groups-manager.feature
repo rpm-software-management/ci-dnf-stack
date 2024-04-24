@@ -1,10 +1,6 @@
 Feature: dnf groups-manager command
 
 
-Background: Enable groups-manager plugin
-  Given I enable plugin "groups_manager"
-
-
 Scenario Outline: groups-manager can read <filename> file
   Given I copy file "{context.dnf.fixturesdir}/data/groups-manager/comps_a.xml" to "/{context.dnf.tempdir}/comps_a.xml"
     And I compress file "/{context.dnf.tempdir}/comps_a.xml" using "gz"

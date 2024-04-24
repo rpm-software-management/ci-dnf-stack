@@ -2,8 +2,7 @@ Feature: Test for debug plugin - dumping
 
 
 Scenario: dnf debug-dump dumps file with configuration
-  Given I enable plugin "debug"
-    And I use repository "debug-plugin"
+  Given I use repository "debug-plugin"
     And I successfully execute dnf with args "install kernel-4.19.1 kernel-4.20.1"
    When I execute dnf with args "debug-dump {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
@@ -52,8 +51,7 @@ Scenario: dnf debug-dump dumps file with configuration
 
 
 Scenario: dnf debug-dump with --norepos skips dumping repositories contents
-  Given I enable plugin "debug"
-    And I use repository "debug-plugin"
+  Given I use repository "debug-plugin"
     And I successfully execute dnf with args "install kernel-4.19.1 kernel-4.20.1"
    When I execute dnf with args "debug-dump --norepos {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0

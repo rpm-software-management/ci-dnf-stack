@@ -2,8 +2,7 @@ Feature: dnf download --debuginfo command
 
 
 Background:
-  Given I enable plugin "download"
-    And I set working directory to "{context.dnf.tempdir}"
+  Given I set working directory to "{context.dnf.tempdir}"
 
 
 Scenario: Download a debuginfo for an RPM that doesn't exist

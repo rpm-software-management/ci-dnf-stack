@@ -7,10 +7,6 @@
 Feature: Reposync does not re-download the package
 
 
-Background: Enable reposync plugin
-Given I enable plugin "reposync"
-
-
 @bz1931904
 Scenario: Different checksum type does not cause package re-download
 Given I copy repository "simple-base" for modification

@@ -2,9 +2,6 @@
 @not.with_dnf=4
 Feature: Tests for BuildConflicts support in builddep command
 
-Background: Enable builddep plugin
-  Given I enable plugin "builddep"
-
 
 # `with-build-conflict` package BuildConflicts with `weak-dependency` and
 # BuildRequires `build-requirement-a` which in turn Recommends `weak-dependency`

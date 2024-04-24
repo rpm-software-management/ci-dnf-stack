@@ -2,9 +2,8 @@
 Feature: dnf changelog command
 
 
-Background: Enable changelog plugin
-  Given I enable plugin "changelog"
-    And I use repository "dnf-ci-changelog"
+Background:
+  Given I use repository "dnf-ci-changelog"
 
 
 Scenario: Listing changelogs since given date

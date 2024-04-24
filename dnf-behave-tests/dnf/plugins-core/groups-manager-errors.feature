@@ -1,10 +1,6 @@
 Feature: dnf groups-manager command errors
 
 
-Background: Enable groups-manager plugin
-  Given I enable plugin "groups_manager"
-
-
 Scenario: groups-manager reports xml parsing errors
    When I execute dnf with args "groups-manager --load={context.dnf.fixturesdir}/data/groups-manager/comps_syntax_error.xml"
    Then the exit code is 1
