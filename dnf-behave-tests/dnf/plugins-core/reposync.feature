@@ -1,10 +1,6 @@
 Feature: Tests for reposync command
 
 
-Background:
-  Given I enable plugin "reposync"
-
-
 Scenario: Base functionality of reposync
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"

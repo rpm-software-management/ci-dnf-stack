@@ -3,10 +3,6 @@
 Feature: Smoke test for swidtags dnf plugin
 
 
-Background: Enable the swidtags plugin
-  Given I enable plugin "swidtags"
-
-
 @bz1689178
 Scenario: Run swidtags without command prints usage
    When I execute dnf with args "swidtags"

@@ -1,8 +1,6 @@
 Feature: Pluginspath and pluginsconfpath test
 
 Scenario: Redirect pluginspath
-  Given I enable plugin "download"
-    And I enable plugin "versionlock"
    When I execute dnf with args "download --help"
    Then the exit code is 0
    When I execute dnf with args "versionlock --help"

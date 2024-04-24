@@ -1,8 +1,7 @@
 Feature: Add package to needs-restarting using config files
 
 Background:
-Given I enable plugin "needs_restarting"
-  And I use repository "needs-restarting"
+Given I use repository "needs-restarting"
   And I move the clock backward to "before boot-up"
   And I execute dnf with args "install wget abcde"
   And I move the clock forward to "2 hours"

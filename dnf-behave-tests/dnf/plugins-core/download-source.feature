@@ -3,8 +3,7 @@ Feature: dnf download --srpm command
 
 
 Background:
-  Given I enable plugin "download"
-    And I use repository "dnf-ci-fedora" as http
+  Given I use repository "dnf-ci-fedora" as http
     And I set working directory to "{context.dnf.tempdir}"
 
 

@@ -1,11 +1,8 @@
-# Unknown argument "builddep" for command "microdnf"
+@dnf5
 Feature: dnf builddep command
 
 
-Background: Enable builddep plugin
-  Given I enable plugin "builddep"
-
-
+@not.with_dnf=5
 Scenario: Dnf builddep can use spec file from a remote location
   Given I use repository "dnf-ci-fedora"
     And I create directory "/remotedir"
@@ -30,7 +27,7 @@ Scenario: Dnf builddep can use spec file from a remote location
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
-@dnf5
+
 Scenario: Builddep with simple dependency (spec)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec"
@@ -39,7 +36,7 @@ Scenario: Builddep with simple dependency (spec)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@dnf5
+
 Scenario: Builddep with simple dependency (spec) + define
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac'"
@@ -48,7 +45,7 @@ Scenario: Builddep with simple dependency (spec) + define
         | Action        | Package                           |
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
 
-@dnf5
+
 Scenario: Builddep with simple dependency (srpm)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
@@ -57,7 +54,7 @@ Scenario: Builddep with simple dependency (srpm)
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@dnf5
+
 @not.with_os=rhel__eq__7
 Scenario: Builddep with rich dependency
     Given I use repository "dnf-ci-fedora"
@@ -68,7 +65,7 @@ Scenario: Builddep with rich dependency
         | install       | flac-0:1.3.2-8.fc29.x86_64        |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@dnf5
+
 Scenario: Builddep with simple dependency (files-like provide)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires /etc/ld.so.conf'"
@@ -77,7 +74,7 @@ Scenario: Builddep with simple dependency (files-like provide)
         | Action        | Package                           |
         | install       | glibc-0:2.28-9.fc29.x86_64        |
 
-@dnf5
+
 Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
@@ -91,7 +88,7 @@ Scenario: Builddep with simple dependency (non-existent)
         --skip-unavailable to skip unavailable packages
       """
 
-@dnf5
+
 @bz1724668
 Scenario: Builddep on SPEC with non-available Source0
  Given I create file "{context.dnf.installroot}/missingSource.spec" with
@@ -124,7 +121,7 @@ Scenario: Builddep on SPEC with non-available Source0
    Failed to parse some inputs.
    """
 
-@dnf5
+
 @bz1758459
 Scenario: I exclude the highest verion of a package and call dnf builddep with --best
   Given I use repository "dnf-ci-fedora-updates"
@@ -148,7 +145,7 @@ Scenario: I exclude the highest verion of a package and call dnf builddep with -
         | Action                | Package                    |
         | install               | flac-0:1.3.3-2.fc29.x86_64 |
 
-@dnf5
+
 @bz1628634
 Scenario: Builddep with unavailable build dependency
     Given I use repository "dnf-ci-fedora"
@@ -171,7 +168,7 @@ Scenario: Builddep with unavailable build dependency
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |
 
-@dnf5
+
 @bz2077820
 Scenario: Builddep using macros with source rpm
     Given I use repository "dnf-ci-fedora"
@@ -179,7 +176,7 @@ Scenario: Builddep using macros with source rpm
      Then the exit code is 0
       And stderr contains "Warning: -D or --define arguments have no meaning for source rpm packages."
 
-@dnf5
+
 Scenario: Builddep where package BuildRequires a pkg spec that contains glob characters
     Given I use repository "builddep"
      When I execute dnf with args "builddep requires-glob"

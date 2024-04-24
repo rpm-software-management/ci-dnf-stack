@@ -3,8 +3,7 @@ Feature: dnf-automatic performs update
 
 
 Background:
-Given I enable plugin "automatic"
-  And I use repository "simple-base"
+Given I use repository "simple-base"
 
 
 Scenario: dnf-automatic can update package

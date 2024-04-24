@@ -3,8 +3,7 @@
 Feature: Reboot hint
 
 Background:
-    Given I enable plugin "needs_restarting"
-      And I use repository "dnf-ci-fedora"
+    Given I use repository "dnf-ci-fedora"
       And I move the clock backward to "before boot-up"
       And I execute dnf with args "install lame kernel basesystem glibc wget lz4"
       And I move the clock forward to "the present"

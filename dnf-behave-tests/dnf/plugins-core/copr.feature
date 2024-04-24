@@ -2,8 +2,7 @@
 Feature: Test the COPR plugin
 
 Background:
-Given I enable plugin "copr"
-  And I create directory "/{context.dnf.tempdir}/copr"
+Given I create directory "/{context.dnf.tempdir}/copr"
   And I start http server "copr" at "{context.dnf.tempdir}/copr"
   And I create and substitute file "//etc/dnf/plugins/copr.conf" with
       """

@@ -2,8 +2,7 @@ Feature: Test the security filters for offline-upgrade commands
 
 
 Background:
-  Given I enable plugin "system-upgrade"
-    And I use repository "dnf-ci-fedora"
+  Given I use repository "dnf-ci-fedora"
 
 
 @bz1939975

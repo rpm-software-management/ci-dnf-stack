@@ -3,9 +3,8 @@ Feature: Repoclosure command tests
 
 
 # we need to override the default value for the `best` config option
-Background: Enable builddep plugin
-  Given I enable plugin "repoclosure"
-    And I configure dnf with
+Background:
+  Given I configure dnf with
         | key   | value |
         | best  | False |
 

@@ -2,8 +2,7 @@
 Feature: dnf-automatic reboots
 
 Background:
-Given I enable plugin "automatic"
-  And I use repository "simple-base"
+Given I use repository "simple-base"
   And I successfully execute dnf with args "install labirinto"
   And I use repository "simple-updates"
 
