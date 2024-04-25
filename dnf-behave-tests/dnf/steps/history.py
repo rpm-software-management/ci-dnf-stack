@@ -30,14 +30,13 @@ def assert_history_list(context, cmd_stdout):
             # command column in `history list` output is trimmed to limited space
             # to get full command, we need to ask `history info`
             h_info = parsed_history_info(context, history['id'])
-            if not table['Command'] in h_info.get('Command Line', ''):
+            if not table['Command'] in h_info.get('Description', ''):
                 return False
         return True
 
     check_context_table(context, ["Id", "Command", "Action", "Altered"])
 
-    stdout_lines = cmd_stdout.splitlines()[2:]
-    history = parse_history_list(stdout_lines)
+    history = parse_history_list(cmd_stdout)
 
     table_idx = 0
     for t_line in context.table:
