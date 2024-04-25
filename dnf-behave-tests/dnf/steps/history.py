@@ -144,13 +144,9 @@ def step_impl(context, spec=""):
 
 @behave.then('package reasons are')
 def step_impl(context):
-    # we only do the check for dnf4
-    if hasattr(context, "dnf5_mode") and context.dnf5_mode:
-        return
-
     check_context_table(context, ["Package", "Reason"])
 
-    cmd = context.dnf.get_cmd(context) + ["repoquery --qf '%{name}-%{evr}.%{arch},%{reason}' --installed"]
+    cmd = context.dnf.get_cmd(context) + ["repoquery --qf '%{name}-%{evr}.%{arch},%{reason}\n' --installed"]
 
     run_in_context(context, " ".join(cmd))
 

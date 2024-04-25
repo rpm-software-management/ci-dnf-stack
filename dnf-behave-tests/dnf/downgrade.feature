@@ -77,8 +77,8 @@ Scenario: Downgrade a package that was installed via rpm
         | Action    | Package                    |
         | downgrade | flac-0:1.3.3-2.fc29.x86_64 |
    Then package reasons are
-        | Package                  | Reason  |
-        | flac-1.3.3-2.fc29.x86_64 | unknown |
+        | Package                  | Reason        |
+        | flac-1.3.3-2.fc29.x86_64 | External User |
     And package state is
         | package                  | reason        | from_repo             |
         | flac-1.3.3-2.fc29.x86_64 | External User | dnf-ci-fedora-updates |

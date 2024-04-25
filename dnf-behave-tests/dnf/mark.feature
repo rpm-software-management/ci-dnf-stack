@@ -57,14 +57,15 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
    When I execute dnf with args "install lame"
     And I execute dnf with args "mark dependency lame nosuchpkg"
    Then the exit code is 1
-    And package reasons are
-        | Package                      | Reason  |
-        | lame-3.100-4.fc29.x86_64     | user    |
     And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
     """
+    And package reasons are
+        | Package                       | Reason     |
+        | lame-3.100-4.fc29.x86_64      | User       |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
 
 
 @dnf5
@@ -73,13 +74,14 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
    When I execute dnf with args "install lame"
     And I execute dnf with args "mark --skip-unavailable dependency lame nosuchpkg"
    Then the exit code is 0
-    And package reasons are
-        | Package                      | Reason        |
-        | lame-3.100-4.fc29.x86_64     | dependency    |
     And stderr is
     """
     No match for argument: nosuchpkg
     """
+    And package reasons are
+        | Package                       | Reason     |
+        | lame-3.100-4.fc29.x86_64      | Dependency |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
 
 
 @dnf5
@@ -87,16 +89,17 @@ Scenario Outline: Mark user installed package as <type>
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lame"
    Then the exit code is 0
-   When I execute dnf with args "mark <type> lame"
+   When I execute dnf with args "mark <arg> lame"
    Then the exit code is 0
     And package reasons are
         | Package                      | Reason    |
         | lame-3.100-4.fc29.x86_64     | <type>    |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
 
 Examples:
-        | type        |
-        | dependency  |
-        | weak        |
+        | arg        | type            |
+        | dependency | Dependency      |
+        | weak       | Weak Dependency |
 
 
 @dnf5
@@ -105,19 +108,20 @@ Scenario Outline: Mark package installed as dependency as <type>
    When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason     |
-        | filesystem-0:3.9-2.fc29.x86_64 | user       |
-        | setup-0:2.12.1-1.fc29.noarch   | dependency |
-   When I execute dnf with args "mark <type> setup"
+        | Package                      | Reason     |
+        | filesystem-3.9-2.fc29.x86_64 | User       |
+        | setup-2.12.1-1.fc29.noarch   | Dependency |
+   When I execute dnf with args "mark <arg> setup"
    Then the exit code is 0
     And package reasons are
         | Package                        | Reason |
-        | setup-0:2.12.1-1.fc29.noarch   | <type> |
+        | filesystem-3.9-2.fc29.x86_64   | User   |
+        | setup-2.12.1-1.fc29.noarch   | <type> |
 
 Examples:
-        | type        |
-        | user        |
-        | weak        |
+        | arg  | type            |
+        | user | User            |
+        | weak | Weak Dependency |
 
 
 @dnf5
@@ -126,8 +130,9 @@ Scenario: Mark package as the same reason it currently has
    When I execute dnf with args "install lame"
    Then the exit code is 0
     And package reasons are
-        | Package                      | Reason    |
-        | lame-3.100-4.fc29.x86_64     | user      |
+        | Package                       | Reason     |
+        | lame-3.100-4.fc29.x86_64      | User       |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
    When I execute dnf with args "mark user lame"
    Then the exit code is 0
     And stdout is
@@ -141,7 +146,8 @@ Scenario: Mark package as the same reason it currently has
     """
 
 
-@dnf5
+#@dnf5 currently fails, see:
+# https://github.com/rpm-software-management/dnf5/issues/935
 Scenario: Mark user installed package as group
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -149,13 +155,21 @@ Scenario: Mark user installed package as group
     And I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | user   |
+        | Package                       | Reason     |
+        | filesystem-3.9-2.fc29.x86_64  | Group      |
+        | lame-3.100-4.fc29.x86_64      | User       |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
+        | setup-2.12.1-1.fc29.noarch    | Dependency |
+   When I execute dnf with args "mark group dnf-ci-testgroup lame"
+   Then the exit code is 0
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | group  |
+        | Package                       | Reason     |
+        | filesystem-3.9-2.fc29.x86_64  | Group      |
+        | lame-3.100-4.fc29.x86_64      | Group      |
+        | lame-libs-3.100-4.fc29.x86_64 | Dependency |
+        | setup-2.12.1-1.fc29.noarch    | Dependency |
 
 
 #@dnf5 currently fails, see:
@@ -168,17 +182,17 @@ Scenario: Mark group installed package as user and back again
    Then the exit code is 0
     And package reasons are
         | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | group  |
+        | lame-3.100-4.fc29.x86_64       | Group  |
    When I execute dnf with args "mark user lame"
    Then the exit code is 0
     And package reasons are
         | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | user   |
+        | lame-3.100-4.fc29.x86_64       | User   |
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
     And package reasons are
         | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | group  |
+        | lame-3.100-4.fc29.x86_64       | Group  |
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
     And stdout does not contain "User -> Group"
@@ -219,12 +233,12 @@ Scenario: Marking installed package when history DB is not on the system (delete
    Then the exit code is 0
     And package reasons are
         | Package                      | Reason         |
-        | wget-1.19.6-5.fc29.x86_64    | unknown        |
+        | wget-1.19.6-5.fc29.x86_64    | External User  |
    When I execute dnf with args "mark user wget"
    Then the exit code is 0
     And package reasons are
         | Package                      | Reason        |
-        | wget-1.19.6-5.fc29.x86_64    | user          |
+        | wget-1.19.6-5.fc29.x86_64    | User          |
 
 
 @dnf5
