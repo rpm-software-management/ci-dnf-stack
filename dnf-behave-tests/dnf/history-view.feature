@@ -18,12 +18,12 @@ Scenario: List userinstalled packages
         | install-weak  | flac-0:1.3.2-8.fc29.x86_64                |
     And package reasons are
         | Package                      | Reason          |
-        | abcde-2.9.2-1.fc29.noarch    | user            |
-        | basesystem-11-6.fc29.noarch  | user            |
-        | filesystem-3.9-2.fc29.x86_64 | dependency      |
-        | flac-1.3.2-8.fc29.x86_64     | weak-dependency |
-        | setup-2.12.1-1.fc29.noarch   | dependency      |
-        | wget-1.19.5-5.fc29.x86_64    | dependency      |
+        | abcde-2.9.2-1.fc29.noarch    | User            |
+        | basesystem-11-6.fc29.noarch  | User            |
+        | filesystem-3.9-2.fc29.x86_64 | Dependency      |
+        | flac-1.3.2-8.fc29.x86_64     | Weak Dependency |
+        | setup-2.12.1-1.fc29.noarch   | Dependency      |
+        | wget-1.19.5-5.fc29.x86_64    | Dependency      |
 
 
 @dnf5
