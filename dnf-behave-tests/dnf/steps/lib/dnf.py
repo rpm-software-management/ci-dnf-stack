@@ -309,11 +309,26 @@ def parse_transaction_table_dnf5(context, lines):
     return result
 
 
-def parse_history_list(lines):
+def parse_history_list(history_out):
+    lines = history_out.splitlines()
+    header = lines[0]
+    history_lines = lines[1:]
+
+    # Depending on the data the history list columns have various widths.
+    # Load column layout (starting indices) based on the header.
+    # The header looks like:
+    # "ID Command line    Date and time     Action(s) Altered"
+    column_indices = [0] # ID column starts at first position
+    column_indices.append(header.find("Command line"))
+    column_indices.append(header.find("Date and time"))
+    column_indices.append(header.find("Action"))
+    column_indices.append(header.find("Altered"))
+
     result = []
     labels = ('_line', 'id', 'command', 'date', 'action', 'altered')
-    for line in lines:
-        result.append(dict(zip(labels, [line] + [col.strip() for col in line.split('|')])))
+    for line in history_lines:
+        parts = [line[i:j].strip() for i, j in zip(column_indices, column_indices[1:] + [None])]
+        result.append(dict(zip(labels, [line] + parts)))
     return result
 
 
