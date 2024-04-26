@@ -1,3 +1,4 @@
+@dnf5
 Feature: Transaction history undo with obsoletes
 
 # Package glibc-all-langpacks requires glibc
@@ -30,10 +31,10 @@ Scenario: Undo with obsoletes
     And Transaction is following
         | Action        | Package                                   |
         | remove        | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
-        | remove-dep    | setup-0:2.12.1-1.fc29.noarch              |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
         | remove        | glibc-0:2.28-9.fc29.x86_64                |
-        | remove-dep    | glibc-common-0:2.28-9.fc29.x86_64         |
-        | remove-dep    | filesystem-0:3.9-2.fc29.x86_64            |
-        | remove-dep    | basesystem-0:11-6.fc29.noarch             |
+        | remove-unused | glibc-common-0:2.28-9.fc29.x86_64         |
+        | remove-unused | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove-unused | basesystem-0:11-6.fc29.noarch             |
         | install       | glibc-profile-0:2.3.1-10.x86_64           |
 
