@@ -73,7 +73,7 @@ Scenario: Reinstall list of packages with --skip-unavailable, one of them is not
     """
     No match for argument: nosuchpkg
 
-    Warning: skipped PGP checks for 1 package(s).
+    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action        | Package                                   |
@@ -98,7 +98,7 @@ Scenario: Reinstall list of packages with --skip-unavailable, one of them is not
     """
     Packages for argument 'abcde' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package(s).
+    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action        | Package                                   |

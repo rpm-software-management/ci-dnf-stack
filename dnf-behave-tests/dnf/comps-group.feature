@@ -506,7 +506,7 @@ Scenario: Install an environment with a nonexistent group
        """
        No match for group from environment: nonexistent-group
 
-       Warning: skipped PGP checks for 1 package(s).
+       Warning: skipped PGP checks for 1 package from repository: comps-group
        """
 
 
@@ -525,7 +525,7 @@ Scenario: Install an environment using @^environment syntax
        """
        No match for group from environment: nonexistent-group
 
-       Warning: skipped PGP checks for 1 package(s).
+       Warning: skipped PGP checks for 1 package from repository: comps-group
        """
 
 

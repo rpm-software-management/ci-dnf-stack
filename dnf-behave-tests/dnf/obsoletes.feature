@@ -296,7 +296,7 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
         | group-install | Obsoleter and obsoleted               |
     And stderr is
     """
-    Warning: skipped PGP checks for 1 package(s).
+    Warning: skipped PGP checks for 1 package from repository: dnf-ci-obsoletes
     """
 
 
