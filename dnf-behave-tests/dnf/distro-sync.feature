@@ -129,7 +129,7 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
     """
     No match for argument: nosuchpkg
 
-    Warning: skipped PGP checks for 1 package(s).
+    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action        | Package                                   |
@@ -164,7 +164,7 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
     """
     Packages for argument 'dwm' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package(s).
+    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action        | Package                                   |
