@@ -128,12 +128,12 @@ Scenario: Test system-upgrade transaction file not found
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
 Given I successfully execute dnf with args "system-upgrade reboot"
-  And I delete file "/usr/lib/sysimage/libdnf5/offline/offline-transaction.json"
+  And I delete file "/usr/lib/sysimage/libdnf5/offline/transaction.json"
  When I execute dnf with args "offline _execute"
  Then the exit code is 1
   And stderr is
       """
-      cannot open file: (2) - No such file or directory [{context.dnf.installroot}/usr/lib/sysimage/libdnf5/offline/offline-transaction.json]
+      cannot open file: (2) - No such file or directory [{context.dnf.installroot}/usr/lib/sysimage/libdnf5/offline/transaction.json]
       """
 
 

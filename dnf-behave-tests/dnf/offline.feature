@@ -82,7 +82,7 @@ Scenario: Test offline clean
       """
 Given I successfully execute dnf with args "offline reboot"
   And file "/usr/lib/sysimage/libdnf5/offline/offline-transaction-state.toml" exists
-  And file "/usr/lib/sysimage/libdnf5/offline/offline-transaction.json" exists
+  And file "/usr/lib/sysimage/libdnf5/offline/transaction.json" exists
  When I execute dnf with args "offline clean"
  Then the exit code is 0
   And directory "/usr/lib/sysimage/libdnf5/offline" is empty
