@@ -182,9 +182,9 @@ Scenario: distro-sync all with a broken dependency and without best
     And stderr is
     """
     Failed to resolve the transaction:
-    Problem: package labirinto-2.0-1.noarch requires labirinto-libs = 2.0-1, but none of the providers can be installed
+    Problem: installed package labirinto-2.0-1.noarch requires labirinto-libs = 2.0-1, but none of the providers can be installed
       - labirinto-libs-2.0-1.noarch does not belong to a distupgrade repository
-      - problem with installed package 
+      - problem with installed package
     You can try to add to command line:
       --skip-broken to skip uninstallable packages
     """

@@ -124,7 +124,15 @@ Scenario: Install and remove group with excluded package dependency
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "group install --exclude=setup dnf-ci-testgroup"
    Then the exit code is 1
-    And stderr contains "Problem: package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed"
+    And stderr is
+    """
+    Failed to resolve the transaction:
+    Problem: package filesystem-3.9-2.fc29.x86_64 from dnf-ci-fedora requires setup, but none of the providers can be installed
+      - conflicting requests
+      - package setup-2.12.1-1.fc29.noarch from dnf-ci-fedora is filtered out by exclude filtering
+    You can try to add to command line:
+      --skip-broken to skip uninstallable packages
+    """
 
 
 @dnf5

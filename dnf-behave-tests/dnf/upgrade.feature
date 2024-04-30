@@ -134,7 +134,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
     And stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
 
     Warning: skipped PGP checks for 7 package(s).
     """
@@ -166,7 +166,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     """
     Failed to resolve the transaction:
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
     You can try to add to command line:
       --no-best to not limit the transaction to the best candidates
     """
@@ -185,7 +185,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
     And stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
  
     Warning: skipped PGP checks for 7 package(s).
     """
@@ -204,7 +204,7 @@ Scenario: Print information about skipped packages
    Then stderr is
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64
+      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
 
     Warning: skipped PGP checks for 1 package(s).
     """

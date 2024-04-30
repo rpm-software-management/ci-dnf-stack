@@ -5,8 +5,8 @@ Feature: Installing attemps fail
 Scenario: Report all missing dependencies
    Given I use repository "dnf-ci-thirdparty"
     When I execute dnf with args "install SuperRipper anitras-dance"
-    Then stderr contains "nothing provides abcde needed by SuperRipper-1.0-1.x86_64"
-    Then stderr contains "nothing provides nodejs needed by anitras-dance-1.0-1.x86_64"
+    Then stderr contains "nothing provides abcde needed by SuperRipper-1.0-1.x86_64 from dnf-ci-thirdparty"
+    Then stderr contains "nothing provides nodejs needed by anitras-dance-1.0-1.x86_64 from dnf-ci-thirdparty"
 
 @bz1599774
 Scenario: Report error when installing empty file

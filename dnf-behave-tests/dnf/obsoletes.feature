@@ -308,7 +308,7 @@ Scenario: Both packages are installed when group contains both obsoleter and obs
     And stderr is
     """
     Failed to resolve the transaction:
-    Problem: package PackageD-2.0-1.x86_64 obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64
+    Problem: package PackageD-2.0-1.x86_64 from dnf-ci-obsoletes obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64 from dnf-ci-obsoletes
       - cannot install the best candidate for the job
       - conflicting requests
     You can try to add to command line:
