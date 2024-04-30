@@ -116,7 +116,7 @@ Scenario: Install remove package that requires version >=
 Scenario: Install remove package that requires version >=, not satisfiable
    When I execute dnf with args "install mate"
    Then the exit code is 1
-    And stderr contains "nothing provides water >= 2 needed by mate-1.0-1.x86_64"
+    And stderr contains "nothing provides water >= 2 needed by mate-1.0-1.x86_64 from dnf-ci-install-remove"
 
 
 # both coffee and tea require water

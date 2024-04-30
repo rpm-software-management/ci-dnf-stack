@@ -70,8 +70,9 @@ Scenario: Running kernel is protected against removal as conflict
     And stderr is
         """
         Failed to resolve the transaction:
-        Problem: problem with installed package 
-          - package dnf-ci-conflict-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64
+        Problem: problem with installed package
+          - installed package dnf-ci-kernel-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-conflict-1.0-1.x86_64 from protect-running-kernel
+          - package dnf-ci-conflict-1.0-1.x86_64 from protect-running-kernel conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-kernel-1.0-1.x86_64 from protect-running-kernel
           - conflicting requests
         You can try to add to command line:
           --skip-broken to skip uninstallable packages

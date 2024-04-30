@@ -53,7 +53,7 @@ Scenario: --no-best is hinted if the best candidate cannot be installed
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
     Problem: cannot install the best candidate for the job
-      - nothing provides DoesNotExist needed by NoBest-2.0-1.noarch
+      - nothing provides DoesNotExist needed by NoBest-2.0-1.noarch from resolve-hints
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
       --no-best to not limit the transaction to the best candidates
@@ -68,7 +68,7 @@ Scenario: --no-best is not printed if the option is already present
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
     Problem: cannot install the best candidate for the job
-      - nothing provides DoesNotExist needed by NoBest-2.0-1.noarch
+      - nothing provides DoesNotExist needed by NoBest-2.0-1.noarch from resolve-hints
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
     """
@@ -81,9 +81,9 @@ Scenario: --allowerasing is hinted on attempt to install conflicting packages
     """
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
-    Problem: problem with installed package 
-      - package ConflictingOne-1.0-1.noarch conflicts with ConflictingTwo provided by ConflictingTwo-1.0-1.noarch
-      - package ConflictingTwo-1.0-1.noarch conflicts with ConflictingOne provided by ConflictingOne-1.0-1.noarch
+    Problem: problem with installed package
+      - installed package ConflictingOne-1.0-1.noarch conflicts with ConflictingTwo provided by ConflictingTwo-1.0-1.noarch from resolve-hints
+      - package ConflictingOne-1.0-1.noarch from resolve-hints conflicts with ConflictingTwo provided by ConflictingTwo-1.0-1.noarch from resolve-hints
       - conflicting requests
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
@@ -111,7 +111,7 @@ Scenario: filelists metadata is hinted on missing file dependency
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
     Problem: conflicting requests
-      - nothing provides /var/ProvidesFileDep needed by RequiresFileDep-1.0-1.noarch
+      - nothing provides /var/ProvidesFileDep needed by RequiresFileDep-1.0-1.noarch from resolve-hints
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
       --setopt=optional_metadata_types=filelists to load additional filelists metadata
@@ -137,7 +137,7 @@ Scenario: --skip-broken is hinted on non-installable package
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
     Problem: conflicting requests
-      - nothing provides DoesNotExist needed by RequirementsUnmet-1.0-1.noarch
+      - nothing provides DoesNotExist needed by RequirementsUnmet-1.0-1.noarch from resolve-hints
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
       --skip-broken to skip uninstallable packages
@@ -151,7 +151,7 @@ Scenario: --skip-broken is not printed if the option is already present
     Failed to resolve the transaction:
     No match for argument: DoesNotExist
     Problem: conflicting requests
-      - nothing provides DoesNotExist needed by RequirementsUnmet-1.0-1.noarch
+      - nothing provides DoesNotExist needed by RequirementsUnmet-1.0-1.noarch from resolve-hints
     You can try to add to command line:
       --skip-unavailable to skip unavailable packages
     """
