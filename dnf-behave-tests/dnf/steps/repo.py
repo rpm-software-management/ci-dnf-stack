@@ -23,6 +23,7 @@ from common.lib.file import (
 )
 from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
+from fixtures.machineid import machineid_fixture
 
 
 def repo_config(repo, new={}):
@@ -379,6 +380,22 @@ def given_system(context, system):
 def given_no_osrelease(context):
     behave.use_fixture(osrelease_fixture, context)
     context.scenario.osrelease.delete()
+
+
+@behave.step("the machine-id file is {what} as of {when}")
+def step_machine_id_file(context, what, when):
+    behave.use_fixture(machineid_fixture, context)
+    machineid = context.scenario.machineid
+    if when.startswith('on '):
+        when = when[3:]
+    if what == 'initialized':
+        machineid.initialize(when)
+    elif what == 'uninitialized':
+        machineid.uninitialize(when)
+    elif what == 'empty':
+        machineid.empty()
+    elif what == 'absent':
+        machineid.delete()
 
 
 @behave.step("I invalidate solvfile version of \"{path}\"")
