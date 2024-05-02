@@ -40,64 +40,90 @@ Feature: Better user counting
             | header     | value     |
             | User-Agent | Agent 007 |
 
-    Scenario: Countme flag is sent once per calendar week
-        Given I set config option "countme" to "1"
+    @destructive
+    Scenario Outline: Countme flag is sent once per calendar week
+        Given the machine-id file is <machine-id> as of <epoch>
+          And I set config option "countme" to "1"
+          And I set releasever to "39"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
 
-         # First calendar week (bucket 1)
+         # First calendar week
          # Note: One in the first 4 requests is randomly chosen to include the
          # flag (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
-         When today is Wednesday, August 07, 2019
+         When today is <date>
          When I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=1 |
+            | path                              |
+            | */metalink.xml*&countme=<age#1>   |
 
          # Same calendar week (should not be sent)
-         When today is Friday, August 09, 2019
+         When today is <date> + 3 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then no HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=* |
+            | path                              |
+            | */metalink.xml*&countme=*         |
 
-         # Next calendar week (bucket 1)
-         When today is Tuesday, August 13, 2019
+         # Next calendar week
+         When today is <date> + 8 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=1 |
+            | path                              |
+            | */metalink.xml*&countme=<age#2>   |
 
-         # Next calendar week (bucket 2)
-         When today is Tuesday, August 21, 2019
+         # Next calendar week
+         When today is <date> + 15 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=2 |
+            | path                              |
+            | */metalink.xml*&countme=<age#3>   |
 
-         # 1 calendar month later (bucket 3)
-         When today is Tuesday, September 16, 2019
+         # Next calendar month
+         When today is <date> + 40 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=3 |
+            | path                              |
+            | */metalink.xml*&countme=<age#4>   |
 
-         # 6 calendar months later (bucket 4)
-         When today is Tuesday, March 15, 2020
+         # 6 calendar months later
+         When today is <date> + 182 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                      |
-            | */metalink.xml*&countme=4 |
+            | path                              |
+            | */metalink.xml*&countme=<age#5>   |
 
+         # Even later, after a system upgrade
+         When today is <date> + 365 days
+          And I set releasever to "40"
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#6>   |
+
+    Examples:
+        | machine-id    | epoch         | date          | age#1 | age#2 | age#3 | age#4 | age#5 | age#6 |
+        # Absolute age counting (since "epoch")
+        | initialized   | Aug 06, 2019  | Aug 07, 2019  | 1     | 1     | 2     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Aug 20, 2019  | 2     | 2     | 2     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Sep 12, 2019  | 3     | 3     | 3     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Jun 18, 2020  | 4     | 4     | 4     | 4     | 4     | 4     |
+        # Relative age counting (since "date")
+        | uninitialized | Aug 06, 2019  | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+        | empty         | ---           | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+        | absent        | ---           | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+
+    @destructive
     Scenario: Countme flag is not sent repeatedly on retries
-        Given I set config option "countme" to "1"
+        Given the machine-id file is initialized as of today
+          And I set config option "countme" to "1"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
@@ -114,8 +140,10 @@ Feature: Better user counting
             | path                      |
             | */metalink.xml*&countme=1 |
 
+    @destructive
     Scenario: Countme feature is disabled
-        Given I set config option "countme" to "0"
+        Given the machine-id file is initialized as of today
+          And I set config option "countme" to "0"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
