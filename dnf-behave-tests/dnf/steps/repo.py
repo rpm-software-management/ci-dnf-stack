@@ -356,7 +356,7 @@ def step_set_up_metalink_for_repository(context, repo):
     generate_metalink(repo_info.path, url)
     repo_info.update_config({
         "baseurl": "",
-        "metalink": url + "metalink.xml",
+        "metalink": url + "metalink.xml?releasever=$releasever",
     })
     create_repo_conf(context, repo)
 
