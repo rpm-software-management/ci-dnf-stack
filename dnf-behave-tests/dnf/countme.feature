@@ -117,4 +117,4 @@ Feature: Better user counting
          When I execute dnf with args "makecache" 4 times
          Then no HTTP GET request should match:
             | path                     |
-            | */metalink.xml?countme=1 |
+            | */metalink.xml?countme=* |
