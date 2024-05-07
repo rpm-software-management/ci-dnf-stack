@@ -52,43 +52,43 @@ Feature: Better user counting
          # flag (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
          When I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
+            | path                      |
+            | */metalink.xml*&countme=1 |
          # Same week (should not be sent)
          When today is Friday, August 09, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then no HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=* |
+            | path                      |
+            | */metalink.xml*&countme=* |
          # Next week (bucket 1)
          When today is Tuesday, August 13, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
+            | path                      |
+            | */metalink.xml*&countme=1 |
          # Next week (bucket 2)
          When today is Tuesday, August 21, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=2 |
+            | path                      |
+            | */metalink.xml*&countme=2 |
          # 1 month later (bucket 3)
          When today is Tuesday, September 16, 2019
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=3 |
+            | path                      |
+            | */metalink.xml*&countme=3 |
          # 6 months later (bucket 4)
          When today is Tuesday, March 15, 2020
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=4 |
+            | path                      |
+            | */metalink.xml*&countme=4 |
 
     Scenario: Countme flag is not sent repeatedly on retries
         Given I set config option "countme" to "1"
@@ -105,8 +105,8 @@ Feature: Better user counting
             | path            |
             | */metalink.xml* |
           And exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
+            | path                      |
+            | */metalink.xml*&countme=1 |
 
     Scenario: Countme feature is disabled
         Given I set config option "countme" to "0"
@@ -116,5 +116,5 @@ Feature: Better user counting
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache" 4 times
          Then no HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=* |
+            | path                      |
+            | */metalink.xml*&countme=* |
