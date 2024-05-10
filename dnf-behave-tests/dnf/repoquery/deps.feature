@@ -34,7 +34,7 @@ Scenario: repoquery --requires NAME-VERSION
       bottom3
       """
 
-Scenario: repoquery --requires --resolve NAME
+Scenario: repoquery --providers-of=requires NAME
  When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires middle1"
  Then the exit code is 0
   And stdout is
@@ -46,7 +46,7 @@ Scenario: repoquery --requires --resolve NAME
       bottom4-1:1.0-1.x86_64
       """
 
-Scenario: repoquery --requires --resolve NAMEGLOB
+Scenario: repoquery --providers-of=requires NAMEGLOB
  When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires middle[1]"
  Then the exit code is 0
   And stdout is
@@ -58,7 +58,7 @@ Scenario: repoquery --requires --resolve NAMEGLOB
       bottom4-1:1.0-1.x86_64
       """
 
-Scenario: repoquery --requires --resolve --recursive NAME
+Scenario: repoquery --providers-of=requires --recursive NAME
  When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires --recursive top1"
  Then the exit code is 0
   And stdout is
@@ -72,7 +72,7 @@ Scenario: repoquery --requires --resolve --recursive NAME
       middle2-1:2.0-1.x86_64
       """
 
-Scenario: repoquery --requires --resolve --recursive NAME-VERSION
+Scenario: repoquery --providers-of=requires --recursive NAME-VERSION
  When I execute dnf with args "repoquery --setopt=optional_metadata_types=filelists --providers-of=requires --recursive top1-2.0"
  Then the exit code is 0
   And stdout is
