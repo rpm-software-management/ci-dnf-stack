@@ -85,6 +85,23 @@ Scenario: repoquery --providers-of=requires --recursive NAME-VERSION
       middle2-1:2.0-1.x86_64
       """
 
+Scenario: repoquery --providers-of=requires --installed NAME when nothing is installed
+ When I execute dnf with args "repoquery --providers-of=requires --installed middle3"
+ Then the exit code is 0
+  And stdout is empty
+
+Scenario: repoquery --providers-of=requires --installed NAME
+Given I successfully execute dnf with args "install middle3"
+ When I execute dnf with args "repoquery --providers-of=requires middle3 --installed "
+ Then the exit code is 0
+  And stdout is
+      """
+      bottom1-1:1.0-1.x86_64
+      bottom3-1:2.0-1.x86_64
+      bottom4-1:1.0-1.x86_64
+      bottom5-1:1.0-1.x86_64
+      """
+
 # missing --tree option
 @xfail
 Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
