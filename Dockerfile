@@ -16,16 +16,12 @@ RUN set -x && \
 # Copy extra repo files
 COPY ./repos.d/ /etc/yum.repos.d/
 
-# enable the test-utils repo
-RUN set -x && \
-    dnf -y --refresh upgrade; \
-    dnf -y install dnf-plugins-core; \
-    dnf -y copr enable rpmsoftwaremanagement/test-utils;
-
 # enable dnf5
 RUN set -x && \
-    dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-    dnf -y install dnf5-plugins; \
+    dnf -y --refresh upgrade; \
+    dnf -y install dnf5 dnf5-plugins; \
+    dnf5 -y copr enable rpmsoftwaremanagement/test-utils; \
+    dnf5 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
     # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
     dnf5 -y upgrade; \
     dnf5 -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly;
