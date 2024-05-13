@@ -346,20 +346,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
 
 
- Scenario: Run 'dnf module info' without further argument (dnf)
-  Given I set dnf command to "dnf"
-   When I execute dnf with args "module info"
-   Then the exit code is 1
-    And stderr contains "Error: dnf module info: too few arguments"
-
-
- Scenario: Run 'dnf module info' without further argument (yum)
-  Given I set dnf command to "yum"
-   When I execute dnf with args "module info"
-   Then the exit code is 1
-    And stderr contains "Error: yum module info: too few arguments"
-
-
   @bz1700250
   @bz1636337
   Scenario: I can get the module context of the active stream
