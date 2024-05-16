@@ -1,3 +1,4 @@
+@dnf5
 Feature: --setopt option
 
 
@@ -15,6 +16,7 @@ Scenario: Without --setopt option, packages wget and flac are available
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         flac-0:1.0-1.fc29.src
         flac-0:1.0-1.fc29.x86_64
         flac-libs-0:1.0-1.fc29.x86_64
@@ -28,6 +30,7 @@ Scenario: --setopt option can be used to set config for specific repo (and repo 
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         wget-0:1.0-1.fc29.src
         wget-0:1.0-1.fc29.x86_64
         """
@@ -38,6 +41,7 @@ Scenario: --setopt option can be used with globs to set config for multiple repo
    Then the exit code is 0
     And stdout is
         """
+        <REPOSYNC>
         flac-0:1.0-1.fc29.src
         flac-0:1.0-1.fc29.x86_64
         flac-libs-0:1.0-1.fc29.x86_64
