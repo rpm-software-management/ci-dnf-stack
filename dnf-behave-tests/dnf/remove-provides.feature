@@ -37,6 +37,20 @@ Examples:
         | <=            | 0:2.28-9.fc29        |
 
 
+@RHEL-5747
+Scenario Outline: Try to remove an RPM by <provide type> when provides should be ignored and only RPM name allowed => FAIL
+   When I execute dnf with args "remove-n <provide>"
+   Then the exit code is 0
+    And Transaction is empty
+
+Examples:
+        | provide type                        | provide               |
+        | provide                             | 'libm.so.6()(64bit)'  |
+        | file provide                        | /etc/ld.so.conf       |
+        | file provide that is directory      | /var/db               |
+        | file provide containing wildcards   | /etc/ld*.conf         |
+
+
 # @dnf5
 # TODO(nsella) different stdout
 Scenario Outline: Remove an RPM by <provide type>
