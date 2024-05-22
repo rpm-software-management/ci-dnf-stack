@@ -11,6 +11,11 @@ Scenario: Install an RPM by provide that equals to e:v-r
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
+@RHEL-5747
+Scenario: Try to install an RPM by provide when provides should be ignored and only RPM name allowed => FAIL
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "install-n 'filesystem = 0:3.9-2.fc29'"
+   Then the exit code is 1
 
 @dnf5
 Scenario: Install an RPM by provide that is greater than e:vr
