@@ -12,7 +12,18 @@ Background:
     [main]
     enabled = 1
     """
-    And I use repository "dnf-ci-fedora"
+    And I use repository "dnf-ci-fedora" with configuration
+      | key     | value                            |
+      | name    | DNF CI fedora base repository    |
+      | enabled | 1                                |
+    And I use repository "dnf-ci-fedora-updates" with configuration
+      | key     | value                            |
+      | name    | DNF CI fedora updates repository |
+      | enabled | 0                                |
+    And I use repository "dnf-ci-thirdparty" with configuration
+      | key     | value                            |
+      | name    | DNF CI thirdparty repo, test     |
+      | enabled | 0                                |
 
 
 Scenario: Test substitutions and settings of libdnf variables, configuration options and actions plugin temporary variables
@@ -67,6 +78,68 @@ Scenario: Test substitutions and settings of libdnf variables, configuration opt
     post_transaction: I setup-0:2.12.1-1.fc29.noarch repo dnf-ci-fedora
     post_transaction: tmp.test_variable=Value_set_in_pre_transaction
     """
+
+
+Scenario: Test substitutions and settings of repository options - the order of repositories in the list corresponds to their load order (random)
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Prints name of dnf-ci-fedora repository.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ "dnf-ci-fedora"\ repository\ name\ is:\ ${{conf.dnf-ci-fedora.name}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of all configured repositories with their enable state.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ repositories:\ ${{conf.*.enabled}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of configured repositories with "fedora" substring in the repository id with their enable state.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ repositories\ with\ "fedora"\ in\ id:\ ${{conf.*fedora*.enabled}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of enabled repositories.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ enabled\ repositories:\ ${{conf.*.enabled=1}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of enabled repositories with "fedora" substring in the repository id with their enable state.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ enabled\ repositories\ with\ "fedora"\ in\ id:\ ${{conf.*fedora*.enabled=1}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of configured repositories with "thirdparty" substring in the repository name with their name. Escaped char in name ','.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ repositories\ with\ "thirdparty"\ in\ name:\ ${{conf.*.name=*thirdparty*}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Prints a list of configured repositories with "CI fedora" substring in the repository name with their name.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ repositories\ with\ "CI\ fedora"\ in\ name:\ ${{conf.*.name=*CI\ fedora*}}'\ >>\ {context.dnf.installroot}/actions.log
+
+    # Disable all repositories
+    repos_configured::::/usr/bin/sh -c echo\ 'conf.*.enabled=0'
+
+    # Enable repository "dnf-ci-thirdparty"
+    repos_configured::::/usr/bin/sh -c echo\ 'conf.dnf-ci-thirdparty.enabled=1'
+
+    # Prints a list of enabled repositories.
+    repos_configured::::/usr/bin/sh -c echo\ 'pre_base_setup:\ enabled\ repositories:\ ${{conf.*.enabled=1}}'\ >>\ {context.dnf.installroot}/actions.log
+    """
+   When I execute dnf with args "repo list --all"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id               repo name                          status
+      dnf-ci-fedora         DNF CI fedora base repository    disabled
+      dnf-ci-fedora-updates DNF CI fedora updates repository disabled
+      dnf-ci-thirdparty     DNF CI thirdparty repo, test      enabled
+      """
+    And file "/actions.log" matches line by line
+      """
+      pre_base_setup: "dnf-ci-fedora" repository name is: dnf-ci-fedora.name=DNF CI fedora base repository
+      ?pre_base_setup: repositories: dnf-ci-fedora.enabled=1,dnf-ci-fedora-updates.enabled=0,dnf-ci-thirdparty.enabled=0
+      ?pre_base_setup: repositories: dnf-ci-fedora-updates.enabled=0,dnf-ci-fedora.enabled=1,dnf-ci-thirdparty.enabled=0
+      ?pre_base_setup: repositories: dnf-ci-fedora.enabled=1,dnf-ci-thirdparty.enabled=0,dnf-ci-fedora-updates.enabled=0
+      ?pre_base_setup: repositories: dnf-ci-fedora-updates.enabled=0,dnf-ci-thirdparty.enabled=0,dnf-ci-fedora.enabled=1
+      ?pre_base_setup: repositories: dnf-ci-thirdparty.enabled=0,dnf-ci-fedora.enabled=1,dnf-ci-fedora-updates.enabled=0
+      ?pre_base_setup: repositories: dnf-ci-thirdparty.enabled=0,dnf-ci-fedora-updates.enabled=0,dnf-ci-fedora.enabled=1
+      ?pre_base_setup: repositories with "fedora" in id: dnf-ci-fedora.enabled=1,dnf-ci-fedora-updates.enabled=0
+      ?pre_base_setup: repositories with "fedora" in id: dnf-ci-fedora-updates.enabled=0,dnf-ci-fedora.enabled=1
+      pre_base_setup: enabled repositories: dnf-ci-fedora.enabled=1
+      pre_base_setup: enabled repositories with "fedora" in id: dnf-ci-fedora.enabled=1
+      pre_base_setup: repositories with "thirdparty" in name: dnf-ci-thirdparty.name=DNF CI thirdparty repo\\x2C test
+      ?pre_base_setup: repositories with "CI fedora" in name: dnf-ci-fedora.name=DNF CI fedora base repository,dnf-ci-fedora-updates.name=DNF CI fedora updates repository
+      ?pre_base_setup: repositories with "CI fedora" in name: dnf-ci-fedora-updates.name=DNF CI fedora updates repository,dnf-ci-fedora.name=DNF CI fedora base repository
+      pre_base_setup: enabled repositories: dnf-ci-thirdparty.enabled=1
+      """
 
 
 Scenario Outline: I can filter on package or file: "<filter>"
