@@ -189,7 +189,6 @@ Scenario: Undoing an older transaction with Reason Change
         | wget-1.19.5-5.fc29.x86_64    | User            |
 
 
-@xfail
 @bz2010259
 @bz2053014
 Scenario: Undoing a transaction range with Reason Change
