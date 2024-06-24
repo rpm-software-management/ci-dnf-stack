@@ -1,36 +1,37 @@
+@dnf5
 Feature: Transaction history rollback of group upgrades
 
 
 Background:
   Given I use repository "dnf-ci-group-rollback-1"
-    And I successfully execute dnf with args "group install DNF-CI-RollbackTestGroup1"
+    And I successfully execute dnf with args "group install dnf-ci-group-rollback-testgroup1"
    Then Transaction is following
         | Action        | Package                                       |
         | group-install | DNF-CI-RollbackTestGroup1                     |
         | install-group | TestGroup1PackageA-0:1.0-1.x86_64             |
         | install-group | TestGroup1PackageB-0:1.0-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-   When I execute dnf with args "group list --installed DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+   When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And stdout is
     """
     <REPOSYNC>
-    Installed Groups:
-       DNF-CI-RollbackTestGroup1
+    ID                               Name                      Installed
+    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
     """
   Given I use repository "dnf-ci-group-rollback-2"
-    And I successfully execute dnf with args "group upgrade DNF-CI-RollbackTestGroup1"
+    And I successfully execute dnf with args "group upgrade dnf-ci-group-rollback-testgroup1"
    Then Transaction is following
         | Action        | Package                                       |
         | group-upgrade | DNF-CI-RollbackTestGroup1                     |
         | upgrade       | TestGroup1PackageA-0:1.1-1.x86_64             |
         | upgrade       | TestGroup1PackageB-0:1.1-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
+        | Id     | Command                                              | Action | Altered   |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
 
 
 @bz2016070
@@ -42,17 +43,17 @@ Scenario: Rollback a group upgrade transaction
         | downgrade              | TestGroup1PackageA-0:1.0-1.x86_64    |
         | downgrade              | TestGroup1PackageB-0:1.0-1.x86_64    |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 3      | history rollback 1                                   | Downgrade     | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-   When I execute dnf with args "group list --installed DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 3      | history rollback 1                                   |        | 4         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+   When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And stdout is
     """
     <REPOSYNC>
-    Installed Groups:
-       DNF-CI-RollbackTestGroup1
+    ID                               Name                      Installed
+    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
     """
 
 
@@ -64,34 +65,41 @@ Scenario: Rollback a rollbacked group upgrade transaction
         | Action                 | Package                              |
         | downgrade              | TestGroup1PackageA-0:1.0-1.x86_64    |
         | downgrade              | TestGroup1PackageB-0:1.0-1.x86_64    |
+    And stderr is
+    """
+    Group upgrade cannot be reverted, however associated package actions will be. (Group id: 'dnf-ci-group-rollback-testgroup1') .
+
+    Warning: skipped PGP checks for 2 packages from repository: dnf-ci-group-rollback-1
+    """
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 3      | history rollback 1                                   | Downgrade     | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
+        | Id     | Command                                              | Action | Altered   |
+        | 3      | history rollback 1                                   |        | 4         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "history rollback 2"
    Then the exit code is 0
     And Transaction is following
         | Action                 | Package                              |
-        | group-upgrade          | DNF-CI-RollbackTestGroup1            |
         | upgrade                | TestGroup1PackageA-0:1.1-1.x86_64    |
         | upgrade                | TestGroup1PackageB-0:1.1-1.x86_64    |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 4      | history rollback 2                                   | Upgrade       | 3         |
-        | 3      | history rollback 1                                   | Downgrade     | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-   When I execute dnf with args "group list --installed DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 4      | history rollback 2                                   |        | 4         |
+        | 3      | history rollback 1                                   |        | 4         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+   When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And stdout is
     """
     <REPOSYNC>
-    Installed Groups:
-       DNF-CI-RollbackTestGroup1
+    ID                               Name                      Installed
+    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
     """
 
 
+# missing redo command
+@xfail
 @bz2016070
 Scenario: Redo an undo-ed group upgrade transaction
   Given I execute dnf with args "history undo last"
@@ -112,7 +120,7 @@ Scenario: Redo an undo-ed group upgrade transaction
 @bz2016070
 Scenario: Rollback multiple group upgrade transactions
   Given I use repository "dnf-ci-group-rollback-3"
-    And I successfully execute dnf with args "group upgrade DNF-CI-RollbackTestGroup1"
+    And I successfully execute dnf with args "group upgrade dnf-ci-group-rollback-testgroup1"
    Then Transaction is following
         | Action        | Package                                       |
         | group-upgrade | DNF-CI-RollbackTestGroup1                     |
@@ -120,10 +128,10 @@ Scenario: Rollback multiple group upgrade transactions
         | upgrade       | TestGroup1PackageB-0:1.2-1.x86_64             |
         | install-group | TestGroup1PackageC-0:1.0-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | I, U          | 4         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
+        | Id     | Command                                              | Action | Altered   |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 6         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
   Given I execute dnf with args "history rollback 1"
    Then the exit code is 0
     And Transaction is following
@@ -132,35 +140,35 @@ Scenario: Rollback multiple group upgrade transactions
         | downgrade              | TestGroup1PackageB-0:1.0-1.x86_64    |
         | remove                 | TestGroup1PackageC-0:1.0-1.x86_64    |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 4      | history rollback 1                                   | D, E          | 4         |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | I, U          | 4         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-   When I execute dnf with args "group list --installed DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 4      | history rollback 1                                   |        | 5         |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 6         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+   When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And stdout is
     """
     <REPOSYNC>
-    Installed Groups:
-       DNF-CI-RollbackTestGroup1
+    ID                               Name                      Installed
+    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
     """
 
 
 @bz2016070
 Scenario: Excluded package is remembered until next group install when rolling back a group upgrade transaction
   Given I use repository "dnf-ci-group-rollback-3"
-    And I successfully execute dnf with args "group upgrade DNF-CI-RollbackTestGroup1 -x TestGroup1PackageC"
+    And I successfully execute dnf with args "group upgrade dnf-ci-group-rollback-testgroup1 -x TestGroup1PackageC"
    Then Transaction is following
         | Action        | Package                                       |
         | group-upgrade | DNF-CI-RollbackTestGroup1                     |
         | upgrade       | TestGroup1PackageA-0:1.2-1.x86_64             |
         | upgrade       | TestGroup1PackageB-0:1.2-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
+        | Id     | Command                                              | Action | Altered   |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
   Given I execute dnf with args "history rollback 2"
    Then the exit code is 0
     And Transaction is following
@@ -168,12 +176,12 @@ Scenario: Excluded package is remembered until next group install when rolling b
         | downgrade              | TestGroup1PackageA-0:1.1-1.x86_64    |
         | downgrade              | TestGroup1PackageB-0:1.1-1.x86_64    |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 4      | history rollback 2                                   | Downgrade     | 3         |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-  Given I successfully execute dnf with args "group upgrade DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 4      | history rollback 2                                   |        | 4         |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+  Given I successfully execute dnf with args "group upgrade dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                       |
@@ -181,31 +189,31 @@ Scenario: Excluded package is remembered until next group install when rolling b
         | upgrade       | TestGroup1PackageA-0:1.2-1.x86_64             |
         | upgrade       | TestGroup1PackageB-0:1.2-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 5      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 4      | history rollback 2                                   | Downgrade     | 3         |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-  Given I successfully execute dnf with args "group install DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 5      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 4      | history rollback 2                                   |        | 4         |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+  Given I successfully execute dnf with args "group install dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                       |
         | group-install | DNF-CI-RollbackTestGroup1                     |
         | install-group | TestGroup1PackageC-0:1.0-1.x86_64             |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 6      | group install DNF-CI-RollbackTestGroup1              | Install       | 2         |
-        | 5      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 4      | history rollback 2                                   | Downgrade     | 3         |
-        | 3      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
-   When I execute dnf with args "group list --installed DNF-CI-RollbackTestGroup1"
+        | Id     | Command                                              | Action | Altered   |
+        | 6      | group install dnf-ci-group-rollback-testgroup1       |        | 2         |
+        | 5      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 4      | history rollback 2                                   |        | 4         |
+        | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
+   When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
     And stdout is
     """
     <REPOSYNC>
-    Installed Groups:
-       DNF-CI-RollbackTestGroup1
+    ID                               Name                      Installed
+    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
     """
