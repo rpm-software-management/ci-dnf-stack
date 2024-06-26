@@ -37,10 +37,9 @@ Given I create symlink "/createrepo_c-ci-packages" to file "/{context.scenario.r
  When I execute createrepo_c with args "--update ." in "/"
  Then the exit code is 0
   And repodata "/repodata" are consistent
-  And I execute "dnf --repofrompath=test,{context.scenario.default_tmp_dir}/ --installroot={context.scenario.default_tmp_dir} --disableplugin='*' --repo test repoquery --provides ampersand-provide-package"
+  And I execute "dnf -q --repofrompath=test,{context.scenario.default_tmp_dir}/ --installroot={context.scenario.default_tmp_dir} --disableplugin='*' --repo test repoquery --provides ampersand-provide-package"
   And stdout is
   """
-  <REPOSYNC>
   ampersand-provide-package = 0.2.1-1.fc29
   ampersand-provide-package(x86-64) = 0.2.1-1.fc29
   font(bpgalgetigpl&gnu)
