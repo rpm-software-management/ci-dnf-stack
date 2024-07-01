@@ -71,3 +71,43 @@ def package_state_is(context):
 
     if fail:
         raise AssertionError("System state mismatch")
+
+
+@behave.then('group state is')
+def group_state_is(context):
+    """
+    Checks packages and userinstalled state in groups system state groups.toml.
+    For that, the table in context has to contain group id.
+    """
+    check_context_table(context, ["id", "package_types", "packages", "userinstalled"])
+
+    found_groups = []
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/groups.toml")) as f:
+        for k, v in toml.load(f)["groups"].items():
+            pkg_types = v["package_types"]
+            pkg_types.sort()
+            pkgs = v["packages"]
+            pkgs.sort()
+            found_groups.append((k, ', '.join(pkg_types), ', '.join(pkgs), str(v["userinstalled"])))
+    found_groups.sort()
+
+    expected_groups = []
+    for group_id, package_types, packages, userinstalled in context.table:
+        p_types = package_types.split(',')
+        p_types = list(map(str.strip, p_types))
+        p_types.sort()
+        p = packages.split(',')
+        p = list(map(str.strip, p))
+        p.sort()
+        expected_groups.append((group_id, ', '.join(p_types), ', '.join(p), str(userinstalled)))
+
+    expected_groups.sort()
+
+    fail = False
+    if expected_groups != found_groups:
+        print("groups.toml system state differs from expected:")
+        print_lines_diff(expected_groups, found_groups)
+        fail = True
+
+    if fail:
+        raise AssertionError("Group system state mismatch")
