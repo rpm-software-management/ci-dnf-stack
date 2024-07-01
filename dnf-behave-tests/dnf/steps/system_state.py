@@ -111,3 +111,38 @@ def group_state_is(context):
 
     if fail:
         raise AssertionError("Group system state mismatch")
+
+
+@behave.then('environment state is')
+def environment_state_is(context):
+    """
+    Checks groups in environments system state environments.toml.
+    For that, the table in context has to contain environment id.
+    """
+    check_context_table(context, ["id", "groups"])
+
+    found_environments = []
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/environments.toml")) as f:
+        for k, v in toml.load(f)["environments"].items():
+            groups = v["groups"]
+            groups.sort()
+            found_environments.append((k, ', '.join(groups)))
+    found_environments.sort()
+
+    expected_environments = []
+    for env_id, groups in context.table:
+        g = groups.split(',')
+        g = list(map(str.strip, g))
+        g.sort()
+        expected_environments.append((env_id, ', '.join(g)))
+
+    expected_environments.sort()
+
+    fail = False
+    if expected_environments != found_environments:
+        print("environments.toml system state differs from expected:")
+        print_lines_diff(expected_environments, found_environments)
+        fail = True
+
+    if fail:
+        raise AssertionError("Environment system state mismatch")
