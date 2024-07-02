@@ -511,7 +511,7 @@ Given I successfully execute dnf with args "install @test-group"
               {
                   "action": "Remove",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "Group",
+                  "reason": "Clean",
                   "repo_id": "@System"
               }
           ],
@@ -522,11 +522,11 @@ Given I successfully execute dnf with args "install @test-group"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
-      | remove        | top-b-1.0-1.x86_64       |
+      | remove-unused | top-b-1.0-1.x86_64       |
       | group-remove  | Test Group               |
   And dnf5 transaction items for transaction "last" are
       | action        | package                   | reason     | repository     |
-      | Remove        | top-b-0:1.0-1.x86_64      | Dependency | @System        |
+      | Remove        | top-b-0:1.0-1.x86_64      | Clean      | @System        |
       | Remove        | test-group                | User       | @System        |
   And package reasons are
       | Package                | Reason          |
