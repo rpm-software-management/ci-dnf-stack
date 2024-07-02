@@ -72,8 +72,8 @@ Scenario: Handle missing packages required for undoing the transaction
      And stderr is
      """
      Failed to resolve the transaction:
-     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
      Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
+     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
      You can try to add to command line:
        --skip-unavailable to skip unavailable packages
      """
@@ -99,8 +99,8 @@ Scenario: Missing packages are skipped if --skip-unavailable is specified
      And Transaction is empty
      And stderr is
      """
-     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
      Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
+     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
      """
 
 
@@ -189,7 +189,6 @@ Scenario: Undoing an older transaction with Reason Change
         | wget-1.19.5-5.fc29.x86_64    | User            |
 
 
-@xfail
 @bz2010259
 @bz2053014
 Scenario: Undoing a transaction range with Reason Change

@@ -1,3 +1,4 @@
+@dnf5
 Feature: History of update
 
 Background:
@@ -29,10 +30,10 @@ Scenario: History of update packages
         | upgrade       | wget-0:1.19.6-5.fc29.x86_64               |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
     And History is following
-        | Id     | Command               | Action        | Altered   |
-        | 3      | update                | Upgrade       | 3         |
-        | 2      |                       | Install       | 3         |
-        | 1      |                       | Install       | 1         |
+        | Id     | Command               | Action | Altered   |
+        | 3      | update                |        | 6         |
+        | 2      |                       |        | 3         |
+        | 1      |                       |        | 1         |
 
 
 @bz1612885
@@ -55,5 +56,5 @@ Scenario: Rollback update
     And Transaction is following
         | Action        | Package                                   |
         | remove        | abcde-0:2.9.2-1.fc29.noarch               |
-        | remove        | flac-0:1.3.2-8.fc29.x86_64                |
-        | remove-dep    | wget-0:1.19.5-5.fc29.x86_64               |
+        | remove-unused | flac-0:1.3.2-8.fc29.x86_64                |
+        | remove-unused | wget-0:1.19.5-5.fc29.x86_64               |
