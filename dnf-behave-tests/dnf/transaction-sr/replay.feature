@@ -336,7 +336,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-a-1:1.0-1.x86_64",
-                  "reason": "Group",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
@@ -354,7 +354,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
   And dnf5 transaction items for transaction "last" are
       | action        | package                   | reason     | repository     |
       | Remove        | top-a-1:1.0-1.x86_64      | User       | @System        |
-      | Reason Change | top-a-1:1.0-1.x86_64      | Group      | @System        |
+      | Reason Change | top-a-1:1.0-1.x86_64      | Dependency | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
