@@ -79,60 +79,6 @@ def step_impl(context, history_range=None):
     assert_history_list(context, context.cmd_stdout)
 
 
-#TODO(amatej): This should be removed once the step is no longer used in transaction-sr/replay.feature.
-#              The step is duplicate of 'dnf5 transaction items for transaction "last" are'.
-@behave.then('History info should match')
-@behave.then('History info "{spec}" should match')
-def step_impl(context, spec=None):
-    IN = ['Description',]
-    ACTIONS = [
-        'Install',
-        'Upgrade',
-        'Downgrade',
-        'Reinstall',
-        'Remove',
-        'Replaced',
-        'Reason Change',
-        'Enable',
-        'Disable',
-        'Reset',
-    ]
-
-    check_context_table(context, ["Key", "Value"])
-
-    if spec is None:
-        spec = ""
-    h_info = parsed_history_info(context, spec)
-
-    expected_actions = []
-    for key, value in context.table:
-        if key in h_info:
-            if key in IN and value in h_info[key]:
-                continue
-            elif value == h_info[key]:
-                continue
-            else:
-                raise AssertionError(
-                    '[history] {0} "{1}" not matched by "{2}".'.format(
-                        key, h_info[key], value))
-        elif key in ACTIONS:
-            expected_actions.append([key, value])
-        else:
-            raise AssertionError('[history] key "{0}" not found.'.format(key))
-
-    found_actions = []
-    for a in h_info[None]:
-        action = a.split()
-
-        if action[0:2] == ["Reason", "Change"]:
-            found_actions.append(["Reason Change", action[2]])
-        else:
-            found_actions.append(action[0:2])
-
-    if expected_actions != found_actions:
-        print_lines_diff(expected_actions, found_actions)
-        raise AssertionError("History actions mismatch")
-
 @behave.then('History info rpmdb version changed')
 def step_impl(context, spec=""):
     h_info = parsed_history_info(context, spec)
