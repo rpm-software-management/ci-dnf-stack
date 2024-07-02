@@ -289,18 +289,13 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
           "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
- Then the exit code is 0
-  And dnf5 transaction items for transaction "last" are
-      | action        | package                   | reason     | repository     |
-      | Reason Change | top-b-0:1.0-1.x86_64      | Dependency | transaction-sr |
-  And package reasons are
-      | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | Dependency      |
-      | bottom-a3-1.0-1.x86_64 | Dependency      |
-      | mid-a1-1.0-1.x86_64    | Dependency      |
-      | mid-a2-1.0-1.x86_64    | Weak Dependency |
-      | top-a-1:1.0-1.x86_64   | User            |
+ When I execute dnf with args "replay ./transaction"
+ Then the exit code is 1
+  And stderr is
+  """
+  Failed to resolve the transaction:
+  Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
+  """
 
 
 Scenario: Replay a reason change transaction on a package being installed
@@ -311,7 +306,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
               {
                   "action": "Reason Change",
                   "nevra": "top-b-1.0-1.x86_64",
-                  "reason": "Group",
+                  "reason": "Dependency",
                   "repo_id": "transaction-sr"
               },
               {
@@ -325,19 +320,12 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       }
       """
  When I execute dnf with args "replay ./transaction"
- Then the exit code is 0
-  And dnf5 transaction items for transaction "last" are
-      | action        | package                   | reason     | repository     |
-      | Install       | top-b-0:1.0-1.x86_64      | User       | transaction-sr |
-      | Reason Change | top-b-0:1.0-1.x86_64      | Dependency | transaction-sr |
-  And package reasons are
-      | Package                | Reason          |
-      | bottom-a2-1.0-1.x86_64 | Dependency      |
-      | bottom-a3-1.0-1.x86_64 | Dependency      |
-      | mid-a1-1.0-1.x86_64    | Dependency      |
-      | mid-a2-1.0-1.x86_64    | Weak Dependency |
-      | top-a-1:1.0-1.x86_64   | User            |
-      | top-b-1.0-1.x86_64     | Group           |
+ Then the exit code is 1
+  And stderr is
+  """
+  Failed to resolve the transaction:
+  Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
+  """
 
 
 Scenario: Replay a reason change transaction on a package being removed
