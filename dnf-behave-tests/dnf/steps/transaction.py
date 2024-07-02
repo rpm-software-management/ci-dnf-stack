@@ -49,7 +49,7 @@ def check_rpmdb_transaction(context, mode):
         if action.startswith("remove-"):
             action = "remove"
 
-        if action in ["broken"] or action in ["conflict"]:
+        if action in ["broken", "conflict", "changing-reason"]:
             continue
         for nevra in nevras.split(", "):
             if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):

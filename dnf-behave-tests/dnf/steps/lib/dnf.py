@@ -53,6 +53,7 @@ ACTIONS_EN = {
     "Installing environmental groups": "env-install",
     "Installing Environment Groups": "env-install",
     "Removing Environment Groups": "env-remove",
+    "Removing environmental groups": "env-remove",
     "Upgrading Environment Groups": "env-upgrade",
     "Upgrading environmental groups": "env-upgrade",
     "Installing module profiles": "module-profile-install",
@@ -62,6 +63,7 @@ ACTIONS_EN = {
     "Switching module streams": "module-stream-switch",
     "Disabling modules": "module-disable",
     "Resetting modules": "module-reset",
+    "Changing reason": "changing-reason",
 }
 
 
@@ -305,6 +307,11 @@ def parse_transaction_table_dnf5(context, lines):
             nevra = "{0[name]}-{0[evr]}.{0[arch]}".format(match_dict)
             rpm = RPM(nevra)
             result[result_action].add(rpm)
+            if action == "changing-reason":
+                # Drop line that describes how the reason was changed, eg: User -> Dependency.
+                # Currently we do not record how the reason was changed, it can be checked by
+                # step: "dnf5 transaction items for transaction "last" are"
+                lines.pop(0)
 
     return result
 
