@@ -1140,6 +1140,9 @@ Given I successfully execute dnf with args "install archchange-1.0"
       | top-a-1:1.0-1.x86_64    | User            |
 
 
+# This should fail or there should be at least a warning.
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1573
+@xfail
 Scenario: Replay a transaction with multiple actions per NEVRA
 Given I successfully execute dnf with args "install @test-group supertop-b"
   And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
@@ -1177,27 +1180,11 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
       }
       """
  When I execute dnf with args "replay ./transaction"
- Then the exit code is 0
-  And Transaction is following
-      | Action       | Package                   |
-      | reinstall    | top-b-1.0-1.x86_64        |
-      | group-remove | Test Group                |
-  And dnf5 transaction items for transaction "last" are
-      | action        | package              | reason     | repository     |
-      | Reinstall     | top-b-0:1.0-1.x86_64 | Group      | transaction-sr |
-      | Replaced      | top-b-0:1.0-1.x86_64 | Group      | @System        |
-      | Reason Change | top-b-0:1.0-1.x86_64 | Dependency | @System        |
-      | Remove        | test-group           | User       | @System        |
-  And package reasons are
-      | Package                 | Reason          |
-      | bottom-a1-2.0-1.noarch  | Dependency      |
-      | bottom-a2-1.0-1.x86_64  | Dependency      |
-      | bottom-a3-1.0-1.x86_64  | Dependency      |
-      | mid-a1-1.0-1.x86_64     | Dependency      |
-      | mid-a2-1.0-1.x86_64     | Weak Dependency |
-      | supertop-b-1.0-1.x86_64 | User            |
-      | top-a-1:2.0-1.x86_64    | User            |
-      | top-b-1.0-1.x86_64      | Dependency      |
+ Then the exit code is 1
+  And stderr is
+  """
+  Something like: Cannot perform multiple actions for: 'top-b-1.0-1.x86_64', only one action per nevra is possible.
+  """
 
 
 Scenario: ignore-installed: Replay an upgrade transaction where a package that is being installed is already on the system in a lower version
