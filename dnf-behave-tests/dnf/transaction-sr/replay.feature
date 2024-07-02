@@ -1494,3 +1494,30 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       | mid-a1-1.0-1.x86_64    | Dependency      |
       | mid-a2-1.0-1.x86_64    | Weak Dependency |
       | top-a-1:1.0-1.x86_64   | User            |
+
+
+# This should fail or there should be at least a warning.
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1571
+@xfail
+Scenario: Replay installing a package with reason group while the group is not installed
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
+      """
+      {
+          "rpms": [
+              {
+                  "action": "Install",
+                  "nevra": "top-b-1.0-1.x86_64",
+                  "reason": "Group",
+                  "repo_id": "transaction-sr",
+                  "group_id": "test-group"
+              }
+          ],
+          "version": "1.0"
+      }
+      """
+ When I execute dnf with args "replay ./transaction"
+ Then the exit code is 1
+  And stderr is
+  """
+  Something like: Cannot install package with reason Group because 'test-group` is not installed.
+  """
