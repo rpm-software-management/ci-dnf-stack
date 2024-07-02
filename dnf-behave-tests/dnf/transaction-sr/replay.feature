@@ -1,3 +1,4 @@
+@dnf5
 Feature: Transaction replay tests
 
 Background:
@@ -7,7 +8,7 @@ Given I use repository "transaction-sr"
 
 
 Scenario: Replay an install transaction
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -24,10 +25,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -49,7 +50,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay an install transaction from a non-existent repository
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -60,10 +61,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "nonexistent"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -82,7 +83,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay an upgrade transaction
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -105,10 +106,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -130,7 +131,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay a reinstall transaction
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -147,10 +148,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -171,7 +172,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 Scenario: Replay a downgrade transaction
 Given I successfully execute dnf with args "upgrade top-a"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -188,10 +189,10 @@ Given I successfully execute dnf with args "upgrade top-a"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -211,7 +212,7 @@ Given I successfully execute dnf with args "upgrade top-a"
 
 
 Scenario: Replay a remove transaction
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -222,10 +223,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -242,7 +243,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay a reason change transaction
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -253,11 +254,14 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
+  And Transaction is following
+      | Action          | Package                  |
+      | changing-reason | top-a-1:1.0-1.x86_64     |
   And dnf5 transaction items for transaction "last" are
       | action        | package                   | reason     | repository     |
       | Reason Change | top-a-1:1.0-1.x86_64      | Dependency | @System        |
@@ -271,7 +275,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay a reason change transaction on a not-installed package
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -282,7 +286,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
  When I execute dnf with args "history replay transaction.json"
@@ -300,7 +304,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay a reason change transaction on a package being installed
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -317,10 +321,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And dnf5 transaction items for transaction "last" are
       | action        | package                   | reason     | repository     |
@@ -337,7 +341,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay a reason change transaction on a package being removed
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -354,10 +358,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And dnf5 transaction items for transaction "last" are
       | action        | package                   | reason     | repository     |
@@ -372,7 +376,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay installing a group
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "groups": [
@@ -380,23 +384,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "action": "Install",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-a",
-                          "package_type": "mandatory"
-                      },
-                      {
-                          "installed": true,
-                          "name": "top-b",
-                          "package_type": "default"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-c",
-                          "package_type": "optional"
-                      }
-                  ]
+                  "reason": "User",
               }
           ],
           "rpms": [
@@ -425,10 +413,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -458,7 +446,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: Replay installing a group without the `default` package type
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "groups": [
@@ -466,23 +454,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "action": "Install",
                   "id": "test-group",
                   "package_types": "conditional, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-a",
-                          "package_type": "mandatory"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-b",
-                          "package_type": "default"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-c",
-                          "package_type": "optional"
-                      }
-                  ]
+                  "reason": "User",
               }
           ],
           "rpms": [
@@ -505,10 +477,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -536,7 +508,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 Scenario: Replay removing a group
 Given I successfully execute dnf with args "install @test-group"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "groups": [
@@ -544,23 +516,7 @@ Given I successfully execute dnf with args "install @test-group"
                   "action": "Remove",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-a",
-                          "package_type": "mandatory"
-                      },
-                      {
-                          "installed": true,
-                          "name": "top-b",
-                          "package_type": "default"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-c",
-                          "package_type": "optional"
-                      }
-                  ]
+                  "reason": "User",
               }
           ],
           "rpms": [
@@ -571,10 +527,10 @@ Given I successfully execute dnf with args "install @test-group"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -599,7 +555,7 @@ Given I successfully execute dnf with args "install @test-group"
 Scenario: Replay upgrading a group
 Given I successfully execute dnf with args "install @test-group"
   And I successfully execute dnf with args "install top-a-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "groups": [
@@ -607,23 +563,7 @@ Given I successfully execute dnf with args "install @test-group"
                   "action": "Upgrade",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-a",
-                          "package_type": "mandatory"
-                      },
-                      {
-                          "installed": true,
-                          "name": "top-b",
-                          "package_type": "default"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-c",
-                          "package_type": "optional"
-                      }
-                  ]
+                  "reason": "User",
               }
           ],
           "rpms": [
@@ -640,10 +580,10 @@ Given I successfully execute dnf with args "install @test-group"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -669,24 +609,12 @@ Given I successfully execute dnf with args "install @test-group"
 
 
 Scenario: Replay installing an environment
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "environments": [
               {
                   "action": "Install",
-                  "groups": [
-                      {
-                          "group_type": "mandatory",
-                          "id": "test-env-group",
-                          "installed": true
-                      },
-                      {
-                          "group_type": "optional",
-                          "id": "test-env-optgroup",
-                          "installed": false
-                      }
-                  ],
                   "id": "test-env",
                   "package_types": "conditional, default, mandatory"
               }
@@ -696,13 +624,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "action": "Install",
                   "id": "test-env-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-c",
-                          "package_type": "mandatory"
-                      }
-                  ]
+                  "reason": "Dependency",
               }
           ],
           "rpms": [
@@ -725,10 +647,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -758,23 +680,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 Scenario: Replay removing an environment group
 Given I successfully execute dnf with args "install @test-env"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "environments": [
               {
-                  "groups": [
-                      {
-                          "group_type": "mandatory",
-                          "id": "test-env-group",
-                          "installed": true
-                      },
-                      {
-                          "group_type": "optional",
-                          "id": "test-env-optgroup",
-                          "installed": false
-                      }
-                  ],
                   "action": "Remove",
                   "id": "test-env",
                   "package_types": "conditional, default, mandatory"
@@ -785,13 +695,7 @@ Given I successfully execute dnf with args "install @test-env"
                   "action": "Remove",
                   "id": "test-env-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-c",
-                          "package_type": "mandatory"
-                      }
-                  ]
+                  "reason": "Dependency",
               }
           ],
           "rpms": [
@@ -814,10 +718,10 @@ Given I successfully execute dnf with args "install @test-env"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -845,24 +749,12 @@ Given I successfully execute dnf with args "install @test-env"
 Scenario: Replay upgrading an environment group
 Given I successfully execute dnf with args "install @test-env"
   And I successfully execute dnf with args "install top-c-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "environments": [
               {
                   "action": "Upgrade",
-                  "groups": [
-                      {
-                          "group_type": "mandatory",
-                          "id": "test-env-group",
-                          "installed": true
-                      },
-                      {
-                          "group_type": "optional",
-                          "id": "test-env-optgroup",
-                          "installed": false
-                      }
-                  ],
                   "id": "test-env",
                   "package_types": "conditional, default, mandatory"
               }
@@ -872,13 +764,7 @@ Given I successfully execute dnf with args "install @test-env"
                   "action": "Upgrade",
                   "id": "test-env-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-c",
-                          "package_type": "mandatory"
-                      }
-                  ]
+                  "reason": "Dependency",
               }
           ],
           "rpms": [
@@ -907,10 +793,10 @@ Given I successfully execute dnf with args "install @test-env"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                  |
@@ -940,7 +826,7 @@ Given I successfully execute dnf with args "install @test-env"
 
 
 Scenario: Replay a transaction installing multiple installonly packages
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -957,10 +843,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -983,7 +869,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 Scenario: Replay a transaction removing multiple installonly packages
 Given I successfully execute dnf with args "install installonly-1.0 installonly-2.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1000,10 +886,10 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -1024,7 +910,7 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
 
 Scenario: Replay a transaction installing and removing an installonly package
 Given I successfully execute dnf with args "install installonly-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1041,10 +927,10 @@ Given I successfully execute dnf with args "install installonly-1.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -1066,7 +952,7 @@ Given I successfully execute dnf with args "install installonly-1.0"
 
 Scenario: Replay a transaction obsoleting a package
 Given I successfully execute dnf with args "install obsoleted-a-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1083,10 +969,10 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                   |
@@ -1108,7 +994,7 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
 
 Scenario: Replay a transaction obsoleting multiple packages
 Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1137,10 +1023,10 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                   |
@@ -1167,7 +1053,7 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
 
 Scenario: Replay an upgrade transaction where a package that is being upgraded has a different reason
 Given I successfully execute dnf with args "install bottom-a1-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1196,10 +1082,10 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                  |
@@ -1223,7 +1109,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
 
 Scenario: Replay a transaction with an arch change
 Given I successfully execute dnf with args "install archchange-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1240,10 +1126,10 @@ Given I successfully execute dnf with args "install archchange-1.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And DNF Transaction is following
       | Action      | Package                   |
@@ -1268,7 +1154,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
 
 Scenario: Replay a transaction with multiple actions per NEVRA
 Given I successfully execute dnf with args "install @test-group supertop-b"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "groups": [
@@ -1276,23 +1162,7 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
                   "action": "Remove",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
-                  "packages": [
-                      {
-                          "installed": true,
-                          "name": "top-a",
-                          "package_type": "mandatory"
-                      },
-                      {
-                          "installed": true,
-                          "name": "top-b",
-                          "package_type": "default"
-                      },
-                      {
-                          "installed": false,
-                          "name": "top-c",
-                          "package_type": "optional"
-                      }
-                  ]
+                  "reason": "User",
               }
           ],
           "rpms": [
@@ -1315,10 +1185,10 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json"
+ When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
       | Action       | Package                   |
@@ -1344,7 +1214,7 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
 
 Scenario: ignore-installed: Replay an upgrade transaction where a package that is being installed is already on the system in a lower version
 Given I successfully execute dnf with args "install bottom-a1-1.0"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1367,15 +1237,16 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --ignore-installed"
+ When I execute dnf with args "replay ./transaction --ignore-installed"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while running a transaction:
-        Package "bottom-a1.noarch" is already installed for action "Install".
+      Cannot perform Install action because 'bottom-a1-2.0-1.noarch' is installed in a different version: 'bottom-a1-1.0-1.noarch'.
+
+      Warning: skipped PGP checks for 2 packages from repository: transaction-sr
       """
   And Transaction is following
       | Action      | Package                  |
@@ -1398,7 +1269,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
 
 
 Scenario: ignore-installed: Replaying an already installed transaction results in noop
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1433,25 +1304,24 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --ignore-installed"
+ When I execute dnf with args "replay ./transaction --ignore-installed --setopt=skip_unavailable=0"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while running a transaction:
-        Package "bottom-a2.x86_64" is already installed for action "Install".
-        Package "bottom-a3.x86_64" is already installed for action "Install".
-        Package "mid-a1.x86_64" is already installed for action "Install".
-        Package "mid-a2.x86_64" is already installed for action "Install".
-        Package "top-a.x86_64" is already installed for action "Install".
-      """
+      Package "bottom-a2-1.0-1.x86_64" is already installed.
+      Package "bottom-a3-1.0-1.x86_64" is already installed.
+      Package "mid-a1-1.0-1.x86_64" is already installed.
+      Package "mid-a2-1.0-1.x86_64" is already installed.
+      Package "top-a-1:1.0-1.x86_64" is already installed.
+     """
   And Transaction is empty
 
 
 Scenario: ignore-installed: Replay an upgrade transaction where a package that is being upgraded is not installed on the system
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1480,16 +1350,17 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --ignore-installed"
+ When I execute dnf with args "replay ./transaction --ignore-installed"
  Then the exit code is 0
-  And stderr is
-      """
-      Warning, the following problems occurred while running a transaction:
-        Package nevra "bottom-a1-1.0-1.noarch" not installed for action "Upgraded".
-      """
+ And stderr is
+     """
+     Cannot perform Remove action for Package 'bottom-a1-1.0-1.noarch' because it is not installed.
+
+     Warning: skipped PGP checks for 2 packages from repository: transaction-sr
+     """
   And Transaction is following
       | Action      | Package                  |
       | install-dep | bottom-a1-2.0-1.noarch   |
@@ -1510,7 +1381,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 
 
 Scenario: ignore-installed: Replay a remove transaction where a package that is being removed is not installed on the system
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1521,21 +1392,20 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --ignore-installed"
+ When I execute dnf with args "replay ./transaction --ignore-installed --skip-unavailable"
  Then the exit code is 0
-  And stderr is
-      """
-      Warning, the following problems occurred while running a transaction:
-        Package nevra "bottom-a1-2.0-1.noarch" not installed for action "Removed".
-      """
+ And stderr is
+     """
+     Cannot perform Remove action for Package 'bottom-a1-2.0-1.noarch' because it is not installed.
+     """
   And Transaction is empty
 
 
 Scenario: skip-unavailable: Replay a transaction installing a nonexistent package
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1552,15 +1422,16 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --skip-unavailable"
+ When I execute dnf with args "replay ./transaction --skip-unavailable"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while running a transaction:
-        Cannot find rpm nevra "does-not-exist-1.0-1.noarch".
+      Cannot perform Install action, no match for: does-not-exist-1.0-1.noarch.
+
+      Warning: skipped PGP checks for 1 package from repository: transaction-sr
       """
   And Transaction is following
       | Action      | Package                  |
@@ -1581,7 +1452,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
 Scenario: skip-unavailable: Replay a transaction reinstalling a non-available package
 Given I successfully execute dnf with args "install bottom-a1-2.0"
   And I drop repository "transaction-sr"
-  And I create file "/{context.dnf.tempdir}/transaction.json" with
+  And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1598,21 +1469,20 @@ Given I successfully execute dnf with args "install bottom-a1-2.0"
                   "repo_id": "@System"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --skip-unavailable"
+ When I execute dnf with args "replay ./transaction --skip-unavailable"
  Then the exit code is 0
   And stderr is
       """
-      Warning, the following problems occurred while running a transaction:
-        Package nevra "bottom-a1-2.0-1.noarch" not available in repositories for action "Reinstall".
+      Packages for argument 'bottom-a1-2.0-1.noarch' installed, but not available.
       """
   And Transaction is empty
 
 
 Scenario: skip-broken: Replay a transaction with a broken dependency
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       {
           "rpms": [
@@ -1629,10 +1499,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               }
           ],
-          "version": "0.0"
+          "version": "1.0"
       }
       """
- When I execute dnf with args "history replay transaction.json --skip-broken"
+ When I execute dnf with args "replay ./transaction --skip-broken"
  Then the exit code is 0
   And Transaction is following
       | Action      | Package                   |
