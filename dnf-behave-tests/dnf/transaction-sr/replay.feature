@@ -99,7 +99,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -141,7 +141,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Reinstalled",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -182,7 +182,7 @@ Given I successfully execute dnf with args "upgrade top-a"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Downgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:2.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -216,7 +216,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       {
           "rpms": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -348,7 +348,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -419,7 +419,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -499,7 +499,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -541,7 +541,7 @@ Given I successfully execute dnf with args "install @test-group"
       {
           "groups": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
                   "packages": [
@@ -565,7 +565,7 @@ Given I successfully execute dnf with args "install @test-group"
           ],
           "rpms": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "top-b-1.0-1.x86_64",
                   "reason": "Group",
                   "repo_id": "@System"
@@ -634,7 +634,7 @@ Given I successfully execute dnf with args "install @test-group"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -719,7 +719,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "mid-a2-1.0-1.x86_64",
                   "reason": "Weak Dependency",
                   "repo_id": "@System"
@@ -763,7 +763,6 @@ Given I successfully execute dnf with args "install @test-env"
       {
           "environments": [
               {
-                  "action": "Removed",
                   "groups": [
                       {
                           "group_type": "mandatory",
@@ -776,13 +775,14 @@ Given I successfully execute dnf with args "install @test-env"
                           "installed": false
                       }
                   ],
+                  "action": "Remove",
                   "id": "test-env",
                   "package_types": "conditional, default, mandatory"
               }
           ],
           "groups": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "id": "test-env-group",
                   "package_types": "conditional, default, mandatory",
                   "packages": [
@@ -796,19 +796,19 @@ Given I successfully execute dnf with args "install @test-env"
           ],
           "rpms": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "bottom-a3-1.0-1.x86_64",
                   "reason": "Clean",
                   "repo_id": "@System"
               },
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "mid-a2-2.0-1.x86_64",
                   "reason": "Clean",
                   "repo_id": "@System"
               },
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "top-c-2.0-1.x86_64",
                   "reason": "Group",
                   "repo_id": "@System"
@@ -889,7 +889,7 @@ Given I successfully execute dnf with args "install @test-env"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "mid-a2-1.0-1.x86_64",
                   "reason": "Weak Dependency",
                   "repo_id": "@System"
@@ -901,7 +901,7 @@ Given I successfully execute dnf with args "install @test-env"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-c-1.0-1.x86_64",
                   "reason": "Group",
                   "repo_id": "@System"
@@ -988,13 +988,13 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
       {
           "rpms": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "installonly-2.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
               },
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "installonly-1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1035,7 +1035,7 @@ Given I successfully execute dnf with args "install installonly-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "installonly-1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1077,7 +1077,7 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Obsoleted",
+                  "action": "Replaced",
                   "nevra": "obsoleted-a-1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1119,13 +1119,13 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Obsoleted",
+                  "action": "Replaced",
                   "nevra": "obsoleted-a-1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
               },
               {
-                  "action": "Obsoleted",
+                  "action": "Replaced",
                   "nevra": "obsoleted-b-1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1178,7 +1178,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "bottom-a1-1.0-1.noarch",
                   "reason": "Dependency",
                   "repo_id": "@System"
@@ -1190,7 +1190,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1234,7 +1234,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "archchange-1.0-1.noarch",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1273,7 +1273,7 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
       {
           "groups": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "id": "test-group",
                   "package_types": "conditional, default, mandatory",
                   "packages": [
@@ -1309,7 +1309,7 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Reinstalled",
+                  "action": "Replaced",
                   "nevra": "top-b-1.0-1.x86_64",
                   "reason": "Group",
                   "repo_id": "@System"
@@ -1361,7 +1361,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1462,7 +1462,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "bottom-a1-1.0-1.noarch",
                   "reason": "Dependency",
                   "repo_id": "@System"
@@ -1474,7 +1474,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Upgraded",
+                  "action": "Replaced",
                   "nevra": "top-a-1:1.0-1.x86_64",
                   "reason": "User",
                   "repo_id": "@System"
@@ -1515,7 +1515,7 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       {
           "rpms": [
               {
-                  "action": "Removed",
+                  "action": "Remove",
                   "nevra": "bottom-a1-2.0-1.noarch",
                   "reason": "Dependency",
                   "repo_id": "@System"
@@ -1592,7 +1592,7 @@ Given I successfully execute dnf with args "install bottom-a1-2.0"
                   "repo_id": "transaction-sr"
               },
               {
-                  "action": "Reinstalled",
+                  "action": "Replaced",
                   "nevra": "bottom-a1-2.0-1.noarch",
                   "reason": "Dependency",
                   "repo_id": "@System"
