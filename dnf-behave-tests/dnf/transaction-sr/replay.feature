@@ -1140,6 +1140,9 @@ Given I successfully execute dnf with args "install archchange-1.0"
       | top-a-1:1.0-1.x86_64    | User            |
 
 
+# This should fail or there should be at least a warning.
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1573
+@xfail
 Scenario: Replay a transaction with multiple actions per NEVRA
 Given I successfully execute dnf with args "install @test-group supertop-b"
   And I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
