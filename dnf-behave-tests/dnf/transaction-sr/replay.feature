@@ -33,11 +33,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Action      | Package                  |
       | install-dep | bottom-a1-2.0-1.noarch   |
       | install     | top-d-1.0-1.x86_64       |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
-      | Install       | top-d-1.0-1.x86_64      |
+  And dnf5 transaction items for transaction "last" are
+      | action      | package                           | reason        | repository     |
+      | Install     | bottom-a1-0:2.0-1.noarch          | Dependency    | transaction-sr |
+      | Install     | top-d-0:1.0-1.x86_64              | User          | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -69,10 +68,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And Transaction is following
       | Action      | Package                  |
       | install     | bottom-a1-2.0-1.noarch   |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                           | reason        | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch          | User          | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | User            |
@@ -116,12 +114,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Action      | Package                  |
       | install-dep | bottom-a1-2.0-1.noarch   |
       | upgrade     | top-a-1:2.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch | Dependency | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64     | User       | transaction-sr |
+      | Replaced      | top-a-1:1.0-1.x86_64     | User       | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -158,11 +155,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And Transaction is following
       | Action      | Package                  |
       | reinstall   | top-a-1:1.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Reinstall     | top-a-1:1.0-1.x86_64    |
-      | Reinstalled   | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action    | package                   | reason | repository     |
+      | Reinstall | top-a-1:1.0-1.x86_64      | User   | transaction-sr |
+      | Replaced  | top-a-1:1.0-1.x86_64      | User   | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -200,11 +196,10 @@ Given I successfully execute dnf with args "upgrade top-a"
   And Transaction is following
       | Action      | Package                  |
       | downgrade   | top-a-1:1.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Downgrade     | top-a-1:1.0-1.x86_64    |
-      | Downgraded    | top-a-1:2.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action    | package                   | reason | repository     |
+      | Downgrade | top-a-1:1.0-1.x86_64      | User   | transaction-sr |
+      | Replaced  | top-a-1:2.0-1.x86_64      | User   | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -235,10 +230,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And Transaction is following
       | Action      | Package                  |
       | remove      | top-a-1:1.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Removed       | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action    | package                   | reason | repository     |
+      | Remove    | top-a-1:1.0-1.x86_64      | User   | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -264,10 +258,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
  When I execute dnf with args "history replay transaction.json"
  Then the exit code is 0
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Reason Change | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Reason Change | top-a-1:1.0-1.x86_64      | Dependency | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -294,10 +287,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
  When I execute dnf with args "history replay transaction.json"
  Then the exit code is 0
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Reason Change | top-b-1.0-1.x86_64      |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Reason Change | top-b-0:1.0-1.x86_64      | Dependency | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -330,11 +322,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
  When I execute dnf with args "history replay transaction.json"
  Then the exit code is 0
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Reason Change | top-b-1.0-1.x86_64      |
-      | Install       | top-b-1.0-1.x86_64      |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Install       | top-b-0:1.0-1.x86_64      | User       | transaction-sr |
+      | Reason Change | top-b-0:1.0-1.x86_64      | Dependency | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -368,11 +359,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
  When I execute dnf with args "history replay transaction.json"
  Then the exit code is 0
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Reason Change | top-a-1:1.0-1.x86_64    |
-      | Removed       | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Remove        | top-a-1:1.0-1.x86_64      | User       | @System        |
+      | Reason Change | top-a-1:1.0-1.x86_64      | Group      | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -446,14 +436,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | install-group | top-b-1.0-1.x86_64       |
       | install-dep   | bottom-a1-2.0-1.noarch   |
       | group-install | Test Group               |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
-      | Install       | top-b-1.0-1.x86_64      |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
-      | Install       | @test-group             |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch  | Dependency | transaction-sr |
+      | Install       | top-b-0:1.0-1.x86_64      | Group      | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64      | User       | transaction-sr |
+      | Replaced      | top-a-1:1.0-1.x86_64      | User       | @System        |
+      | Install       | test-group                | User       | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -526,13 +515,12 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | upgrade       | top-a-1:2.0-1.x86_64     |
       | install-dep   | bottom-a1-2.0-1.noarch   |
       | group-install | Test Group               |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
-      | Install       | @test-group             |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch  | Dependency | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64      | User       | transaction-sr |
+      | Replaced      | top-a-1:1.0-1.x86_64      | User       | @System        |
+      | Install       | test-group                | User       | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -592,11 +580,10 @@ Given I successfully execute dnf with args "install @test-group"
       | Action        | Package                  |
       | remove        | top-b-1.0-1.x86_64       |
       | group-remove  | Test Group               |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Removed       | top-b-1.0-1.x86_64      |
-      | Removed       | @test-group             |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Remove        | top-b-0:1.0-1.x86_64      | Dependency | @System        |
+      | Remove        | test-group                | User       | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -662,12 +649,11 @@ Given I successfully execute dnf with args "install @test-group"
       | Action        | Package                  |
       | upgrade       | top-a-1:2.0-1.x86_64     |
       | group-upgrade | Test Group               |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
-      | Upgrade       | @test-group             |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                   | reason     | repository     |
+      | Upgrade       | top-a-1:2.0-1.x86_64      | User       | transaction-sr |
+      | Replaced      | top-a-1:1.0-1.x86_64      | User       | @System        |
+      | Upgrade       | test-group                | User       | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -750,14 +736,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | install-group | top-c-2.0-1.x86_64       |
       | env-install   | Test Environment         |
       | group-install | Test Env Group           |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | top-c-2.0-1.x86_64      |
-      | Upgrade       | mid-a2-2.0-1.x86_64     |
-      | Upgraded      | mid-a2-1.0-1.x86_64     |
-      | Install       | @test-env-group         |
-      | Install       | @test-env               |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package               | reason          | repository     |
+      | Install       | top-c-0:2.0-1.x86_64  | Dependency      | transaction-sr |
+      | Upgrade       | mid-a2-0:2.0-1.x86_64 | Weak Dependency | transaction-sr |
+      | Replaced      | mid-a2-0:1.0-1.x86_64 | Weak Dependency | @System        |
+      | Install       | test-env-group        | Dependency      | transaction-sr |
+      | Install       | test-env              | User            | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -841,14 +826,13 @@ Given I successfully execute dnf with args "install @test-env"
       | remove-unused | mid-a2-2.0-1.x86_64      |
       | group-remove  | Test Env Group           |
       | env-remove    | Test Environment         |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Removed       | bottom-a3-1.0-1.x86_64  |
-      | Removed       | mid-a2-2.0-1.x86_64     |
-      | Removed       | top-c-2.0-1.x86_64      |
-      | Removed       | @test-env-group         |
-      | Removed       | @test-env               |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason          | repository     |
+      | Remove        | bottom-a3-0:1.0-1.x86_64 | Clean           | @System        |
+      | Remove        | mid-a2-0:2.0-1.x86_64    | Clean           | @System        |
+      | Remove        | top-c-0:2.0-1.x86_64     | Dependency      | @System        |
+      | Remove        | test-env-group           | Dependency      | @System        |
+      | Remove        | test-env                 | User            | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -934,15 +918,14 @@ Given I successfully execute dnf with args "install @test-env"
       | upgrade       | mid-a2-2.0-1.x86_64      |
       | group-upgrade | Test Env Group           |
       | env-upgrade   | Test Environment         |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Upgrade       | mid-a2-2.0-1.x86_64     |
-      | Upgraded      | mid-a2-1.0-1.x86_64     |
-      | Upgrade       | top-c-2.0-1.x86_64      |
-      | Upgraded      | top-c-1.0-1.x86_64      |
-      | Upgrade       | @test-env-group         |
-      | Upgrade       | @test-env               |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason          | repository     |
+      | Upgrade       | mid-a2-0:2.0-1.x86_64    | Weak Dependency | transaction-sr |
+      | Upgrade       | top-c-0:2.0-1.x86_64     | Group           | transaction-sr |
+      | Replaced      | mid-a2-0:1.0-1.x86_64    | Weak Dependency | @System        |
+      | Replaced      | top-c-0:1.0-1.x86_64     | Group           | @System        |
+      | Upgrade       | test-env-group           | Dependency      | transaction-sr |
+      | Upgrade       | test-env                 | User            | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -983,11 +966,10 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Action      | Package                  |
       | install     | installonly-1.0-1.x86_64 |
       | install     | installonly-2.0-1.x86_64 |
-  And History info should match
-      | Key           | Value                    |
-      | Return-Code   | Success                  |
-      | Install       | installonly-1.0-1.x86_64 |
-      | Install       | installonly-2.0-1.x86_64 |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                    | reason  | repository     |
+      | Install       | installonly-0:1.0-1.x86_64 | User    | transaction-sr |
+      | Install       | installonly-0:2.0-1.x86_64 | User    | transaction-sr |
   And package reasons are
       | Package                  | Reason          |
       | bottom-a2-1.0-1.x86_64   | Dependency      |
@@ -1027,11 +1009,10 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
       | Action      | Package                  |
       | remove      | installonly-1.0-1.x86_64 |
       | remove      | installonly-2.0-1.x86_64 |
-  And History info should match
-      | Key           | Value                    |
-      | Return-Code   | Success                  |
-      | Removed       | installonly-2.0-1.x86_64 |
-      | Removed       | installonly-1.0-1.x86_64 |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                    | reason  | repository |
+      | Remove        | installonly-0:2.0-1.x86_64 | User    | @System    |
+      | Remove        | installonly-0:1.0-1.x86_64 | User    | @System    |
   And package reasons are
       | Package                | Reason          |
       | bottom-a2-1.0-1.x86_64 | Dependency      |
@@ -1069,11 +1050,10 @@ Given I successfully execute dnf with args "install installonly-1.0"
       | Action      | Package                  |
       | install     | installonly-2.0-1.x86_64 |
       | remove      | installonly-1.0-1.x86_64 |
-  And History info should match
-      | Key           | Value                    |
-      | Return-Code   | Success                  |
-      | Install       | installonly-2.0-1.x86_64 |
-      | Removed       | installonly-1.0-1.x86_64 |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                    | reason  | repository     |
+      | Install       | installonly-0:2.0-1.x86_64 | User    | transaction-sr |
+      | Remove        | installonly-0:1.0-1.x86_64 | User    | @System        |
   And package reasons are
       | Package                  | Reason          |
       | bottom-a2-1.0-1.x86_64   | Dependency      |
@@ -1112,11 +1092,10 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
       | Action      | Package                   |
       | install     | obsoleting-x-2.0-1.x86_64 |
       | obsoleted   | obsoleted-a-1.0-1.x86_64  |
-  And History info should match
-      | Key           | Value                     |
-      | Return-Code   | Success                   |
-      | Install       | obsoleting-x-2.0-1.x86_64 |
-      | Obsoleted     | obsoleted-a-1.0-1.x86_64  |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                     | reason  | repository     |
+      | Install       | obsoleting-x-0:2.0-1.x86_64 | User    | transaction-sr |
+      | Replaced      | obsoleted-a-0:1.0-1.x86_64  | User    | @System        |
   And package reasons are
       | Package                   | Reason          |
       | bottom-a2-1.0-1.x86_64    | Dependency      |
@@ -1169,13 +1148,12 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
       | install     | obsoleting-y-2.0-1.x86_64 |
       | obsoleted   | obsoleted-a-1.0-1.x86_64  |
       | obsoleted   | obsoleted-b-1.0-1.x86_64  |
-  And History info should match
-      | Key           | Value                     |
-      | Return-Code   | Success                   |
-      | Install       | obsoleting-x-2.0-1.x86_64 |
-      | Obsoleted     | obsoleted-a-1.0-1.x86_64  |
-      | Obsoleted     | obsoleted-b-1.0-1.x86_64  |
-      | Install       | obsoleting-y-2.0-1.x86_64 |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                     | reason  | repository     |
+      | Install       | obsoleting-x-0:2.0-1.x86_64 | User    | transaction-sr |
+      | Install       | obsoleting-y-0:2.0-1.x86_64 | User    | transaction-sr |
+      | Replaced      | obsoleted-a-0:1.0-1.x86_64  | User    | @System        |
+      | Replaced      | obsoleted-b-0:1.0-1.x86_64  | User    | @System        |
   And package reasons are
       | Package                   | Reason          |
       | bottom-a2-1.0-1.x86_64    | Dependency      |
@@ -1227,13 +1205,12 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | Action      | Package                  |
       | upgrade     | bottom-a1-2.0-1.noarch   |
       | upgrade     | top-a-1:2.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Upgrade       | bottom-a1-2.0-1.noarch  |
-      | Upgraded      | bottom-a1-1.0-1.noarch  |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                     | reason     | repository     |
+      | Upgrade       | bottom-a1-0:2.0-1.noarch    | User       | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64        | User       | transaction-sr |
+      | Replaced      | bottom-a1-0:1.0-1.noarch    | User       | @System        |
+      | Replaced      | top-a-1:1.0-1.x86_64        | User       | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | User            |
@@ -1275,11 +1252,10 @@ Given I successfully execute dnf with args "install archchange-1.0"
       | Action      | Package                   |
       | remove      | archchange-1.0-1.noarch   |
       | install     | archchange-2.0-1.x86_64   |
-  And History info should match
-      | Key           | Value                     |
-      | Return-Code   | Success                   |
-      | Upgrade       | archchange-2.0-1.x86_64   |
-      | Upgraded      | archchange-1.0-1.noarch   |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                     | reason | repository     |
+      | Upgrade       | archchange-0:2.0-1.x86_64   | User   | transaction-sr |
+      | Replaced      | archchange-0:1.0-1.noarch   | User   | @System        |
   And package reasons are
       | Package                 | Reason          |
       | archchange-2.0-1.x86_64 | unknown         |
@@ -1348,13 +1324,12 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
       | Action       | Package                   |
       | reinstall    | top-b-1.0-1.x86_64        |
       | group-remove | Test Group                |
-  And History info should match
-      | Key           | Value                     |
-      | Return-Code   | Success                   |
-      | Reason Change | top-b-1.0-1.x86_64        |
-      | Reinstall     | top-b-1.0-1.x86_64        |
-      | Reinstalled   | top-b-1.0-1.x86_64        |
-      | Removed       | @test-group               |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package              | reason     | repository     |
+      | Reinstall     | top-b-0:1.0-1.x86_64 | Group      | transaction-sr |
+      | Replaced      | top-b-0:1.0-1.x86_64 | Group      | @System        |
+      | Reason Change | top-b-0:1.0-1.x86_64 | Dependency | @System        |
+      | Remove        | test-group           | User       | @System        |
   And package reasons are
       | Package                 | Reason          |
       | bottom-a1-2.0-1.noarch  | Dependency      |
@@ -1406,13 +1381,12 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | Action      | Package                  |
       | upgrade     | bottom-a1-2.0-1.noarch   |
       | upgrade     | top-a-1:2.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Upgrade       | bottom-a1-2.0-1.noarch  |
-      | Upgraded      | bottom-a1-1.0-1.noarch  |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason     | repository     |
+      | Upgrade       | top-a-1:2.0-1.x86_64     | User       | transaction-sr |
+      | Upgrade       | bottom-a1-0:2.0-1.noarch | User       | transaction-sr |
+      | Replaced      | bottom-a1-0:1.0-1.noarch | User       | @System        |
+      | Replaced      | top-a-1:1.0-1.x86_64     | User       | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | User            |
@@ -1520,12 +1494,11 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Action      | Package                  |
       | install-dep | bottom-a1-2.0-1.noarch   |
       | upgrade     | top-a-1:2.0-1.x86_64     |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
-      | Upgrade       | top-a-1:2.0-1.x86_64    |
-      | Upgraded      | top-a-1:1.0-1.x86_64    |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch | Dependency | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64     | User       | transaction-sr |
+      | Replaced      | top-a-1:1.0-1.x86_64     | User       | @System        |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -1592,10 +1565,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
   And Transaction is following
       | Action      | Package                  |
       | install-dep | bottom-a1-2.0-1.noarch   |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch | Dependency | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
@@ -1666,10 +1638,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | Action      | Package                   |
       | install-dep | bottom-a1-2.0-1.noarch    |
       | broken      | broken-dep-0:1.0-1.x86_64 |
-  And History info should match
-      | Key           | Value                   |
-      | Return-Code   | Success                 |
-      | Install       | bottom-a1-2.0-1.noarch  |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package                  | reason     | repository     |
+      | Install       | bottom-a1-0:2.0-1.noarch | Dependency | transaction-sr |
   And package reasons are
       | Package                | Reason          |
       | bottom-a1-2.0-1.noarch | Dependency      |
