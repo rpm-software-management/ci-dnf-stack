@@ -648,7 +648,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       | group-install | Test Env Group           |
   And dnf5 transaction items for transaction "last" are
       | action        | package               | reason          | repository     |
-      | Install       | top-c-0:2.0-1.x86_64  | Dependency      | transaction-sr |
+      | Install       | top-c-0:2.0-1.x86_64  | Group           | transaction-sr |
       | Upgrade       | mid-a2-0:2.0-1.x86_64 | Weak Dependency | transaction-sr |
       | Replaced      | mid-a2-0:1.0-1.x86_64 | Weak Dependency | @System        |
       | Install       | test-env-group        | Dependency      | transaction-sr |
@@ -722,7 +722,7 @@ Given I successfully execute dnf with args "install @test-env"
       | action        | package                  | reason          | repository     |
       | Remove        | bottom-a3-0:1.0-1.x86_64 | Clean           | @System        |
       | Remove        | mid-a2-0:2.0-1.x86_64    | Clean           | @System        |
-      | Remove        | top-c-0:2.0-1.x86_64     | Dependency      | @System        |
+      | Remove        | top-c-0:2.0-1.x86_64     | Group           | @System        |
       | Remove        | test-env-group           | Dependency      | @System        |
       | Remove        | test-env                 | User            | @System        |
   And package reasons are
