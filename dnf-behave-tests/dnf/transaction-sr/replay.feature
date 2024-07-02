@@ -1104,7 +1104,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
               {
                   "action": "Upgrade",
                   "nevra": "archchange-2.0-1.x86_64",
-                  "reason": "unknown",
+                  "reason": "User",
                   "repo_id": "transaction-sr"
               },
               {
@@ -1132,7 +1132,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
       | Replaced      | archchange-0:1.0-1.noarch   | User   | @System        |
   And package reasons are
       | Package                 | Reason          |
-      | archchange-2.0-1.x86_64 | unknown         |
+      | archchange-2.0-1.x86_64 | User            |
       | bottom-a2-1.0-1.x86_64  | Dependency      |
       | bottom-a3-1.0-1.x86_64  | Dependency      |
       | mid-a1-1.0-1.x86_64     | Dependency      |
