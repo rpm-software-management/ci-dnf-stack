@@ -932,7 +932,7 @@ Given I successfully execute dnf with args "install installonly-1.0"
       | Package                  | Reason          |
       | bottom-a2-1.0-1.x86_64   | Dependency      |
       | bottom-a3-1.0-1.x86_64   | Dependency      |
-      | installonly-2.0-1.x86_64 | unknown         |
+      | installonly-2.0-1.x86_64 | User            |
       | mid-a1-1.0-1.x86_64      | Dependency      |
       | mid-a2-1.0-1.x86_64      | Weak Dependency |
       | top-a-1:1.0-1.x86_64     | User            |
