@@ -463,13 +463,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a2-1.0-1.x86_64    | Weak Dependency |
       | top-a-1:2.0-1.x86_64   | User            |
       | top-b-1.0-1.x86_64     | Group           |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|top-a|1|4
-      2|6|top-b|1|2
-      3|6|top-c|0|8
-      """
+  And group state is
+      | id         | package_types                   | packages | userinstalled |
+      | test-group | conditional, default, mandatory | top-b    | True          |
 
 
 Scenario: Replay installing a group without the `default` package type
@@ -545,13 +541,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a1-1.0-1.x86_64    | Dependency      |
       | mid-a2-1.0-1.x86_64    | Weak Dependency |
       | top-a-1:2.0-1.x86_64   | User            |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|top-a|1|4
-      2|6|top-b|0|2
-      3|6|top-c|0|8
-      """
+  And group state is
+      | id         | package_types          | packages | userinstalled |
+      | test-group | conditional, mandatory |          | True          |
 
 
 Scenario: Replay removing a group
@@ -613,16 +605,8 @@ Given I successfully execute dnf with args "install @test-group"
       | mid-a1-1.0-1.x86_64    | Dependency      |
       | mid-a2-1.0-1.x86_64    | Weak Dependency |
       | top-a-1:2.0-1.x86_64   | User            |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|top-a|1|4
-      2|6|top-b|1|2
-      3|6|top-c|0|8
-      4|10|top-a|1|4
-      5|10|top-b|1|2
-      6|10|top-c|0|8
-      """
+  And group state is
+      | id | package_types | packages | userinstalled |
 
 
 Scenario: Replay upgrading a group
@@ -693,17 +677,9 @@ Given I successfully execute dnf with args "install @test-group"
       | mid-a2-1.0-1.x86_64    | Weak Dependency |
       | top-a-1:2.0-1.x86_64   | User            |
       | top-b-1.0-1.x86_64     | Group           |
-  And I execute "echo 'select * from comps_group_package;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|top-a|1|4
-      2|6|top-b|1|2
-      3|6|top-c|0|8
-      4|10|top-a|1|4
-      5|10|top-b|1|2
-      6|10|top-c|0|8
-      """
-
+  And group state is
+      | id         | package_types                   | packages | userinstalled |
+      | test-group | conditional, default, mandatory | top-b    | True          |
 
 
 Scenario: Replay installing an environment
@@ -790,12 +766,9 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
       | mid-a2-2.0-1.x86_64    | Weak Dependency |
       | top-a-1:1.0-1.x86_64   | User            |
       | top-c-2.0-1.x86_64     | Group           |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|7|test-env-group|1|4
-      2|7|test-env-optgroup|0|8
-      """
+  And environment state is
+      | id       | groups         |
+      | test-env | test-env-group |
 
 
 Scenario: Replay removing an environment group
@@ -881,14 +854,8 @@ Given I successfully execute dnf with args "install @test-env"
       | bottom-a2-1.0-1.x86_64 | Dependency      |
       | mid-a1-1.0-1.x86_64    | Dependency      |
       | top-a-1:1.0-1.x86_64   | User            |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|test-env-group|1|4
-      2|6|test-env-optgroup|0|8
-      3|11|test-env-group|1|4
-      4|11|test-env-optgroup|0|8
-      """
+  And environment state is
+      | id       | groups |
 
 
 Scenario: Replay upgrading an environment group
@@ -984,14 +951,9 @@ Given I successfully execute dnf with args "install @test-env"
       | mid-a2-2.0-1.x86_64    | Weak Dependency |
       | top-a-1:1.0-1.x86_64   | User            |
       | top-c-2.0-1.x86_64     | Group           |
-  And I execute "echo 'select * from comps_environment_group;' | sqlite3 -noheader -list {context.dnf.installroot}/var/lib/dnf/history.sqlite"
-  And stdout is
-      """
-      1|6|test-env-group|1|4
-      2|6|test-env-optgroup|0|8
-      3|12|test-env-group|1|4
-      4|12|test-env-optgroup|0|8
-      """
+  And environment state is
+      | id       | groups         |
+      | test-env | test-env-group |
 
 
 Scenario: Replay a transaction installing multiple installonly packages
