@@ -1521,3 +1521,61 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
   """
   Something like: Cannot install package with reason Group because 'test-group` is not installed.
   """
+
+
+Scenario: Replay installing a group without package_types specified sets no package types
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
+      """
+      {
+          "groups": [
+              {
+                  "action": "Install",
+                  "id": "test-group",
+                  "reason": "User",
+              }
+          ],
+          "version": "1.0"
+      }
+      """
+ When I execute dnf with args "replay ./transaction"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package    |
+      | group-install | Test Group |
+  And dnf5 transaction items for transaction "last" are
+      | action        | package    | reason     | repository     |
+      | Install       | test-group | User       | transaction-sr |
+  And group state is
+      | id         | package_types | packages | userinstalled |
+      | test-group |               | top-a    | True          |
+
+
+Scenario: Replay installing a group with package_types which are then used for upgrade
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
+      """
+      {
+          "groups": [
+              {
+                  "action": "Install",
+                  "id": "test-group",
+                  "package_types": "mandatory",
+                  "reason": "User",
+              }
+          ],
+          "version": "1.0"
+      }
+      """
+  And I successfully execute dnf with args "replay ./transaction"
+  And I drop repository "transaction-sr"
+  And I use repository "transaction-sr-upgrade"
+  # Only new mandatory packages are installed from test-group from transaction-sr-upgade,
+  # it doesn't include new "default" package bottom-f.
+ When I execute dnf with args "group upgrade test-group"
+ Then the exit code is 0
+ And Transaction is following
+      | Action        | Package               |
+      | install-group | bottom-e-1.0-1.x86_64 |
+      | group-upgrade | Test Group            |
+  And group state is
+      | id         | package_types | packages        | userinstalled |
+      | test-group | mandatory     | bottom-e, top-a | True          |
