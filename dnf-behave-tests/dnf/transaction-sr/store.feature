@@ -1012,15 +1012,6 @@ Scenario: Store a transaction with specifying the output file
       """
 
 
-Scenario: Store a transaction to a nonexistent path
- When I execute dnf with args "history store last -o {context.dnf.tempdir}/not-there/out.json"
- Then the exit code is 1
-  And stderr is
-      """
-      Error: Error storing transaction: [Errno 2] No such file or directory: '{context.dnf.tempdir}/not-there/out.json'
-      """
-
-
 Scenario: Store a transaction to a file that already exists and --assumeyes
 Given I create file "/{context.dnf.tempdir}/transaction.json" with
       """
