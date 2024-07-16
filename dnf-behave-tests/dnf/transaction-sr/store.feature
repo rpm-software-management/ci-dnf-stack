@@ -1,3 +1,4 @@
+@dnf5
 Feature: Transaction store tests
 
 Background:
@@ -58,7 +59,7 @@ Scenario: Store a transaction with an invalid transaction ID
  Then the exit code is 1
   And stderr is
       """
-      Error: Transaction ID "2" not found.
+      No matching transaction ID found, exactly one required.
       """
 
 
@@ -208,7 +209,7 @@ Given I successfully execute dnf with args "remove top-a"
 
 
 Scenario: Store a reason change transaction
-Given I successfully execute dnf with args "mark remove top-a"
+Given I successfully execute dnf with args "mark dependency top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
   And stdout is
@@ -319,6 +320,8 @@ Given I successfully execute dnf with args "install @test-group"
 Scenario: Store a transaction with a group upgrade
 Given I successfully execute dnf with args "install @test-group"
 Given I successfully execute dnf with args "install top-a-1.0"
+# This mark group is a workaround for https://github.com/rpm-software-management/dnf5/issues/1581
+Given I successfully execute dnf with args "mark group test-group top-a-1.0"
 Given I successfully execute dnf with args "upgrade @test-group"
  When I execute dnf with args "history store last"
  Then the exit code is 0
@@ -583,6 +586,9 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
       """
 
 
+# no dnf shell for dnf5
+# https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Scenario: Store a transaction installing and removing an installonly package
 Given I successfully execute dnf with args "install installonly-1.0"
   And I open dnf shell session
@@ -747,6 +753,9 @@ Given I successfully execute dnf with args "install archchange-1.0"
       """
 
 
+# no dnf shell for dnf5
+# https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Scenario: Store a transaction with multiple actions per NEVRA (removing a group and reinstalling its package while another package depends on it)
 Given I successfully execute dnf with args "install @test-group supertop-b"
   And I open dnf shell session
@@ -794,6 +803,9 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
       """
 
 
+# no dnf shell for dnf5
+# https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Scenario: Store a transaction with removing a group and reinstalling its package (unlike the scenario above, the reason of the package stays unchanged)
 Given I successfully execute dnf with args "install @test-group"
   And I open dnf shell session
@@ -902,8 +914,8 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       STUFF
       """
  When I execute dnf with args "history store last --assumeno"
- Then the exit code is 0
+ Then the exit code is 1
   And stdout is
       """
-      Not overwriting transaction.json, exiting.
+      File "./transaction/transaction.json" already exists, it will be overwritten.
       """
