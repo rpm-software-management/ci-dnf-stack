@@ -11,9 +11,9 @@ Scenario: Store a transaction
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -68,9 +68,9 @@ Given I successfully execute dnf with args "upgrade top-a"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -104,9 +104,9 @@ Given I successfully execute dnf with args "reinstall top-a"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -135,9 +135,9 @@ Given I successfully execute dnf with args "downgrade top-a"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -165,9 +165,9 @@ Given I successfully execute dnf with args "remove top-a"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -213,9 +213,9 @@ Given I successfully execute dnf with args "mark remove top-a"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -237,9 +237,9 @@ Given I successfully execute dnf with args "install @test-group"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "groups": [
@@ -304,9 +304,9 @@ Given I successfully execute dnf with args "install @test-group"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "groups": [
@@ -354,9 +354,9 @@ Given I successfully execute dnf with args "upgrade @test-group"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "groups": [
@@ -408,9 +408,9 @@ Given I successfully execute dnf with args "install @test-env"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "environments": [
@@ -478,9 +478,9 @@ Given I successfully execute dnf with args "install @test-env"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "environments": [
@@ -549,9 +549,9 @@ Given I successfully execute dnf with args "install @test-env"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "environments": [
@@ -624,9 +624,9 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -655,9 +655,9 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -689,9 +689,9 @@ Given I successfully execute dnf with args "install installonly-1.0"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -720,9 +720,9 @@ Given I successfully execute dnf with args "install installonly-1.0"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -745,9 +745,9 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -776,9 +776,9 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -819,9 +819,9 @@ Given I successfully execute dnf with args "install archchange-1.0"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "rpms": [
@@ -853,9 +853,9 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "groups": [
@@ -917,9 +917,9 @@ Given I successfully execute dnf with args "install @test-group"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      Transaction saved to ./transaction.
       """
-  And file "/{context.dnf.tempdir}/transaction.json" contents is
+  And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {
           "groups": [
@@ -966,13 +966,13 @@ Given I successfully execute dnf with args "install @test-group"
 
 
 Scenario: Store a transaction with specifying the output file
- When I execute dnf with args "history store last -o {context.dnf.tempdir}/out.json"
+ When I execute dnf with args "history store last -o {context.dnf.tempdir}/out"
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to {context.dnf.tempdir}/out.json.
+      Transaction saved to {context.dnf.tempdir}/out.
       """
-  And file "/{context.dnf.tempdir}/out.json" contents is
+  And file "/{context.dnf.tempdir}/out/transaction.json" contents is
       """
       {
           "rpms": [
@@ -1013,7 +1013,7 @@ Scenario: Store a transaction with specifying the output file
 
 
 Scenario: Store a transaction to a file that already exists and --assumeyes
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       STUFF
       """
@@ -1021,12 +1021,13 @@ Given I create file "/{context.dnf.tempdir}/transaction.json" with
  Then the exit code is 0
   And stdout is
       """
-      Transaction saved to transaction.json.
+      File "./transaction/transaction.json" already exists, it will be overwritten.
+      Transaction saved to ./transaction.
       """
 
 
 Scenario: Store a transaction to a file that already exists and --assumeno
-Given I create file "/{context.dnf.tempdir}/transaction.json" with
+Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       STUFF
       """
