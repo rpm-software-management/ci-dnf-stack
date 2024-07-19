@@ -1,7 +1,7 @@
+@dnf5
 Feature: Testing dnf clean command
 
 
-@dnf5
 Scenario: Ensure that metadata are unavailable after "dnf clean all"
   Given I use repository "dnf-ci-rich"
    When I execute dnf with args "makecache"
@@ -28,8 +28,8 @@ Scenario: Ensure that metadata are unavailable after "dnf clean all"
         """
 
 
-@dnf5
 @tier1
+@dnf5daemon
 Scenario: Expire dnf cache and run repoquery for a package that has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
     And I use repository "dnf-ci-thirdparty-updates"
@@ -70,8 +70,8 @@ Scenario: Expire dnf cache and run repoquery for a package that has been removed
         """
 
 
-@dnf5
 @tier1
+@dnf5daemon
 Scenario: Expire dnf cache and run repoquery when a package has been removed meanwhile
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
     And I use repository "dnf-ci-thirdparty-updates"
