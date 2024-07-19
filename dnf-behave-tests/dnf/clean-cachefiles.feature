@@ -1,4 +1,5 @@
 @dnf5
+@dnf5daemon
 Feature: Testing that dnf clean command removes files from the cache
 
 
@@ -27,7 +28,8 @@ Background: Fill the cache
 
 Scenario: Cleanup of the whole cache (dnf clean all)
    When I execute dnf with args "clean all"
-    And I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
+   Then the exit code is 0
+   When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \.
@@ -36,7 +38,8 @@ Scenario: Cleanup of the whole cache (dnf clean all)
 
 Scenario: Cached metadata cleanup (dnf clean metadata)
    When I execute dnf with args "clean metadata"
-    And I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
+   Then the exit code is 0
+   When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \.
@@ -48,7 +51,8 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
 
 Scenario: Cached packages cleanup (dnf clean packages)
    When I execute dnf with args "clean packages"
-    And I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
+   Then the exit code is 0
+   When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \.
@@ -63,7 +67,8 @@ Scenario: Cached packages cleanup (dnf clean packages)
 
 Scenario: Database cached cleanup (dnf clean dbcache)
    When I execute dnf with args "clean dbcache"
-    And I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
+   Then the exit code is 0
+   When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \.
