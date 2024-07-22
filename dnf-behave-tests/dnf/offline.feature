@@ -225,3 +225,36 @@ Given I successfully execute dnf with args "offline-upgrade reboot"
   And Transaction is following
       | Action        | Package                               |
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
+
+
+Scenario: Test offline install with local rpm (absolute path)
+Given I use repository "simple-base"
+  And I copy file "{context.dnf.fixturesdir}/repos/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" to "/tmp/labirinto-1.0-1.fc29.x86_64.rpm"
+ When I execute dnf with args "install --offline {context.dnf.installroot}/tmp/labirinto-1.0-1.fc29.x86_64.rpm"
+ Then the exit code is 0
+  And DNF Transaction is following
+      | Action        | Package                       |
+      | install       | labirinto-0:1.0-1.fc29.x86_64 |
+ When I execute dnf with args "offline reboot"
+  And I execute dnf with args "offline _execute"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package                       |
+      | install       | labirinto-0:1.0-1.fc29.x86_64 |
+
+
+Scenario: Test offline install with local rpm (relative path)
+Given I use repository "simple-base"
+  And I copy file "{context.dnf.fixturesdir}/repos/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" to "/tmp/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I set working directory to "{context.dnf.installroot}/tmp/"
+ When I execute dnf with args "install --offline ./labirinto-1.0-1.fc29.x86_64.rpm"
+ Then the exit code is 0
+  And DNF Transaction is following
+      | Action        | Package                       |
+      | install       | labirinto-0:1.0-1.fc29.x86_64 |
+ When I execute dnf with args "offline reboot"
+  And I execute dnf with args "offline _execute"
+ Then the exit code is 0
+  And Transaction is following
+      | Action        | Package                       |
+      | install       | labirinto-0:1.0-1.fc29.x86_64 |
