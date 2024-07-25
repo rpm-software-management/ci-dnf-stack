@@ -1229,8 +1229,8 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | upgrade     | top-a-1:2.0-1.x86_64     |
   And dnf5 transaction items for transaction "last" are
       | action        | package                  | reason     | repository     |
-      | Upgrade       | top-a-1:2.0-1.x86_64     | User       | transaction-sr |
       | Upgrade       | bottom-a1-0:2.0-1.noarch | User       | transaction-sr |
+      | Upgrade       | top-a-1:2.0-1.x86_64     | User       | transaction-sr |
       | Replaced      | bottom-a1-0:1.0-1.noarch | User       | @System        |
       | Replaced      | top-a-1:1.0-1.x86_64     | User       | @System        |
   And package reasons are
