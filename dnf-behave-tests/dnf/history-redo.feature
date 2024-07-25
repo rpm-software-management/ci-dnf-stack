@@ -1,3 +1,4 @@
+@dnf5
 Feature: Transaction history redo
 
 
@@ -25,10 +26,10 @@ Scenario: Redo last transaction
         | install       | filesystem-0:3.9-2.fc29.x86_64             |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
     And History is following
-        | Id     | Command               | Action        | Altered   |
-        | 3      |                       | Install       | 2         |  
-        | 2      |                       | Removed       | 2         |  
-        | 1      | install filesystem    | Install       | 2         |  
+        | Id     | Command               | Action | Altered   |
+        | 3      |                       |        | 2         |
+        | 2      |                       |        | 2         |
+        | 1      | install filesystem    |        | 2         |
    When I execute dnf with args "history redo last-1"
    Then the exit code is 0
     And Transaction is following
@@ -36,11 +37,11 @@ Scenario: Redo last transaction
         | remove        | filesystem-0:3.9-2.fc29.x86_64             |
         | remove-unused | setup-0:2.12.1-1.fc29.noarch               |
     And History is following
-        | Id     | Command               | Action        | Altered   |
-        | 4      |                       | Removed       | 2         |  
-        | 3      |                       | Install       | 2         |  
-        | 2      |                       | Removed       | 2         |  
-        | 1      |                       | Install       | 2         |  
+        | Id     | Command               | Action | Altered   |
+        | 4      |                       |        | 2         |
+        | 3      |                       |        | 2         |
+        | 2      |                       |        | 2         |
+        | 1      |                       |        | 2         |
 
 
 Scenario: Redo a transaction with a package that is no longer available
@@ -48,8 +49,8 @@ Scenario: Redo a transaction with a package that is no longer available
    Then the exit code is 1
     And stderr is
         """
-        Error: The following problems occurred while running a transaction:
-          Cannot find rpm nevra "filesystem-3.9-2.fc29.x86_64".
+        Failed to resolve the transaction:
+        Cannot perform Install action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
         """
 
 
@@ -61,8 +62,9 @@ Scenario: Redo a transaction with a package that is no longer available and --sk
         | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
     And stderr is
         """
-        Warning, the following problems occurred while running a transaction:
-          Cannot find rpm nevra "filesystem-3.9-2.fc29.x86_64".
+        Cannot perform Install action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
+
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora
         """
 
 
