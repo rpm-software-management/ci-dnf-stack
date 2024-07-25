@@ -322,6 +322,22 @@ Scenario: Reposync --norepopath cannot be used with multiple repositories
     """
 
 
+@RHEL-40914
+Scenario: Reposync with --norepopath and --metadata-path ad --download-metadata options
+  Given I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath --metadata-path={context.dnf.tempdir}/downloadedmetadata --download-metadata"
+   Then the exit code is 0
+    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/repodata/primary.xml.zst" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/primary.xml.zst" do not differ
+
+
+@RHEL-40914
+Scenario: Reposync with --norepopath and --metadata-path ad --downloadcomps options
+  Given I use repository "dnf-ci-thirdparty-updates" as http
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath --metadata-path={context.dnf.tempdir}/downloadedmetadata --downloadcomps"
+   Then the exit code is 0
+    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst" do not differ
+
+
 @bz1856818
 Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by not-installed keys
   Given I use repository "reposync-gpg" with configuration
