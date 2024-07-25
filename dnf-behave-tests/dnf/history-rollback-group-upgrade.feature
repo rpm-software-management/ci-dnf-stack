@@ -98,8 +98,6 @@ Scenario: Rollback a rollbacked group upgrade transaction
     """
 
 
-# missing redo command
-@xfail
 @bz2016070
 Scenario: Redo an undo-ed group upgrade transaction
   Given I execute dnf with args "history undo last"
@@ -109,10 +107,10 @@ Scenario: Redo an undo-ed group upgrade transaction
         | downgrade              | TestGroup1PackageA-0:1.0-1.x86_64    |
         | downgrade              | TestGroup1PackageB-0:1.0-1.x86_64    |
     And History is following
-        | Id     | Command                                              | Action        | Altered   |
-        | 3      | history undo last                                    | Downgrade     | 3         |
-        | 2      | group upgrade DNF-CI-RollbackTestGroup1              | Upgrade       | 3         |
-        | 1      | group install DNF-CI-RollbackTestGroup1              | Install       | 3         |
+        | Id     | Command                                              | Action | Altered   |
+        | 3      | history undo last                                    |        | 4         |
+        | 2      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
+        | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "history redo last"
    Then the exit code is 0
 

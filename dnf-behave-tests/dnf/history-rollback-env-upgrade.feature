@@ -114,8 +114,6 @@ Scenario: Rollback a rollbacked environment upgrade transaction
     """
 
 
-# missing redo command
-@xfail
 @bz2016070
 Scenario: Redo an undo-ed environment upgrade transaction
   Given I execute dnf with args "history undo last"
@@ -128,8 +126,8 @@ Scenario: Redo an undo-ed environment upgrade transaction
         | downgrade              | TestGroup2PackageB-0:1.0-1.x86_64    |
     And History is following
         | Id     | Command                                              | Action | Altered   |
-        | 3      | history undo last                                    |        | 7         |
-        | 2      | group upgrade DNF-CI-RollbackTestEnv                 |        | 7         |
-        | 1      | group install DNF-CI-RollbackTestEnv                 |        | 7         |
+        | 3      | history undo last                                    |        | 8         |
+        | 2      | group upgrade dnf-ci-group-rollback-testenv          |        | 11        |
+        | 1      | group install dnf-ci-group-rollback-testenv          |        | 7         |
    When I execute dnf with args "history redo last"
    Then the exit code is 0
