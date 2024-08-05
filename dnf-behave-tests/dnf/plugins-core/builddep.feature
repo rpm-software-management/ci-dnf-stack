@@ -174,7 +174,11 @@ Scenario: Builddep using macros with source rpm
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep -D 'dummy_param 1' {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
      Then the exit code is 0
-      And stderr contains "Warning: -D or --define arguments have no meaning for source rpm packages."
+      And stderr is
+      """
+      Warning: -D/--define/--with/--without arguments have no effect on source rpm packages.
+      Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora
+      """
 
 
 Scenario: Builddep where package BuildRequires a pkg spec that contains glob characters
@@ -184,3 +188,102 @@ Scenario: Builddep where package BuildRequires a pkg spec that contains glob cha
       And Transaction is following
           | Action        | Package                    |
           | install       | provides-glob-0:1-1.x86_64 |
+
+
+Scenario: Builddep respects --with option
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/pkg.spec" with
+    """
+    # disabled foo
+    %bcond_with  foo
+
+    Name: pkg
+    Version: 1
+    Release: 1
+    Summary: summary
+    License: license
+
+    %if %{with foo}
+    BuildRequires: filesystem
+    %endif
+
+    %description
+    desc
+    """
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec"
+   Then the exit code is 0
+    And Transaction is empty
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec --with foo"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                        |
+        | install       | filesystem-0:3.9-2.fc29.x86_64 |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch   |
+
+
+Scenario: Builddep respects --without option
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/pkg.spec" with
+    """
+    # enabled foo
+    %bcond_without  foo
+
+    Name: pkg
+    Version: 1
+    Release: 1
+    Summary: summary
+    License: license
+
+    %if %{without foo}
+    BuildRequires: filesystem
+    %endif
+
+    %description
+    desc
+    """
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec"
+   Then the exit code is 0
+    And Transaction is empty
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec --without foo"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                        |
+        | install       | filesystem-0:3.9-2.fc29.x86_64 |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch   |
+
+
+Scenario: Builddep respects both --with and --without option
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/pkg.spec" with
+    """
+    # enabled foo
+    %bcond_without  foo
+    # disabled bar
+    %bcond_with     bar
+
+    Name: pkg
+    Version: 1
+    Release: 1
+    Summary: summary
+    License: license
+
+    %if %{without foo}
+    BuildRequires: dwm
+    %endif
+
+    %if %{with bar}
+    BuildRequires: wget
+    %endif
+
+    %description
+    desc
+    """
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec"
+   Then the exit code is 0
+    And Transaction is empty
+   When I execute dnf with args "builddep {context.dnf.installroot}/pkg.spec --without foo --with bar "
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                     |
+        | install       | dwm-0:6.1-1.x86_64          |
+        | install       | wget-0:1.19.5-5.fc29.x86_64 |
