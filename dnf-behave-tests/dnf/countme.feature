@@ -1,3 +1,4 @@
+@dnf5
 Feature: Better user counting
 
     @destructive
