@@ -370,7 +370,10 @@ def given_system(context, system):
     variant = None
     if len(system) > 1:
         variant = system[1]
+        variant = '"{0}"'.format(variant.strip())
     name, version = distro.rsplit(' ', 1)
+    name = '"{0}"'.format(name.strip())
+    version = '"{0}"'.format(version.strip())
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'),
                     (name, version, variant)))
     context.scenario.osrelease.set(data)
