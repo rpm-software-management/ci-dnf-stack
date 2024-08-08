@@ -23,6 +23,7 @@ from common.lib.file import (
 )
 from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
+from fixtures.machineid import machineid_fixture
 
 
 def repo_config(repo, new={}):
@@ -137,7 +138,7 @@ def generate_metalink(destdir, url):
         f.write(data + '\n')
 
 
-@behave.given("I set releasever to \"{releasever}\"")
+@behave.step("I set releasever to \"{releasever}\"")
 def step_impl(context, releasever):
     context.dnf._set("releasever", releasever)
     for repo, info in context.dnf.repos.items():
@@ -356,7 +357,7 @@ def step_set_up_metalink_for_repository(context, repo):
     generate_metalink(repo_info.path, url)
     repo_info.update_config({
         "baseurl": "",
-        "metalink": url + "metalink.xml",
+        "metalink": url + "metalink.xml?releasever=$releasever",
     })
     create_repo_conf(context, repo)
 
@@ -369,7 +370,10 @@ def given_system(context, system):
     variant = None
     if len(system) > 1:
         variant = system[1]
+        variant = '"{0}"'.format(variant.strip())
     name, version = distro.rsplit(' ', 1)
+    name = '"{0}"'.format(name.strip())
+    version = '"{0}"'.format(version.strip())
     data = dict(zip(('NAME', 'VERSION_ID', 'VARIANT_ID'),
                     (name, version, variant)))
     context.scenario.osrelease.set(data)
@@ -379,6 +383,22 @@ def given_system(context, system):
 def given_no_osrelease(context):
     behave.use_fixture(osrelease_fixture, context)
     context.scenario.osrelease.delete()
+
+
+@behave.step("the machine-id file is {what} as of {when}")
+def step_machine_id_file(context, what, when):
+    behave.use_fixture(machineid_fixture, context)
+    machineid = context.scenario.machineid
+    if when.startswith('on '):
+        when = when[3:]
+    if what == 'initialized':
+        machineid.initialize(when)
+    elif what == 'uninitialized':
+        machineid.uninitialize(when)
+    elif what == 'empty':
+        machineid.empty()
+    elif what == 'absent':
+        machineid.delete()
 
 
 @behave.step("I invalidate solvfile version of \"{path}\"")

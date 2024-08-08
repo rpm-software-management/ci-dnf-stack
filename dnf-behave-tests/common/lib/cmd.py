@@ -31,7 +31,7 @@ def run(cmd, shell=True, cwd=None):
 
 def run_in_context(context, cmd, can_fail=False, expected_exit_code=None, **run_args):
     if getattr(context, "faketime", None) is not None:
-        cmd = context.faketime + cmd
+        cmd = 'NO_FAKE_STAT=1 ' + context.faketime + cmd
 
     if getattr(context, "fake_kernel_release", None) is not None:
         cmd = context.fake_kernel_release + cmd

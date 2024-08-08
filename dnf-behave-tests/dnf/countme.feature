@@ -1,3 +1,4 @@
+@dnf5
 Feature: Better user counting
 
     @destructive
@@ -7,7 +8,7 @@ Feature: Better user counting
         Given I am running a system identified as the "<system>"
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
+         When I execute dnf with args "makecache --refresh"
          Then every HTTP GET request should match:
             | header     | value   |
             | User-Agent | <agent> |
@@ -25,7 +26,7 @@ Feature: Better user counting
         Given I remove the os-release file
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
+         When I execute dnf with args "makecache --refresh"
          Then the exit code is 0
           And every HTTP GET request should match:
             | header     | value  |
@@ -35,86 +36,120 @@ Feature: Better user counting
         Given I use repository "dnf-ci-fedora" as http
           And I set config option "user_agent" to "'Agent 007'"
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache"
+         When I execute dnf with args "makecache --refresh"
          Then every HTTP GET request should match:
             | header     | value     |
             | User-Agent | Agent 007 |
 
-    Scenario: Countme flag is sent once per week
-        Given I set config option "countme" to "1"
-          And today is Wednesday, August 07, 2019
+    @destructive
+    Scenario Outline: Countme flag is sent once per calendar week
+        Given the machine-id file is <machine-id> as of <epoch>
+          And I set config option "countme" to "1"
+          And I set releasever to "39"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
-         # First week (bucket 1)
+
+         # First calendar week
          # Note: One in the first 4 requests is randomly chosen to include the
          # flag (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
-         When I execute dnf with args "makecache" 4 times
+         When today is <date>
+         When I execute dnf with args "makecache --refresh" 4 times
          Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
-         # Same week (should not be sent)
-         When today is Friday, August 09, 2019
-          And I forget any HTTP requests captured so far
-          And I execute dnf with args "makecache" 4 times
-         Then no HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=* |
-         # Next week (bucket 1)
-         When today is Tuesday, August 13, 2019
-          And I forget any HTTP requests captured so far
-          And I execute dnf with args "makecache" 4 times
-         Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
-         # Next week (bucket 2)
-         When today is Tuesday, August 21, 2019
-          And I forget any HTTP requests captured so far
-          And I execute dnf with args "makecache" 4 times
-         Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=2 |
-         # 1 month later (bucket 3)
-         When today is Tuesday, September 16, 2019
-          And I forget any HTTP requests captured so far
-          And I execute dnf with args "makecache" 4 times
-         Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=3 |
-         # 6 months later (bucket 4)
-         When today is Tuesday, March 15, 2020
-          And I forget any HTTP requests captured so far
-          And I execute dnf with args "makecache" 4 times
-         Then exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=4 |
+            | path                              |
+            | */metalink.xml*&countme=<age#1>   |
 
+         # Same calendar week (should not be sent)
+         When today is <date> + 3 days
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then no HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=*         |
+
+         # Next calendar week
+         When today is <date> + 8 days
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#2>   |
+
+         # Next calendar week
+         When today is <date> + 15 days
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#3>   |
+
+         # Next calendar month
+         When today is <date> + 40 days
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#4>   |
+
+         # 6 calendar months later
+         When today is <date> + 182 days
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#5>   |
+
+         # Even later, after a system upgrade
+         When today is <date> + 365 days
+          And I set releasever to "40"
+          And I forget any HTTP requests captured so far
+          And I execute dnf with args "makecache --refresh" 4 times
+         Then exactly one HTTP GET request should match:
+            | path                              |
+            | */metalink.xml*&countme=<age#6>   |
+
+    Examples:
+        | machine-id    | epoch         | date          | age#1 | age#2 | age#3 | age#4 | age#5 | age#6 |
+        # Absolute age counting (since "epoch")
+        | initialized   | Aug 06, 2019  | Aug 07, 2019  | 1     | 1     | 2     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Aug 20, 2019  | 2     | 2     | 2     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Sep 12, 2019  | 3     | 3     | 3     | 3     | 4     | 4     |
+        | initialized   | Aug 06, 2019  | Jun 18, 2020  | 4     | 4     | 4     | 4     | 4     | 4     |
+        # Relative age counting (since "date")
+        | uninitialized | Aug 06, 2019  | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+        | empty         | ---           | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+        | absent        | ---           | Jun 18, 2020  | 1     | 1     | 2     | 3     | 4     | 1     |
+
+    @destructive
     Scenario: Countme flag is not sent repeatedly on retries
-        Given I set config option "countme" to "1"
+        Given the machine-id file is initialized as of today
+          And I set config option "countme" to "1"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
           # This triggers the retry mechanism in librepo, 4 retries by default
           And the server starts responding with HTTP status code 503
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache" 4 times
-         # 48 = 4 * makecache = 4 * (3 metalink attempts * 4 low-level retries)
+         When I execute dnf with args "makecache --refresh" 4 times
+         # 48 = 4 * makecache --refresh = 4 * (3 metalink attempts * 4 low-level retries)
          # See librepo commits 15adfb31 and 12d0b4ad for details
          Then exactly 48 HTTP GET requests should match:
             | path            |
             | */metalink.xml* |
           And exactly one HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
+            | path                      |
+            | */metalink.xml*&countme=1 |
 
+    @destructive
     Scenario: Countme feature is disabled
-        Given I set config option "countme" to "0"
+        Given the machine-id file is initialized as of today
+          And I set config option "countme" to "0"
           And I copy repository "dnf-ci-fedora" for modification
           And I use repository "dnf-ci-fedora" as http
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
-         When I execute dnf with args "makecache" 4 times
+         When I execute dnf with args "makecache --refresh" 4 times
          Then no HTTP GET request should match:
-            | path                     |
-            | */metalink.xml?countme=1 |
+            | path                      |
+            | */metalink.xml*&countme=* |
