@@ -144,6 +144,14 @@ Scenario: Test usage of not existing config file
 
 
 @dnf5
+Scenario: Test using the short alias "-c" instead of "--config" (we'll use the test for a non-existent config file)
+  Given I use repository "dnf-ci-fedora"
+   When I execute dnf with args "-c {context.dnf.installroot}/non/existing/dnf.conf list"
+   Then the exit code is 1
+    And stderr contains "Configuration file.*not found"
+
+
+@dnf5
 @bz1722493
 Scenario: Lines that contain only whitespaces do not spoil previous config options
   Given I create file "/test/dnf.conf" with
