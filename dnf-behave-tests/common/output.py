@@ -143,13 +143,38 @@ def then_stderr_is_empty(context):
 
 @behave.then("stderr is")
 def then_stderr_is(context):
+    """
+    Checks for the exact match of the test's stderr. Supports the <REPOSYNC>
+    placeholder on the first line, which will match against the repository
+    synchronization lines (i.e. the "Last metadata expiration check:" line as
+    well as the individual repo download lines) in the test's output.
+    """
     expected = context.text.format(context=context).strip().split('\n')
     found = context.cmd_stderr.strip().split('\n')
 
-    if expected == found:
+    if found == [""]:
+        found = []
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+
+    if clean_expected == clean_found:
         return
 
-    print_lines_diff(expected, found)
+    rs_offset = 0
+    if len(clean_expected) < len(expected):
+        if len(clean_found) == len(found):
+            rs_offset = 1
+            # reposync was not in found, prepend a single line to pad for the
+            # <REPOSYNC> line in expected
+            found = [""] + found
+        else:
+            rs_offset = len(found) - len(clean_found)
+            # prepend empty lines to expected to pad for multiple reposync
+            # lines in found
+            expected = [""] * (rs_offset - 1) + expected
+
+    print_lines_diff(expected, found, num_lines_equal=rs_offset)
 
     raise AssertionError("Stderr is not: %s" % context.text)
 
