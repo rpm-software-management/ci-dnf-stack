@@ -14,16 +14,19 @@ Scenario: The packages from --repofrompath repository are available
  Given I copy repository "simple-base" for modification
   When I execute dnf with args "repoquery --repofrompath=NEW_REPO,{context.dnf.tempdir}/repos/simple-base/"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-   """
-   <REPOSYNC>
-   dedalo-signed-0:1.0-1.fc29.src
-   dedalo-signed-0:1.0-1.fc29.x86_64
-   labirinto-0:1.0-1.fc29.src
-   labirinto-0:1.0-1.fc29.x86_64
-   vagare-0:1.0-1.fc29.src
-   vagare-0:1.0-1.fc29.x86_64
-   """
+       """
+       dedalo-signed-0:1.0-1.fc29.src
+       dedalo-signed-0:1.0-1.fc29.x86_64
+       labirinto-0:1.0-1.fc29.src
+       labirinto-0:1.0-1.fc29.x86_64
+       vagare-0:1.0-1.fc29.src
+       vagare-0:1.0-1.fc29.x86_64
+       """
 
 Scenario: I can use --repofrompath multiple times
   When I execute dnf with args "repo list --repofrompath=NEW_REPO,THE_PATH --repofrompath=ANOTHER_ID,ANOTHER_PATH"
@@ -49,16 +52,19 @@ Scenario: Variables in the path are substituted
    And I execute "mv {context.dnf.tempdir}/repos/simple-base {context.dnf.tempdir}/repos/simple-base-RLS"
   When I execute dnf with args "repoquery --releasever=RLS --repofrompath=NEW_REPO,{context.dnf.tempdir}/repos/simple-base-\$releasever/"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-   """
-   <REPOSYNC>
-   dedalo-signed-0:1.0-1.fc29.src
-   dedalo-signed-0:1.0-1.fc29.x86_64
-   labirinto-0:1.0-1.fc29.src
-   labirinto-0:1.0-1.fc29.x86_64
-   vagare-0:1.0-1.fc29.src
-   vagare-0:1.0-1.fc29.x86_64
-   """
+       """
+       dedalo-signed-0:1.0-1.fc29.src
+       dedalo-signed-0:1.0-1.fc29.x86_64
+       labirinto-0:1.0-1.fc29.src
+       labirinto-0:1.0-1.fc29.x86_64
+       vagare-0:1.0-1.fc29.src
+       vagare-0:1.0-1.fc29.x86_64
+       """
 
 Scenario: Variables in the repo id are substituted
   When I execute dnf with args "repo list --releasever=RLS --repofrompath=NEW_REPO_\${{releasever}},THE_PATH"

@@ -11,9 +11,12 @@ Given I use repository "repoquery-security-filters"
   <REPOSYNC>
   A-0:2-2.x86_64
   """
-  And dnf5 stdout is
+  And dnf5 stderr is
   """
   <REPOSYNC>
+  """
+  And dnf5 stdout is
+  """
   A-0:2-2.x86_64
   A-0:3-3.x86_64
   """
@@ -29,9 +32,12 @@ Given I use repository "repoquery-security-filters"
   <REPOSYNC>
   A-0:2-2.x86_64
   """
-  And dnf5 stdout is
+  And dnf5 stderr is
   """
   <REPOSYNC>
+  """
+  And dnf5 stdout is
+  """
   A-0:2-2.x86_64
   A-0:3-3.x86_64
   """
@@ -55,9 +61,12 @@ Given I use repository "repoquery-security-filters"
   <REPOSYNC>
   A-0:2-2.x86_64
   """
-  And dnf5 stdout is
+  And dnf5 stderr is
   """
   <REPOSYNC>
+  """
+  And dnf5 stdout is
+  """
   A-0:2-2.x86_64
   A-0:3-3.x86_64
   """
@@ -73,9 +82,12 @@ Given I use repository "repoquery-security-filters"
   <REPOSYNC>
   A-0:2-2.x86_64
   """
-  And dnf5 stdout is
+  And dnf5 stderr is
   """
   <REPOSYNC>
+  """
+  And dnf5 stdout is
+  """
   A-0:2-2.x86_64
   A-0:3-3.x86_64
   """
@@ -88,9 +100,12 @@ Given I use repository "repoquery-security-filters"
   And I execute dnf with args "install A-2-2"
  When I execute dnf with args "repoquery --security --available --installed A --info"
  Then the exit code is 0
- And stdout matches line by line
+ And stderr is
   """
   <REPOSYNC>
+  """
+ And stdout matches line by line
+  """
   Name            : A
   Epoch           : 0
   Version         : 2
@@ -141,9 +156,12 @@ Scenario: --security, --available with advisory for a missing pkg and newer vers
 Given I use repository "repoquery-security-filters"
  When I execute dnf with args "repoquery --security --available B"
  Then the exit code is 0
-  And stdout is
+  And stderr is
   """
   <REPOSYNC>
+  """
+  And stdout is
+  """
   B-0:2-2.x86_64
   """
 
@@ -160,9 +178,12 @@ Given I use repository "repoquery-security-filters"
   C-0:1-1.x86_64
   C-0:2-2.x86_64
   """
-  And dnf5 stdout is
+  And dnf5 stderr is
   """
   <REPOSYNC>
+  """
+  And dnf5 stdout is
+  """
   A-0:2-2.x86_64
   A-0:3-3.x86_64
   B-0:2-2.x86_64
@@ -175,9 +196,12 @@ Scenario: package C has two versions where each has advisory
 Given I use repository "repoquery-security-filters"
  When I execute dnf with args "repoquery --security C"
  Then the exit code is 0
-  And stdout is
+  And stderr is
   """
   <REPOSYNC>
+  """
+  And stdout is
+  """
   C-0:1-1.x86_64
   C-0:2-2.x86_64
   """
@@ -193,9 +217,12 @@ Scenario: repoquery shows a command line package when its present in an advisory
         | install       | advisory_B-0:1.0-1.x86_64 |
    When I execute dnf with args "repoquery --cve CVE-002 {context.scenario.repos_location}/dnf-ci-security/x86_64/advisory_B-1.0-4.x86_64.rpm"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     advisory_B-0:1.0-4.x86_64
     """
 
@@ -210,7 +237,8 @@ Scenario: repoquery filters out a command line package when its not present in a
         | install       | advisory_B-0:1.0-1.x86_64 |
    When I execute dnf with args "repoquery --cve CVE-002 {context.scenario.repos_location}/dnf-ci-security/x86_64/advisory_A-1.0-1.x86_64.rpm"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
     """
+    And stdout is empty

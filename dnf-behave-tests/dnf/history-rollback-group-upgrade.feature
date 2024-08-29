@@ -15,12 +15,15 @@ Background:
         | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    ID                               Name                      Installed
-    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
-    """
+        """
+        ID                               Name                      Installed
+        dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
+        """
   Given I use repository "dnf-ci-group-rollback-2"
     And I successfully execute dnf with args "group upgrade dnf-ci-group-rollback-testgroup1"
    Then Transaction is following
@@ -49,12 +52,15 @@ Scenario: Rollback a group upgrade transaction
         | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    ID                               Name                      Installed
-    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
-    """
+        """
+        ID                               Name                      Installed
+        dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
+        """
 
 
 @bz2016070
@@ -65,7 +71,7 @@ Scenario: Rollback a rollbacked group upgrade transaction
         | Action                 | Package                              |
         | downgrade              | TestGroup1PackageA-0:1.0-1.x86_64    |
         | downgrade              | TestGroup1PackageB-0:1.0-1.x86_64    |
-    And stderr is
+    And stderr contains lines
     """
     Group upgrade cannot be reverted, however associated package actions will be. (Group id: 'dnf-ci-group-rollback-testgroup1') .
 
@@ -90,12 +96,15 @@ Scenario: Rollback a rollbacked group upgrade transaction
         | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    ID                               Name                      Installed
-    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
-    """
+        """
+        ID                               Name                      Installed
+        dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
+        """
 
 
 @bz2016070
@@ -145,12 +154,15 @@ Scenario: Rollback multiple group upgrade transactions
         | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    ID                               Name                      Installed
-    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
-    """
+        """
+        ID                               Name                      Installed
+        dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
+        """
 
 
 @bz2016070
@@ -209,9 +221,12 @@ Scenario: Excluded package is remembered until next group install when rolling b
         | 1      | group install dnf-ci-group-rollback-testgroup1       |        | 3         |
    When I execute dnf with args "group list --installed dnf-ci-group-rollback-testgroup1"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    ID                               Name                      Installed
-    dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
-    """
+        """
+        ID                               Name                      Installed
+        dnf-ci-group-rollback-testgroup1 DNF-CI-RollbackTestGroup1       yes
+        """

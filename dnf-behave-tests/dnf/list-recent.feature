@@ -17,12 +17,15 @@ Background: prepare repository with recent package labirinto
 Scenario: dnf list --recent
    When I execute dnf with args "list --recent"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout matches line by line
-    """
-    <REPOSYNC>
-    Recently added packages
-    labirinto\.x86_64\s+1\.0-1\.fc29\s+simple-base
-    """
+        """
+        Recently added packages
+        labirinto\.x86_64\s+1\.0-1\.fc29\s+simple-base
+        """
 
 
 Scenario: dnf list package that is not recently added
@@ -32,11 +35,9 @@ Scenario: dnf list package that is not recently added
    # but was not recently added
    When I execute dnf with args "list --recent vagare"
    Then the exit code is 1
-    And stdout is
-    """
-    <REPOSYNC>
-    """
+    And stdout is empty
     And stderr is
-    """
-    No matching packages to list
-    """
+        """
+        <REPOSYNC>
+        No matching packages to list
+        """

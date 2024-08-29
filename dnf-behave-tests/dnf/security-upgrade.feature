@@ -33,15 +33,16 @@ Given I use repository "security-upgrade-noarch"
  When I execute dnf with args "upgrade --security"
  Then the exit code is 1
  And stderr is
- """
- Failed to resolve the transaction:
- Problem: cannot install both json-c-2-2.x86_64 from security-upgrade-noarch and json-c-2-2.noarch from security-upgrade-noarch
-   - package bind-libs-lite-2-2.x86_64 from security-upgrade-noarch requires libjson-c.so.4()(64bit), but none of the providers can be installed
-   - cannot install the best update candidate for package json-c-1-1.x86_64
-   - cannot install the best update candidate for package bind-libs-lite-1-1.x86_64
- You can try to add to command line:
-   --no-best to not limit the transaction to the best candidates
- """
+     """
+     <REPOSYNC>
+     Failed to resolve the transaction:
+     Problem: cannot install both json-c-2-2.x86_64 from security-upgrade-noarch and json-c-2-2.noarch from security-upgrade-noarch
+       - package bind-libs-lite-2-2.x86_64 from security-upgrade-noarch requires libjson-c.so.4()(64bit), but none of the providers can be installed
+       - cannot install the best update candidate for package json-c-1-1.x86_64
+       - cannot install the best update candidate for package bind-libs-lite-1-1.x86_64
+     You can try to add to command line:
+       --no-best to not limit the transaction to the best candidates
+     """
 
 
 @2097757
@@ -126,11 +127,14 @@ Given I use repository "security-upgrade"
   # Make sure change-arch-2-2.x86_64 is available since we are testing we don't upgrade to it.
   # It also has to have an available advisory. (We cannot verify that here because the updateinfo command is bugged when dealing with arch changes)
   And I successfully execute dnf with args "repoquery change-arch-2-2.x86_64"
-  Then stdout is
-  """
-  <REPOSYNC>
-  change-arch-0:2-2.x86_64
-  """
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      change-arch-0:2-2.x86_64
+      """
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
@@ -143,10 +147,13 @@ Given I use repository "security-upgrade"
   # Make sure change-arch-reversed-2-2.i686 is available and has an adivosry since we are testing we don't upgrade to it.
   # It also has to have an available advisory. (We cannot verify that here because the updateinfo command is bugged when dealing with arch changes)
   And I successfully execute dnf with args "repoquery change-arch-reversed-2-2.i686"
-  Then stdout is
-  """
-  <REPOSYNC>
-  change-arch-reversed-0:2-2.i686
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      change-arch-reversed-0:2-2.i686
   """
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
@@ -198,11 +205,14 @@ Given I use repository "security-upgrade-obsoletes"
   obsoleted-change-arch
   """
 Given I successfully execute dnf with args "repoquery obsoleter-change-arch-1-1.i686 --obsoletes"
-  Then stdout is
-  """
-  <REPOSYNC>
-  obsoleted-change-arch
-  """
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      obsoleted-change-arch
+      """
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
@@ -215,17 +225,23 @@ Given I use repository "security-upgrade-obsoletes"
   # Make sure obsoleter-change-arch-reversed-1-1.x86_64 and obsoleter-change-arch-reversed-1-1.i686 are available and obsolete obsoleted-change-arch-reversed since we are testing we don't upgrade to any of them.
   # There also should be an available advisory for obsoleter-change-arch-reversed-1-1.i686. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
   And I successfully execute dnf with args "repoquery obsoleter-change-arch-reversed-1-1.x86_64 --obsoletes"
-  Then stdout is
-  """
-  <REPOSYNC>
-  obsoleted-change-arch-reversed
-  """
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      obsoleted-change-arch-reversed
+      """
 Given I successfully execute dnf with args "repoquery obsoleter-change-arch-reversed-1-1.i686 --obsoletes"
-  Then stdout is
-  """
-  <REPOSYNC>
-  obsoleted-change-arch-reversed
-  """
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      obsoleted-change-arch-reversed
+      """
  When I execute dnf with args "upgrade --security"
  Then the exit code is 0
   And Transaction is empty
@@ -237,12 +253,15 @@ Given I use repository "security-upgrade"
   # Make sure F-2-2 is available and obsoletes E since we are testing we don't upgrade to it.
   # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
   And I successfully execute dnf with args "repoquery F-2-2.x86_64 --obsoletes"
-  Then stdout is
-  """
-  <REPOSYNC>
-  E
-  """
-  When I execute dnf with args "upgrade E --security --setopt=obsoletes=false"
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      E
+      """
+ When I execute dnf with args "upgrade E --security --setopt=obsoletes=false"
  Then the exit code is 0
   And Transaction is empty
 
@@ -253,12 +272,15 @@ Given I use repository "security-upgrade"
   # Make sure F-2-2 is available and obsoletes E since we are testing we don't upgrade to it.
   # There also should be an available advisory for it. (We cannot verify that here because the updateinfo command is bugged when dealing with obsoletes)
   And I successfully execute dnf with args "repoquery F-2-2.x86_64 --obsoletes"
-  Then stdout is
-  """
-  <REPOSYNC>
-  E
-  """
-  When I execute dnf with args "upgrade --security --setopt=obsoletes=false"
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      E
+      """
+ When I execute dnf with args "upgrade --security --setopt=obsoletes=false"
  Then the exit code is 0
   And Transaction is empty
 
@@ -329,13 +351,16 @@ Scenario: use both advisories even if they are duplicates but with different iss
    When I execute dnf with args "updateinfo list"
    # dnf5 shows only one date because libsolv provides only one in metadata,
    # it is the latest of issued vs updated date.
-   Then dnf5 stdout is
-   """
-   <REPOSYNC>
-   Name      Type     Severity      Package              Issued
-   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
-   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
-   """
+   Then dnf5 stderr is
+        """
+        <REPOSYNC>
+        """
+    And dnf5 stdout is
+        """
+        Name      Type     Severity      Package              Issued
+        custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+        custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+        """
    # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
    # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
    # -> output is deduplicated
@@ -360,14 +385,17 @@ Scenario: use all (3) advisories even if they are duplicates but with different 
         | install       | E-0:1-1.x86_64 |
     And I use repository "security-upgrade-duplicates-2"
    When I execute dnf with args "updateinfo list"
-   Then dnf5 stdout is
-   """
-   <REPOSYNC>
-   Name      Type     Severity      Package              Issued
-   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
-   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
-   custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
-   """
+   Then dnf5 stderr is
+        """
+        <REPOSYNC>
+        """
+    And dnf5 stdout is
+        """
+        Name      Type     Severity      Package              Issued
+        custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+        custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+        custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
+        """
    # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
    # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
    # -> output is deduplicated
@@ -392,13 +420,16 @@ Scenario: use both advisories even if they are duplicates but with just summary 
         | install       | F-0:1-1.x86_64 |
     And I use repository "security-upgrade-duplicates-2"
    When I execute dnf with args "updateinfo list"
-   Then dnf5 stdout is
-   """
-   <REPOSYNC>
-   Name        Type     Severity      Package              Issued
-   custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
-   custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
-   """
+   Then dnf5 stderr is
+        """
+        <REPOSYNC>
+        """
+    And dnf5 stdout is
+        """
+        Name        Type     Severity      Package              Issued
+        custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
+        custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
+        """
    # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
    # here only the summary differs -> output is deduplicated
    Then dnf4 stdout is

@@ -18,9 +18,12 @@ Background: Set up versionlock infrastructure in the installroot
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repoquery wget"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     wget-0:1.19.5-5.fc29.src
     wget-0:1.19.5-5.fc29.x86_64
     wget-0:1.19.6-5.fc29.src

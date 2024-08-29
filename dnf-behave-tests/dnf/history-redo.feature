@@ -49,6 +49,7 @@ Scenario: Redo a transaction with a package that is no longer available
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Cannot perform Install action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
         """
@@ -60,7 +61,7 @@ Scenario: Redo a transaction with a package that is no longer available and --sk
     And Transaction is following
         | Action        | Package                                    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch               |
-    And stderr is
+    And stderr contains lines
         """
         Cannot perform Install action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
 

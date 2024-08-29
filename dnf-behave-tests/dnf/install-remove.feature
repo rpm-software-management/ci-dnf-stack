@@ -201,12 +201,15 @@ Scenario: Install remove group
         | install-dep   | water-0:1.0-1.x86_64              |
    When I execute dnf with args "group list beverages"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout matches line by line
-    """
-    <REPOSYNC>
-    ID +Name +Installed
-    beverages +Beverages +yes
-    """
+        """
+        ID +Name +Installed
+        beverages +Beverages +yes
+        """
    When I execute dnf with args "install water_carbonated"
    Then the exit code is 0
     And Transaction is following

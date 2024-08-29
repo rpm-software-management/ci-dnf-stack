@@ -22,7 +22,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I generate repodata for repository "dnf-ci-fedora" with extra arguments "--baseurl http://localhost:{context.dnf.ports[dnf-ci-fedora]}"
   And I use repository "dnf-ci-fedora"
  When I execute dnf with args "download setup --destdir={context.dnf.tempdir}"
- Then stderr is empty
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
  Then the exit code is 0
   And file sha256 checksums are following
       | Path                                                 | sha256                                                                                     |
@@ -36,7 +39,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I use repository "dnf-ci-fedora" as http
  When I execute dnf with args "download setup --destdir={context.dnf.tempdir}"
  Then the exit code is 0
- Then stderr is empty
+ Then stderr is
+      """
+      <REPOSYNC>
+      """
   And file sha256 checksums are following
       | Path                                                 | sha256                                                                                     |
       | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm |
@@ -53,7 +59,10 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | baseurl | file://{context.dnf.installroot}/merged_repo |
  When I execute dnf with args "download setup alternator --destdir={context.dnf.tempdir}"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+      """
+      <REPOSYNC>
+      """
   And file sha256 checksums are following
       | Path                                                 | sha256                                                                                      |
       | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm  |

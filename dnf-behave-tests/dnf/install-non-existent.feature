@@ -8,9 +8,10 @@ Scenario: Try to install a non-existent rpm
    When I execute dnf with args "install non-existent.rpm"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to access RPM "non-existent.rpm": No such file or directory
-    """
+        """
+        <REPOSYNC>
+        Failed to access RPM "non-existent.rpm": No such file or directory
+        """
 
 
 Scenario: Try to install a non-existent package
@@ -18,12 +19,13 @@ Scenario: Try to install a non-existent package
    When I execute dnf with args "install non-existent-package"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: non-existent-package
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: non-existent-package
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
 
 
 @bz1717429
@@ -32,12 +34,13 @@ Scenario: Install an existent and an non-existent package
    When I execute dnf with args "install setup non-existent-package"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: non-existent-package
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: non-existent-package
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
 
 
 @bz1717429
@@ -45,7 +48,7 @@ Scenario: Install an existent and an non-existent package with --skip-unavailabl
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install setup non-existent-package --skip-unavailable"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     No match for argument: non-existent-package
 

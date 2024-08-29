@@ -13,6 +13,7 @@ Scenario: Enable a module stream that is not latest fails with --best
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Modular dependency problems with the latest modules:
         Problem: cannot install the best candidate for the job

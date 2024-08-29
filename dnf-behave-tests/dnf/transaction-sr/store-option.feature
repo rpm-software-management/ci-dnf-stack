@@ -9,7 +9,6 @@ Given I set working directory to "{context.dnf.tempdir}"
 Scenario: Store an install transaction
   When I execute dnf with args "install top-a-1.0 --store ./transaction"
  Then the exit code is 0
-  And stderr is empty
   And file "/{context.dnf.tempdir}/transaction/transaction.json" contents is
       """
       {

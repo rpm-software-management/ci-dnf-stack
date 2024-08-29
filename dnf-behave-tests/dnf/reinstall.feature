@@ -57,24 +57,25 @@ Scenario: Reinstall list of packages, one of them is not available
    When I execute dnf with args "reinstall CQRlib nosuchpkg"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: nosuchpkg
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: nosuchpkg
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
     And Transaction is empty
 
 
 Scenario: Reinstall list of packages with --skip-unavailable, one of them is not available
    When I execute dnf with args "reinstall --skip-unavailable CQRlib nosuchpkg"
    Then the exit code is 0
-    And stderr is
-    """
-    No match for argument: nosuchpkg
+    And stderr contains lines
+        """
+        No match for argument: nosuchpkg
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
-    """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+        """
     And Transaction is following
         | Action        | Package                                   |
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
@@ -84,22 +85,23 @@ Scenario: Reinstall list of packages, one of them is not installed
    When I execute dnf with args "reinstall abcde CQRlib"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Packages for argument 'abcde' available, but not installed.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Packages for argument 'abcde' available, but not installed.
+        """
     And Transaction is empty
 
 
 Scenario: Reinstall list of packages with --skip-unavailable, one of them is not installed
    When I execute dnf with args "reinstall --skip-unavailable abcde CQRlib"
    Then the exit code is 0
-    And stderr is
-    """
-    Packages for argument 'abcde' available, but not installed.
+    And stderr contains lines
+        """
+        Packages for argument 'abcde' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
-    """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+        """
     And Transaction is following
         | Action        | Package                                   |
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |

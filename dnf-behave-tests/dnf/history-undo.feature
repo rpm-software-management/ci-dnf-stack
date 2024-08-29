@@ -70,13 +70,14 @@ Scenario: Handle missing packages required for undoing the transaction
      Then the exit code is 1
      And Transaction is empty
      And stderr is
-     """
-     Failed to resolve the transaction:
-     Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
-     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
-     You can try to add to command line:
-       --skip-unavailable to skip unavailable packages
-     """
+         """
+         <REPOSYNC>
+         Failed to resolve the transaction:
+         Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
+         Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
+         You can try to add to command line:
+           --skip-unavailable to skip unavailable packages
+         """
 
 
 Scenario: Missing packages are skipped if --skip-unavailable is specified
@@ -98,10 +99,11 @@ Scenario: Missing packages are skipped if --skip-unavailable is specified
      Then the exit code is 0
      And Transaction is empty
      And stderr is
-     """
-     Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
-     Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
-     """
+         """
+         <REPOSYNC>
+         Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
+         Cannot perform Install action, no match for: flac-1.3.2-8.fc29.x86_64.
+         """
 
 
 Scenario: Undo a transaction with a package that is no longer available
@@ -109,13 +111,14 @@ Scenario: Undo a transaction with a package that is no longer available
    When I execute dnf with args "history undo 1 -x filesystem"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Cannot perform Remove action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
-    Problem: installed package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
-      - conflicting requests
-      - problem with installed package
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Cannot perform Remove action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
+        Problem: installed package filesystem-3.9-2.fc29.x86_64 requires setup, but none of the providers can be installed
+          - conflicting requests
+          - problem with installed package
+        """
 
 
 @bz2010259
@@ -234,7 +237,7 @@ Scenario: Undo a downgrade transaction
     And Transaction is following
         | Action  | Package                     |
         | upgrade | wget-0:1.19.6-5.fc29.x86_64 |
-    And stderr is
+    And stderr contains lines
     """
     Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
@@ -249,11 +252,11 @@ Scenario: Undo an upgrade transaction with --skip-unavailable where the orignal 
    Then the exit code is 0
     And Transaction is empty
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
     And stderr is
-    """
-    Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
-    """
+        """
+        <REPOSYNC>
+        Cannot perform Install action, no match for: wget-1.19.5-5.fc29.x86_64.
+        """

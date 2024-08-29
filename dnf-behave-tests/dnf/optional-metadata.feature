@@ -21,13 +21,16 @@ Background:
 Scenario: Optional metadata are loaded when explicitly requested by the option
   Given I execute dnf with args "makecache --setopt=optional_metadata_types=,comps"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    Updating and loading repositories:
-     advisories-and-groups test repository .*
-    Repositories loaded.
-    Metadata cache created.
-    """
+    And stderr matches line by line
+        """
+        Updating and loading repositories:
+         advisories-and-groups test repository .*
+        Repositories loaded.
+        """
+    And stdout is
+        """
+        Metadata cache created.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
     """
@@ -46,23 +49,25 @@ Scenario: Optional metadata are loaded when explicitly requested by the option
 Scenario: Invalid metadata type is ignored when processing the option
   Given I execute dnf with args "makecache --setopt=optional_metadata_types=,abcdef"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    Updating and loading repositories:
-    Repositories loaded.
-    Metadata cache created.
-    """
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Metadata cache created.
+        """
 
 
 Scenario: Optional metadata are loaded when requested by command
   Given I execute dnf with args "advisory list --setopt=optional_metadata_types=,"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    Updating and loading repositories:
-     advisories-and-groups test repository .*
-    Repositories loaded.
-    """
+    And stderr matches line by line
+        """
+        Updating and loading repositories:
+         advisories-and-groups test repository .*
+        Repositories loaded.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
     """
@@ -82,20 +87,21 @@ Scenario: Operation returns an error when metadata are not present in cacheonly 
   Given I execute dnf with args "advisory list --cacheonly --setopt=optional_metadata_types=,"
    Then the exit code is 1
     And stderr is
-    """
-    Cache-only enabled but no cache for repository "advisories-and-groups"
-    """
+        """
+        <REPOSYNC>
+        Cache-only enabled but no cache for repository "advisories-and-groups"
+        """
 
 
 Scenario: Filelists metadata are loaded when filepath spec is provided
   Given I execute dnf with args "repoquery /some/file --setopt=optional_metadata_types=,"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    Updating and loading repositories:
-     advisories-and-groups test repository .*
-    Repositories loaded.
-    """
+    And stderr matches line by line
+        """
+        Updating and loading repositories:
+         advisories-and-groups test repository .*
+        Repositories loaded.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
     """
@@ -114,12 +120,12 @@ Scenario: Filelists metadata are loaded when filepath spec is provided
 Scenario: Comps metadata are loaded when group spec is provided
   Given I execute dnf with args "repoquery @group --setopt=optional_metadata_types=,"
    Then the exit code is 0
-    And stdout matches line by line
-    """
-    Updating and loading repositories:
-     advisories-and-groups test repository .*
-    Repositories loaded.
-    """
+    And stderr matches line by line
+        """
+        Updating and loading repositories:
+         advisories-and-groups test repository .*
+        Repositories loaded.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
     """

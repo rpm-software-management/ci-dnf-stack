@@ -14,7 +14,7 @@ Scenario: Best candidates have conflicting dependencies
         | install-dep   | lib-0:1.0-1.fc29.x86_64           |
         | conflict      | lib-0:2.0-1.fc29.x86_64           |
         | broken        | foo-0:2.0-1.fc29.x86_64           |
-    And stderr is
+    And stderr contains lines
     """
     Problem: cannot install both lib-2.0-1.fc29.x86_64 from install-dependencies and lib-1.0-1.fc29.x86_64 from install-dependencies
       - package foo-2.0-1.fc29.x86_64 from install-dependencies requires lib-2.0, but none of the providers can be installed

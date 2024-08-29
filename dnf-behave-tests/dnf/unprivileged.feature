@@ -12,8 +12,11 @@ Scenario: unprivileged user can create a cache even without system state
     And I delete directory "/usr/lib/sysimage/libdnf5"
    When I execute dnf with args "makecache" as an unprivileged user
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Metadata cache created.
         """

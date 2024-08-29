@@ -13,9 +13,12 @@ Scenario: Check that only module packages including src are available
         | berry-source | enabled   | wood       |           |
    When I execute dnf with args "repoquery berry"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         berry-0:1.0-1.wood.src
         berry-0:1.0-1.wood.x86_64
         """
@@ -29,9 +32,12 @@ Scenario: Check that only module packages including src are available
       | berry-source | enabled   | garden     |           |
  When I execute dnf with args "repoquery berry"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       berry-0:1.0-1.garden.src
       berry-0:1.0-1.garden.x86_64
       """
@@ -46,9 +52,12 @@ Scenario: Check that source packages do not filter binary rpms
       | yum-source   | enabled   | 1          |           |
  When I execute dnf with args "repoquery yum"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       yum-0:3.4.3-0.x86_64
       yum-0:3.8.3-0.f29.modular.src
       yum-0:3.8.3-0.f29.modular.x86_64

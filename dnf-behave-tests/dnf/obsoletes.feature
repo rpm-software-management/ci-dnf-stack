@@ -294,10 +294,10 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
         | Action        | Package                               |
         | install-group | PackageD-0:2.0-1.x86_64               |
         | group-install | Obsoleter and obsoleted               |
-    And stderr is
-    """
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-obsoletes
-    """
+    And stderr contains lines
+        """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-obsoletes
+        """
 
 
 @dnf5
@@ -306,12 +306,13 @@ Scenario: Both packages are installed when group contains both obsoleter and obs
    When I execute dnf with args "group install obsoleter-obsoleted --setopt=obsoletes=False"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Problem: package PackageD-2.0-1.x86_64 from dnf-ci-obsoletes obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64 from dnf-ci-obsoletes
-      - cannot install the best candidate for the job
-      - conflicting requests
-    You can try to add to command line:
-      --no-best to not limit the transaction to the best candidates
-      --skip-broken to skip uninstallable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Problem: package PackageD-2.0-1.x86_64 from dnf-ci-obsoletes obsoletes PackageC < 2.0 provided by PackageC-1.0-1.x86_64 from dnf-ci-obsoletes
+          - cannot install the best candidate for the job
+          - conflicting requests
+        You can try to add to command line:
+          --no-best to not limit the transaction to the best candidates
+          --skip-broken to skip uninstallable packages
+        """

@@ -42,9 +42,10 @@ Scenario: dnf provides nonexistentprovide
    Error: No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
    """
    And dnf5 stderr is
-   """
-   No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
-   """
+       """
+       <REPOSYNC>
+       No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+       """
 
 Scenario: test order of provides "dnf provides webclient A B C"
    When I execute dnf with args "provides webclient A B C"
@@ -53,12 +54,13 @@ Scenario: test order of provides "dnf provides webclient A B C"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is
-    """
-    No matches found for A.
-    No matches found for B.
-    No matches found for C.
-    If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
-    """
+        """
+        <REPOSYNC>
+        No matches found for A.
+        No matches found for B.
+        No matches found for C.
+        If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+        """
 
 Scenario: test order of provides "dnf provides A webclient B C"
    When I execute dnf with args "provides A webclient B C"
@@ -67,12 +69,13 @@ Scenario: test order of provides "dnf provides A webclient B C"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is
-    """
-    No matches found for A.
-    No matches found for B.
-    No matches found for C.
-    If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
-    """
+        """
+        <REPOSYNC>
+        No matches found for A.
+        No matches found for B.
+        No matches found for C.
+        If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+        """
 
 Scenario: test order of provides "dnf provides A B C webclient"
    When I execute dnf with args "provides A B C webclient"
@@ -81,12 +84,13 @@ Scenario: test order of provides "dnf provides A B C webclient"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is
-    """
-    No matches found for A.
-    No matches found for B.
-    No matches found for C.
-    If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
-    """
+        """
+        <REPOSYNC>
+        No matches found for A.
+        No matches found for B.
+        No matches found for C.
+        If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+        """
 
 Scenario: try to match a package by binary if other provides do not match
   Given I use repository "dnf-ci-provides"

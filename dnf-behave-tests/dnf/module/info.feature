@@ -33,9 +33,12 @@ Given I use repository "dnf-ci-fedora-modular-updates"
 Scenario: Get info for a module, only module name specified
  When I execute dnf with args "module info nodejs"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Name             : nodejs
       Stream           : 10
       Version          : 20180920144631
@@ -204,9 +207,12 @@ Scenario: Get info for a module, only module name specified
 Scenario: Get info for an enabled stream, module name and stream specified
  When I execute dnf with args "module info nodejs:11"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Name             : nodejs
       Stream           : 11
       Version          : 20180920144611
@@ -257,9 +263,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Get info for an installed profile, module name and profile specified
    When I execute dnf with args "module info nodejs/minimal"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Ignoring unnecessary profile: 'nodejs/minimal'
         Name             : nodejs
         Stream           : 10
@@ -430,9 +439,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Get info for an installed profile, module name, stream and profile specified
    When I execute dnf with args "module info nodejs:11/minimal"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Ignoring unnecessary profile: 'nodejs/minimal'
         Name             : nodejs
         Stream           : 11
@@ -484,9 +496,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Non-existent profile is ignored for dnf module info
    When I execute dnf with args "module info nodejs:11/non-existing-profile"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Ignoring unnecessary profile: 'nodejs/non-existing-profile'
         Name             : nodejs
         Stream           : 11
@@ -545,9 +560,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Get info for two enabled modules from different repos
    When I execute dnf with args "module info nodejs:8 postgresql:10"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name             : nodejs
         Stream           : 8 [d][e][a]
         Version          : 20180801080000
@@ -609,9 +627,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Get info for two modules, one of them non-existent
    When I execute dnf with args "module info postgresql:10 non-existing-module"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Unable to resolve argument non-existing-module
         Name             : postgresql
         Stream           : 10
@@ -650,9 +671,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario Outline: I can get the info about content of existing module streams with <command>
    When I execute dnf with args "<command>"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name    : postgresql:10:20181211125304:6c81f848:x86_64
         client  : postgresql
         default : postgresql-server
@@ -689,9 +713,12 @@ Examples:
   Scenario: Profile specification is ignored by dnf module info --profile
    When I execute dnf with args "module info --profile postgresql/client"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Ignoring unnecessary profile: 'postgresql/client'
         Name    : postgresql:10:20181211125304:6c81f848:x86_64
         client  : postgresql
@@ -723,9 +750,12 @@ Examples:
   Scenario: I can get the info about contents of more than one module profile streams
    When I execute dnf with args "module info --profile postgresql:10 nodejs:11"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name        : nodejs:11:20180920144611:6c81f848:x86_64
         default     : nodejs
                     : npm
@@ -770,9 +800,12 @@ Examples:
   Scenario: I can get the module context of the active stream
    When I execute dnf with args "module info nodejs:8"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name             : nodejs
         Stream           : 8 [d][e][a]
         Version          : 20180801080000

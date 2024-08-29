@@ -25,9 +25,10 @@ Scenario: Downgrade one RPM
    When I execute dnf with args "downgrade flac"
    Then the exit code is 0
     And stderr is
-    """
-    The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
-    """
+        """
+        <REPOSYNC>
+        The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
+        """
 
 
 Scenario: Downgrade RPM that requires downgrade of dependency
@@ -94,10 +95,11 @@ Scenario: Downgrade list of packages, none of them has a downgrade available
    Then the exit code is 0
     And stdout contains "Nothing to do."
     And stderr is
-    """
-    The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
-    The lowest available version of the "abcde.noarch" package is already installed, cannot downgrade it.
-    """
+        """
+        <REPOSYNC>
+        The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
+        The lowest available version of the "abcde.noarch" package is already installed, cannot downgrade it.
+        """
     And Transaction is empty
 
 
@@ -107,12 +109,13 @@ Scenario: Downgrade list of packages, one of them is not available
    When I execute dnf with args "downgrade flac nosuchpkg"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: nosuchpkg
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: nosuchpkg
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
     And Transaction is empty
 
 
@@ -121,7 +124,7 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
    Then the exit code is 0
    When I execute dnf with args "downgrade --skip-unavailable flac nosuchpkg"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     No match for argument: nosuchpkg
 
@@ -137,7 +140,7 @@ Scenario: Downgrade list of packages, one of them is not installed
    Then the exit code is 0
    When I execute dnf with args "downgrade flac abcde"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     Packages for argument 'abcde' available, but not installed.
@@ -150,7 +153,7 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
    Then the exit code is 0
    When I execute dnf with args "downgrade --skip-unavailable flac abcde"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     Packages for argument 'abcde' available, but not installed.
 
@@ -166,7 +169,7 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
    Then the exit code is 0
    When I execute dnf with args "downgrade nosuchpkg flac wget abcde"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     No match for argument: nosuchpkg
@@ -183,7 +186,7 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
    Then the exit code is 0
    When I execute dnf with args "downgrade --skip-unavailable nosuchpkg flac wget abcde"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     No match for argument: nosuchpkg
     The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
@@ -202,12 +205,13 @@ Scenario Outline: Check <command> exit code - package does not exist
    When I execute dnf with args "<command> non-existent-package"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: non-existent-package
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: non-existent-package
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
 
 Examples:
     | command   |
@@ -220,10 +224,11 @@ Scenario Outline: Check <command> exit code - package not installed
    When I execute dnf with args "<command> flac"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Packages for argument 'flac' available, but not installed.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Packages for argument 'flac' available, but not installed.
+        """
 
 Examples:
     | command   |
@@ -237,11 +242,14 @@ Scenario: Check upgrade exit code - package already on the highest version
     And I successfully execute dnf with args "install flac-0:1.3.3-3.fc29.x86_64"
    When I execute dnf with args "upgrade flac"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
 
 
 @bz1759847
@@ -251,11 +259,11 @@ Scenario: Check downgrade exit code - package already on the lowest version
    When I execute dnf with args "downgrade flac"
    Then the exit code is 0
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
     And stderr is
-    """
-    The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
-    """
+        """
+        <REPOSYNC>
+        The lowest available version of the "flac.x86_64" package is already installed, cannot downgrade it.
+        """

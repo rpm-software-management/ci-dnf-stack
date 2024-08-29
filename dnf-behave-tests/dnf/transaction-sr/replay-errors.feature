@@ -26,6 +26,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Install action, no match for: does-not-exist-1.0-1.noarch.
       You can try to add to command line:
@@ -52,6 +53,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Install action, no match for: top-a-1:3.0-1.x86_64.
       You can try to add to command line:
@@ -78,6 +80,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Package "bottom-a2-1.0-1.x86_64" is already installed.
       """
@@ -108,6 +111,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Install action, no match for: does-not-exist-2.0-1.x86_64.
       Cannot perform Remove action, no match for: does-not-exist-1.0-1.x86_64.
@@ -141,6 +145,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Install action, no match for: top-a-1:3.0-1.x86_64.
       You can try to add to command line:
@@ -173,6 +178,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Remove action because 'top-a-1:2.0-1.x86_64' is installed in a different version: 'top-a-1:1.0-1.x86_64'.
       Extra package 'bottom-a1-2.0-1.noarch' (with action 'Install') which is not present in the stored transaction was pulled into the transaction.
@@ -204,6 +210,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Remove action, no match for: does-not-exist-1.0-1.x86_64.
       You can try to add to command line:
@@ -230,6 +237,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Remove action for Package 'top-c-1.0-1.x86_64' because it is not installed.
       You can try to add to command line:
@@ -262,6 +270,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Extra package 'bottom-a1-2.0-1.noarch' (with action 'Install') which is not present in the stored transaction was pulled into the transaction.
 
@@ -307,6 +316,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Problem: package top-a-1:2.0-1.x86_64 from transaction-sr requires bottom-a1 = 2.0-1, but none of the providers can be installed
         - cannot install both bottom-a1-2.0-1.noarch from transaction-sr and bottom-a1-1.0-1.noarch from transaction-sr
@@ -335,6 +345,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Problem: conflicting requests
         - nothing provides nonexistent needed by broken-dep-1.0-1.x86_64 from transaction-sr
@@ -376,6 +387,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       No match for argument: nonexistent
       Extra package 'bottom-a1-2.0-1.noarch' (with action 'Install') which is not present in the stored transaction was pulled into the transaction.
@@ -406,6 +418,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Remove action for Group 'nonexistent' because it is not installed.
       No groups to remove for argument: nonexistent
@@ -433,6 +446,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Upgrade action for Group 'nonexistent' because it is not installed.
       No match for argument: nonexistent
@@ -463,6 +477,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Packages for argument 'test-group' installed, but not available.
       """
 
@@ -499,6 +514,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       No match for argument: nonexistent
       Extra package 'bottom-a1-2.0-1.noarch' (with action 'Install') which is not present in the stored transaction was pulled into the transaction.
@@ -527,6 +543,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Remove action for Environment 'nonexistent' because it is not installed.
       No groups to remove for argument: nonexistent
@@ -553,6 +570,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot perform Upgrade action for Environment 'nonexistent' because it is not installed.
       No match for argument: nonexistent
@@ -605,6 +623,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "id" in a group.
       """

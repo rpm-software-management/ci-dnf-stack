@@ -21,9 +21,12 @@ Given I use repository "dnf-ci-fedora-modular"
 Given I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "updateinfo --list"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
 
@@ -43,10 +46,11 @@ Given I use repository "dnf-ci-fedora-modular"
 Given I use repository "dnf-ci-fedora-modular-updates"
  Then I execute dnf with args "updateinfo --list"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
       """
+  And stdout is empty
 
 
 @dnf5
@@ -57,10 +61,11 @@ Given I use repository "dnf-ci-fedora"
   And I use repository "dnf-ci-fedora-modular-updates"
   And I execute dnf with args "module enable postgresql:9.6"
  When I execute dnf with args "updateinfo --list"
- Then stdout is
+ Then stderr is
       """
       <REPOSYNC>
       """
+  And stdout is empty
 
 
 @bz1804234
@@ -72,9 +77,12 @@ Given I use repository "dnf-ci-fedora"
   And I execute dnf with args "module install postgresql/default"
   And I use repository "dnf-ci-fedora-modular-updates"
  When I execute dnf with args "updateinfo --list"
- Then stdout is
+ Then stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       FEDORA-2019-0329090518 enhancement nodejs-1:8.14.0-1.x86_64
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
@@ -89,9 +97,12 @@ Given I use repository "dnf-ci-fedora"
   And I use repository "dnf-ci-fedora-modular-updates"
   And I execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "updateinfo --list"
- Then stdout is
+ Then stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       FEDORA-2019-0329090518 enhancement nodejs-1:8.14.0-1.x86_64
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
@@ -114,9 +125,12 @@ Given I use repository "dnf-ci-multicontext-modular-advisory"
       | module-stream-enable  | perl-DBI:master                                        |
   When I execute dnf with args "updateinfo --list"
   Then the exit code is 0
-   And stdout is
+   And stderr is
       """
       <REPOSYNC>
+      """
+   And stdout is
+      """
       FEDORA-2019-0329090518 enhancement test-perl-DBI-1-2.module_el8+6587+9879afr5.x86_64
       """
   When I execute dnf with args "check-update --enhancement"
@@ -129,8 +143,8 @@ Given I use repository "dnf-ci-multicontext-modular-advisory"
       | upgrade               | test-perl-DBI-0:1-2.module_el8+6587+9879afr5.x86_64   |
   When I execute dnf with args "updateinfo"
   Then the exit code is 0
-   And stdout is
-      """
-      <REPOSYNC>
-
-      """
+   And stderr is
+       """
+       <REPOSYNC>
+       """
+   And stdout is empty

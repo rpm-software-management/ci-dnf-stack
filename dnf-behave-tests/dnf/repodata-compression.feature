@@ -9,9 +9,12 @@ Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--general-compress-type zstd"
  When I execute dnf with args "repoquery vagare"
  Then the exit code is 0
- And stdout is
- """
- <REPOSYNC>
- vagare-0:1.0-1.fc29.src
- vagare-0:1.0-1.fc29.x86_64
- """
+  And stderr is
+      """
+      <REPOSYNC>
+      """
+  And stdout is
+      """
+      vagare-0:1.0-1.fc29.src
+      vagare-0:1.0-1.fc29.x86_64
+      """

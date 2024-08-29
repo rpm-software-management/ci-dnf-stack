@@ -9,9 +9,12 @@ Background:
 Scenario: Listing changelogs since given date
    When I execute dnf with args "changelog pkg-with-changelogs --since 2023-01-01"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     Listing changelogs since Sun Jan  1 00:00:00 2023
     Changelogs for pkg-with-changelogs-1.0-3.src, pkg-with-changelogs-1.0-3.x86_64
     * Mon May 01 12:00:00 2023 DNF5 Team <pkgs@dnf.team> - 1.0-3

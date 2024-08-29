@@ -53,16 +53,15 @@ Scenario: Downgrade is unable to resolve transaction
    Then the exit code is 1
    And transaction is empty
    And stdout is
-   """
-   <REPOSYNC>
-   (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages)
-   """
+       """
+       (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages)
+       """
    And stderr is
-   """
-   allow_vendor_change is disabled. This option is currently not supported for downgrade and distro-sync commands
-   Error: 
-    Problem: problem with installed package vendor-1.1-1.x86_64
-     - cannot install both vendor-1.0-1.x86_64 and vendor-1.1-1.x86_64
-     - conflicting requests
-   """
-
+       """
+       <REPOSYNC>
+       allow_vendor_change is disabled. This option is currently not supported for downgrade and distro-sync commands
+       Error: 
+        Problem: problem with installed package vendor-1.1-1.x86_64
+         - cannot install both vendor-1.0-1.x86_64 and vendor-1.1-1.x86_64
+         - conflicting requests
+       """

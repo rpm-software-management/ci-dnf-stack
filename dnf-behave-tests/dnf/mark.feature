@@ -74,10 +74,10 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
    When I execute dnf with args "install lame"
     And I execute dnf with args "mark --skip-unavailable dependency lame nosuchpkg"
    Then the exit code is 0
-    And stderr is
-    """
-    No match for argument: nosuchpkg
-    """
+    And stderr contains lines
+        """
+        No match for argument: nosuchpkg
+        """
     And package reasons are
         | Package                       | Reason     |
         | lame-3.100-4.fc29.x86_64      | Dependency |
@@ -136,14 +136,14 @@ Scenario: Mark package as the same reason it currently has
    When I execute dnf with args "mark user lame"
    Then the exit code is 0
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
     And stderr is
-    """
-    Package "lame-3.100-4.fc29.x86_64" is already installed with reason "User".
-    """
+        """
+        <REPOSYNC>
+        Package "lame-3.100-4.fc29.x86_64" is already installed with reason "User".
+        """
 
 
 #@dnf5 currently fails, see:

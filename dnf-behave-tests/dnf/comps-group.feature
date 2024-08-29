@@ -125,14 +125,15 @@ Scenario: Install and remove group with excluded package dependency
    When I execute dnf with args "group install --exclude=setup dnf-ci-testgroup"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Problem: package filesystem-3.9-2.fc29.x86_64 from dnf-ci-fedora requires setup, but none of the providers can be installed
-      - conflicting requests
-      - package setup-2.12.1-1.fc29.noarch from dnf-ci-fedora is filtered out by exclude filtering
-    You can try to add to command line:
-      --skip-broken to skip uninstallable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Problem: package filesystem-3.9-2.fc29.x86_64 from dnf-ci-fedora requires setup, but none of the providers can be installed
+          - conflicting requests
+          - package setup-2.12.1-1.fc29.noarch from dnf-ci-fedora is filtered out by exclude filtering
+        You can try to add to command line:
+          --skip-broken to skip uninstallable packages
+        """
 
 
 @dnf5
@@ -305,14 +306,17 @@ Scenario: Group list
  Given I use repository "dnf-ci-thirdparty"
   When I execute dnf with args "group list"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-    """
-    <REPOSYNC>
-    ID                   Name                 Installed
-    cqrlib-non-devel     CQRlib-non-devel            no
-    dnf-ci-testgroup     DNF-CI-Testgroup            no
-    superripper-and-deps SuperRipper-and-deps        no
-    """
+       """
+       ID                   Name                 Installed
+       cqrlib-non-devel     CQRlib-non-devel            no
+       dnf-ci-testgroup     DNF-CI-Testgroup            no
+       superripper-and-deps SuperRipper-and-deps        no
+       """
 
 @dnf5
 @dnf5daemon
@@ -321,12 +325,15 @@ Scenario: Group list with arg
  Given I use repository "dnf-ci-thirdparty"
   When I execute dnf with args "group list dnf-ci-testgroup"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-    """
-    <REPOSYNC>
-    ID                   Name             Installed
-    dnf-ci-testgroup     DNF-CI-Testgroup        no
-    """
+       """
+       ID                   Name             Installed
+       dnf-ci-testgroup     DNF-CI-Testgroup        no
+       """
 
 @bz1826198
 @dnf5
@@ -344,9 +351,12 @@ Scenario: List an environment with empty name
           Test Group
           <name-unset>
        """
-   And dnf5 stdout is
+   And dnf5 stderr is
        """
        <REPOSYNC>
+       """
+   And dnf5 stdout is
+       """
        ID                   Name       Installed
        no-name-group                          no
        test-group           Test Group        no
@@ -384,25 +394,31 @@ Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group list"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-       """
-       <REPOSYNC>
-       ID                   Name       Installed
-       test-group           Test Group        no
-       """
+        """
+        ID                   Name       Installed
+        test-group           Test Group        no
+        """
    When I execute dnf with args "group info test-group"
-   Then stdout is
-       """
-       <REPOSYNC>
-       Id                   : test-group
-       Name                 : Test Group
-       Description          : Test Group description updated.
-       Installed            : no
-       Order                : 
-       Langonly             : 
-       Uservisible          : yes
-       Repositories         : comps-group-merging
-       """
+   Then stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Id                   : test-group
+        Name                 : Test Group
+        Description          : Test Group description updated.
+        Installed            : no
+        Order                : 
+        Langonly             : 
+        Uservisible          : yes
+        Repositories         : comps-group-merging
+        """
 
 
 @dnf5
@@ -428,14 +444,17 @@ Scenario: Merge groups when one has empty packagelist
         | group-install | Test Group                        |
         | install-group | test-package-1.0-1.fc29.noarch    |
    When I execute dnf with args "group info test-group"
-   Then stdout is
-       """
-       <REPOSYNC>
-       Group: Test Group
-        Description: Test Group description updated.
-        Mandatory Packages:
-          test-package
-       """
+   Then stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Group: Test Group
+         Description: Test Group description updated.
+         Mandatory Packages:
+           test-package
+        """
 
 
 @dnf5
@@ -445,17 +464,20 @@ Scenario: Merge environment with missing names containg a group with missing nam
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
    When I execute dnf with args "environment info no-name-env"
-   Then stdout is
-       """
-       <REPOSYNC>
-       Id                   : no-name-env
-       Name                 : 
-       Description          : 
-       Order                : 
-       Installed            : False
-       Repositories         : comps-group, comps-group-merging
-       Required groups      : no-name-group
-       """
+   Then stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Id                   : no-name-env
+        Name                 : 
+        Description          : 
+        Order                : 
+        Installed            : False
+        Repositories         : comps-group, comps-group-merging
+        Required groups      : no-name-group
+        """
 
 
 @dnf5
@@ -463,19 +485,22 @@ Scenario: Merge environment with missing names containg a group with missing nam
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
    When I execute dnf with args "group info no-name-group"
-   Then stdout is
-       """
-       <REPOSYNC>
-       Id                   : no-name-group
-       Name                 : 
-       Description          : 
-       Installed            : no
-       Order                : 
-       Langonly             : 
-       Uservisible          : yes
-       Repositories         : comps-group
-       Mandatory packages   : test-package
-       """
+   Then stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Id                   : no-name-group
+        Name                 : 
+        Description          : 
+        Installed            : no
+        Order                : 
+        Langonly             : 
+        Uservisible          : yes
+        Repositories         : comps-group
+        Mandatory packages   : test-package
+        """
 
 
 # @dnf5
@@ -502,7 +527,7 @@ Scenario: Install an environment with a nonexistent group
         | group-install | Test Group                        |
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
-    And stderr is
+    And stderr contains lines
        """
        No match for group from environment: nonexistent-group
 
@@ -521,7 +546,7 @@ Scenario: Install an environment using @^environment syntax
         | group-install | Test Group                        |
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
-    And stderr is
+    And stderr contains lines
        """
        No match for group from environment: nonexistent-group
 
@@ -568,14 +593,17 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
   When I execute dnf with args "group list -C" as an unprivileged user
   Then the exit code is 0
   Then stderr does not contain "Permission denied: '{context.dnf.installroot}/var/cache/dnf/dnf-ci-thirdparty-[a-z0-9]{{16}}/repodata/gen'"
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-    """
-    <REPOSYNC>
-    ID                   Name                 Installed
-    cqrlib-non-devel     CQRlib-non-devel            no
-    dnf-ci-testgroup     DNF-CI-Testgroup            no
-    superripper-and-deps SuperRipper-and-deps        no
-    """
+       """
+       ID                   Name                 Installed
+       cqrlib-non-devel     CQRlib-non-devel            no
+       dnf-ci-testgroup     DNF-CI-Testgroup            no
+       superripper-and-deps SuperRipper-and-deps        no
+       """
 
 
 @dnf5
@@ -586,22 +614,28 @@ Scenario: dnf5 group list: empty output when run for the second time
   When I execute dnf with args "clean metadata"
    And I execute dnf with args "group list"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-    """
-    <REPOSYNC>
-    ID                   Name         Installed
-    test-group-1         Test Group 1        no
-    test-group-2         Test Group 2        no
-    """
+       """
+       ID                   Name         Installed
+       test-group-1         Test Group 1        no
+       test-group-2         Test Group 2        no
+       """
   When I execute dnf with args "group list"
   Then the exit code is 0
+   And stderr is
+       """
+       <REPOSYNC>
+       """
    And stdout is
-    """
-    <REPOSYNC>
-    ID                   Name         Installed
-    test-group-1         Test Group 1        no
-    test-group-2         Test Group 2        no
-    """
+       """
+       ID                   Name         Installed
+       test-group-1         Test Group 1        no
+       test-group-2         Test Group 2        no
+       """
 
 @dnf5
 # This typically covers situations where initial system state is created from
@@ -613,19 +647,22 @@ Scenario: dnf can list installed groups even without their xml definitions prese
     And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/test-group.xml"
    When I execute dnf with args "group info --installed"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    Id                   : test-group
-    Name                 : Test Group
-    Description          : Test Group description.
-    Installed            : yes
-    Order                : 
-    Langonly             : 
-    Uservisible          : yes
-    Repositories         : @System
-    Mandatory packages   : test-package
-    """
+        """
+        Id                   : test-group
+        Name                 : Test Group
+        Description          : Test Group description.
+        Installed            : yes
+        Order                : 
+        Langonly             : 
+        Uservisible          : yes
+        Repositories         : @System
+        Mandatory packages   : test-package
+        """
 
 @dnf5
 # In case the group is not available in repositories, minimal solvable is created
@@ -637,19 +674,22 @@ Scenario: dnf can list installed groups even without their xml definitions prese
     And I drop repository "comps-group"
    When I execute dnf with args "group info --installed"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    Id                   : test-group
-    Name                 : 
-    Description          : 
-    Installed            : yes
-    Order                : 
-    Langonly             : 
-    Uservisible          : yes
-    Repositories         : @System
-    Default packages     : test-package
-    """
+        """
+        Id                   : test-group
+        Name                 : 
+        Description          : 
+        Installed            : yes
+        Order                : 
+        Langonly             : 
+        Uservisible          : yes
+        Repositories         : @System
+        Default packages     : test-package
+        """
 
 # https://github.com/rpm-software-management/dnf5/issues/917
 @dnf5
@@ -658,6 +698,7 @@ Scenario: Remove group that is not installed
   When I execute dnf with args "group remove dnf-ci-testgroup"
   Then the exit code is 0
    And stderr is
-   """
-   No groups to remove for argument: dnf-ci-testgroup
-   """
+       """
+       <REPOSYNC>
+       No groups to remove for argument: dnf-ci-testgroup
+       """

@@ -22,9 +22,12 @@ Scenario: Packages in transaction are sorted by NEVRA
     And I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install wget glibc flac SuperRipper"
    Then the exit code is 0
-    And stdout matches line by line
+    And stderr is
       """
       <REPOSYNC>
+      """
+    And stdout matches line by line
+      """
       Dependencies resolved.
       ================================================================================
        Package                Arch      Version            Repository            Size

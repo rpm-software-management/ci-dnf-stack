@@ -9,7 +9,8 @@ Scenario: Run repoclosure with already created cache without filelists
     # This command requires filelists.xml
    When I execute dnf with args "repoclosure"
    Then the exit code is 0
-   Then stdout is
-   """
-   <REPOSYNC>
-   """
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is empty

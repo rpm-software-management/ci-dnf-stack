@@ -181,9 +181,17 @@ def then_stderr_is(context):
 
 @behave.then("stderr matches line by line")
 def then_stderr_matches_line_by_line(context):
-    out_lines = context.cmd_stderr.split('\n')
-    regexp_lines = context.text.split('\n')
-    lines_match_to_regexps_line_by_line(out_lines, regexp_lines)
+    """
+    Checks that each line of stderr matches respective line in regular expressions.
+    Supports the <REPOSYNC> in the same way as the step "stderr is"
+    """
+    found = context.cmd_stderr.split('\n')
+    expected = context.text.split('\n')
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+
+    lines_match_to_regexps_line_by_line(clean_found, clean_expected)
 
 
 @behave.then("{dnf_version:dnf_version} exit code is {exitcode}")

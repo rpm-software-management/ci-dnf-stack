@@ -22,6 +22,7 @@ Scenario: Fail to enable a different stream of an already enabled module
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
@@ -45,6 +46,7 @@ Scenario: Fail to install a different stream of an already enabled module
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        <REPOSYNC>
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         """
@@ -68,6 +70,7 @@ Scenario: Fail to install a different stream of an already enabled module using 
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        <REPOSYNC>
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         """
@@ -82,6 +85,7 @@ Scenario: Fail to enable a module stream when specifying only module
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Unable to resolve argument 'nodejs':
           - Argument 'nodejs' matches 4 streams ('10', '11', '12', '8') of module 'nodejs', but none of the streams are enabled or default.
@@ -98,6 +102,7 @@ Scenario: Fail to enable a module stream when specifying wrong version
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         No match for argument: nodejs:8:99
         You can try to add to command line:
@@ -115,6 +120,7 @@ Scenario: Fail to enable a non-existent module stream
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         No match for argument: nodejs:1
         You can try to add to command line:
@@ -145,6 +151,7 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        <REPOSYNC>
         Cannot enable multiple streams for module 'nodejs'
         """
 

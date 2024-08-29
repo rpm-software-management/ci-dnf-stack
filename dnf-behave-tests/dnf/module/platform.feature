@@ -42,14 +42,14 @@ Scenario: I can't list info for the pseudo-module
  When I execute dnf with args "module info pseudoplatform"
  Then the exit code is 1
   And stdout is
-   """
-   <REPOSYNC>
-   Unable to resolve argument pseudoplatform
-   """
+      """
+      Unable to resolve argument pseudoplatform
+      """
   And stderr is
-   """
-   Error: No matching Modules to list
-   """
+      """
+      <REPOSYNC>
+      Error: No matching Modules to list
+      """
 
 
 @dnf5
@@ -58,6 +58,7 @@ Scenario: I can't enable pseudo-module
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       No match for argument: pseudoplatform:6.0
       You can try to add to command line:
@@ -81,6 +82,7 @@ Scenario: I can't disable pseudo-module
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       No match for argument: pseudoplatform:6.0
       You can try to add to command line:
@@ -100,15 +102,18 @@ Scenario: I can't update pseudo-module
 Scenario: I can't remove pseudo-module
  When I execute dnf with args "module remove pseudoplatform:6.0"
  Then the exit code is 0
+  And stderr is
+      """
+      <REPOSYNC>
+      """
   And stdout matches line by line
-  """
-  <REPOSYNC>
-  ^Dependencies resolved.
-  ^Nothing to do.
-  ^Complete!
-  """
+      """
+      ^Dependencies resolved.
+      ^Nothing to do.
+      ^Complete!
+      """
   And stderr contains lines
-  """
-  Problems in request:
-  missing groups or modules: pseudoplatform:6.0
-  """
+      """
+      Problems in request:
+      missing groups or modules: pseudoplatform:6.0
+      """

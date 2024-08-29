@@ -33,9 +33,12 @@ Scenario: Reposync with --downloadcomps option
     And I drop repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "group list"
    Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
    """
-   <REPOSYNC>
    Available Groups:
       DNF-CI-Testgroup
    """
@@ -229,9 +232,12 @@ Scenario: Reposync --urls switch
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --urls"
    Then the exit code is 0
-    And stdout matches line by line
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout matches line by line
+    """
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
     http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.2-1\.src\.rpm
@@ -246,9 +252,12 @@ Scenario: Reposync --urls and --download-metadata switches
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --urls --download-metadata"
    Then the exit code is 0
-    And stdout matches line by line
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout matches line by line
+    """
     http://localhost:[0-9]+/repodata/primary.xml.gz
     http://localhost:[0-9]+/repodata/filelists.xml.gz
     http://localhost:[0-9]+/repodata/other.xml.gz

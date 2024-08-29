@@ -107,7 +107,8 @@ Scenario: Ignoring variable files with invalid encoding
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "repoquery empty --setopt=varsdir={context.dnf.installroot}/etc/dnf/vars"
    Then the exit code is 0
-   And stdout is
-   """
-   <REPOSYNC>
-   """
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is empty

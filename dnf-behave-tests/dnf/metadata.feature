@@ -12,7 +12,7 @@ Given I create directory "/temp-repos/temp-repo"
  Then the exit code is 0
  When I execute dnf with args "list"
  Then the exit code is 0
-  And stdout contains "testrepo"
+  And stderr contains "testrepo"
 Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/temp-repo/dnf-ci-fedora"
  Then the exit code is 0
   And I execute "createrepo_c --update ." in "{context.dnf.installroot}/temp-repos/temp-repo"
