@@ -13,12 +13,15 @@ Scenario: debug-restore does not do anything if there is no package set change
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
     And transaction is empty
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    Complete!
+    """
+    And stdout is
+    """
     Dependencies resolved.
     Nothing to do.
-    Complete!
     """
 
 
@@ -45,12 +48,15 @@ Scenario: debug-restore does not install missing packages if 'install' not in fi
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=remove,replace"
    Then the exit code is 0
     And transaction is empty
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    Complete!
+    """
+    And stdout is
+    """
     Dependencies resolved.
     Nothing to do.
-    Complete!
     """
 
 
@@ -68,12 +74,15 @@ Scenario: debug-restore does not remove packages if 'remove' not in filter-types
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=install,replace"
    Then the exit code is 0
     And transaction is empty
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    Complete!
+    """
+    And stdout is
+    """
     Dependencies resolved.
     Nothing to do.
-    Complete!
     """
 
 
@@ -100,12 +109,16 @@ Scenario: debug-restore does not replace packages if 'replace' not in filter-typ
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=install,remove"
    Then the exit code is 0
     And transaction is empty
+    And stderr is
+    """
+    <REPOSYNC>
+    Complete!
+    """
     And stdout is
     """
     <REPOSYNC>
     Dependencies resolved.
     Nothing to do.
-    Complete!
     """
 
 @bz1844533
@@ -153,9 +166,12 @@ Scenario: debug-restore --output only prints what would be changed
    When I execute dnf with args "debug-restore --output {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
     And transaction is empty
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     install   kernel-0:4.20.1-fc29.x86_64
     replace   test-replace-0:2-fc29.x86_64
     """
@@ -168,9 +184,12 @@ Scenario: debug-restore --output only prints what would be changed (with --remov
    When I execute dnf with args "debug-restore --remove-installonly --output {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
     And transaction is empty
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     remove    kernel-0:4.18.1-fc29.x86_64
     install   kernel-0:4.20.1-fc29.x86_64
     replace   test-replace-0:2-fc29.x86_64

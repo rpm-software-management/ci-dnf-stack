@@ -81,12 +81,13 @@ Scenario: Builddep with simple dependency (non-existent)
      Then the exit code is 1
       And dnf4 stderr contains "No matching package to install: 'flac = 15'"
       And dnf5 stderr is
-      """
-      Failed to resolve the transaction:
-      No match for argument: flac = 15
-      You can try to add to command line:
-        --skip-unavailable to skip unavailable packages
-      """
+          """
+          <REPOSYNC>
+          Failed to resolve the transaction:
+          No match for argument: flac = 15
+          You can try to add to command line:
+            --skip-unavailable to skip unavailable packages
+          """
 
 
 @bz1724668
@@ -115,11 +116,12 @@ Scenario: Builddep on SPEC with non-available Source0
    Error: Some packages could not be found.
    """
    And dnf5 stderr matches line by line
-   """
-   error: Unable to open .*/missingSource.spec: No such file or directory
-   Failed to parse spec file ".*/missingSource.spec".
-   Failed to parse some inputs.
-   """
+       """
+       <REPOSYNC>
+       error: Unable to open .*/missingSource.spec: No such file or directory
+       Failed to parse spec file ".*/missingSource.spec".
+       Failed to parse some inputs.
+       """
 
 
 @bz1758459
@@ -152,12 +154,13 @@ Scenario: Builddep with unavailable build dependency
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 1
       And stderr is
-      """
-      Failed to resolve the transaction:
-      No match for argument: this-lib-is-not-available
-      You can try to add to command line:
-        --skip-unavailable to skip unavailable packages
-      """
+          """
+          <REPOSYNC>
+          Failed to resolve the transaction:
+          No match for argument: this-lib-is-not-available
+          You can try to add to command line:
+            --skip-unavailable to skip unavailable packages
+          """
      When I execute dnf with args "builddep --skip-unavailable {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 0
       And dnf4 stderr is
@@ -174,7 +177,7 @@ Scenario: Builddep using macros with source rpm
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep -D 'dummy_param 1' {context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm"
      Then the exit code is 0
-      And stderr is
+      And stderr contains lines
       """
       Warning: -D/--define/--with/--without arguments have no effect on source rpm packages.
       Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora

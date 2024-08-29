@@ -16,7 +16,6 @@ Scenario: Run repoclosure without any options
    Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
     package: dedalo-1.0-1.fc29.noarch from repoclosure-lookaside
       unresolved deps (1):
         the-other-lib
@@ -26,6 +25,7 @@ Scenario: Run repoclosure without any options
     """
     And stderr is
         """
+        <REPOSYNC>
         Error: Repoclosure ended with unresolved dependencies (2) across 2 packages.
         """
 
@@ -37,13 +37,13 @@ Scenario: Run repoclosure with a package specified
    Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
     package: dedalo-1.0-1.fc29.noarch from repoclosure-lookaside
       unresolved deps (1):
         the-other-lib
     """
     And stderr is
         """
+        <REPOSYNC>
         Error: Repoclosure ended with unresolved dependencies (1) across 1 packages.
         """
 
@@ -69,7 +69,6 @@ Scenario: Check closure with --newest (consider only the latest package in each 
    Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
     package: dedalo-1.0-1.fc29.noarch from repoclosure-lookaside
       unresolved deps (1):
         the-other-lib
@@ -82,6 +81,7 @@ Scenario: Check closure with --newest (consider only the latest package in each 
     """
     And stderr is
         """
+        <REPOSYNC>
         Error: Repoclosure ended with unresolved dependencies (3) across 3 packages.
         """
 
@@ -93,7 +93,6 @@ Scenario: Check closure with --best
    Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
     package: dedalo-1.0-1.fc29.noarch from repoclosure-lookaside
       unresolved deps (1):
         the-other-lib
@@ -112,6 +111,7 @@ Scenario: Check closure with --best
     """
     And stderr is
         """
+        <REPOSYNC>
         Error: Repoclosure ended with unresolved dependencies (5) across 5 packages.
         """
 
@@ -123,7 +123,6 @@ Scenario: Check closure with both --newest and --best
    Then the exit code is 1
     And stdout is
     """
-    <REPOSYNC>
     package: dedalo-1.0-1.fc29.noarch from repoclosure-lookaside
       unresolved deps (1):
         the-other-lib
@@ -139,5 +138,6 @@ Scenario: Check closure with both --newest and --best
     """
     And stderr is
         """
+        <REPOSYNC>
         Error: Repoclosure ended with unresolved dependencies (4) across 4 packages.
         """

@@ -131,9 +131,12 @@ Scenario Outline: Package to add to a group can be specified by "<type>"
   Given I use repository "simple-base"
    When I execute dnf with args "groups-manager --name="New group" --print <spec>"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
     <comps>
@@ -231,9 +234,12 @@ Scenario: groups-manager --print is working
       </group>
     </comps>
     """
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
     <comps>

@@ -11,6 +11,7 @@ Scenario: Replay a non-existant transaction dir
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       cannot open file: (2) - No such file or directory [nonexistent/transaction.json]
       """
 
@@ -27,6 +28,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Error during transaction replay JSON parsing : object value separator ',' expected.
       """
@@ -43,6 +45,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing key "version".
       """
@@ -59,6 +62,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Unexpected version format: "1", supported version is "1.0".
       """
@@ -75,6 +79,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Incompatible major version: "a", supported major version is "1".
       """
@@ -91,6 +96,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Invalid minor version: "a", number expected.
       """
@@ -107,6 +113,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Incompatible major version: "5", supported major version is "1".
       """
@@ -124,6 +131,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Unexpected type of "rpms", array expected.
       """
@@ -147,6 +155,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "action" in an rpm.
       """
@@ -170,6 +179,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Either "nevra" or "package_path" object key is required in an rpm.
       """
@@ -193,6 +203,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "reason" in an rpm.
       """
@@ -217,6 +228,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Invalid transaction item action: Fixxit
       """
 
@@ -240,6 +252,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Cannot parse NEVRA for rpm "wakaka".
       """
@@ -264,6 +277,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Invalid transaction item reason: dumb
       """
 
@@ -280,6 +294,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Unexpected type of "groups", array expected.
       """
@@ -301,6 +316,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "id" in a group.
       """
@@ -324,6 +340,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "action" in a group.
       """
@@ -349,6 +366,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Invalid transaction item action: Invalid
       """
 
@@ -372,6 +390,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Invalid package type: aaa
       """
 
@@ -388,6 +407,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Unexpected type of "environments", array expected.
       """
@@ -409,6 +429,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "id" in an environment.
       """
@@ -430,6 +451,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       Cannot parse file: './transaction/transaction.json': Missing object key "action" in an environment.
       """
@@ -453,5 +475,6 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Invalid transaction item action: Invalid
       """

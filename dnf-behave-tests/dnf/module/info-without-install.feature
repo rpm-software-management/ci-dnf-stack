@@ -21,9 +21,12 @@ Given I use repository "dnf-ci-fedora-modular-updates"
 Scenario: Get info for a module, only module name specified
  When I execute dnf with args "module info nodejs"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Name             : nodejs
       Stream           : 10
       Version          : 20180920144631
@@ -192,9 +195,12 @@ Scenario: Get info for a module, only module name specified
 Scenario: Get info for an enabled stream, module name and stream specified
  When I execute dnf with args "module info nodejs:11"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Name             : nodejs
       Stream           : 11
       Version          : 20180920144611
@@ -247,6 +253,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
    Then the exit code is 0
     And stderr is
         """
+        <REPOSYNC>
         No matches found for "non-existing-module".
         """
 
@@ -254,9 +261,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: Get info for two enabled modules from different repos
    When I execute dnf with args "module info nodejs:8 postgresql:10"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name             : nodejs
         Stream           : 8 [d][e][a]
         Version          : 20180801080000
@@ -320,7 +330,6 @@ Scenario: Get info for an enabled stream, module name and stream specified
    Then the exit code is 0
     And stdout is
         """
-        <REPOSYNC>
         Name             : postgresql
         Stream           : 10
         Version          : 20181211125304
@@ -342,6 +351,7 @@ Scenario: Get info for an enabled stream, module name and stream specified
         """
     And stderr is
         """
+        <REPOSYNC>
         No matches found for "non-existing-module".
         """
 
@@ -351,9 +361,12 @@ Scenario: Get info for an enabled stream, module name and stream specified
   Scenario: I can get the module context of the active stream
    When I execute dnf with args "module info nodejs:8"
    Then the exit code is 0
-    And stdout is
+    And stderr is
         """
         <REPOSYNC>
+        """
+    And stdout is
+        """
         Name             : nodejs
         Stream           : 8 [d][e][a]
         Version          : 20180801080000

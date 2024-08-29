@@ -69,9 +69,10 @@ Scenario: Undo a transaction with a missing group
    When I execute dnf with args "history undo last"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: dnf-ci-testgroup
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: dnf-ci-testgroup
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """

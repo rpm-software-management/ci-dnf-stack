@@ -155,8 +155,8 @@ Given I use repository "simple-base" as http
   And I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
  When I execute dnf with args "download labirinto --destdir={context.dnf.tempdir}/downloaddir"
  Then the exit code is 0
-  And stdout contains "labirinto-0:1.0-1.fc29.src             100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
-  And stdout contains "labirinto-0:1.0-1.fc29.x86_64          100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
+  And stderr contains "labirinto-0:1.0-1.fc29.src             100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
+  And stderr contains "labirinto-0:1.0-1.fc29.x86_64          100% \|   0.0   B/s \|   0.0   B \|  00m00s\n>>> Already downloaded"
 
 
 @bz2077864

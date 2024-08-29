@@ -65,12 +65,13 @@ Scenario: Upgrade list of packages, one of them is not available
    When I execute dnf with args "upgrade flac nosuchpkg"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: nosuchpkg
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: nosuchpkg
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
     And Transaction is empty
 
 
@@ -79,12 +80,12 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not a
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --skip-unavailable nosuchpkg flac"
    Then the exit code is 0
-    And stderr is
-    """
-    No match for argument: nosuchpkg
+    And stderr contains lines
+        """
+        No match for argument: nosuchpkg
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
-    """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+        """
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
@@ -96,10 +97,11 @@ Scenario: Upgrade list of packages, one of them is not installed
    When I execute dnf with args "upgrade flac dwm"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Packages for argument 'dwm' available, but not installed.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Packages for argument 'dwm' available, but not installed.
+        """
     And Transaction is empty
 
 
@@ -108,12 +110,12 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not i
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --skip-unavailable dwm flac"
    Then the exit code is 0
-    And stderr is
-    """
-    Packages for argument 'dwm' available, but not installed.
+    And stderr contains lines
+        """
+        Packages for argument 'dwm' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
-    """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+        """
     And Transaction is following
         | Action        | Package                                   |
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
@@ -131,7 +133,7 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
         | best | False |
    When I execute dnf with args "--nogpgcheck upgrade"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
       - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
@@ -163,13 +165,14 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
    When I execute dnf with args "upgrade"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
-    You can try to add to command line:
-      --no-best to not limit the transaction to the best candidates
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
+          - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
+        You can try to add to command line:
+          --no-best to not limit the transaction to the best candidates
+        """
    When I execute dnf with args "upgrade --no-best"
    Then the exit code is 0
     And Transaction is following
@@ -182,13 +185,13 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | upgrade       | abcde-0:2.9.3-1.fc29.noarch               |
         | broken        | SuperRipper-1.3-1.x86_64                  |
-    And stderr is
-    """
-    Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
+    And stderr contains lines
+        """
+        Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
+          - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
  
-    Warning: skipped PGP checks for 7 packages from repositories: dnf-ci-fedora-updates, dnf-ci-fedora-updates-testing, dnf-ci-thirdparty-updates
-    """
+        Warning: skipped PGP checks for 7 packages from repositories: dnf-ci-fedora-updates, dnf-ci-fedora-updates-testing, dnf-ci-thirdparty-updates
+        """
 
 
 @dnf5
@@ -201,13 +204,13 @@ Scenario: Print information about skipped packages
         | Action        | Package                                   |
         | upgrade       | SuperRipper-0:1.2-1.x86_64                |
         | broken        | SuperRipper-1.3-1.x86_64                  |
-   Then stderr is
-    """
-    Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
-      - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
+   Then stderr contains lines
+        """
+        Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
+          - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-thirdparty-updates
-    """
+        Warning: skipped PGP checks for 1 package from repository: dnf-ci-thirdparty-updates
+        """
 
 
 # @dnf5
@@ -225,11 +228,14 @@ Scenario Outline: Print correct number of available updates if update <type> is 
    Then the exit code is 0
     And Transaction is empty
     And stderr contains "No security updates needed, but 2 updates available"
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
 
 Examples:
         | type          |
@@ -249,11 +255,14 @@ Scenario Outline: Print correct number of available updates if update <type> is 
    Then the exit code is 0
     And Transaction is empty
     And stderr contains "No security updates needed, but 7 updates available"
+    And stderr is
+        """
+        <REPOSYNC>
+        """
     And stdout is
-    """
-    <REPOSYNC>
-    Nothing to do.
-    """
+        """
+        Nothing to do.
+        """
 
 Examples:
         | type          |

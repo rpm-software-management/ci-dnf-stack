@@ -10,6 +10,7 @@ Scenario: reports an error for a non-existent package
  Then the exit code is 1
   And stderr is
       """
+      <REPOSYNC>
       Failed to resolve the transaction:
       No match for argument: non-existent-package
       You can try to add to command line:
@@ -21,6 +22,7 @@ Scenario: reports an error for a package without debuginfo
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Could not find debuginfo package for the following packages resolved from the argument 'nodebug': nodebug-0:1.0-1.x86_64
       Could not find debugsource package for the following packages resolved from the argument 'nodebug': nodebug-0:1.0-1.x86_64
       """
@@ -86,6 +88,7 @@ Given I successfully execute dnf with args "install bar-2.0"
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Could not find debuginfo package for the following packages resolved from the argument 'bar': bar-0:2.0-1.x86_64
       Could not find debugsource package for the following packages resolved from the argument 'bar': bar-0:2.0-1.x86_64
       """
@@ -95,6 +98,7 @@ Scenario: can't find the requested version of debuginfo (multilib package, archi
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Could not find debuginfo package for the following packages resolved from the argument 'baz-1.0': baz-0:1.0-1.i686, baz-0:1.0-1.x86_64
       Could not find debugsource package for the following packages resolved from the argument 'baz-1.0': baz-0:1.0-1.i686, baz-0:1.0-1.x86_64
       """

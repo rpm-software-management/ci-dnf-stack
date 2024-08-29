@@ -13,7 +13,7 @@ Scenario: Test offline when reboot wasn't performed
   And DNF Transaction is following
       | Action        | Package                    |
       | install       | flac-0:1.3.2-8.fc29.x86_64 |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -31,13 +31,13 @@ Scenario: Test offline when an offline transaction is already queued
   And DNF Transaction is following
       | Action        | Package                    |
       | install       | flac-0:1.3.2-8.fc29.x86_64 |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
  When I execute dnf with args "install --offline flac"
  Then the exit code is 0
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
 
@@ -76,7 +76,7 @@ Scenario: Test offline clean
   And DNF Transaction is following
       | Action        | Package                    |
       | install       | flac-0:1.3.2-8.fc29.x86_64 |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -100,7 +100,7 @@ Scenario: Test offline install and offline status
   And DNF Transaction is following
       | Action        | Package                    |
       | install       | flac-0:1.3.2-8.fc29.x86_64 |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -134,7 +134,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade       | glibc-0:2.28-26.fc29.x86_64               |
       | upgrade       | glibc-common-0:2.28-26.fc29.x86_64        |
       | upgrade       | glibc-all-langpacks-0:2.28-26.fc29.x86_64 |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -157,7 +157,7 @@ Given I use repository "dnf-ci-thirdparty"
       | install-group | lame-0:3.100-4.fc29.x86_64        |
       | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
       | group-install | DNF-CI-Testgroup                  |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -180,7 +180,7 @@ Given I use repository "simple-base"
   And DNF Transaction is following
       | Action        | Package                               |
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -208,7 +208,7 @@ Given I use repository "simple-base"
   And DNF Transaction is following
       | Action        | Package                               |
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """

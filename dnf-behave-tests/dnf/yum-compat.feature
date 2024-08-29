@@ -23,12 +23,12 @@ Scenario: using install-n doesn't allow additional NEVRA parts
  Then the exit code is 1
   And stdout is
       """
-      <REPOSYNC>
       No match for argument: labirinto.x86_64
         * Maybe you meant: labirinto
       """
   And stderr is
       """
+      <REPOSYNC>
       Error: Unable to find a match: labirinto.x86_64
       """
 
@@ -51,12 +51,12 @@ Scenario: using install-na doesn't allow additional nevra parts
  Then the exit code is 1
   And stdout is
       """
-      <REPOSYNC>
       No match for argument: labirinto-1.0-1.fc29.x86_64
         * Maybe you meant: labirinto
       """
   And stderr is
       """
+      <REPOSYNC>
       Error: Unable to find a match: labirinto-1.0-1.fc29.x86_64
       """
 
@@ -78,12 +78,12 @@ Scenario: install using install-nevra doesn't work without full nevra
  Then the exit code is 1
   And stdout is
       """
-      <REPOSYNC>
       No match for argument: labirinto-1.0-1.fc29
         * Maybe you meant: labirinto
       """
   And stderr is
       """
+      <REPOSYNC>
       Error: Unable to find a match: labirinto-1.0-1.fc29
       """
 
@@ -104,9 +104,12 @@ Scenario: install using localinstall
 Scenario: install using localinstall fails with just available package name
  When I execute dnf with args "localinstall labirinto"
  Then the exit code is 1
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Not a valid rpm file path: labirinto
       """
 

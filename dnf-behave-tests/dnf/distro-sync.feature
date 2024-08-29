@@ -71,7 +71,7 @@ Given I use repository "dnf-ci-gpg"
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
   And dnf4 stderr contains "Error: GPG check FAILED"
-  And dnf5 stderr matches line by line
+  And dnf5 stderr contains lines matching
     """
     Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
@@ -92,7 +92,7 @@ Given I use repository "dnf-ci-gpg"
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
   And dnf4 stderr contains "Error: GPG check FAILED"
-  And dnf5 stderr matches line by line
+  And dnf5 stderr contains lines matching
     """
     Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
@@ -108,12 +108,13 @@ Scenario: distro-sync list of packages, one of them is not available
    When I execute dnf with args "distro-sync flac nosuchpkg"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: nosuchpkg
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: nosuchpkg
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
     And Transaction is empty
 
 
@@ -125,10 +126,9 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "distro-sync --skip-unavailable flac nosuchpkg"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     No match for argument: nosuchpkg
-
     Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
@@ -144,7 +144,7 @@ Scenario: distro-sync list of packages, one of them is not installed
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "distro-sync flac dwm"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Failed to resolve the transaction:
     Packages for argument 'dwm' available, but not installed.
@@ -160,10 +160,9 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "distro-sync --skip-unavailable dwm flac"
    Then the exit code is 0
-    And stderr is
+    And stderr contains lines
     """
     Packages for argument 'dwm' available, but not installed.
-
     Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
@@ -180,15 +179,13 @@ Scenario: distro-sync all with a broken dependency and without best
    When I execute dnf with args "distro-sync --no-best"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Problem: installed package labirinto-2.0-1.noarch requires labirinto-libs = 2.0-1, but none of the providers can be installed
-      - labirinto-libs-2.0-1.noarch does not belong to a distupgrade repository
-      - problem with installed package
-    You can try to add to command line:
-      --skip-broken to skip uninstallable packages
-    """
-    And stdout is
-    """
-    <REPOSYNC>
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Problem: installed package labirinto-2.0-1.noarch requires labirinto-libs = 2.0-1, but none of the providers can be installed
+          - labirinto-libs-2.0-1.noarch does not belong to a distupgrade repository
+          - problem with installed package
+        You can try to add to command line:
+          --skip-broken to skip uninstallable packages
+        """
+    And stdout is empty

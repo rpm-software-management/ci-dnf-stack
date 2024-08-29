@@ -12,7 +12,7 @@ Scenario: prefer installing latests dependencies rather than smaller transaction
         | install       | ipa-client-0:1.0-1.fc29.x86_64  |
         | install-dep   | krb5-pkinit-0:2.0-1.fc29.x86_64 |
         | upgrade       | krb5-libs-0:2.0-1.fc29.x86_64   |
-    And stderr is
+    And stderr contains lines
     """
     Warning: skipped PGP checks for 3 packages from repository: install-latest-deps
     """
@@ -27,7 +27,7 @@ Scenario: if latests dependencies are not possible to install fall back to lower
         | Action        | Package                         |
         | install       | ipa-client-0:1.0-1.fc29.x86_64  |
         | install-dep   | krb5-pkinit-0:1.0-1.fc29.x86_64 |
-    And stderr is
+    And stderr contains lines
     """
     Warning: skipped PGP checks for 2 packages from repository: install-latest-deps
     """

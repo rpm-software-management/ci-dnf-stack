@@ -17,9 +17,12 @@ Scenario: I can download a module
     And file "modulesync/nodejs-devel-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
     And file "modulesync/nodejs-docs-8.11.4-1.module_2030+42747d40.noarch.rpm" exists
     And file "modulesync/npm-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     Directory walk started
     Directory walk done - 5 packages
     Loaded information about 0 packages
@@ -40,9 +43,12 @@ Scenario: I can download a module using --downloaddir
     And file "modulesync/nodejs-devel-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
     And file "modulesync/nodejs-docs-8.11.4-1.module_2030+42747d40.noarch.rpm" exists
     And file "modulesync/npm-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     Directory walk started
     Directory walk done - 6 packages
     Loaded information about 0 packages
@@ -64,9 +70,12 @@ Scenario: I can download a module with option newest only
     And file "modulesync/nodejs-devel-8.11.4-1.module_2030+42747d40.x86_64.rpm" exists
     And file "modulesync/nodejs-docs-8.11.4-1.module_2030+42747d40.noarch.rpm" exists
     And file "modulesync/npm-8.14.0-1.module_2030+42747d41.x86_64.rpm" exists
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     Directory walk started
     Directory walk done - 5 packages
     Loaded information about 0 packages
@@ -90,9 +99,12 @@ Scenario: I can download a module and init a modular repository with modulesync
     And file "modulesync/setup-2.12.1-1.fc29.noarch.rpm" exists
    When I execute dnf with args "modulesync --downloaddir={context.dnf.installroot}/modulesync"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     Directory walk started
     Directory walk done - 8 packages
     Loaded information about 0 packages

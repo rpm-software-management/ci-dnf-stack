@@ -28,6 +28,7 @@ Scenario: Config files from the drop-in directories are loaded
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Argument 'filesystem' matches only excluded packages.
         Argument 'wget' matches only excluded packages.
@@ -57,6 +58,7 @@ Scenario: In case of the same file name, /etc/dnf/libdnf5.conf.d/... masks usr/s
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Argument 'dwm' matches only excluded packages.
         Argument 'filesystem' matches only excluded packages.
@@ -91,6 +93,7 @@ Scenario: The configs are ordered by name
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Argument 'flac' matches only excluded packages.
         Argument 'lame' matches only excluded packages.
@@ -118,6 +121,7 @@ Scenario: The /etc/dnf/dnf.conf is loaded last
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Argument 'flac' matches only excluded packages.
         """
@@ -131,6 +135,7 @@ Scenario: Fail when explicitly requested config file doesn't exist
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Configuration file "/etc/dnf/libdnf5.conf.d/test.conf" not found
          cannot open file: (2) - No such file or directory [/etc/dnf/libdnf5.conf.d/test.conf]
         """

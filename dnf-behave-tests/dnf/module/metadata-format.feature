@@ -8,9 +8,12 @@ Feature: libmodulemd document format tests
 Scenario: Metadata containing additional uknown field can be read (the field is ignored)
 Given I use repository "additional-field-modulemd"
  When I execute dnf with args "module info nodejs"
- Then stdout is
+ Then stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       Name             : nodejs
       Stream           : 5
       Version          : 20150811143428
@@ -40,9 +43,12 @@ Given I use repository "additional-field-modulemd"
   And I use repository "dnf-ci-fedora"
   And I execute dnf with args "module enable nodejs:5"
  When I execute dnf with args "repoquery nodejs"
- Then stdout is
+ Then stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       nodejs-1:5.3.1-1.module_2011+41787af0.src
       nodejs-1:5.3.1-1.module_2011+41787af0.x86_64
       """

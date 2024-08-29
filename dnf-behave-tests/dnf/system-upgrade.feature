@@ -29,7 +29,7 @@ Scenario: Test system-upgrade when reboot wasn't performed
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -50,7 +50,7 @@ Scenario: Test system-upgrade basic functionality
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -75,7 +75,7 @@ Scenario: Test system-upgrade with --cachedir
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -99,7 +99,7 @@ Scenario: Test system-upgrade with --no-downgrade
       | Action        | Package               |
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -123,7 +123,7 @@ Scenario: Test system-upgrade transaction file not found
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """
@@ -146,7 +146,7 @@ Scenario: Test system-upgrade downloading a package from a different repo
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
       | downgrade     | pkg-b-1.0-1.noarch    |
-  And stdout contains lines
+  And stderr contains lines
       """
       Transaction stored to be performed offline. Run `dnf5 offline reboot` to reboot and run the transaction. To cancel the transaction and delete the downloaded files, use `dnf5 offline clean`.
       """

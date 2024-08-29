@@ -42,10 +42,11 @@ Scenario: Rollback a transaction with a package that is no longer available
    When I execute dnf with args "history rollback 1 -x glibc-2.28-26.fc29.x86_64"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Cannot perform Remove action because 'glibc-2.28-26.fc29.x86_64' matches only excluded packages.
-    Problem: installed package glibc-2.28-26.fc29.x86_64 requires glibc-common = 2.28-26.fc29, but none of the providers can be installed
-      - conflicting requests
-      - problem with installed package
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Cannot perform Remove action because 'glibc-2.28-26.fc29.x86_64' matches only excluded packages.
+        Problem: installed package glibc-2.28-26.fc29.x86_64 requires glibc-common = 2.28-26.fc29, but none of the providers can be installed
+          - conflicting requests
+          - problem with installed package
+        """

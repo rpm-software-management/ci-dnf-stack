@@ -292,10 +292,11 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  When I execute dnf with args "replay ./transaction"
  Then the exit code is 1
   And stderr is
-  """
-  Failed to resolve the transaction:
-  Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
-  """
+      """
+      <REPOSYNC>
+      Failed to resolve the transaction:
+      Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
+      """
 
 
 Scenario: Replay a reason change transaction on a package being installed
@@ -322,10 +323,11 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  When I execute dnf with args "replay ./transaction"
  Then the exit code is 1
   And stderr is
-  """
-  Failed to resolve the transaction:
-  Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
-  """
+      """
+      <REPOSYNC>
+      Failed to resolve the transaction:
+      Argument 'top-b-1.0-1.x86_64' matches only excluded packages.
+      """
 
 
 Scenario: Replay a reason change transaction on a package being removed
@@ -1217,7 +1219,7 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       """
  When I execute dnf with args "replay ./transaction --ignore-installed"
  Then the exit code is 0
-  And stderr is
+  And stderr contains lines
       """
       Cannot perform Install action because 'bottom-a1-2.0-1.noarch' is installed in a different version: 'bottom-a1-1.0-1.noarch'.
 
@@ -1286,6 +1288,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Package "bottom-a2-1.0-1.x86_64" is already installed.
       Package "bottom-a3-1.0-1.x86_64" is already installed.
       Package "mid-a1-1.0-1.x86_64" is already installed.
@@ -1330,7 +1333,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
  When I execute dnf with args "replay ./transaction --ignore-installed"
  Then the exit code is 0
- And stderr is
+ And stderr contains lines
      """
      Cannot perform Remove action for Package 'bottom-a1-1.0-1.noarch' because it is not installed.
 
@@ -1374,6 +1377,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 0
  And stderr is
      """
+     <REPOSYNC>
      Cannot perform Remove action for Package 'bottom-a1-2.0-1.noarch' because it is not installed.
      """
   And Transaction is empty
@@ -1402,7 +1406,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
  When I execute dnf with args "replay ./transaction --skip-unavailable"
  Then the exit code is 0
-  And stderr is
+  And stderr contains lines
       """
       Cannot perform Install action, no match for: does-not-exist-1.0-1.noarch.
 
@@ -1451,6 +1455,7 @@ Given I successfully execute dnf with args "install bottom-a1-2.0"
  Then the exit code is 0
   And stderr is
       """
+      <REPOSYNC>
       Packages for argument 'bottom-a1-2.0-1.noarch' installed, but not available.
       """
   And Transaction is empty

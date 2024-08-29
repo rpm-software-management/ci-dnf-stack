@@ -29,10 +29,11 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
    When I execute dnf with args "install filesystem"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Argument 'filesystem' matches only excluded packages.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Argument 'filesystem' matches only excluded packages.
+        """
 
 
 @dnf5    
@@ -51,10 +52,11 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
    When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install dwm"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Argument 'dwm' matches only excluded packages.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Argument 'dwm' matches only excluded packages.
+        """
 
 
 Scenario: Reposdir option in dnf.conf file in installroot
@@ -220,14 +222,14 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
    When I execute dnf with args "install vagare"
    Then the exit code is 1
     And stdout is
-    """
-    <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: vagare
-    """
+        """
+        All matches were filtered out by exclude filtering for argument: vagare
+        """
     And stderr is
-    """
-    Error: Unable to find a match: vagare
-    """
+        """
+        <REPOSYNC>
+        Error: Unable to find a match: vagare
+        """
 
 
 @no_installroot
@@ -252,14 +254,14 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
    When I execute dnf with args "--config /test/dnf.conf install dedalo-signed"
    Then the exit code is 1
     And stdout is
-    """
-    <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: dedalo-signed
-    """
+        """
+        All matches were filtered out by exclude filtering for argument: dedalo-signed
+        """
     And stderr is
-    """
-    Error: Unable to find a match: dedalo-signed
-    """
+        """
+        <REPOSYNC>
+        Error: Unable to find a match: dedalo-signed
+        """
 
 
 @destructive
@@ -276,14 +278,14 @@ Scenario: Test without dnf.conf in installroot (dnf.conf is taken from host)
    When I execute dnf with args "install vagare"
    Then the exit code is 1
     And stdout is
-    """
-    <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: vagare
-    """
+        """
+        All matches were filtered out by exclude filtering for argument: vagare
+        """
     And stderr is
-    """
-    Error: Unable to find a match: vagare
-    """
+        """
+        <REPOSYNC>
+        Error: Unable to find a match: vagare
+        """
 
 
 @no_installroot

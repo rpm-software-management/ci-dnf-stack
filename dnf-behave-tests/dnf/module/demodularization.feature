@@ -33,9 +33,12 @@ Scenario: Test module info contains Demodularized rpms when defined
    Given I use repository "dnf-ci-fedora-modular-demodularized"
    When I execute dnf with args "module info nodejs:5"
    Then the exit code is 0
-    And stdout is
+    And stderr is
       """
       <REPOSYNC>
+      """
+    And stdout is
+      """
       Name               : nodejs
       Stream             : 5
       Version            : 20150811143429

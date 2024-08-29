@@ -46,6 +46,7 @@ Scenario: Running kernel is protected against obsoleting
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Problem: The operation would result in removing of running kernel: dnf-ci-kernel-0:1.0-1.x86_64
         You can try to add to command line:
@@ -69,6 +70,7 @@ Scenario: Running kernel is protected against removal as conflict
    Then the exit code is 1
     And stderr is
         """
+        <REPOSYNC>
         Failed to resolve the transaction:
         Problem: problem with installed package
           - installed package dnf-ci-kernel-1.0-1.x86_64 conflicts with dnf-ci-kernel = 1.0-1 provided by dnf-ci-conflict-1.0-1.x86_64 from protect-running-kernel

@@ -15,9 +15,10 @@ Scenario: Report error when installing empty file
     When I execute dnf with args "install empty.rpm"
     Then the exit code is 1
      And stderr is
-     """
-     Failed to load RPM "empty.rpm": empty.rpm: not a rpm
-     """
+         """
+         <REPOSYNC>
+         Failed to load RPM "empty.rpm": empty.rpm: not a rpm
+         """
 
 @bz1616321
 Scenario: Report error when installing text file
@@ -29,25 +30,28 @@ Scenario: Report error when installing text file
     When I execute dnf with args "install invalid.rpm"
     Then the exit code is 1
      And stderr is
-     """
-     Failed to load RPM "invalid.rpm": invalid.rpm: not a rpm
-     """
+         """
+         <REPOSYNC>
+         Failed to load RPM "invalid.rpm": invalid.rpm: not a rpm
+         """
 
 @bz1599774
 Scenario: Report error when installing non-existing RPM file
     When I execute dnf with args "install no_such_file.rpm"
     Then the exit code is 1
      And stderr is
-     """
-     Failed to access RPM "no_such_file.rpm": No such file or directory
-     """
+         """
+         <REPOSYNC>
+         Failed to access RPM "no_such_file.rpm": No such file or directory
+         """
 
 Scenario: Cannot install source rpm
    Given I use repository "simple-base"
     When I execute dnf with args "install vagare.src"
     Then the exit code is 1
      And stderr is
-     """
-     Failed to resolve the transaction:
-     Argument 'vagare.src' matches only source packages.
-     """
+         """
+         <REPOSYNC>
+         Failed to resolve the transaction:
+         Argument 'vagare.src' matches only source packages.
+         """

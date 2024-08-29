@@ -57,12 +57,13 @@ Scenario: Redo a transaction with a missing group
    When I execute dnf with args "history redo 1"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    No match for argument: dnf-ci-testgroup
-    You can try to add to command line:
-      --skip-unavailable to skip unavailable packages
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: dnf-ci-testgroup
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
+        """
 
 
 Scenario: Redo a transaction that removed a group and the group is was removed from the system already

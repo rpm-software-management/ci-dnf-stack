@@ -20,9 +20,12 @@ Scenario: Update core packages
       And I execute dnf with args "upgrade lame wget"
      When I execute dnf with args "needs-restarting"
      Then the exit code is 1
-      And stdout is
+      And stderr is
           """
           <REPOSYNC>
+          """
+      And stdout is
+          """
           Core libraries or services have been updated since boot-up:
             * glibc
             * kernel
@@ -37,9 +40,12 @@ Scenario: Install a package with an associated reboot_suggested advisory
     Given I execute dnf with args "upgrade --advisory=FEDORA-2999:003-03 \*"
      When I execute dnf with args "needs-restarting"
      Then the exit code is 1
-      And stdout is
+      And stderr is
           """
           <REPOSYNC>
+          """
+      And stdout is
+          """
           Core libraries or services have been updated since boot-up:
             * lz4
 
@@ -51,9 +57,12 @@ Scenario: Update non-core packages only
     Given I execute dnf with args "upgrade lame basesystem wget"
      When I execute dnf with args "needs-restarting"
      Then the exit code is 0
-      And stdout is
+      And stderr is
           """
           <REPOSYNC>
+          """
+      And stdout is
+          """
           No core libraries or services have been updated since boot-up.
           Reboot should not be necessary.
           """

@@ -10,7 +10,7 @@ Given I use repository "transaction-sr"
 Scenario: Store a transaction
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -67,7 +67,7 @@ Scenario: Store an upgrade transaction
 Given I successfully execute dnf with args "upgrade top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -103,7 +103,7 @@ Scenario: Store a reinstall transaction
 Given I successfully execute dnf with args "reinstall top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -134,7 +134,7 @@ Given I successfully execute dnf with args "upgrade top-a"
 Given I successfully execute dnf with args "downgrade top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -164,7 +164,7 @@ Scenario: Store a remove transaction
 Given I successfully execute dnf with args "remove top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -212,7 +212,7 @@ Scenario: Store a reason change transaction
 Given I successfully execute dnf with args "mark dependency top-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -236,7 +236,7 @@ Scenario: Store a transaction with a group install
 Given I successfully execute dnf with args "install @test-group"
  When I execute dnf with args "history store 2"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -288,7 +288,7 @@ Given I successfully execute dnf with args "install @test-group"
   And I successfully execute dnf with args "remove @test-group"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -325,7 +325,7 @@ Given I successfully execute dnf with args "mark group test-group top-a-1.0"
 Given I successfully execute dnf with args "upgrade @test-group"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -364,7 +364,7 @@ Scenario: Store a transaction with an enviroment group install
 Given I successfully execute dnf with args "install @test-env"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -417,7 +417,7 @@ Given I successfully execute dnf with args "install @test-env"
   And I successfully execute dnf with args "remove @test-env"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -471,7 +471,7 @@ Given I successfully execute dnf with args "install @test-env"
   And I successfully execute dnf with args "upgrade @test-env"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -529,7 +529,7 @@ Scenario: Store a transaction installing multiple installonly package versions
 Given I successfully execute dnf with args "install installonly-1.0 installonly-2.0"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -560,7 +560,7 @@ Given I successfully execute dnf with args "install installonly-1.0 installonly-
   And I successfully execute dnf with args "remove installonly-1.0 installonly-2.0"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -597,7 +597,7 @@ Given I successfully execute dnf with args "install installonly-1.0"
   And I execute in dnf shell "run"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -628,7 +628,7 @@ Given I successfully execute dnf with args "install installonly-1.0"
   And I successfully execute dnf with args "upgrade installonly"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -653,7 +653,7 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0"
   And I successfully execute dnf with args "upgrade obsoleted-a"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -684,7 +684,7 @@ Given I successfully execute dnf with args "install obsoleted-a-1.0 obsoleted-b-
   And I successfully execute dnf with args "upgrade obsoleted-a obsoleted-b"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -727,7 +727,7 @@ Given I successfully execute dnf with args "install archchange-1.0"
   And I successfully execute dnf with args "upgrade archchange"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -764,7 +764,7 @@ Given I successfully execute dnf with args "install @test-group supertop-b"
   And I execute in dnf shell "run"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -814,7 +814,7 @@ Given I successfully execute dnf with args "install @test-group"
   And I execute in dnf shell "run"
  When I execute dnf with args "history store last"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to ./transaction.
       """
@@ -850,7 +850,7 @@ Given I successfully execute dnf with args "install @test-group"
 Scenario: Store a transaction with specifying the output file
  When I execute dnf with args "history store last -o {context.dnf.tempdir}/out"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       Transaction saved to {context.dnf.tempdir}/out.
       """
@@ -901,7 +901,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
  When I execute dnf with args "history store last -y"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       File "./transaction/transaction.json" already exists, it will be overwritten.
       Transaction saved to ./transaction.
@@ -915,7 +915,8 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
  When I execute dnf with args "history store last --assumeno"
  Then the exit code is 1
-  And stdout is
+  And stderr is
       """
       File "./transaction/transaction.json" already exists, it will be overwritten.
+      Operation aborted by the user.
       """

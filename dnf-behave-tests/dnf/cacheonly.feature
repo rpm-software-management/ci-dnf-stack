@@ -9,7 +9,7 @@ Background:
 Scenario: Cannot work with empty cache when using -C
   Given I execute dnf with args "install wget -C"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Cache-only enabled but no cache for repository "dnf-ci-fedora"
     """
@@ -19,7 +19,7 @@ Scenario: Cannot install a remote package when using -C
   Given I successfully execute dnf with args "makecache"
    When I execute dnf with args "install wget -C"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Cannot download the "wget-1.19.5-5.fc29.x86_64" package, cacheonly option is activated.
     """
@@ -46,7 +46,7 @@ Scenario: Install locally cached package using -C
 Scenario: Cannot work with empty cache when using cacheonly=metadata
   Given I execute dnf with args "install wget --setopt=cacheonly=metadata"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines
     """
     Cache-only enabled but no cache for repository "dnf-ci-fedora"
     """
@@ -73,4 +73,4 @@ Scenario: Local key is imported during installation with -C option
    Then Transaction is following
         | Action        | Package                        |
         | install       | setup-0:2.12.1-1.fc29.noarch   |
-    And stdout contains "The key was successfully imported."
+    And stderr contains "The key was successfully imported."

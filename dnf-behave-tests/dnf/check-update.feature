@@ -39,11 +39,14 @@ Given I use repository "check-update"
   And Transaction is empty
  When I execute dnf with args "check-upgrade --security"
  Then the exit code is 0
+  And stderr is
+      """
+      <REPOSYNC>
+      """
   And stdout is
-  """
-  <REPOSYNC>
-  No security updates needed, but 1 update(s) available
-  """
+      """
+      No security updates needed, but 1 update(s) available
+      """
 
 
 @bz2151910
@@ -58,7 +61,8 @@ Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "check-upgrade abcde"
  # abcde-2.9.3-1.fc29.src is not reported as an upgrade
  Then the exit code is 0
-  And stdout is
-  """
-  <REPOSYNC>
-  """
+  And stderr is
+     """
+     <REPOSYNC>
+     """
+  And stdout is empty

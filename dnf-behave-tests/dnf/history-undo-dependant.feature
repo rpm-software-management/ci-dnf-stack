@@ -14,15 +14,13 @@ Scenario: Undo module install with dependent userinstalled package
    When I execute dnf with args "history undo last-1"
    # the transaction is not supposed to reinstall required packages, but to fail
    Then the exit code is 1
-    And stdout is
-    """
-    <REPOSYNC>
-    """
+    And stdout is empty
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Extra package 'postgresql-test-9.6.8-1.module_1710+b535a823.x86_64' (with action 'Remove') which is not present in the stored transaction was pulled into the transaction.
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Extra package 'postgresql-test-9.6.8-1.module_1710+b535a823.x86_64' (with action 'Remove') which is not present in the stored transaction was pulled into the transaction.
 
-    You can try to add to command line:
-      --ignore-extras to allow extra packages in the transaction
-    """
+        You can try to add to command line:
+          --ignore-extras to allow extra packages in the transaction
+        """

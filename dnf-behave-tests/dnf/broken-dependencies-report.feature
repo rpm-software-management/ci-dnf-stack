@@ -16,6 +16,7 @@ Scenario: Broken dependencies are reported when strict and best options are off
    Then the exit code is 0
     And stderr is
     """
+    <REPOSYNC>
     Problem: package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests
@@ -33,6 +34,7 @@ Scenario: Broken dependencies are reported when strict option is off and best op
    Then the exit code is 0
     And stderr is
     """
+    <REPOSYNC>
     Problem: package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests
@@ -50,6 +52,7 @@ Scenario: Broken dependencies are reported when skip-broken and best options are
    Then the exit code is 0
     And stderr is
     """
+    <REPOSYNC>
     Problem: package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires libpq.so.5()(64bit), but none of the providers can be installed
       - package postgresql-9.6.5-1.fc29.x86_64 from dnf-ci-fedora requires postgresql-libs(x86-64) = 9.6.5-1.fc29, but none of the providers can be installed
       - conflicting requests

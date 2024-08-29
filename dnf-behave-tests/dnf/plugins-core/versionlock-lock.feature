@@ -18,9 +18,12 @@ Background: Set up versionlock infrastructure in the installroot
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "repoquery wget"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     wget-0:1.19.5-5.fc29.src
     wget-0:1.19.5-5.fc29.x86_64
     wget-0:1.19.6-5.fc29.src
@@ -30,9 +33,12 @@ Background: Set up versionlock infrastructure in the installroot
 
 Scenario: I can list all versions of locked package
    When I execute dnf with args "list --showduplicates wget"
-   Then stdout matches line by line
+   Then stderr is
     """
     <REPOSYNC>
+    """
+   And stdout matches line by line
+    """
     Available packages
     wget.src +1.19.5-5.fc29 +dnf-ci-fedora
     wget.x86_64 +1.19.5-5.fc29 +dnf-ci-fedora
@@ -110,10 +116,11 @@ Scenario: Locking does not require that the package exists in a repository
    When I execute dnf with args "install wget"
    Then the exit code is 1
     And stderr is
-    """
-    Failed to resolve the transaction:
-    Argument 'wget' matches only packages excluded by versionlock.
-    """
+        """
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        Argument 'wget' matches only packages excluded by versionlock.
+        """
 
 
 @bz1726712
@@ -156,9 +163,12 @@ Scenario: Versionlock can lock the package version to an interval
     """
    When I execute dnf with args "repoquery flac"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     flac-0:1.3.2-8.fc29.src
     flac-0:1.3.2-8.fc29.x86_64
     flac-0:1.3.3-1.fc29.src
@@ -193,9 +203,12 @@ Scenario: Check-update command does not report updates filtered out by the versi
     """
    When I execute dnf with args "check-upgrade"
    Then the exit code is 100
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     flac.x86_64 1.4.0-1.fc29 dnf-ci-fedora-updates-testing
     """
   # flac package versionlocked on specific minor version
@@ -215,9 +228,12 @@ Scenario: Check-update command does not report updates filtered out by the versi
     """
    When I execute dnf with args "check-upgrade"
    Then the exit code is 100
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
+    """
+    And stdout is
+    """
     flac.x86_64 1.3.3-3.fc29 dnf-ci-fedora-updates
     """
   # flac package versionlocked on specific version
@@ -233,10 +249,11 @@ Scenario: Check-update command does not report updates filtered out by the versi
     """
    When I execute dnf with args "check-upgrade"
    Then the exit code is 0
-    And stdout is
+    And stderr is
     """
     <REPOSYNC>
     """
+    And stdout is empty
 
 
 # PackageB-Obsoleter obsoletes PackageB < 3.0
@@ -330,9 +347,12 @@ Scenario: The packages with minorbump part of release are correctly locked
     """
         # check that minorbump is available with version higher then locked
     And I successfully execute dnf with args "repoquery minorbump"
-   Then stdout is
+   Then stderr is
     """
     <REPOSYNC>
+    """
+   And stdout is
+    """
     minorbump-0:1.0-1.fc29.1.src
     minorbump-0:1.0-1.fc29.1.x86_64
     minorbump-0:1.0-1.fc29.src

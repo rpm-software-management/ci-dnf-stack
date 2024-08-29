@@ -18,7 +18,7 @@ Scenario: Download an RPM that doesn't exist
 Scenario: Download an existing RPM
    When I execute dnf with args "download setup"
    Then the exit code is 0
-    And stdout contains "setup-0:2.12.1-1.fc29.noarch"
+    And stderr contains "setup-0:2.12.1-1.fc29.noarch"
     And file sha256 checksums are following
         | Path                                                  | sha256                                                                                        |
         | {context.dnf.tempdir}/setup-2.12.1-1.fc29.noarch.rpm  | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm    |
@@ -27,8 +27,8 @@ Scenario: Download an existing RPM
 Scenario: Download an existing RPM with dependencies
    When I execute dnf with args "download filesystem --resolve"
    Then the exit code is 0
-    And stdout contains "filesystem-0:3.9-2.fc29.x86_64"
-    And stdout contains "setup-0:2.12.1-1.fc29.noarch"
+    And stderr contains "filesystem-0:3.9-2.fc29.x86_64"
+    And stderr contains "setup-0:2.12.1-1.fc29.noarch"
     And file sha256 checksums are following
         | Path                                                      | sha256                                                                                        |
         | {context.dnf.tempdir}/filesystem-3.9-2.fc29.x86_64.rpm    | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm  |
@@ -38,7 +38,7 @@ Scenario: Download an existing RPM with dependencies
 @bz1844925
 Scenario: Error when failed to resolve dependencies
    When I execute dnf with args "download filesystem --resolve --exclude setup"
-    Then stderr is
+    Then stderr contains lines
         """
         Failed to resolve the transaction:
         Problem: package filesystem-3.9-2.fc29.x86_64 from dnf-ci-fedora requires setup, but none of the providers can be installed
@@ -51,8 +51,8 @@ Scenario: Error when failed to resolve dependencies
 Scenario: Download an existing RPM with dependencies into a --destdir
    When I execute dnf with args "download filesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
-    And stdout contains "filesystem-0:3.9-2.fc29.x86_64"
-    And stdout contains "setup-0:2.12.1-1.fc29.noarch"
+    And stderr contains "filesystem-0:3.9-2.fc29.x86_64"
+    And stderr contains "setup-0:2.12.1-1.fc29.noarch"
     And file sha256 checksums are following
         | Path                                                                  | sha256                                                                                        |
         | {context.dnf.tempdir}/downloaddir/filesystem-3.9-2.fc29.x86_64.rpm    | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/filesystem-3.9-2.fc29.x86_64.rpm  |
@@ -67,9 +67,9 @@ Scenario: Download an existing RPM with dependencies into a --destdir where a de
         | install       | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "download basesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
-    And stdout contains "basesystem-0:11-6.fc29.noarch"
-    And stdout contains "filesystem-0:3.9-2.fc29.x86_64"
-    And stdout does not contain "setup-2.12.1-1.fc29.noarch"
+    And stderr contains "basesystem-0:11-6.fc29.noarch"
+    And stderr contains "filesystem-0:3.9-2.fc29.x86_64"
+    And stderr does not contain "setup-2.12.1-1.fc29.noarch"
     And file sha256 checksums are following
         | Path                                                                  | sha256                                                                                        |
         | {context.dnf.tempdir}/downloaddir/basesystem-11-6.fc29.noarch.rpm     | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/basesystem-11-6.fc29.noarch.rpm   |
@@ -87,9 +87,9 @@ Scenario: Download an existing RPM with dependencies into a --destdir where all 
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
    When I execute dnf with args "download basesystem --resolve --destdir={context.dnf.tempdir}/downloaddir"
    Then the exit code is 0
-    And stdout contains "basesystem-0:11-6.fc29.noarch"
-    And stdout does not contain "filesystem-0:3.9-2.fc29.x86_64"
-    And stdout does not contain "setup-0:2.12.1-1.fc29.noarch"
+    And stderr contains "basesystem-0:11-6.fc29.noarch"
+    And stderr does not contain "filesystem-0:3.9-2.fc29.x86_64"
+    And stderr does not contain "setup-0:2.12.1-1.fc29.noarch"
     And file sha256 checksums are following
         | Path                                                                  | sha256                                                                                        |
         | {context.dnf.tempdir}/downloaddir/basesystem-11-6.fc29.noarch.rpm     | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/basesystem-11-6.fc29.noarch.rpm   |
@@ -102,13 +102,13 @@ Scenario: Download an existing RPM when there are multiple packages of the same 
   Given I use repository "dnf-ci-gpg" as http
    When I execute dnf with args "download --destdir={context.dnf.installroot}/downloaddir setup filesystem wget"
    Then the exit code is 0
-    And stdout contains "setup-0:2.12.1-1.fc29.noarch"
-    And stdout contains "filesystem-0:3.9-2.fc29.x86_64"
-    And stdout contains "wget-0:1.19.5-5.fc29.x86_64"
+    And stderr contains "setup-0:2.12.1-1.fc29.noarch"
+    And stderr contains "filesystem-0:3.9-2.fc29.x86_64"
+    And stderr contains "wget-0:1.19.5-5.fc29.x86_64"
       # check that each file was being downloaded only once
-    And stdout does not contain "setup-0:2.12.1-1.fc29.noarch.*setup-0:2.12.1-1.fc29.noarch"
-    And stdout does not contain "filesystem-0:3.9-2.fc29.x86_64.*filesystem-0:3.9-2.fc29.x86_64"
-    And stdout does not contain "wget-0:1.19.5-5.fc29.x86_64.*wget-0:1.19.5-5.fc29.x86_64"
+    And stderr does not contain "setup-0:2.12.1-1.fc29.noarch.*setup-0:2.12.1-1.fc29.noarch"
+    And stderr does not contain "filesystem-0:3.9-2.fc29.x86_64.*filesystem-0:3.9-2.fc29.x86_64"
+    And stderr does not contain "wget-0:1.19.5-5.fc29.x86_64.*wget-0:1.19.5-5.fc29.x86_64"
       # check that the files have been downloaded
     And file "downloaddir/setup-2.12.1-1.fc29.noarch.rpm" exists
     And file "downloaddir/filesystem-3.9-2.fc29.x86_64.rpm" exists

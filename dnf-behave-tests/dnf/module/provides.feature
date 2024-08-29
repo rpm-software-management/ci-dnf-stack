@@ -10,9 +10,12 @@ Given I use repository "dnf-ci-fedora-modular"
 Scenario: I can get list of all modules providing specific package
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
       Module   : nodejs:10:20180920144631:6c81f848:x86_64
       Profiles : development
@@ -45,9 +48,12 @@ Scenario: I can get list of enabled modules providing specific package
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
       Module   : nodejs:10:20180920144631:6c81f848:x86_64
       Profiles : development
@@ -80,9 +86,12 @@ Scenario: I see packages only once when they are availiable and installed
 Given I successfully execute dnf with args "module enable nodejs:8"
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
       Module   : nodejs:10:20180920144631:6c81f848:x86_64
       Profiles : development
@@ -116,9 +125,12 @@ Given I successfully execute dnf with args "module enable nodejs:8"
       | module-profile-install    | nodejs/development                                  |
  When I execute dnf with args "module provides nodejs-devel"
  Then the exit code is 0
-  And stdout is
+  And stderr is
       """
       <REPOSYNC>
+      """
+  And stdout is
+      """
       nodejs-devel-1:10.11.0-1.module_2200+adbac02b.x86_64
       Module   : nodejs:10:20180920144631:6c81f848:x86_64
       Profiles : development

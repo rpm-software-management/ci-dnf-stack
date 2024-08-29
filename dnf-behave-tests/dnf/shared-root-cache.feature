@@ -11,32 +11,41 @@ Background:
     And I create directory "/{context.dnf.installroot}/var/cache/dnf-user"
     And I successfully execute "chmod 777 {context.dnf.installroot}/var/cache/dnf-user"
     And I successfully execute dnf with args "makecache"
-   Then stdout matches line by line
-   """
-   Updating and loading repositories:
-    dnf-ci-fedora test repository .*
-   Repositories loaded.
-   Metadata cache created.
-   """
+   Then stderr matches line by line
+        """
+        Updating and loading repositories:
+         dnf-ci-fedora test repository .*
+        Repositories loaded.
+        """
+    And stdout is
+        """
+        Metadata cache created.
+        """
 
 
 Scenario: Root cache is shared when user metadata are empty
    When I execute dnf with args "makecache --setopt=system_cachedir={context.dnf.installroot}/var/cache/dnf --setopt=cachedir={context.dnf.installroot}/var/cache/dnf-user" as an unprivileged user
-   Then stdout matches line by line
-   """
-   Updating and loading repositories:
-   Repositories loaded.
-   Metadata cache created.
-   """
+   Then stderr matches line by line
+        """
+        Updating and loading repositories:
+        Repositories loaded.
+        """
+    And stdout is
+        """
+        Metadata cache created.
+        """
 
 
 Scenario: Root cache is not shared when the user doesn't have permissions
    When I successfully execute "chmod 700 {context.dnf.installroot}/var/cache/dnf"
     And I execute dnf with args "makecache --setopt=system_cachedir={context.dnf.installroot}/var/cache/dnf --setopt=cachedir={context.dnf.installroot}/var/cache/dnf-user" as an unprivileged user
-   Then stdout matches line by line
-   """
-   Updating and loading repositories:
-    dnf-ci-fedora test repository .*
-   Repositories loaded.
-   Metadata cache created.
-   """
+   Then stderr matches line by line
+        """
+        Updating and loading repositories:
+         dnf-ci-fedora test repository .*
+        Repositories loaded.
+        """
+    And stdout is
+        """
+        Metadata cache created.
+        """

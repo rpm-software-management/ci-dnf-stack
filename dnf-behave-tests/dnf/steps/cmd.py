@@ -265,6 +265,18 @@ def then_stdout_contains_lines(context):
             raise AssertionError("Stdout doesn't contain line: %s" % line)
 
 
+@behave.then("stdout contains lines matching")
+def then_stdout_contains_lines_matching(context):
+    out_lines = context.cmd_stdout.split('\n')
+    test_lines = context.text.split('\n')
+    for line in test_lines:
+        for outline in out_lines:
+            if re.search(line.strip(), outline.strip()):
+                break
+        else:
+            raise AssertionError("Stderr doesn't contain line matching: %s" % line)
+
+
 @behave.then("stdout does not contain lines")
 def then_stdout_does_not_contain_lines(context):
     out_lines = [l.strip() for l in context.cmd_stdout.split('\n')]
@@ -316,6 +328,17 @@ def then_stderr_contains_lines(context):
         else:
             raise AssertionError("Stderr doesn't contain line: %s" % line)
 
+
+@behave.then("stderr contains lines matching")
+def then_stderr_contains_lines_matching(context):
+    out_lines = context.cmd_stderr.split('\n')
+    test_lines = context.text.split('\n')
+    for line in test_lines:
+        for outline in out_lines:
+            if re.search(line.strip(), outline.strip()):
+                break
+        else:
+            raise AssertionError("Stderr doesn't contain line matching: %s" % line)
 
 @behave.then("{dnf_version:dnf_version} {std_stream:std_stream} contains \"{text}\"")
 def then_dnf_stream_contains(context, dnf_version, std_stream, text):
@@ -387,6 +410,30 @@ def then_dnf_stream_contains_lines(context, dnf_version, std_stream):
         then_stream_contains_lines(context)
     if dnf_version == "dnf4" and not dnf5_mode:
         then_stream_contains_lines(context)
+
+
+@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} contains lines matching")
+def then_dnf_stream_contains_lines_matching(context, dnf_version, std_stream):
+    """
+    Check that stdout/stderr contains lines matching regex
+    Works only if running in the appropriate mode otherwise
+    the step is skipped
+    Produce the steps:
+        then dnf4 stdout contains lines matching
+        then dnf4 stderr contains lines matching
+        then dnf5 stdout contains lines matching
+        then dnf5 stderr contains lines matching
+    """
+    if std_stream == "stdout":
+        then_stream_contains_lines_matching = then_stdout_contains_lines_matching
+    if std_stream == "stderr":
+        then_stream_contains_lines_matching = then_stderr_contains_lines_matching
+
+    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
+    if dnf_version == "dnf5" and dnf5_mode:
+        then_stream_contains_lines_matching(context)
+    if dnf_version == "dnf4" and not dnf5_mode:
+        then_stream_contains_lines_matching(context)
 
 
 @behave.then("{dnf_version:dnf_version} {std_stream:std_stream} does not contain lines")

@@ -73,7 +73,7 @@ Scenario: Fail to install signed package with incorrectly signed dependency (wit
         | install-dep   | glibc-common-0:2.28-9.fc29.x86_64         |
         | install-dep   | glibc-all-langpacks-0:2.28-9.fc29.x86_64  |
     And RPMDB Transaction is empty
-    And stderr matches line by line
+    And stderr contains lines matching
     """
     Transaction failed: Signature verification failed
     PGP check for package "basesystem-11-6\.fc29\.noarch" \(.*/basesystem-11-6\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Public key is not installed\.
@@ -89,7 +89,7 @@ Scenario: Fail to install signed package with incorrect checksum
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
-    And stderr matches line by line
+    And stderr contains lines matching
     """
     Transaction failed: Signature verification failed
     PGP check for package "broken-package-0\.2\.4-1\.fc29\.noarch" \(.*/broken-package-0\.2\.4-1\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Problem occurred when opening the package\.
@@ -119,7 +119,7 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
 Scenario: Attempt to install unsigned package from repo with gpgcheck=1
    When I execute dnf with args "install flac"
    Then the exit code is 1
-    And stderr matches line by line
+    And stderr contains lines matching
     """
     Transaction failed: Signature verification failed
     PGP check for package "flac-1\.3\.2-8\.fc29\.x86_64" \(.*/flac-1\.3\.2-8\.fc29\.x86_64\.rpm\) from repo "dnf-ci-gpg" has failed: The package is not signed\.
