@@ -226,6 +226,31 @@ Scenario: test "addrepo" from repofile
         """
 
 
+Scenario: test "addrepo" from repofile with comments and empty line
+  Given I create file "/{context.dnf.tempdir}/tmp/test.repo" with
+        """
+        # Repository configuration file
+        [test] # Test repo
+        name=repository file
+
+        enabled=0
+        # URL to repository
+        baseurl=http://something.com/os/
+        """
+    And I execute dnf with args "config-manager addrepo --from-repofile={context.dnf.tempdir}/tmp/test.repo"
+   Then the exit code is 0
+    And file "/etc/yum.repos.d/test.repo" contents is
+        """
+        # Repository configuration file
+        [test] # Test repo
+        name=repository file
+
+        enabled=0
+        # URL to repository
+        baseurl=http://something.com/os/
+        """
+
+
 Scenario: "addrepo" from repofile, source file without .repo extension, adding the .repo extension to the destination filename
   Given I create file "/{context.dnf.tempdir}/tmp/test" with
         """
