@@ -18,6 +18,7 @@ Dummy.
 
 %package debuginfo
 Summary:        Debug information for kernel.
+Recommends:     %{name}-debugsource(x86-64) = %{version}-%{release}
 
 %description debuginfo
 Dummy.
