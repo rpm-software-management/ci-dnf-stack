@@ -24,6 +24,7 @@ Dummy.
 
 %package debuginfo
 Summary:        Debug information for foo.
+Recommends:     %{name}-debugsource(x86-64) = %{version}-%{release}
 
 %description debuginfo
 Dummy.
