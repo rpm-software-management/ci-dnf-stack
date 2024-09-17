@@ -18,6 +18,7 @@ Dummy.
 
 %package debuginfo
 Summary:        Debug information for foo.
+Recommends:     %{name}-debugsource(i686) = %{version}-%{release}
 
 %description debuginfo
 Dummy.
