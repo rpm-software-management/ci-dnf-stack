@@ -12,5 +12,5 @@ Scenario: Try to reinstall a pkg if repo not available
    Then the exit code is 1
    And stderr is
        """
-       error: cannot update repo 'simple-base': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Curl error (6): Couldn't resolve host name for https://www.not-available-repo.com/repodata/repomd.xml [Could not resolve host: www.not-available-repo.com]
+       error: cannot update repo 'simple-base': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Curl error (6): Could not resolve hostname for https://www.not-available-repo.com/repodata/repomd.xml [Could not resolve host: www.not-available-repo.com]
        """
