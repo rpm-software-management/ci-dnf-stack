@@ -203,7 +203,7 @@ Scenario: Dnf prints reasonable error when remote config file is not downloadabl
    And stderr matches line by line
    """
    Config error: Configuration file URL "http://the_host:[\d]+/does-not-exist\.conf" could not be downloaded:
-     Curl error \(6\): Couldn't resolve host name for http://the_host:[\d]+/does-not-exist\.conf \[Could not resolve host: the_host\]
+     Curl error \(6\): Could not resolve hostname for http://the_host:[\d]+/does-not-exist\.conf \[Could not resolve host: the_host\]
    """
 
 
