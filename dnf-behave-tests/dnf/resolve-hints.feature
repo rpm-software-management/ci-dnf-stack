@@ -93,7 +93,7 @@ Scenario: --allowerasing is hinted on attempt to install conflicting packages
           - conflicting requests
         You can try to add to command line:
           --skip-unavailable to skip unavailable packages
-          --allowerasing to allow erasing of installed packages to resolve problems
+          --allowerasing to allow removing of installed packages to resolve problems
           --skip-broken to skip uninstallable packages
         """
 
