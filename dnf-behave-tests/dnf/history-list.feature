@@ -39,6 +39,16 @@ Scenario: history list 2
       | 2  |         |         | 3       |
 
 @dnf5
+Scenario: history list with mulitple args
+ When I execute dnf with args "history list 1 2 3"
+ Then the exit code is 0
+  And stdout is history list
+      | Id | Command | Action  | Altered |
+      | 3  |         |         | 5       |
+      | 2  |         |         | 3       |
+      | 1  |         |         | 6       |
+
+@dnf5
 Scenario: history list last
  When I execute dnf with args "history list last"
  Then the exit code is 0
