@@ -8,84 +8,79 @@ Given I use repository "dnf-ci-fedora"
   And I successfully execute dnf with args "install nodejs"
 
 
+@dnf5
 Scenario: history list
  When I execute dnf with args "history list"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
-      | 2  |         | Removed | 3       |
-      | 1  |         | Install | 6       |
+      | 3  |         |         | 5       |
+      | 2  |         |         | 3       |
+      | 1  |         |         | 6       |
 
-Scenario: history
+@dnf5
+Scenario: history without sub-command
  When I execute dnf with args "history"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
-      | 2  |         | Removed | 3       |
-      | 1  |         | Install | 6       |
+ Then the exit code is 2
+  And stdout is empty
+  And stderr is
+  """
+  Missing command. Add "--help" for more information about the arguments.
+  """
 
 
+@dnf5
 # single item tests
 Scenario: history list 2
  When I execute dnf with args "history list 2"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
+      | 2  |         |         | 3       |
 
+@dnf5
 Scenario: history list last
  When I execute dnf with args "history list last"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
+      | 3  |         |         | 5       |
 
-Scenario: history last
+@dnf5
+Scenario: history last without subcommand
  When I execute dnf with args "history last"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
+ Then the exit code is 2
+  And stdout is empty
+  And stderr is
+  """
+  Unknown argument "last" for command "history". Add "--help" for more information about the arguments.
+  """
 
+@dnf5
 Scenario: history list last-1
  When I execute dnf with args "history list last-1"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
+      | 2  |         |         | 3       |
 
-Scenario: history last-1
- When I execute dnf with args "history last-1"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
-
-
+@dnf5
 # range tests
-Scenario: history 1..last-1
- When I execute dnf with args "history 1..last-1"
+Scenario: history list 1..last-1
+ When I execute dnf with args "history list 1..last-1"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
-      | 1  |         | Install | 6       |
+      | 2  |         |         | 3       |
+      | 1  |         |         | 6       |
 
-Scenario: history 1..last-2
- When I execute dnf with args "history 1..last-2"
+@dnf5
+Scenario: history list 1..last-2
+ When I execute dnf with args "history list 1..last-2"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 1  |         | Install | 6       |
-
-Scenario: history 1..last-2
- When I execute dnf with args "history 1..last-2"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 1  |         | Install | 6       |
+      | 1  |         |         | 6       |
 
 Scenario: history list 1..-1
  When I execute dnf with args "history 1..-1"
@@ -102,69 +97,76 @@ Scenario: history list 1..-2
       | Id | Command | Action  | Altered |
       | 1  |         | Install | 6       |
 
-Scenario: history 2..3
- When I execute dnf with args "history 2..3"
+@dnf5
+Scenario: history list 2..3
+ When I execute dnf with args "history list 2..3"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
-      | 2  |         | Removed | 3       |
+      | 3  |         |         | 5       |
+      | 2  |         |         | 3       |
 
-Scenario: history 10..11
- When I execute dnf with args "history 10..11"
+@dnf5
+Scenario: history list 10..11
+ When I execute dnf with args "history list 10..11"
+ Then the exit code is 0
+  And stdout is empty
+
+@dnf5
+Scenario: history list last..11
+ When I execute dnf with args "history list last..11"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-
-Scenario: history last..11
- When I execute dnf with args "history last..11"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
+      | 3  |         |         | 5       |
 
 
+@dnf5
 # "invalid" range tests
-Scenario: history 3..2
- When I execute dnf with args "history 3..2"
+Scenario: history list 3..2
+ When I execute dnf with args "history list 3..2"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
-      | 2  |         | Removed | 3       |
+      | 3  |         |         | 5       |
+      | 2  |         |         | 3       |
 
-Scenario: history last-1..1
- When I execute dnf with args "history last-1..1"
+@dnf5
+Scenario: history list last-1..1
+ When I execute dnf with args "history list last-1..1"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
-      | 1  |         | Install | 6       |
+      | 2  |         |         | 3       |
+      | 1  |         |         | 6       |
 
-Scenario: history 11..last-1
- When I execute dnf with args "history 11..last-1"
+@dnf5
+Scenario: history list 11..last-1
+ When I execute dnf with args "history list 11..last-1"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 3  |         | Install | 5       |
-      | 2  |         | Removed | 3       |
+      | 3  |         |         | 5       |
+      | 2  |         |         | 3       |
 
-Scenario: history last-1..aaa
- When I execute dnf with args "history last-1..aaa"
+@dnf5
+Scenario: history list last-1..aaa
+ When I execute dnf with args "history list last-1..aaa"
  Then the exit code is 1
+  And stdout is empty
   And stderr is
       """
-      Can't convert 'aaa' to transaction ID.
-      Use '<number>', 'last', 'last-<number>'.
+      Invalid transaction ID range "last-1..aaa", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
       """
 
-Scenario: history 12a..bc
- When I execute dnf with args "history 12a..bc"
+@dnf5
+Scenario: history list 12a..bc
+ When I execute dnf with args "history list 12a..bc"
  Then the exit code is 1
+  And stdout is empty
   And stderr is
       """
-      Can't convert '12a' to transaction ID.
-      Use '<number>', 'last', 'last-<number>'.
+      Invalid transaction ID range "12a..bc", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
       """
 
 
@@ -215,31 +217,24 @@ Scenario: history length is 80 chars when missing rows are queried
   80
   """
 
+@dnf5
 @bz1846692
 Scenario: history list --reverse
  When I execute dnf with args "history list --reverse"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 1  |         | Install | 6       |
-      | 2  |         | Removed | 3       |
-      | 3  |         | Install | 5       |
+      | 1  |         |         | 6       |
+      | 2  |         |         | 3       |
+      | 3  |         |         | 5       |
 
-@bz1846692
-Scenario: history --reverse
- When I execute dnf with args "history --reverse"
- Then the exit code is 0
-  And stdout is history list
-      | Id | Command | Action  | Altered |
-      | 1  |         | Install | 6       |
-      | 2  |         | Removed | 3       |
-      | 3  |         | Install | 5       |
 
+@dnf5
 @bz1846692
 Scenario: history 2..3 --reverse
- When I execute dnf with args "history 2..3 --reverse"
+ When I execute dnf with args "history list 2..3 --reverse"
  Then the exit code is 0
   And stdout is history list
       | Id | Command | Action  | Altered |
-      | 2  |         | Removed | 3       |
-      | 3  |         | Install | 5       |
+      | 2  |         |         | 3       |
+      | 3  |         |         | 5       |
