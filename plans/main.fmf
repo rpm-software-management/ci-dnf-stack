@@ -27,7 +27,7 @@ prepare:
       how: shell
       script: |
         $TMT_PLANS_DATA/ci-dnf-stack/container-test \
-        -c container-test-$PACKIT_SOURCE_BRANCH-$PACKIT_TARGET_BRANCH build \
+        -c container-test-${PACKIT_SOURCE_BRANCH,,?}-${PACKIT_TARGET_BRANCH,,?} build \
         --base $( echo "$@distro" | tr '-' ':') \
         --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
         --container-arg="--env=COPR_RPMS=$PACKIT_COPR_RPMS"
