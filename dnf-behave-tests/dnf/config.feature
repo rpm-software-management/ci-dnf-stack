@@ -93,30 +93,6 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
-Scenario: Reposdir option in dnf.conf file with --config option in installroot is taken first from installroot then from host
-  Given I create and substitute file "/test/dnf.conf" with
-    """
-    [main]
-    reposdir={context.dnf.installroot}/testrepos,/othertestrepos
-    """
-    And I generate repodata for repository "dnf-ci-fedora"
-    And I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
-        | key     | value                                                   |
-        | baseurl | {context.scenario.repos_location}/dnf-ci-fedora |
-    And I create directory "/othertestrepos"
-   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
-   Then the exit code is 1
-    And stderr contains "No match for argument: filesystem"
-    And stdout contains "No repositories were loaded from the installroot. To use the configuration and repositories of the host system, pass --use-host-config."
-  Given I delete directory "/othertestrepos"
-   When I execute dnf with args "--config {context.dnf.installroot}/test/dnf.conf install filesystem"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                           |
-        | install       | filesystem-0:3.9-2.fc29.x86_64    |
-        | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
-
-
 Scenario: Reposdir option set by --setopt
   Given I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
@@ -264,28 +240,48 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
         """
 
 
+@dnf5
 @destructive
-Scenario: Test without dnf.conf in installroot (dnf.conf is taken from host)
+Scenario: dnf.conf is not taken from host even even if the file in installroot does not exist
   Given I use repository "simple-base"
     # create host config file
-    And I create file "//etc/dnf/dnf.conf" with
+    And I create and substitute file "//etc/dnf/dnf.conf" with
     """
     [main]
     exclude=vagare
+    reposdir={context.dnf.installroot}/etc/yum.repos.d
     """
     # ensure there is no dnf.conf in the installroot
     And I delete file "/etc/dnf/dnf.conf"
    When I execute dnf with args "install vagare"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | vagare-1.0-1.fc29.x86_64              |
+        | install-dep   | labirinto-1.0-1.fc29.x86_64           |
+
+
+@dnf5
+@destructive
+Scenario: dnf.conf is taken from host if --use-host-config is used
+  Given I use repository "simple-base"
+    # create host config file
+    And I create and substitute file "//etc/dnf/dnf.conf" with
+    """
+    [main]
+    exclude=vagare
+    reposdir={context.dnf.installroot}/etc/yum.repos.d
+    """
+    # ensure there is no dnf.conf in the installroot
+    And I delete file "/etc/dnf/dnf.conf"
+   When I execute dnf with args "install vagare --use-host-config"
    Then the exit code is 1
-    And stdout is
-        """
-        All matches were filtered out by exclude filtering for argument: vagare
-        """
     And stderr is
-        """
-        <REPOSYNC>
-        Error: Unable to find a match: vagare
-        """
+    """
+    <REPOSYNC>
+    Failed to resolve the transaction:
+    Argument 'vagare' matches only excluded packages.
+    """
 
 
 @no_installroot
