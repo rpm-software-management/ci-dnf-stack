@@ -204,12 +204,10 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
     """
    When I execute dnf with args "install vagare"
    Then the exit code is 1
-    And stderr is
-        """
-        <REPOSYNC>
-        Failed to resolve the transaction:
-        Argument 'vagare' matches only excluded packages.
-        """
+    # rhsm plugin is polluting stderr with messages, we cannot use "stderr is" step
+    # librhsm-WARNING **: 12:59:28.478: Found 0 entitlement certificates
+    # librhsm-WARNING **: 12:59:28.478: Found 0 product certificates
+    And stderr contains "Argument 'vagare' matches only excluded packages."
 
 
 @dnf5
@@ -234,12 +232,10 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
         | install-dep   | labirinto-1.0-1.fc29.x86_64           |
    When I execute dnf with args "--config /test/dnf.conf install dedalo-signed"
    Then the exit code is 1
-    And stderr is
-        """
-        <REPOSYNC>
-        Failed to resolve the transaction:
-        Argument 'dedalo-signed' matches only excluded packages.
-        """
+    # rhsm plugin is polluting stderr with messages, we cannot use "stderr is" step
+    # librhsm-WARNING **: 12:59:28.478: Found 0 entitlement certificates
+    # librhsm-WARNING **: 12:59:28.478: Found 0 product certificates
+    And stderr contains "Argument 'dedalo-signed' matches only excluded packages."
 
 
 @dnf5
