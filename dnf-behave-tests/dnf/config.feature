@@ -1,19 +1,20 @@
 Feature: DNF config files testing
 
 
+@dnf5
 Scenario: Test removal of dependency when clean_requirements_on_remove=false
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
         | key                          | value      |
         | exclude                      | filesystem |
         | clean_requirements_on_remove | False      |
-    When I execute dnf with args "install --disableexcludes=main filesystem"
+   When I execute dnf with args "install --setopt=disable_excludes=main filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
         | install       | filesystem-0:3.9-2.fc29.x86_64    |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
-   When I execute dnf with args "remove --disableexcludes=all filesystem"
+   When I execute dnf with args "remove --setopt=disable_excludes=* filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
