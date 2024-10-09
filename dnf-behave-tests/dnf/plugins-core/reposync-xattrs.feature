@@ -33,9 +33,9 @@ Given I copy repository "simple-base" for modification
  Then stdout matches line by line
       """
       # file: synced/x86_64/labirinto-1\.0-1\.fc29\.x86_64\.rpm
-      user\.Librepo\.checksum\.mtime="[0-9]+"
-      user\.Librepo\.checksum\.sha256="[0-9a-f]{64}"
-      user\.Librepo\.checksum\.sha512="[0-9a-f]{128}"
+      user\.[lL]ibrepo\.checksum\.mtime="[0-9]+"
+      user\.[lL]ibrepo\.checksum\.sha256="[0-9a-f]{64}"
+      user\.[lL]ibrepo\.checksum\.sha512="[0-9a-f]{128}"
       """
 
 
@@ -45,5 +45,5 @@ Given I use repository "simple-base" as http
  When I execute dnf with args "reposync --repoid=simple-base --norepopath --download-path=/synced --remote-time"
  Then the exit code is 0
  # the timestamp stored in user.Librepo.checksum.mtime xattr is the same as mtime of the file in nanoseconds
- When I execute "[ `getfattr --absolute-names --only-values -n 'user.Librepo.checksum.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `date +%s%N -r /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
+ When I execute "[ `getfattr --absolute-names --only-values -m 'user\.[lL]ibrepo\.checksum\.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `date +%s%N -r /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
  Then the exit code is 0
