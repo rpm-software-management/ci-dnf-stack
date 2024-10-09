@@ -7,7 +7,7 @@ Scenario: Exit with an error when trying to --enable-repo='*' when there are no 
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "*". Add "--help" for more information about the arguments.
+    No matching repositories for *. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -17,7 +17,7 @@ Scenario: Exit with an error when trying to enable missing repo
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "missing-repo". Add "--help" for more information about the arguments.
+    No matching repositories for missing-repo. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -27,7 +27,7 @@ Scenario: Exit with an error when trying to enable multiple missing repos
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "missing-repo1, missing-repo2". Add "--help" for more information about the arguments.
+    No matching repositories for missing-repo1, missing-repo2. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -47,7 +47,7 @@ Scenario: Exit with an error when trying to --disable-repo='*' when there are no
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "*". Add "--help" for more information about the arguments.
+    No matching repositories for *. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -59,7 +59,7 @@ Scenario: Exit with an error when using --repo but there are no repositories
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "*, missing-repo". Add "--help" for more information about the arguments.
+    No matching repositories for *, missing-repo. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -69,7 +69,7 @@ Scenario: Exit with an error when --repo specifies invalid repository
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "missing-repo". Add "--help" for more information about the arguments.
+    No matching repositories for missing-repo. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -78,7 +78,7 @@ Scenario: Exit with an error when --setop specifies invalid repository
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "missing-repo". Add "--help" for more information about the arguments.
+    No matching repositories for missing-repo. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
 
 
@@ -87,5 +87,5 @@ Scenario: Exit with an error when trying --setop for all repos but there are non
    Then the exit code is 2
     And stderr is
     """
-    No matching repositories for "*". Add "--help" for more information about the arguments.
+    No matching repositories for *. To use repositories from a host system, pass --use-host-config option. Add "--help" for more information about the arguments.
     """
