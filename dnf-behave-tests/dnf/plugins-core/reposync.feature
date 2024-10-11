@@ -327,7 +327,7 @@ Scenario: Reposync with --norepopath and --metadata-path ad --download-metadata 
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath --metadata-path={context.dnf.tempdir}/downloadedmetadata --download-metadata"
    Then the exit code is 0
-    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/repodata/primary.xml.zst" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/primary.xml.zst" do not differ
+    And the files "{context.dnf.tempdir}/downloadedmetadata/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/primary.xml.gz" do not differ
 
 
 @RHEL-40914
@@ -335,7 +335,7 @@ Scenario: Reposync with --norepopath and --metadata-path ad --downloadcomps opti
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath --metadata-path={context.dnf.tempdir}/downloadedmetadata --downloadcomps"
    Then the exit code is 0
-    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml.zst" do not differ
+    And the text file contents of "/{context.dnf.tempdir}/downloadedmetadata/comps.xml" and "/{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
 
 
 @bz1856818
