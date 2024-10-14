@@ -6,8 +6,9 @@ Feature: Testing groups
 #   optional: flac
 #   conditional: wget, requires filesystem-content
 
+# @dnf5
 # dnf5 currently supports only group ids as a <group spec>. Names are not supported
-@not.with_dnf=5
+# https://github.com/rpm-software-management/dnf5/issues/1599
 Scenario: Install and remove group using group name
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -186,21 +187,11 @@ Scenario: Install condidional package if required package has been installed
         | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
-#@dnf5
-# TODO(nsella) Reason change not captured in dnf5 transaction parser
-#  Changing reason:
-#   filesystem                   x86_64 3.9-2.fc29   @System         0.0   B
-#     Group -> Dependency
-# basesystem requires filesystem (part of DNF-CI-Testgroup)
-#
-# TODO(emrakova) replace name DNF-CI-Testgroup with ID dnf-ci-testgroup
-#  and update transaction when 
-#  https://github.com/rpm-software-management/ci-dnf-stack/issues/1344
-#  will be resolved
+@dnf5
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
-   When I execute dnf with args "group install DNF-CI-Testgroup"
+   When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -216,15 +207,15 @@ Scenario: Group remove does not remove packages required by user installed packa
         | install       | basesystem-0:11-6.fc29.noarch             |
         # setup and filesystem packages should be kept because they are required by
         # userinstalled basesystem
-   When I execute dnf with args "group remove DNF-CI-Testgroup"
+   When I execute dnf with args "group remove dnf-ci-testgroup"
    Then the exit code is 0
     And Transaction is following
-        | Action        | Package                                   |
-        | remove        | lame-0:3.100-4.fc29.x86_64                |
-        | remove-unused | lame-libs-0:3.100-4.fc29.x86_64           |
-        | group-remove  | DNF-CI-Testgroup                          |
-        | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
-        | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
+        | Action            | Package                                   |
+        | remove            | lame-0:3.100-4.fc29.x86_64                |
+        | remove-unused     | lame-libs-0:3.100-4.fc29.x86_64           |
+        | group-remove      | DNF-CI-Testgroup                          |
+        | changing-reason   | filesystem-0:3.9-2.fc29.x86_64            |
+        | unchanged         | setup-0:2.12.1-1.fc29.noarch              |
    When I execute dnf with args "remove basesystem"
    Then the exit code is 0
     And Transaction is following
@@ -264,6 +255,7 @@ Scenario: Group remove does not remove user installed packages
 
 # @dnf5
 # TODO(nsella) "shell" command not implemented
+# https://github.com/rpm-software-management/dnf5/issues/153
 @bz1809600
 Scenario: Group remove does not traceback when reason change
   Given I use repository "dnf-ci-thirdparty"
@@ -433,6 +425,7 @@ Scenario: Install a group with empty packagelist
 
 # @dnf5
 # TODO(nsella) Merged group produces different package set
+# https://github.com/rpm-software-management/dnf5/issues/183
 @not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
   Given I use repository "comps-group"
@@ -505,6 +498,8 @@ Scenario: Group info with a group that has missing name
 
 # @dnf5
 # TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
+# https://github.com/rpm-software-management/dnf5/issues/881
+# https://github.com/rpm-software-management/dnf5/issues/183
 Scenario: Mark a group and an environment without name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"

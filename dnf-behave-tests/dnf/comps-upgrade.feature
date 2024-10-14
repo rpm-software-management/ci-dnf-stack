@@ -190,8 +190,9 @@ Scenario: Upgrade environment - user-installed groups are not removed
         | group-install | B-group                            |
         | env-upgrade   | AB-environment                     |
 
-#@dnf5
+# @dnf5
 # TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
+# https://github.com/rpm-software-management/dnf5/issues/881
 Scenario: Upgrade environment when there are both old and new groups/packages - install only new groups/packages
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
       # I don't drop repository comps-environment-upgrade-1, so the comps are merged
