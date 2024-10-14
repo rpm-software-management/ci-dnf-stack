@@ -1,13 +1,17 @@
+@dnf5
 Feature: Tests for command aliases availability
 
 
 Scenario: "nonexistent" is not an alias for any dnf command
    When I execute dnf with args "nonexistent -h"
-   Then the exit code is 1
-    And stderr contains "No such command: nonexistent"
+   Then the exit code is 2
+   And stderr is
+   """
+   Unknown argument "nonexistent" for command "dnf5".
+   It could be a command provided by a plugin, try: dnf5 install 'dnf5-command(nonexistent)'
+   """
 
 
-@dnf5
 Scenario Outline: "<alias>" is an alias for "<command>"
    When I execute dnf with args "<alias> -h"
    Then the exit code is 0
