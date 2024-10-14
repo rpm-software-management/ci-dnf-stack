@@ -1,3 +1,6 @@
+# comps groups merging works differently in dnf5
+# https://github.com/rpm-software-management/dnf5/issues/183
+# https://github.com/rpm-software-management/dnf5/issues/881
 @bz1928181
 Feature: Comps are merged based on repoconf load order
 
