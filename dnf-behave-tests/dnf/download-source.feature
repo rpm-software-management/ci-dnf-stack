@@ -2,7 +2,8 @@ Feature: Tests for different package download sources
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+# dnf5 does not fall-back to baseurl if mirrorlist fails.
+# https://github.com/rpm-software-management/dnf5/issues/1763
 @bz1775184
 Scenario: baseurl is used if all mirrors from mirrorlist fail
 Given I create directory "/baseurlrepo"
@@ -18,11 +19,14 @@ Given I create directory "/baseurlrepo"
       | mirrorlist | {context.dnf.installroot}/tmp/mirrorlist |
  When I execute dnf with args "makecache"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+  """
+  <REPOSYNC>
+  """
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+# https://github.com/rpm-software-management/dnf5/issues/1763
 @bz1775184
 Scenario: baseurl is used if mirrorlist file cannot be found
 Given I create directory "/baseurlrepo"
@@ -33,11 +37,14 @@ Given I create directory "/baseurlrepo"
       | mirrorlist | {context.dnf.installroot}/tmp/mirrorlist |
  When I execute dnf with args "makecache"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+  """
+  <REPOSYNC>
+  """
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+# https://github.com/rpm-software-management/dnf5/issues/1763
 @bz1775184
 Scenario: baseurl is used if mirrorlist file is empty
 Given I create directory "/baseurlrepo"
@@ -51,11 +58,14 @@ Given I create directory "/baseurlrepo"
       | mirrorlist | {context.dnf.installroot}/tmp/mirrorlist |
  When I execute dnf with args "makecache"
  Then the exit code is 0
-  And stderr is empty
+  And stderr is
+  """
+  <REPOSYNC>
+  """
 
 
 # @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+# https://github.com/rpm-software-management/dnf5/issues/1763
 Scenario: no working donwload source result in an error
 Given I create directory "/baseurlrepo"
   And I execute "createrepo_c {context.dnf.installroot}/baseurlrepo"
@@ -139,7 +149,7 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 
 
 # @dnf5
-# TODO(nsella) different HTTP log
+# https://github.com/rpm-software-management/dnf5/issues/1321
 @bz1817130
 Scenario: Download a package that contains special URL characters that need to be encoded (e.g. a +)
 Given I use repository "download-sources" as http
@@ -172,6 +182,7 @@ Given I make packages from repository "download-sources" accessible via http
       """
 
 
+@dnf5
 @bz2103015
 Scenario: Download a package that contains special URL characters by passing an encoded URL
 Given I use repository "download-sources" as http
