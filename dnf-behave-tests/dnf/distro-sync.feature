@@ -1,8 +1,8 @@
+@dnf5
 Feature: distro-sync
 
 
 @dnf5daemon
-@dnf5
 Scenario: when there is noting to do
 Given I use repository "simple-base"
  When I execute dnf with args "distro-sync"
@@ -11,7 +11,6 @@ Given I use repository "simple-base"
 
 
 @dnf5daemon
-@dnf5
 Scenario: updating a pkg
 Given I use repository "simple-base"
   And I execute dnf with args "install labirinto"
@@ -23,7 +22,6 @@ Given I use repository "simple-base"
       | upgrade       | labirinto-2.0-1.fc29.x86_64           |
 
 @dnf5daemon
-@dnf5
 Scenario: Ignore excluded packages - not fail on excluded best candidate
 Given I use repository "simple-base"
   And I execute dnf with args "install labirinto"
@@ -34,7 +32,6 @@ Given I use repository "simple-base"
 
 
 @dnf5daemon
-@dnf5
 Scenario: updating a signed pkg
 Given I use repository "simple-base"
   And I execute dnf with args "install dedalo-signed"
@@ -49,7 +46,6 @@ Given I use repository "simple-base"
       | upgrade       | dedalo-signed-2.0-1.fc29.x86_64       |
 
 
-@dnf5
 Scenario: updating a signed pkg without key specified
 Given I use repository "simple-base"
   And I execute dnf with args "install dedalo-signed"
@@ -60,7 +56,6 @@ Given I use repository "simple-base"
  Then the exit code is 1
 
 
-@dnf5
 Scenario: updating a broken signed pkg whose key is not imported
 Given I use repository "dnf-ci-gpg"
   And I execute dnf with args "install wget"
@@ -70,15 +65,13 @@ Given I use repository "dnf-ci-gpg"
       | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public |
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
-  And dnf4 stderr contains "Error: GPG check FAILED"
-  And dnf5 stderr contains lines matching
+  And stderr contains lines matching
     """
     Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
     """
 
 
-@dnf5
 @bz1963732
 @not.with_os=rhel__ge__8
 Scenario: updating a broken signed pkg whose key is imported
@@ -91,15 +84,13 @@ Given I use repository "dnf-ci-gpg"
   And I execute rpm with args "--import {context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public"
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
-  And dnf4 stderr contains "Error: GPG check FAILED"
-  And dnf5 stderr contains lines matching
+  And stderr contains lines matching
     """
     Transaction failed: Signature verification failed.
     PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
     """
 
 
-@dnf5
 Scenario: distro-sync list of packages, one of them is not available
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install flac"
@@ -118,7 +109,6 @@ Scenario: distro-sync list of packages, one of them is not available
     And Transaction is empty
 
 
-@dnf5
 Scenario: distro-sync list of packages with --skip-unavailable, one of them is not available
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install flac"
@@ -136,7 +126,6 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@dnf5
 Scenario: distro-sync list of packages, one of them is not installed
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install flac"
@@ -152,7 +141,6 @@ Scenario: distro-sync list of packages, one of them is not installed
     And Transaction is empty
 
 
-@dnf5
 Scenario: distro-sync list of packages with --skip-unavailable, one of them is not installed
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install flac"
@@ -170,7 +158,6 @@ Scenario: distro-sync list of packages with --skip-unavailable, one of them is n
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@dnf5
 Scenario: distro-sync all with a broken dependency and without best
   Given I use repository "upgrade-dependent"
     And I successfully execute dnf with args "install labirinto"
