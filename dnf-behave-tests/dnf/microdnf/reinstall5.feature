@@ -2,6 +2,8 @@
 Feature: Reinstall
 
 
+# Since the Curl error messages were updated in f41 run the test only there
+@not.with_os=fedora__lt__41
 Scenario: Try to reinstall a pkg if repo not available
   Given I use repository "simple-base"
     And I successfully execute microdnf with args "install labirinto"
@@ -14,5 +16,5 @@ Scenario: Try to reinstall a pkg if repo not available
    Then the exit code is 1
    And stderr is
        """
-       error: cannot update repo 'non-existent': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Curl error (6): Couldn't resolve host name for https://www.not-available-repo.com/repodata/repomd.xml [Could not resolve host: www.not-available-repo.com]
+       error: cannot update repo 'non-existent': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried; Last error: Curl error (6): Could not resolve hostname for https://www.not-available-repo.com/repodata/repomd.xml [Could not resolve host: www.not-available-repo.com]
        """
