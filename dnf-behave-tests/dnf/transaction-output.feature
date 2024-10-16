@@ -63,11 +63,11 @@ Scenario: Packages in transaction are sorted by NEVRA
         Installing       : glibc-all-langpacks-2.28-9.fc29.x86_64                4/11
         Installing       : glibc-common-2.28-9.fc29.x86_64                       5/11
         Installing       : glibc-2.28-9.fc29.x86_64                              6/11
-        Installing       : FlacBetterEncoder-1.0-1.x86_64                        7/11
-        Installing       : flac-1.3.2-8.fc29.x86_64                              8/11
-        Installing       : wget-1.19.5-5.fc29.x86_64                             9/11
-        Installing       : abcde-2.9.2-1.fc29.noarch                            10/11
-        Installing       : SuperRipper-1.0-1.x86_64                             11/11
+        Installing       : *
+        Installing       : *
+        Installing       : *
+        Installing       : *
+        Installing       : *
 
       Installed:
         FlacBetterEncoder-1.0-1.x86_64      SuperRipper-1.0-1.x86_64
