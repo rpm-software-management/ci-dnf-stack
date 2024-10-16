@@ -21,6 +21,8 @@ Scenario: UTF-8 characters in .repo filename
 # @dnf5
 # TODO(nsella) different stderr
 @bz1803038
+# Reported as https://github.com/swig/swig/issues/3051
+@not.with_os=fedora__ge__41
 Scenario: non-UTF-8 characters in .repo filename
   Given I configure dnf with
         | key      | value      |
