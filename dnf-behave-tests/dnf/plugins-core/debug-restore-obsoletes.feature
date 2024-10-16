@@ -1,3 +1,5 @@
+@not.with_os=fedora__ge__41
+# The plugin was disabled by https://github.com/rpm-software-management/dnf-plugins-core/pull/541
 Feature: Test for debug plugin - restoring obsoleted package
 
 

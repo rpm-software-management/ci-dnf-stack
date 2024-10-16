@@ -42,9 +42,16 @@ BuildRequires:  zchunk
 # tested packages
 BuildRequires:  createrepo_c
 
+# For newer fedoras we don't build dnf-automatic and dnf/yum packages because of dnf5
+# https://github.com/rpm-software-management/dnf/commit/f519e602a70ce6d3494a9d9d70464187eb9c263e
+# https://github.com/rpm-software-management/dnf/commit/d50a6b2a63976bd3e4a0cf99b53aa9cfc189f68a
+%if 0%{?fedora} < 41
 BuildRequires:  dnf
 BuildRequires:  dnf-automatic
 BuildRequires:  yum
+%else
+BuildRequires:  python3-dnf
+%endif
 
 BuildRequires:  dnf-plugins-core
 BuildRequires:  dnf-utils
