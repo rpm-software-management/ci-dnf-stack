@@ -1,3 +1,4 @@
+@dnf5
 Feature: The common repoquery tests, core functionality, odds and ends.
 
 Background:
@@ -5,7 +6,6 @@ Background:
 
 
 # simple nevra matching tests
-@dnf5
 Scenario: repoquery (no arguments, i.e. list all packages)
  When I execute dnf with args "repoquery"
  Then the exit code is 0
@@ -39,7 +39,6 @@ Scenario: repoquery (no arguments, i.e. list all packages)
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME (nonexisting package)
  When I execute dnf with args "repoquery dummy"
  Then the exit code is 0
@@ -49,7 +48,6 @@ Scenario: repoquery NAME (nonexisting package)
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery NAME
  When I execute dnf with args "repoquery top-a"
  Then the exit code is 0
@@ -67,7 +65,6 @@ Scenario: repoquery NAME
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME-VERSION
  When I execute dnf with args "repoquery top-a-2.0"
  Then the exit code is 0
@@ -83,7 +80,6 @@ Scenario: repoquery NAME-VERSION
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME-VERSION-RELEASE
  When I execute dnf with args "repoquery top-a-2.0-2"
  Then the exit code is 0
@@ -97,7 +93,6 @@ Scenario: repoquery NAME-VERSION-RELEASE
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME-EPOCH:VERSION-RELEASE
  When I execute dnf with args "repoquery top-a-2:2.0-2"
  Then the exit code is 0
@@ -111,7 +106,6 @@ Scenario: repoquery NAME-EPOCH:VERSION-RELEASE
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME-EPOCH:VERSION-RELEASE old epoch
  When I execute dnf with args "repoquery top-a-1:2.0-2"
  Then the exit code is 0
@@ -121,7 +115,6 @@ Scenario: repoquery NAME-EPOCH:VERSION-RELEASE old epoch
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery NAME NAME-EPOCH:VERSION-RELEASE
  When I execute dnf with args "repoquery bottom-a1 top-a-2:2.0-2"
  Then the exit code is 0
@@ -139,7 +132,6 @@ Scenario: repoquery NAME NAME-EPOCH:VERSION-RELEASE
       top-a-2:2.0-2.x86_64
       """
 
-@dnf5
 Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB-RELEASE
  When I execute dnf with args "repoquery bottom-a1-1.0 top-a-1:[12].0-1"
  Then the exit code is 0
@@ -157,7 +149,6 @@ Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB-RELEASE
       top-a-1:2.0-1.x86_64
       """
 
-@xfail
 @bz1735687
 Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB2-RELEASE
  When I execute dnf with args "repoquery bottom-a1-1.0 top-a-1:[1-2].0-1"
@@ -173,52 +164,7 @@ Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB2-RELEASE
       """
 
 
-# --all: compatibility option, basically does nothing
-Scenario: dnf repoquery --all
- When I execute dnf with args "repoquery"
- Then the exit code is 0
-  And stdout is
-      """
-      bottom-a1-1:1.0-1.noarch
-      bottom-a1-1:1.0-1.src
-      bottom-a1-1:2.0-1.noarch
-      bottom-a1-1:2.0-1.src
-      bottom-a2-1:1.0-1.src
-      bottom-a2-1:1.0-1.x86_64
-      bottom-a3-1:1.0-1.src
-      bottom-a3-1:1.0-1.x86_64
-      bottom-a3-1:2.0-1.src
-      bottom-a3-1:2.0-1.x86_64
-      broken-deps-1:1.0-1.src
-      broken-deps-1:1.0-1.x86_64
-      mid-a1-1:1.0-1.src
-      mid-a1-1:1.0-1.x86_64
-      mid-a2-1:1.0-1.src
-      mid-a2-1:1.0-1.x86_64
-      top-a-1:1.0-1.src
-      top-a-1:1.0-1.x86_64
-      top-a-1:2.0-1.src
-      top-a-1:2.0-1.x86_64
-      top-a-2:2.0-2.src
-      top-a-2:2.0-2.x86_64
-      """
-
-Scenario: dnf repoquery --all NAME (illogical combination, --all is a compatibility noop)
- When I execute dnf with args "repoquery --all top-a"
- Then the exit code is 0
-  And stdout is
-      """
-      top-a-1:1.0-1.src
-      top-a-1:1.0-1.x86_64
-      top-a-1:2.0-1.src
-      top-a-1:2.0-1.x86_64
-      top-a-2:2.0-2.src
-      top-a-2:2.0-2.x86_64
-      """
-
-
 # --available is the default, scenarios above should cover it
-@dnf5
 Scenario: dnf repoquery --available NAME
  When I execute dnf with args "repoquery --available top-a-2.0"
  Then the exit code is 0
@@ -236,7 +182,6 @@ Scenario: dnf repoquery --available NAME
 
 
 # --arch
-@dnf5
 Scenario: repoquery --arch ARCH
  When I execute dnf with args "repoquery --arch noarch"
  Then the exit code is 0
@@ -250,7 +195,6 @@ Scenario: repoquery --arch ARCH
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery --arch ARCH (nonexisting arch)
  When I execute dnf with args "repoquery --arch yesarch"
  Then the exit code is 0
@@ -261,7 +205,6 @@ Scenario: repoquery --arch ARCH (nonexisting arch)
   And stdout is empty
 
 # --cacheonly
-@dnf5
 Scenario: repoquery -C (without any cache)
  When I execute dnf with args "repoquery --available -C"
  Then the exit code is 1
@@ -272,7 +215,6 @@ Scenario: repoquery -C (without any cache)
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery -Cq (without any cache)
  When I execute dnf with args "repoquery --available -Cq"
  Then the exit code is 1
@@ -283,7 +225,6 @@ Scenario: repoquery -Cq (without any cache)
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery -C (with cache)
 Given I successfully execute dnf with args "makecache"
  When I execute dnf with args "repoquery -C mid*"
@@ -300,7 +241,6 @@ Given I successfully execute dnf with args "makecache"
       mid-a2-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery -C (with cache, installed package)
 Given I successfully execute dnf with args "makecache"
 Given I successfully execute dnf with args "install bottom-a1"
@@ -314,7 +254,6 @@ Given I successfully execute dnf with args "install bottom-a1"
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery -C (with cache, but disabled repository)
 Given I successfully execute dnf with args "makecache"
 Given I drop repository "repoquery-main"
@@ -327,6 +266,9 @@ Given I drop repository "repoquery-main"
   And stdout is empty
 
 
+
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 # --deplist
 Scenario: repoquery --deplist NAME
  When I execute dnf with args "repoquery --deplist top-a"
@@ -362,6 +304,8 @@ Scenario: repoquery --deplist NAME
          provider: mid-a1-1:1.0-1.x86_64
       """
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 @bz1784148
 Scenario: repoquery --deplist REMOTE_RPM
  When I execute dnf with args "repoquery --deplist {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"
@@ -380,6 +324,8 @@ Scenario: repoquery --deplist REMOTE_RPM
         dependency: rpmlib(PayloadFilesHavePrefix) <= 4.0-1
       """
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 @bz1784148
 Scenario: repoquery --deplist NEVRA REMOTE_RPM
  When I execute dnf with args "repoquery --deplist top-a-2:2.0-2.x86_64 {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/top-a-1.0-1.x86_64.rpm"
@@ -404,11 +350,15 @@ Scenario: repoquery --deplist NEVRA REMOTE_RPM
          provider: mid-a1-1:1.0-1.x86_64
       """
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 Scenario: repoquery --deplist NAME (no such package)
  When I execute dnf with args "repoquery --deplist dummy"
  Then the exit code is 0
   And stdout is empty
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 Scenario: repoquery --deplist --latest-limit
  When I execute dnf with args "repoquery --deplist --latest-limit 1 top-a"
  Then the exit code is 0
@@ -423,6 +373,8 @@ Scenario: repoquery --deplist --latest-limit
          provider: mid-a1-1:1.0-1.x86_64
       """
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/914
 Scenario: deplist --latest-limit (deplist is an alias for repoquery --deplist)
  When I execute dnf with args "deplist --latest-limit 1 top-a"
  Then the exit code is 0
@@ -439,7 +391,6 @@ Scenario: deplist --latest-limit (deplist is an alias for repoquery --deplist)
 
 
 # --extras: installed pkgs, not from known repos
-@dnf5
 Scenario: repoquery --extras
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/dummy-1.0-1.x86_64.rpm"
  When I execute dnf with args "repoquery --extras"
@@ -453,7 +404,6 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
       dummy-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --extras (no such packages)
  When I execute dnf with args "repoquery --extras"
  Then the exit code is 0
@@ -463,7 +413,6 @@ Scenario: repoquery --extras (no such packages)
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery --extras NAME (package is installed)
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/dummy-1.0-1.x86_64.rpm"
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/miscellaneous/x86_64/weird-1.0-1.x86_64.rpm"
@@ -478,7 +427,6 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
       dummy-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery --extras NAME (package is not installed)
  When I execute dnf with args "repoquery --extras dummy"
  Then the exit code is 0
@@ -489,7 +437,6 @@ Scenario: repoquery --extras NAME (package is not installed)
   And stdout is empty
 
    # --extras: installed pkgs, different NEVRA in available repository
-@dnf5
 Scenario: dnf repoquery --extras (when there are such pkgs with different NEVRA in repository)
 Given I drop repository "repoquery-main"
  When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/x86_64/mid-a1-1.0-1.x86_64.rpm"
@@ -512,7 +459,6 @@ Given I use repository "repoquery-main"
   And stdout is empty
 
   # --extras: installed pkgs, no NA in available repository
-@dnf5
 Scenario: dnf repoquery --extras (no NA in available repository)
  When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main-multilib/i686/mid-a1-1.0-1.i686.rpm"
  Then the exit code is 0
@@ -545,7 +491,6 @@ Given I use repository "repoquery-main-multilib"
   And stdout is empty
 
 # --installed: list only installed packages
-@dnf5
 Scenario: repoquery --installed
 Given I successfully execute dnf with args "install bottom-a1"
  When I execute dnf with args "repoquery --installed"
@@ -555,13 +500,11 @@ Given I successfully execute dnf with args "install bottom-a1"
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery --installed (no such packages)
  When I execute dnf with args "repoquery --installed"
  Then the exit code is 0
   And stdout is empty
 
-@dnf5
 Scenario: repoquery --installed NAME
 Given I successfully execute dnf with args "install bottom-a1 bottom-a2"
  When I execute dnf with args "repoquery --installed bottom-a1"
@@ -571,7 +514,6 @@ Given I successfully execute dnf with args "install bottom-a1 bottom-a2"
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery --installed NAME (no such packages)
  When I execute dnf with args "repoquery --installed bottom-a1"
  Then the exit code is 0
@@ -579,7 +521,6 @@ Scenario: repoquery --installed NAME (no such packages)
 
 
 # --location
-@dnf5
 @bz1639827
 Scenario: repoquery --location NAME
  When I execute dnf with args "repoquery --location top-a-2.0"
@@ -596,7 +537,6 @@ Scenario: repoquery --location NAME
       .+/fixtures/repos/repoquery-main/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
-@dnf5
 Scenario: repoquery --location NAME (in an HTTP repo)
 Given I use repository "repoquery-main" as https
  When I execute dnf with args "repoquery --location top-a-2.0"
@@ -613,7 +553,6 @@ Given I use repository "repoquery-main" as https
       https://localhost:[0-9]+/x86_64/top-a-2.0-2.x86_64.rpm$
       """
 
-@dnf5
 Scenario: repoquery --location NAME (no such package)
  When I execute dnf with args "repoquery --location dummy"
  Then the exit code is 0
@@ -623,7 +562,6 @@ Scenario: repoquery --location NAME (no such package)
       """
 
 
-@dnf5
 @bz1873146
 Scenario: repoquery --location for local package with file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location file://{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
@@ -633,7 +571,6 @@ Scenario: repoquery --location for local package with file protocol is empty (no
       <REPOSYNC>
       """
 
-@dnf5
 @bz1873146
 Scenario: repoquery --location for local package without file protocol is empty (no traceback)
  When I execute dnf with args "repoquery --location /{context.dnf.fixturesdir}/repos/repoquery-main/noarch/bottom-a1-1.0-1.noarch.rpm"
@@ -644,7 +581,6 @@ Scenario: repoquery --location for local package without file protocol is empty 
       """
 
 
-@dnf5
 @bz1873146
 Scenario: repoquery --location NAME for --installed is empty (no traceback)
 Given I successfully execute dnf with args "install bottom-a1"
@@ -657,7 +593,6 @@ Given I successfully execute dnf with args "install bottom-a1"
 
 
 # --srpm
-@dnf5
 Scenario: repoquery --srpm
  When I execute dnf with args "repoquery --srpm"
  Then the exit code is 0
@@ -680,7 +615,6 @@ Scenario: repoquery --srpm
       top-a-2:2.0-2.src
       """
 
-@dnf5
 Scenario: repoquery --srpm NAME
  When I execute dnf with args "repoquery --srpm bottom-a1"
  Then the exit code is 0
@@ -695,7 +629,6 @@ Scenario: repoquery --srpm NAME
       """
 
 
-@dnf5
 # --unneeded
 Scenario: repoquery --unneeded
 Given I successfully execute dnf with args "install top-a-1.0"
@@ -709,6 +642,8 @@ Given I successfully execute dnf with args "upgrade top-a"
       """
 
 
+@xfail
+# option is not implemented: https://github.com/rpm-software-management/dnf5/issues/910
 # --unsatisfied
 Scenario: repoquery --unsatisfied
 Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/repoquery-main/x86_64/broken-deps-1.0-1.x86_64.rpm"
@@ -724,7 +659,6 @@ Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir
 
 
 # --upgrades: lists packages that upgrade installed packages
-@dnf5
 Scenario: repoquery --upgrades
 Given I successfully execute dnf with args "install bottom-a1-1.0"
  When I execute dnf with args "repoquery --upgrades"
@@ -738,7 +672,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery --upgrades (no such packages)
 Given I successfully execute dnf with args "install bottom-a2-1.0"
  When I execute dnf with args "repoquery --upgrades"
@@ -749,7 +682,6 @@ Given I successfully execute dnf with args "install bottom-a2-1.0"
       """
   And stdout is empty
 
-@dnf5
 Scenario: repoquery --upgrades NAME
 Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a3-1.0"
  When I execute dnf with args "repoquery --upgrades bottom-a1"
@@ -763,7 +695,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a3-1.0"
       bottom-a1-1:2.0-1.noarch
       """
 
-@dnf5
 Scenario: repoquery --upgrades NAME (no such packages)
 Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a2-1.0"
  When I execute dnf with args "repoquery --upgrades bottom-a2"
@@ -776,7 +707,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0 bottom-a2-1.0"
 
 
 # --userinstalled
-@dnf5
 Scenario: repoquery --userinstalled
 Given I successfully execute dnf with args "install top-a"
  When I execute dnf with args "repoquery --userinstalled"
@@ -788,7 +718,6 @@ Given I successfully execute dnf with args "install top-a"
 
 
 # --queryformat
-@dnf5
 Scenario: repoquery --queryformat NVR
  When I execute dnf with args "repoquery --queryformat "%{{name}}-%{{version}}-%{{release}}\n" bottom-a1"
  Then the exit code is 0
@@ -803,7 +732,6 @@ Scenario: repoquery --queryformat NVR
       """
 
 # note: %{{installtime}}, %{{buildtime}}, %{{downloadsize}}, %{{installsize}} and %{{location}} untested as they vary
-@dnf5
 Scenario: repoquery --queryformat EVERYTHING
  When I execute dnf with args "repoquery --queryformat '%{{name}} | %{{arch}} | %{{epoch}} | %{{version}} | %{{release}} | %{{reponame}} | %{{repoid}} | %{{evr}} | %{{debug_name}} | %{{source_name}} | %{{source_debug_name}} | %{{provides}} | %{{requires}} | %{{obsoletes}} | %{{conflicts}} | %{{sourcerpm}} | %{{description}} | %{{summary}} | %{{license}} | %{{url}} | %{{reason}} | %{{depends}} | %{{files}} | %{{full_nevra}} | %{{prereq_ignoreinst}} | %{{requires_pre}} | %{{regular_requires}}\n\n' top*.x86_64"
  Then the exit code is 0
@@ -852,7 +780,6 @@ Scenario: repoquery --queryformat EVERYTHING
 
 # install bottom-a1 using dnf (i.e. has record in history database)
 # install bottom-a2 using rpm (no record in history database)
-@dnf5
 @bz1898968
 @bz1879168
 Scenario: repoquery --queryformat from_repo
@@ -876,7 +803,6 @@ Given I successfully execute dnf with args "install bottom-a1"
       """
 
 
-@dnf5
 Scenario: repoquery --queryformat upper-case tags
  When I execute dnf with args "repoquery --queryformat '%{{NAME}}-%{{VERSION}}-%{{release}} %{{RePoId}}\n' bottom-*"
  Then the exit code is 0
@@ -895,7 +821,6 @@ Scenario: repoquery --queryformat upper-case tags
 
 
 # --querytags
-@dnf5
 @bz1744073
 Scenario: dnf repoquery --querytags
  When I execute dnf with args "repoquery --querytags"

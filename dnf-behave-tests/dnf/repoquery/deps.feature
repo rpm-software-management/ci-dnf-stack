@@ -120,7 +120,7 @@ Given I successfully execute dnf with args "install middle3"
       bottom5-1:1.0-1.x86_64
       """
 
-# missing --tree option
+# missing --tree option: https://github.com/rpm-software-management/dnf5/issues/913
 @xfail
 Scenario: repoquery --requires --resolve --recursive --tree NAME-VERSION
  When I execute dnf with args "repoquery --requires --resolve --recursive --tree top1-2.0"
