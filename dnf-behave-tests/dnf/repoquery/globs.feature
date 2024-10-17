@@ -1,10 +1,10 @@
+@dnf5
 Feature: Glob tests for expanding all the various glob patterns.
 
 Background:
  Given I use repository "repoquery-globs"
 
 
-@dnf5
 # <name> globs
 Scenario: repoquery '*' (lists all available packages)
  When I execute dnf with args "repoquery '*'"
@@ -33,7 +33,6 @@ Scenario: repoquery '*' (lists all available packages)
       toppler-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top*
  When I execute dnf with args "repoquery top*"
  Then the exit code is 0
@@ -55,7 +54,6 @@ Scenario: repoquery top*
       toppler-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top?d
  When I execute dnf with args "repoquery top?d"
  Then the exit code is 0
@@ -69,7 +67,6 @@ Scenario: repoquery top?d
       toped-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top?{d,it}
  When I execute dnf with args "repoquery top?{{d,it}}"
  Then the exit code is 0
@@ -87,7 +84,6 @@ Scenario: repoquery top?{d,it}
       topgit-1:1.17.6-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top[a-f]d
  When I execute dnf with args "repoquery top[a-f]d"
  Then the exit code is 0
@@ -101,7 +97,6 @@ Scenario: repoquery top[a-f]d
       toped-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top[a-fg]*
  When I execute dnf with args "repoquery top[a-fg]*"
  Then the exit code is 0
@@ -119,7 +114,6 @@ Scenario: repoquery top[a-fg]*
       topgit-1:1.17.6-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top[^a-g]*
  When I execute dnf with args "repoquery top[^a-g]*"
  Then the exit code is 0
@@ -133,7 +127,6 @@ Scenario: repoquery top[^a-g]*
       toppler-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top{ed,pler}
  When I execute dnf with args "repoquery top{{ed,pler}}"
  Then the exit code is 0
@@ -149,7 +142,6 @@ Scenario: repoquery top{ed,pler}
       toppler-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery top[!n-z]{d,aaa,it}
  When I execute dnf with args "repoquery top[!n-z]{{d,aaa,it}}"
  Then the exit code is 0
@@ -167,7 +159,6 @@ Scenario: repoquery top[!n-z]{d,aaa,it}
       topgit-1:1.17.6-1.x86_64
       """
 
-@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*
  When I execute dnf with args "repoquery *top[-a-f]*"
@@ -187,7 +178,6 @@ Scenario: repoquery *top[-a-f]*
       """
 
 
-@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 # <name-version> globs
 Scenario: repoquery *top[-a-f]*-1.0
@@ -205,7 +195,6 @@ Scenario: repoquery *top[-a-f]*-1.0
       toped-1:1.0-1.x86_64
       """
 
-@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*-1.[1-4]*
  When I execute dnf with args "repoquery *top[-a-f]*-1.[1-4]*"
@@ -220,7 +209,6 @@ Scenario: repoquery *top[-a-f]*-1.[1-4]*
       desktop-utils-1:1.23.9-1.x86_64
       """
 
-@dnf5
 # https://github.com/rpm-software-management/dnf5/issues/614
 Scenario: repoquery *top[-a-f]*-1.[!1-4]*.x86_64
  When I execute dnf with args "repoquery *top[-a-f]*-1.[!1-4]*.x86_64"
@@ -235,7 +223,6 @@ Scenario: repoquery *top[-a-f]*-1.[!1-4]*.x86_64
       toped-1:1.0-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery *top*-1.{17,23,99}*
  When I execute dnf with args "repoquery *top*-1.{{17,23,99}}*"
  Then the exit code is 0
@@ -251,7 +238,6 @@ Scenario: repoquery *top*-1.{17,23,99}*
       topgit-1:1.17.6-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery desktop-utils-[1-5].23.9
  When I execute dnf with args "repoquery desktop-utils-[1-5].23.9"
  Then the exit code is 0
@@ -265,7 +251,6 @@ Scenario: repoquery desktop-utils-[1-5].23.9
       desktop-utils-1:1.23.9-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery with argument with epoch 0 and replaced '-' by wild card
 #  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
  Given I use repository "dnf-ci-fedora"
@@ -280,7 +265,6 @@ Scenario: repoquery with argument with epoch 0 and replaced '-' by wild card
       postgresql-devel-0:9.6.5-1.fc29.x86_64
       """
 
-@dnf5
 Scenario: repoquery with argument without epoch 0 and replaced '-' by wild card
 #  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
  Given I use repository "dnf-ci-fedora"
@@ -295,7 +279,6 @@ Scenario: repoquery with argument without epoch 0 and replaced '-' by wild card
       postgresql-devel-0:9.6.5-1.fc29.x86_64
       """
 
-@dnf5
 Scenario: repoquery with argument with epoch 1 and replaced '-' by wild card
 #  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
  When I execute dnf with args "repoquery desktop-utils-1:1.23.9*1.x86_64"
@@ -309,7 +292,6 @@ Scenario: repoquery with argument with epoch 1 and replaced '-' by wild card
       desktop-utils-1:1.23.9-1.x86_64
       """
 
-@dnf5
 Scenario: repoquery with argument without epoch 1 and replaced '-' by wild card
 #  The test is aimed for full nevra query, because NEVRA parser cannot split an argument correctly
  When I execute dnf with args "repoquery desktop-utils-1.23.9*1.x86_64"
