@@ -36,6 +36,10 @@ default:
 If any additional repositories are needed to be added to the container image,
 you can place them into the `repos.d` directory (mainly useful for RHEL).
 
+If any additional CA certificates are needed to be trusted in the container
+image, e.g. for the additional repositories, you can place them into the
+`ca-trust` directory.
+
 During the build, any RPMs found in the `rpms` directory are installed in the
 image. Place your RPMs to be tested in this directory.
 
