@@ -13,6 +13,10 @@ RUN set -x && \
     echo -e "deltarpm=0" >> /etc/dnf/dnf.conf && \
     echo -e "install_weak_deps=0" >> /etc/dnf/dnf.conf
 
+# Import extra CA certificates
+COPY ./ca-trust/ /etc/pki/ca-trust/source/anchors/
+RUN update-ca-trust
+
 # Copy extra repo files
 COPY ./repos.d/ /etc/yum.repos.d/
 
