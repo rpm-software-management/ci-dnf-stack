@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test for dnf info
 
 
@@ -5,7 +6,6 @@ Background: Enable dnf-ci-fedora repository
 Given I use repository "dnf-ci-fedora"
 
 
-@dnf5
 Scenario: dnf info nonexistentpkg
  When I execute dnf with args "info non-existent-pkg"
  Then the exit code is 1
@@ -16,7 +16,6 @@ Scenario: dnf info nonexistentpkg
       """
 
 
-@dnf5
 Scenario: info all packages available
  When I execute dnf with args "info --available"
  Then the exit code is 0
@@ -27,7 +26,6 @@ Scenario: info all packages available
  Then stdout contains "Name\s+: glibc-all-langpacks"
 
 
-@dnf5
 Scenario: dnf info --extras (installed pkgs, not from known repos)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -58,7 +56,6 @@ Given I drop repository "dnf-ci-fedora"
       """
 
 
-@dnf5
 Scenario: dnf info setup (when setup is installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -87,7 +84,7 @@ Given I drop repository "dnf-ci-fedora"
       Vendor          : <NULL>
       """
 
-@dnf5
+
 Scenario: dnf info is case insensitive
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -116,7 +113,7 @@ Given I drop repository "dnf-ci-fedora"
       Vendor          : <NULL>
       """
 
-@dnf5
+
 Scenario: dnf info setup (when setup is not installed but it is available)
  When I execute dnf with args "info setup"
  Then stderr is
@@ -159,7 +156,6 @@ Scenario: dnf info setup (when setup is not installed but it is available)
       """
 
 
-@dnf5
 Scenario: dnf info --installed setup (when setup is installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -189,7 +185,6 @@ Given I drop repository "dnf-ci-fedora"
       """
 
 
-@dnf5
 Scenario: info --installed alias packages from all enabled repositories
  When I execute dnf with args "install glibc"
  Then the exit code is 0
@@ -204,7 +199,6 @@ Scenario: info --installed alias packages from all enabled repositories
  Then stdout contains "Name\s+: setup"
 
 
-@dnf5
 Scenario: dnf info --available setup (when setup is available)
  When I execute dnf with args "info --available setup"
  Then stderr is
@@ -247,7 +241,6 @@ Scenario: dnf info --available setup (when setup is available)
       """
 
 
-@dnf5
 Scenario: dnf info setup basesystem (when basesystem is not installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -327,7 +320,6 @@ Scenario: dnf info setup basesystem (when basesystem is not installed)
       """
 
 
-@dnf5
 Scenario: dnf info installed setup basesystem (when basesystem is not installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -358,7 +350,6 @@ Scenario: dnf info installed setup basesystem (when basesystem is not installed)
 
 # Change in behavior compared to dnf4 - Available section contains all available
 # packages, installed versions are not filtered out
-@dnf5
 Scenario: dnf info available setup basesystem (when basesystem is available)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -368,7 +359,6 @@ Scenario: dnf info available setup basesystem (when basesystem is available)
  Then stdout contains "Name\s+: setup"
 
 
-@dnf5
 Scenario: dnf info setup basesystem (when both are installed)
  When I execute dnf with args "install setup basesystem"
  Then the exit code is 0
@@ -458,9 +448,6 @@ Scenario: dnf info setup basesystem (when both are installed)
   And stdout contains "Name\s+: setup"
 
 
-@dnf5
-# This will be failing until dnf5-5.2.0.0 is merged with main
-@xfail
 Scenario Outline: dnf info <upgrades alias>
  When I execute dnf with args "install glibc"
  Then the exit code is 0
@@ -478,7 +465,6 @@ Examples:
         | --updates          |
 
 
-@dnf5
 Scenario: dnf info upgrades glibc (when glibc is not installed)
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "info --upgrades glibc"
@@ -491,7 +477,6 @@ Given I use repository "dnf-ci-fedora-updates"
   And stdout is empty
 
 
-@dnf5
 Scenario: dnf info --obsoletes
  When I execute dnf with args "install glibc"
  Then the exit code is 0
@@ -529,7 +514,6 @@ Given I use repository "dnf-ci-fedora-updates"
       """
 
 
-@dnf5
 Scenario: dnf info obsoletes setup (when setup is not obsoleted)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -542,7 +526,6 @@ Scenario: dnf info obsoletes setup (when setup is not obsoleted)
       """
 
 
-@dnf5
 @bz1800342
 Scenario: dnf info respects repo priorities
   Given I use repository "dnf-ci-fedora-updates" with configuration
@@ -582,7 +565,6 @@ Scenario: dnf info respects repo priorities
         """
 
 
-@dnf5
 Scenario: dnf info --showduplicates info all (even from lower-priority repo)
   Given I use repository "dnf-ci-fedora-updates" with configuration
         | key           | value   |
@@ -687,7 +669,6 @@ Scenario: dnf info --showduplicates info all (even from lower-priority repo)
         """
 
 
-@dnf5
 @bz1800342
 Scenario: dnf info doesn't show any available packages when there are no upgrades in the highest-priority repo
   Given I use repository "dnf-ci-fedora-updates" with configuration
@@ -727,7 +708,6 @@ Scenario: dnf info doesn't show any available packages when there are no upgrade
         """
 
 
-@dnf5
 Scenario: dnf info shows available packages when there are upgrades in the highest-priority repo
   Given I use repository "dnf-ci-fedora-updates" with configuration
         | key           | value   |
@@ -789,7 +769,6 @@ Scenario: dnf info shows available packages when there are upgrades in the highe
         """
 
 
-@dnf5
 Scenario: dnf info doesn't show package with same nevra from lower-priority repo
   Given I configure a new repository "dnf-ci-fedora2" with
         | key     | value                                          |
