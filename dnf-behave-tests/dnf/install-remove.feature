@@ -176,7 +176,7 @@ Scenario: Install remove *.rpm from local path
 
 
 @xfail
-# TODO(lukash) one would probably expect the package would be userinstalled after a `dnf install`
+# https://github.com/rpm-software-management/dnf5/issues/1787
 Scenario: Install a package that was already installed via rpm
    When I execute rpm with args "-i {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
    Then the exit code is 0

@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test upgrading installonly packages
 
 
@@ -5,7 +6,6 @@ Background:
   Given I use repository "dnf-ci-fedora"
 
 
-@dnf5
 @bz1668256 @bz1616191 @bz1639429
 Scenario: Install multiple versions of an installonly package with a limit of 2
   Given I set config option "installonly_limit" to "2"
@@ -42,7 +42,7 @@ Scenario: Install multiple versions of an installonly package with a limit of 2
         | Install | kernel-core-0:4.20.6-300.fc29.x86_64  | User   | dnf-ci-fedora-updates-testing |
         | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System                       |
 
-@dnf5
+
 Scenario: Install and remove multiple versions of an installonly package
   Given I set config option "installonly_limit" to "2"
    When I execute dnf with args "install kernel-core"
@@ -77,7 +77,7 @@ Scenario: Install and remove multiple versions of an installonly package
         | Remove  | kernel-core-0:4.18.16-300.fc29.x86_64 | User   | @System    |
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
-@dnf5
+
 @bz1769788
 Scenario: Install multiple versions of an installonly package and keep reason
    When I execute dnf with args "install kernel-core"
@@ -109,8 +109,9 @@ Scenario: Install multiple versions of an installonly package and keep reason
    Then the exit code is 0
     And Transaction is empty
 
-# @dnf5
-# TODO(nsella) Unknown argument "--oldinstallonly" for command "remove"
+
+@xfail
+# Depends on issue: https://github.com/rpm-software-management/dnf5/issues/762
 @bz1774670
 Scenario: Remove all installonly packages but keep the latest
    When I execute dnf with args "install kernel-core"
@@ -141,8 +142,9 @@ Scenario: Remove all installonly packages but keep the latest
         | remove        | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64    |
 
-# @dnf5
-# TODO(nsella) Unknown argument "--repofrompath=r,/opt/ci/dnf-behave-tests/fixtures/repos/dnf-ci-fedora" for command "install"
+
+@xfail
+# Depends on issue: https://github.com/rpm-software-management/dnf5/issues/762
 @bz1774670
 @no_installroot
 @destructive
@@ -178,7 +180,6 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
 
 
-@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
@@ -208,7 +209,6 @@ Scenario: Do not autoremove kernel after upgrade with --best
     And Transaction is empty
 
 
-@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --no-best
@@ -239,7 +239,6 @@ Scenario: Do not autoremove kernel after upgrade with --no-best
     And Transaction is empty
 
 
-@dnf5
 @bz1934499
 @bz1921063
 Scenario: Do not remove or change reason after remove of one of installonly packages
@@ -285,7 +284,6 @@ Scenario: Do not remove or change reason after remove of one of installonly pack
         | Remove  | kernel-core-0:4.19.15-300.fc29.x86_64 | User   | @System    |
 
 
-@dnf5
 @bz1934499
 @bz1921063
 Scenario: Keep reason for installonly packages
@@ -314,20 +312,24 @@ Scenario: Keep reason for installonly packages
    Then the exit code is 0
     And Transaction is empty
 
-# @dnf5
-# TODO(nsella) different exit code
+
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1789
 @bz1926261
 Scenario: Value 1 of installonly_limit config option is not allowed
   Given I configure dnf with
         | key               | value     |
         | installonly_limit | 1         |
-   When I execute dnf with args " "
+   When I execute dnf with args "upgrade"
    Then the exit code is 0
     And stderr matches line by line
     """
     Invalid configuration value: installonly_limit=1 in .*/etc/dnf/dnf.conf; value 1 is not allowed
     """
 
+
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1789
 # TODO(lukash) dnf5 doesn't seem to implement the limit lower bound and accepts installonly_limit = 1
 # also, the rpmdb check seems to not work correctly for this case, since it's passing without an
 # error even if the older version is being removed
@@ -345,7 +347,7 @@ Scenario: Kernel upgrade does not fail when installonly_limit=1 (default value i
         | install       | kernel-core-0:4.19.15-300.fc29.x86_64 |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64 |
 
-@dnf5
+
 @bz2221308 @gh_dnf5_720
 Scenario Outline: Dnf can downgrade kernel using "<command>" command.
   Given I use repository "dnf-ci-fedora-updates"
@@ -366,7 +368,6 @@ Examples:
     | install       | kernel-core-4.18.16-300.fc29.x86_64   |
 
 
-@dnf5
 @bz2163474
 Scenario: Do not bypass installonly limit (2) when installing kernel-core through provide
   Given I set config option "installonly_limit" to "2"
@@ -387,7 +388,6 @@ Scenario: Do not bypass installonly limit (2) when installing kernel-core throug
         | remove-dep    | kernel-modules-0:4.18.16-300.fc29.x86_64 |
 
 
-@dnf5
 @bz2163474
 Scenario: Do not bypass installonly limit (default 3) when installing kernel-core through provide
   Given I drop repository "dnf-ci-fedora"
@@ -408,7 +408,6 @@ Scenario: Do not bypass installonly limit (default 3) when installing kernel-cor
         | remove-dep    | kernel-modules-0:1.0.0-1.fc29.x86_64 |
 
 
-@dnf5
 @bz2263675
 Scenario: Handle over-limit custom kernel without installonlypkg(kernel) provide
   Given I drop repository "dnf-ci-fedora"

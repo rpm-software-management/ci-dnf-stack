@@ -1,8 +1,8 @@
+@dnf5
 Feature: Installroot test
 
 
 @dnf5daemon
-@dnf5
 @force_installroot
 Scenario: Install package from host repository into empty installroot
   # The following two steps generate repodata for the repository without configuring it
@@ -21,7 +21,6 @@ Scenario: Install package from host repository into empty installroot
 
 
 @dnf5daemon
-@dnf5
 @force_installroot
 Scenario: Install package from installroot repository into installroot
   Given I use repository "dnf-ci-install-remove"
@@ -34,7 +33,6 @@ Scenario: Install package from installroot repository into installroot
    Then the exit code is 1
 
 
-@dnf5
 @force_installroot
 Scenario: Test metadata handling in installroot
   Given I use repository "dnf-ci-install-remove"
@@ -51,7 +49,6 @@ Scenario: Test metadata handling in installroot
 
 
 @dnf5daemon
-@dnf5
 @force_installroot
 Scenario: Remove package from installroot
   Given I use repository "dnf-ci-install-remove"
@@ -69,7 +66,6 @@ Scenario: Remove package from installroot
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
-@dnf5
 @force_installroot
 Scenario: Repolist command in installroot and with a reposdir specified
   Given I use repository "dnf-ci-install-remove"
@@ -93,7 +89,6 @@ Scenario: Repolist command in installroot and with a reposdir specified
 
 
 @dnf5daemon
-@dnf5
 @force_installroot
 Scenario: Upgrade package in installroot
   Given I use repository "dnf-ci-install-remove"
@@ -111,11 +106,12 @@ Scenario: Upgrade package in installroot
    Then the exit code is 1
 
 
-# @dnf5
-# TODO(nsella) different stderr
+@xfail
 # (emrakova) in fact, the requested info is not provided:
-# stdout: No repositories were loaded from the installroot. To use the configuration and repositories of the host system, pass --use-host-config.
-# stderr: Failed to resolve the transaction: No match for argument: sugar
+# stderr:
+#   Failed to resolve the transaction:
+#   No match for argument: sugar
+#   No repositories were loaded from the installroot. To use the configuration and repositories of the host system, pass --use-host-config.
 # issue: https://github.com/rpm-software-management/dnf5/issues/1325
 @bz1658579
 Scenario: Installroot directory is listed when there are no repos

@@ -7,6 +7,7 @@ Background: Use "install-remove-multilib" repo
 
 
 @xfail
+# https://bugzilla.redhat.com/show_bug.cgi?id=1745878
 Scenario: Installing inferior arch with dependencies
  When I execute dnf with args "install packageB.i686"
  Then the exit code is 0
@@ -31,6 +32,7 @@ Scenario: Installing inferior arch with dependencies, in two steps
 
 
 @xfail
+# https://bugzilla.redhat.com/show_bug.cgi?id=1745878
 @bz1745878
 Scenario: Removing package of inferior arch also removes dependencies
  When I execute dnf with args "install packageA.x86_64"
