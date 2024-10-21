@@ -1,11 +1,10 @@
-Feature: Test config options includepkgs and excludepkgs with option --disableexcludes
+@dnf5
+Feature: Test config options includepkgs and excludepkgs with option disable_excludes
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=" for command "install"
-Scenario Outline: Install an RPM that is NOT in includepkgs in <conf>, with option --disableexcludepkgs equal to <disable-conf>
+Scenario Outline: Install an RPM that is NOT in includepkgs in <conf>, with option disable_excludes equal to <disable-conf>
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=<prefix>includepkgs=setup --disableexcludepkgs=<disable-conf>"
+   When I execute dnf with args "install flac --setopt=<prefix>includepkgs=setup --setopt=disable_excludes=<disable-conf>"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                          |
@@ -14,16 +13,14 @@ Scenario Outline: Install an RPM that is NOT in includepkgs in <conf>, with opti
 Examples:
   | conf   | prefix         | disable-conf   |
   | main   |                | main           |
-  | main   |                | all            |
+  | main   |                | *              |
   | repo   | dnf-ci-fedora. | dnf-ci-fedora  |
-  | repo   | dnf-ci-fedora. | all            |
+  | repo   | dnf-ci-fedora. | *              |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=" for command "install"
-Scenario Outline: Install an RPM that is in excludepkgs in <conf>, with option --disableexcludepkgs equal to <disable-conf>
+Scenario Outline: Install an RPM that is in excludepkgs in <conf>, with option disable_excludes equal to <disable-conf>
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=<prefix>excludepkgs=flac --disableexcludepkgs=<disable-conf>"
+   When I execute dnf with args "install flac --setopt=<prefix>excludepkgs=flac --setopt=disable_excludes=<disable-conf>"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                          |
@@ -32,42 +29,34 @@ Scenario Outline: Install an RPM that is in excludepkgs in <conf>, with option -
 Examples:
   | conf   | prefix         | disable-conf   |
   | main   |                | main           |
-  | main   |                | all            |
+  | main   |                | *              |
   | repo   | dnf-ci-fedora. | dnf-ci-fedora  |
-  | repo   | dnf-ci-fedora. | all            |
+  | repo   | dnf-ci-fedora. | *              |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=" for command "install"
-Scenario: Fail to install an RPM that is NOT in includepkgs in main conf, with option --disableexcludepkgs equal to <repo-id>
+Scenario: Fail to install an RPM that is NOT in includepkgs in main conf, with option disable_excludes equal to <repo-id>
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=includepkgs=setup --disableexcludepkgs=dnf-ci-fedora"
+   When I execute dnf with args "install flac --setopt=includepkgs=setup --setopt=disable_excludes=dnf-ci-fedora"
    Then the exit code is 1
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=" for command "install"
-Scenario: Fail to install an RPM that is in excludepkgs in main conf, with option --disableexcludepkgs equal to <repo-id>
+Scenario: Fail to install an RPM that is in excludepkgs in main conf, with option disable_excludes equal to <repo-id>
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=excludepkgs=flac --disableexcludepkgs=dnf-ci-fedora"
+   When I execute dnf with args "install flac --setopt=excludepkgs=flac --setopt=disable_excludes=dnf-ci-fedora"
    Then the exit code is 1
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=" for command "install"
-Scenario: Fail to install an RPM that is NOT in includepkgs in repo conf, with option --disableexcludepkgs equal to main
+Scenario: Fail to install an RPM that is NOT in includepkgs in repo conf, with option disable_excludes equal to main
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=dnf-ci-fedora.includepkgs=setup --disableexcludepkgs=main"
+   When I execute dnf with args "install flac --setopt=dnf-ci-fedora.includepkgs=setup --setopt=disable_excludes=main"
    Then the exit code is 1
     And Transaction is empty
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--disableexcludepkgs=main" for command "install"
-Scenario: Fail to install an RPM that is in excludepkgs in repo conf, with option --disableexcludepkgs equal to main
+Scenario: Fail to install an RPM that is in excludepkgs in repo conf, with option disable_excludes equal to main
   Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install flac --setopt=dnf-ci-fedora.excludepkgs=flac --disableexcludepkgs=main"
+   When I execute dnf with args "install flac --setopt=dnf-ci-fedora.excludepkgs=flac --setopt=disable_excludes=main"
    Then the exit code is 1
     And Transaction is empty
