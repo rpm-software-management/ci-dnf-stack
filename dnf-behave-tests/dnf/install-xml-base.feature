@@ -2,7 +2,8 @@
 Feature: Install packages with base:xml set
 
 
-@dnf5daemon
+@xfail
+# https://github.com/rpm-software-management/ci-dnf-stack/issues/1576
 Scenario: Installed packages from local repository with local xml:base are not cached
 Given I copy repository "dnf-ci-fedora" for modification
   And I use repository "dnf-ci-fedora"
@@ -14,7 +15,7 @@ Given I copy repository "dnf-ci-fedora" for modification
   And Transaction is following
       | Action        | Package                                  |
       | install       | setup-0:2.12.1-1.fc29.noarch             |
-  And file "/var/cache/dnf/dnf-ci-fedora_with_baseurl*/packages/setup*" does not exist
+  And file "/var/cache/dnf/dnf-ci-fedora*/packages/setup*" does not exist
 
 
 @dnf5daemon
