@@ -1,7 +1,7 @@
+@dnf5
 Feature: Test encoding
 
 
-@dnf5
 Scenario: UTF-8 characters in .repo filename
   Given I configure dnf with
         | key      | value      |
@@ -17,8 +17,6 @@ Scenario: UTF-8 characters in .repo filename
     And stderr is empty
 
 
-@dnf5
-# dnf5 is OK with that in comparison with dnf4
 @bz1803038
 Scenario: non-UTF-8 characters in .repo filename
   Given I configure dnf with
@@ -35,46 +33,46 @@ Scenario: non-UTF-8 characters in .repo filename
     And stderr is empty
 
 
-# @dnf5
-# TODO(nsella) different stdout
 Scenario: non-UTF-8 character in pkgspec
   Given I use repository "miscellaneous"
    When I execute dnf with args "install {context.invalid_utf8_char}ummy"
    Then the exit code is 1
     And stdout is empty
-    And stderr is 
+    And stderr is
         """
-        Error: Cannot encode argument '\udcfdummy': 'utf-8' codec can't encode character '\udcfd' in position 0: surrogates not allowed
+        <REPOSYNC>
+        Failed to resolve the transaction:
+        No match for argument: {context.invalid_utf8_char}ummy
+        You can try to add to command line:
+          --skip-unavailable to skip unavailable packages
         """
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--repofrompath=testrepo," for command "install"
 Scenario: non-UTF-8 character in baseurl
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --repofrompath=testrepo,{context.invalid_utf8_char}"
    Then the exit code is 1
     And stdout is empty
-    And stderr is 
+    And stderr is
         """
-        Error: Cannot encode argument '--repofrompath=testrepo,\udcfd': 'utf-8' codec can't encode character '\udcfd' in position 24: surrogates not allowed
+        <REPOSYNC>
+        >>> Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath Failed to download metadata (baseurl: "{context.invalid_utf8_char}") for repository "testrepo"
+         Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath specified!
         """
 
 
-# @dnf5
-# TODO(nsella) different stdout
 Scenario: non-UTF-8 character in an option
   Given I use repository "miscellaneous"
    When I execute dnf with args "install dummy --config={context.invalid_utf8_char}"
    Then the exit code is 1
     And stdout is empty
-    And stderr is 
+    And stderr is
         """
-        Error: Cannot encode argument '--config=\udcfd': 'utf-8' codec can't encode character '\udcfd' in position 9: surrogates not allowed
+        Configuration file "{context.invalid_utf8_char}" not found
+         cannot open file: (2) - No such file or directory [{context.invalid_utf8_char}]
         """
 
 
-@dnf5
 Scenario: non-UTF-8 character in an option when using corresponding locale
   Given I use repository "miscellaneous"
     And I create file "/{context.invalid_utf8_char}" with
@@ -88,7 +86,6 @@ Scenario: non-UTF-8 character in an option when using corresponding locale
         | install       | dummy-1:1.0-1.x86_64       |
 
 
-@dnf5
 @not.with_os=rhel__eq__9
 @bz1893176
 Scenario: non-UTF-8 character in filename in an installed package
