@@ -35,7 +35,6 @@ Scenario: Downgrade to RPM with same NVR but different epoch
         | downgrade     | dummy-0:1.0-1.x86_64   |
 
 
-@xfail
 @bz1845069
 Scenario: Downgrade to RPM with same NVR but no epoch
   Given I use repository "epoch1"
