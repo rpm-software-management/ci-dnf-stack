@@ -1,3 +1,5 @@
+@not.with_os=fedora__ge__41
+# dnf-automatic disabled by https://github.com/rpm-software-management/dnf/pull/2129
 @no_installroot
 Feature: dnf-automatic performs update
 

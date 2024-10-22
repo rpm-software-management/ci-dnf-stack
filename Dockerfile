@@ -44,9 +44,19 @@ RUN set -x && \
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
+# remove dnf5 and exclude it to ensure we test old dnf
+RUN set -x && \
+    dnf -y remove dnf5 --setopt=protected_packages=,; \
+    echo "excludepkgs=dnf5*" >> /etc/dnf/dnf.conf
+
+# On Fedora > 40 the symlinks to dnf-3 and yum are missing (because dnf5 provides dnf), add them manually
+RUN set -x && \
+    ln -sf /usr/bin/dnf-3 /usr/bin/dnf; \
+    ln -sf /usr/bin/dnf-3 /usr/bin/yum
+
 # install test suite dependencies
 RUN set -x && \
-    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec --exclude=dnf5 && \
+    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
