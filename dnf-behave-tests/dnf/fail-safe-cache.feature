@@ -1,3 +1,5 @@
+# @dnf5
+# missing modularity features: https://github.com/rpm-software-management/dnf5/issues/146
 Feature: Tests for the correct creation and usage of the modulefailsafe file
 
 

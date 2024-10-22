@@ -1,3 +1,5 @@
+# @dnf5
+# missing modularity features: https://github.com/rpm-software-management/dnf5/issues/146
 Feature: Fail-safe
 
 

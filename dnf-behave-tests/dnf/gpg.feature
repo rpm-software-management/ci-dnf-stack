@@ -1,3 +1,4 @@
+@dnf5
 Feature: Testing gpgcheck
 
 
@@ -29,7 +30,6 @@ Background: Add repository with gpgcheck=1
    Then the exit code is 1
 
 
-@dnf5
 @dnf5daemon
 Scenario Outline: Install <offline> masterkey signed package and check GPG key was imported
    When I execute dnf with args "install <offline> setup"
@@ -49,7 +49,6 @@ Examples:
     | --offline     | DNF Transaction   |
 
 
-@dnf5
 @dnf5daemon
 Scenario Outline: Install <offline> subkey signed package with masterkey signed dependency
    When I execute dnf with args "install <offline> filesystem"
@@ -69,7 +68,6 @@ Examples:
     | --offline     | DNF Transaction   |
 
 
-@dnf5
 # XXX stderr @dnf5daemon
 Scenario Outline: Fail to <offline> install signed package with incorrectly signed dependency (with key from different repository)
    When I execute dnf with args "install <offline> glibc"
@@ -95,7 +93,6 @@ Examples:
     | --offline     |
 
 
-@dnf5
 # XXX stderr @dnf5daemon
 Scenario Outline: Fail to <offline> install signed package with incorrect checksum
    When I execute dnf with args "install <offline> broken-package"
@@ -116,7 +113,6 @@ Examples:
     | --offline     |
 
 
-@dnf5
 @dnf5daemon
 Scenario Outline: Install <offline> masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
   Given I configure repository "dnf-ci-gpg" with
@@ -139,7 +135,6 @@ Examples:
     | --offline     |
 
 
-@dnf5
 # XXX stderr @dnf5daemon
 Scenario Outline: Attempt to <offline> install unsigned package from repo with gpgcheck=1
    When I execute dnf with args "install <offline> flac"
@@ -156,7 +151,6 @@ Examples:
     | --offline     |
 
 
-@dnf5
 Scenario Outline: Install <offline> unsigned package from repository without gpgcheck set using option --no-gpgchecks
    When I execute dnf with args "install <offline> flac --no-gpgchecks"
    Then the exit code is 0
@@ -170,7 +164,6 @@ Examples:
     | --offline     | DNF Transaction   |
 
 
-@dnf5
 @bz1314405
 Scenario Outline: Fail to <offline> install package with incorrect checksum with --no-gpgchecks
   Given I configure repository "dnf-ci-gpg" with
@@ -191,7 +184,6 @@ Examples:
     | --offline     |
 
 
-@dnf5
 @bz1915990
 @bz1932079
 @bz1932089
@@ -215,6 +207,7 @@ Examples:
 
 
 @xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1790
 @1941959
 Scenario: Expire repo when failed to install package with incorrect checksum
   Given I drop repository "dnf-ci-gpg"
@@ -229,7 +222,11 @@ Scenario: Expire repo when failed to install package with incorrect checksum
         | Action        | Package                               |
         | install       | broken-package-0:0.2.4-1.fc29.noarch  |
     And RPMDB Transaction is empty
-    And file "/var/cache/dnf/expired_repos.json" contents is
-        """
-        ["dnf-ci-gpg"]
-        """
+   # Check that repository dnf-ci-gpg is refreshed on the next run
+   When I execute dnf with args "makecache"
+   Then stderr matches line by line
+   """
+   Updating and loading repositories:
+    dnf-ci-gpg test repository             100% |   .*
+   Repositories loaded.
+   """
