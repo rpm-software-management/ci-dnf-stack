@@ -1,3 +1,4 @@
+@dnf5
 Feature: Remove RPMs by pkgspec
 
 
@@ -7,22 +8,22 @@ Background: Installs 3 kernel versions and other packages
     And I create directory "/usr"
    When I execute microdnf with args "install kernel-4.18.16 kernel-4.19.15 kernel-4.20.6 installonlyA-2.0 installonlyB-2.0"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                                |
         | install       | installonlyA-0:2.0-1.x86_64            |
         | install       | installonlyB-0:2.0-1.x86_64            |
         | install       | kernel-0:4.18.16-300.fc29.x86_64       |
         | install       | kernel-0:4.19.15-300.fc29.x86_64       |
         | install       | kernel-0:4.20.6-300.fc29.x86_64        |
-        | install       | kernel-core-0:4.18.16-300.fc29.x86_64  |
-        | install       | kernel-core-0:4.19.15-300.fc29.x86_64  |
-        | install       | kernel-core-0:4.20.6-300.fc29.x86_64   |
+        | install-dep   | kernel-core-0:4.18.16-300.fc29.x86_64  |
+        | install-dep   | kernel-core-0:4.19.15-300.fc29.x86_64  |
+        | install-dep   | kernel-core-0:4.20.6-300.fc29.x86_64   |
 
 
 Scenario: Remove an RPM by name
    When I execute microdnf with args "remove installonlyA"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                                |
         | remove        | installonlyA-0:2.0-1.x86_64            |
 
@@ -30,18 +31,21 @@ Scenario: Remove an RPM by name
 Scenario: Remove multiple RPMs by name
    When I execute microdnf with args "remove kernel"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                                |
         | remove        | kernel-0:4.18.16-300.fc29.x86_64       |
         | remove        | kernel-0:4.19.15-300.fc29.x86_64       |
         | remove        | kernel-0:4.20.6-300.fc29.x86_64        |
+        | remove-unused | kernel-core-0:4.18.16-300.fc29.x86_64  |
+        | remove-unused | kernel-core-0:4.19.15-300.fc29.x86_64  |
+        | remove-unused | kernel-core-0:4.20.6-300.fc29.x86_64   |
 
 
 @bz2084602
 Scenario: Remove multiple RPMs by name with globs
    When I execute microdnf with args "remove inst*only?"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                                |
         | remove        | installonlyA-0:2.0-1.x86_64            |
         | remove        | installonlyB-0:2.0-1.x86_64            |
@@ -51,7 +55,7 @@ Scenario: Remove multiple RPMs by name with globs
 Scenario Outline: Remove an RPM by <pkgspec-type>
    When I execute microdnf with args "remove <pkgspec>"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                                |
         | remove        | kernel-0:4.19.15-300.fc29.x86_64       |
 

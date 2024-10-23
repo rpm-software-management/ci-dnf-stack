@@ -1,3 +1,4 @@
+@dnf5
 Feature: Enabling module streams using microdnf
 
 

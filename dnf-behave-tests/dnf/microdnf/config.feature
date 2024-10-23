@@ -1,5 +1,4 @@
-@no_installroot
-@destructive
+@dnf5
 Feature: Respect main config options
 
 
@@ -32,7 +31,7 @@ Given I copy repository "simple-base" for modification
  Then the exit code is 0
   And HTTP log contains
       """
-      GET /repodata/primary.xml.gz
+      GET /repodata/primary.xml.zst
       """
 
 
@@ -46,5 +45,10 @@ Given I use repository "simple-base"
       """
  When I execute microdnf with args "--config {context.dnf.installroot}/test/microdnf.conf install labirinto"
  Then the exit code is 1
-  And stderr contains "error: No package matches 'labirinto'"
+  And stderr is
+  """
+  <REPOSYNC>
+  Failed to resolve the transaction:
+  Argument 'labirinto' matches only excluded packages.
+  """
   And stdout is empty

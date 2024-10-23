@@ -1,3 +1,4 @@
+@dnf5
 Feature: Protected packages
 
 
@@ -10,7 +11,7 @@ Scenario: Package protected via "protected_packages" option cannot be removed
     And I create directory "/usr"
     And I execute microdnf with args "install filesystem"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                               |
         | install       | filesystem-0:3.9-2.fc29.x86_64        |
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |

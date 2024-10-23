@@ -1,5 +1,4 @@
-@no_installroot
-@destructive
+@dnf5
 Feature: The common repoquery tests, core functionality, odds and ends.
 
 Background:
@@ -114,7 +113,6 @@ Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB-RELEASE
       top-a-1:2.0-1.x86_64
       """
 
-@xfail
 @bz1735687
 Scenario: repoquery NAME-VERSION NAME-EPOCH:VERSION_GLOB2-RELEASE
  When I execute microdnf with args "repoquery bottom-a1-1.0 top-a-1:[1-2].0-1"

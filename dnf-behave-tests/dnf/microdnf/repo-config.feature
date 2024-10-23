@@ -1,8 +1,7 @@
-@no_installroot
+@dnf5
 Feature: libdnf context part correctly reading repo config
 
 
-@xfail
 Scenario: multiline config for gpg works with local repo
 Given I use repository "simple-base"
   And I create and substitute file "/etc/yum.repos.d/simple-base.repo" with
@@ -10,14 +9,14 @@ Given I use repository "simple-base"
       [simple-base]
       name=simple-base test repository
       enabled=1
-      baseurl=file:///opt/behave/fixtures/repos/simple-base
+      baseurl=file://{context.dnf.fixturesdir}/repos/simple-base
       gpgcheck=1
       gpgkey=file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public
              file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public
       """
  When I execute microdnf with args "install dedalo-signed"
  Then the exit code is 0
-  And microdnf transaction is
+  And transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -37,7 +36,7 @@ Given I use repository "simple-base" as http
       """
  When I execute microdnf with args "install dedalo-signed"
  Then the exit code is 0
-  And microdnf transaction is
+  And transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -57,7 +56,7 @@ Given I use repository "simple-base" as http
       """
  When I execute microdnf with args "install dedalo-signed"
  Then the exit code is 0
-  And microdnf transaction is
+  And transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -75,7 +74,7 @@ Given I use repository "simple-base" as http
       """
  When I execute microdnf with args "install labirinto"
  Then the exit code is 0
-  And microdnf transaction is
+  And transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
@@ -90,6 +89,6 @@ Given I use repository "simple-base" with configuration
       | priority | 2     |
  When I execute microdnf with args "install labirinto"
  Then the exit code is 0
-  And microdnf transaction is
+  And transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |

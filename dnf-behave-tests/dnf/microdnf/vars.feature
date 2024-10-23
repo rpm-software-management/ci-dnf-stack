@@ -1,3 +1,4 @@
+@dnf5
 Feature: Subtitute variables
 
 Background:
@@ -8,8 +9,6 @@ Background:
 
 
 @bz2076853
-@no_installroot
-@destructive
 Scenario: Variables are substituted in baseurl via vars in config files
   Given I create and substitute file "/etc/dnf/vars/var1" with
         """
@@ -21,15 +20,20 @@ Scenario: Variables are substituted in baseurl via vars in config files
         """
     And I execute microdnf with args "repoquery setup"
    Then the exit code is 0
+    And stdout is
+    """
+    setup-0:2.12.1-1.fc29.noarch
+    setup-0:2.12.1-1.fc29.src
+    """
 
 
 @bz2076853
 Scenario: Variables are substituted in baseurl via vars in config files in custom location
-  Given I create and substitute file "{context.dnf.installroot}/tmp/vars/var1" with
+  Given I create and substitute file "/tmp/vars/var1" with
         """
         file://
         """
-    And I create and substitute file "{context.dnf.installroot}/tmp/vars/var2" with
+    And I create and substitute file "/tmp/vars/var2" with
         """
         dnf-ci-fedora
         """
@@ -37,7 +41,7 @@ Scenario: Variables are substituted in baseurl via vars in config files in custo
     Then the exit code is 1
   When I execute microdnf with args "install setup --setopt=varsdir={context.dnf.installroot}/tmp/vars"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
@@ -48,6 +52,6 @@ Scenario: Variables are substituted in baseurl via environment variables
     And I set environment variable "DNF_VAR_var2" to "dnf-ci-fedora"
     And I execute microdnf with args "install setup"
    Then the exit code is 0
-    And microdnf transaction is
+    And transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
