@@ -1,3 +1,4 @@
+@dnf5
 Feature: Disabling module stream using microdnf
 
 
@@ -57,5 +58,5 @@ Scenario: It is possible to disable an enabled default stream
    When I execute dnf with args "module list nodejs"
    Then the exit code is 0
     And module list contains
-        | Repository             | Name   | Stream   | Profiles                          |
-        | microdnf-module-enable | nodejs | 8 [d][x] | development, minimal, default [d] |
+        | Name   | Stream   | Profiles                          |
+        | nodejs | 8 [d][x] | development, minimal, default [d] |
