@@ -697,3 +697,13 @@ Scenario: Remove group that is not installed
        <REPOSYNC>
        No groups to remove for argument: dnf-ci-testgroup
        """
+
+@dnf5
+@bz2263762
+Scenario: Dnf works with comps group containing duplicate package entry
+ Given I use repository "comps-group-duplicate-package"
+  When I execute dnf with args "install @test-group"
+  Then the exit code is 0
+    And Transaction is following
+        | Action        | Package       |
+        | group-install | Test Group    |
