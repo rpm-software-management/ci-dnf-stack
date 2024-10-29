@@ -56,7 +56,8 @@ Scenario: non-UTF-8 character in baseurl
     And stderr is
         """
         <REPOSYNC>
-        >>> Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath Failed to download metadata (baseurl: "{context.invalid_utf8_char}") for repository "testrepo"
+        >>> Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath 
+        Failed to download metadata (baseurl: "{context.invalid_utf8_char}") for repository "testrepo"
          Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath specified!
         """
 
