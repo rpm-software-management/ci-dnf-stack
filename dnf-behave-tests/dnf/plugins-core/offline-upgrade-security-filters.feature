@@ -163,7 +163,7 @@ Given I use repository "dnf-ci-security"
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
       | upgrade     | bugfix_B-0:1.0-2.x86_64        |
       | upgrade     | security_A-0:1.0-4.x86_64      |
- When I execute dnf with args "offline-upgrade download --secseverity=Critical"
+ When I execute dnf with args "offline-upgrade download --advisory-severities=Critical"
  Then the exit code is 0
   And DNF transaction is following
       | Action      | Package                        |
@@ -182,7 +182,7 @@ Given I use repository "dnf-ci-security"
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
       | upgrade     | bugfix_B-0:1.0-2.x86_64        |
       | upgrade     | security_A-0:1.0-4.x86_64      |
- When I execute dnf with args "offline-upgrade download --secseverity=Moderate"
+ When I execute dnf with args "offline-upgrade download --advisory-severities=Moderate"
  Then the exit code is 0
   And DNF transaction is following
       | Action      | Package                        |
