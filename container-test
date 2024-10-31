@@ -29,7 +29,7 @@ def command_line_parser():
         help="Test suite to run (directory with *.feature files)")
     parser.add_argument(
         "-c", "--container", metavar="IMAGE",
-        default='dnf-bot/dnf-testing:latest',
+        default='localhost/dnf-bot/dnf-testing:latest',
         help="Specified Image ID or name if do not want to run the last built image")
     parser.add_argument(
         "-d", "--devel", action="store_true", default=False,
@@ -40,6 +40,9 @@ def command_line_parser():
     parser.add_argument(
         "-v", "--verbose", action="store_true", default=False,
         help="Increase verbosity")
+    parser.add_argument(
+        "-H", "--run-on-host", action="store_true", default=False,
+        help="Run command on the host instead of using the container")
 
     subparsers = parser.add_subparsers(
         dest="command", help="List of available commands:")
@@ -63,6 +66,28 @@ def command_line_parser():
         "--container-arg", metavar="<container-arg>", dest="container_args", action="append",
         help='Additional argument for the docker/podman build command. Can be specified multiple times.')
 
+    # bootc-build command
+    bootc_build_parser = subparsers.add_parser(
+        'bootc_build', help="Build a bootc qcow2 with functional tests")
+    bootc_build_parser.add_argument(
+        "-f", "--file", metavar="FILE", dest="docker_file",
+        default="bootc/Containerfile", help="Path to Containerfile to use")
+    bootc_build_parser.add_argument(
+        "--usecache", action="store_true", default=False,
+        help="Use cache when building the image")
+    bootc_build_parser.add_argument(
+        "--type", metavar="<type>",
+        help='Build type for the image, e.g. "nightly" or "distro". Needs to be supported by the Containerfile.')
+    bootc_build_parser.add_argument(
+        "--base", metavar="<base>",
+        help='Base image to override the FROM clause in the Dockerfile.')
+    bootc_build_parser.add_argument(
+        "--container-arg", metavar="<container-arg>", dest="container_args", action="append",
+        help='Additional argument for the docker/podman build command. Can be specified multiple times.')
+    bootc_build_parser.add_argument(
+        "--bootc-output", metavar="DIRECTORY", dest="bootc_output",
+        default="./build", help="Path to a directory to store bootc image")
+
     # run command
     run_parser = subparsers.add_parser(
         'run',
@@ -74,7 +99,7 @@ def command_line_parser():
         "-R", "--reserveonfail", action="store_true", default=False,
         help="Keep bash shell session open upon test failure")
     run_parser.add_argument(
-        "-t", "--tags", action="append", metavar="TAG", default=[],
+        "-t", "--tags", action="append", metavar="TAG", default=["~@bootc"],
         help="Pass specific tag to the behave command when running tests")
     run_parser.add_argument(
         "--noxfail", action="store_true", default=False,
@@ -114,14 +139,14 @@ def error(msg):
     sys.exit(1)
 
 
-def execute(command):
+def execute(command, cwd=None):
     '''
     Execute the `command` in a new process, wait for process to finish and
     return (exit code, [captured sdout lines], [captured stderr lines])
     '''
     #print('Running: ', ' '.join(command), file=sys.stderr)
     process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
     out_encoding = sys.stdout.encoding or 'utf-8'
     stdout, stderr = process.communicate()
     return process.returncode,\
@@ -267,16 +292,20 @@ class BehaveRunner(object):
         return tests
 
     def dry_run(self):
-        command = self.docker_bin + ['run', '--rm']
-        command += self.volumes
-        command += [self.command_line_args.container, 'behave', '--dry-run', '--no-skipped']
+        command = []
+        if not self.command_line_args.run_on_host:
+            command += self.docker_bin + ['run', '--rm']
+            command += self.volumes
+            command += [self.command_line_args.container]
+        command += ['behave', '--dry-run', '--no-skipped']
         if getattr(self.command_line_args, 'featurefiles', []):
             command += [os.path.join(self.command_line_args.suite, a) for a in self.command_line_args.featurefiles]
         else:
             command += [self.command_line_args.suite]
         for tag in self.tags:
             command += ['--tags', tag]
-        returncode, stdout, stderr = execute(command)
+        cwd = "./dnf-behave-tests" if self.command_line_args.run_on_host else None
+        returncode, stdout, stderr = execute(command, cwd=cwd)
         if returncode > 0:
             msg = 'Command "{}" failed with {}'.format(' '.join(command), returncode)
             stdout = [l for l in stdout if l]
@@ -346,16 +375,18 @@ class BehaveRunner(object):
             return ['--junit-directory="/junit/{}_{}"'.format(feature_name, i)]
 
 
-        command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
+        command = []
+        if not self.command_line_args.run_on_host:
+            command += self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
+            if self.command_line_args.container_args:
+                command += self.command_line_args.container_args
 
-        if self.command_line_args.container_args:
-            command += self.command_line_args.container_args
+            if not self.command_line_args.enable_network:
+                command += ['--net', 'none']
 
-        if not self.command_line_args.enable_network:
-            command += ['--net', 'none']
+            command += [self.command_line_args.container]
 
-        command += [self.command_line_args.container, './container-test-wrapper']
-        command += self.param_reserve
+        command += ['./container-test-wrapper'] + self.param_reserve
 
         command += ['--', '--no-skipped', '--junit']
 
@@ -385,7 +416,8 @@ class BehaveRunner(object):
                 if self.command_line_args.verbose:
                     print("Running command:", ' '.join(command + run_args), '\n')
 
-                returncode = subprocess.call(command + run_args)
+                cwd = "./dnf-behave-tests" if self.command_line_args.run_on_host else None
+                returncode = subprocess.call(command + run_args, cwd=cwd)
                 if returncode > 0:
                     failed.add(feature[0])
 
@@ -417,6 +449,59 @@ class BehaveRunner(object):
         returncode = subprocess.call(command)
         if returncode > 0:
             error('Failed to build the container.')
+
+    def command_bootc_build(self):
+        '''
+        Build bootc VM image for testing
+        '''
+
+        command = self.docker_bin + ['build', '--force-rm']
+        command += self.param_cache
+
+        if self.command_line_args.type is not None:
+            command += ['--build-arg', 'TYPE={}'.format(self.command_line_args.type)]
+
+        if self.command_line_args.base is not None:
+            command += ['--build-arg', 'BASE={}'.format(self.command_line_args.base)]
+
+        command += ['-t', self.command_line_args.container]
+        command += ['-f', self.command_line_args.docker_file, PROGPATH]
+
+        if self.command_line_args.container_args:
+            command += self.command_line_args.container_args
+
+        if self.command_line_args.verbose:
+            print("Running command:", command, '\n')
+
+        returncode = subprocess.call(command)
+        if returncode > 0:
+            error('Failed to build the container.')
+
+        builder_image = "quay.io/centos-bootc/bootc-image-builder:latest"
+        command = self.docker_bin + ["pull", builder_image]
+        returncode = subprocess.call(command)
+        if returncode > 0:
+            error("Failed to pull builder image {}".format(builder_image))
+
+        output_dir = os.path.realpath(self.command_line_args.bootc_output)
+        os.makedirs(output_dir, exist_ok=True)
+
+        # See https://github.com/osbuild/bootc-image-builder#-examples
+        command = self.docker_bin + [
+            "run", "--rm", "--privileged",
+            "-v", "/var/lib/containers/storage:/var/lib/containers/storage",
+            "--security-opt", "label=type:unconfined_t",
+            "-v", "{}:/output".format(output_dir),
+            builder_image,
+            "--type", "qcow2",
+            "--rootfs", "ext4",
+            "--local", self.command_line_args.container]
+
+        print(command)
+
+        returncode = subprocess.call(command)
+        if returncode > 0:
+            error("Failed to build qcow2 image")
 
 
 if __name__ == '__main__':
