@@ -1,0 +1,19 @@
+summary: Prepare CI DNF Stack
+
+tag: integration
+
+prepare:
+    - name: Install packages to build fedora container
+      how: install
+      package: [git, podman]
+
+    - name: Checkout PR branch if packit call is from ci-dnf-stack
+      how: shell
+      script: |
+        if [ "$PACKIT_UPSTREAM_NAME" == "ci-dnf-stack" ]; then
+          cd "$TMT_TREE"
+          git remote add pull-request "$PACKIT_SOURCE_URL"
+          git fetch pull-request
+          git checkout --track "pull-request/$PACKIT_SOURCE_BRANCH"
+          git rebase "origin/$PACKIT_TARGET_BRANCH"
+        fi
