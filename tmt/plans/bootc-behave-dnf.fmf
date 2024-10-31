@@ -1,0 +1,24 @@
+summary: Build and run a bootc VM for testing
+tag: dnf
+
+provision:
+  how: virtual
+  image: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2
+
+prepare:
+- how: install
+  package:
+  - podman
+  - skopeo
+  - jq
+
+execute:
+  how: tmt
+
+/test-01-bootc:
+  summary: Foo test
+  discover:
+    how: fmf
+    test:
+    - /tmt/tests/test-00-bootc-install
+    - /tmt/tests/test-01-bootc
