@@ -171,7 +171,7 @@ Given I use repository "dnf-ci-security"
 
 
 @bz1939975
-Scenario: Test security severity filter with offline-upgrade when higher version of a package is available
+Scenario: Test security severity filter with offline-upgrade --minimal when higher version of a package is available
 Given I use repository "dnf-ci-security"
   And I execute dnf with args "install bugfix_B-1.0-1 advisory_B-1.0-3 security_A-1.0-1"
  Then the exit code is 0
@@ -182,7 +182,7 @@ Given I use repository "dnf-ci-security"
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
       | upgrade     | bugfix_B-0:1.0-2.x86_64        |
       | upgrade     | security_A-0:1.0-4.x86_64      |
- When I execute dnf with args "offline-upgrade download --advisory-severities=Moderate"
+ When I execute dnf with args "offline-upgrade download --minimal --advisory-severities=Moderate"
  Then the exit code is 0
   And DNF transaction is following
       | Action      | Package                        |
