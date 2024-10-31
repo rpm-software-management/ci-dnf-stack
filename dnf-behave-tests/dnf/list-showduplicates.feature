@@ -1,5 +1,4 @@
 @dnf5
-# TODO(nsella) Unknown argument "list" for command "microdnf"
 Feature: for list --showduplicates option
 
 
