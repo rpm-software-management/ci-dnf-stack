@@ -448,12 +448,13 @@ Scenario: dnf list doesn't show package with same nevra from lower-priority repo
         """
 
 
-# TODO(mblaha) --security not supported for list command
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1816
 @bz2124483
 Scenario: dnf list updates --security shows upgrades as available when it changes arch from noarch
 Given I use repository "security-upgrade"
   And I execute dnf with args "install change-arch-noarch-1-1.noarch"
- When I execute dnf with args "list upgrades --security"
+ When I execute dnf with args "list --upgrades --security"
  Then the exit code is 0
   And stderr is
       """
@@ -466,7 +467,8 @@ Given I use repository "security-upgrade"
       """
 
 
-# TODO(mblaha) --security not supported for list command
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1816
 @bz2124483
 Scenario: dnf list updates --security doesn't shnow an upgrade when it would require an arch change (when its not noarch)
 Given I use repository "security-upgrade"
@@ -482,7 +484,7 @@ Given I use repository "security-upgrade"
       """
       change-arch-0:2-2.x86_64
       """
- When I execute dnf with args "list upgrades --security"
+ When I execute dnf with args "list --upgrades --security"
  Then the exit code is 0
   And stderr is
       """

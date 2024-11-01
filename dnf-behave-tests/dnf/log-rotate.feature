@@ -3,6 +3,8 @@
 Feature: Log rotation
 
 
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1818
 @bz1702690
 @bz1816573
 Scenario: Size and number of log files respects log_size and log_rotate options

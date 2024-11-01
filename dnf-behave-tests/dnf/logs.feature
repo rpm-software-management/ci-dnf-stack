@@ -1,6 +1,8 @@
 Feature: Logs
 
 
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1819
 @bz1802074
 Scenario Outline: logfilelevel <level> controls verbosity of dnf.log
 Given I use repository "dnf-ci-fedora-updates"
@@ -46,6 +48,8 @@ Given I use repository "dnf-ci-fedora-updates"
 Given I set umask to "0022"
 
 
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1820
 @bz1910084
 Scenario: Log rotation keeps file permissions
 Given I use repository "dnf-ci-fedora-updates"
