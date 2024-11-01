@@ -1,5 +1,4 @@
-# @dnf5
-# TODO(nsella) different stdout
+@dnf5
 Feature: Log rotation
 
 

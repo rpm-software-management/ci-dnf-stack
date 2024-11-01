@@ -1,6 +1,7 @@
+@dnf5
 Feature: Testing DNF metadata handling
 
-@dnf5
+
 @bz1644283
 Scenario: update expired metadata on first dnf update
 Given I create directory "/temp-repos/temp-repo"
@@ -26,7 +27,6 @@ Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/te
   And stdout contains "\s+wget.src\s+1.19.5-5.fc29\s+testrepo"
 
 
-@dnf5
 @bz1866505
 Scenario: I cannot create/overwrite a file in /etc from local repository
 # This directory structure is needed at the repo source so that it can be matched on the system running dnf
@@ -49,7 +49,6 @@ Given I create file "/a/etc/malicious.file" with
  Then file "/etc/malicious.file" does not exist
 
 
-@dnf5
 @bz1866505
 Scenario: I cannot create/overwrite a file in /etc from remote repository
 Given I create file "/a/etc/malicious.file" with
@@ -74,8 +73,6 @@ Given I create file "/a/etc/malicious.file" with
  Then file "/etc/malicious.file" does not exist
 
 
-# @dnf5
-# TODO(nsella) different stdout
 Scenario: present user understandable message when there is a mismatch between available repodata and packages
     Given I copy repository "simple-base" for modification
     And I use repository "simple-base" as http
