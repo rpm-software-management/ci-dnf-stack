@@ -1,3 +1,6 @@
+@xfail
+# The option for download command is missing:
+# https://github.com/rpm-software-management/dnf5/issues/948
 Feature: dnf download --debuginfo command
 
 

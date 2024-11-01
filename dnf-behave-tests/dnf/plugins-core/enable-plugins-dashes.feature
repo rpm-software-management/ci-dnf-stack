@@ -1,3 +1,5 @@
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1809
 Feature: Tests for enabling plugins containing dashes in names
 
 Background: Enable plugins

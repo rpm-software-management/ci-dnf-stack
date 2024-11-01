@@ -27,6 +27,8 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
 
 
+@xfail
+# Unexpected reason change, reported as https://github.com/rpm-software-management/dnf5/issues/1831
 @bz1939975
 Scenario: Test bugfix filter with offline-upgrade
 Given I use repository "dnf-ci-fedora-updates"
@@ -93,6 +95,8 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
 
 
+@xfail
+# Unexpected reason change, reported as https://github.com/rpm-software-management/dnf5/issues/1831
 @bz1939975
 Scenario: Test enhancement filter with offline-upgrade
 Given I use repository "dnf-ci-fedora-updates"

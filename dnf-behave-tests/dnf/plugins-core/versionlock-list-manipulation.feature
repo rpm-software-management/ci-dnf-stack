@@ -170,10 +170,11 @@ Scenario: Prevent duplicate entries in versionlock.list
     """
 
 
-# @dnf5
+@xfail
 # currently the conflict between add and exclude is not detected.
 # The reason is that we need multiple entries for the same name
 # to handle locking version-1 OR version-2
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1832
 @bz1782052
 Scenario: Prevent conflicting entries in versionlock.list
   Given I use repository "dnf-ci-fedora"

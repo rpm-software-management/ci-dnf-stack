@@ -1,3 +1,5 @@
+@xfail
+# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/931
 Feature: Tests for reposync command with local repository
 
 
