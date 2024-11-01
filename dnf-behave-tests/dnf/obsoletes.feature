@@ -81,8 +81,9 @@ Scenario: Install of obsoleting package using upgrade command, when obsoleted pa
         | Install  | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
         | Replaced | PackageE-0:1.0-1.x86_64           | User   | @System          |
 
-@dnf5
-# TODO(lukash) passes with reason = User, but correct outcome is reason = External User
+
+@xfail
+# https://github.com/rpm-software-management/dnf5/issues/1783
 Scenario: Obsoleting a package that was installed via rpm, with --best
    When I execute rpm with args "-i --nodeps {context.scenario.repos_location}/dnf-ci-obsoletes/x86_64/PackageB-1.0-1.x86_64.rpm"
    Then the exit code is 0
@@ -93,11 +94,11 @@ Scenario: Obsoleting a package that was installed via rpm, with --best
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
         | obsoleted     | PackageB-0:1.0-1.x86_64                   |
     And package state is
-        | package                         | reason | from_repo        |
-        | PackageB-Obsoleter-1.0-1.x86_64 | User   | dnf-ci-obsoletes |
+        | package                         | reason          | from_repo        |
+        | PackageB-Obsoleter-1.0-1.x86_64 | External User   | dnf-ci-obsoletes |
     And dnf5 transaction items for transaction "last" are
         | action   | package                           | reason        | repository       |
-        | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | User          | dnf-ci-obsoletes |
+        | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | External User | dnf-ci-obsoletes |
         | Replaced | PackageB-0:1.0-1.x86_64           | External User | @System          |
 
 @dnf5
