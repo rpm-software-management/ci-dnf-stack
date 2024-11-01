@@ -223,20 +223,20 @@ Scenario: Upgrade of obsoleted package if package specified by version with glob
 Scenario: Keep reason of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
-   When I execute dnf with args "mark remove PackageB"
+   When I execute dnf with args "mark dependency PackageB"
    Then the exit code is 0
-    And package reasons are
-        | Package        | Reason     |
-        | PackageB-1.0-1 | dependency |
+    And package state is
+        | package               | reason       | from_repo        |
+        | PackageB-1.0-1.x86_64 | Dependency   | dnf-ci-obsoletes |
    When I execute dnf with args "upgrade"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
         | install       | PackageB-Obsoleter-0:1.0-1.x86_64         |
-        | remove        | PackageB-0:1.0-1.x86_64                   |
-    And package reasons are
-        | Package                  | Reason     |
-        | PackageB-Obsoleter-1.0-1 | dependency |
+        | obsoleted     | PackageB-0:1.0-1.x86_64                   |
+    And package state is
+        | package                          | reason       | from_repo        |
+        | PackageB-Obsoleter-1.0-1.x86_64  | Dependency   | dnf-ci-obsoletes |
 
 
 @dnf5
@@ -261,7 +261,6 @@ Scenario: Autoremoval of obsoleted package
     But Transaction is empty
 
 
-@xfail
 @bz1672947
 Scenario: Multilib obsoletes during distro-sync
   Given I use repository "dnf-ci-fedora"
@@ -278,9 +277,15 @@ Scenario: Multilib obsoletes during distro-sync
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | lz4-0:1.8.2-2.fc29.x86_64             |
-        | install       | lz4-libs-0:1.8.2-2.fc29.i686          |
+        | upgrade       | lz4-0:1.8.2-2.fc29.i686               |
         | install       | lz4-libs-0:1.8.2-2.fc29.x86_64        |
-        | remove        | lz4-0:1.7.5-2.fc26.i686               |
+    And dnf5 transaction items for transaction "last" are
+        | action   | package                           | reason | repository            |
+        | Install  | lz4-libs-0:1.8.2-2.fc29.x86_64    | User   | dnf-ci-fedora-updates |
+        | Upgrade  | lz4-0:1.8.2-2.fc29.x86_64         | User   | dnf-ci-fedora-updates |
+        | Upgrade  | lz4-0:1.8.2-2.fc29.i686           | User   | dnf-ci-fedora-updates |
+        | Replaced | lz4-0:1.7.5-2.fc26.x86_64         | User   | @System               |
+        | Replaced | lz4-0:1.7.5-2.fc26.i686           | User   | @System               |
 
 
 @dnf5
