@@ -1,3 +1,4 @@
+@dnf5
 Feature: Accesing a proxy via proxy credentials username and password
          # it just tests whether the proxy credentials are passed correctly
          # URL of the test repo intentionally does not exist and so repoquery
@@ -5,7 +6,6 @@ Feature: Accesing a proxy via proxy credentials username and password
          # dXNlcjoxMjM0NTY= is a base64 representation of user:123456
 
 
-@dnf5
 Scenario: I can store proxy credentials in a repo config
   Given I copy repository "simple-base" for modification
     And I start http server "http_server" at "/{context.dnf.repos[simple-base].path}"
@@ -28,7 +28,6 @@ Scenario: I can store proxy credentials in a repo config
         | Proxy-Authorization | Basic dXNlcjoxMjM0NTY= |
 
 
-@dnf5
 Scenario: I can store proxy credentials in dnf.conf
   Given I copy repository "simple-base" for modification
     And I start http server "http_server" at "/{context.dnf.repos[simple-base].path}"

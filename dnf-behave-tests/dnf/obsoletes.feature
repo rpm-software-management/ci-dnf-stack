@@ -1,3 +1,4 @@
+@dnf5
 Feature: Obsoleted packages
 
 # dnf-ci-obsoletes repo contains:
@@ -9,7 +10,6 @@ Background: Use dnf-ci-obsoletes repository
   Given I use repository "dnf-ci-obsoletes"
 
 
-@dnf5
 # PackageE has a split in its upgrade-path, PackageA-Obsoleter-1.0-1 obsoletes
 # non-best version of PackageE < 2
 @bz1902279
@@ -27,7 +27,6 @@ Scenario: Install obsoleted package, even though obsoleter of older version is p
         | Install | PackageE-0:3.0-1.x86_64           | User   | dnf-ci-obsoletes |
 
 
-@dnf5
 Scenario: Install alphabetically first of obsoleters when installing obsoleted package
    When I execute dnf with args "install PackageF"
    Then the exit code is 0
@@ -36,7 +35,6 @@ Scenario: Install alphabetically first of obsoleters when installing obsoleted p
         | install       | PackageF-Obsoleter-0:3.0-1.x86_64         |
 
 
-@dnf5
 Scenario: Upgrade a package with multiple obsoleters will install all of them
   Given I execute dnf with args "install PackageF-1.0"
    Then the exit code is 0
@@ -51,15 +49,13 @@ Scenario: Upgrade a package with multiple obsoleters will install all of them
         | install       | PackageF-Obsoleter-Second-0:3.0-1.x86_64  |
         | obsoleted     | PackageF-0:1.0-1.x86_64                   |
 
-# @dnf5
-# TODO(nsella) different exit code
+
 Scenario: Do not install of obsoleting package using upgrade command, when obsoleted package not on the system
    When I execute dnf with args "upgrade PackageA-Obsoleter"
    Then the exit code is 1
     And Transaction is empty
 
 
-@dnf5
 @bz1818118
 Scenario: Install of obsoleting package using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -101,7 +97,7 @@ Scenario: Obsoleting a package that was installed via rpm, with --best
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | External User | dnf-ci-obsoletes |
         | Replaced | PackageB-0:1.0-1.x86_64           | External User | @System          |
 
-@dnf5
+
 Scenario: Obsoleting a package that was installed via rpm, with --nobest
    When I execute rpm with args "-i --nodeps {context.scenario.repos_location}/dnf-ci-obsoletes/x86_64/PackageB-1.0-1.x86_64.rpm"
    Then the exit code is 0
@@ -119,7 +115,7 @@ Scenario: Obsoleting a package that was installed via rpm, with --nobest
         | Install  | PackageB-Obsoleter-0:1.0-1.x86_64 | External User | dnf-ci-obsoletes |
         | Replaced | PackageB-0:1.0-1.x86_64           | External User | @System          |
 
-@dnf5
+
 @bz1818118
 Scenario: Install of obsoleting package from commandline using upgrade command, when obsoleted package on the system
   Given I execute dnf with args "install PackageE-0:1.0-1.x86_64"
@@ -141,7 +137,7 @@ Scenario: Install of obsoleting package from commandline using upgrade command, 
         | Install  | PackageA-Obsoleter-0:1.0-1.x86_64 | User   | @commandline |
         | Replaced | PackageE-0:1.0-1.x86_64           | User   | @System      |
 
-@dnf5
+
 Scenario: Upgrade of obsoleted package by package of higher version than obsoleted
    When I execute dnf with args "install PackageA-1.0"
    Then the exit code is 0
@@ -162,7 +158,6 @@ Scenario: Upgrade of obsoleted package by package of higher version than obsolet
         | Replaced | PackageA-0:1.0-1.x86_64 | User   | @System          |
 
 
-@dnf5
 Scenario: Install of obsoleted package
    When I execute dnf with args "install PackageB"
    Then the exit code is 0
@@ -177,7 +172,6 @@ Scenario: Install of obsoleted package
         | Install | PackageB-Obsoleter-0:1.0-1.x86_64 | User   | dnf-ci-obsoletes |
 
 
-@dnf5
 Scenario: Upgrade of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -199,7 +193,6 @@ Scenario: Upgrade of obsoleted package
         | Replaced | PackageB-0:1.0-1.x86_64           | User   | @System          |
 
 
-@dnf5
 Scenario: Upgrade of obsoleted package if package specified by version with glob (no obsoletes applied)
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -242,7 +235,6 @@ Scenario: Keep reason of obsoleted package
         | PackageB-Obsoleter-1.0-1.x86_64  | Dependency   | dnf-ci-obsoletes |
 
 
-@dnf5
 Scenario: Autoremoval of obsoleted package
    When I execute dnf with args "install PackageB-1.0"
    Then the exit code is 0
@@ -291,7 +283,6 @@ Scenario: Multilib obsoletes during distro-sync
         | Replaced | lz4-0:1.7.5-2.fc26.i686           | User   | @System               |
 
 
-@dnf5
 # PackageD-0:2.0-1.x86_64 obsoletes PackageC < 2
 # PackageD-0:1.0-1.x86_64 does not obsolete anything
 @bz1761137
@@ -308,7 +299,6 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
         """
 
 
-@dnf5
 @bz1761137
 Scenario: Both packages are installed when group contains both obsoleter and obsoleted packages and obsoletes are switched off
    When I execute dnf with args "group install obsoleter-obsoleted --setopt=obsoletes=False"

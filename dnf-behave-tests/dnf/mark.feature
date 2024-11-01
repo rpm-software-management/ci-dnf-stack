@@ -1,7 +1,7 @@
+@dnf5
 Feature: Mark command
 
 
-@dnf5
 Scenario Outline: Marking non-existent package as <type> fails
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark <type> nosuchpkg"
@@ -19,7 +19,6 @@ Examples:
         | weak        |
 
 
-@dnf5
 Scenario: Marking as group for non-existent package or non-existent group fails
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -39,7 +38,6 @@ Scenario: Marking as group for non-existent package or non-existent group fails
     """
 
 
-@dnf5
 Scenario: Marking available but not installed package fails
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "mark user lame"
@@ -51,7 +49,6 @@ Scenario: Marking available but not installed package fails
     """
 
 
-@dnf5
 Scenario: Marking as dependency a list of pkgs when one of them is not available fails 
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lame"
@@ -68,7 +65,6 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
         | lame-libs-3.100-4.fc29.x86_64 | Dependency |
 
 
-@dnf5
 Scenario: Marking as dependency a list of pkgs when one of them is not available passes with --skip-unavailable
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lame"
@@ -84,7 +80,6 @@ Scenario: Marking as dependency a list of pkgs when one of them is not available
         | lame-libs-3.100-4.fc29.x86_64 | Dependency |
 
 
-@dnf5
 Scenario Outline: Mark user installed package as <type>
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lame"
@@ -102,7 +97,6 @@ Examples:
         | weak       | Weak Dependency |
 
 
-@dnf5
 Scenario Outline: Mark package installed as dependency as <type>
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"
@@ -124,7 +118,6 @@ Examples:
         | weak | Weak Dependency |
 
 
-@dnf5
 Scenario: Mark package as the same reason it currently has
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install lame"
@@ -146,7 +139,7 @@ Scenario: Mark package as the same reason it currently has
         """
 
 
-#@dnf5 currently fails, see:
+@xfail
 # https://github.com/rpm-software-management/dnf5/issues/935
 Scenario: Mark user installed package as group
   Given I use repository "dnf-ci-thirdparty"
@@ -172,7 +165,7 @@ Scenario: Mark user installed package as group
         | setup-2.12.1-1.fc29.noarch    | Dependency |
 
 
-#@dnf5 currently fails, see:
+@xfail
 # https://github.com/rpm-software-management/dnf5/issues/935
 # TODO (emrakova): update the scenario when the issue is fixed
 Scenario: Mark group installed package as user and back again
@@ -202,7 +195,6 @@ Scenario: Mark group installed package as user and back again
     """
 
 
-@dnf5
 Scenario: Marking dependency as user-installed should not remove it automatically
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install filesystem"
@@ -226,7 +218,6 @@ Scenario: Marking dependency as user-installed should not remove it automaticall
         | remove        | setup-0:2.12.1-1.fc29.noarch              |
 
 
-@dnf5
 @bz2046581
 Scenario: Marking installed package when history DB is not on the system (deleted or not created yet)
    When I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/wget-1.19.6-5.fc29.x86_64.rpm"
@@ -241,7 +232,6 @@ Scenario: Marking installed package when history DB is not on the system (delete
         | wget-1.19.6-5.fc29.x86_64    | User          |
 
 
-@dnf5
 Scenario: Marking toplevel package as dependency should not remove shared dependencies on autoremove
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "install nss_hesiod libnsl"
