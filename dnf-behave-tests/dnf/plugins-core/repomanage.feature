@@ -1,3 +1,5 @@
+@xfail
+# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/943
 Feature: Tests for repomanage command
 
 

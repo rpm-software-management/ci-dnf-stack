@@ -1,3 +1,5 @@
+@xfail
+# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/931
 # The test relies on librepo ability to set extended file attributes on
 # downloaded files. Although xattrs are supported on tmpfs which is usual /tmp
 # filesystem where the installroots live, the user attributes are not permitted

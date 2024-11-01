@@ -1,3 +1,5 @@
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1817
+@xfail
 @use.with_os=fedora__ge__31
 Feature: Test the system-upgrade plugin with comps
 

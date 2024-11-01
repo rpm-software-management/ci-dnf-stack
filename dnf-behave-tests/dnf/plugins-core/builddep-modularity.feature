@@ -18,6 +18,8 @@ Scenario: Builddep installs non-modular build requirements
         | install       | ninja-build-0:1.8.2-5.fc29.x86_64     |
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 @bz1677583
 Scenario: Builddep preferes default stream over other streams / non-modular content even though the version is older
   Given I use repository "dnf-ci-fedora-modular"
@@ -55,6 +57,8 @@ Scenario: Builddep reports error where required package is available only in non
     """
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 # dnf-ci-fedora-modular: nodejs-1:8.11.4-1.module_2030+42747d40.x86_64
 # dnf-ci-fedora-modular-hotfix: nodejs-1:8.11.5-1.module_2030+42747d40.x86_64
 @bz1677583
@@ -72,6 +76,8 @@ Scenario: Builddep preferes hotfix repo over the default stream
         | module-stream-enable  | ninja:master                                      |
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 @bz1677583
 Scenario: Builddep preferes hotfix repo over the enabled stream
   Given I use repository "dnf-ci-fedora-modular"
@@ -89,8 +95,8 @@ Scenario: Builddep preferes hotfix repo over the enabled stream
         | module-stream-enable  | ninja:master                                      |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 @bz1758459
 Scenario: I call dnf builddep with --best on a spec file with a modular dependency (tests handling modular excludes)
   Given I use repository "dnf-ci-fedora-modular"

@@ -1,3 +1,5 @@
+@xfail
+# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/932
 @1868047
 Feature: Test for modulesync command
 

@@ -1,3 +1,6 @@
+# It is not clear if this should be supported,
+# reported as: https://github.com/rpm-software-management/dnf5/issues/1815
+@xfail
 Feature: Add package to needs-restarting using config files
 
 Background:
