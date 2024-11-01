@@ -82,4 +82,8 @@ Scenario: present user understandable message when there is a mismatch between a
     And I execute "echo \"checksum mismatch\" >> /{context.dnf.repos[simple-base].path}/x86_64/labirinto-1.0-1.fc29.x86_64.rpm"
     When I execute dnf with args "install labirinto"
     Then the exit code is 1
-    And stdout contains "\[MIRROR\] labirinto-1.0-1.fc29.x86_64.rpm: Interrupted by header callback: Inconsistent server data, reported file Content-Length: .*, repository metadata states file length: .* \(please report to repository maintainer\)"
+    And stderr contains "Interrupted by header callback: Inconsistent server data"
+    And file "/var/log/dnf5.log" contains lines
+        """
+        .* INFO \[librepo\] Error during transfer: Interrupted by header callback: Inconsistent server data, reported file Content-Length: .*, repository metadata states file length: .* \(please report to repository maintainer\)
+        """
