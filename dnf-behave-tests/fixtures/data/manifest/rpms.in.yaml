@@ -1,0 +1,10 @@
+contentOrigin:
+  repos:
+    - repoid: dnf-ci-fedora
+      baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/dnf-ci-fedora
+packages:
+  - dwm
+  - npm
+  - wget
+arches:
+  - x86_64
