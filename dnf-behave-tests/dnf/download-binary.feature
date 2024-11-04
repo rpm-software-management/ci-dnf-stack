@@ -106,9 +106,12 @@ Scenario: Download an existing RPM when there are multiple packages of the same 
     And stderr contains "filesystem-0:3.9-2.fc29.x86_64"
     And stderr contains "wget-0:1.19.5-5.fc29.x86_64"
       # check that each file was being downloaded only once
-    And stderr does not contain "setup-0:2.12.1-1.fc29.noarch.*setup-0:2.12.1-1.fc29.noarch"
-    And stderr does not contain "filesystem-0:3.9-2.fc29.x86_64.*filesystem-0:3.9-2.fc29.x86_64"
-    And stderr does not contain "wget-0:1.19.5-5.fc29.x86_64.*wget-0:1.19.5-5.fc29.x86_64"
+      # By default re.search() (used by "stderr does not contain") does not match
+      # across multiple lines. To bypass this limitation and check that the package
+      # name is not present on multiple lines, use "(.|\n)*" pattern instead of ".*".
+    And stderr does not contain "setup-0:2\.12\.1-1\.fc29\.noarch(.|\n)*setup-0:2\.12\.1-1\.fc29\.noarch"
+    And stderr does not contain "filesystem-0:3\.9-2\.fc29\.x86_64(.|\n)*filesystem-0:3\.9-2\.fc29\.x86_64"
+    And stderr does not contain "wget-0:1\.19\.5-5\.fc29\.x86_64(.|\n)*wget-0:1\.19\.5-5\.fc29\.x86_64"
       # check that the files have been downloaded
     And file "downloaddir/setup-2.12.1-1.fc29.noarch.rpm" exists
     And file "downloaddir/filesystem-3.9-2.fc29.x86_64.rpm" exists
