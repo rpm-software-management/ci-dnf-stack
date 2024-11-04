@@ -192,10 +192,6 @@ Examples:
     | out       |             |
 
 
-@xfail
-# TODO(lukash) this test relied on an injected Reason Change for installonly
-# packages, which we no longer inject instead replace with an explicit `dnf
-# mark` once the command is implement
 Scenario: Reason change is in transaction
   Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
     """
@@ -226,6 +222,7 @@ Scenario: Reason change is in transaction
     I installonlyA-0:2.0-1.x86_64 repo installonly
     """
    Given I delete file "/actions.log"
+    And I execute dnf with args "mark dependency installonlyA-2.0"
     And I execute dnf with args "install installonlyA-2.2"
    Then the exit code is 0
     And Transaction is following

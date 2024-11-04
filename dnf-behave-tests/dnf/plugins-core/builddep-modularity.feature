@@ -1,3 +1,4 @@
+@dnf5
 Feature: Tests for builddep command on modular system
 
 Background:
@@ -51,9 +52,9 @@ Scenario: Builddep reports error where required package is available only in non
    Then the exit code is 1
     And stderr is
     """
-    Error: 
-     Problem: conflicting requests
-      - package ninja-build-1.5.2-1.module_1991+4e5efe2f.x86_64 is filtered out by modular filtering
+    <REPOSYNC>
+    Failed to resolve the transaction:
+    Argument 'ninja-build < 1.6' matches only excluded packages.
     """
 
 
