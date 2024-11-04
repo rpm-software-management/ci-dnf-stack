@@ -378,3 +378,20 @@ Scenario: Reposync does not stop downloading packages on the first error
     And file "//{context.dnf.tempdir}/simple-base/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/vagare-1.0-1.fc29.x86_64.rpm" exists
+
+# https://issues.redhat.com/browse/RHEL-82849
+Scenario: Reposync doesn't download duplicit nevra multiple times
+  # create a repository containing a duplicated NEVRA
+  Given I copy repository "simple-base" for modification
+    And I execute "createrepo_c -n x86_64/labirinto-1.0-1.fc29.x86_64.rpm -n x86_64/labirinto-1.0-1.fc29.x86_64.rpm --duplicated-nevra=keep {context.dnf.tempdir}/repos/simple-base/"
+    And I use repository "simple-base"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    # check that the package have been downloaded
+    And file "//{context.dnf.tempdir}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" exists
+    # check that the package was being downloaded only once
+    And stdout contains "labirinto-1.0-1.fc29.x86_64.rpm"
+    # By default re.search() (used by "stdout does not contain") does not match
+    # across multiple lines. To bypass this limitation and check that the package
+    # name is not present on multiple lines, use "(.|\n)*" pattern instead of ".*".
+    And stdout does not contain "labirinto-1\.0-1\.fc29\.x86_64\.rpm(.|\n)*labirinto-1\.0-1\.fc29\.x86_64\.rpm"
