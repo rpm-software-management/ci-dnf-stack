@@ -1,3 +1,4 @@
+@dnf5
 Feature: Versionlock command can maintain versionlock.list file
 
 
@@ -8,7 +9,6 @@ Background: Set up versionlock infrastructure in the installroot
     And I use repository "dnf-ci-fedora"
 
 
-@dnf5
 Scenario: Basic commands add/exclude/list/delete/clear for manipulation with versionlock.list file are working
    When I execute dnf with args "install wget"
    Then the exit code is 0
@@ -139,7 +139,6 @@ Scenario: Basic commands add/exclude/list/delete/clear for manipulation with ver
     And stdout is empty
 
 
-@dnf5
 @bz1785563
 Scenario: versionlock will print just necessary information with -q option
   Given I use repository "dnf-ci-fedora"
@@ -154,7 +153,6 @@ Scenario: versionlock will print just necessary information with -q option
     """
 
 
-@dnf5
 @bz1782052
 @bz1845270
 Scenario: Prevent duplicate entries in versionlock.list
@@ -189,7 +187,6 @@ Scenario: Prevent conflicting entries in versionlock.list
     """
 
 
-@dnf5
 @bz2013324
 Scenario: I can exclude mutliple packages when one is already excluded
   Given I use repository "dnf-ci-fedora"
@@ -207,7 +204,6 @@ Scenario: I can exclude mutliple packages when one is already excluded
     """
 
 
-@dnf5
 @bz2013324
 Scenario: I can lock mutliple packages when one is already locked
   Given I use repository "dnf-ci-fedora"
