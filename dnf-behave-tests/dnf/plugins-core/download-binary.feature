@@ -114,9 +114,12 @@ Scenario: Download an existing RPM when there are multiple packages of the same 
     And stdout contains "filesystem-3.9-2.fc29.x86_64.rpm"
     And stdout contains "wget-1.19.5-5.fc29.x86_64.rpm"
       # check that each file was being downloaded only once
-    And stdout does not contain "setup.*setup"
-    And stdout does not contain "filesystem.*filesystem"
-    And stdout does not contain "wget.*wget"
+      # By default re.search() (used by "stdout does not contain") does not match
+      # across multiple lines. To bypass this limitation and check that the package
+      # name is not present on multiple lines, use "(.|\n)*" pattern instead of ".*".
+    And stdout does not contain "setup(.|\n)*setup"
+    And stdout does not contain "filesystem(.|\n)*filesystem"
+    And stdout does not contain "wget(.|\n)*wget"
       # check that the files have been downloaded
     And file "/tmp/download/setup-2.12.1-1.fc29.noarch.rpm" exists
     And file "/tmp/download/filesystem-3.9-2.fc29.x86_64.rpm" exists
