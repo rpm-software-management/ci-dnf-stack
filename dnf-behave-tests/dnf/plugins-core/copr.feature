@@ -1,3 +1,7 @@
+@dnf5
+# These tests need to be marked destructive because copr
+# doesn't use repositories in installroot, this is tracked as:
+# https://github.com/rpm-software-management/dnf5/issues/1497
 @destructive
 Feature: Test the COPR plugin
 
@@ -14,24 +18,34 @@ Given I create directory "/{context.dnf.tempdir}/copr"
       protocol = http
       port = {context.dnf.ports[copr]}
       """
-  And I create and substitute file "/{context.dnf.tempdir}/copr/coprs/testuser/testproject/repo/fedora-30/dnf.repo" with
+  And I create and substitute file "/{context.dnf.tempdir}/copr/api_3/rpmrepo/testuser/testproject/Fedora-30/index.html" with
       """
-      [copr:localhost:testuser:testproject]
-      name=Copr test project
-      baseurl=http://project_base_url/
-      type=rpm-md
+      {{
+        "dependencies": [],
+        "directories": {{
+          "testproject": {{}}
+        }},
+        "repos": {{
+          "Fedora-30": {{
+            "arch": {{
+              "x86_64": {{
+                "opts": {{}}
+              }}
+            }}
+          }},
+        }},
+        "results_url": "http://project_base_url/"
+      }}
       """
 
 
 Scenario: Test enabling and disabling a project
  When I execute dnf with args "copr enable testhub/testuser/testproject"
  Then the exit code is 0
-  And stdout is
-      """
-      Repository successfully enabled.
-      """
+  And stdout is empty
   And stderr is
       """
+      <REPOSYNC>
       Enabling a Copr repository. Please note that this repository is not part
       of the main distribution, and quality may vary.
 
@@ -43,11 +57,11 @@ Scenario: Test enabling and disabling a project
       Please do not file bug reports about these packages in Fedora
       Bugzilla. In case of problems, contact the owner of this repository.
       """
- When I execute dnf with args "copr disable testhub/testuser/testproject"
+ When I execute dnf with args "--use-host-config copr disable testhub/testuser/testproject"
  Then the exit code is 0
   And stdout is
       """
-      Repository successfully disabled.
+      Copr repository 'localhost/testuser/testproject' in '/etc/yum.repos.d/_copr:localhost:testuser:testproject.repo' disabled.
       """
   And stderr is empty
 
@@ -57,7 +71,7 @@ Scenario: Test disabling a project that is not enabled
  Then the exit code is 1
   And stderr is
       """
-      Error: Failed to disable copr repo testuser/testproject
+      Repository 'localhost/testuser/testproject' not found on this system
       """
 
 
@@ -66,21 +80,19 @@ Scenario: Test enabling a non-existent repo
  Then the exit code is 1
   And stderr is
       """
-      Enabling a Copr repository. Please note that this repository is not part
-      of the main distribution, and quality may vary.
-
-      The Fedora Project does not exercise any power over the contents of
-      this repository beyond the rules outlined in the Copr FAQ at
-      <https://docs.pagure.org/copr.copr/user_documentation.html#what-i-can-build-in-copr>,
-      and packages are not held to any quality or security level.
-
-      Please do not file bug reports about these packages in Fedora
-      Bugzilla. In case of problems, contact the owner of this repository.
-      Error: It wasn't possible to enable this project.
-      Project testuser/nonexistent does not exist.
+      <REPOSYNC>
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      Failed to download files
+       Librepo error: Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1)
       """
 
 
+# Since curl messages change in fedora 41 don't run on earlier fedoras.
+@use.with_os=fedora__ge__41
 Scenario: Test enabling a repo with invalid copr configuration
 Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
       """
@@ -97,17 +109,14 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
  Then the exit code is 1
   And stderr is
       """
-      Enabling a Copr repository. Please note that this repository is not part
-      of the main distribution, and quality may vary.
-
-      The Fedora Project does not exercise any power over the contents of
-      this repository beyond the rules outlined in the Copr FAQ at
-      <https://docs.pagure.org/copr.copr/user_documentation.html#what-i-can-build-in-copr>,
-      and packages are not held to any quality or security level.
-
-      Please do not file bug reports about these packages in Fedora
-      Bugzilla. In case of problems, contact the owner of this repository.
-      Error: Failed to connect to http://localhost:2/coprs/testuser/testproject/repo/fedora-30/dnf.repo?arch=x86_64: Connection refused
+      <REPOSYNC>
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      Failed to download files
+       Librepo error: Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server]
       """
 
 
@@ -122,61 +131,72 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
       protocol = http
       port = {context.dnf.ports[copr]}
       """
-  And HTTP server GET /coprs/testuser/testproject/repo/fedora-31/dnf.repo?arch=x86_64 response headers are
-      """
-      Copr-Error-Data=eyJhdmFpbGFibGUgY2hyb290cyI6IFsiZmVkb3JhLTMwLXg4Nl82NCJdfQ==
-      """
-  And the server starts responding with HTTP status code 404
  When I execute dnf with args "copr enable testhub/testuser/testproject"
  Then the exit code is 1
   And stderr is
       """
-      Enabling a Copr repository. Please note that this repository is not part
-      of the main distribution, and quality may vary.
-
-      The Fedora Project does not exercise any power over the contents of
-      this repository beyond the rules outlined in the Copr FAQ at
-      <https://docs.pagure.org/copr.copr/user_documentation.html#what-i-can-build-in-copr>,
-      and packages are not held to any quality or security level.
-
-      Please do not file bug reports about these packages in Fedora
-      Bugzilla. In case of problems, contact the owner of this repository.
-      Error: It wasn't possible to enable this project.
-      Repository 'fedora-31-x86_64' does not exist in project 'testuser/testproject'.
-      Available repositories: 'fedora-30-x86_64'
-
-      If you want to enable a non-default repository, use the following command:
-        'dnf copr enable testuser/testproject <repository>'
-      But note that the installed repo file will likely need a manual modification.
+      <REPOSYNC>
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      Failed to download files
+       Librepo error: Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1)
       """
 
 
 Scenario: Test enabling and disabling a repository with dependencies
-Given I create and substitute file "/{context.dnf.tempdir}/copr/coprs/testuser/project-with-deps/repo/fedora-30/dnf.repo" with
+Given I create and substitute file "/{context.dnf.tempdir}/copr/api_3/rpmrepo/testuser/depproject/Fedora-30/index.html" with
       """
-      [copr:localhost:testuser:project-with-deps]
-      name=Copr test project
-      baseurl=http://repo_base_url/
-      type=rpm-md
-
-      [coprdep:localhost:testuser:dep1]
-      name=Copr dependency 1
-      baseurl=http://repo_base_url/
-      type=rpm-md
-
-      [coprdep:some-external-repo]
-      name=Copr dependency 2
-      baseurl=https://repo_base_url/
-      type=rpm-md
+      {{
+      "dependencies": [
+        {{
+            "data": {{
+                "owner": "@copr",
+                "projectname": "copr-dev"
+            }},
+            "opts": {{
+                "id": "coprdep:localhost:testuser:dep1",
+                "name": "Copr copr.fedorainfracloud.org/testuser/ping runtime dependency #1 - @copr/copr-dev"
+            }},
+            "type": "copr"
+        }},
+        {{
+            "data": {{
+            "pattern": "https://download.copr.fedorainfracloud.org/results/@copr/copr-devl/$chroot/"
+            }},
+            "opts": {{
+                "id": "coprdep:some-external-repo",
+                "name": "Copr copr.fedorainfracloud.org/testuser/ping runtime dependency #2 - https_download_copr_fedorainfracloud_org_result_copr_copr_dev_chroot"
+            }},
+            "type": "external_baseurl"
+        }}
+      ],
+        "directories": {{
+            "depproject": {{
+                "ping:custom:11": {{}}
+            }}
+        }},
+        "repos": {{
+          "Fedora-30": {{
+            "arch": {{
+              "x86_64": {{
+                "delete_after_days": 68,
+                "opts": {{}}
+              }}
+            }}
+          }},
+        }},
+        "results_url": "http://repo_base_url"
+      }}
       """
- When I execute dnf with args "copr enable testhub/testuser/project-with-deps"
+ When I execute dnf with args "copr enable testhub/testuser/depproject"
  Then the exit code is 0
-  And stdout is
-      """
-      Repository successfully enabled.
-      """
+  And stdout is empty
   And stderr is
       """
+      <REPOSYNC>
       Enabling a Copr repository. Please note that this repository is not part
       of the main distribution, and quality may vary.
 
@@ -197,18 +217,19 @@ Given I create and substitute file "/{context.dnf.tempdir}/copr/coprs/testuser/p
       above applies here too, Fedora Project doesn't control the
       content. Please review the list:
 
-       1. [coprdep:localhost:testuser:dep1]
-          baseurl=http://repo_base_url/
+        1. [coprdep:localhost:testuser:dep1]
+           baseurl=http://repo_base_url/@copr/copr-dev/Fedora-30-$basearch/
 
-       2. [coprdep:some-external-repo]
-          baseurl=https://repo_base_url/
+        2. [coprdep:some-external-repo]
+           baseurl=https://download.copr.fedorainfracloud.org/results/@copr/copr-devl/Fedora-30-$basearch/
 
-      These repositories have been enabled automatically.
+      These repositories are being enabled together with the main
+      repository.
       """
- When I execute dnf with args "copr disable testhub/testuser/project-with-deps"
+ When I execute dnf with args "copr disable testhub/testuser/depproject --use-host-config"
  Then the exit code is 0
   And stdout is
       """
-      Repository successfully disabled.
+      Copr repository 'localhost/testuser/depproject' in '/etc/yum.repos.d/_copr:localhost:testuser:depproject.repo' disabled.
       """
   And stderr is empty
