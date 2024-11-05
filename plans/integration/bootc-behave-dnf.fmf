@@ -1,0 +1,11 @@
+provision:
+    how: virtual
+    image: file://./build/qcow2/disk.qcow2
+    connection: system
+    disk: 20
+summary: Run bootc behave tests
+tag: dnf
+execute:
+    how: tmt
+    script: |
+        ./container-test --run-on-host run --tags bootc --command dnf4
