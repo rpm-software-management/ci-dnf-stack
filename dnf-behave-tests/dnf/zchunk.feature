@@ -1,8 +1,7 @@
-@use.with_os=fedora__ge__31
+@dnf5
 Feature: zchunk tests
 
 
-@dnf5
 Scenario: I can install an RPM from local mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -17,7 +16,6 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
-@dnf5
 Scenario: download zchunk metadata, enabled by default
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -62,7 +60,6 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
-@dnf5
 Scenario: I can install an RPM from FTP mirror with zchunk repo and disabled zchunk
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -77,8 +74,6 @@ Given I copy repository "simple-base" for modification
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: when zchunk is enabled, prefer HTTP over FTP
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -96,7 +91,7 @@ Given I copy repository "simple-base" for modification
       | key    | value |
       | zchunk | True  |
   And I start capturing outbound HTTP requests
- When I execute dnf with args "install labirinto -v"
+ When I execute dnf with args "install labirinto"
  Then the exit code is 0
   And Transaction is following
       | Action        | Package                       |
@@ -104,13 +99,8 @@ Given I copy repository "simple-base" for modification
   And exactly 2 HTTP GET requests should match:
       | path                      |
       | /repodata/primary.xml.zck |
-  And exactly 2 HTTP GET request should match:
-      | path                        |
-      | /repodata/filelists.xml.zck |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: when zchunk is enabled, prefer HTTP over FTP (reversed)
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
@@ -128,29 +118,6 @@ Given I copy repository "simple-base" for modification
       | key    | value |
       | zchunk | True  |
   And I start capturing outbound HTTP requests
- When I execute dnf with args "install labirinto -v"
- Then the exit code is 0
-  And Transaction is following
-      | Action        | Package                       |
-      | install       | labirinto-0:1.0-1.fc29.x86_64 |
-  And exactly 2 HTTP GET requests should match:
-      | path                      |
-      | /repodata/primary.xml.zck |
-  And exactly 2 HTTP GET request should match:
-      | path                        |
-      | /repodata/filelists.xml.zck |
-
-
-@use.with_dnf=4
-@not.with_dnf=5
-Scenario: using mirror wihtout ranges supports and zchunk results in only two GET requests per file (the first try is with range specified)
-Given I copy repository "simple-base" for modification
-  And I generate repodata for repository "simple-base" with extra arguments "--zck"
-  And I use repository "simple-base" as http
-  And I configure dnf with
-      | key    | value |
-      | zchunk | True |
-  And I start capturing outbound HTTP requests
  When I execute dnf with args "install labirinto"
  Then the exit code is 0
   And Transaction is following
@@ -159,14 +126,8 @@ Given I copy repository "simple-base" for modification
   And exactly 2 HTTP GET requests should match:
       | path                      |
       | /repodata/primary.xml.zck |
-  And exactly 2 HTTP GET request should match:
-      | path                        |
-      | /repodata/filelists.xml.zck |
 
 
-@dnf5
-@not.with_dnf=4
-# dnf5 doesn't require filelists.xml here -> there are no GET requests for it
 Scenario: using mirror wihtout ranges supports and zchunk results in only two GET requests for primary (the first try is with range specified)
 Given I copy repository "simple-base" for modification
   And I generate repodata for repository "simple-base" with extra arguments "--zck"
