@@ -105,3 +105,27 @@ Scenario: Reinstall list of packages with --skip-unavailable, one of them is not
     And Transaction is following
         | Action        | Package                                   |
         | reinstall     | CQRlib-0:1.1.2-16.fc29.x86_64             |
+
+
+Scenario: Try to reinstall a pkg if repo not available
+  Given I use repository "simple-base"
+    And I successfully execute dnf with args "install labirinto"
+   When I use repository "simple-base" with configuration
+        | key     | value                               |
+        | baseurl | https://www.not-available-repo.com/ |
+   When I execute dnf with args "reinstall labirinto"
+   Then the exit code is 1
+   And stderr contains "Failed to download metadata \(baseurl: \"https://www.not-available-repo.com/\"\) for repository \"simple-base\""
+
+
+Scenario: Try to reinstall a pkg if repo not available
+  Given I use repository "simple-base"
+    And I successfully execute dnf with args "install labirinto"
+   When I configure a new repository "non-existent" with
+        | key                 | value                               |
+        | baseurl             | https://www.not-available-repo.com/ |
+        | enabled             | 1                                   |
+        | skip_if_unavailable | 0                                   |
+   When I execute dnf with args "reinstall labirinto"
+   Then the exit code is 1
+   And stderr contains "Failed to download metadata \(baseurl: \"https://www.not-available-repo.com/\"\) for repository \"non-existent\""
