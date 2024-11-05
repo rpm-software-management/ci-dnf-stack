@@ -15,6 +15,17 @@ Scenario: Install an RPM by name
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
+@bz1734350
+Scenario: Install packages by name from remote repodata with remote packages
+Given I use repository "dnf-ci-fedora" as http
+ When I execute dnf with args "install lame"
+ Then the exit code is 0
+  And transaction is following
+      | Action        | Package                                   |
+      | install       | lame-0:3.100-4.fc29.x86_64                |
+      | install-dep   | lame-libs-0:3.100-4.fc29.x86_64           |
+
+
 Scenario: Install an RPM by name-version
    When I execute dnf with args "install filesystem-3.9"
    Then the exit code is 0
