@@ -18,6 +18,35 @@ Given I copy repository "simple-base" for modification
 
 
 @dnf5
+Scenario: download zchunk metadata, enabled by default
+Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
+  And I use repository "simple-base" as http
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "install labirinto"
+ Then the exit code is 0
+  And exactly 2 HTTP GET requests should match:
+      | path                      |
+      | /repodata/primary.xml.zck |
+
+
+@bz1851841
+@bz1779104
+Scenario: ignore zchunk metadata if disabled
+Given I copy repository "simple-base" for modification
+  And I generate repodata for repository "simple-base" with extra arguments "--zck"
+  And I use repository "simple-base" as http
+  And I start capturing outbound HTTP requests
+  And I configure dnf with
+      | key    | value |
+      | zchunk | False |
+ When I execute dnf with args "install labirinto"
+ Then the exit code is 0
+  And exactly 1 HTTP GET requests should match:
+      | path                      |
+      | /repodata/primary.xml.zst |
+
+
 @bz1886706
 Scenario: I can install an RPM from FTP mirror with zchunk repo and enabled zchunk
 Given I copy repository "simple-base" for modification
