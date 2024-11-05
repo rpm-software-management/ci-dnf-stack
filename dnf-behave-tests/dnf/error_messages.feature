@@ -30,7 +30,7 @@ Scenario: Repository option 'proxy_username' is set but not 'proxy_password'
    Then the exit code is 1
     And stderr contains "'proxy_username' is set but not 'proxy_password'"
 
-@dnf5
+
 Scenario: Nested exception is printed when max parallel downloads are exceeded
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
