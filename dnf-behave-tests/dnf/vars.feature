@@ -112,3 +112,64 @@ Scenario: Ignoring variable files with invalid encoding
         <REPOSYNC>
         """
     And stdout is empty
+
+
+@bz2076853
+Scenario: Variables are substituted in baseurl via vars in config files
+  Given I use repository "dnf-ci-fedora" with configuration
+        | key                 | value                                        |
+        | baseurl             | $var1{context.scenario.repos_location}/$var2 |
+        | skip_if_unavailable | false                                        |
+    And I create and substitute file "/etc/dnf/vars/var1" with
+        """
+        file://
+        """
+    And I create and substitute file "/etc/dnf/vars/var2" with
+        """
+        dnf-ci-fedora
+        """
+    And I execute dnf with args "repoquery setup"
+   Then the exit code is 0
+    And stdout is
+    """
+    setup-0:2.12.1-1.fc29.noarch
+    setup-0:2.12.1-1.fc29.src
+    """
+
+
+@bz2076853
+Scenario: Variables are substituted in baseurl via vars in config files in custom location
+  Given I use repository "dnf-ci-fedora" with configuration
+        | key                 | value                                        |
+        | baseurl             | $var1{context.scenario.repos_location}/$var2 |
+        | skip_if_unavailable | false                                        |
+    And I create and substitute file "/tmp/vars/var1" with
+        """
+        file://
+        """
+    And I create and substitute file "/tmp/vars/var2" with
+        """
+        dnf-ci-fedora
+        """
+  When I execute dnf with args "install setup"
+    Then the exit code is 1
+  When I execute dnf with args "install setup --setopt=varsdir={context.dnf.installroot}/tmp/vars"
+   Then the exit code is 0
+    And transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
+@bz2076853
+Scenario: Variables are substituted in baseurl via environment variables
+  Given I use repository "dnf-ci-fedora" with configuration
+        | key                 | value                                        |
+        | baseurl             | $var1{context.scenario.repos_location}/$var2 |
+        | skip_if_unavailable | false                                        |
+    And I set environment variable "DNF_VAR_var1" to "file://"
+    And I set environment variable "DNF_VAR_var2" to "dnf-ci-fedora"
+    And I execute dnf with args "install setup"
+   Then the exit code is 0
+    And transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
