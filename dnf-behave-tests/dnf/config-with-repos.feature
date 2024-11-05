@@ -1,5 +1,4 @@
 @dnf5
-@no_installroot
 # no bug, PR https://github.com/rpm-software-management/libdnf/pull/882
 Feature: Repositories configured in main configuration file
 
@@ -23,7 +22,7 @@ Background: Configure repositories in the main configuration file
 
 
 Scenario: Repositories configured only in the main configuration file
-   When I execute microdnf with args "repo list --all"
+   When I execute dnf with args "repo list --all"
    Then the exit code is 0
     And stdout is
      """
@@ -39,7 +38,7 @@ Scenario: Repositories configured in the main configuration file and in *.repo f
     And I use repository "dnf-ci-fedora-updates" with configuration
         | key     | value |
         | enabled | 0     |
-   When I execute microdnf with args "repo list --all"
+   When I execute dnf with args "repo list --all"
    Then the exit code is 0
     And stdout is
      """
