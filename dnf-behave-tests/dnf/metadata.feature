@@ -27,6 +27,45 @@ Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/te
   And stdout contains "\s+wget.src\s+1.19.5-5.fc29\s+testrepo"
 
 
+@bz1771147
+Scenario: dnf respects metadata_expire (with default of 48 hours)
+Given I use repository "simple-base" as http
+ When I execute dnf with args "repoquery labirinto"
+ Then the exit code is 0
+  And stdout is
+  """
+  labirinto-0:1.0-1.fc29.src
+  labirinto-0:1.0-1.fc29.x86_64
+  """
+ # since libdnf measures the metadata file age in whole seconds, wait till it changes
+ When I sleep for "1" seconds
+  And I execute dnf with args "repoquery labirinto"
+ Then the exit code is 0
+  And stderr is
+  """
+  Updating and loading repositories:
+  Repositories loaded.
+  """
+  And stdout is
+  """
+  labirinto-0:1.0-1.fc29.src
+  labirinto-0:1.0-1.fc29.x86_64
+  """
+ When I execute dnf with args "--refresh repoquery labirinto"
+ Then the exit code is 0
+  And stdout is
+  """
+  labirinto-0:1.0-1.fc29.src
+  labirinto-0:1.0-1.fc29.x86_64
+  """
+  And stderr matches line by line
+  """
+  Updating and loading repositories:
+  simple-base test repository .*
+  Repositories loaded.
+  """
+
+
 @bz1866505
 Scenario: I cannot create/overwrite a file in /etc from local repository
 # This directory structure is needed at the repo source so that it can be matched on the system running dnf
