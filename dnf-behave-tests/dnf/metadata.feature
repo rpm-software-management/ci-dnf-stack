@@ -22,7 +22,7 @@ Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/te
   And I execute "sleep 2s"
  Then I execute dnf with args "upgrade"
  Then the exit code is 0
- Then I execute dnf with args "list"
+ Then I execute dnf with args "--cacheonly list"
  Then the exit code is 0
   And stdout contains "\s+wget.src\s+1.19.5-5.fc29\s+testrepo"
 
