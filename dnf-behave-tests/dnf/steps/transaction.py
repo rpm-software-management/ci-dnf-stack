@@ -4,10 +4,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
-import re
 
 from common.lib.behave_ext import check_context_table
-from common.lib.diff import print_lines_diff
 from lib.dnf import ACTIONS, parse_transaction_table, parse_transaction_table_dnf5
 from lib.rpm import RPM, diff_rpm_lists
 from lib.rpmdb import get_rpmdb_rpms
@@ -256,78 +254,3 @@ def then_DNF_transaction_is_empty(context):
 def then_transaction_is_empty(context):
     context.execute_steps(u"Then RPMDB Transaction is empty")
     context.execute_steps(u"Then DNF Transaction is empty")
-
-
-def parse_microdnf_transaction_table(lines):
-    """
-    Find and parse transaction table.
-    Return {action: set([rpms])}
-    """
-    trans_start_re = re.compile(r"Package +Repository +Size")
-    transaction_start = None
-    for i in range(0, len(lines) - 1):
-        if trans_start_re.match(lines[i]):
-            transaction_start = i + 1
-            break
-    assert transaction_start is not None, "Transaction table start not found"
-    lines = lines[transaction_start:]
-
-    transaction_end = None
-    for i in range(0, len(lines)):
-        if lines[i].startswith("Transaction Summary:"):
-            transaction_end = i
-    assert transaction_end is not None, "Transaction table end not found"
-    lines = lines[:transaction_end]
-
-    label_re = re.compile(r"^([^ ].+):$")
-    replacing_re = re.compile(r"^replacing +(?P<nevra>[^ ]*)$")
-    action = None
-    result = []
-    for line in lines:
-        line = line.strip()
-
-        label_match = label_re.match(line)
-        if label_match:
-            action = ACTIONS[label_match.group(1)]
-            continue
-
-        replacing_match = replacing_re.match(line)
-        if replacing_match:
-            real_action = "replaced"
-            package = replacing_match.group("nevra")
-        else:
-            real_action = action
-            package = line.split(" ")[0]
-
-        # use RPM to parse and format the NEVRA to add epoch if missing
-        result.append((real_action, str(RPM(package))))
-
-    return sorted(result)
-
-
-def check_microdnf_transaction(context, mode):
-    check_context_table(context, ["Action", "Package"])
-
-    transaction = parse_microdnf_transaction_table(context.cmd_stdout.splitlines())
-    table = sorted([(a, p) for a, p in context.table])
-
-    updated_table = []
-    for action, nevra in table:
-        if action in ["upgraded", "downgraded", "reinstalled", "obsoleted"]:
-            action = "replaced"
-        if action.startswith("install-"):
-            action = "install"
-        if action.startswith("remove-"):
-            action = "remove"
-        updated_table.append((action, nevra))
-    updated_table.sort()
-
-    if transaction != updated_table:
-        print_lines_diff(updated_table, transaction)
-        raise AssertionError("Transaction table mismatch")
-
-
-@behave.then("microdnf transaction is")
-def then_microdnf_transaction_is_following(context):
-    check_microdnf_transaction(context, 'exact_match')
-    check_rpmdb_transaction(context, 'exact_match')

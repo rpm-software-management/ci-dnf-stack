@@ -150,14 +150,6 @@ def when_I_execute_dnf_with_args_times(context, args, times):
         context.execute_steps('when I execute dnf with args "{}"'.format(args))
 
 
-@behave.step("I execute microdnf with args \"{args}\"")
-def when_I_execute_microdnf_with_args(context, args):
-    cmd = " ".join(context.dnf.get_microdnf_cmd(context))
-    cmd += " " + args.format(context=context)
-    context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
-    run_in_context(context, cmd, can_fail=True)
-
-
 @behave.step("I execute rpm with args \"{args}\"")
 def when_I_execute_rpm_with_args(context, args):
     cmd = "rpm --root=" + context.dnf.installroot
@@ -211,12 +203,6 @@ def given_enable_plugin(context, plugin):
 @behave.given("I successfully execute dnf with args \"{args}\"")
 def given_i_successfully_execute_dnf_with_args(context, args):
     context.execute_steps(u"Given I execute dnf with args \"{args}\"".format(args=args))
-    assert_exitcode(context, 0)
-
-
-@behave.given("I successfully execute microdnf with args \"{args}\"")
-def given_i_successfully_execute_microdnf_with_args(context, args):
-    context.execute_steps(u"Given I execute microdnf with args \"{args}\"".format(args=args))
     assert_exitcode(context, 0)
 
 
