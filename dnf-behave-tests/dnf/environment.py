@@ -172,46 +172,6 @@ class DNFContext(object):
 
         return result
 
-    def get_microdnf_cmd(self, context):
-        result = ["microdnf"]
-        result.append(self.assumeyes_option)
-
-        # installroot can't be set via context for safety reasons
-        if self.installroot and self.installroot != "/":
-            result.append("--installroot={0}".format(self.installroot))
-
-            # Microdnf in installroot mode requires the following options to be set.
-            # The calculation of their default values is not implemented in microdnf.
-            # New rules for default values are still being discussed.
-            result.append("--noplugins")
-            result.append("--config={0}".format(os.path.join(self.installroot, "etc/dnf/dnf.conf")))
-            result.append("--setopt=reposdir={0}".format(os.path.join(self.installroot, "etc/yum.repos.d")))
-            result.append("--setopt=varsdir={0}".format(os.path.join(self.installroot, "etc/dnf/vars")))
-            result.append("--setopt=cachedir={0}".format(os.path.join(self.installroot, "var/cache/yum")))
-
-        releasever = self._get("releasever")
-        if releasever:
-            result.append("--releasever={0}".format(releasever))
-
-        module_platform_id = self._get("module_platform_id")
-        if module_platform_id:
-            result.append("--setopt=module_platform_id={0}".format(module_platform_id))
-
-        # Plugins support is disabled in installroot mode. We can't disable/enable plugins.
-        if not self.installroot or self.installroot == "/":
-            disable_plugins = self._get("disable_plugins")
-            if disable_plugins:
-                result.append("--noplugins")
-            plugins = self._get("plugins") or []
-            for plugin in plugins:
-                result.append("--enableplugin='{0}'".format(plugin))
-
-        setopts = self._get("setopts") or {}
-        for key, value in setopts.items():
-            result.append("--setopt={0}={1}".format(key, value))
-
-        return result
-
     def get_dnf5_cmd(self, context):
         result = [self.dnf_command]
         result.append(self.assumeyes_option)
