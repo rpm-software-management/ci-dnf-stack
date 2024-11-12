@@ -1,3 +1,4 @@
+@dnf5
 Feature: Enabling module streams - error handling
 
 
@@ -5,7 +6,6 @@ Background:
   Given I use repository "dnf-ci-fedora-modular-updates"
 
 
-@dnf5
 Scenario: Fail to enable a different stream of an already enabled module
    When I execute dnf with args "module enable nodejs:8"
    Then the exit code is 0
@@ -29,6 +29,9 @@ Scenario: Fail to enable a different stream of an already enabled module
         """
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Fail to install a different stream of an already enabled module
   Given I set dnf command to "dnf"
    When I execute dnf with args "module enable nodejs:8"
@@ -52,6 +55,9 @@ Scenario: Fail to install a different stream of an already enabled module
         """
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1706215
 Scenario: Fail to install a different stream of an already enabled module using @module:stream syntax
   Given I set dnf command to "dnf"
@@ -75,7 +81,7 @@ Scenario: Fail to install a different stream of an already enabled module using 
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         """
 
-@dnf5
+
 @bz1814831
 Scenario: Fail to enable a module stream when specifying only module
    When I execute dnf with args "module enable nodejs"
@@ -92,7 +98,6 @@ Scenario: Fail to enable a module stream when specifying only module
         """
 
 
-@dnf5
 @bz1629655
 Scenario: Fail to enable a module stream when specifying wrong version
    When I execute dnf with args "module enable nodejs:8:99"
@@ -110,7 +115,6 @@ Scenario: Fail to enable a module stream when specifying wrong version
         """
 
 
-@dnf5
 @bz1629655
 Scenario: Fail to enable a non-existent module stream
    When I execute dnf with args "module enable nodejs:1"
@@ -128,7 +132,6 @@ Scenario: Fail to enable a non-existent module stream
         """
 
 
-@dnf5
 Scenario: Fail to enable a module stream when not specifying anything
    When I execute dnf with args "module enable"
    Then the exit code is 2
@@ -141,7 +144,6 @@ Scenario: Fail to enable a module stream when not specifying anything
         """
 
 
-@dnf5
 @bz1581267
 Scenario: Fail to enable a module stream when specifying more streams of the same module
    When I execute dnf with args "module enable nodejs:8 nodejs:10"
@@ -156,6 +158,9 @@ Scenario: Fail to enable a module stream when specifying more streams of the sam
         """
 
 
+# Module defaults from /etc/dnf/modules.defaults.d/ are not loaded
+# https://github.com/rpm-software-management/dnf5/issues/1853
+@xfail
 @not.with_os=rhel__eq__8
 Scenario: Enabling a stream depending on other than enabled stream should fail
   Given I use repository "dnf-ci-thirdparty-modular"
@@ -227,7 +232,6 @@ Scenario: Enabling a stream depending on a disabled stream should fail
     And stderr contains "module fluid:water:1:.x86_64 is disabled"
 
 
-@dnf5
 # side-dish:chip requires fluid:oil
 # beverage:beer requires fluid:water
 @not.with_os=rhel__eq__8
@@ -240,7 +244,6 @@ Scenario: Enabling two modules both requiring different streams of another modul
     And stderr contains "module beverage:beer:1:.x86_64 requires module\(fluid:water\), but none of the providers can be installed"
 
 
-@dnf5
 # beverage:beer requires fluid:water
 @bz1651280
 @not.with_os=rhel__eq__8

@@ -1,3 +1,6 @@
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Feature: On-disk modulemd data are preferred over repodata in case of a conflict
 
 # Notes regarding operation of modulemd-defaults data merging:

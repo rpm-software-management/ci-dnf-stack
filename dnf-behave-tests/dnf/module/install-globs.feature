@@ -1,3 +1,6 @@
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Feature: Installing module profiles with globs
 
 

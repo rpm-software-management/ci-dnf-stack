@@ -1,3 +1,4 @@
+@dnf5
 Feature: Disabling module stream
 
 
@@ -6,7 +7,6 @@ Background:
   Given I use repository "dnf-ci-fedora"
 
 
-@dnf5
 @bz1677640
 Scenario: I can disable a module when specifying module name
    When I execute dnf with args "module enable nodejs:8"
@@ -22,7 +22,6 @@ Scenario: I can disable a module when specifying module name
         | nodejs    | disabled  |           |           |
 
 
-@dnf5
 # this is not test for @bz1677640, but test is failing until the bug is fixed
 Scenario: Disabling an already disabled module should pass
    When I execute dnf with args "module enable nodejs:8"
@@ -40,6 +39,9 @@ Scenario: Disabling an already disabled module should pass
     And stdout contains "Nothing to do."
 
 
+# Missing report about unneeded information
+# https://github.com/rpm-software-management/dnf5/issues/1028
+@xfail
 @bz1649261
 Scenario Outline: I can disable a module when specifying <spec>
    When I execute dnf with args "module enable nodejs:8"
@@ -60,6 +62,11 @@ Examples:
     | version           | nodejs:10:20180920144631  |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+# Missing report about unneeded information
+# https://github.com/rpm-software-management/dnf5/issues/1028
+@xfail
 @bz1649261
 Scenario Outline: I can disable a module with installed profile when specifying <spec>
    When I execute dnf with args "module install nodejs:10/default"
@@ -82,7 +89,6 @@ Examples:
     | version           | nodejs:10:20180920144631  |
 
 
-@dnf5
 @bz1613910
 Scenario: It is possible to disable an enabled default stream
    When I execute dnf with args "module enable nodejs"
@@ -102,6 +108,9 @@ Scenario: It is possible to disable an enabled default stream
         | nodejs        | 8 [d][x]     | development, minimal, default [d] |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1653623
 @bz1583596
 Scenario: User is informed about disabling installed profiles when disabling a module

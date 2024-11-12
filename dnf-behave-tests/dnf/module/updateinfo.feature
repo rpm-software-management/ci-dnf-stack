@@ -1,6 +1,9 @@
 Feature: Advisory aplicability on a modular system
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1622614
 Scenario: List available updates for installed streams (updates available)
 Given I use repository "dnf-ci-fedora-modular"
@@ -19,7 +22,7 @@ Given I use repository "dnf-ci-fedora-modular"
       | install-dep               | postgresql-libs-0:9.6.8-1.module_1710+b535a823.x86_64   |
       | module-profile-install    | postgresql/default                                      |
 Given I use repository "dnf-ci-fedora-modular-updates"
- When I execute dnf with args "updateinfo --list"
+ When I execute dnf with args "updateinfo list"
  Then the exit code is 0
   And stderr is
       """
@@ -31,6 +34,9 @@ Given I use repository "dnf-ci-fedora-modular-updates"
       """
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1622614
 Scenario: Updates for non enabled streams are hidden
 Given I use repository "dnf-ci-fedora-modular"
@@ -44,7 +50,7 @@ Given I use repository "dnf-ci-fedora-modular"
       | install-dep               | postgresql-libs-0:6.1-1.module_2514+aa9aadc5.x86_64   |
       | module-profile-install    | postgresql/default                                    |
 Given I use repository "dnf-ci-fedora-modular-updates"
- Then I execute dnf with args "updateinfo --list"
+ Then I execute dnf with args "updateinfo list"
  Then the exit code is 0
   And stderr is
       """
@@ -53,8 +59,8 @@ Given I use repository "dnf-ci-fedora-modular-updates"
   And stdout is empty
 
 
-# Test is failing with DNF 5.
-# @dnf5
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1856
+@xfail
 @bz1804234
 Scenario: having installed packages from one collection and enabled all modules from another doesn't activate advisory
 Given I use repository "dnf-ci-fedora"
@@ -69,15 +75,18 @@ Given I use repository "dnf-ci-fedora"
   And stdout is empty
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1804234
 Scenario: having installed packages from all collections but enabled modules only for one shows just the one
 Given I use repository "dnf-ci-fedora"
   And I execute dnf with args "install nodejs"
   And I use repository "dnf-ci-fedora-modular"
-  And I execute dnf with args "module enable postgresql:9.6"
-  And I execute dnf with args "module install postgresql/default"
+  And I successfully execute dnf with args "module enable postgresql:9.6"
+  And I successfully execute dnf with args "module install postgresql/default"
   And I use repository "dnf-ci-fedora-modular-updates"
- When I execute dnf with args "updateinfo --list"
+ When I execute dnf with args "updateinfo list"
  Then stderr is
       """
       <REPOSYNC>
@@ -89,15 +98,18 @@ Given I use repository "dnf-ci-fedora"
       """
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: having two active collections shows packages from both
 Given I use repository "dnf-ci-fedora"
-  And I execute dnf with args "install nodejs"
+  And I successfully execute dnf with args "install nodejs"
   And I use repository "dnf-ci-fedora-modular"
-  And I execute dnf with args "module enable postgresql:9.6"
-  And I execute dnf with args "module install postgresql/default"
+  And I successfully execute dnf with args "module enable postgresql:9.6"
+  And I successfully execute dnf with args "module install postgresql/default"
   And I use repository "dnf-ci-fedora-modular-updates"
-  And I execute dnf with args "module enable nodejs:8"
- When I execute dnf with args "updateinfo --list"
+  And I successfully execute dnf with args "module enable nodejs:8"
+ When I execute dnf with args "updateinfo list"
  Then stderr is
       """
       <REPOSYNC>
@@ -108,6 +120,9 @@ Given I use repository "dnf-ci-fedora"
       FEDORA-2019-0329090518 enhancement postgresql-9.6.11-1.x86_64
       """
 
+
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
+@xfail
 @bz1804234
 Scenario: Show applicable advisories only from active contexts
 Given I use repository "dnf-ci-multicontext-modular-advisory"
@@ -124,7 +139,7 @@ Given I use repository "dnf-ci-multicontext-modular-advisory"
       | install               | test-perl-DBI-0:1-1.module_el8+7554+8763afg8.x86_64    |
       | install-dep           | test-perl-0:5.24-2.module_el8+4182+3467aeg6.x86_64     |
       | module-stream-enable  | perl-DBI:master                                        |
-  When I execute dnf with args "updateinfo --list"
+  When I execute dnf with args "updateinfo list"
   Then the exit code is 0
    And stderr is
       """

@@ -1,3 +1,4 @@
+@dnf5
 Feature: Modulemd defaults are followed by dnf module commands
 
 Background:
@@ -5,7 +6,6 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
-@dnf5
 Scenario: The default stream is used when enabling a module
    When I execute dnf with args "module enable nodejs"
    Then the exit code is 0
@@ -14,7 +14,6 @@ Scenario: The default stream is used when enabling a module
         | nodejs    | enabled   | 8         |           |
 
 
-@dnf5
 @bz1629702
 Scenario: The default streams are identified in the output of module list
    When I execute dnf with args "module list nodejs"
@@ -27,7 +26,6 @@ Scenario: The default streams are identified in the output of module list
         | nodejs    | 11        | development, minimal, default |
 
 
-@dnf5
 @bz1618553
 Scenario: Default profiles are identified in the output of dnf info
    When I execute dnf with args "module info nodejs"
@@ -35,6 +33,9 @@ Scenario: Default profiles are identified in the output of dnf info
     And stdout contains "Default profiles : default"
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Default stream and profile are used when installing a module with no enabled profile
    When I execute dnf with args "module install nodejs"
    Then the exit code is 0
@@ -43,6 +44,9 @@ Scenario: Default stream and profile are used when installing a module with no e
         | nodejs    | enabled   | 8         | default   |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @bz1582450
 Scenario: Default profile(s) is used when installing a module with enabled stream
    When I execute dnf with args "module enable nodejs:10"
@@ -57,6 +61,9 @@ Scenario: Default profile(s) is used when installing a module with enabled strea
         | nodejs    | enabled   | 10        | default   |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Default profile is installed when installing a non-default stream with dnf module install module:stream
    When I execute dnf with args "module install nodejs:10"
    Then the exit code is 0

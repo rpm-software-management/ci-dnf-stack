@@ -1,3 +1,6 @@
+# Missing module update command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Feature: Updating module profiles
 
 

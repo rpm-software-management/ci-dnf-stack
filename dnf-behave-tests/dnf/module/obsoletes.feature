@@ -1,3 +1,6 @@
+@xfail
+# Obsoletes are not implemented in dnf5
+# Mentioned in https://github.com/rpm-software-management/dnf5/issues/146
 Feature: obsoletes reset/change streams in any transaction according to metadata
 
 
@@ -34,7 +37,6 @@ Given I execute dnf with args "module install nodejs:5/minimal"
       | nodejs    | enabled   | 10        |           |
 
 
-@dnf5
 Scenario: two stream changes, one of which is obsoletes, do not throw exception
 Given I execute dnf with args "module enable nodejs:5"
  When I use repository "dnf-ci-fedora-modular-obsoletes"

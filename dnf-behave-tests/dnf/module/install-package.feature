@@ -1,7 +1,7 @@
+@dnf5
 Feature: Installing package from module
 
 
-@dnf5
 Scenario: I can install a specific package from a module
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
@@ -13,7 +13,6 @@ Scenario: I can install a specific package from a module
         | install                   | ninja-build-0:1.8.2-4.module_1991+4e5efe2f.x86_64 |
 
 
-@dnf5
 Scenario: I can install a package from modular repo not belonging to a module
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install solveigs-song"
@@ -27,8 +26,16 @@ Scenario: I cannot install a specific package from not enabled module when defau
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install arabian-dance"
    Then the exit code is 1
-    And stderr contains "Error: Unable to find a match"
+    And stderr is
+    """
+    <REPOSYNC>
+    Failed to resolve the transaction:
+    Argument 'arabian-dance' matches only excluded packages.
+    """
 
+
+@xfail
+# Missing shell command https://github.com/rpm-software-management/dnf5/issues/153
 @bz1767351
 Scenario: I cannot install a specific package from not enabled module after reset
   Given I use repository "dnf-ci-multicontext-modular"
@@ -71,8 +78,12 @@ Scenario: module content masks ursine content - module not enabled, default stre
     And I use repository "dnf-ci-fedora"
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
-    And stderr contains "Error: Unable to find a match"
-    And stdout contains "All matches were filtered out by modular filtering for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
+    And stderr is
+    """
+    <REPOSYNC>
+    Failed to resolve the transaction:
+    Argument 'ninja-build-0:1.8.2-5.fc29.x86_64' matches only excluded packages.
+    """
 
 
 Scenario: module content masks ursine content - non-default stream enabled
@@ -82,10 +93,16 @@ Scenario: module content masks ursine content - non-default stream enabled
    Then the exit code is 0
    When I execute dnf with args "install ninja-build-0:1.8.2-5.fc29.x86_64"
    Then the exit code is 1
-    And stderr contains "Error: Unable to find a match"
-    And stdout contains "All matches were filtered out by modular filtering for argument: ninja-build-0:1.8.2-5.fc29.x86_64"
+    And stderr is
+    """
+    <REPOSYNC>
+    Failed to resolve the transaction:
+    Argument 'ninja-build-0:1.8.2-5.fc29.x86_64' matches only excluded packages.
+    """
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 Scenario: a package from a non-enabled module is preferred when default stream is defined
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
@@ -100,7 +117,6 @@ Scenario: a package from a non-enabled module is preferred when default stream i
     And stderr contains "Error: No matching Modules to list"
 
 
-@dnf5
 Scenario: rpm from enabled stream is preferred regardless of NVRs
   Given I use repository "dnf-ci-fedora-modular"
     And I use repository "dnf-ci-fedora"
@@ -112,6 +128,9 @@ Scenario: rpm from enabled stream is preferred regardless of NVRs
         | Action                | Package                                           |
         | install               | ninja-build-0:1.5.2-1.module_1991+4e5efe2f.x86_64 |
 
+
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 @bz1762314
 Scenario: I can install a specific package from a module and enable all module dependencies
   Given I use repository "dnf-ci-fedora-modular"

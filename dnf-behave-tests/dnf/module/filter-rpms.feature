@@ -1,3 +1,4 @@
+@dnf5
 @jiraRHELPLAN-6073
 Feature: Filter RPMs by enabled and default module streams
 
@@ -6,6 +7,8 @@ Background:
 Given I use repository "dnf-ci-fedora-modular"
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 Scenario: default from module is preferred over ursine pkg
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install ninja-build"
@@ -22,7 +25,6 @@ Given I use repository "dnf-ci-fedora"
     | module-stream-enable      | ninja:master                                      |
 
 
-@dnf5
 Scenario: enabled module is preferred over ursine pkg
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module enable ninja" 
@@ -40,7 +42,6 @@ Given I use repository "dnf-ci-fedora"
     | install-dep               | basesystem-0:11-6.fc29.noarch                     |
 
 
-@dnf5
 Scenario: disabled module is not used
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "module disable ninja" 
@@ -52,7 +53,6 @@ Given I use repository "dnf-ci-fedora"
     | install                   | ninja-build-0:1.8.2-5.fc29.x86_64 |
 
 
-@dnf5
 Scenario: ursine pkg is preferred over module without default
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install dwm"
@@ -62,7 +62,6 @@ Given I use repository "dnf-ci-fedora"
     | install                   | dwm-0:6.1-1.x86_64                |
 
 
-@dnf5
 Scenario: RPMs from non-active streams are not available
  When I execute dnf with args "module disable nodejs:8" 
  Then I execute dnf with args "list --available dwm.x86_64"
