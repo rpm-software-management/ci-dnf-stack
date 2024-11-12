@@ -1,3 +1,6 @@
+# Missing module switch-to command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Feature: Switch module to streams
 
 Background:

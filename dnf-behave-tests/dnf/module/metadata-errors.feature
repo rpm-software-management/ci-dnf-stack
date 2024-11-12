@@ -1,3 +1,5 @@
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1855
 Feature: Error reading modular metadata
 
 Background: Create a fake modules.yaml, gzip it and damage it
@@ -27,7 +29,6 @@ Given I execute "echo "GARBAGE" >> {context.dnf.repos[dnf-ci-fedora].path}/repod
 
 # Throws a CloseError instead of ReadError, since libsolv only errors out on when closing the file
 # will be fixed in libsolv-0.7.12 or higher
-@xfail
 @bz1771768
 Scenario: The end of modules.yaml.gz cut off
   # remove the closing tag of repomd.xml so that we can append

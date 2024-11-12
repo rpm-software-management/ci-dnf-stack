@@ -1,3 +1,4 @@
+@dnf5
 @jiraRHELPLAN-6083
 Feature: platform pseudo-module based on /etc/os-release
 
@@ -16,7 +17,6 @@ Given I create file "/etc/os-release" with
  And I do not set default module platformid
 
 
-@dnf5
 @not.with_os=rhel__eq__8
 Scenario: I can't enable module requiring different platform pseudo module
 Given I delete file "/etc/os-release"
@@ -25,7 +25,6 @@ Given I delete file "/etc/os-release"
   And stderr contains "nothing provides module\(pseudoplatform:6.0\) needed by module dwm:6.0:20180813144159:.x86_64"
 
 
-@dnf5
 Scenario: I can't see pseudo-module in module listing
  When I execute dnf with args "module enable dwm:6.0"
  Then the exit code is 0
@@ -52,7 +51,6 @@ Scenario: I can't list info for the pseudo-module
       """
 
 
-@dnf5
 Scenario: I can't enable pseudo-module
  When I execute dnf with args "module enable pseudoplatform:6.0"
  Then the exit code is 1
@@ -66,7 +64,10 @@ Scenario: I can't enable pseudo-module
       """
 
 
-  Scenario: I can't install pseudo-module
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
+Scenario: I can't install pseudo-module
  When I execute dnf with args "module install pseudoplatform:6.0"
  Then the exit code is 1
   And stderr contains lines
@@ -76,7 +77,6 @@ Scenario: I can't enable pseudo-module
   """
 
 
-@dnf5
 Scenario: I can't disable pseudo-module
  When I execute dnf with args "module  disable pseudoplatform:6.0"
  Then the exit code is 1
@@ -90,6 +90,9 @@ Scenario: I can't disable pseudo-module
       """
 
 
+# Missing module update command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: I can't update pseudo-module
  When I execute dnf with args "module update pseudoplatform:6.0"
  Then the exit code is 1
@@ -99,6 +102,9 @@ Scenario: I can't update pseudo-module
   """
 
 
+# Missing module remove command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: I can't remove pseudo-module
  When I execute dnf with args "module remove pseudoplatform:6.0"
  Then the exit code is 0

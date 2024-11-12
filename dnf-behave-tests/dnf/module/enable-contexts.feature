@@ -1,8 +1,12 @@
+@dnf5
 Feature: Dependency resolution must occur to determine the appropriate dependent stream+context to use
 
 Background:
   Given I use repository "dnf-ci-thirdparty-modular"
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Appropriate context is selected depending on the enabled required module stream
    When I execute dnf with args "module enable biotope:wood"
    Then the exit code is 0
@@ -18,6 +22,9 @@ Scenario: Appropriate context is selected depending on the enabled required modu
         | install-group             | raspberry-0:1.0-1.wood.x86_64 |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Appropriate context is selected depending on the enabled required module stream - cross check
    When I execute dnf with args "module enable biotope:garden"
    Then the exit code is 0
@@ -33,6 +40,9 @@ Scenario: Appropriate context is selected depending on the enabled required modu
         | install-group             | raspberry-0:1.0-1.garden.x86_64   |
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 Scenario: Any suitable context is selected when more options are possible
    When I execute dnf with args "module install berry:raspberry/default"
    Then the exit code is 0
@@ -44,7 +54,6 @@ Scenario: Any suitable context is selected when more options are possible
    Then the exit code is 0
 
 
-@dnf5
 @not.with_os=rhel__eq__8
 Scenario: An error is printed with no stream and context is possible to enable
    When I execute dnf with args "module enable biotope:pond"
@@ -56,6 +65,9 @@ Scenario: An error is printed with no stream and context is possible to enable
     And stderr contains "module biotope:wood:1:\.x86_64 conflicts with module\(biotope\) provided by biotope:pond:1:\.x86_64"
 
 
+# Missing module install command
+# https://github.com/rpm-software-management/dnf5/issues/146
+@xfail
 @not.with_os=rhel__eq__8
 @bz1670496
 Scenario: An error is printed when trying to install different context

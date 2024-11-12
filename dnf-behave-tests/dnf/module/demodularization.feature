@@ -1,3 +1,6 @@
+# Demodularization is not implemented
+# https://github.com/rpm-software-management/dnf5/issues/1852
+@xfail
 Feature: Modular filtering must ignore demodularized rpms
 
 Background:

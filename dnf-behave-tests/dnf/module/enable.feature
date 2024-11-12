@@ -42,7 +42,6 @@ Scenario: Enable a module stream that was already enabled
         | nodejs    | enabled   | 8         |           |
 
 
-@dnf5
 Scenario: Enable a different stream of an already enabled module when module_stream_switch=true
   Given I configure dnf with
         | key                  | value |

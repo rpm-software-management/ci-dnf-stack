@@ -1,3 +1,4 @@
+@dnf5
 Feature: Default streams are properly switched to enabled 
 
 Background:
@@ -5,7 +6,6 @@ Background:
     And I use repository "dnf-ci-fedora"
 
 
-@dnf5
 @bz1657213
 Scenario: The default stream is enabled when requiring module is enabled
    When I execute dnf with args "module enable meson:master"
@@ -20,6 +20,9 @@ Scenario: The default stream is enabled when requiring module is enabled
 # DnfCiModulePackageDep:packagedep does not have any modular dependencies
 # DnfCiModulePackageDep:moduledep requires nodejs module
 
+
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 Scenario Outline: The default stream is enabled when its package is required by installed package of another module <description>
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "module enable DnfCiModulePackageDep:<stream>"
@@ -41,6 +44,8 @@ Scenario Outline: The default stream is enabled when its package is required by 
         | (module deps set)     | moduledep     |
 
 
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/1811
 Scenario: The default stream is enabled when its package is required by installed non-modular package
   Given I use repository "dnf-ci-thirdparty"
    When I execute dnf with args "install anitras-dance"
