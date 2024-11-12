@@ -39,15 +39,12 @@ Scenario: I can't see pseudo-module in module listing
 
 Scenario: I can't list info for the pseudo-module
  When I execute dnf with args "module info pseudoplatform"
- Then the exit code is 1
-  And stdout is
-      """
-      Unable to resolve argument pseudoplatform
-      """
+ Then the exit code is 0
+  And stdout is empty
   And stderr is
       """
       <REPOSYNC>
-      Error: No matching Modules to list
+      No matches found for "pseudoplatform".
       """
 
 
