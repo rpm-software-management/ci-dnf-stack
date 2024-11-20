@@ -2,8 +2,6 @@
 Feature: dnf builddep command
 
 
-@xfail
-# reported as https://github.com/rpm-software-management/dnf5/issues/1796
 Scenario: Dnf builddep can use spec file from a remote location
   Given I use repository "dnf-ci-fedora"
     And I create directory "/remotedir"
