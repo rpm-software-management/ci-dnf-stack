@@ -1,5 +1,4 @@
 @not.with_os=rhel__ge__9
-@not.with_os=fedora__ge__39
 Feature: Tests createrepo_c generating delta rpms
 
 
