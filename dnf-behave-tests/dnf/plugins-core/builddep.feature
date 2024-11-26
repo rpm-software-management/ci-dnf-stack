@@ -291,3 +291,36 @@ Scenario: Builddep respects both --with and --without option
         | Action        | Package                     |
         | install       | dwm-0:6.1-1.x86_64          |
         | install       | wget-0:1.19.5-5.fc29.x86_64 |
+
+
+Scenario: User can specify parameter type using --spec option
+  Given I use repository "dnf-ci-fedora"
+    And I create file "/pkg.spec.in" with
+    """
+    Name: pkg
+    Version: 1
+    Release: 1
+    Summary: summary
+    License: license
+
+    BuildRequires: filesystem
+
+    %description
+    desc
+    """
+   When I execute dnf with args "builddep --spec {context.dnf.installroot}/pkg.spec.in"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                               |
+        | install       | filesystem-0:3.9-2.fc29.x86_64        |
+        | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
+
+
+Scenario: User can specify parameter type using --srpm option
+    Given I use repository "dnf-ci-fedora"
+      And I copy file "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty/src/SuperRipper-1.0-1.src.rpm" to "/SuperRipper-1.0-1.src.rpm.unknown.extension"
+     When I execute dnf with args "builddep --srpm {context.dnf.installroot}/SuperRipper-1.0-1.src.rpm.unknown.extension"
+     Then the exit code is 0
+      And Transaction is following
+        | Action        | Package                           |
+        | install       | lame-libs-0:3.100-4.fc29.x86_64   |
