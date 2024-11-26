@@ -1,10 +1,9 @@
-@xfail
-# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/931
 # The test relies on librepo ability to set extended file attributes on
 # downloaded files. Although xattrs are supported on tmpfs which is usual /tmp
 # filesystem where the installroots live, the user attributes are not permitted
 # (see tmpfs(5), xattr(7)). That said the packages have to be downloaded out of
 # the /tmp.
+@dnf5
 @no_installroot
 Feature: Reposync does not re-download the package
 
@@ -25,15 +24,19 @@ Given I copy repository "simple-base" for modification
  When I execute dnf with args "reposync --repoid=simple-base --norepopath --download-path=/synced"
  Then the exit code is 0
   # the package was not re-downloaded
-  And stdout contains "\[SKIPPED\] labirinto-1\.0-1\.fc29\.x86_64\.rpm: Already downloaded"
+  And stderr contains lines matching
+  """
+   labirinto-0:1\.0-1\.fc29\.x86_64.*
+  >>> Already downloaded
+  """
   # timestamp and checksums of both types are stored in xattr
  When I execute "getfattr --dump /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm"
  Then stdout matches line by line
       """
       # file: synced/x86_64/labirinto-1\.0-1\.fc29\.x86_64\.rpm
-      user\.Librepo\.checksum\.mtime="[0-9]+"
-      user\.Librepo\.checksum\.sha256="[0-9a-f]{64}"
-      user\.Librepo\.checksum\.sha512="[0-9a-f]{128}"
+      user\.librepo\.checksum\.mtime="[0-9]+"
+      user\.librepo\.checksum\.sha256="[0-9a-f]{64}"
+      user\.librepo\.checksum\.sha512="[0-9a-f]{128}"
       """
 
 
@@ -42,6 +45,6 @@ Scenario: reposync --remote-time stores correct timestamp in xattr
 Given I use repository "simple-base" as http
  When I execute dnf with args "reposync --repoid=simple-base --norepopath --download-path=/synced --remote-time"
  Then the exit code is 0
- # the timestamp stored in user.Librepo.checksum.mtime xattr is the same as mtime of the file in nanoseconds
- When I execute "[ `getfattr --absolute-names --only-values -n 'user.Librepo.checksum.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `date +%s%N -r /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
+ # the timestamp stored in user.librepo.checksum.mtime xattr is the same as mtime of the file in nanoseconds
+ When I execute "[ `getfattr --absolute-names --only-values -n 'user.librepo.checksum.mtime' /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` == `date +%s%N -r /synced/x86_64/labirinto-1.0-1.fc29.x86_64.rpm` ]"
  Then the exit code is 0
