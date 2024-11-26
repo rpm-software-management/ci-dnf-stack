@@ -1,5 +1,4 @@
-@xfail
-# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/931
+@dnf5
 Feature: Tests for reposync command
 
 
@@ -7,8 +6,8 @@ Scenario: Base functionality of reposync
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
    Then the exit code is 0
-    And stdout contains ": SuperRipper-1\.2-1\."
-    And stdout contains ": SuperRipper-1\.3-1\."
+    And stderr contains " SuperRipper-0:1\.2-1\."
+    And stderr contains " SuperRipper-0:1\.3-1\."
     And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/CQRlib-extension-1.6-2.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/x86_64/CQRlib-extension-1.6-2.x86_64.rpm" do not differ
 
 
@@ -16,10 +15,12 @@ Scenario: Reposync with --newest-only option
   Given I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --newest-only"
    Then the exit code is 0
-    And stdout contains ": SuperRipper-1\.3-1\."
-    And stdout does not contain ": SuperRipper-1\.2-1\."
+    And stderr contains " SuperRipper-0:1\.3-1\."
+    And stderr does not contain " SuperRipper-0:1\.2-1\."
 
 
+@xfail
+# --downloadcomps is not supported in dnf5
 @bz1653126 @bz1676726
 Scenario: Reposync with --downloadcomps option
   Given I use repository "dnf-ci-thirdparty-updates" as http
@@ -46,6 +47,8 @@ Scenario: Reposync with --downloadcomps option
    """
 
 
+@xfail
+# --downloadcomps is not supported in dnf5
 @bz1676726
 Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist)
   Given I use repository "dnf-ci-rich" as http
@@ -54,6 +57,8 @@ Scenario: Reposync with --downloadcomps option (comps.xml in repo does not exist
     And stdout does not contain "comps.xml for repository dnf-ci-rich saved"
 
 
+@xfail
+# --downloadcomps is not supported in dnf5
 @bz1895059
 Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not compressed)
   Given I copy repository "dnf-ci-thirdparty-updates" for modification
@@ -64,6 +69,8 @@ Scenario: Reposync with --downloadcomps option (the comps.xml in repodata is not
     And the files "{context.dnf.tempdir}/dnf-ci-thirdparty-updates/comps.xml" and "{context.dnf.fixturesdir}/repos/dnf-ci-thirdparty-updates/repodata/comps.xml" do not differ
 
 
+@xfail
+# --downloadcomps is not supported in dnf5
 @bz1676726
 Scenario: Reposync with --downloadcomps and --metadata-path options
   Given I use repository "dnf-ci-thirdparty-updates" as http
@@ -83,10 +90,10 @@ Scenario: Reposync with --download-metadata option
     And I drop repository "dnf-ci-thirdparty-updates"
    When I execute dnf with args "group list"
    Then the exit code is 0
-    And stdout contains lines
+    And stdout is
    """
-   Available Groups:
-   DNF-CI-Testgroup
+   ID                   Name             Installed
+   dnf-ci-testgroup     DNF-CI-Testgroup        no
    """
 
 
@@ -115,11 +122,11 @@ Scenario: Reposync downloads packages from all streams of modular repository eve
 @bz1750273
 Scenario: Reposync respects excludes
   Given I use repository "dnf-ci-thirdparty-updates" as http
-   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --excludepkgs=SuperRipper"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --setopt=excludepkgs=SuperRipper"
    Then the exit code is 0
-    And stdout contains ": CQRlib-extension-1\.6-2\.src\.rpm"
-    And stdout contains ": CQRlib-extension-1\.6-2\.x86_64\.rpm"
-    And stdout does not contain "SuperRipper"
+    And stderr contains " CQRlib-extension-0:1\.6-2\.src"
+    And stderr contains " CQRlib-extension-0:1\.6-2\.x86_64"
+    And stderr does not contain "SuperRipper"
    When I execute "ls {context.dnf.tempdir}/dnf-ci-thirdparty-updates/x86_64/"
    Then stdout is
         """
@@ -137,7 +144,7 @@ Scenario: Reposync respects includes
   Given I use repository "dnf-ci-fedora" as http
   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --arch=noarch --setopt=includepkgs=abcde"
    Then the exit code is 0
-    And stdout contains "abcde-2.9.2-1.fc29.noarch.rpm"
+    And stderr contains "abcde-0:2.9.2-1.fc29.noarch"
    When I execute "find" in "{context.dnf.tempdir}"
    Then stdout is
     """
@@ -152,10 +159,10 @@ Scenario: Reposync respects excludes, but not modular excludes
   Given I use repository "dnf-ci-fedora-modular" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --setopt=includepkgs=postgresql"
    Then the exit code is 0
-    And stdout contains ": postgresql-6\.1-1\."
-    And stdout contains ": postgresql-9\.6\.8-1\."
-    And stdout does not contain "ninja"
-    And stdout does not contain "nodejs"
+    And stderr contains " postgresql-0:6\.1-1\."
+    And stderr contains " postgresql-0:9\.6\.8-1\."
+    And stderr does not contain "ninja"
+    And stderr does not contain "nodejs"
    When I execute "ls {context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/"
    Then stdout is
         """
@@ -215,8 +222,8 @@ Scenario: Reposync preserves remote timestamps of packages
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --remote-time"
    Then the exit code is 0
-    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*"
-    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.src\.rpm .*"
+    And stderr contains " wget-0:1\.0-1\.fc29\.x86_64"
+    And stderr contains " wget-0:1\.0-1\.fc29\.src"
     And the files "{context.dnf.tempdir}/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
     And timestamps of the files "{context.dnf.tempdir}/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
 
@@ -225,8 +232,8 @@ Scenario: Reposync preserves remote timestamps of metadata files
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --download-metadata --remote-time"
    Then the exit code is 0
-    And the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
-    And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.gz" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.gz" do not differ
+    And the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.zst" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.zst" do not differ
+    And timestamps of the files "{context.dnf.tempdir}/reposync/repodata/primary.xml.zst" and "{context.dnf.fixturesdir}/repos/reposync/repodata/primary.xml.zst" do not differ
 
 
 @bz1686602
@@ -241,10 +248,10 @@ Scenario: Reposync --urls switch
     And stdout matches line by line
     """
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
-    http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.2-1\.src\.rpm
-    http://localhost:[0-9]+/x86_64/SuperRipper-1\.2-1\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.3-1\.src\.rpm
+    http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
+    http://localhost:[0-9]+/x86_64/SuperRipper-1\.2-1\.x86_64\.rpm
     http://localhost:[0-9]+/x86_64/SuperRipper-1\.3-1\.x86_64\.rpm
     """
 
@@ -260,20 +267,22 @@ Scenario: Reposync --urls and --download-metadata switches
     """
     And stdout matches line by line
     """
-    http://localhost:[0-9]+/repodata/primary.xml.gz
-    http://localhost:[0-9]+/repodata/filelists.xml.gz
-    http://localhost:[0-9]+/repodata/other.xml.gz
-    http://localhost:[0-9]+/repodata/comps.xml
-    http://localhost:[0-9]+/repodata/comps.xml.gz
+    http://localhost:[0-9]+/repodata/primary.xml.zst
+    http://localhost:[0-9]+/repodata/filelists.xml.zst
+    http://localhost:[0-9]+/repodata/other.xml.zst
+    http://localhost:[0-9]+/repodata/comps.xml.zst
     http://localhost:[0-9]+/src/CQRlib-extension-1\.6-2\.src\.rpm
-    http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.2-1\.src\.rpm
-    http://localhost:[0-9]+/x86_64/SuperRipper-1\.2-1\.x86_64\.rpm
     http://localhost:[0-9]+/src/SuperRipper-1\.3-1\.src\.rpm
+    http://localhost:[0-9]+/x86_64/CQRlib-extension-1\.6-2\.x86_64\.rpm
+    http://localhost:[0-9]+/x86_64/SuperRipper-1\.2-1\.x86_64\.rpm
     http://localhost:[0-9]+/x86_64/SuperRipper-1\.3-1\.x86_64\.rpm
     """
 
 
+@xfail
+# --newest-only is not yet fully supported for modules
+# https://github.com/rpm-software-management/dnf5/issues/1902
 @bz1775434
 Scenario: Reposync --newest-only downloads packages from all streams and latest context versions of modular repository and latest non-modular rpms
   Given I use repository "dnf-ci-multicontext-hybrid-multiversion-modular" as http
@@ -289,6 +298,9 @@ Scenario: Reposync --newest-only downloads packages from all streams and latest 
     And file "//{context.dnf.tempdir}/dnf-ci-multicontext-hybrid-multiversion-modular/x86_64/postgresql-9.8.1-1.module_9790+c535b823.x86_64.rpm" exists
 
 
+@xfail
+# --newest-only is not yet fully supported for modules
+# https://github.com/rpm-software-management/dnf5/issues/1902
 @bz1833074
 Scenario: Reposync --newest-only downloads latest modular packages versions even if they are not part of the latest context version
   Given I use repository "reposync-newest-modular"
@@ -311,8 +323,8 @@ Scenario: Reposync accepts --norepopath to synchronize single repository
   Given I use repository "reposync" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath"
    Then the exit code is 0
-    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.x86_64\.rpm .*"
-    And stdout contains "\([12]/2\): wget-1\.0-1\.fc29\.src\.rpm .*"
+    And stderr contains " wget-0:1\.0-1\.fc29\.x86_64 .*"
+    And stderr contains " wget-0:1\.0-1\.fc29\.src .*"
     And the files "{context.dnf.tempdir}/x86_64/wget-1.0-1.fc29.x86_64.rpm" and "{context.dnf.fixturesdir}/repos/reposync/x86_64/wget-1.0-1.fc29.x86_64.rpm" do not differ
     And the files "{context.dnf.tempdir}/src/wget-1.0-1.fc29.src.rpm" and "{context.dnf.fixturesdir}/repos/reposync/src/wget-1.0-1.fc29.src.rpm" do not differ
 
@@ -322,10 +334,10 @@ Scenario: Reposync --norepopath cannot be used with multiple repositories
   Given I use repository "reposync" as http
     And I use repository "dnf-ci-thirdparty-updates" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --norepopath"
-   Then the exit code is 1
+   Then the exit code is 2
     And stderr is
     """
-    Error: Can't use --norepopath with multiple repositories
+    Can't use --norepopath with multiple repositories enabled. Add "--help" for more information about the arguments.
     """
 
 
@@ -337,14 +349,13 @@ Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by n
         | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/reposync-gpg/reposync-gpg-public |
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --gpgcheck"
    Then the exit code is 1
-    And stderr matches line by line
+    And stderr contains lines matching
     """
-    ?warning: .*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm: Header V4 .SA/SHA256 Signature, key ID .*: NOKEY
-    Removing dedalo-signed-1\.0-1\.fc29\.src\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.src\.rpm is not installed
-    Removing dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm: Public key for dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm is not installed
-    Removing dedalo-unsigned-1\.0-1\.fc29\.src\.rpm: Package dedalo-unsigned-1\.0-1\.fc29\.src\.rpm is not signed
-    Removing dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm: Package dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm is not signed
-    Error: GPG signature check failed\.
+    Removing '.*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm' with failing PGP check: No corresponding key was found\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: No corresponding key was found\.
+    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing PGP check: The package is not signed\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: The package is not signed\.
+    PGP signature check failed
     """
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" does not exist
@@ -360,16 +371,19 @@ Scenario: Reposync --gpgcheck removes unsigned packages
     And I successfully execute dnf with args "install dedalo-signed"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --gpgcheck"
    Then the exit code is 1
-    And stderr is
+    And stderr contains lines matching
     """
-    Removing dedalo-unsigned-1.0-1.fc29.src.rpm: Package dedalo-unsigned-1.0-1.fc29.src.rpm is not signed
-    Removing dedalo-unsigned-1.0-1.fc29.x86_64.rpm: Package dedalo-unsigned-1.0-1.fc29.x86_64.rpm is not signed
-    Error: GPG signature check failed.
+    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing PGP check: The package is not signed\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: The package is not signed\.
+    PGP signature check failed
     """
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
 
 
+@xfail
+# The exit code is currently 0, tracked in the issue
+# https://github.com/rpm-software-management/dnf5/issues/1926
 @bz2009894
 Scenario: Reposync does not stop downloading packages on the first error
   Given I copy repository "simple-base" for modification
@@ -378,10 +392,33 @@ Scenario: Reposync does not stop downloading packages on the first error
     And I delete file "//{context.dnf.tempdir}/repos/simple-base/src/dedalo-signed-1.0-1.fc29.src.rpm"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
    Then the exit code is 1
-    And stdout contains "\[FAILED\] dedalo-signed-1.0-1.fc29.src.rpm: No more mirrors to try - All mirrors were already tried without success"
+    And stderr contains lines matching
+    """
+     dedalo-signed-0:1.0-1.fc29.src.*
+    >>> Curl error.*
+    >>> No more mirrors to try - All mirrors were already tried without success
+    """
     # check that all other packages were downloaded
     And file "//{context.dnf.tempdir}/simple-base/src/labirinto-1.0-1.fc29.src.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/src/vagare-1.0-1.fc29.src.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/vagare-1.0-1.fc29.x86_64.rpm" exists
+
+
+# https://issues.redhat.com/browse/RHEL-64320
+Scenario: Reposync doesn't download duplicit nevra multiple times
+  # create a repository containing a duplicated NEVRA
+  Given I copy repository "simple-base" for modification
+    And I execute "createrepo_c -n x86_64/labirinto-1.0-1.fc29.x86_64.rpm -n x86_64/labirinto-1.0-1.fc29.x86_64.rpm --duplicated-nevra=keep {context.dnf.tempdir}/repos/simple-base/"
+    And I use repository "simple-base"
+   When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
+   Then the exit code is 0
+    # check that the package have been downloaded
+    And file "//{context.dnf.tempdir}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" exists
+    # check that the package was being downloaded only once
+    And stderr contains "labirinto-0:1\.0-1\.fc29\.x86_64"
+    # By default re.search() (used by "stdout does not contain") does not match
+    # across multiple lines. To bypass this limitation and check that the package
+    # name is not present on multiple lines, use "(.|\n)*" pattern instead of ".*".
+    And stderr does not contain "labirinto-0:1\.0-1\.fc29\.x86_64(.|\n)*labirinto-1\.0-1\.fc29\.x86_64"
