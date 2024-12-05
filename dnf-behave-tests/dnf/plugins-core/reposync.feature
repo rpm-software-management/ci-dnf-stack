@@ -351,11 +351,11 @@ Scenario: Reposync --gpgcheck removes unsigned packages and packages signed by n
    Then the exit code is 1
     And stderr contains lines matching
     """
-    Removing '.*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm' with failing PGP check: No corresponding key was found\.
-    Removing '.*/reposync-gpg/x86_64/dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: No corresponding key was found\.
-    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing PGP check: The package is not signed\.
-    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: The package is not signed\.
-    PGP signature check failed
+    Removing '.*/reposync-gpg/src/dedalo-signed-1\.0-1\.fc29\.src\.rpm' with failing OpenPGP check: No corresponding key was found\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-signed-1\.0-1\.fc29\.x86_64\.rpm' with failing OpenPGP check: No corresponding key was found\.
+    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing OpenPGP check: The package is not signed\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing OpenPGP check: The package is not signed\.
+    OpenPGP signature check failed
     """
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" does not exist
@@ -373,9 +373,9 @@ Scenario: Reposync --gpgcheck removes unsigned packages
    Then the exit code is 1
     And stderr contains lines matching
     """
-    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing PGP check: The package is not signed\.
-    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing PGP check: The package is not signed\.
-    PGP signature check failed
+    Removing '.*/reposync-gpg/src/dedalo-unsigned-1\.0-1\.fc29\.src\.rpm' with failing OpenPGP check: The package is not signed\.
+    Removing '.*/reposync-gpg/x86_64/dedalo-unsigned-1\.0-1\.fc29\.x86_64\.rpm' with failing OpenPGP check: The package is not signed\.
+    OpenPGP signature check failed
     """
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm" does not exist
     And file "//{context.dnf.tempdir}/reposync-gpg/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists

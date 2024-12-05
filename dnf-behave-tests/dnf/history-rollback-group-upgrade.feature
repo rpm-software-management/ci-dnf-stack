@@ -75,7 +75,7 @@ Scenario: Rollback a rollbacked group upgrade transaction
     """
     Group upgrade cannot be reverted, however associated package actions will be. (Group id: 'dnf-ci-group-rollback-testgroup1') .
 
-    Warning: skipped PGP checks for 2 packages from repository: dnf-ci-group-rollback-1
+    Warning: skipped OpenPGP checks for 2 packages from repository: dnf-ci-group-rollback-1
     """
     And History is following
         | Id     | Command                                              | Action | Altered   |

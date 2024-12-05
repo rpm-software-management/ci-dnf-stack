@@ -128,7 +128,7 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
     """
     No match for argument: nosuchpkg
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+    Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action    | Package                    |
@@ -157,7 +157,7 @@ Scenario: Downgrade list of packages with --skip-unavailable, one of them is not
     """
     Packages for argument 'abcde' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+    Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action    | Package                    |
@@ -192,7 +192,7 @@ Scenario: Downgrade mixture of not available/not installed/not downgradable/down
     The lowest available version of the "wget.x86_64" package is already installed, cannot downgrade it.
     Packages for argument 'abcde' available, but not installed.
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+    Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
     And Transaction is following
         | Action    | Package                    |

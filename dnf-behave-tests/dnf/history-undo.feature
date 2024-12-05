@@ -239,7 +239,7 @@ Scenario: Undo a downgrade transaction
         | upgrade | wget-0:1.19.6-5.fc29.x86_64 |
     And stderr contains lines
     """
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora-updates
+    Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
     """
 
 
