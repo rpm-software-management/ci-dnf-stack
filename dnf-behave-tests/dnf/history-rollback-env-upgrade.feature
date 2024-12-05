@@ -89,7 +89,7 @@ Scenario: Rollback a rollbacked environment upgrade transaction
         Group upgrade cannot be reverted, however associated package actions will be. (Group id: 'dnf-ci-group-rollback-testgroup2') .
         Environment upgrade cannot be reverted, however associated package actions will be. (Environment id: 'dnf-ci-group-rollback-testenv') .
 
-        Warning: skipped PGP checks for 4 packages from repository: dnf-ci-group-rollback-1
+        Warning: skipped OpenPGP checks for 4 packages from repository: dnf-ci-group-rollback-1
         """
     And History is following
         | Id     | Command                                              | Action | Altered   |

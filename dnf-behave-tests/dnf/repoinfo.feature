@@ -33,7 +33,7 @@ Scenario: Repo info without arguments
         Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
         URLs                 :
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
-        PGP                  :
+        OpenPGP              :
           Verify repodata    : false
           Verify packages    : false
         Repodata info        :
@@ -54,7 +54,7 @@ Scenario: Repo info without arguments
         Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
         URLs                 :
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
-        PGP                  :
+        OpenPGP              :
           Verify repodata    : false
           Verify packages    : false
         Repodata info        :
@@ -86,7 +86,7 @@ Scenario: Repo info without arguments and option --all
         Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
         URLs                 : 
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
-        PGP                  : 
+        OpenPGP              : 
           Verify repodata    : false
           Verify packages    : false
         Repodata info        : 
@@ -107,7 +107,7 @@ Scenario: Repo info without arguments and option --all
         Config file         : .*/etc/yum.repos.d/dnf-ci-fedora-updates.repo
         URLs                : 
           Base URL          : .*/fixtures/repos/dnf-ci-fedora-updates
-        PGP                 : 
+        OpenPGP             : 
           Verify repodata   : false
           Verify packages   : false
          
@@ -122,7 +122,7 @@ Scenario: Repo info without arguments and option --all
         Config file         : .*/etc/yum.repos.d/dnf-ci-thirdparty.repo
         URLs                : 
           Base URL          : .*/fixtures/repos/dnf-ci-thirdparty
-        PGP                 : 
+        OpenPGP             : 
           Verify repodata   : false
           Verify packages   : false
         
@@ -137,7 +137,7 @@ Scenario: Repo info without arguments and option --all
         Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
         URLs                 : 
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
-        PGP                  : 
+        OpenPGP              : 
           Verify repodata    : false
           Verify packages    : false
         Repodata info        : 
@@ -170,7 +170,7 @@ Scenario: Repoinfo without arguments but with excludes
         Config file          : .*/etc/yum.repos.d/dnf-ci-fedora.repo
         URLs                 :
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
-        PGP                  :
+        OpenPGP              :
           Verify repodata    : false
           Verify packages    : false
         Repodata info        :
@@ -191,7 +191,7 @@ Scenario: Repoinfo without arguments but with excludes
         Config file          : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
         URLs                 :
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
-        PGP                  :
+        OpenPGP              :
           Verify repodata    : false
           Verify packages    : false
         Repodata info        :

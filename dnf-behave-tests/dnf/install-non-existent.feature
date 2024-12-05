@@ -52,7 +52,7 @@ Scenario: Install an existent and an non-existent package with --skip-unavailabl
     """
     No match for argument: non-existent-package
 
-    Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora
+    Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora
     """
     And Transaction is following
         | Action        | Package                                   |
