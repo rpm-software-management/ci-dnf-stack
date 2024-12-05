@@ -65,7 +65,7 @@ Scenario: Redo a transaction with a package that is no longer available and --sk
         """
         Cannot perform Install action because 'filesystem-3.9-2.fc29.x86_64' matches only excluded packages.
 
-        Warning: skipped PGP checks for 1 package from repository: dnf-ci-fedora
+        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora
         """
 
 

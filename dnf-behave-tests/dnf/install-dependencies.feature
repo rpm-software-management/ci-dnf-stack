@@ -22,5 +22,5 @@ Scenario: Best candidates have conflicting dependencies
       - cannot install the best candidate for the job
       - conflicting requests
 
-    Warning: skipped PGP checks for 3 packages from repository: install-dependencies
+    Warning: skipped OpenPGP checks for 3 packages from repository: install-dependencies
     """
