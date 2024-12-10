@@ -1,4 +1,7 @@
+# dnf-automatic disabled by https://github.com/rpm-software-management/dnf/pull/2129
+@not.with_os=fedora__ge__41
 Feature: dnf-automatic configuration files testing
+
 
 # https://issues.redhat.com/browse/RHEL-46030
 Scenario: dnf-automatic fails if non-existing config file is specified

@@ -32,8 +32,6 @@ Scenario: dnf-automatic reports an error when package installation failed
     """
 
 
-# dnf-automatic disabled by https://github.com/rpm-software-management/dnf/pull/2129
-@not.with_os=fedora__ge__41
 # https://github.com/rpm-software-management/dnf/issues/1918
 # https://issues.redhat.com/browse/RHEL-61882
 Scenario: emitters can report errors if configured by send_error_messages = yes
