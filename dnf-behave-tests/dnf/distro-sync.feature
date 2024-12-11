@@ -67,8 +67,8 @@ Given I use repository "dnf-ci-gpg"
  Then the exit code is 1
   And stderr contains lines matching
     """
-    Transaction failed: Signature verification failed.
-    PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
+    Transaction failed: Signature verification failed\.
+    OpenPGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package\.
     """
 
 
@@ -86,8 +86,8 @@ Given I use repository "dnf-ci-gpg"
  Then the exit code is 1
   And stderr contains lines matching
     """
-    Transaction failed: Signature verification failed.
-    PGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package.
+    Transaction failed: Signature verification failed\.
+    OpenPGP check for package "wget-2\.0\.0-1\.fc29\.x86_64" \(.*/wget-2.0.0-1.fc29.x86_64.rpm\) from repo "dnf-ci-gpg-updates" has failed: Problem occurred when opening the package\.
     """
 
 

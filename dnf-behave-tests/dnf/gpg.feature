@@ -83,8 +83,8 @@ Scenario Outline: Fail to <offline> install signed package with incorrectly sign
     And RPMDB Transaction is empty
     And stderr contains lines matching
     """
-    Transaction failed: Signature verification failed
-    PGP check for package "basesystem-11-6\.fc29\.noarch" \(.*/basesystem-11-6\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Public key is not installed\.
+    Transaction failed: Signature verification failed\.
+    OpenPGP check for package "basesystem-11-6\.fc29\.noarch" \(.*/basesystem-11-6\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Public key is not installed\.
     """
 
 Examples:
@@ -103,8 +103,8 @@ Scenario Outline: Fail to <offline> install signed package with incorrect checks
     And RPMDB Transaction is empty
     And stderr contains lines matching
     """
-    Transaction failed: Signature verification failed
-    PGP check for package "broken-package-0\.2\.4-1\.fc29\.noarch" \(.*/broken-package-0\.2\.4-1\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Problem occurred when opening the package\.
+    Transaction failed: Signature verification failed\.
+    OpenPGP check for package "broken-package-0\.2\.4-1\.fc29\.noarch" \(.*/broken-package-0\.2\.4-1\.fc29\.noarch\.rpm\) from repo "dnf-ci-gpg" has failed: Problem occurred when opening the package\.
     """
 
 Examples:
@@ -141,8 +141,8 @@ Scenario Outline: Attempt to <offline> install unsigned package from repo with g
    Then the exit code is 1
     And stderr contains lines matching
     """
-    Transaction failed: Signature verification failed
-    PGP check for package "flac-1\.3\.2-8\.fc29\.x86_64" \(.*/flac-1\.3\.2-8\.fc29\.x86_64\.rpm\) from repo "dnf-ci-gpg" has failed: The package is not signed\.
+    Transaction failed: Signature verification failed\.
+    OpenPGP check for package "flac-1\.3\.2-8\.fc29\.x86_64" \(.*/flac-1\.3\.2-8\.fc29\.x86_64\.rpm\) from repo "dnf-ci-gpg" has failed: The package is not signed\.
     """
 
 Examples:
