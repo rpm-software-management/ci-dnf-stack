@@ -257,7 +257,7 @@ def then_stdout_contains_lines_matching(context):
     test_lines = context.text.split('\n')
     for line in test_lines:
         for outline in out_lines:
-            if re.search(line.strip(), outline.strip()):
+            if re.search("^" + line.strip() + "$", outline.strip()):
                 break
         else:
             raise AssertionError("Stderr doesn't contain line matching: %s" % line)
@@ -321,7 +321,7 @@ def then_stderr_contains_lines_matching(context):
     test_lines = context.text.split('\n')
     for line in test_lines:
         for outline in out_lines:
-            if re.search(line.strip(), outline.strip()):
+            if re.search("^" + line.strip() + "$", outline.strip()):
                 break
         else:
             raise AssertionError("Stderr doesn't contain line matching: %s" % line)
