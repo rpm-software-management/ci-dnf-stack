@@ -32,14 +32,38 @@ Scenario: emitters report errors by default
     emit_via = command_email
 
     [command_email]
-    command_format = "echo {{body}} > {context.dnf.tempdir}/dnf_error"
+    command_format = "echo {{body}} > {context.dnf.tempdir}/dnf_command_email_error"
     """
     And I successfully execute dnf with args "install test-1.0"
-    And file "/{context.dnf.tempdir}/dnf_error" does not exist
+    And file "/{context.dnf.tempdir}/dnf_command_email_error" does not exist
    When I execute dnf with args "automatic --installupdates"
    Then the exit code is 1
     And RPMDB Transaction is empty
-    And file "/{context.dnf.tempdir}/dnf_error" contains lines
+    And file "/{context.dnf.tempdir}/dnf_command_email_error" contains lines
+    """
+    Transaction failed: Rpm transaction failed.
+    """
+
+@gdb
+Scenario: {body} substituted in command_format for command emitter
+  Given I create and substitute file "/etc/dnf/automatic.conf" with
+    """
+    [commands]
+    download_updates = yes
+    apply_updates = yes
+
+    [emitters]
+    emit_via = command
+
+    [command]
+    command_format = "echo {{body}} > {context.dnf.tempdir}/dnf_command_error"
+    """
+    And I successfully execute dnf with args "install test-1.0"
+    And file "/{context.dnf.tempdir}/dnf_command_error" does not exist
+   When I execute dnf with args "automatic --installupdates"
+   Then the exit code is 1
+    And RPMDB Transaction is empty
+    And file "/{context.dnf.tempdir}/dnf_command_error" contains lines
     """
     Transaction failed: Rpm transaction failed.
     """
