@@ -33,14 +33,11 @@ def extract_section_content_from_text(section_header, text):
     parsed = ''
     copy = False
     for line in text.split('\n'):
-        strippedline = line.strip()
-        # in dnf5 there can be spaces after some section headers
-        # (e.g. 'Installing:', 'Upgrading:' etc.)
-        if (not copy) and section_header == strippedline:
+        if (not copy) and section_header == line:
             copy = True
             continue
         if copy:  # copy lines until hitting empty line or another known header
-            if strippedline and strippedline not in SECTION_HEADERS:
+            if line.strip() and line not in SECTION_HEADERS:
                 parsed += "%s\n" % line
             else:
                 return parsed
