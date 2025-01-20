@@ -219,3 +219,20 @@ Scenario: I can lock mutliple packages when one is already locked
     <REPOSYNC>
     Package "wget" is already locked.
     """
+
+
+# https://github.com/rpm-software-management/dnf5/issues/1895
+Scenario: I can lock multiple packages with the same nevra and name matching wildcard
+   When I execute dnf with args "versionlock add lz4*"
+   Then the exit code is 0
+    And stdout is
+    """
+    Adding versionlock on "lz4 = 1.7.5-2.fc26".
+    Adding versionlock on "lz4-debuginfo = 1.7.5-2.fc26".
+    Adding versionlock on "lz4-devel = 1.7.5-2.fc26".
+    Adding versionlock on "lz4-static = 1.7.5-2.fc26".
+    """
+    And stderr is
+    """
+    <REPOSYNC>
+    """
