@@ -101,3 +101,16 @@ Scenario: Releasever is substituted in baseurl via vars in custom location
     And Transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
+@dnf5
+Scenario: Releasever gets split into releasever_major and releasever_minor
+  Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-epel-12-34"
+    And I use repository "dnf-ci-fedora" with configuration
+        | key         | value |
+        | baseurl     | file://{context.dnf.installroot}/temp-repos/base-epel-$releasever_major-$releasever_minor |
+    And I execute dnf with args "install setup --releasever=12.34"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
