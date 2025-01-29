@@ -1,10 +1,10 @@
+@dnf5
 Feature: Transaction history userinstalled, list and info
 
 Background:
   Given I use repository "dnf-ci-fedora"
 
 
-@dnf5
 Scenario: List userinstalled packages
    When I execute dnf with args "install abcde basesystem"
    Then the exit code is 0
@@ -26,7 +26,6 @@ Scenario: List userinstalled packages
         | wget-1.19.5-5.fc29.x86_64    | Dependency      |
 
 
-@dnf5
 Scenario: History info
   Given I successfully execute dnf with args "install abcde"
    When I execute dnf with args "install setup"
@@ -42,7 +41,6 @@ Scenario: History info
         | Remove  | wget-0:1.19.5-5.fc29.x86_64     | Clean      | @System    |
 
 
-@dnf5
 Scenario: History info in range - transaction merging
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
@@ -93,7 +91,6 @@ Scenario: History info in range - transaction merging
         | Remove   | wget-0:1.19.5-5.fc29.x86_64     | Clean           | @System               |
 
 
-@dnf5
 Scenario: History info of package
   Given I successfully execute dnf with args "install abcde"
   Given I successfully execute dnf with args "remove abcde"
@@ -109,26 +106,29 @@ Scenario: History info of package
         | Remove  | wget-0:1.19.5-5.fc29.x86_64     | Clean      | @System    |
 
 
-# @dnf5
-# This is a test for listing transactions by package, this is not yet implemented in dnf5.
-# Transaction commands need a --contains-pkgs option
 Scenario: history info aaa (nonexistent package)
-   When I execute dnf with args "history info aaa"
-   Then the exit code is 1
-    And stderr is
+   When I execute dnf with args "history info --contains-pkgs=aaa"
+   Then the exit code is 0
+    And stderr is empty
+    And stdout is
         """
-        Invalid transaction ID range "aaa", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
+        No match found, history info defaults to considering only the last transaction, specify "1..last" range to search all transactions.
         """
 
 
-# @dnf5
-# This is a test for listing transactions by package, this is not yet implemented in dnf5.
-# Transaction commands need a --contains-pkgs option
-Scenario: history info aaa (nonexistent package)
+Scenario: history info aaa (nonexistent package) when other package is present
   Given I successfully execute dnf with args "install abcde"
-   When I execute dnf with args "history info aaa"
-   Then the exit code is 1
-    And stderr is
+   When I execute dnf with args "history info --contains-pkgs=aaa"
+   Then the exit code is 0
+    And stderr is empty
+    And stdout is
         """
-        Invalid transaction ID range "aaa", "ID" or "ID..ID" expected, where ID is "NUMBER", "last" or "last-NUMBER".
+        No match found, history info defaults to considering only the last transaction, specify "1..last" range to search all transactions.
         """
+
+
+Scenario: history info aaa (nonexistent package) when full range specified
+   When I execute dnf with args "history info 0..last --contains-pkgs=aaa"
+   Then the exit code is 0
+    And stderr is empty
+    And stdout is empty
