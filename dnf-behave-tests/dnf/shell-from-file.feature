@@ -1,3 +1,5 @@
+# missing shell command: https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Feature: Execute dnf shell commands from file
 
 
@@ -10,8 +12,6 @@ Background:
        | key     | value |
        | enabled | 0     |
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Execute dnf shell with file as argument
   When I execute dnf with args "shell {context.dnf.fixturesdir}/scripts/shell-commands"
   Then the exit code is 0
@@ -20,8 +20,6 @@ Scenario: Execute dnf shell with file as argument
        | install       | flac-0:1.3.2-8.fc29.x86_64                |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Execute dnf shell with file on input
   When I execute dnf with args "shell < {context.dnf.fixturesdir}/scripts/shell-commands"
   Then the exit code is 0

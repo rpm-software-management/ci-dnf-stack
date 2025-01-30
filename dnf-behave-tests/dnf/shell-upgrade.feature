@@ -1,3 +1,5 @@
+# missing shell command: https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Feature: Shell upgrade
 
 
@@ -13,8 +15,6 @@ Background: Install flac
         | install       | flac-0:1.3.2-8.fc29.x86_64                |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, upgrade an RPM
    When I open dnf shell session
     And I execute in dnf shell "repo enable dnf-ci-fedora-updates"
@@ -27,8 +27,6 @@ Scenario: Using dnf shell, upgrade an RPM
    Then stdout contains "Leaving Shell"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, upgrade an RPM with the "update" alias
    When I open dnf shell session
     And I execute in dnf shell "repo enable dnf-ci-fedora-updates"

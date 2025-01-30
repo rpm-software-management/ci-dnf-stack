@@ -1,3 +1,5 @@
+# missing shell command: https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Feature: Shell help
 
 
