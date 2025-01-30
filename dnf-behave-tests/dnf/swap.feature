@@ -1,3 +1,4 @@
+@dnf5
 Feature: Test for swap command
 
 
@@ -7,8 +8,6 @@ Background: Enable repositories
   Given I use repository "dnf-ci-thirdparty"
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
 Scenario: Switch packages by swap command
    When I execute dnf with args "install CQRlib-devel CQRlib"
    Then the exit code is 0
@@ -28,8 +27,6 @@ Scenario: Switch packages by swap command
         | install-weak  | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-# @dnf5
-# TODO(nsella) rpmdb check fail
 Scenario: Switch packages and their subpackages by swap command with wildcards
    When I execute dnf with args "install CQRlib-devel CQRlib CQRlib-extension"
    Then the exit code is 0
@@ -58,10 +55,10 @@ Scenario: Switch packages and their subpackages by swap command with wildcards
         | install       | CQRlib-devel-0:1.1.2-16.fc29.x86_64       |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "groupinstall" for command "microdnf"
+# Reported as https://github.com/rpm-software-management/dnf5/issues/916
+@xfail
 Scenario: Switch groups by swap command
-   When I execute dnf with args "groupinstall CQRlib-non-devel"
+   When I execute dnf with args "group install cqrlib-non-devel"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
@@ -89,8 +86,6 @@ Scenario: Switch groups by swap command
         | group-install | SuperRipper-and-deps                      |
 
 
-# @dnf5
-# TODO(nsella) different exit code
 @bz2036434
 Scenario: Swap packages using rpm file path
   Given I successfully execute dnf with args "install CQRlib-devel CQRlib"
