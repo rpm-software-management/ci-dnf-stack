@@ -1,3 +1,5 @@
+# missing shell command: https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 Feature: Shell downgrade
 
 
@@ -17,8 +19,6 @@ Background: Install glibc and flac
         | install-dep   | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, downgrade an RPM
    When I open dnf shell session
     And I execute in dnf shell "downgrade glibc"
@@ -32,8 +32,6 @@ Scenario: Using dnf shell, downgrade an RPM
    Then stdout contains "Leaving Shell"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Downgrade multiple RPMs
    When I open dnf shell session
     And I execute in dnf shell "downgrade glibc flac"
@@ -48,8 +46,6 @@ Scenario: Downgrade multiple RPMs
    Then stdout contains "Leaving Shell"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to downgrade an RPM of the lowest version
    When I open dnf shell session
     And I execute in dnf shell "downgrade setup"
@@ -62,8 +58,6 @@ Scenario: Using dnf shell, fail to downgrade an RPM of the lowest version
    Then stdout contains "Leaving Shell"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, fail to downgrade non-existent RPM
    When I open dnf shell session
     And I execute in dnf shell "downgrade non-existent"
