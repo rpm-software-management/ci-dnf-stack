@@ -1,3 +1,4 @@
+@dnf5
 Feature: DNF/Behave test rpmdb version
 
 
