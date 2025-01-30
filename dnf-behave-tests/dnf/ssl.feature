@@ -1,14 +1,13 @@
+@dnf5
 Feature: SSL related tests
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Installing a package from https repository
   Given I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
-   When I execute dnf with args "install filesystem -v"
+   When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -16,15 +15,17 @@ Scenario: Installing a package from https repository
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "-v" for command "install"
 Scenario: Installing a package from https repository with client verification
   Given I require client certificate verification with certificate "certificates/testcerts/client/cert.pem" and key "certificates/testcerts/client/key.pem"
     And I use repository "dnf-ci-fedora" as https
    When I execute dnf with args "repolist"
    Then the exit code is 0
-    And stdout contains "dnf-ci-fedora\s+dnf-ci-fedora"
-   When I execute dnf with args "install filesystem -v"
+    And stdout is
+       """
+       repo id       repo name
+       dnf-ci-fedora dnf-ci-fedora test repository
+       """
+   When I execute dnf with args "install filesystem"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                               |
@@ -32,8 +33,6 @@ Scenario: Installing a package from https repository with client verification
         | install-dep   | setup-0:2.12.1-1.fc29.noarch          |
 
 
-# @dnf5
-# TODO(nsella) different stderr
 @bz1605187
 @bz1713627
 Scenario: Installing a package using untrusted client cert should fail
@@ -56,13 +55,11 @@ Scenario: Installing a package using untrusted client cert should fail
         # The connection failures will be hard to debug, untill then, we test
         # for stderr containing the expected output and ignore the superfluous
         # errors.
-    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error"
-    And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
+    And stderr contains ">>> Curl error"
+    And stderr contains "Failed to download metadata \(baseurl: \"https://localhost:{context.dnf.ports[dnf-ci-fedora]}/\"\) for repository \"dnf-ci-fedora\""
+    And stderr contains " Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
-# @dnf5
-# TODO(nsella) different stderr
 @bz1605187
 @bz1713627
 Scenario: Installing a package using nonexistent client cert should fail
@@ -72,14 +69,17 @@ Scenario: Installing a package using nonexistent client cert should fail
    Then the exit code is 1
     And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'dnf-ci-fedora':
-      - Curl error \(58\): Problem with the local SSL certificate for https://localhost:[0-9]+/repodata/repomd.xml \[could not load PEM client certificate from .*/nonexistent.pem, OpenSSL error error:[0-9]+:system library:.*:No such file or directory, \(no key found, wrong pass phrase, or wrong file format\?\)\]
-    Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    <REPOSYNC>
+    >>> Curl error \(58\)\: Problem with the local SSL certificate.*
+    >>> Curl error \(58\)\: Problem with the local SSL certificate.*
+    >>> Curl error \(58\)\: Problem with the local SSL certificate.*
+    >>> Curl error \(58\)\: Problem with the local SSL certificate.*
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd*
+    Failed to download metadata \(baseurl: \"https://localhost:[0-9]+/\"\) for repository \"dnf-ci-fedora\"
+     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
-# @dnf5
-# TODO(nsella) different stderr
 Scenario: Installation with untrusted repository should fail
         # https repositories use sslcacert certificates/testcerts/ca/cert.pem
   Given I use repository "simple-base" as https
@@ -91,14 +91,17 @@ Scenario: Installation with untrusted repository should fail
    Then the exit code is 1
     And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'simple-base':
-      - Curl error \(60\): .* for https://localhost:[0-9]+/repodata/repomd\.xml \[SSL certificate problem:.*\]
-    Error: Failed to download metadata for repo 'simple-base': Cannot download repomd\.xml: Cannot download repodata/repomd\.xml: All mirrors were tried
+    <REPOSYNC>
+    >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
+    >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
+    >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
+    >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd*
+    Failed to download metadata \(baseurl: \"https://localhost:[0-9]+/\"\) for repository \"simple-base\"
+     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
-# @dnf5
-# TODO(nsella) different stderr
 Scenario: Untrusted cert can be overriden with sslverify=False
   Given I use repository "simple-base" as https
     And I configure repository "simple-base" with
