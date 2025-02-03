@@ -1,3 +1,4 @@
+@dnf5
 Feature: Upgrade single RPMs
 
 
@@ -22,7 +23,6 @@ Background: Install RPMs
 
 
 @dnf5daemon
-@dnf5
 @tier1
 @bz1649286
 Scenario: Upgrade one RPM
@@ -38,7 +38,6 @@ Scenario: Upgrade one RPM
 
 
 @dnf5daemon
-@dnf5
 Scenario: Upgrade two RPMs
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade glibc flac"
@@ -51,7 +50,6 @@ Scenario: Upgrade two RPMs
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@dnf5
 Scenario: Upgrade list of packages, none of them has an upgrade available
    When I execute dnf with args "upgrade flac abcde"
    Then the exit code is 0
@@ -59,7 +57,6 @@ Scenario: Upgrade list of packages, none of them has an upgrade available
     And Transaction is empty
 
 
-@dnf5
 Scenario: Upgrade list of packages, one of them is not available
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade flac nosuchpkg"
@@ -75,7 +72,6 @@ Scenario: Upgrade list of packages, one of them is not available
     And Transaction is empty
 
 
-@dnf5
 Scenario: Upgrade list of packages with --skip-unavailable, one of them is not available
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --skip-unavailable nosuchpkg flac"
@@ -91,7 +87,6 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not a
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@dnf5
 Scenario: Upgrade list of packages, one of them is not installed
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade flac dwm"
@@ -105,7 +100,6 @@ Scenario: Upgrade list of packages, one of them is not installed
     And Transaction is empty
 
 
-@dnf5
 Scenario: Upgrade list of packages with --skip-unavailable, one of them is not installed
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "upgrade --skip-unavailable dwm flac"
@@ -121,7 +115,6 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not i
         | upgrade       | flac-0:1.3.3-3.fc29.x86_64                |
 
 
-@dnf5
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=False
@@ -152,7 +145,6 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
         | broken        | SuperRipper-1.3-1.x86_64                  |
 
 
-@dnf5
 @tier1
 @bz1670776 @bz1671683
 Scenario: Upgrade all RPMs from multiple repositories with best=True
@@ -194,7 +186,6 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
         """
 
 
-@dnf5
 @bz1659390
 Scenario: Print information about skipped packages
   Given I use repository "dnf-ci-thirdparty-updates"
@@ -213,7 +204,7 @@ Scenario: Print information about skipped packages
         """
 
 
-# @dnf5
+@xfail
 # dnf4 @bz1585138
 # dnf5: we want info about other updates available, see
 # https://github.com/rpm-software-management/dnf5/issues/360
@@ -244,7 +235,7 @@ Examples:
         | --enhancement |
 
 
-# @dnf5
+@xfail
 # dnf4 @bz1585138
 # dnf5: we want info about other updates available, see
 # https://github.com/rpm-software-management/dnf5/issues/360
