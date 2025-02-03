@@ -1,5 +1,5 @@
-# TODO (emrakova): dnf5: has to be updated when localization is resolved
-# destructive because it creates/overwrites /usr/share/locale/de/LC_MESSAGES/dnf.mo file
+# destructive because it creates/overwrites /usr/share/locale/de/LC_MESSAGES/libdnf5.mo file
+@dnf5
 @destructive
 Feature: Upgrade packages already downloaded to the cache
 
@@ -20,13 +20,12 @@ Scenario: Upgrade works correctly with non-english locale when packages were alr
     And I successfully execute dnf with args "upgrade --downloadonly"
     # In UBI containers rpm does not install translation files (see /etc/rpm/macros.image-language-conf).
     # We need to copy german dnf.mo to proper location in order to be able to run dnf in german locales.
-    And I copy file "{context.dnf.fixturesdir}/data/dnf-translations/dnf.mo" to "//usr/share/locale/de/LC_MESSAGES/dnf.mo"
+    And I copy file "{context.dnf.fixturesdir}/data/dnf-translations/libdnf5.mo" to "//usr/share/locale/de/LC_MESSAGES/libdnf5.mo"
     And I set LC_ALL to "de_DE.utf-8"
    When I execute dnf with args "upgrade"
    Then the exit code is 0
-    # make sure dnf was running in german (stdout contains translated "Dependencies resolved."
-    And stdout contains "Abhängigkeiten sind aufgelöst."
-    And stdout contains "\[SKIPPED\] wget-1\.19\.6-5\.fc29\.x86_64\.rpm: Already downloaded"
+    # make sure dnf was running in german (stdout contains translated "Already downloaded"
+    And stderr contains ">>> Bereits heruntergeladen"
     # cannot do `And Transaction is following` because changed locales break transaction table parsing
     And RPMDB Transaction is following
         | Action        | Package                                   |
