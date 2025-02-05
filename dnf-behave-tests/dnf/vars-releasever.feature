@@ -50,6 +50,19 @@ Scenario: Releasever is substituted in baseurl via a value detected from 'system
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
 
+Scenario: releasever_{major,minor} are substituted via values detected from 'system-release(releasever_{major,minor})' provides
+  Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
+    And I use repository "dnf-ci-fedora" with configuration
+        | key     | value                                                                                             |
+        | baseurl | file://{context.dnf.installroot}/temp-repos/base-f$releasever-$releasever_major-$releasever_minor |
+    And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f123-45-67"
+    And I execute dnf with args "install setup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
 @destructive
 Scenario: Releasever is substituted in baseurl using vars loaded from the same location (host or installroot) as repos
   Given I do not set releasever
