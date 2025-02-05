@@ -502,9 +502,9 @@ send_request(
          "filters": [{"key": "direction", "value": "IN"}],
          "output": ["nevra"]}})
 check_reply(
-    'Get trans_packages outside "pre_transaion" and "post_transaction" hooks',
+    'Get trans_packages outside "goal_resolved", "pre_transaction" and "post_transaction" hooks',
     {"op": "reply", "requested_op": "get", "domain": "trans_packages", "status": "ERROR",
-     "message": "Domain \"trans_packages\" used outside the hooks \"pre_transaction\" and \"post_transaction\""})
+     "message": "Domain \"trans_packages\" used outside the hooks \"goal_resolved\", \"pre_transaction\" and \"post_transaction\""})
 """
 
     And I create file "/etc/dnf/libdnf5-plugins/actions.d/json_hook_pre_trans.py" with
@@ -622,7 +622,7 @@ check_reply(
     Get packages, use "direction" output outside "trans_packages" domain: OK
     Get packages, use "action" output outside "trans_packages" domain: OK
     Get packages, use "direction" filter outside "trans_packages" domain: OK
-    Get trans_packages outside "pre_transaion" and "post_transaction" hooks: OK
+    Get trans_packages outside "goal_resolved", "pre_transaction" and "post_transaction" hooks: OK
     Get "IN" trans_packages with arch == "x86_64": OK
     Get "OUT" trans_packages: OK
     Get trans_packages, unknown value for direction filter: OK
