@@ -17,6 +17,9 @@ Provides:       config(fedora-release) = 29-1
 
 # detected $releasever should be '123'
 Provides:       system-release(releasever) = 123
+# $releasever_major, $releasever_minor should be overridden to 45, 67
+Provides:       system-release(releasever_major) = 45
+Provides:       system-release(releasever_minor) = 67
 
 
 %description
