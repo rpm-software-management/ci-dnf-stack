@@ -73,3 +73,35 @@ Scenario: RPMs from non-active streams are not available
   And the exit code is 1
  Then I execute dnf with args "list --available dwm.x86_64"
   And the exit code is 1
+
+
+# https://issues.redhat.com/browse/RHEL-62833
+# destructive because of creating a user on the system
+@destructive
+@no_installroot
+Scenario: User is warned if the module file exists but is not readable
+Given I use repository "dnf-ci-fedora"
+  And I successfully execute dnf with args "module enable dwm:6.0"
+ # make modular config file inaccessible for a regular user
+  And I successfully execute "chmod 0600 /etc/dnf/modules.d/dwm.module"
+ # root user does see modular version of the package
+ When I execute dnf with args "repoquery dwm"
+ Then the exit code is 0
+  And stdout is
+  """
+  dwm-0:6.0-1.module_1997+c375c79c.src
+  dwm-0:6.0-1.module_1997+c375c79c.x86_64
+  """
+ # regular user is presented with non-modular version of the package
+ # but is warned that modular filtering may not be accurate
+ When I execute dnf with args "repoquery dwm" as an unprivileged user
+ Then the exit code is 0
+  And stdout is
+  """
+  dwm-0:6.1-1.src
+  dwm-0:6.1-1.x86_64
+  """
+  And stderr contains lines
+  """
+  Cannot read "/etc/dnf/modules.d/dwm.module". Modular filtering may be affected.
+  """
