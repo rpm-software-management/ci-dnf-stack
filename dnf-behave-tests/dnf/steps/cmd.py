@@ -524,7 +524,7 @@ base.setup()
 
 repo_sack = base.get_repo_sack()
 repo_sack.create_repos_from_system_configuration()
-repo_sack.update_and_load_enabled_repos(True)
+repo_sack.load_repos()
 """
     execute_python_script(context, libdnf5_setup_script + context.text)
 
