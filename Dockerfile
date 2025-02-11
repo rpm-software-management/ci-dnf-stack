@@ -23,6 +23,9 @@ COPY ./repos.d/ /etc/yum.repos.d/
 # enable dnf5
 RUN set -x && \
     dnf -y --refresh upgrade; \
+    # Since Fedora 42, `systemd-standalone-sysuser` comes pre-installed.  This package 
+    # conflicts with `systemd`, preventing `dnf5daemon-server` from being installed.
+    dnf -y install systemd --allowerasing; \
     dnf -y install dnf5 dnf5-plugins; \
     dnf5 -y copr enable rpmsoftwaremanagement/test-utils; \
     dnf5 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
