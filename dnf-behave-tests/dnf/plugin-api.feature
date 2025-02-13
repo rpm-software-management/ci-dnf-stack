@@ -1,3 +1,5 @@
+@xfail
+# Reported as https://github.com/rpm-software-management/ci-dnf-stack/issues/1632
 Feature: Plugin API
 
 
