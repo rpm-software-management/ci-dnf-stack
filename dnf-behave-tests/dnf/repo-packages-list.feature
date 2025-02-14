@@ -1,5 +1,5 @@
-# @dnf5
-# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
+@xfail
+# repository-packages list is missing: https://github.com/rpm-software-management/dnf5/issues/951
 Feature: repository-packages list installed packages from repository
 
 

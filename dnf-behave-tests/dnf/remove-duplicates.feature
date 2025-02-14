@@ -1,8 +1,8 @@
+# --duplicates is missing: https://github.com/rpm-software-management/dnf5/issues/760
+@xfail
 Feature: Remove duplicate RPMs
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--duplicates" for command "remove"
 @bz1674296
 Scenario: Remove a duplicate RPM
   Given I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-1.fc29.x86_64.rpm"
@@ -17,8 +17,6 @@ Scenario: Remove a duplicate RPM
 
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--duplicates" for command "remove"
 @bz1674296
 @bz1647345
 Scenario: Remove multiple duplicate RPMs
@@ -37,8 +35,6 @@ Scenario: Remove multiple duplicate RPMs
         | remove        | flac-0:1.3.3-1.fc29.x86_64            |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--duplicates" for command "remove"
 @bz1674296
 Scenario: Remove a duplicate RPM and reinstall an existing RPM when a copy is available in repos
   Given I execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-1.fc29.x86_64.rpm"

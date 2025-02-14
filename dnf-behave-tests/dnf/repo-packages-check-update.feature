@@ -1,5 +1,5 @@
-# @dnf5
-# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
+@xfail
+# repository-packages check-update is missing: https://github.com/rpm-software-management/dnf5/issues/958
 Feature: repo-packages check-update
 
 

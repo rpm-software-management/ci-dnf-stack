@@ -1,7 +1,8 @@
+@xfail
+# repository-packages info is missing: https://github.com/rpm-software-management/dnf5/issues/952
 Feature: repository-packages info
 
-# @dnf5
-# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
+
 Scenario: List info of all packages from repository
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install filesystem"
@@ -27,8 +28,6 @@ Given I use repository "dnf-ci-fedora"
  Then stdout contains "Description\s+:\s+[a-zA-Z ]*"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
 Scenario: List all installed packages from repository
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
@@ -40,8 +39,6 @@ Given I use repository "dnf-ci-fedora"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "repository-packages" for command "microdnf"
 Scenario: Single repository package info
 Given I use repository "dnf-ci-fedora"
  When I execute dnf with args "install setup"
@@ -53,8 +50,6 @@ Given I use repository "dnf-ci-fedora"
  Then stdout does not contain "Source\s+:\s+glibc-2.28-9.fc29.src.rpm"
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "clean" for command "microdnf"
 Scenario Outline: List repo <extras alias> - installed from repo, but not available anymore
 # use temporary copy of repository dnf-ci-fedora for this test
 Given I copy repository "dnf-ci-fedora" for modification
@@ -86,4 +81,3 @@ Examples:
     | extras alias   |
     | extras         |
     | --extras       |
-
