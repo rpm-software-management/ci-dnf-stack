@@ -740,8 +740,6 @@ Scenario: repoquery --whatconflicts NAME < VERSION (two matches)
       bottom2-1:2.0-1.x86_64
       """
 
-# --whatconflicts and --whatobsoletes doesn't support globs for dnf4
-@not.with_dnf=4
 Scenario: repoquery --whatconflicts NAMEGLOB < VERSIONGLOB (two matches)
  When I execute dnf with args "repoquery --whatconflicts 'bottom[3] < 1:1.5'"
  Then the exit code is 0
@@ -842,8 +840,6 @@ Scenario: repoquery --whatobsoletes NAME <= VERSION (matches)
       bottom3-1:1.0-1.x86_64
       """
 
-# --whatconflicts and --whatobsoletes doesn't support globs for dnf4
-@not.with_dnf=4
 Scenario: repoquery --whatobsoletes NAMEGLOB <= VERSION (matches)
  When I execute dnf with args "repoquery --whatobsoletes 'bottom[1] <= 4'"
  Then the exit code is 0

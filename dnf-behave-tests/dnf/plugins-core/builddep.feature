@@ -78,7 +78,6 @@ Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
-      And dnf4 stderr contains "No matching package to install: 'flac = 15'"
       And dnf5 stderr is
           """
           <REPOSYNC>
@@ -107,13 +106,6 @@ Scenario: Builddep on SPEC with non-available Source0
    """
   When I execute dnf with args "builddep {context.dnf.installroot}/missingSource.spec"
   Then the exit code is 1
-   And dnf4 stderr matches line by line
-   """
-   RPM: error: Unable to open .*/missingSource.spec: No such file or directory
-   Failed to open: '.*/missingSource.spec', not a valid spec file: can't parse specfile
-
-   Error: Some packages could not be found.
-   """
    And dnf5 stderr matches line by line
        """
        <REPOSYNC>
@@ -162,10 +154,6 @@ Scenario: Builddep with unavailable build dependency
           """
      When I execute dnf with args "builddep --skip-unavailable {context.dnf.fixturesdir}/repos/dnf-ci-builddep/src/unavailable-requirement-1.0-1.src.rpm"
      Then the exit code is 0
-      And dnf4 stderr is
-      """
-      No matching package to install: 'this-lib-is-not-available'
-      """
       And Transaction is following
         | Action        | Package                           |
         | install       | lame-libs-0:3.100-4.fc29.x86_64   |

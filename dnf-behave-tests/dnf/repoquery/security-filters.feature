@@ -6,11 +6,6 @@ Scenario: --security, --available with available security fix
 Given I use repository "repoquery-security-filters"
  When I execute dnf with args "repoquery --security --available A"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  A-0:2-2.x86_64
-  """
   And dnf5 stderr is
   """
   <REPOSYNC>
@@ -27,11 +22,6 @@ Given I use repository "repoquery-security-filters"
   And I execute dnf with args "install A-1-1"
  When I execute dnf with args "repoquery --security --available A"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  A-0:2-2.x86_64
-  """
   And dnf5 stderr is
   """
   <REPOSYNC>
@@ -56,11 +46,6 @@ Given I use repository "repoquery-security-filters"
   And I execute dnf with args "install A-3-3"
  When I execute dnf with args "repoquery --security --available A"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  A-0:2-2.x86_64
-  """
   And dnf5 stderr is
   """
   <REPOSYNC>
@@ -77,11 +62,6 @@ Given I use repository "repoquery-security-filters"
   And I execute dnf with args "install A-2-2"
  When I execute dnf with args "repoquery --security --available A"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  A-0:2-2.x86_64
-  """
   And dnf5 stderr is
   """
   <REPOSYNC>
@@ -170,14 +150,6 @@ Scenario: list all --security fixes when no pkg name is specified
 Given I use repository "repoquery-security-filters"
  When I execute dnf with args "repoquery --security --available"
  Then the exit code is 0
-  And dnf4 stdout is
-  """
-  <REPOSYNC>
-  A-0:2-2.x86_64
-  B-0:2-2.x86_64
-  C-0:1-1.x86_64
-  C-0:2-2.x86_64
-  """
   And dnf5 stderr is
   """
   <REPOSYNC>
