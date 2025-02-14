@@ -1,5 +1,5 @@
-# @dnf5
-# TODO(nsella) Unknown argument "repo-packages" for command "microdnf"
+@xfail
+# repository-packages remove-or-distro-sync is missing: https://github.com/rpm-software-management/dnf5/issues/960
 Feature: repo-packages remove-or-distro-sync
 
 

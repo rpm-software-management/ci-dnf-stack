@@ -1,5 +1,5 @@
-# @dnf5
-# TODO(nsella) Unknown argument "repo-packages" for command "microdnf"
+@xfail
+# repository-packages reinstall-old is missing: https://github.com/rpm-software-management/dnf5/issues/961
 Feature: repository-packages reinstall-old
 
 
