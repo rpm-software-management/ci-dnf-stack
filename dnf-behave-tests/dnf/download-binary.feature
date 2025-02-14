@@ -7,8 +7,8 @@ Background:
     And I set working directory to "{context.dnf.tempdir}"
 
 
-# TODO(jkolarik): Do we want to return an error on non-existing input?
-@not.with_dnf=5
+# reported as https://github.com/rpm-software-management/dnf5/issues/1151
+@xfail
 Scenario: Download an RPM that doesn't exist
    When I execute dnf with args "download does-not-exist"
    Then the exit code is 1

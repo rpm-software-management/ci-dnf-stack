@@ -2,6 +2,7 @@ Feature: Test for dnf repoquery --unsatisfied
 
 
 # options is not implemented: https://github.com/rpm-software-management/dnf5/issues/910
+@xfail
 @bz1750745
 @no_installroot
 @use.with_os=fedora__ge__30
