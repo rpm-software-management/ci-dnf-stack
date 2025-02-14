@@ -351,11 +351,11 @@ Scenario: use both advisories even if they are duplicates but with different iss
    When I execute dnf with args "updateinfo list"
    # dnf5 shows only one date because libsolv provides only one in metadata,
    # it is the latest of issued vs updated date.
-   Then dnf5 stderr is
+   Then stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name      Type     Severity      Package              Issued
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
@@ -377,11 +377,11 @@ Scenario: use all (3) advisories even if they are duplicates but with different 
         | install       | E-0:1-1.x86_64 |
     And I use repository "security-upgrade-duplicates-2"
    When I execute dnf with args "updateinfo list"
-   Then dnf5 stderr is
+   Then stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name      Type     Severity      Package              Issued
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
@@ -404,11 +404,11 @@ Scenario: use both advisories even if they are duplicates but with just summary 
         | install       | F-0:1-1.x86_64 |
     And I use repository "security-upgrade-duplicates-2"
    When I execute dnf with args "updateinfo list"
-   Then dnf5 stderr is
+   Then stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name        Type     Severity      Package              Issued
         custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00

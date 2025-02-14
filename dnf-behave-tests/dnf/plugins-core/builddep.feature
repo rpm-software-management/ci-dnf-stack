@@ -78,7 +78,7 @@ Scenario: Builddep with simple dependency (non-existent)
     Given I use repository "dnf-ci-fedora"
      When I execute dnf with args "builddep {context.dnf.fixturesdir}/specs/dnf-ci-thirdparty/SuperRipper-1.0-1.spec --define 'buildrequires flac = 15'"
      Then the exit code is 1
-      And dnf5 stderr is
+      And stderr is
           """
           <REPOSYNC>
           Failed to resolve the transaction:
@@ -106,7 +106,7 @@ Scenario: Builddep on SPEC with non-available Source0
    """
   When I execute dnf with args "builddep {context.dnf.installroot}/missingSource.spec"
   Then the exit code is 1
-   And dnf5 stderr matches line by line
+   And stderr matches line by line
        """
        <REPOSYNC>
        error: Unable to open .*/missingSource.spec: No such file or directory

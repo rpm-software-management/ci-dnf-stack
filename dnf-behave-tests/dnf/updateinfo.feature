@@ -165,11 +165,11 @@ Scenario: advisory list
   Given I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "advisory list"
    Then the exit code is 0
-    And dnf5 stderr is
+    And stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name                   Type        Severity                   Package              Issued
         FEDORA-2018-318f184000 bugfix      none     glibc-2.28-26.fc29.x86_64 2019-01-17 00:00:00
@@ -426,7 +426,7 @@ Scenario: advisory show <advisory> of the running kernel after a kernel update
         | install-dep   | kernel-core-0:4.18.16-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.18.16-300.fc29.x86_64 |
    # updated kernel is available
-   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
+   When I execute dnf with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stderr is
         """
@@ -444,7 +444,7 @@ Scenario: advisory show <advisory> of the running kernel after a kernel update
         | install-dep   | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | install-dep   | kernel-modules-0:4.19.15-300.fc29.x86_64 |
    # updated kernel is installed, but the running kernel is still the older one
-   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
+   When I execute dnf with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stderr is
         """
@@ -457,7 +457,7 @@ Scenario: advisory show <advisory> of the running kernel after a kernel update
         """
   Given I fake kernel release to "4.19.15-300.fc29.x86_64"
    # updated kernel is installed and running
-   When I execute dnf5 with args "advisory list --contains-pkgs=kernel"
+   When I execute dnf with args "advisory list --contains-pkgs=kernel"
    Then the exit code is 0
     And stderr is
         """
@@ -491,11 +491,11 @@ Scenario: advisory lists advisories with custom type and severity
     And I use repository "advisories-updates"
    When I execute dnf with args "advisory list"
    Then the exit code is 0
-    And dnf5 stderr is
+    And stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name                   Type        Severity                               Package              Issued
         FEDORA-2019-57b5902ed1 security    Critical        labirinto-1.56.2-6.fc30.x86_64 2019-09-15 01:34:29
@@ -512,11 +512,11 @@ Scenario: advisory prints info for advisories with custom type and severity
     And I use repository "advisories-updates"
    When I execute dnf with args "advisory info"
    Then the exit code is 0
-    And dnf5 stderr is
+    And stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Name        : FEDORA-2019-f4eb34cf4c
         Title       : labirinto-1.56.2-1.fc30
@@ -606,11 +606,11 @@ Scenario: advisory prints summary of advisories with custom type and severity
     And I use repository "advisories-updates"
    When I execute dnf with args "updateinfo summary"
    Then the exit code is 0
-    And dnf5 stderr is
+    And stderr is
         """
         <REPOSYNC>
         """
-    And dnf5 stdout is
+    And stdout is
         """
         Available advisory information summary:
         Security    : 3
@@ -651,7 +651,7 @@ Given I use repository "security-upgrade"
       """
       <REPOSYNC>
       """
-  And dnf5 stdout is
+  And stdout is
       """
       Name         Type     Severity      Package              Issued
       DNF-D-2022-9 security          D-1-1.x86_64 1970-01-01 00:00:00
@@ -689,11 +689,11 @@ Given I use repository "security-upgrade"
   And I execute dnf with args "install change-arch-noarch-1-1.noarch"
  When I execute dnf with args "updateinfo list --updates"
  Then the exit code is 0
-  And dnf5 stderr is
+  And stderr is
       """
       <REPOSYNC>
       """
-  And dnf5 stdout is
+  And stdout is
       """
       Name       Type     Severity                       Package              Issued
       DNF-2019-4 security          change-arch-noarch-2-2.x86_64 1970-01-01 00:00:00
