@@ -1,6 +1,13 @@
-# @dnf5
-# TODO(nsella) Unknown argument "makecache" for command "microdnf"
+@dnf5
 Feature: Tests for the repository syncing functionality
+
+
+Background: Force column width
+# Some of the curl errors can be quite long and since they are
+# truncated: https://github.com/rpm-software-management/dnf5/issues/1829
+# we need to force the width to see them in full.
+Given I set environment variable "FORCE_COLUMNS" to "300"
+
 
 @bz1763663
 @bz1679509
@@ -14,11 +21,13 @@ Scenario: The default value of skip_if_unavailable is False
         | baseurl         | /non/existent/repo |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
-    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo"
+     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
@@ -33,17 +42,16 @@ Scenario: There is global skip_if_unavailable option
         | baseurl         | /non/existent/repo |
    When I execute dnf with args "makecache"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
     """
-    testrepo
-    Metadata cache created\.
+    Metadata cache created.
     """
-    And stderr is
+    And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
-    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    Ignoring repositories: testrepo
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Repositories loaded.
     """
 
 
@@ -57,17 +65,16 @@ Scenario: Per repo skip_if_unavailable configuration
         | skip_if_unavailable | True               |
    When I execute dnf with args "makecache"
    Then the exit code is 0
-    And stdout matches line by line
+    And stdout is
     """
-    testrepo
-    Metadata cache created\.
+    Metadata cache created.
     """
-    And stderr is
+    And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
-    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    Ignoring repositories: testrepo
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Repositories loaded.
     """
 
 
@@ -83,11 +90,13 @@ Scenario: The repo configuration takes precedence over the global one
         | skip_if_unavailable | False              |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
-    Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Couldn't read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
-    Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo"
+     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
@@ -99,12 +108,13 @@ Given I use repository "dnf-ci-fedora" with configuration
       | repo_gpgcheck | 1     |
  When I execute dnf with args "makecache"
  Then the exit code is 1
-  And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-  And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
-  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Couldn't read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
+ And stderr contains ">>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/dnf-ci-fedora/repodata/repomd.xml.asc"
+  And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
 
 
 @bz1713627
+# reported as https://github.com/rpm-software-management/dnf5/issues/2064
+@xfail
 Scenario: Missing baseurl/metalink/mirrorlist
   Given I configure a new repository "testrepo" with
         | key      | value        |
@@ -112,7 +122,9 @@ Scenario: Missing baseurl/metalink/mirrorlist
    Then the exit code is 1
     And stderr is
         """
-        Error: Cannot find a valid baseurl for repo: testrepo
+        <REPOSYNC>
+        Failed to download metadata (baseurl: "") for repository "testrepo"
+         No valid source (baseurl, mirrorlist or metalink) found for repository "testrepo"
         """
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
@@ -125,6 +137,8 @@ Scenario: Missing baseurl/metalink/mirrorlist
 
 @bz1605117
 @bz1713627
+# reported as https://github.com/rpm-software-management/dnf5/issues/2065
+@xfail
 Scenario: Nonexistent GPG key
   Given I use repository "dnf-ci-fedora" with configuration
         | key             | value                                       |
@@ -132,16 +146,12 @@ Scenario: Nonexistent GPG key
         | repo_gpgcheck   | 1                                           |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
-    And stderr contains "Error: Failed to retrieve GPG key for repo 'dnf-ci-fedora'"
+    And stderr contains "Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora/repodata/repomd.xml.asc"
+    And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
-    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
-    And stderr contains "Error: Failed to retrieve GPG key for repo 'dnf-ci-fedora'"
+    And stderr contains "Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora/repodata/repomd.xml.asc"
+    And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
     And stderr contains "Ignoring repositories: dnf-ci-fedora"
 
 
@@ -159,19 +169,29 @@ Scenario: Mirrorlist with invalid mirrors
         | gpgcheck        | 0                                           |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Connection refused\]"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
+    And stderr matches line by line
+    """
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Failed to download metadata \(mirrorlist: ".*/tmp/mirrorlist"\) for repository "dnf-ci-fedora"
+     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    """
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
-    And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Couldn't connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Connection refused\]"
-    And stderr contains "  - Curl error \(37\): Couldn't read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
-    And stderr contains "Ignoring repositories: dnf-ci-fedora"
+    And stderr matches line by line
+    """
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    Repositories loaded.
+    """
 
 
 Scenario: Mirrorlist with invalid mirrors and one good mirror
@@ -188,4 +208,16 @@ Scenario: Mirrorlist with invalid mirrors and one good mirror
         | gpgcheck        | 0                                           |
    When I execute dnf with args "makecache"
    Then the exit code is 0
-    And stderr is empty
+    And stdout is
+    """
+    Metadata cache created.
+    """
+    And stderr matches line by line
+    """
+    <REPOSYNC>
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/repomd.xml .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/primary.xml.zst .*
+    >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/primary.xml.zst .*
+    Repositories loaded.
+    """
