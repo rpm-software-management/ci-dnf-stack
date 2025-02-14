@@ -6,9 +6,9 @@ Feature: Testing groups
 #   optional: flac
 #   conditional: wget, requires filesystem-content
 
-# @dnf5
 # dnf5 currently supports only group ids as a <group spec>. Names are not supported
 # https://github.com/rpm-software-management/dnf5/issues/1599
+@xfail
 Scenario: Install and remove group using group name
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -253,9 +253,10 @@ Scenario: Group remove does not remove user installed packages
         | unchanged     | filesystem-0:3.9-2.fc29.x86_64            |
         | unchanged     | setup-0:2.12.1-1.fc29.noarch              |
 
-# @dnf5
+
 # TODO(nsella) "shell" command not implemented
 # https://github.com/rpm-software-management/dnf5/issues/153
+@xfail
 @bz1809600
 Scenario: Group remove does not traceback when reason change
   Given I use repository "dnf-ci-thirdparty"
@@ -413,8 +414,7 @@ Scenario: Install a group with empty packagelist
         | group-install | Test Group    |
 
 
-# @dnf5
-# TODO(nsella) Merged group produces different package set
+@xfail
 # https://github.com/rpm-software-management/dnf5/issues/183
 @not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
@@ -486,8 +486,7 @@ Scenario: Group info with a group that has missing name
         """
 
 
-# @dnf5
-# TODO(nsella) Enviroments merge produces different groups sets in dnf4/dnf5
+@xfail
 # https://github.com/rpm-software-management/dnf5/issues/881
 # https://github.com/rpm-software-management/dnf5/issues/183
 Scenario: Mark a group and an environment without name

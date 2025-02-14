@@ -2,6 +2,7 @@
 # libdnf5 plugins written in Python are currently broken.
 # TODO(mblaha): try again once
 # https://github.com/rpm-software-management/dnf5/issues/1775 is resolved
+@xfail
 @no_installroot
 Feature: Test exception when dnf tries to do a transaction resolved but not valid anymore
 

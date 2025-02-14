@@ -1,9 +1,9 @@
 Feature: Tests for different package download sources
 
 
-# @dnf5
 # dnf5 does not fall-back to baseurl if mirrorlist fails.
 # https://github.com/rpm-software-management/dnf5/issues/1763
+@xfail
 @bz1775184
 Scenario: baseurl is used if all mirrors from mirrorlist fail
 Given I create directory "/baseurlrepo"
@@ -25,8 +25,8 @@ Given I create directory "/baseurlrepo"
   """
 
 
-# @dnf5
 # https://github.com/rpm-software-management/dnf5/issues/1763
+@xfail
 @bz1775184
 Scenario: baseurl is used if mirrorlist file cannot be found
 Given I create directory "/baseurlrepo"
@@ -43,8 +43,8 @@ Given I create directory "/baseurlrepo"
   """
 
 
-# @dnf5
 # https://github.com/rpm-software-management/dnf5/issues/1763
+@xfail
 @bz1775184
 Scenario: baseurl is used if mirrorlist file is empty
 Given I create directory "/baseurlrepo"
@@ -64,8 +64,8 @@ Given I create directory "/baseurlrepo"
   """
 
 
-# @dnf5
 # https://github.com/rpm-software-management/dnf5/issues/1763
+@xfail
 Scenario: no working donwload source result in an error
 Given I create directory "/baseurlrepo"
   And I execute "createrepo_c {context.dnf.installroot}/baseurlrepo"
@@ -148,8 +148,8 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
       | install       | setup-0:2.12.1-1.fc29.noarch             |
 
 
-# @dnf5
 # https://github.com/rpm-software-management/dnf5/issues/1321
+@xfail
 @bz1817130
 Scenario: Download a package that contains special URL characters that need to be encoded (e.g. a +)
 Given I use repository "download-sources" as http

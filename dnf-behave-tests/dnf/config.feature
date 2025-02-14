@@ -156,6 +156,7 @@ Scenario: Lines that contain only whitespaces do not spoil previous config optio
 
 # dnf5 does not support remote config files
 # https://github.com/rpm-software-management/dnf5/issues/1767
+@xfail
 @bz1721091
 Scenario: Dnf can use config file from remote location
   Given I create directory "/remotedir"
