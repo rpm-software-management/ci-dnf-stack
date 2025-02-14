@@ -1,3 +1,4 @@
+@dnf5
 Feature: Tests handling a repository with spaces in baseurl
 
 
@@ -7,7 +8,6 @@ Given I use repository "repo with spaces"
   And I drop repository "repo with spaces"
 
 
-@dnf5
 @bz1853349
 Scenario: Install an rpm from a repo with spaces in baseurl
 Given I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
@@ -25,7 +25,6 @@ Given I create and substitute file "/etc/yum.repos.d/test-repo.repo" with
       | install | test-package-0:1.0-1.x86_64 |
 
 
-@dnf5
 @bz1853349
 Scenario: Install an rpm with spaces in its baseurl (the xml:base attribute of the package)
 Given I copy repository "repo with spaces" for modification
@@ -45,8 +44,6 @@ Given I copy repository "repo with spaces" for modification
       | install | test-package-0:1.0-1.x86_64 |
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--destdir=/tmp/dnf_ci_tempdir_2t0j2a0q" for command "install"
 @bz1853349
 Scenario: Download an rpm with spaces in its baseurl (the xml:base attribute of the package) to a destdir
 Given I copy repository "repo with spaces" for modification
@@ -59,6 +56,6 @@ Given I copy repository "repo with spaces" for modification
       gpgcheck=0
       baseurl=file://{context.dnf.tempdir}/repos/repo%20with%20spaces
       """
- When I execute dnf with args "install test-package --destdir={context.dnf.tempdir} --downloadonly"
+ When I execute dnf with args "download test-package --destdir={context.dnf.tempdir}"
  Then the exit code is 0
   And file "/{context.dnf.tempdir}/test-package-1.0-1.x86_64.rpm" exists
