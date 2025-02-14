@@ -333,11 +333,11 @@ Scenario: List an environment with empty name
   Given I use repository "comps-group"
   When I execute dnf with args "group list"
    Then the exit code is 0
-   And dnf5 stderr is
+   And stderr is
        """
        <REPOSYNC>
        """
-   And dnf5 stdout is
+   And stdout is
        """
        ID                   Name       Installed
        no-name-group                          no
