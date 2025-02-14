@@ -1,5 +1,6 @@
 @dnf5daemon
 @destructive
+@not.with_dnf=5
 Feature: Test dnf5daemon-client initialization
 
 
