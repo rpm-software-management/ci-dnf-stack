@@ -16,10 +16,10 @@ Scenario: The default value of skip_if_unavailable is False
         | baseurl         | /non/existent/repo |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
     Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Could not read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
+      - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
@@ -42,10 +42,10 @@ Scenario: There is global skip_if_unavailable option
     testrepo
     Metadata cache created\.
     """
-    And stderr is
+    And stderr matches line by line
     """
     Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Could not read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
+      - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
@@ -68,10 +68,10 @@ Scenario: Per repo skip_if_unavailable configuration
     testrepo
     Metadata cache created\.
     """
-    And stderr is
+    And stderr matches line by line
     """
     Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Could not read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
+      - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     Ignoring repositories: testrepo
     """
@@ -91,10 +91,10 @@ Scenario: The repo configuration takes precedence over the global one
         | skip_if_unavailable | False              |
    When I execute dnf with args "makecache"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
     Errors during downloading metadata for repository 'testrepo':
-      - Curl error (37): Could not read a file:// file for file:///non/existent/repo/repodata/repomd.xml [Couldn't open file /non/existent/repo/repodata/repomd.xml]
+      - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\]
     Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
@@ -110,8 +110,8 @@ Given I use repository "dnf-ci-fedora" with configuration
  When I execute dnf with args "makecache"
  Then the exit code is 1
   And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-  And stderr contains "  - Curl error \(37\): Could not read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
-  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): Could not read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
+  And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
+  And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): (Couldn't|Could not) read a file:// file for file://.*/dnf-ci-fedora/repodata/repomd.xml.asc \[Couldn't open file .*/dnf-ci-fedora/repodata/repomd.xml.asc\]"
 
 
 @bz1713627
@@ -145,14 +145,14 @@ Scenario: Nonexistent GPG key
    When I execute dnf with args "makecache"
    Then the exit code is 1
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
     And stderr contains "Error: Failed to retrieve GPG key for repo 'dnf-ci-fedora'"
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistentkey \[Couldn't open file /nonexistentkey\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for .*repomd.xml.asc \[Couldn't open file .*repomd.xml.asc\]"
     And stderr contains "Error: Failed to retrieve GPG key for repo 'dnf-ci-fedora'"
     And stderr contains "Ignoring repositories: dnf-ci-fedora"
 
@@ -174,16 +174,14 @@ Scenario: Mirrorlist with invalid mirrors
    When I execute dnf with args "makecache"
    Then the exit code is 1
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Could not connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Could not connect to server\]"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
+    And stderr contains "  - Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Could not connect to server\]"
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
     And stderr contains "Errors during downloading metadata for repository 'dnf-ci-fedora':"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
-    And stderr contains "  - Curl error \(7\): Could not connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Could not connect to server\]"
-    And stderr contains "  - Curl error \(37\): Could not read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
+    And stderr contains "  - Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///nonexistent.repo/repodata/repomd.xml \[Couldn't open file /nonexistent.repo/repodata/repomd.xml\]"
+    And stderr contains "  - Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml \[Failed to connect to 127.0.0.1 port 5000 after 0 ms: Could not connect to server\]"
     And stderr contains "Error: Failed to download metadata for repo 'dnf-ci-fedora': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
     And stderr contains "Ignoring repositories: dnf-ci-fedora"
 
