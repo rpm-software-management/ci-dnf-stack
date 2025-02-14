@@ -37,10 +37,6 @@ Scenario: dnf provides webclient - installed and in repos package wget provides 
 Scenario: dnf provides nonexistentprovide
    When I execute dnf with args "provides nonexistentprovde"
    Then the exit code is 1
-   And dnf4 stderr is
-   """
-   Error: No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
-   """
    And dnf5 stderr is
        """
        <REPOSYNC>
@@ -49,8 +45,7 @@ Scenario: dnf provides nonexistentprovide
 
 Scenario: test order of provides "dnf provides webclient A B C"
    When I execute dnf with args "provides webclient A B C"
-   Then dnf4 exit code is 0
-    And stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
+   Then stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is
@@ -64,8 +59,7 @@ Scenario: test order of provides "dnf provides webclient A B C"
 
 Scenario: test order of provides "dnf provides A webclient B C"
    When I execute dnf with args "provides A webclient B C"
-   Then dnf4 exit code is 0
-    And stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
+   Then stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is
@@ -79,8 +73,7 @@ Scenario: test order of provides "dnf provides A webclient B C"
 
 Scenario: test order of provides "dnf provides A B C webclient"
    When I execute dnf with args "provides A B C webclient"
-   Then dnf4 exit code is 0
-    And stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
+   Then stdout contains "wget-1.19.5-5.fc29[^R]+Repo[ \t]+: dnf-ci-fedora"
     And stdout does not contain "(glibc)|(setup)"
     And dnf5 exit code is 1
     And dnf5 stderr is

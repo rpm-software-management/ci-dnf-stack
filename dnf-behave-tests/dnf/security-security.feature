@@ -92,20 +92,6 @@ Examples:
     | upgrade-minimal security_A | security_A-0:1.0-3.x86_64 |
 
 
-@not.with_dnf=5
-Scenario Outline: Security <command> (dnf4 syntax compat)
-   When I execute dnf with args "<command> --security"
-   Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                   |
-        | upgrade       | <package>                 |
-
-Examples:
-    | command           | package                   |
-    | update            | security_A-0:1.0-4.x86_64 |
-    | update-minimal    | security_A-0:1.0-3.x86_64 |
-
-
 Scenario Outline: Security <command> with bzs explicitly mentioned
    When I execute dnf with args "<command> --security --bz 123 --bzs=234,345"
    Then the exit code is 0

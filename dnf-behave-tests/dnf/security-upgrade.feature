@@ -361,14 +361,6 @@ Scenario: use both advisories even if they are duplicates but with different iss
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
         """
-   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
-   # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
-   # -> output is deduplicated
-   Then dnf4 stdout is
-   """
-   <REPOSYNC>
-   custom_id Moderate/Sec. E-2-2.x86_64
-   """
    When I execute dnf with args "upgrade --security"
    Then the exit code is 0
    Then Transaction is following
@@ -396,14 +388,6 @@ Scenario: use all (3) advisories even if they are duplicates but with different 
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
         custom_id security Moderate E-2-2.x86_64 2022-12-17 00:00:00
         """
-   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
-   # here only the updated/issued dates differ but libsolv selects only the higher one and those are all identical.
-   # -> output is deduplicated
-   Then dnf4 stdout is
-   """
-   <REPOSYNC>
-   custom_id Moderate/Sec. E-2-2.x86_64
-   """
    When I execute dnf with args "upgrade --security"
    Then the exit code is 0
    Then Transaction is following
@@ -430,13 +414,6 @@ Scenario: use both advisories even if they are duplicates but with just summary 
         custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
         custom_id_F security Moderate F-2-2.x86_64 2019-08-19 22:00:00
         """
-   # dnf4 is deduplicating output based on advisory id, issued date, packages (and whether the packages are installed)
-   # here only the summary differs -> output is deduplicated
-   Then dnf4 stdout is
-   """
-   <REPOSYNC>
-   custom_id_F Moderate/Sec. F-2-2.x86_64
-   """
    When I execute dnf with args "upgrade --security"
    Then the exit code is 0
    Then Transaction is following
