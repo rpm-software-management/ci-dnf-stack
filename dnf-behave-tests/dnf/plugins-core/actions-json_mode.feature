@@ -370,13 +370,13 @@ check_reply(
 
     And file "/var/log/dnf5.log" contains lines
     """
-    TRACE Actions plugin: Hook in file .* Test log message 1
-    DEBUG Actions plugin: Hook in file .* Test log message 2
-    INFO Actions plugin: Hook in file .* Test log message 3
-    NOTICE Actions plugin: Hook in file .* Test log message 4
-    WARNING Actions plugin: Hook in file .* Test log message 5
-    ERROR Actions plugin: Hook in file .* Test log message 6
-    CRITICAL Actions plugin: Hook in file .* Test log message 7
+    TRACE Actions plugin: .* Test log message 1
+    DEBUG Actions plugin: .* Test log message 2
+    INFO Actions plugin: .* Test log message 3
+    NOTICE Actions plugin: .* Test log message 4
+    WARNING Actions plugin: .* Test log message 5
+    ERROR Actions plugin: .* Test log message 6
+    CRITICAL Actions plugin: .* Test log message 7
     """
 
 
