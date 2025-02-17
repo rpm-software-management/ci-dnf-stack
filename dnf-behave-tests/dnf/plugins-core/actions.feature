@@ -346,3 +346,35 @@ Scenario: Testing the "stop" action request, must thrown exception even with "ra
    When I execute dnf with args "install setup"
    Then the exit code is 1
     And stderr contains "Action calls for stop: I want to stop the task"
+
+
+Scenario: Testing the "log" action request
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Error logged.
+    repos_configured::::/bin/sh -c echo\ "log.TRACE=Test\ log\ message\ 1"
+    repos_configured::::/bin/sh -c echo\ "log.DEBUG=Test\ log\ message\ 2"
+    repos_configured::::/bin/sh -c echo\ "log.INFO=Test\ log\ message\ 3"
+    repos_configured::::/bin/sh -c echo\ "log.NOTICE=Test\ log\ message\ 4"
+    repos_configured::::/bin/sh -c echo\ "log.WARNING=Test\ log\ message\ 5"
+    repos_configured::::/bin/sh -c echo\ "log.ERROR=Test\ log\ message\ 6"
+    repos_configured::::/bin/sh -c echo\ "log.CRITICAL=Test\ log\ message\ 7"
+    repos_configured:::raise_error=0:/bin/sh -c echo\ "log.BAD_LEVEL=Test\ log\ message\ 8"
+
+    # Exception thrown.
+    repos_configured:::raise_error=1:/bin/sh -c echo\ "log.BAD_LEVEL=Test\ log\ message\ 9"
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Action sent the wrong log level: log.BAD_LEVEL=Test log message 9"
+    And file "/var/log/dnf5.log" contains lines
+    """
+    TRACE Actions plugin: .* Test log message 1
+    DEBUG Actions plugin: .* Test log message 2
+    INFO Actions plugin: .* Test log message 3
+    NOTICE Actions plugin: .* Test log message 4
+    WARNING Actions plugin: .* Test log message 5
+    ERROR Actions plugin: .* Test log message 6
+    CRITICAL Actions plugin: .* Test log message 7
+    ERROR Actions plugin: .* Action sent the wrong log level: log.BAD_LEVEL=Test log message 8
+    """
