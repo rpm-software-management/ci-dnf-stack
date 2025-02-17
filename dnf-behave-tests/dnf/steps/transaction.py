@@ -6,7 +6,7 @@ from __future__ import print_function
 import behave
 
 from common.lib.behave_ext import check_context_table
-from lib.dnf import ACTIONS, parse_transaction_table, parse_transaction_table_dnf5
+from lib.dnf import ACTIONS, parse_transaction_table_dnf5
 from lib.rpm import RPM, diff_rpm_lists
 from lib.rpmdb import get_rpmdb_rpms
 
@@ -107,41 +107,6 @@ def check_rpmdb_transaction(context, mode):
                 raise AssertionError(
                     "[rpmdb] Following packages weren't captured in the table for action '%s': %s" % (
                     action, ", ".join([str(rpm) for rpm in sorted(rpmdb_transaction[action])])))
-
-def check_dnf_transaction(context, mode):
-    check_context_table(context, ["Action", "Package"])
-
-    # check changes in DNF transaction table
-    lines = context.cmd_stdout.splitlines()
-    dnf_transaction = parse_transaction_table(context, lines)
-
-    for action, nevras in context.table:
-        if action in ["absent", "present", "unchanged", "changed"]:
-            continue
-        for nevra in nevras.split(", "):
-            if action.startswith('group-') or action.startswith('env-') or action.startswith('module-'):
-                title = action.split('-')[0].capitalize()
-                group = nevra
-                if group not in dnf_transaction[action]:
-                    candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
-                    raise AssertionError("[dnf] %s %s not %s; Possible candidates: %s" % (
-                        title, group, action, candidates))
-            else:
-                rpm = RPM(nevra)
-                if rpm not in dnf_transaction[action]:
-                    candidates = ", ".join([str(i) for i in sorted(dnf_transaction[action])])
-                    raise AssertionError("[dnf] Package %s not %s; Possible candidates: %s" % (
-                                         rpm, action, candidates))
-
-    if mode == 'exact_match':
-        context_table = parse_context_table(context)
-        for action, rpms in dnf_transaction.items():
-            delta = rpms.difference(context_table[action])
-            if delta:
-                raise AssertionError(
-                        "[dnf] Following packages weren't captured in the table for action '%s': %s" % (
-                        action, ", ".join([str(rpm) for rpm in sorted(delta)])))
-
 
 def check_dnf5_transaction(context, mode):
     check_context_table(context, ["Action", "Package"])
