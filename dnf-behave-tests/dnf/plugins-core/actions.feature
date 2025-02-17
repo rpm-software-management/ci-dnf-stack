@@ -304,3 +304,45 @@ Scenario: Testing the "raise_error" option and failed to process the output line
     ERROR Actions plugin: .* Cannot set option: Action output line: conf.nonexist_option=1
     ERROR Actions plugin: .* Cannot set option: Action output line: conf.nonexist_option=2
     """
+
+
+Scenario: Testing the "error" action message
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Error logged.
+    repos_configured::::/bin/sh -c echo\ "error=Error\ in\ action\ process\ 1"
+    repos_configured:::raise_error=0:/bin/sh -c echo\ "error=Error\ in\ action\ process\ 2"
+
+    # Exception thrown.
+    repos_configured:::raise_error=1:/bin/sh -c echo\ "error=Error\ in\ action\ process\ 3"
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Action sent error message: Error in action process 3"
+    And file "/var/log/dnf5.log" contains lines
+    """
+    ERROR Actions plugin: .* Action sent error message: Error in action process 1
+    ERROR Actions plugin: .* Action sent error message: Error in action process 2
+    """
+
+
+Scenario: Testing the "stop" action request
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Exception thrown.
+    repos_configured:::raise_error=1:/bin/sh -c echo\ "stop=I\ want\ to\ stop\ the\ task"
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Action calls for stop: I want to stop the task"
+
+
+Scenario: Testing the "stop" action request, must thrown exception even with "raise_error=0"
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Exception thrown.
+    repos_configured:::raise_error=0:/bin/sh -c echo\ "stop=I\ want\ to\ stop\ the\ task"
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Action calls for stop: I want to stop the task"
