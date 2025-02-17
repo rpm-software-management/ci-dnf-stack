@@ -220,6 +220,11 @@ class BehaveRunner(object):
             tags = []
         if hasattr(self.command_line_args, 'noxfail') and self.command_line_args.noxfail:
             tags.append('~xfail')
+        # For a transition period ignore "@dnf5" tag passed on the commandline.
+        # We run dnf5 by default.
+        # TODO(amatej): This could be removed later
+        if "dnf5" in tags:
+            tags.remove("dnf5")
         return tags
 
     def parse_behave_dry_run(self, output):
