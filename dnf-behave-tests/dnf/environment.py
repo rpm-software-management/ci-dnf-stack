@@ -12,10 +12,8 @@ import tempfile
 # add the behave tests root to python path so that the `common` module can be found
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 # make sure behave loads the common steps
-import common
 import consts
 import subprocess
-import time
 
 from behave import model
 from behave.formatter.ansi_escapes import escapes
@@ -137,42 +135,6 @@ class DNFContext(object):
         return setattr(self, name, value)
 
     def get_cmd(self, context):
-        if context.dnf5_mode:
-            result = self.get_dnf5_cmd(context)
-        else:
-            result = self.get_dnf4_cmd(context)
-        return result
-
-    def get_dnf4_cmd(self, context):
-        result = [self.dnf_command]
-        result.append(self.assumeyes_option)
-
-        # installroot can't be set via context for safety reasons
-        if self.installroot and self.installroot != "/":
-            result.append("--installroot={0}".format(self.installroot))
-
-        releasever = self._get("releasever")
-        if releasever:
-            result.append("--releasever={0}".format(releasever))
-
-        module_platform_id = self._get("module_platform_id")
-        if module_platform_id:
-            result.append("--setopt=module_platform_id={0}".format(module_platform_id))
-
-        disable_plugins = self._get("disable_plugins")
-        if disable_plugins:
-            result.append("--disableplugin='*'")
-        plugins = self._get("plugins") or []
-        for plugin in plugins:
-            result.append("--enableplugin='{0}'".format(plugin))
-
-        setopts = self._get("setopts") or {}
-        for key,value in setopts.items():
-            result.append("--setopt={0}={1}".format(key, value))
-
-        return result
-
-    def get_dnf5_cmd(self, context):
         result = [self.dnf_command]
         result.append(self.assumeyes_option)
 
@@ -270,25 +232,15 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    # --define dnf5_mode=1
-    context.dnf5_mode = string_to_bool(context.config.userdata.get("dnf5_mode", "no"))
-
-    # if "dnf5" is in the commandline tags, turn on dnf5 mode
-    # if "dnf5daemon" turn on dnf5daemon mode and dnf5 mode
+    # if "dnf5daemon" turn on dnf5daemon mode
     context.dnf5daemon_mode = False
     for ors in context.config.tags.ands:
-        if "dnf5" in ors:
-            context.dnf5_mode = True
-            break
         if "dnf5daemon" in ors:
-            context.dnf5_mode = True
             context.dnf5daemon_mode = True
             break
 
-
-
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
-    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5" if context.dnf5_mode else "4"})
+    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5"})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 

@@ -187,12 +187,7 @@ def check_dnf5_transaction(context, mode):
 
 def check_transaction(context, mode):
     check_rpmdb_transaction(context, mode)
-
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf5_mode:
-        check_dnf5_transaction(context, mode)
-    else:
-        check_dnf_transaction(context, mode)
+    check_dnf5_transaction(context, mode)
 
 
 @behave.then("Transaction is following")
@@ -207,11 +202,7 @@ def then_RPMDB_Transaction_is_following(context):
 
 @behave.then("DNF Transaction is following")
 def then_DNF_Transaction_is_following(context):
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf5_mode:
-        check_dnf5_transaction(context, 'exact_match')
-    else:
-        check_dnf_transaction(context, 'exact_match')
+    check_dnf5_transaction(context, 'exact_match')
 
 
 @behave.then("Transaction contains")
@@ -237,12 +228,8 @@ def then_RPMDB_transaction_is_empty(context):
 def then_DNF_transaction_is_empty(context):
     # check changes in DNF transaction table
     lines = context.cmd_stdout.splitlines()
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
     try:
-        if dnf5_mode:
-            dnf_transaction = parse_transaction_table_dnf5(context, lines)
-        else:
-            dnf_transaction = parse_transaction_table(context, lines)
+        dnf_transaction = parse_transaction_table_dnf5(context, lines)
     except RuntimeError:
         dnf_transaction = {}
     if dnf_transaction:

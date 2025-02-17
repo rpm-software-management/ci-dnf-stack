@@ -109,10 +109,6 @@ transaction_item_re = re.compile("  (.+[^ ]) +(.+-[^ ]+) +(.+[^ ]+) +(.+)")
 
 @behave.then('dnf5 transaction items for transaction "{id}" are')
 def step_impl(context, id):
-    # we only do the check for dnf5
-    if hasattr(context, "dnf5_mode") and not context.dnf5_mode:
-        return
-
     check_context_table(context, ["action", "package", "reason", "repository"])
 
     cmd = context.dnf.get_cmd(context) + ["history", "info", id]
