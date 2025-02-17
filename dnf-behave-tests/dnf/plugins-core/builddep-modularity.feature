@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for builddep command on modular system
 
 Background:

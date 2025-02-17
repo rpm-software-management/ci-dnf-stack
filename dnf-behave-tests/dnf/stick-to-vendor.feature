@@ -1,4 +1,3 @@
-@dnf5
 Feature: DNF allow_vendor_change option in dnf.conf
 Background:
   Given I use repository "dnf-ci-vendor-1"

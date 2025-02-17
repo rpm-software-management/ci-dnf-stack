@@ -1,4 +1,3 @@
-@dnf5
 Feature: Installing attemps fail
 
 @bz1568965

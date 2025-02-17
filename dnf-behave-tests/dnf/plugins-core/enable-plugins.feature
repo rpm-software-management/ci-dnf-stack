@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for report nonexisting plugin
 
 Background:

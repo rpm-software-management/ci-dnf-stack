@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test group remove when repositories are disabled
 
 Background: Install group DNF-CI-Testgroup

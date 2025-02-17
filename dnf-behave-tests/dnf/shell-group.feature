@@ -75,7 +75,6 @@ Examples:
   | update              |
 
 
-# @dnf5
 # TODO(nsella) Unknown argument "shell" for command "microdnf"
 Scenario: Using dnf shell, remove a package group
   Given I use repository "dnf-ci-fedora"

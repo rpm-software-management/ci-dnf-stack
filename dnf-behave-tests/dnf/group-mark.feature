@@ -1,4 +1,3 @@
-@dnf5
 Feature: Testing group marking via group install/remove --no-packages
 
 # dnf-ci-testgroup structure:

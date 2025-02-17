@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for the basic repoquery dependencies functionality:
     --requires, --provides, --conflicts, --obsoletes, --requires-pre
     --whatrequires, --whatprovides, --whatconflicts, --whatobsoletes

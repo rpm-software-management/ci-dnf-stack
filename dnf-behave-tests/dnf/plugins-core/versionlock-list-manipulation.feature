@@ -1,4 +1,3 @@
-@dnf5
 Feature: Versionlock command can maintain versionlock.list file
 
 

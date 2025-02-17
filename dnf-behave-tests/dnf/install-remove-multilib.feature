@@ -1,4 +1,3 @@
-@dnf5
 Feature: Installing and removing multilib packages
 
 

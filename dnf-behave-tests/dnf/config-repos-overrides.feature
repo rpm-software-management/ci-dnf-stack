@@ -1,4 +1,3 @@
-@dnf5
 Feature: Repository overriding configuration files
 
 

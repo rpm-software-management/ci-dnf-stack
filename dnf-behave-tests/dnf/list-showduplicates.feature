@@ -1,4 +1,3 @@
-@dnf5
 Feature: for list --showduplicates option
 
 

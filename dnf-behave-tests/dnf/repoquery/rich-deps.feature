@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for rich (boolean) dependencies:
  and - requires all operands to be fulfilled for the term to be True.
  or - requires one of the operands to be fulfilled

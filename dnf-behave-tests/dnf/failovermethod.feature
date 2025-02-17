@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test behavior of failovermethod repo config option
 
 @bz2039906

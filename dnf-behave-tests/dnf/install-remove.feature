@@ -1,4 +1,3 @@
-@dnf5
 Feature: Install remove test
 
 Background: Use install-remove repository

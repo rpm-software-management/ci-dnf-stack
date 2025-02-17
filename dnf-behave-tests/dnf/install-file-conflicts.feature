@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for file conflicts reporting
 
 Background:

@@ -1,4 +1,3 @@
-@dnf5
 Feature: repoquery with security filters (--security, --bugfix, --newpackages, --enhancement)
 
 

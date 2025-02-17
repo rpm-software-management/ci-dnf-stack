@@ -1,4 +1,3 @@
-@dnf5
 Feature: Better error message when TMPDIR is missing
 
 @bz2019993

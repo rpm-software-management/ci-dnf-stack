@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test config options includepkgs and excludepkgs with option disable_excludes
 
 

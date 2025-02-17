@@ -1,4 +1,3 @@
-@dnf5
 Feature: Listing available updates using the dnf advisory command
 
 

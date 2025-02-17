@@ -1,4 +1,3 @@
-@dnf5
 Feature: Enable module streams with modular dependencies
 
 

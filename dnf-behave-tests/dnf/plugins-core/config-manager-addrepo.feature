@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf "config-manager" command - test "addrepo" subcommand
 
 

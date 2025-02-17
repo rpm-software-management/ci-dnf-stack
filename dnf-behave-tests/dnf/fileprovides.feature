@@ -1,4 +1,3 @@
-@dnf5
 Feature: Adding file provides tests
 
 Scenario: Run repoclosure with already created cache without filelists

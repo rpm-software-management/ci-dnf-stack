@@ -1,4 +1,3 @@
-@dnf5
 # These tests need to be marked destructive because copr
 # doesn't use repositories in installroot, this is tracked as:
 # https://github.com/rpm-software-management/dnf5/issues/1497

@@ -1,4 +1,3 @@
-@dnf5
 @not.with_dnf=4
 Feature: transaction: remove a package with dependency, then install the dependency again
 

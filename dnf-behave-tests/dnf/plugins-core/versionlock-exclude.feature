@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests excluding capabilities of the versionlock plugin
 
 

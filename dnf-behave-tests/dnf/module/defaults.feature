@@ -1,4 +1,3 @@
-@dnf5
 Feature: Modulemd defaults are followed by dnf module commands
 
 Background:

@@ -1,4 +1,3 @@
-@dnf5
 Feature: hotfix repo content is not masked by a modular content
 
 

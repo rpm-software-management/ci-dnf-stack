@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test security options for update
 
 

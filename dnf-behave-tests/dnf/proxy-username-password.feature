@@ -1,4 +1,3 @@
-@dnf5
 Feature: Accesing a proxy via proxy credentials username and password
          # it just tests whether the proxy credentials are passed correctly
          # URL of the test repo intentionally does not exist and so repoquery

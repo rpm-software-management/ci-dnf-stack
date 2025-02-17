@@ -1,4 +1,3 @@
-@dnf5
 @jiraRHELPLAN-6073
 Feature: Filter RPMs by enabled and default module streams
 

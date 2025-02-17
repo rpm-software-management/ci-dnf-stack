@@ -1,4 +1,3 @@
-@dnf5
 Feature: Install RPMs with forcearch
 
 Background: Use dnf-ci-fedora repository

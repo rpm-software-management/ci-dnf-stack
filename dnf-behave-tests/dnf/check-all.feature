@@ -1,4 +1,3 @@
-@dnf5
 Feature: Check when there are multiple problems
 
 

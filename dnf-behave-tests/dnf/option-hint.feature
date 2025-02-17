@@ -1,4 +1,3 @@
-@dnf5
 Feature: Hints for misplaced options
 
 

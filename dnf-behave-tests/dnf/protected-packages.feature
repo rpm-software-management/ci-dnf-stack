@@ -1,4 +1,3 @@
-@dnf5
 Feature: Protected packages
 
 Background:

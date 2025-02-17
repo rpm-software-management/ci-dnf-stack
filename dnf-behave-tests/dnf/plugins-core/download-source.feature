@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf download --srpm command
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test upgrading and downgrading to package with different epoch
 
 

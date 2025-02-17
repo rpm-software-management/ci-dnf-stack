@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test for successful and failing rpm scriptlets
 
 

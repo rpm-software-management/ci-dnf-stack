@@ -35,7 +35,6 @@ Scenario: Install and remove group using group name
 # The rest of scenarios use a group id to specify the group.
 # This way scenarios can be used for both dnf4 and dnf5 testing.
 
-@dnf5
 Scenario: Install and remove group
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -59,7 +58,6 @@ Scenario: Install and remove group
         | group-remove  | DNF-CI-Testgroup                  |
 
 
-@dnf5
 Scenario: Install a group that is already installed
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -79,7 +77,6 @@ Scenario: Install a group that is already installed
         | group-install | DNF-CI-Testgroup                  |
 
 
-@dnf5
 Scenario: Install and remove group with excluded package
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -98,7 +95,7 @@ Scenario: Install and remove group with excluded package
         | remove-unused | setup-0:2.12.1-1.fc29.noarch      |
         | group-remove  | DNF-CI-Testgroup                  |
 
-@dnf5
+
 @bz1707624
 Scenario: Install installed group when group is not available
   Given I use repository "dnf-ci-thirdparty"
@@ -119,7 +116,7 @@ Scenario: Install installed group when group is not available
     """
     And stderr does not contain "ValueError"
 
-@dnf5
+
 Scenario: Install and remove group with excluded package dependency
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -137,7 +134,6 @@ Scenario: Install and remove group with excluded package dependency
         """
 
 
-@dnf5
 @bz1673851
 Scenario: Install condidional package if required package is about to be installed
   Given I use repository "dnf-ci-thirdparty"
@@ -165,7 +161,6 @@ Scenario: Install condidional package if required package is about to be install
         | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
 
 
-@dnf5
 @bz1673851
 Scenario: Install condidional package if required package has been installed
   Given I use repository "dnf-ci-thirdparty"
@@ -187,7 +182,6 @@ Scenario: Install condidional package if required package has been installed
         | install-dep   | setup-0:2.12.1-1.fc29.noarch              |
 
 
-@dnf5
 Scenario: Group remove does not remove packages required by user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -225,7 +219,6 @@ Scenario: Group remove does not remove packages required by user installed packa
         | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
 
 
-@dnf5
 Scenario: Group remove does not remove user installed packages
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -292,8 +285,8 @@ Scenario: Group remove does not traceback when reason change
    When I execute in dnf shell "exit"
    Then stdout contains "Leaving Shell"
 
+
 @bz1706382
-@dnf5
 @dnf5daemon
 Scenario: Group list
  Given I use repository "dnf-ci-thirdparty"
@@ -311,7 +304,7 @@ Scenario: Group list
        superripper-and-deps SuperRipper-and-deps        no
        """
 
-@dnf5
+
 @dnf5daemon
 @bz1706382
 Scenario: Group list with arg
@@ -328,8 +321,8 @@ Scenario: Group list with arg
        dnf-ci-testgroup     DNF-CI-Testgroup        no
        """
 
+
 @bz1826198
-@dnf5
 Scenario: List an environment with empty name
   Given I use repository "comps-group"
   When I execute dnf with args "group list"
@@ -345,7 +338,7 @@ Scenario: List an environment with empty name
        test-group           Test Group        no
        """
 
-@dnf5
+
 @bz1826198
 Scenario: Install a group with empty name
   Given I use repository "comps-group"
@@ -357,7 +350,7 @@ Scenario: Install a group with empty name
         | group-install | <name-unset>                      |
         | install-group | test-package-1.0-1.fc29.noarch    |
 
-@dnf5
+
 @bz1826198
 Scenario: Install an environment with empty name
   Given I use repository "comps-group"
@@ -371,7 +364,6 @@ Scenario: Install an environment with empty name
         | install-group | test-package-1.0-1.fc29.noarch    |
 
 
-@dnf5
 @dnf5daemon
 Scenario: List and info a group with missing packagelist
   Given I use repository "comps-group-merging"
@@ -404,7 +396,6 @@ Scenario: List and info a group with missing packagelist
         """
 
 
-@dnf5
 Scenario: Install a group with empty packagelist
   Given I use repository "comps-group-merging"
    When I execute dnf with args "group install test-group"
@@ -440,7 +431,6 @@ Scenario: Merge groups when one has empty packagelist
         """
 
 
-@dnf5
 # there is related issue
 # https://github.com/rpm-software-management/dnf5/issues/724
 Scenario: Merge environment with missing names containg a group with missing name
@@ -463,7 +453,6 @@ Scenario: Merge environment with missing names containg a group with missing nam
         """
 
 
-@dnf5
 @dnf5daemon
 Scenario: Group info with a group that has missing name
   Given I use repository "comps-group"
@@ -500,7 +489,6 @@ Scenario: Mark a group and an environment without name
         | group-install | Test Group                        |
 
 
-@dnf5
 Scenario: Install an environment with a nonexistent group
   Given I use repository "comps-group"
   When I execute dnf with args "group install env-with-a-nonexistent-group"
@@ -519,7 +507,6 @@ Scenario: Install an environment with a nonexistent group
        """
 
 
-@dnf5
 Scenario: Install an environment using @^environment syntax
   Given I use repository "comps-group"
   When I execute dnf with args "install @^env-with-a-nonexistent-group"
@@ -538,7 +525,6 @@ Scenario: Install an environment using @^environment syntax
        """
 
 
-@dnf5
 @bz2066638
 Scenario: Packages that are part of another installed group are not removed
   Given I use repository "comps-group"
@@ -562,7 +548,6 @@ Scenario: Packages that are part of another installed group are not removed
         | group-remove  | Test Group    |
 
 
-@dnf5
 # destructive because it can create a new user on the system
 @bz2030255
 @destructive
@@ -590,7 +575,6 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
        """
 
 
-@dnf5
 @dnf5daemon
 @bz2173929
 Scenario: dnf5 group list: empty output when run for the second time
@@ -621,7 +605,7 @@ Scenario: dnf5 group list: empty output when run for the second time
        test-group-2         Test Group 2        no
        """
 
-@dnf5
+
 # This typically covers situations where initial system state is created from
 # dnf4 history db - dnf5 is not able to create installed groups *.xml files
 # because dnf4 does not store their content anywhere.
@@ -648,7 +632,7 @@ Scenario: dnf can list installed groups even without their xml definitions prese
         Mandatory packages   : test-package
         """
 
-@dnf5
+
 # In case the group is not available in repositories, minimal solvable is created
 # from the system state.
 Scenario: dnf can list installed groups even without their xml definitions present, group not available
@@ -675,8 +659,8 @@ Scenario: dnf can list installed groups even without their xml definitions prese
         Default packages     : test-package
         """
 
+
 # https://github.com/rpm-software-management/dnf5/issues/917
-@dnf5
 Scenario: Remove group that is not installed
  Given I use repository "dnf-ci-thirdparty"
   When I execute dnf with args "group remove dnf-ci-testgroup"
@@ -687,7 +671,7 @@ Scenario: Remove group that is not installed
        No groups to remove for argument: dnf-ci-testgroup
        """
 
-@dnf5
+
 @bz2263762
 Scenario: Dnf works with comps group containing duplicate package entry
  Given I use repository "comps-group-duplicate-package"

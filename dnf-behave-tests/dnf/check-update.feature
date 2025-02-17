@@ -1,4 +1,3 @@
-@dnf5
 Feature: check-upgrade commands
 
 @bz1769466

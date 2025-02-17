@@ -1,4 +1,3 @@
-@dnf5
 #TODO(amatej): replace log checking with https://github.com/rpm-software-management/dnf5/issues/1335
 Feature: Pluginspath and pluginsconfpath test
 

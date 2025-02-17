@@ -1,4 +1,3 @@
-@dnf5
 Feature: Repo list (alias repolist) when there are no repositories
 
 

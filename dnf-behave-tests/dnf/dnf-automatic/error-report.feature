@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf-automatic reports an error when transaction failed
 
 

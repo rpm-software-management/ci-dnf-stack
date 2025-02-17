@@ -1,4 +1,3 @@
-@dnf5
 @dnf5daemon
 Feature: Tests for installing RPM from paths
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: repoquery tests for handling modularity.
 
 Background:

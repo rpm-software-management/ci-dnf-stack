@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test for --repofrompath option
 
 Scenario: I can use --repofrompath to add a repository

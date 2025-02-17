@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test upgrade, upgrade-minimal, and check-ugrade with advisory, cve, secseverity
 
 

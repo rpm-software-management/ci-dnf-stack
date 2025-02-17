@@ -1,4 +1,3 @@
-@dnf5
 Feature: Skip exclude_from_weak for weak deps and autodetected exclude_from_weak for unmet weak dependencies of installed packages
 
 

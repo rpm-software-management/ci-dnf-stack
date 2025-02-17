@@ -39,7 +39,7 @@ Background: Enable comps-upgrade-1 nad install dummy
   Given I use repository "comps-upgrade-1"
     And I successfully execute dnf with args "install dummy"
 
-@dnf5
+
 Scenario: Upgrade group when there are new package versions - upgrade packages
   Given I successfully execute dnf with args "group install a-group"
     And I use repository "comps-upgrade-2"
@@ -53,7 +53,6 @@ Scenario: Upgrade group when there are new package versions - upgrade packages
         | group-upgrade | A-group - repo#2                   |
 
 
-@dnf5
 Scenario: Upgrade group when there are no new packages - nothing is installed
   Given I successfully execute dnf with args "group install --no-packages AB-group"
    When I execute dnf with args "group upgrade AB-group"
@@ -63,7 +62,6 @@ Scenario: Upgrade group when there are no new packages - nothing is installed
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade group when there are new packages - install new packages
   Given I successfully execute dnf with args "group install --no-packages AB-group"
     And I drop repository "comps-upgrade-1"
@@ -78,7 +76,6 @@ Scenario: Upgrade group when there are new packages - install new packages
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade group when there are both old and new packages - install only new packages
   Given I successfully execute dnf with args "group install --no-packages AB-group"
       # I don't drop repository comps-upgrade-1, so the comps are merged
@@ -93,7 +90,6 @@ Scenario: Upgrade group when there are both old and new packages - install only 
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade group to new metadata and back - always install new packages
   Given I successfully execute dnf with args "group install --no-packages AB-group"
     And I drop repository "comps-upgrade-1"
@@ -121,7 +117,6 @@ Scenario: Upgrade group to new metadata and back - always install new packages
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade group when there were excluded packages during installation - don't install these packages
    When I execute dnf with args "group install AB-group --exclude=A-mandatory,A-default,A-optional,A-conditional-true"
    Then the exit code is 0
@@ -135,7 +130,6 @@ Scenario: Upgrade group when there were excluded packages during installation - 
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade group when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install AB-group"
     And I successfully execute dnf with args "remove A-mandatory A-default A-conditional-true"
@@ -146,7 +140,6 @@ Scenario: Upgrade group when there were removed packages since installation - do
         | group-upgrade | AB-group                           |
 
 
-@dnf5
 Scenario: Upgrade environment when there are no new groups/packages - nothing is installed
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
    When I execute dnf with args "group upgrade AB-environment"
@@ -157,7 +150,6 @@ Scenario: Upgrade environment when there are no new groups/packages - nothing is
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 Scenario: Upgrade environment when there are new groups/packages - install new groups/packages
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
     And I drop repository "comps-upgrade-1"
@@ -174,7 +166,6 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 Scenario: Upgrade environment - user-installed groups are not removed
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
     And I successfully execute dnf with args "group install --no-packages a-group"
@@ -210,7 +201,6 @@ Scenario: Upgrade environment when there are both old and new groups/packages - 
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 Scenario: Upgrade environment to new metadata and back - always install new groups/packages
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
     And I drop repository "comps-upgrade-1"
@@ -242,7 +232,6 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 Scenario: Upgrade environment when there were excluded packages during installation - don't install these packages
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
    When I execute dnf with args "group install AB-environment --exclude=A-mandatory,A-default,A-optional,A-conditional-true"
@@ -259,7 +248,6 @@ Scenario: Upgrade environment when there were excluded packages during installat
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 Scenario: Upgrade environment when there were removed packages since installation - don't install these packages
   Given I successfully execute dnf with args "group install AB-environment"
     And I successfully execute dnf with args "remove A-mandatory A-default A-conditional-true"
@@ -271,7 +259,6 @@ Scenario: Upgrade environment when there were removed packages since installatio
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 @bz1872586
 Scenario: Upgrade empty group
   Given I successfully execute dnf with args "group install empty-group"
@@ -282,7 +269,6 @@ Scenario: Upgrade empty group
         | group-upgrade | empty-group                        |
 
 
-@dnf5
 @bz1872586
 Scenario: Upgrade empty environment
   Given I successfully execute dnf with args "group install empty-environment"
@@ -292,7 +278,7 @@ Scenario: Upgrade empty environment
         | Action        | Package                            |
         | env-upgrade   | empty-environment                  |
 
-@dnf5
+
 @bz1872586
 Scenario: Upgrade environment when all groups are removed
   Given I successfully execute dnf with args "group install AB-environment"
@@ -304,7 +290,6 @@ Scenario: Upgrade environment when all groups are removed
         | env-upgrade   | AB-environment                     |
 
 
-@dnf5
 @bz1872586
 Scenario: Upgrade environment with installed optional groups
   Given I successfully execute dnf with args "group install --no-packages optional-environment a-group"
@@ -316,7 +301,6 @@ Scenario: Upgrade environment with installed optional groups
         | env-upgrade   | optional-environment               |
 
 
-@dnf5
 Scenario: Upgrade nonexistent group
    When I execute dnf with args "group upgrade nonexistent"
    Then the exit code is 1
@@ -328,7 +312,6 @@ Scenario: Upgrade nonexistent group
         """
 
 
-@dnf5
 Scenario: Upgrade nonexistent and existent group
   Given I successfully execute dnf with args "group install empty-group"
    When I execute dnf with args "group upgrade nonexistent empty-group --skip-unavailable"

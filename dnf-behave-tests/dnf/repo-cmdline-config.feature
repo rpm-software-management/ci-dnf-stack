@@ -1,4 +1,3 @@
-@dnf5
 Feature: Configure repos through cmd line options
 
 

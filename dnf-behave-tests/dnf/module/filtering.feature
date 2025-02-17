@@ -1,4 +1,3 @@
-@dnf5
 Feature: Modular filtering must provide onlu relevant source packages
 
 Background:

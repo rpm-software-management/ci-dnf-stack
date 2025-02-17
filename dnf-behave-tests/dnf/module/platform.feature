@@ -1,4 +1,3 @@
-@dnf5
 @jiraRHELPLAN-6083
 Feature: platform pseudo-module based on /etc/os-release
 

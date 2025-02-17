@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests --setopt=install_weak_deps=
 
 

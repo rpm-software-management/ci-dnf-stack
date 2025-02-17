@@ -1,4 +1,3 @@
-@dnf5
 @dnf5daemon
 Feature: Testing that dnf clean command removes files from the cache
 

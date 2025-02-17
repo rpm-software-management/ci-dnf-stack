@@ -1,4 +1,3 @@
-@dnf5
 Feature: Autoremoval of unneeded packages
 
 Scenario: Remove with --setopt=clean_requirements_on_remove=True

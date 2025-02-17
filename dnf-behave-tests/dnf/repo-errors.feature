@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test error handling related to repositories
 
 Scenario: Invalid character in ID in --repofrompath

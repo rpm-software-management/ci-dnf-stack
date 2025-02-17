@@ -1,6 +1,5 @@
 # destructive because it can create a new user on the system
 @destructive
-@dnf5
 Feature: Testing functionality related to sharing root metadata cache to users
 
 Background:

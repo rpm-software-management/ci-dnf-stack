@@ -1,4 +1,3 @@
-@dnf5
 Feature: Enable module requires confirmation
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: History of update
 
 Background:

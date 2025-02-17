@@ -3,7 +3,6 @@
 Feature: test dnf5 as unprivileged user
 
 
-@dnf5
 Scenario: unprivileged user can create a cache even without system state
   Given I use repository "simple-base"
     # Give user permissions to access cache

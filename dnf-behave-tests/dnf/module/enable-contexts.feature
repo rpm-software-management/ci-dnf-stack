@@ -1,4 +1,3 @@
-@dnf5
 Feature: Dependency resolution must occur to determine the appropriate dependent stream+context to use
 
 Background:

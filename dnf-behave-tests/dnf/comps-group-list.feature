@@ -1,4 +1,3 @@
-@dnf5
 @dnf5daemon
 Feature: Tests for group list and info commands
 

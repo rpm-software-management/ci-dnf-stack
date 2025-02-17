@@ -87,7 +87,6 @@ Given I create directory "/baseurlrepo"
   And stderr contains "Error: Failed to download metadata for repo 'testrepo': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
-@dnf5
 Scenario: mirrorlist is prefered over baseurl
 Given I create directory "/baseurlrepo"
   And I execute "createrepo_c {context.dnf.installroot}/baseurlrepo"
@@ -109,7 +108,6 @@ Given I create directory "/baseurlrepo"
       | install       | setup-0:2.12.1-1.fc29.noarch |
 
 
-@dnf5
 Scenario: Install from local repodata with locations pointing to remote packages
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -129,7 +127,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
   And file "/var/cache/dnf/dnf-ci-fedora*/packages/setup*" exists
 
 
-@dnf5
 Scenario: Install from remote repodata with locations pointing to packages on different HTTP servers
 Given I make packages from repository "dnf-ci-fedora" accessible via http
   And I copy repository "dnf-ci-fedora" for modification
@@ -182,7 +179,6 @@ Given I make packages from repository "download-sources" accessible via http
       """
 
 
-@dnf5
 @bz2103015
 Scenario: Download a package that contains special URL characters by passing an encoded URL
 Given I use repository "download-sources" as http

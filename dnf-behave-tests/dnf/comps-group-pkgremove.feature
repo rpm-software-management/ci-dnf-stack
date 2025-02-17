@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test removal packages along with group
 
 # Self-dependent package is a package that requires and provides the same capability.
