@@ -12,17 +12,6 @@ from common.lib.diff import print_lines_diff
 from common.lib.text import lines_match_to_regexps_line_by_line
 
 
-sync_line_dnf4 = re.compile(r".*[0-9.]+ +[kMG]?B/s \| +[0-9.]+ +[kMG]?B +[0-9]{2}:[0-9]{2}")
-bottom_line_dnf4 = re.compile(r"Last metadata expiration check: .*")
-
-def strip_reposync_dnf4(found_lines, line_number):
-    while line_number < len(found_lines) and sync_line_dnf4.fullmatch(found_lines[line_number].strip()):
-        found_lines.pop(line_number)
-
-    if line_number < len(found_lines) and bottom_line_dnf4.fullmatch(found_lines[line_number].strip()):
-        found_lines.pop(line_number)
-
-
 sync_line_dnf5 = re.compile(
     r".* [0-9?]+% \| +[0-9.]+ +[KMG]?i?B/s \| +[\-0-9.]+ +[KMG]?i?B \| + [0-9hms?]+")
 
@@ -40,14 +29,11 @@ def strip_reposync_dnf5(found_lines, line_number):
     while line_number < len(found_lines) and sync_line_dnf5.fullmatch(found_lines[line_number].strip()):
         found_lines.pop(line_number)
 
-def handle_reposync(expected, found, dnf5_mode):
+def handle_reposync(expected, found):
     line_number = 0
     for line in expected:
         if line == "<REPOSYNC>":
-            if dnf5_mode:
-                strip_reposync_dnf5(found, line_number)
-            else:
-                strip_reposync_dnf4(found, line_number)
+            strip_reposync_dnf5(found, line_number)
 
             expected.pop(line_number)
             break
@@ -83,8 +69,7 @@ def then_stdout_is(context):
     if found == [""]:
         found = []
 
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+    clean_expected, clean_found = handle_reposync(expected, found)
 
     if clean_expected == clean_found:
         return
@@ -107,12 +92,6 @@ def then_stdout_is(context):
     raise AssertionError("Stdout is not: %s" % context.text)
 
 
-@parse.with_pattern(r"dnf4|dnf5")
-def parse_dnf_version(text):
-    return text
-behave.register_type(dnf_version=parse_dnf_version)
-
-
 @parse.with_pattern(r"stdout|stderr")
 def parse_std_stream(text):
     return text
@@ -128,8 +107,7 @@ def then_stdout_matches_line_by_line(context):
     found = context.cmd_stdout.split('\n')
     expected = context.text.split('\n')
 
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+    clean_expected, clean_found = handle_reposync(expected, found)
 
     lines_match_to_regexps_line_by_line(clean_found, clean_expected)
 
@@ -155,8 +133,7 @@ def then_stderr_is(context):
     if found == [""]:
         found = []
 
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+    clean_expected, clean_found = handle_reposync(expected, found)
 
     if clean_expected == clean_found:
         return
@@ -188,98 +165,6 @@ def then_stderr_matches_line_by_line(context):
     found = context.cmd_stderr.split('\n')
     expected = context.text.split('\n')
 
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    clean_expected, clean_found = handle_reposync(expected, found, dnf5_mode)
+    clean_expected, clean_found = handle_reposync(expected, found)
 
     lines_match_to_regexps_line_by_line(clean_found, clean_expected)
-
-
-@behave.then("{dnf_version:dnf_version} exit code is {exitcode}")
-def then_dnf_exit_code_is(context, dnf_version, exitcode):
-    """
-    Check for the test's exit code only if running in the
-    appropriate mode otherwise the step is skipped
-    Produce the steps:
-        then dnf4 exit code is
-        then dnf5 exit code is
-    """
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_the_exit_code_is(context, exitcode)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_the_exit_code_is(context, exitcode)
-
-
-@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} is")
-def then_dnf_stream_is(context, dnf_version, std_stream):
-    """
-    Check for exact match of the test's stdout/stderr
-    only if running in the appropriate mode otherwise
-    the step is skipped.
-    Produce the steps:
-        then dnf4 stdout is
-        then dnf4 stderr is
-        then dnf5 stderr is
-        then dnf5 stdout is
-    """
-    if std_stream == "stdout":
-        then_stream_is = then_stdout_is
-    if std_stream == "stderr":
-        then_stream_is = then_stderr_is
-
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stream_is(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stream_is(context)
-
-
-@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} matches line by line")
-def then_dnf_stream_matches_line_by_line(context, dnf_version, std_stream):
-    """
-    Checks that each line of stdout/stderr matches respective
-    line in regular expressions.
-    Supports the <REPOSYNC> in the same way as the step
-    "stdout is"
-    Works only if running in the appropriate mode otherwise
-    the step is skipped.
-    Produce the steps:
-        then dnf4 stdout matches line by line
-        then dnf4 stderr matches line by line
-        then dnf5 stderr matches line by line
-        then dnf5 stdout matches line by line
-    """
-    if std_stream == "stdout":
-        then_stream_matches_line_by_line = then_stdout_matches_line_by_line
-    if std_stream == "stderr":
-        then_stream_matches_line_by_line = then_stderr_matches_line_by_line
-
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stream_matches_line_by_line(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stream_matches_line_by_line(context)
-
-
-@behave.then("{dnf_version:dnf_version} {std_stream:std_stream} is empty")
-def then_dnf_stream_is_empty(context, dnf_version, std_stream):
-    """
-    Check that stdout/stderr is empty
-    Works only if running in the appropriate mode otherwise
-    the step is skipped
-    Produce the steps:
-        then dnf4 stdout is empty
-        then dnf4 stderr is empty
-        then dnf5 stdout is empty
-        then dnf5 stderr is empty
-    """
-    if std_stream == "stdout":
-        then_stream_is_empty = then_stdout_is_empty
-    if std_stream == "stderr":
-        then_stream_is_empty = then_stderr_is_empty
-
-    dnf5_mode = hasattr(context, "dnf5_mode") and context.dnf5_mode
-    if dnf_version == "dnf5" and dnf5_mode:
-        then_stream_is_empty(context)
-    if dnf_version == "dnf4" and not dnf5_mode:
-        then_stream_is_empty(context)

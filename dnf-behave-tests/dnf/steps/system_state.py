@@ -26,10 +26,6 @@ def package_state_is(context):
     For installonly packages, multiple NEVRAS for the same NA can be put into
     the table, the reason is checked just as one NA record in packages.toml.
     """
-    # we only do the check for dnf5
-    if not hasattr(context, "dnf5_mode") or not context.dnf5_mode:
-        return
-
     check_context_table(context, ["package", "reason", "from_repo"])
 
     found_pkgs = []
