@@ -1,4 +1,3 @@
-@dnf5
 Feature: Transaction history rollback between states with the same version of a package installed
 
 

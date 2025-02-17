@@ -1,4 +1,3 @@
-@dnf5
 Feature: DNF test of append option
 
 # The excludepks append option was choosen for testing.

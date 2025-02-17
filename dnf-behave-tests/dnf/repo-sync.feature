@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for the repository syncing functionality
 
 

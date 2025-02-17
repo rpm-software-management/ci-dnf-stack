@@ -3,7 +3,6 @@
 # filesystem where the installroots live, the user attributes are not permitted
 # (see tmpfs(5), xattr(7)). That said the packages have to be downloaded out of
 # the /tmp.
-@dnf5
 @no_installroot
 Feature: Reposync does not re-download the package
 

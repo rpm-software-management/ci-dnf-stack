@@ -1,4 +1,3 @@
-@dnf5
 Feature: Install packages with base:xml set
 
 

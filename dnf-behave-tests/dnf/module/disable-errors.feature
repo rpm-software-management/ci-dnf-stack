@@ -1,4 +1,3 @@
-@dnf5
 Feature: Disabling module - error handling
 
 

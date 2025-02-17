@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests handling a repository with spaces in baseurl
 
 

@@ -1,5 +1,4 @@
 @not.with_dnf=4
-@dnf5
 Feature: Tests for actions plugin
 
 Background:

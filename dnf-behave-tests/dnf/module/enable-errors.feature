@@ -1,4 +1,3 @@
-@dnf5
 Feature: Enabling module streams - error handling
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Upgrade one package to a specific version
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests missing or misconfigured versionlock.list file in versionlock plugin
 
 

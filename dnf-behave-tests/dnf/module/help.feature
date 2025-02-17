@@ -1,4 +1,3 @@
-@dnf5
 Feature: Module usage help
 
 Scenario: I can print help using dnf module --help

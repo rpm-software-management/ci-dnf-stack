@@ -1,4 +1,3 @@
-@dnf5
 Feature: RPMs can be installed locally regardless the modular content
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: install command on packages and their docs
 
 

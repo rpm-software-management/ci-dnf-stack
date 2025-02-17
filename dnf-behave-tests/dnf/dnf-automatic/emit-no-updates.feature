@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf-automatic does not emit when no updates are available
 
 

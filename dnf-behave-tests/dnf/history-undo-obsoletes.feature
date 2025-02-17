@@ -1,4 +1,3 @@
-@dnf5
 Feature: Transaction history undo with obsoletes
 
 # Package glibc-all-langpacks requires glibc

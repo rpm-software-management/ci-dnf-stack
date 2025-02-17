@@ -1,4 +1,3 @@
-@dnf5
 Feature: Subtitute releasever in baseurl
 
 Background:

@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf repoquery command on packages with xml:base
 
 # https://github.com/rpm-software-management/dnf/issues/2130

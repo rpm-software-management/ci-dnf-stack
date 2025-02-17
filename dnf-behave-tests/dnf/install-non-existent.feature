@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test for installation of non-existent rpm or package
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test dnf list --recent
 
 

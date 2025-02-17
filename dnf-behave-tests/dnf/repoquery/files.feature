@@ -1,4 +1,3 @@
-@dnf5
 Feature: Repoquery tests working with files
 
 

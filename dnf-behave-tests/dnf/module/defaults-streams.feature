@@ -1,4 +1,3 @@
-@dnf5
 Feature: Default streams are properly switched to enabled 
 
 Background:

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Tests for repoquery weak deps related functionality:
  --recommends, --supplements, --suggests, --enhances,
  --whatrecommends, --whatsupplements, --whatsuggests, --whatenhances

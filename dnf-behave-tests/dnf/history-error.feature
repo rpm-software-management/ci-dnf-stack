@@ -1,4 +1,3 @@
-@dnf5
 Feature: Handling of errors on the history database
 
 Background:

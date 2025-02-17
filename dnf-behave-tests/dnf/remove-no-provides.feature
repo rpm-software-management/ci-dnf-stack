@@ -13,7 +13,6 @@ Background: Install two providers of foo - foo and bar
 
 
 
-@dnf5
 Scenario: Remove an RPM by name and not by provide
    When I execute dnf with args "remove 'foo'"
    Then the exit code is 0

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Checking GPG signatures of transaction packages
 
 

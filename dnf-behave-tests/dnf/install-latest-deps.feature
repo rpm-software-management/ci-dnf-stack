@@ -1,4 +1,3 @@
-@dnf5
 Feature: Always use the latest packages when installing dependecies
 
 

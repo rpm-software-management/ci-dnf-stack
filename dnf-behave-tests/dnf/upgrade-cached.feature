@@ -1,5 +1,4 @@
 # destructive because it creates/overwrites /usr/share/locale/de/LC_MESSAGES/libdnf5.mo file
-@dnf5
 @destructive
 Feature: Upgrade packages already downloaded to the cache
 

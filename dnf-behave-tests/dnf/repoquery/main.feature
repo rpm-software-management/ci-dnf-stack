@@ -1,4 +1,3 @@
-@dnf5
 Feature: The common repoquery tests, core functionality, odds and ends.
 
 Background:

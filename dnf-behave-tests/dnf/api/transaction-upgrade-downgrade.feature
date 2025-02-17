@@ -1,4 +1,3 @@
-@dnf5
 Feature: transaction: upgrades and downgrades
 
 Background: Install RPMs

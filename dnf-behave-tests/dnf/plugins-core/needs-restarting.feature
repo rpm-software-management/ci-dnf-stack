@@ -1,4 +1,3 @@
-@dnf5
 @bz1639468
 Feature: Reboot hint
 

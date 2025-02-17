@@ -1,4 +1,3 @@
-@dnf5
 Feature: correctly reading multiline repo config
 
 

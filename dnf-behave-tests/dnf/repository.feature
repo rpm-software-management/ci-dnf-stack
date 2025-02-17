@@ -1,4 +1,3 @@
-@dnf5
 Feature: Handling local base url in repository in installroot
 
 

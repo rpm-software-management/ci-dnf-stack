@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf advisory command with --json
 
 

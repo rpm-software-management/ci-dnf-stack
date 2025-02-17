@@ -1,4 +1,3 @@
-@dnf5
 Feature: Alternative packages are suggested when package is not available
 
 

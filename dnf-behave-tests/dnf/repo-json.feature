@@ -1,4 +1,3 @@
-@dnf5
 Feature: Repo command with --json option
 
 

@@ -1,6 +1,5 @@
 # aliases configuration directories are always taken from the host
 @destructive
-@dnf5
 Feature: Test for dnf5 aliases functionality
 
 Background:

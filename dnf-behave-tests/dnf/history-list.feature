@@ -1,4 +1,3 @@
-@dnf5
 Feature: history list
 
 Background:

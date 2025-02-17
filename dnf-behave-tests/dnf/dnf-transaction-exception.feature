@@ -1,4 +1,3 @@
-# @dnf5
 # libdnf5 plugins written in Python are currently broken.
 # TODO(mblaha): try again once
 # https://github.com/rpm-software-management/dnf5/issues/1775 is resolved

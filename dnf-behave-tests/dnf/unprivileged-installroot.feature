@@ -1,4 +1,3 @@
-@dnf5
 @destructive
 @no_installroot
 Feature: Installroot test as unprivileged user

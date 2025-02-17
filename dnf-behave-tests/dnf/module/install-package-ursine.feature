@@ -1,4 +1,3 @@
-@dnf5
 Feature: Installing package from ursine repo
 
 Background: Enable repositories

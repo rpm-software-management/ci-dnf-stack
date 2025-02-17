@@ -1,4 +1,3 @@
-@dnf5
 Feature: Testing dnf clean command
 
 

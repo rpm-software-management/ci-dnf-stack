@@ -1,4 +1,3 @@
-@dnf5
 Feature: Module info without the install command implemented
 
 

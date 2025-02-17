@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test the offline command
 
 Background:

@@ -1,4 +1,3 @@
-@dnf5
 @bz1688462
 Feature: Detecting proper modular platform
 

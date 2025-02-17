@@ -1,4 +1,3 @@
-@dnf5
 # rpm on RHEL7 does not support rich dependencies
 @not.with_os=rhel__eq__7
 Feature: Rich dependencies testing

@@ -1,4 +1,3 @@
-@dnf5
 Feature: RPM installation tests
 
 Background: Set repositories

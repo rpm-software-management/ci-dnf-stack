@@ -1,4 +1,3 @@
-@dnf5
 Feature: Reporting broken dependencies with various strict, best options
 
 

@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test for dnf list (including all documented suboptions and yum compatibility)
 
 

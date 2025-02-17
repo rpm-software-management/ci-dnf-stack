@@ -1,4 +1,3 @@
-@dnf5
 Feature: dnf download command on packages with xml:base
 
 

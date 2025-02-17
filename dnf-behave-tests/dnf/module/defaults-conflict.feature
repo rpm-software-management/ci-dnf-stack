@@ -1,4 +1,3 @@
-@dnf5
 Feature: Not fail if conflicts in module metadata.
 
   @bz1656019

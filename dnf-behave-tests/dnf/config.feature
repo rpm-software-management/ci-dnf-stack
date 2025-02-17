@@ -1,7 +1,6 @@
 Feature: DNF config files testing
 
 
-@dnf5
 Scenario: Test removal of dependency when clean_requirements_on_remove=false
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
@@ -21,7 +20,6 @@ Scenario: Test removal of dependency when clean_requirements_on_remove=false
         | remove        | filesystem-0:3.9-2.fc29.x86_64    |
 
 
-@dnf5
 Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
@@ -37,7 +35,6 @@ Scenario: Test with dnf.conf in installroot (dnf.conf is taken from installroot)
         """
 
 
-@dnf5    
 Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from --config)
   Given I use repository "dnf-ci-fedora"
     And I configure dnf with
@@ -60,7 +57,6 @@ Scenario: Test with dnf.conf in installroot and --config (dnf.conf is taken from
         """
 
 
-@dnf5
 Scenario: Reposdir option in dnf.conf file in installroot
   Given I configure dnf with
         | key      | value      |
@@ -77,7 +73,6 @@ Scenario: Reposdir option in dnf.conf file in installroot
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
-@dnf5
 Scenario: Reposdir option in dnf.conf file with --config option in installroot
   Given I create file "/test/dnf.conf" with
     """
@@ -96,7 +91,6 @@ Scenario: Reposdir option in dnf.conf file with --config option in installroot
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
-@dnf5
 Scenario: Reposdir option set by --setopt
   Given I configure a new repository "testrepo" in "{context.dnf.installroot}/testrepos" with
         | key     | value                                                   |
@@ -116,7 +110,6 @@ Scenario: Reposdir option set by --setopt
         | install-dep   | setup-0:2.12.1-1.fc29.noarch      |
 
 
-@dnf5
 @bz1512457
 Scenario: Test usage of not existing config file
   Given I use repository "dnf-ci-fedora"
@@ -125,7 +118,6 @@ Scenario: Test usage of not existing config file
     And stderr contains "Configuration file.*not found"
 
 
-@dnf5
 Scenario: Test using the short alias "-c" instead of "--config" (we'll use the test for a non-existent config file)
   Given I use repository "dnf-ci-fedora"
    When I execute dnf with args "-c {context.dnf.installroot}/non/existing/dnf.conf list"
@@ -133,7 +125,6 @@ Scenario: Test using the short alias "-c" instead of "--config" (we'll use the t
     And stderr contains "Configuration file.*not found"
 
 
-@dnf5
 @bz1722493
 Scenario: Lines that contain only whitespaces do not spoil previous config options
   Given I create file "/test/dnf.conf" with
@@ -175,7 +166,6 @@ Scenario: Dnf can use config file from remote location
     """
 
 
-@dnf5
 @bz1721091
 Scenario: Dnf prints reasonable error when remote config file is not downloadable
   Given I create directory "/remotedir"
@@ -194,7 +184,6 @@ Scenario: Dnf prints reasonable error when remote config file is not downloadabl
    And stderr contains "Configuration file.*not found"
 
 
-@dnf5
 @no_installroot
 Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
   Given I use repository "simple-base"
@@ -211,7 +200,6 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
     And stderr contains "Argument 'vagare' matches only excluded packages."
 
 
-@dnf5
 @no_installroot
 Scenario: Create dnf.conf file and test if host is taking option --config /test/dnf.conf file
   Given I use repository "simple-base"
@@ -239,7 +227,6 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
     And stderr contains "Argument 'dedalo-signed' matches only excluded packages."
 
 
-@dnf5
 @destructive
 Scenario: dnf.conf is not taken from host even even if the file in installroot does not exist
   Given I use repository "simple-base"
@@ -260,7 +247,6 @@ Scenario: dnf.conf is not taken from host even even if the file in installroot d
         | install-dep   | labirinto-1.0-1.fc29.x86_64           |
 
 
-@dnf5
 @destructive
 Scenario: dnf.conf is taken from host if --use-host-config is used
   Given I use repository "simple-base"
@@ -283,7 +269,6 @@ Scenario: dnf.conf is taken from host if --use-host-config is used
     """
 
 
-@dnf5
 @no_installroot
 Scenario: Reposdir option in dnf.conf file in host
   Given I configure dnf with

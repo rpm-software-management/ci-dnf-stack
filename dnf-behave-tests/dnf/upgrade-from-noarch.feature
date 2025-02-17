@@ -1,5 +1,4 @@
 @dnf5daemon
-@dnf5
 Feature: Upgrade package from noarch to arch
 
 Background: Install package to upgrade

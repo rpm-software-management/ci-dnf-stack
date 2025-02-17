@@ -1,4 +1,3 @@
-@dnf5
 Feature: Upgrade with conflicts
 
 Scenario: Conflicts are reported even if the transaction would involve removal of protected packages

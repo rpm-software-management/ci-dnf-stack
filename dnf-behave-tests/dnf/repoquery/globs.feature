@@ -1,4 +1,3 @@
-@dnf5
 Feature: Glob tests for expanding all the various glob patterns.
 
 Background:

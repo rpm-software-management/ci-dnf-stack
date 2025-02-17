@@ -1,4 +1,3 @@
-@dnf5
 Feature: Download commands with options --resolve --alldeps
 
 

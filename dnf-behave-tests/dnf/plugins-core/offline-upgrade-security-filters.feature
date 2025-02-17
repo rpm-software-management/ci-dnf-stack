@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test the security filters for offline-upgrade commands
 
 

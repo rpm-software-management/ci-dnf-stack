@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test drop-in directories for configuration files
 
 

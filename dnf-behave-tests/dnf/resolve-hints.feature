@@ -1,4 +1,3 @@
-@dnf5
 Feature: Test that proper hints are printed after resolving failure
 
 Background: Set dnf for strict behavior

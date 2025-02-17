@@ -1,5 +1,4 @@
 @dnf5daemon
-@dnf5
 Feature: Upgrade all RPMs
 
 
