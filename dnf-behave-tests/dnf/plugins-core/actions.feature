@@ -235,3 +235,72 @@ Scenario: Reason change is in transaction
     \? installonlyA-0:2.0-1.x86_64 repo @System
     I installonlyA-0:2.2-1.x86_64 repo installonly
     """
+
+
+Scenario: Testing the "raise_error" and a non-existent action process file
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Error logged.
+    repos_configured::::/bin/non-existed ab c
+    repos_configured:::raise_error=0:/bin/non-existed d ef
+
+    # Exception thrown.
+    repos_configured:::raise_error=1:/bin/non-existed xy z
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Cannot execute action, command \"/bin/non-existed\" arguments \"xy z\""
+    And file "/var/log/dnf5.log" contains lines
+    """
+    ERROR Actions plugin: .* Cannot execute action, command "/bin/non-existed" arguments "ab c"
+    ERROR Actions plugin: .* Cannot execute action, command "/bin/non-existed" arguments "d ef"
+    """
+
+
+Scenario: Testing the "raise_error" option and exit codes
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Zero exit code. Success. No error was logged and no exception was thrown.
+    repos_configured::::/bin/sh -c exit\ 0
+    repos_configured:::raise_error=0:/bin/sh -c exit\ 0
+    repos_configured:::raise_error=1:/bin/sh -c exit\ 0
+
+    # Non-zero exit code. Error logged.
+    repos_configured::::/bin/sh -c exit\ 1
+    repos_configured:::raise_error=0:/bin/sh -c exit\ 2
+
+    # Non-zero exit code. Exception thrown.
+    repos_configured:::raise_error=1:/bin/sh -c exit\ 3
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Exit code: 3"
+    And file "/var/log/dnf5.log" does not contain lines
+    """
+    ERROR Actions plugin: .* Exit code: 0
+    """
+    And file "/var/log/dnf5.log" contains lines
+    """
+    ERROR Actions plugin: .* Exit code: 1
+    ERROR Actions plugin: .* Exit code: 2
+    """
+
+
+Scenario: Testing the "raise_error" option and failed to process the output line in plain communication mode
+  Given I create and substitute file "/etc/dnf/libdnf5-plugins/actions.d/test.actions" with
+    """
+    # Error logged.
+    repos_configured::::/bin/sh -c echo\ "conf.nonexist_option=1"
+    repos_configured:::raise_error=0:/bin/sh -c echo\ "conf.nonexist_option=2"
+
+    # Exception thrown.
+    repos_configured:::raise_error=1:/bin/sh -c echo\ "conf.nonexist_option=3"
+    """
+   When I execute dnf with args "install setup"
+   Then the exit code is 1
+    And stderr contains "Cannot set option: Action output line: conf.nonexist_option=3"
+    And file "/var/log/dnf5.log" contains lines
+    """
+    ERROR Actions plugin: .* Cannot set option: Action output line: conf.nonexist_option=1
+    ERROR Actions plugin: .* Cannot set option: Action output line: conf.nonexist_option=2
+    """
