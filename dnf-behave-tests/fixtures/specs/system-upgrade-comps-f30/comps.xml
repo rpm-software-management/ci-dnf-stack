@@ -90,4 +90,52 @@
     </grouplist>
   </environment>
 
+  <group>
+   <id>C-group</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>C-group</name>
+   <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+    </packagelist>
+  </group>
+
+  <group>
+   <id>D-group</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>D-group</name>
+   <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+      <packagereq type="mandatory">A-mandatory</packagereq>
+      <packagereq type="default">A-default</packagereq>
+      <packagereq type="optional">A-optional</packagereq>
+    </packagelist>
+  </group>
+
+  <environment>
+   <id>C-environment</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>C-environment</name>
+   <description>Testenvironment for DNF CI testing</description>
+    <grouplist>
+    </grouplist>
+  </environment>
+
+  <environment>
+   <id>D-environment</id>
+   <default>false</default>
+   <uservisible>true</uservisible>
+   <display_order>1024</display_order>
+   <name>D-environment</name>
+   <description>Testenvironment for DNF CI testing</description>
+    <grouplist>
+      <groupid>A-group</groupid>
+    </grouplist>
+  </environment>
+
 </comps>
