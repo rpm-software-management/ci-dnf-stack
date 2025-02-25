@@ -310,3 +310,37 @@ Scenario: Upgrade nonexistent and existent group
     And Transaction is following
         | Action        | Package                            |
         | group-upgrade | empty-group                        |
+
+
+Scenario: Upgrade group and a package that was removed from the group at the same time
+  Given I successfully execute dnf with args "group install AB-group"
+    And I drop repository "comps-upgrade-1"
+    And I use repository "comps-upgrade-2"
+   When I execute dnf with args "upgrade @AB-group A-mandatory"
+   Then the exit code is 0
+    And DNF Transaction is following
+        | Action        | Package                            |
+        | upgrade       | A-mandatory-0:2.0-1.x86_64         |
+        | install-group | B-mandatory-0:1.0-1.x86_64         |
+        | install-group | B-default-0:1.0-1.x86_64           |
+        | install-group | B-conditional-true-0:1.0-1.x86_64  |
+        | group-upgrade | AB-group                           |
+
+
+Scenario: Upgrade environment and a group that was removed from the environment at the same time
+  Given I successfully execute dnf with args "group install AB-environment"
+    And I drop repository "comps-upgrade-1"
+    And I use repository "comps-upgrade-2"
+   When I execute dnf with args "group upgrade AB-environment a-group"
+   Then the exit code is 0
+    And DNF Transaction is following
+        | Action        | Package                           |
+        | upgrade       | A-mandatory-0:2.0-1.x86_64        |
+        | upgrade       | A-default-0:2.0-1.x86_64          |
+        | upgrade       | A-conditional-true-0:2.0-1.x86_64 |
+        | install-group | B-mandatory-0:1.0-1.x86_64        |
+        | install-group | B-default-0:1.0-1.x86_64          |
+        | install-group | B-conditional-true-0:1.0-1.x86_64 |
+        | group-upgrade | A-group - repo#2                  |
+        | group-install | B-group                           |
+        | env-upgrade   | AB-environment                    |
