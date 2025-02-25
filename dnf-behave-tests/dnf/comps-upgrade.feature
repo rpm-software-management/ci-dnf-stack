@@ -111,9 +111,6 @@ Scenario: Upgrade group to new metadata and back - always install new packages
         | install-group | A-mandatory-0:1.0-1.x86_64         |
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
-        | remove        | B-mandatory-0:1.0-1.x86_64         |
-        | remove        | B-default-0:1.0-1.x86_64           |
-        | remove        | B-conditional-true-0:1.0-1.x86_64  |
         | group-upgrade | AB-group                           |
 
 
@@ -162,7 +159,6 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
         | install-group | B-default-0:1.0-1.x86_64           |
         | install-group | B-conditional-true-0:1.0-1.x86_64  |
         | group-install | B-group                            |
-        | group-remove  | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
 
 
@@ -213,7 +209,6 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | B-default-0:1.0-1.x86_64           |
         | install-group | B-conditional-true-0:1.0-1.x86_64  |
         | group-install | B-group                            |
-        | group-remove  | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
   Given I drop repository "comps-upgrade-2"
     And I use repository "comps-upgrade-1"
@@ -225,10 +220,6 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
         | group-install | A-group - repo#1                   |
-        | group-remove  | B-group                            |
-        | remove        | B-mandatory-0:1.0-1.x86_64         |
-        | remove        | B-default-0:1.0-1.x86_64           |
-        | remove        | B-conditional-true-0:1.0-1.x86_64  |
         | env-upgrade   | AB-environment                     |
 
 
