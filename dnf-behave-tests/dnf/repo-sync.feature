@@ -137,7 +137,6 @@ Scenario: Missing baseurl/metalink/mirrorlist
 @bz1605117
 @bz1713627
 # reported as https://github.com/rpm-software-management/dnf5/issues/2065
-@xfail
 Scenario: Nonexistent GPG key
   Given I use repository "dnf-ci-fedora" with configuration
         | key             | value                                       |
@@ -151,7 +150,8 @@ Scenario: Nonexistent GPG key
    Then the exit code is 0
     And stderr contains "Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora/repodata/repomd.xml.asc"
     And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
-    And stderr contains "Ignoring repositories: dnf-ci-fedora"
+    # See https://github.com/rpm-software-management/dnf5/issues/2064.
+    # And stderr contains "Ignoring repositories: dnf-ci-fedora"
 
 
 @bz1713627
