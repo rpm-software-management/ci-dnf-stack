@@ -444,6 +444,35 @@ Scenario: Generate new manifest using installed packages
     """
 
 
+Scenario: Generate new multiarch manifest file
+  Given I use repository "security-upgrade-multilib"
+    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686"
+   Then file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
+   """
+    document: rpm-package-manifest
+    version: *
+    data:
+    repositories:
+      - id: security-upgrade-multilib
+        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+    packages:
+      i686:
+        - name: B
+          repo_id: security-upgrade-multilib
+          location: i686/B-1-1.i686.rpm
+          checksum: sha256:*
+          size: *
+          evr: 1-1
+      x86_64:
+        - name: B
+          repo_id: security-upgrade-multilib
+          location: x86_64/B-1-1.x86_64.rpm
+          checksum: sha256:*
+          size: *
+          evr: 1-1
+    """
+
+
 Scenario: Download packages from the manifest
   Given I successfully execute dnf with args "manifest new abcde http-parser"
    When I execute dnf with args "manifest download"
@@ -454,6 +483,17 @@ Scenario: Download packages from the manifest
         | {context.dnf.tempdir}/packages.manifest/flac-1.3.2-8.fc29.x86_64.rpm        | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/flac-1.3.2-8.fc29.x86_64.rpm        |
         | {context.dnf.tempdir}/packages.manifest/http-parser-2.4.0-1.fc29.x86_64.rpm | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/http-parser-2.4.0-1.fc29.x86_64.rpm |
         | {context.dnf.tempdir}/packages.manifest/wget-1.19.5-5.fc29.x86_64.rpm       | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/wget-1.19.5-5.fc29.x86_64.rpm       |
+
+
+Scenario: Download multiarch packages from the manifest
+  Given I use repository "security-upgrade-multilib"
+    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686"
+   When I execute dnf with args "manifest download --archs x86_64 i686"
+   Then the exit code is 0
+    And file sha256 checksums are following
+        | Path                                                                        | sha256                                                                                   |
+        | {context.dnf.tempdir}/packages.manifest/B-1-1.i686.rpm                      | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/i686/B-1-1.i686.rpm     |
+        | {context.dnf.tempdir}/packages.manifest/B-1-1.x86_64.rpm                    | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/x86_64/B-1-1.x86_64.rpm |
 
 
 Scenario: Install packages from the manifest
