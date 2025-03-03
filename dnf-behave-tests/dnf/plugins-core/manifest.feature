@@ -473,6 +473,45 @@ Scenario: Generate new multiarch manifest file
     """
 
 
+Scenario: Generate new manifest files for each arch
+  Given I use repository "security-upgrade-multilib"
+    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686 --per-arch"
+   Then file "/{context.dnf.tempdir}/packages.manifest.x86_64.yaml" matches line by line
+   """
+   document: rpm-package-manifest
+   version: *
+   data:
+   repositories:
+     - id: security-upgrade-multilib
+       baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+   packages:
+     x86_64:
+       - name: B
+         repo_id: security-upgrade-multilib
+         location: x86_64/B-1-1.x86_64.rpm
+         checksum: sha256:*
+         size: *
+         evr: 1-1
+    """
+    And file "/{context.dnf.tempdir}/packages.manifest.i686.yaml" matches line by line
+    """
+    document: rpm-package-manifest
+    version: *
+    data:
+    repositories:
+      - id: security-upgrade-multilib
+        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+    packages:
+      i686:
+        - name: B
+          repo_id: security-upgrade-multilib
+          location: i686/B-1-1.i686.rpm
+          checksum: sha256:*
+          size: *
+          evr: 1-1
+    """
+
+
 Scenario: Download packages from the manifest
   Given I successfully execute dnf with args "manifest new abcde http-parser"
    When I execute dnf with args "manifest download"
@@ -494,6 +533,16 @@ Scenario: Download multiarch packages from the manifest
         | Path                                                                        | sha256                                                                                   |
         | {context.dnf.tempdir}/packages.manifest/B-1-1.i686.rpm                      | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/i686/B-1-1.i686.rpm     |
         | {context.dnf.tempdir}/packages.manifest/B-1-1.x86_64.rpm                    | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/x86_64/B-1-1.x86_64.rpm |
+
+
+Scenario: Download packages from the arch-specific manifest
+  Given I use repository "security-upgrade-multilib"
+    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686 --per-arch"
+   When I execute dnf with args "manifest download"
+   Then the exit code is 0
+    And file sha256 checksums are following
+        | Path                                                                        | sha256                                                                                   |
+        | {context.dnf.tempdir}/packages.manifest.x86_64/B-1-1.x86_64.rpm             | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/x86_64/B-1-1.x86_64.rpm |
 
 
 Scenario: Install packages from the manifest
