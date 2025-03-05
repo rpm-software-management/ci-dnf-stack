@@ -220,3 +220,20 @@ Examples:
       | option            |
       | --setopt=cachedir |
       | --setopt=system_cachedir |
+
+
+# https://github.com/rpm-software-management/dnf5/issues/1851
+Scenario: After the system-upgrade, packages from_repo contains correct repo_id
+Given I successfully execute dnf with args "system-upgrade download"
+  And I successfully execute dnf with args "system-upgrade reboot"
+  And I stop http server for repository "system-upgrade-f$releasever"
+  And I stop http server for repository "system-upgrade-2-f$releasever"
+  And I successfully execute dnf with args "offline _execute"
+ When I execute dnf with args "repoquery --installed --queryformat="%{{full_nevra}} %{{from_repo}}\n" pkg-a pkg-both pkg-b"
+ Then the exit code is 0
+  And stdout is
+  """
+  pkg-a-0:2.0-1.noarch system-upgrade-f30
+  pkg-b-0:1.0-1.noarch system-upgrade-f30
+  pkg-both-0:2.0-1.noarch system-upgrade-f30
+  """
