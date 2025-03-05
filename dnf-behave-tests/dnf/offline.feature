@@ -257,3 +257,16 @@ Given I use repository "simple-base"
   And Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
+
+
+# https://github.com/rpm-software-management/dnf5/issues/1851
+Scenario: After an offline transaction, installed packages have correct from_repo
+Given I successfully execute dnf with args "install --offline flac"
+  And I successfully execute dnf with args "offline reboot"
+  And I successfully execute dnf with args "offline _execute"
+ When I execute dnf with args "repoquery --installed --queryformat="%{{full_nevra}} %{{from_repo}}\n" flac"
+ Then the exit code is 0
+  And stdout is
+      """
+      flac-0:1.3.2-8.fc29.x86_64 dnf-ci-fedora
+      """
