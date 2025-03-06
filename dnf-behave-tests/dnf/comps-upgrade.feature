@@ -344,3 +344,24 @@ Scenario: Upgrade environment and a group that was removed from the environment 
         | group-upgrade | A-group - repo#2                  |
         | group-install | B-group                           |
         | env-upgrade   | AB-environment                    |
+
+
+Scenario: Packages removed from a group are still upgraded during an upgrade
+  Given I successfully execute dnf with args "group install AB-group"
+    And I drop repository "comps-upgrade-1"
+    And I use repository "comps-upgrade-2"
+   When I execute dnf with args "upgrade @AB-group"
+   Then the exit code is 0
+    And DNF Transaction is following
+        | Action        | Package                            |
+        | install-group | B-mandatory-0:1.0-1.x86_64         |
+        | install-group | B-default-0:1.0-1.x86_64           |
+        | install-group | B-conditional-true-0:1.0-1.x86_64  |
+        | group-upgrade | AB-group                           |
+   When I execute dnf with args "upgrade"
+   Then the exit code is 0
+    And DNF Transaction is following
+        | Action        | Package                            |
+        | upgrade       | A-mandatory-0:2.0-1.x86_64         |
+        | upgrade       | A-default-0:2.0-1.x86_64          |
+        | upgrade       | A-conditional-true-0:2.0-1.x86_64 |
