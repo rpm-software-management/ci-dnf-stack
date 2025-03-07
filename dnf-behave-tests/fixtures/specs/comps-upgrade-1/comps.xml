@@ -19,6 +19,18 @@
   </group>
 
   <group>
+    <id>C-group</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>C-group</name>
+    <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+      <packagereq type="mandatory">C-mandatory</packagereq>
+    </packagelist>
+  </group>
+
+  <group>
    <id>AB-group</id>
    <default>false</default>
    <uservisible>true</uservisible>
@@ -43,6 +55,19 @@
    <description>Testenvironment for DNF CI testing</description>
     <grouplist>
       <groupid>a-group</groupid>
+    </grouplist>
+  </environment>
+
+  <environment>
+    <id>AC-environment</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>AC-environment</name>
+    <description>Testenvironment for DNF CI testing</description>
+    <grouplist>
+      <groupid>a-group</groupid>
+      <groupid>C-group</groupid>
     </grouplist>
   </environment>
 
