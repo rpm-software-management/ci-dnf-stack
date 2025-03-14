@@ -19,18 +19,18 @@ Background:
     And I successfully execute dnf with args "install wget"
 
 
-Scenario: When PGP key is expired, its removal is triggered before transaction
+Scenario: When OpenPGP key is expired, its removal is triggered before transaction
   Given I move the clock forward to "2 years"
     And I successfully execute dnf with args "install vagare" 
    Then stderr contains lines matching
     """
-    The following PGP key \(0x.*\) is about to be removed:
+    The following (Open)?PGP key \(0x.*\) is about to be removed:
      Reason     : Expired on .*
      UserID     : "dnf-ci-gpg-expiry"
     """
 
 
-Scenario: When PGP key is expired, its removal is not triggered on non-transactional operations
+Scenario: When OpenPGP key is expired, its removal is not triggered on non-transactional operations
   Given I move the clock forward to "2 years"
     And I successfully execute dnf with args "repoquery vagare" 
-   Then stderr does not contain "The following PGP key \(0x.*\) is about to be removed:"
+   Then stderr does not contain "The following (Open)?PGP key \(0x.*\) is about to be removed:"
