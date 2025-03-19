@@ -50,6 +50,21 @@
     </packagelist>
   </group>
 
+  <group>
+    <id>change-package-type</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>change-package-type</name>
+    <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+      <packagereq type="mandatory">dummy</packagereq>
+      <packagereq type="default">A-mandatory</packagereq>
+      <packagereq type="optional">B-mandatory</packagereq>
+      <packagereq type="conditional" requires="A-mandatory">C-mandatory</packagereq>
+    </packagelist>
+  </group>
+
   <environment>
    <id>AB-environment</id>
    <default>false</default>
@@ -60,6 +75,21 @@
     <grouplist>
       <groupid>B-group</groupid>
     </grouplist>
+  </environment>
+
+  <environment>
+    <id>ABC-environment</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>ABC-environment</name>
+    <description>Testenvironment for DNF CI testing</description>
+    <grouplist>
+      <groupid>B-group</groupid>
+    </grouplist>
+    <optionlist>
+      <groupid>AB-group</groupid>
+    </optionlist>
   </environment>
 
 </comps>
