@@ -405,8 +405,6 @@ Scenario: Install a group with empty packagelist
         | group-install | Test Group    |
 
 
-@xfail
-# https://github.com/rpm-software-management/dnf5/issues/183
 @not.with_os=rhel__ge__8
 Scenario: Merge groups when one has empty packagelist
   Given I use repository "comps-group"
@@ -424,10 +422,15 @@ Scenario: Merge groups when one has empty packagelist
         """
     And stdout is
         """
-        Group: Test Group
-         Description: Test Group description updated.
-         Mandatory Packages:
-           test-package
+        Id                   : test-group
+        Name                 : Test Group
+        Description          : Test Group description updated.
+        Installed            : yes
+        Order                : 
+        Langonly             : 
+        Uservisible          : yes
+        Repositories         : @System
+        Mandatory packages   : test-package
         """
 
 
@@ -450,6 +453,7 @@ Scenario: Merge environment with missing names containg a group with missing nam
         Installed            : False
         Repositories         : comps-group, comps-group-merging
         Required groups      : no-name-group
+                             : test-group
         """
 
 
@@ -475,9 +479,6 @@ Scenario: Group info with a group that has missing name
         """
 
 
-@xfail
-# https://github.com/rpm-software-management/dnf5/issues/881
-# https://github.com/rpm-software-management/dnf5/issues/183
 Scenario: Mark a group and an environment without name
   Given I use repository "comps-group"
     And I use repository "comps-group-merging"
