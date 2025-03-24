@@ -1,7 +1,3 @@
-# comps groups merging works differently in dnf5
-# https://github.com/rpm-software-management/dnf5/issues/183
-# https://github.com/rpm-software-management/dnf5/issues/881
-@xfail
 @bz1928181
 Feature: Comps are merged based on repoconf load order
 
@@ -29,8 +25,8 @@ Scenario: Comps merging and repoconf load order of dnf-ci-fedora and dnf-ci-fedo
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group info a-group"
    Then the exit code is 0
-    And stdout contains "Group: A-group - repo#2"
-    And stdout contains "Description: Testgroup for DNF CI testing - repo#2"
+    And stdout contains "Name *: A-group - repo#2"
+    And stdout contains "Description *: Testgroup for DNF CI testing - repo#2"
 
 
 Scenario: Comps merging and repoconf load order of dnf-ci-abc and dnf-ci-fedora repo files
@@ -46,8 +42,8 @@ Scenario: Comps merging and repoconf load order of dnf-ci-abc and dnf-ci-fedora 
     And I use repository "comps-upgrade-1"
     And I create and substitute file "/etc/yum.repos.d/dnf-ci-abc.repo" with
       """
-      [dnf-ci-fedora-updates]
-      name=dnf-ci-fedora-updates
+      [dnf-ci-abc]
+      name=dnf-ci-abc
       baseurl={context.scenario.repos_location}/comps-upgrade-2
       enabled=1
       gpgcheck=0
@@ -56,5 +52,5 @@ Scenario: Comps merging and repoconf load order of dnf-ci-abc and dnf-ci-fedora 
     And I use repository "comps-upgrade-2"
    When I execute dnf with args "group info a-group"
    Then the exit code is 0
-    And stdout contains "Group: A-group - repo#1"
-    And stdout contains "Description: Testgroup for DNF CI testing - repo#1"
+    And stdout contains "Name *: A-group - repo#1"
+    And stdout contains "Description *: Testgroup for DNF CI testing - repo#1"

@@ -52,7 +52,7 @@ Scenario: Install an environment when all of its groups are excluded
 
 Scenario: Install comps that are not excluded
   Given I use repository "comps-upgrade-1"
-   When I execute dnf with args "group install *-group *-environment --setopt=excludegroups=a-group --setopt=excludeenvs=AB-environment"
+   When I execute dnf with args "group install *-group *-environment --setopt=excludegroups=a-group --setopt=excludeenvs=AB*-environment"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                            |

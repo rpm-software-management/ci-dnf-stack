@@ -82,6 +82,21 @@
     </packagelist>
   </group>
 
+  <group>
+    <id>change-package-type</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>change-package-type</name>
+    <description>Testgroup for DNF CI testing</description>
+    <packagelist>
+      <packagereq type="mandatory">A-mandatory</packagereq>
+      <packagereq type="default">B-mandatory</packagereq>
+      <packagereq type="optional">C-mandatory</packagereq>
+      <packagereq type="conditional" requires="A-mandatory">dummy</packagereq>
+    </packagelist>
+  </group>
+
   <environment>
    <id>empty-environment</id>
    <default>false</default>
@@ -102,6 +117,21 @@
    <description>Testenvironment for DNF CI testing</description>
     <optionlist>
       <groupid>a-group</groupid>
+    </optionlist>
+  </environment>
+
+  <environment>
+    <id>ABC-environment</id>
+    <default>false</default>
+    <uservisible>true</uservisible>
+    <display_order>1024</display_order>
+    <name>ABC-environment</name>
+    <description>Testenvironment for DNF CI testing</description>
+    <grouplist>
+      <groupid>a-group</groupid>
+    </grouplist>
+    <optionlist>
+      <groupid>C-group</groupid>
     </optionlist>
   </environment>
 
