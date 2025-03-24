@@ -524,25 +524,29 @@ Scenario: Download packages from the manifest
         | {context.dnf.tempdir}/packages.manifest/wget-1.19.5-5.fc29.x86_64.rpm       | file://{context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/wget-1.19.5-5.fc29.x86_64.rpm       |
 
 
-Scenario: Download multiarch packages from the manifest
-  Given I use repository "security-upgrade-multilib"
-    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686"
-   When I execute dnf with args "manifest download --archs x86_64 i686"
+Scenario: Download multiarch packages from multiarch manifest
+  Given I use repository "manifest-multiarch"
+    And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64"
+   When I execute dnf with args "manifest download --archs x86_64 ppc64"
    Then the exit code is 0
     And file sha256 checksums are following
-        | Path                                                                        | sha256                                                                                   |
-        | {context.dnf.tempdir}/packages.manifest/B-1-1.i686.rpm                      | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/i686/B-1-1.i686.rpm     |
-        | {context.dnf.tempdir}/packages.manifest/B-1-1.x86_64.rpm                    | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/x86_64/B-1-1.x86_64.rpm |
+        | Path                                                                        | sha256                                                                                          |
+        | {context.dnf.tempdir}/packages.manifest/foo-1.0-1.x86_64.rpm                | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/x86_64/foo-1.0-1.x86_64.rpm           |
+        | {context.dnf.tempdir}/packages.manifest/foo-1.0-1.ppc64.rpm                 | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/ppc64/foo-1.0-1.ppc64.rpm             |
+        | {context.dnf.tempdir}/packages.manifest/waldo-1.0-1.noarch.rpm              | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/noarch/waldo-1.0-1.noarch.rpm         |
 
 
-Scenario: Download packages from the arch-specific manifest
-  Given I use repository "security-upgrade-multilib"
-    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686 --per-arch"
-   When I execute dnf with args "manifest download"
-   Then the exit code is 0
-    And file sha256 checksums are following
-        | Path                                                                        | sha256                                                                                   |
-        | {context.dnf.tempdir}/packages.manifest.x86_64/B-1-1.x86_64.rpm             | file://{context.dnf.fixturesdir}/repos/security-upgrade-multilib/x86_64/B-1-1.x86_64.rpm |
+Scenario: Download multiarch packages from per-arch manifests
+  Given I use repository "manifest-multiarch"
+    And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64 --per-arch"
+    And I successfully execute dnf with args "manifest download --archs x86_64"
+    And I successfully execute dnf with args "manifest download --archs ppc64"
+   Then file sha256 checksums are following
+        | Path                                                                        | sha256                                                                                          |
+        | {context.dnf.tempdir}/packages.manifest.x86_64/foo-1.0-1.x86_64.rpm         | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/x86_64/foo-1.0-1.x86_64.rpm           |
+        | {context.dnf.tempdir}/packages.manifest.x86_64/waldo-1.0-1.noarch.rpm       | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/noarch/waldo-1.0-1.noarch.rpm         |
+        | {context.dnf.tempdir}/packages.manifest.ppc64/foo-1.0-1.ppc64.rpm           | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/ppc64/foo-1.0-1.ppc64.rpm             |
+        | {context.dnf.tempdir}/packages.manifest.ppc64/waldo-1.0-1.noarch.rpm        | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/noarch/waldo-1.0-1.noarch.rpm         |
 
 
 Scenario: Install packages from the manifest
