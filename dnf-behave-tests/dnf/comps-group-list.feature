@@ -23,9 +23,9 @@ Scenario: All user visible groups are listed by default (installed group is not 
    And stdout is
        """
        ID                   Name        Installed
+       test-group           Test Group        yes
        empty-group          Empty group        no
        no-name-group                           no
-       test-group           Test Group        yes 
        """
 
 Scenario: I can list also hidden groups
@@ -38,10 +38,10 @@ Scenario: I can list also hidden groups
    And stdout is
        """
        ID                   Name         Installed
-       empty-group          Empty group         no
        hidden-group         Hidden group        no
-       no-name-group                            no
        test-group           Test Group         yes
+       empty-group          Empty group         no
+       no-name-group                            no
        """
 
 Scenario: I can filter listed groups by their ids (hidden groups are included)
@@ -67,9 +67,9 @@ Scenario: I can filter listed groups by their names (hidden groups are included)
    And stdout is
        """
        ID                   Name         Installed
-       empty-group          Empty group         no
        hidden-group         Hidden group        no
        test-group           Test Group         yes
+       empty-group          Empty group         no
        """
 
 Scenario: I can list only installed groups
@@ -95,9 +95,9 @@ Scenario: I can list only available groups
    And stdout is
        """
        ID                   Name        Installed
+       test-group           Test Group         no
        empty-group          Empty group        no
        no-name-group                           no
-       test-group           Test Group         no
        """
 
 Scenario: I can list only groups containing a package
@@ -110,8 +110,8 @@ Scenario: I can list only groups containing a package
    And stdout is
        """
        ID                   Name       Installed
-       no-name-group                          no
        test-group           Test Group       yes
+       no-name-group                          no
        """
 
 Scenario: I can get info about all groups (installed group is not duplicated)
@@ -123,24 +123,24 @@ Scenario: I can get info about all groups (installed group is not duplicated)
       """
    And stdout is
       """
-      Id                   : empty-group
-      Name                 : Empty group
-      Description          : 
-      Installed            : no
-      Order                : 
-      Langonly             : 
-      Uservisible          : yes
-      Repositories         : comps-group-list
-      
       Id                   : test-group
       Name                 : Test Group
       Description          : Test Group description.
       Installed            : yes
-      Order                : 
+      Order                : 4
       Langonly             : 
       Uservisible          : yes
       Repositories         : @System
       Mandatory packages   : test-package
+      
+      Id                   : empty-group
+      Name                 : Empty group
+      Description          : 
+      Installed            : no
+      Order                : 16
+      Langonly             : 
+      Uservisible          : yes
+      Repositories         : comps-group-list
       
       Id                   : no-name-group
       Name                 : 
