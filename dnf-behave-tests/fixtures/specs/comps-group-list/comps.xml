@@ -5,6 +5,7 @@
    <id>test-group</id>
    <name>Test Group</name>
    <description>Test Group description.</description>
+   <display_order>4</display_order>
    <packagelist>
      <packagereq type="mandatory">test-package</packagereq>
    </packagelist>
@@ -23,6 +24,7 @@
    <id>hidden-group</id>
    <name>Hidden group</name>
    <description></description>
+   <display_order>3</display_order>
    <uservisible>false</uservisible>
    <packagelist>
      <packagereq type="mandatory">test-package</packagereq>
@@ -33,6 +35,7 @@
    <id>empty-group</id>
    <name>Empty group</name>
    <description></description>
+   <display_order>16</display_order>
    <packagelist>
    </packagelist>
   </group>
