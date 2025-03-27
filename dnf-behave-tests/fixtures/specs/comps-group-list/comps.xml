@@ -40,4 +40,31 @@
    </packagelist>
   </group>
 
+  <environment>
+    <id>test-environment</id>
+    <name>Test Environment</name>
+    <description>Test Environment description.</description>
+    <display_order>4</display_order>
+    <grouplist>
+      <groupid>test-group</groupid>
+    </grouplist>
+  </environment>
+
+  <environment>
+    <id>no-name-environment</id>
+    <name></name>
+    <description></description>
+    <grouplist>
+      <groupid>test-group</groupid>
+    </grouplist>
+  </environment>
+
+  <environment>
+    <id>empty-environment</id>
+    <name>Empty Environment</name>
+    <description></description>
+    <display_order>16</display_order>
+    <grouplist>
+    </grouplist>
+  </environment>
 </comps>
