@@ -5,7 +5,7 @@ Background: Force column width
 # Some of the curl errors can be quite long and since they are
 # truncated: https://github.com/rpm-software-management/dnf5/issues/1829
 # we need to force the width to see them in full.
-Given I set environment variable "FORCE_COLUMNS" to "300"
+Given I set environment variable "FORCE_COLUMNS" to "400"
 
 
 @bz1763663
@@ -23,10 +23,9 @@ Scenario: The default value of skip_if_unavailable is False
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo"
-     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Usable URL not found
+    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo": Usable URL not found
     """
 
 
@@ -48,8 +47,8 @@ Scenario: There is global skip_if_unavailable option
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Usable URL not found
     Repositories loaded.
     """
 
@@ -71,8 +70,8 @@ Scenario: Per repo skip_if_unavailable configuration
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Usable URL not found
     Repositories loaded.
     """
 
@@ -92,10 +91,9 @@ Scenario: The repo configuration takes precedence over the global one
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml - repomd.xml
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo"
-     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Usable URL not found
+    Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo": Usable URL not found
     """
 
 
@@ -108,7 +106,7 @@ Given I use repository "dnf-ci-fedora" with configuration
  When I execute dnf with args "makecache"
  Then the exit code is 1
  And stderr contains ">>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/dnf-ci-fedora/repodata/repomd.xml.asc"
-  And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
+  And stderr contains ">>> GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
 
 
 @bz1713627
@@ -145,11 +143,11 @@ Scenario: Nonexistent GPG key
    When I execute dnf with args "makecache"
    Then the exit code is 1
     And stderr contains "Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora/repodata/repomd.xml.asc"
-    And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
+    And stderr contains ">>> GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
     And stderr contains "Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora/repodata/repomd.xml.asc"
-    And stderr contains ">>> Librepo error: GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
+    And stderr contains ">>> GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification:"
     # See https://github.com/rpm-software-management/dnf5/issues/2064.
     # And stderr contains "Ignoring repositories: dnf-ci-fedora"
 
@@ -175,9 +173,8 @@ Scenario: Mirrorlist with invalid mirrors
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-    Failed to download metadata \(mirrorlist: ".*/tmp/mirrorlist"\) for repository "dnf-ci-fedora"
-     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Usable URL not found
+    Failed to download metadata \(mirrorlist: ".*/tmp/mirrorlist"\) for repository "dnf-ci-fedora": Usable URL not found
     """
    When I execute dnf with args "makecache --setopt=*.skip_if_unavailable=1"
    Then the exit code is 0
@@ -188,7 +185,7 @@ Scenario: Mirrorlist with invalid mirrors
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
     >>> Curl error \(7\): (Couldn't|Could not) connect to server for http://127.0.0.1:5000/nonexistent/repodata/repomd.xml .*
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+    >>> Usable URL not found
     Repositories loaded.
     """
 

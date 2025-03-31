@@ -52,12 +52,12 @@ Scenario: non-UTF-8 character in baseurl
    When I execute dnf with args "install dummy --repofrompath=testrepo,{context.invalid_utf8_char}"
    Then the exit code is 1
     And stdout is empty
-    And stderr is
+    And stderr matches line by line
         """
         <REPOSYNC>
-        >>> Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath 
-        Failed to download metadata (baseurl: "{context.invalid_utf8_char}") for repository "testrepo"
-         Librepo error: Cannot download repomd.xml: Empty mirrorlist and no basepath specified!
+        >>> Usable URL not found
+        miscellaneous test repository .*
+        Failed to download metadata \(baseurl: "{context.invalid_utf8_char}".*
         """
 
 
