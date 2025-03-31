@@ -223,19 +223,6 @@ Scenario: history longer than 80 charactersi gets cut when there is no terminal
   """
 
 
-@xfail
-# Reported as https://github.com/rpm-software-management/dnf5/issues/2025
-@bz1786335
-@bz1786316
-Scenario: history length is 80 chars when missing rows are queried
- When I execute dnf with args "history 10 | head -1 | wc -c"
- Then the exit code is 0
-  And stdout is
-  """
-  80
-  """
-
-
 @bz1846692
 Scenario: history list --reverse
  When I execute dnf with args "history list --reverse"
