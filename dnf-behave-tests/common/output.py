@@ -163,7 +163,7 @@ def then_stderr_matches_line_by_line(context):
     Supports the <REPOSYNC> in the same way as the step "stderr is"
     """
     found = context.cmd_stderr.split('\n')
-    expected = context.text.split('\n')
+    expected = context.text.format(context=context).split('\n')
 
     clean_expected, clean_found = handle_reposync(expected, found)
 
