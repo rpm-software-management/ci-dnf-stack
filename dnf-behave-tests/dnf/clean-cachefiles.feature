@@ -28,6 +28,10 @@ Background: Fill the cache
 Scenario: Cleanup of the whole cache (dnf clean all)
    When I execute dnf with args "clean all"
    Then the exit code is 0
+    And stdout matches line by line
+        """
+        Removed 4 files, 4 directories \(total of [0-9]* KiB\). 0 errors occurred.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
@@ -51,6 +55,10 @@ Scenario: Cleanup of the whole cache, cache contains link pointing outside, cont
     And I execute "ln -s {context.dnf.installroot}/tmp/user_file2 `ls -d simple-base-*`/packages/link_outside2" in "{context.dnf.installroot}/var/cache/dnf"
    When I execute dnf with args "clean all"
    Then the exit code is 0
+    And stdout matches line by line
+        """
+        Removed 6 files, 4 directories \(total of [0-9]* KiB\). 0 errors occurred.
+        """
     And directory "/var/cache/dnf" is empty
     And file "/tmp/user_dir/user_file1" exists
     And file "/tmp/user_file2" exists
@@ -59,6 +67,10 @@ Scenario: Cleanup of the whole cache, cache contains link pointing outside, cont
 Scenario: Cached metadata cleanup (dnf clean metadata)
    When I execute dnf with args "clean metadata"
    Then the exit code is 0
+    And stdout matches line by line
+        """
+        Removed 3 files, 2 directories \(total of [0-9]* KiB\). 0 errors occurred.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
@@ -72,6 +84,10 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
 Scenario: Cached packages cleanup (dnf clean packages)
    When I execute dnf with args "clean packages"
    Then the exit code is 0
+    And stdout matches line by line
+        """
+        Removed 1 files, 1 directories \(total of [0-9]* KiB\). 0 errors occurred.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
@@ -88,6 +104,10 @@ Scenario: Cached packages cleanup (dnf clean packages)
 Scenario: Database cached cleanup (dnf clean dbcache)
    When I execute dnf with args "clean dbcache"
    Then the exit code is 0
+    And stdout matches line by line
+        """
+        Removed 1 files, 1 directories \(total of [0-9]* KiB\). 0 errors occurred.
+        """
    When I execute "find | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
