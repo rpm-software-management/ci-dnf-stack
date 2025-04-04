@@ -1,4 +1,3 @@
-@dnf5daemon
 Feature: Tests for environment list and info commands
 
 
