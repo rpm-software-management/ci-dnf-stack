@@ -3,6 +3,9 @@ Feature: Tests for group list and info commands
 
 Background: Enable repo and mark a group as installed
  Given I use repository "comps-group-list"
+ # Create the installed group manually so the test can be
+ # used by dnf5daemon because it doesn't implement the group
+ # install command yet.
  Given I create file "/usr/lib/sysimage/libdnf5/groups.toml" with
     """
     version = "1.0"
