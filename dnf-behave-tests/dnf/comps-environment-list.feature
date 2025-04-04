@@ -3,6 +3,9 @@ Feature: Tests for environment list and info commands
 
 Background: Enable repo and mark an environment as installed
  Given I use repository "comps-group-list"
+   # Create the installed environment manually so the test can be
+   # used by dnf5daemon because it doesn't implement the environment
+   # install command yet.
    And I create file "/usr/lib/sysimage/libdnf5/environments.toml" with
        """
        version = "1.0"
