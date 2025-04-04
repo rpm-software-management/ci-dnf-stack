@@ -4,8 +4,13 @@ Feature: Tests for environment list and info commands
 
 Background: Enable repo and mark an environment as installed
  Given I use repository "comps-group-list"
-   And I successfully execute dnf with args "group install test-environment"
+   And I create file "/usr/lib/sysimage/libdnf5/environments.toml" with
+       """
+       version = "1.0"
+       [environments]
 
+       test-environment = {groups = [], userinstalled = true}
+       """
 
 # https://github.com/rpm-software-management/dnf5/issues/1502
 @xfail
