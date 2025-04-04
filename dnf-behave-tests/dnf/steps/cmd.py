@@ -14,6 +14,7 @@ import json
 
 from common.lib.cmd import assert_exitcode, run_in_context
 from common.lib.file import prepend_installroot
+from common.output import then_stdout_matches_line_by_line
 from fixtures import start_server_based_on_type
 from lib.rpmdb import get_rpmdb_rpms
 from lib.json import diff_json_pattern_values
@@ -313,6 +314,20 @@ def then_stderr_contains_lines_matching(context):
                 break
         else:
             raise AssertionError("Stderr doesn't contain line matching: %s" % line)
+
+
+@behave.then("dnf5 stdout matches line by line")
+def then_dnf5_stdout_matches(context):
+    if context.dnf5daemon_mode:
+        return
+    then_stdout_matches_line_by_line(context)
+
+
+@behave.then("dnf5daemon stdout matches line by line")
+def then_dnf5daemon_stdout_matches(context):
+    if not context.dnf5daemon_mode:
+        return
+    then_stdout_matches_line_by_line(context)
 
 
 @behave.step("I sleep for \"{duration:d}\" seconds")
