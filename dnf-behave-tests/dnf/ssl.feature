@@ -55,8 +55,8 @@ Scenario: Installing a package using untrusted client cert should fail
         # for stderr containing the expected output and ignore the superfluous
         # errors.
     And stderr contains ">>> Curl error"
+    And stderr contains ">>> Usable URL not found"
     And stderr contains "Failed to download metadata \(baseurl: \"https://localhost:{context.dnf.ports[dnf-ci-fedora]}/\"\) for repository \"dnf-ci-fedora\""
-    And stderr contains " Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried"
 
 
 @bz1605187
@@ -73,9 +73,8 @@ Scenario: Installing a package using nonexistent client cert should fail
     >>> Curl error \(58\)\: Problem with the local SSL certificate.*
     >>> Curl error \(58\)\: Problem with the local SSL certificate.*
     >>> Curl error \(58\)\: Problem with the local SSL certificate.*
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd*
+    >>> Usable URL not found
     Failed to download metadata \(baseurl: \"https://localhost:[0-9]+/\"\) for repository \"dnf-ci-fedora\"
-     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
@@ -95,9 +94,8 @@ Scenario: Installation with untrusted repository should fail
     >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
     >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
     >>> Curl error \(60\): SSL peer certificate or SSH remote key was not OK for https.*
-    >>> Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd*
+    >>> Usable URL not found
     Failed to download metadata \(baseurl: \"https://localhost:[0-9]+/\"\) for repository \"simple-base\"
-     Librepo error: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
     """
 
 
