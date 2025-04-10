@@ -15,34 +15,30 @@ Scenario: sort alphanumerically
        """
    And stdout is
        """
-       Matched fields: name (exact)
-        name.src: Summary
-        name.x86_64: Summary
-       Matched fields: name, summary
-        name-summary.src: Summary of name
-        name-summary.x86_64: Summary of name
-        name-summary-description.src: Summary of name
-        name-summary-description.x86_64: Summary of name
-        name-summary-description-url.src: Summary of name
-        name-summary-description-url.x86_64: Summary of name
-        name-summary-url.src: Summary of name
-        name-summary-url.x86_64: Summary of name
-       Matched fields: name
-        name-description.src: Summary
-        name-description.x86_64: Summary
-        name-description-url.src: Summary
-        name-description-url.x86_64: Summary
-        name-url.src: Summary
-        name-url.x86_64: Summary
-       Matched fields: summary
-        summary.src: Summary of name
-        summary.x86_64: Summary of name
-        summary-description.src: Summary of name
-        summary-description.x86_64: Summary of name
-        summary-description-url.src: Summary of name
-        summary-description-url.x86_64: Summary of name
-        summary-url.src: Summary of name
-        summary-url.x86_64: Summary of name
+       Package                             Description     Matched fields
+       name.x86_64                         Summary         name (exact)
+       name-summary.src                    Summary of name name, summary
+       name-summary.x86_64                 Summary of name name, summary
+       name-summary-description.src        Summary of name name, summary
+       name-summary-description.x86_64     Summary of name name, summary
+       name-summary-description-url.src    Summary of name name, summary
+       name-summary-description-url.x86_64 Summary of name name, summary
+       name-summary-url.src                Summary of name name, summary
+       name-summary-url.x86_64             Summary of name name, summary
+       name-description.src                Summary         name
+       name-description.x86_64             Summary         name
+       name-description-url.src            Summary         name
+       name-description-url.x86_64         Summary         name
+       name-url.src                        Summary         name
+       name-url.x86_64                     Summary         name
+       summary.src                         Summary of name summary
+       summary.x86_64                      Summary of name summary
+       summary-description.src             Summary of name summary
+       summary-description.x86_64          Summary of name summary
+       summary-description-url.src         Summary of name summary
+       summary-description-url.x86_64      Summary of name summary
+       summary-url.src                     Summary of name summary
+       summary-url.x86_64                  Summary of name summary
        """
 
 
@@ -56,46 +52,33 @@ Scenario: sort --all alphanumerically
        """
    And stdout is
        """
-       Matched fields: name (exact)
-        name.src: Summary
-        name.x86_64: Summary
-       Matched fields: name, summary, description, url
-        name-summary-description-url.src: Summary of name
-        name-summary-description-url.x86_64: Summary of name
-       Matched fields: name, summary, description
-        name-summary-description.src: Summary of name
-        name-summary-description.x86_64: Summary of name
-       Matched fields: name, summary, url
-        name-summary-url.src: Summary of name
-        name-summary-url.x86_64: Summary of name
-       Matched fields: name, summary
-        name-summary.src: Summary of name
-        name-summary.x86_64: Summary of name
-       Matched fields: name, description, url
-        name-description-url.src: Summary
-        name-description-url.x86_64: Summary
-       Matched fields: name, description
-        name-description.src: Summary
-        name-description.x86_64: Summary
-       Matched fields: name, url
-        name-url.src: Summary
-        name-url.x86_64: Summary
-       Matched fields: summary, description, url
-        summary-description-url.src: Summary of name
-        summary-description-url.x86_64: Summary of name
-       Matched fields: summary, description
-        summary-description.src: Summary of name
-        summary-description.x86_64: Summary of name
-       Matched fields: summary, url
-        summary-url.src: Summary of name
-        summary-url.x86_64: Summary of name
-       Matched fields: summary
-        summary.src: Summary of name
-        summary.x86_64: Summary of name
-       Matched fields: description
-        description.src: Summary
-        description.x86_64: Summary
-       Matched fields: url
-        url.src: Summary
-        url.x86_64: Summary
+       Package                             Description  Matched fields
+       name.src                            Summary      name (exact)
+       name.x86_64                         Summary      name (exact)
+       name-summary-description-url.src    Summary of n name, summary, description, url
+       name-summary-description-url.x86_64 Summary of n name, summary, description, url
+       name-summary-description.src        Summary of n name, summary, description
+       name-summary-description.x86_64     Summary of n name, summary, description
+       name-summary-url.src                Summary of n name, summary, url
+       name-summary-url.x86_64             Summary of n name, summary, url
+       name-summary.src                    Summary of n name, summary
+       name-summary.x86_64                 Summary of n name, summary
+       name-description-url.src            Summary      name, description, url
+       name-description-url.x86_64         Summary      name, description, url
+       name-description.src                Summary      name, description
+       name-description.x86_64             Summary      name, description
+       name-url.src                        Summary      name, url
+       name-url.x86_64                     Summary      name, url
+       summary-description-url.src         Summary of n summary, description, url
+       summary-description-url.x86_64      Summary of n summary, description, url
+       summary-description.src             Summary of n summary, description
+       summary-description.x86_64          Summary of n summary, description
+       summary-url.src                     Summary of n summary, url
+       summary-url.x86_64                  Summary of n summary, url
+       summary.src                         Summary of n summary
+       summary.x86_64                      Summary of n summary
+       description.src                     Summary      description
+       description.x86_64                  Summary      description
+       url.src                             Summary      url
+       url.x86_64                          Summary      url
        """
