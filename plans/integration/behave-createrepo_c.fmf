@@ -3,6 +3,6 @@ tag: createrepo_c
 execute:
     how: tmt
     script: |
-        $TMT_PLANS_DATA/ci-dnf-stack/container-test \
+        /var/tmp/ci-dnf-stack/container-test \
         --suite createrepo_c \
         run
