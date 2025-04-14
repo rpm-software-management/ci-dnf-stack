@@ -3,5 +3,5 @@ tag: dnf
 execute:
     how: tmt
     script: |
-        $TMT_PLANS_DATA/ci-dnf-stack/container-test run
+        /var/tmp/ci-dnf-stack/container-test run
 
