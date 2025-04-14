@@ -3,6 +3,6 @@ tag: dnf5
 execute:
     how: tmt
     script: |
-        $TMT_PLANS_DATA/ci-dnf-stack/container-test run \
+        /var/tmp/ci-dnf-stack/container-test run \
         --tags dnf5 \
         --command dnf5
