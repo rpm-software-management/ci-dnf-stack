@@ -2,7 +2,7 @@
 # $ podman build --build-arg TYPE=distro -t ci-dnf-stack -f Dockerfile
 # $ podman run --net none -it ci-dnf-stack behave dnf
 
-ARG BASE=quay.io/centos-bootc/centos-bootc:stream9
+ARG BASE=quay.io/centos-bootc/centos-bootc:stream10
 FROM $BASE
 
 ENV LANG C.UTF-8
