@@ -261,8 +261,13 @@ Given I use repository "security-upgrade"
       E
       """
  When I execute dnf with args "upgrade E --security --setopt=obsoletes=false"
- Then the exit code is 0
-  And Transaction is empty
+ Then the exit code is 1
+  And stderr is
+      """
+      <REPOSYNC>
+      Failed to resolve the transaction:
+      No match for argument 'E' in selected advisories
+      """
 
 
 Scenario: --security upgrade all packages with obsoletes when obsoletes are turned off
