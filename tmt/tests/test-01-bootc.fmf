@@ -1,6 +1,0 @@
-summary: Foo test
-test: |
-  cd /opt/ci/dnf-behave-tests
-  "$TMT_TREE"/container-test --run-on-host run --reboot --tags bootc --command dnf4
-
-duration: 30m
