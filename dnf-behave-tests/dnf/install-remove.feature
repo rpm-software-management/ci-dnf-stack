@@ -334,7 +334,11 @@ Scenario: Install with glob
 # https://github.com/rpm-software-management/dnf5/issues/766
 Scenario: Install with glob and empty advisory
    When I execute dnf with args "install 'water_*' --advisories=nonexistent"
-   Then the exit code is 0
-    And Transaction is empty
+   Then the exit code is 1
+    And stderr is
+    """
+    <REPOSYNC>
+    No advisory found matching the requested name: "nonexistent"
+    """
 
 #Scenario: Install remove package from url

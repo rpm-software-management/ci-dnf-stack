@@ -153,6 +153,7 @@ Scenario: advisory info security (when there's nothing to report)
     And stderr is
         """
         <REPOSYNC>
+        No advisory found matching the specified filters.
         """
     And stdout is empty
 
