@@ -1,6 +1,5 @@
-@bootc
 @destructive
-Feature: Bootc plugin
+Feature: Transient mode
 
 Background: Enable repositories
   Given I use repository "bootc"
