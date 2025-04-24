@@ -49,3 +49,84 @@ Scenario: Rollback a transaction with a package that is no longer available
           - conflicting requests
           - problem with installed package
         """
+
+
+Scenario: Rollback install of multiple installonly pkgs
+  Given I use repository "installonly"
+    And I configure dnf with
+        | key               | value        |
+        | installonlypkgs   | installonlyB |
+        | installonly_limit | 2            |
+    And I successfully execute dnf with args "install installonlyB-1.0 installonlyB-2.0"
+   When I execute dnf with args "history rollback last-1"
+   Then the exit code is 0
+    And Transaction is following
+        | Action | Package                   |
+        | remove | installonlyB-1.0-1.x86_64 |
+        | remove | installonlyB-2.0-1.x86_64 |
+
+
+Scenario: Rollback rollback of install of multiple installonly pkgs
+  Given I use repository "installonly"
+    And I configure dnf with
+        | key               | value        |
+        | installonlypkgs   | installonlyB |
+        | installonly_limit | 2            |
+    And I successfully execute dnf with args "install installonlyB-1.0 installonlyB-2.0"
+    And I successfully execute dnf with args "history rollback last-1"
+   When I execute dnf with args "history rollback last-1"
+   Then the exit code is 0
+    And Transaction is following
+        | Action  | Package                   |
+        | install | installonlyB-1.0-1.x86_64 |
+        | install | installonlyB-2.0-1.x86_64 |
+
+
+Scenario: Rollback upgrade with obsolete
+  Given I use repository "dnf-ci-obsoletes"
+    And I successfully execute dnf with args "install PackageB-2.0"
+    And I successfully execute dnf with args "upgrade"
+   When I execute dnf with args "history rollback last-1"
+   Then the exit code is 0
+    And Transaction is following
+        | Action  | Package                         |
+        | install | PackageB-2.0-1.x86_64           |
+        | remove  | PackageB-Obsoleter-1.0-1.x86_64 |
+
+
+Scenario: Rollback upgrade with two obsoleters
+  Given I use repository "dnf-ci-obsoletes"
+    And I successfully execute dnf with args "install PackageF-1.0"
+    And I successfully execute dnf with args "upgrade"
+   When I execute dnf with args "history rollback last-1"
+   Then the exit code is 0
+    And Transaction is following
+        | Action  | Package                                |
+        | install | PackageF-1.0-1.x86_64                  |
+        | remove  | PackageF-Obsoleter-3.0-1.x86_64        |
+        | remove  | PackageF-Obsoleter-Second-3.0-1.x86_64 |
+
+
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/2223
+Scenario: Rollback reinstall action
+  Given I successfully execute dnf with args "reinstall glibc"
+   When I execute dnf with args "history rollback last-1"
+   Then the exit code is 0
+    And Transaction is following
+        | Action    | Package                   |
+        | reinstall | glibc-2.28-26.fc29.x86_64 |
+    And stderr does not contain "Transaction merge error"
+
+
+@xfail
+# Reported as https://github.com/rpm-software-management/dnf5/issues/2223
+Scenario: Rollback install + reinstall action
+  Given I successfully execute dnf with args "install wget"
+    And I successfully execute dnf with args "reinstall wget"
+   When I execute dnf with args "history rollback last-2"
+   Then the exit code is 0
+    And Transaction is following
+        | Action | Package                   |
+        | remove | wget-1.19.6-5.fc29.x86_64 |
+    And stderr does not contain "Transaction merge error"
