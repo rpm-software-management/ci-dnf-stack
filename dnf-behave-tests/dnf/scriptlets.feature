@@ -34,8 +34,8 @@ Scenario Outline: Install a pkg with a failing %pre[IN|TRANS] scriptlet
 
 Examples:
       | package                              | scriptlet       |
-      | Package-pre-fail-0:1.0-1.x86_64      | pre-install     |
-      | Package-pretrans-fail-0:1.0-1.x86_64 | pre-transaction |
+      | Package-pre-fail-0:1.0-1.x86_64      | %pre            |
+      | Package-pretrans-fail-0:1.0-1.x86_64 | %pretrans       |
 
 
 Scenario Outline: Install a pkg with a failing %post[in|trans] scriptlet
@@ -49,8 +49,8 @@ Scenario Outline: Install a pkg with a failing %post[in|trans] scriptlet
 
 Examples:
       | package                               | scriptlet        |
-      | Package-post-fail-0:1.0-1.x86_64      | post-install     |
-      | Package-posttrans-fail-0:1.0-1.x86_64 | post-transaction |
+      | Package-post-fail-0:1.0-1.x86_64      | %post            |
+      | Package-posttrans-fail-0:1.0-1.x86_64 | %posttrans       |
 
 
 Scenario Outline: Remove a pkg with a successful %[pre|post]un scriptlet
@@ -77,8 +77,8 @@ Scenario: Remove a pkg with a failing %preun scriptlet
        | install       | Package-preun-fail-0:1.0-1.x86_64 |
   When I execute dnf with args "remove Package-preun-fail"
   Then the exit code is 1
-   And stderr contains ">>> Running pre-uninstall scriptlet: Package-preun-fail-0:1.0-1.x86_64"
-   And stderr contains ">>> Error in pre-uninstall scriptlet: Package-preun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Running %preun scriptlet: Package-preun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Error in %preun scriptlet: Package-preun-fail-0:1.0-1.x86_64"
    And stderr contains "Transaction failed: Rpm transaction failed."
   When I execute dnf with args "--setopt=tsflags=noscripts remove Package-preun-fail"
   Then the exit code is 0
@@ -95,8 +95,8 @@ Scenario: Remove a pkg with a failing %postun scriptlet
        | install       | Package-postun-fail-0:1.0-1.x86_64 |
   When I execute dnf with args "remove Package-postun-fail"
   Then the exit code is 0
-   And stderr contains ">>> Running post-uninstall scriptlet: Package-postun-fail-0:1.0-1.x86_64"
-   And stderr contains ">>> Non-critical error in post-uninstall scriptlet: Package-postun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Running %postun scriptlet: Package-postun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Non-critical error in %postun scriptlet: Package-postun-fail-0:1.0-1.x86_64"
    And stderr contains "Complete!"
    And Transaction is following
        | Action        | Package                           |
@@ -121,8 +121,8 @@ Scenario: Correct output for triggered failed scriptlet of package not present i
   When I execute dnf with args "install Package-install-file"
   Then the exit code is 0
    And stderr contains "failing on triggerin scriptlet"
-   And stderr contains ">>> Running trigger-install scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
-   And stderr contains ">>> Non-critical error in trigger-install scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Running %triggerin scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Non-critical error in %triggerin scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
    And stderr does not contain "scriptlet: Package-install-file"
 
 
@@ -136,8 +136,8 @@ Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet 
        | Action       | Package                             |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
    And stderr contains "transfiletriggerpostun scriptlet \(Package-transfiletriggerpostun-fail\) for uninstall transaction of Package-install-file is failing"
-   And stderr contains ">>> Running trigger-post-uninstall scriptlet: Package-transfiletriggerpostun-fail-0:1.0-1.x86_64"
-   And stderr contains ">>> Non-critical error in trigger-post-uninstall scriptlet: Package-transfiletriggerpostun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Running %triggerpostun scriptlet: Package-transfiletriggerpostun-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Non-critical error in %triggerpostun scriptlet: Package-transfiletriggerpostun-fail-0:1.0-1.x86_64"
    And stderr does not contain "scriptlet: Package-install-file"
 
 
@@ -159,8 +159,8 @@ Scenario: Correct output for triggered failing file scriptlet of package not pre
   When I execute dnf with args "install Package-install-file"
   Then the exit code is 0
    And stderr contains "filetriggerin scriptlet \(Package-filetriggerin-fail\) for Package-install-file install/update is failing"
-   And stderr contains ">>> Running trigger-install scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
-   And stderr contains ">>> Non-critical error in trigger-install scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Running %triggerin scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
+   And stderr contains ">>> Non-critical error in %triggerin scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
    And stderr does not contain "scriptlet: Package-install-file"
 
 
