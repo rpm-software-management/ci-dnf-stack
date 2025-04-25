@@ -15,7 +15,7 @@ Scenario: dnf-automatic reports an error when package installation failed
    Then the exit code is 1
     And RPMDB Transaction is empty
     And stdout contains "Failed to install upgrades."
-    And stdout contains "Error in pre-install scriptlet"
+    And stdout contains "Error in %pre scriptlet"
     And stdout contains "Transaction failed: Rpm transaction failed."
 
 # https://github.com/rpm-software-management/dnf/issues/1918
