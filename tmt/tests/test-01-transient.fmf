@@ -1,0 +1,6 @@
+summary: Test DNF transient mode (--transient, persistence=transient)
+test: |
+  cd /opt/ci/dnf-behave-tests
+  "$TMT_TREE"/container-test --suite dnf-bootc --run-on-host run --reboot --command dnf4 transient.feature
+
+duration: 30m

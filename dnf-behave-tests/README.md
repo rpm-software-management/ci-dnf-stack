@@ -107,6 +107,36 @@ To preserve the directories of failing scenarios only, you can use:
 sudo behave -Ddnf_command=my-dnf -Dpreserve=f dnf
 ```
 
+dnf-bootc Test Suite
+-----------
+The `dnf-bootc` test suite contains tests for DNF functionality specific to
+[bootc](https://github.com/containers/bootc) systems. It shares `steps` and
+`environment.py` with the `dnf` suite. The tests are destructive and must be
+run using [TMT](https://tmt.readthedocs.io/en/stable/) since they call
+`tmt-reboot` to reboot the test system. Starting from the top level of the
+ci-dnf-stack repository, you can run the `dnf-bootc` test suite with:
+
+```
+sudo dnf install -y tmt+all
+sudo tmt run plan --name behave-dnf-bootc
+```
+
+Each of the features in the suite should be run on a clean bootc system, so TMT
+is configured (via `tmt/plans/behave-dnf-bootc.fmf` and
+`tmt/tests/test-00-bootc-install.sh`) to reinstall the DNF testing container to
+the test runner via `bootc install to-existing-root` before running each
+feature.
+
+To test the effects of system reboots, scenarios in some features use the tags
+`@reboot_count_1`, `@reboot_count_2`, and so on. `container-test run --reboot`
+reads the environment variable `TMT_REBOOT_COUNT` and runs scenarios tagged
+with `@reboot_count_$TMT_REBOOT_COUNT`. After running these scenarios, if there
+are scenarios tagged `@reboot_count_${TMT_REBOOT_COUNT+1}`, `container-test`
+will call `tmt-reboot` to reboot the system and run the next phase of the test.
+Beware: because we need to split up scenarios with reboots, **Behave scenarios
+in this test suite are not independent**, which is a departure from best
+practices.
+
 
 Contributing
 ------------

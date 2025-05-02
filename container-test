@@ -29,7 +29,7 @@ def command_line_parser():
         help="Test suite to run (directory with *.feature files)")
     parser.add_argument(
         "-c", "--container", metavar="IMAGE",
-        default='dnf-bot/dnf-testing:latest',
+        default='localhost/dnf-bot/dnf-testing:latest',
         help="Specified Image ID or name if do not want to run the last built image")
     parser.add_argument(
         "-d", "--devel", action="store_true", default=False,
@@ -40,6 +40,9 @@ def command_line_parser():
     parser.add_argument(
         "-v", "--verbose", action="store_true", default=False,
         help="Increase verbosity")
+    parser.add_argument(
+        "-H", "--run-on-host", action="store_true", default=False,
+        help="Run command on the host instead of using the container")
 
     subparsers = parser.add_subparsers(
         dest="command", help="List of available commands:")
@@ -97,6 +100,9 @@ def command_line_parser():
     run_parser.add_argument(
         "featurefiles", metavar="<feature>", nargs="*",
         help="List of feature files to run")
+    run_parser.add_argument(
+        "--reboot", action="store_true", default=False,
+        help="Run only tests tagged with `reboot_count_$TMT_REBOOT_COUNT` and reboot if tests succeeded and there are tests tagged with `reboot_count_${TMT_REBOOT_COUNT+1}`")
 
     # list command
     list_parser = subparsers.add_parser(
@@ -203,7 +209,7 @@ class BehaveRunner(object):
                     os.path.join('/opt/ci/dnf-behave-tests', self.command_line_args.suite))])
             if hasattr(self.command_line_args, 'junit_directory') \
                 and self.command_line_args.junit_directory:
-                self._volumes.extend(['--volume', '{}:/junit:z'.format(
+                self._volumes.extend(['--volume', '{}:/var/junit:z'.format(
                     self.command_line_args.junit_directory)])
         return self._volumes
 
@@ -266,16 +272,21 @@ class BehaveRunner(object):
 
         return tests
 
-    def dry_run(self):
-        command = self.docker_bin + ['run', '--rm']
-        command += self.volumes
-        command += [self.command_line_args.container, 'behave', '--dry-run', '--no-skipped']
+    def dry_run(self, extra_tags=()):
+        command = []
+        if not self.command_line_args.run_on_host:
+            command += self.docker_bin + ['run', '--rm']
+            command += self.volumes
+            command += [self.command_line_args.container]
+        command += ['behave', '--dry-run', '--no-skipped']
         if getattr(self.command_line_args, 'featurefiles', []):
             command += [os.path.join(self.command_line_args.suite, a) for a in self.command_line_args.featurefiles]
         else:
             command += [self.command_line_args.suite]
-        for tag in self.tags:
+
+        for tag in (*self.tags, *extra_tags):
             command += ['--tags', tag]
+
         returncode, stdout, stderr = execute(command)
         if returncode > 0:
             msg = 'Command "{}" failed with {}'.format(' '.join(command), returncode)
@@ -343,23 +354,36 @@ class BehaveRunner(object):
                 yield (feature_name, None)
 
         def param_junit(feature_name, i):
-            return ['--junit-directory="/junit/{}_{}"'.format(feature_name, i)]
+            return ['--junit-directory="/var/junit/{}_{}"'.format(feature_name, i)]
 
 
-        command = self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
+        command = []
+        if not self.command_line_args.run_on_host:
+            command += self.docker_bin + ['run', '--rm'] + self.param_tty + self.volumes + self.capabilities
+            if self.command_line_args.container_args:
+                command += self.command_line_args.container_args
 
-        if self.command_line_args.container_args:
-            command += self.command_line_args.container_args
+            if not self.command_line_args.enable_network:
+                command += ['--net', 'none']
 
-        if not self.command_line_args.enable_network:
-            command += ['--net', 'none']
+            command += [self.command_line_args.container]
 
-        command += [self.command_line_args.container, './container-test-wrapper']
-        command += self.param_reserve
+        command += ['./container-test-wrapper'] + self.param_reserve
 
         command += ['--', '--no-skipped', '--junit']
 
-        for tag in self.tags:
+
+        if self.command_line_args.reboot:
+            tmt_reboot_count_env = os.getenv("TMT_REBOOT_COUNT")
+            try:
+                tmt_reboot_count = int(tmt_reboot_count_env)
+            except (ValueError, TypeError):
+                error(f"--reboot specified, but TMT_REBOOT_COUNT is {repr(tmt_reboot_count_env)}")
+            reboot_tags = (f"reboot_count_{tmt_reboot_count}",)
+        else:
+            reboot_tags = ()
+
+        for tag in (*self.tags, *reboot_tags):
             command += ['--tags', tag]
 
         if self.command_line_args.dnf_command:
@@ -369,7 +393,7 @@ class BehaveRunner(object):
             command.extend(['-D destructive=yes'])
 
         failed = set()
-        for feature, scenarios in self.dry_run():
+        for feature, scenarios in self.dry_run(reboot_tags):
             i = 1
             for feature_name, scenario_name in process_feature(feature, scenarios):
                 if scenario_name is not None:
@@ -391,6 +415,12 @@ class BehaveRunner(object):
 
         if failed:
             error('\n'.join(['Failed test(s):'] + sorted(failed)))
+
+        if self.command_line_args.reboot:
+            # If we are running under TMT and counting reboots, and there are
+            # tests to be done on the next reboot, then reboot.
+            if self.dry_run((f"reboot_count_{tmt_reboot_count+1}",)):
+                subprocess.call(["tmt-reboot"])
 
     def command_build(self):
         '''

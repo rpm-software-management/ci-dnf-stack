@@ -59,3 +59,7 @@ def file_has_mode(context, filepath, octal_mode_str):
     octal_file_mode = os.stat(matched_files[0]).st_mode & 0o777
     assert oct(octal_mode) == oct(octal_file_mode), \
         "File \"{}\" has mode \"{}\"".format(matched_files[0], oct(octal_file_mode))
+
+@behave.step("path \"{path}\" is not writeable")
+def path_is_not_writeable(context, path):
+    assert not os.access(path, os.W_OK), f"Path '{path}' is unexpectedly writeable"
