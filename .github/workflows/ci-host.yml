@@ -33,6 +33,7 @@ jobs:
           RUN dnf -y update
           RUN dnf -y install dnf-plugins-core
           RUN dnf -y copr enable rpmsoftwaremanagement/rpm-gitoverlay
+          RUN dnf -y copr enable rpmsoftwaremanagement/dnf-nightly
           RUN dnf -y install rpm-gitoverlay fuse-overlayfs parallel podman wget clang-tools-extra
           # needed for dnf5's ccache builds
           RUN dnf -y builddep https://raw.githubusercontent.com/rpm-software-management/dnf5/main/dnf5.spec
