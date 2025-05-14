@@ -472,3 +472,47 @@ Examples:
     | value |
     | 1     |
     | 0     |
+
+
+Scenario: working repo and repo with absolute path baseurl to a missing file when skip_if_unavailable is enabled
+  Given I use repository "dnf-ci-fedora"
+    And I configure a new repository "testrepo" with
+        | key     | value                 |
+        | enabled | True                  |
+        # the baseurl is an absolute path but the file is missing
+        | baseurl | file:///nfsmount/repo |
+   When I execute dnf with args "rq dwm.x86_64 --setopt=skip_if_unavailable=1"
+   Then the exit code is 0
+    And stdout is
+    """
+    dwm-0:6.1-1.x86_64
+    """
+    And stderr contains lines matching
+    """
+    Updating and loading repositories:
+     testrepo test repository .*
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[Couldn't open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
+    >>> Usable URL not found
+     dnf-ci-fedora test repository .*
+    Repositories loaded.
+    """
+
+
+Scenario: working repo and repo with absolute path baseurl to a missing file when skip_if_unavailable is disabled
+  Given I use repository "dnf-ci-fedora"
+    And I configure a new repository "testrepo" with
+        | key     | value                 |
+        | enabled | True                  |
+        # the baseurl is an absolute path but the file is missing
+        | baseurl | file:///nfsmount/repo |
+   When I execute dnf with args "rq dwm.x86_64 --setopt=skip_if_unavailable=0"
+   Then the exit code is 1
+    And stderr contains lines matching
+    """
+    Updating and loading repositories:
+     testrepo test repository .*
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[Couldn't open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
+    >>> Usable URL not found
+     dnf-ci-fedora test repository .*
+    Failed to download metadata \(baseurl: "file:///nfsmount/repo"\) for repository "testrepo": Usable URL not found
+    """
