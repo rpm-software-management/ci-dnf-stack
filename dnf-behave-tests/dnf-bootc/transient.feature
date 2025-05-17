@@ -37,6 +37,10 @@ Scenario: Install a package using --transient without any overlay procudes a war
      A transient overlay will be created on /usr that will be discarded on reboot. Keep in mind that changes to /etc and /var will still persist, and packages commonly modify these directories.
      """
    And stderr is empty
+   And History info should match
+     | Key           | Value                     |
+     | Persistence   | Transient                 |
+     | Install       | hello-1.0-1.fc29.x86_64   |
    And file "/usr/bin/hello" exists
 
 @reboot_count_1
