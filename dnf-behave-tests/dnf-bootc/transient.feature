@@ -1,4 +1,3 @@
-@destructive
 Feature: Transient mode
 
 Background: Enable repositories
@@ -14,7 +13,6 @@ Scenario: System should boot without transient overlay
    And path "/usr/bin" is not writeable
 
 @reboot_count_1
-@no_installroot
 Scenario: Install a package using --transient on a bootc system
  Given file "/usr/bin/hello" does not exist
   When I execute dnf with args "install hello --transient"
