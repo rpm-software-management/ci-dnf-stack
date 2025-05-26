@@ -25,11 +25,11 @@ Scenario: Variables are substituted in baseurl via vars in config files
 
 @bz2076853
 Scenario: Variables are substituted in baseurl via vars in config files in custom location
-  Given I create and substitute file "{context.dnf.installroot}/tmp/vars/var1" with
+  Given I create and substitute file "/tmp/vars/var1" with
         """
         file://
         """
-    And I create and substitute file "{context.dnf.installroot}/tmp/vars/var2" with
+    And I create and substitute file "/tmp/vars/var2" with
         """
         dnf-ci-fedora
         """
