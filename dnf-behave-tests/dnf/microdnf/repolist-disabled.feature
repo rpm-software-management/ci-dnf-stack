@@ -1,5 +1,3 @@
-@no_installroot
-@destructive
 Feature: Repolist when all repositories are disabled
 
 

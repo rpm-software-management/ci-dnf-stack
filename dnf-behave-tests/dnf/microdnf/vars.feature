@@ -8,8 +8,6 @@ Background:
 
 
 @bz2076853
-@no_installroot
-@destructive
 Scenario: Variables are substituted in baseurl via vars in config files
   Given I create and substitute file "/etc/dnf/vars/var1" with
         """
