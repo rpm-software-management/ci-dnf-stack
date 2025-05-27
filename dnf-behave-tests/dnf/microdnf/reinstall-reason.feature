@@ -1,4 +1,3 @@
-@no_installroot
 Feature: Reinstall must keep the "reason" why a package was installed
   E.g. if package with dependency is installed, and the dependency is reinstalled, and the main package is then removed, the dependency is removed as well.
 

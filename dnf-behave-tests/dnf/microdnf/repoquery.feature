@@ -1,5 +1,3 @@
-@no_installroot
-@destructive
 Feature: The common repoquery tests, core functionality, odds and ends.
 
 Background:

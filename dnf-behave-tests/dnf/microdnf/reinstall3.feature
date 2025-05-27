@@ -1,4 +1,3 @@
-@no_installroot
 Feature: Reinstall
 
 

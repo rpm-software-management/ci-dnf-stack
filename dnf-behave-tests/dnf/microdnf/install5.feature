@@ -1,4 +1,3 @@
-@no_installroot
 Feature: microdnf install command on packages
 
 
