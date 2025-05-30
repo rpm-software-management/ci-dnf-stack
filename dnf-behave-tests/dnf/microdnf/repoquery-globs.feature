@@ -1,5 +1,3 @@
-@no_installroot
-@destructive
 Feature: Glob tests for expanding all the various glob patterns.
 
 Background:

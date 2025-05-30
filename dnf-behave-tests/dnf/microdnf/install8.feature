@@ -1,4 +1,3 @@
-@no_installroot
 Feature: microdnf is able to downgrade packages
 
 

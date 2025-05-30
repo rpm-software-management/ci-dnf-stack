@@ -8,8 +8,6 @@ Background:
 
 
 @bz2076853
-@no_installroot
-@destructive
 Scenario: Variables are substituted in baseurl via vars in config files
   Given I create and substitute file "/etc/dnf/vars/var1" with
         """
@@ -24,12 +22,26 @@ Scenario: Variables are substituted in baseurl via vars in config files
 
 
 @bz2076853
-Scenario: Variables are substituted in baseurl via vars in config files in custom location
-  Given I create and substitute file "{context.dnf.installroot}/tmp/vars/var1" with
+Scenario: Variables are substituted in baseurl via vars in config files, installroot variant
+  Given I create and substitute file "/etc/dnf/vars/var1" with
         """
         file://
         """
-    And I create and substitute file "{context.dnf.installroot}/tmp/vars/var2" with
+    And I create and substitute file "/etc/dnf/vars/var2" with
+        """
+        dnf-ci-fedora
+        """
+    And I execute microdnf with args "repoquery setup"
+   Then the exit code is 0
+
+
+@bz2076853
+Scenario: Variables are substituted in baseurl via vars in config files in custom location
+  Given I create and substitute file "/tmp/vars/var1" with
+        """
+        file://
+        """
+    And I create and substitute file "/tmp/vars/var2" with
         """
         dnf-ci-fedora
         """
