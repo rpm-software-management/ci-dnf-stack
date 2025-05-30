@@ -122,3 +122,111 @@ Scenario: present user understandable message when there is a mismatch between a
         """
         .* INFO \[librepo\] Error during transfer: Interrupted by header callback: Inconsistent server data, reported file Content-Length: .*, repository metadata states file length: .* \(please report to repository maintainer\)
         """
+
+
+Scenario: Identical metalink checksums match, no repo redownload needed
+Given I copy repository "simple-base" for modification
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  And I execute dnf with args "makecache"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+ And stderr is
+      """
+      <REPOSYNC>
+      """
+  And HTTP log is
+      """
+      GET simple-base /metalink.xml?releasever=29
+      """
+
+
+Scenario: Updated metalink with updated metadata causes the whole repo to redownload
+Given I copy repository "simple-base" for modification
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  And I execute dnf with args "makecache"
+  And I generate repodata for repository "simple-base" with extra arguments "--baseurl update-metadata"
+  # We need to run this step so that we can regenerate the metalink
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+ And stderr is
+      """
+      <REPOSYNC>
+      """
+  And HTTP log is
+      """
+      GET simple-base /metalink.xml?releasever=29
+      GET simple-base /repodata/repomd.xml
+      GET simple-base /repodata/primary.xml.zst
+      """
+
+
+Scenario: Identical repomd checksums match, no repo redownload needed
+Given I copy repository "simple-base" for modification
+  And I use repository "simple-base" as http
+  And I execute dnf with args "makecache"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+ And stderr is
+      """
+      <REPOSYNC>
+      """
+  And HTTP log is
+      """
+      GET simple-base /repodata/repomd.xml
+      """
+
+
+Scenario: Updated repomd with updated metadata causes the whole repo to redownload
+Given I copy repository "simple-base" for modification
+  And I use repository "simple-base" as http
+  And I execute dnf with args "makecache"
+  And I generate repodata for repository "simple-base" with extra arguments "--baseurl update-metadata"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 0
+ And stderr is
+      """
+      <REPOSYNC>
+      """
+  And HTTP log is
+      """
+      GET simple-base /repodata/repomd.xml
+      GET simple-base /repodata/primary.xml.zst
+      """
+
+
+Scenario: Checksum from metalink is verified agains downloaded repomd.xml checksum, fail if they don't match
+Given I copy repository "simple-base" for modification
+  And I use repository "simple-base" as http
+  And I set up metalink for repository "simple-base"
+  # Change repomd.xml from simple-base repo so that it doesn't match with metalink checksum
+  And I generate repodata for repository "simple-base" with extra arguments "--baseurl update-metadata"
+  And I start capturing outbound HTTP requests
+ When I execute dnf with args "makecache --refresh"
+ Then the exit code is 1
+  And stderr matches line by line
+      """
+      Updating and loading repositories:
+       simple-base test repository .*
+      >>> Downloading successful, but checksum doesn't match. Calculated: .*
+      >>> Downloading successful, but checksum doesn't match. Calculated: .*
+      >>> Downloading successful, but checksum doesn't match. Calculated: .*
+      >>> Downloading successful, but checksum doesn't match. Calculated: .*
+      >>> Usable URL not found
+      Failed to download metadata \(metalink: "http://.*/metalink.xml\?releasever=29"\) for repository "simple-base": Usable URL not found
+      """
+  And HTTP log is
+      """
+      GET simple-base /metalink.xml?releasever=29
+      GET simple-base /repodata/repomd.xml
+      GET simple-base /repodata/repomd.xml
+      GET simple-base /repodata/repomd.xml
+      GET simple-base /repodata/repomd.xml
+      """
