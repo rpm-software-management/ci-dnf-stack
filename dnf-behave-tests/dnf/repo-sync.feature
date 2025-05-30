@@ -443,7 +443,7 @@ Scenario Outline: working repo and repo without any mirror or baseurl is an erro
     And stderr is
     """
     Updating and loading repositories:
-    Failed to download metadata
+    Failed to set up metadata download
      No valid source (baseurl, mirrorlist or metalink) found for repository "testrepo"
     """
 Examples:
