@@ -1,5 +1,3 @@
-@no_installroot
-@destructive
 Feature: Respect main config options
 
 

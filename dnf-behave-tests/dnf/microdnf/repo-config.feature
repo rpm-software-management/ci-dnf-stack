@@ -1,4 +1,3 @@
-@no_installroot
 Feature: libdnf context part correctly reading repo config
 
 
