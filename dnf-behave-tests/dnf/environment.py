@@ -240,7 +240,7 @@ def before_all(context):
             break
 
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
-    context.dnf_tag_matcher = ActiveTagMatcher({"dnf": "5"})
+    context.dnf_tag_matcher = ActiveTagMatcher({"mode": "dnf5daemon" if context.dnf5daemon_mode else "dnf5"})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 

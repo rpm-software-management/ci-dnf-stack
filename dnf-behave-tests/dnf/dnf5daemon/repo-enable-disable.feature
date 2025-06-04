@@ -1,5 +1,5 @@
 @dnf5daemon
-@not.with_dnf=5
+@not.with_mode=dnf5
 Feature: Enable/disable repo functionality for dnf5daemon
 
 
