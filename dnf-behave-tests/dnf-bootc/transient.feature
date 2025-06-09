@@ -7,7 +7,8 @@ Background: Enable repositories
 Scenario: System should boot without any overlay (it is locked)
   When I successfully execute "ostree admin status"
   Then stdout does not contain "Unlocked:"
-   And path "/usr/bin" is not writeable
+   And path "/usr/bin" is not writable
+   And path "/etc" is writable
 
 @reboot_count_1
 Scenario: Installing a package without overlay fails
@@ -25,7 +26,7 @@ Scenario: Installing a package without overlay fails
    And file "/usr/bin/hello" does not exist
 
 @reboot_count_1
-Scenario: Install a package using --transient without any overlay procudes a warning
+Scenario: Install a package using --transient without any overlay produces a warning
  Given file "/usr/bin/hello" does not exist
   When I execute dnf with args "install hello --transient"
   Then the exit code is 0
@@ -46,7 +47,7 @@ Scenario: After using DNF --transient, transient overlay should exist
      """
      Unlocked: transient
      """
-   And path "/usr/bin" is not writeable
+   And path "/usr/bin" is not writable
 
 @reboot_count_1
 Scenario: Remove and install a package using --transient with transient overlay doesn't produce warning
@@ -82,6 +83,39 @@ Scenario: Removing a package without --transient and with transient overlay fail
      """
    And file "/usr/bin/hello" exists
 
+@reboot_count_1
+Scenario: Paths in usr_drift_protected_paths are protected
+ Given I create file "/etc/dnf/usr-drift-protected-paths.d/configurable.conf" with
+       """
+       /etc/configurable-2/*
+       /etc/configurable-3/configurable.conf
+       """
+  When I execute dnf with args "install configurable --transient"
+  Then the exit code is 1
+   And stdout contains lines
+     """
+     This operation would modify the following paths, possibly introducing inconsistencies when the transient overlay on /usr is discarded. See the usr_drift_protected_paths configuration option for more information.
+     configurable-1.0-1.fc29.x86_64
+       /etc/configurable-2/configurable.conf
+       /etc/configurable-3/configurable.conf
+     """
+
+@reboot_count_1
+Scenario: usr_drift_protected_paths can be bypassed on the command line
+ Given I create file "/etc/dnf/usr-drift-protected-paths.d/configurable.conf" with
+       """
+       /etc/configurable-2/*
+       /etc/configurable-3/configurable.conf
+       """
+  When I execute dnf with args "install configurable --transient --setopt=usr_drift_protected_paths="
+  Then the exit code is 0
+   And Transaction is following
+     | Action        | Package                          |
+     | install       | configurable-0:1.0-1.fc29.x86_64 |
+   And stderr is empty
+   And file "/etc/configurable-2/configurable.conf" exists
+   And file "/etc/configurable-3/configurable.conf" exists
+
 @reboot_count_2
 Scenario: After reboot, the transient overlay should disappear
   When I successfully execute "ostree admin status"
@@ -89,8 +123,11 @@ Scenario: After reboot, the transient overlay should disappear
      """
      Unlocked: transient
      """
-   And path "/usr/bin" is not writeable
+   And path "/usr/bin" is not writable
    And file "/usr/bin/hello" does not exist
+   And file "/etc/configurable-1/configurable.conf" exists
+   And file "/etc/configurable-2/configurable.conf" exists
+   And file "/etc/configurable-3/configurable.conf" exists
 
 @reboot_count_2
 Scenario: Create writable overlay (unlock the system)
@@ -140,7 +177,7 @@ Scenario: After reboot, the writable overlay should disappear
      """
      Unlocked: development
      """
-   And path "/usr/bin" is not writeable
+   And path "/usr/bin" is not writable
    And file "/usr/bin/hello" does not exist
 
 @reboot_count_3
