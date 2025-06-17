@@ -6,5 +6,4 @@ jobs:
     trigger: pull_request
     targets:
       - fedora-all
-    manual_trigger: true
     skip_build: true
