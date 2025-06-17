@@ -93,6 +93,7 @@ Scenario: Paths in usr_drift_protected_paths are protected
        """
        /etc/configurable-2/*
        /etc/configurable-3/configurable.conf
+       /var/lib/configurable/*
        """
   When I execute dnf with args "install configurable --transient"
   Then the exit code is 1
@@ -102,6 +103,7 @@ Scenario: Paths in usr_drift_protected_paths are protected
      configurable-1.0-1.fc29.x86_64
        /etc/configurable-2/configurable.conf
        /etc/configurable-3/configurable.conf
+       /var/lib/configurable/configurable.db
      """
 
 @reboot_count_1
