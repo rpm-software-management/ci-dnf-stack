@@ -4,10 +4,12 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import behave
+import os.path
 import re
+import shlex
 
 from common.lib.behave_ext import check_context_table
-from common.lib.cmd import run_in_context
+from common.lib.cmd import assert_exitcode, run_in_context
 from common.lib.diff import print_lines_diff
 from lib.dnf import parse_history_info, parse_history_list
 
@@ -131,3 +133,11 @@ def step_impl(context, id):
     if found != expected:
         print_lines_diff(expected, found)
         raise AssertionError("Package reasons mismatch")
+
+@behave.given("I adjust history database with query")
+def step_impl(context):
+    history_db_location = os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/transaction_history.sqlite")
+    cmd_list = ["sqlite3", history_db_location, context.text]
+    cmd_string = " ".join(shlex.quote(s) for s in cmd_list)
+    run_in_context(context, cmd_string)
+    assert_exitcode(context, 0)
