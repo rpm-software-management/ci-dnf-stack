@@ -5,6 +5,7 @@ from __future__ import print_function
 
 import behave
 import os
+import subprocess
 
 # make sure the server_type is registered in behave
 import steps.server
@@ -17,6 +18,7 @@ from common.lib.file import (
     copy_tree,
     create_file_with_contents,
     delete_file,
+    delete_directory,
     ensure_directory_exists,
     ensure_file_exists,
     find_file_by_glob,
@@ -423,3 +425,46 @@ def rewrite_solvfile_version(context, path):
 
     fp.write(bytes("\0\0\0bogus", 'utf-8'))
     fp.close()
+
+@behave.step("I sign repository \"{repo}\" metadata with \"{key_path}\"")
+def step_sign_metadata_with_key(context, repo, key_path):
+    """
+    Sign repo with key (creates repomd.xml.asc).
+    The signing is done in a temp directory so that the key is not imported
+    after finishing.
+
+    Note that you need to copy the repository using the "I copy repository for
+    modification" step beforehand.
+    """
+
+    repo_info = get_repo_info(context, repo)
+    assert repo_info.path.startswith(context.dnf.tempdir), \
+        "Signing needs to be done on a repo that was copied for modification."
+
+    temp_gpg_home = os.path.join(context.dnf.installroot, "gpg_home")
+    ensure_directory_exists(temp_gpg_home)
+
+    key_path = key_path.format(context=context)
+    # import key into temp dir
+    gpg_import_cmd = [
+        "gpg",
+        "--homedir",
+        temp_gpg_home,
+        "--import",
+        key_path
+    ]
+    subprocess.run(gpg_import_cmd, check=True)
+
+    repomd_path = os.path.join(repo_info.path, "repodata/repomd.xml")
+    # sign repomd.xml
+    gpg_cmd = [
+        "gpg",
+        "--homedir",
+        temp_gpg_home,
+        "--detach-sign",
+        "--armor",
+        repomd_path
+    ]
+    subprocess.run(gpg_cmd, check=True)
+
+    delete_directory(temp_gpg_home)
