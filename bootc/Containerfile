@@ -6,7 +6,7 @@ ARG BASE=quay.io/centos-bootc/centos-bootc:stream10
 FROM $BASE
 
 ENV LANG C.UTF-8
-ARG TYPE=nightly
+ARG TYPE=distro
 
 # disable deltas and weak deps
 RUN set -x && \
