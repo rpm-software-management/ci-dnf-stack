@@ -14,6 +14,8 @@ if [ "$TMT_REBOOT_COUNT" -eq 0 ]; then
         "fedora")
             BASE_IMAGE="${BASE_IMAGE:-quay.io/fedora/fedora-bootc:${VERSION_ID}}"
             ;;
+        "rhel")
+            BASE_IMAGE="${BASE_IMAGE:-images.paas.redhat.com/testingfarm/rhel-bootc:${VERSION_ID}}"
     esac
 
     # TMT needs this key
