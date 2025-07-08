@@ -4,6 +4,7 @@
   <group>
     <id>test-group-1</id>
     <name>Test Group 1</name>
+    <display_order>1</display_order>
     <description>Test Group 1 description.</description>
       <packagelist>
         <packagereq type="mandatory">test</packagereq>
@@ -12,6 +13,7 @@
 
   <group>
     <id>test-group-2</id>
+    <display_order>2</display_order>
     <name>Test Group 2</name>
     <description>Test Group 2 description.</description>
   </group>

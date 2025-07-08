@@ -21,7 +21,7 @@
    <id>cqrlib-non-devel</id>
    <default>false</default>
    <uservisible>true</uservisible>
-   <display_order>1024</display_order>
+   <display_order>1021</display_order>
    <name>CQRlib-non-devel</name>
    <description>Testgroup for DNF CI swap testing</description>
     <packagelist>
@@ -34,7 +34,7 @@
    <id>superripper-and-deps</id>
    <default>false</default>
    <uservisible>true</uservisible>
-   <display_order>1024</display_order>
+   <display_order>1029</display_order>
    <name>SuperRipper-and-deps</name>
    <description>Testgroup for DNF CI swap testing</description>
     <packagelist>
