@@ -426,7 +426,7 @@ Scenario: Merge groups when one has empty packagelist
         Name                 : Test Group
         Description          : Test Group description updated.
         Installed            : yes
-        Order                : 
+        Order                : 2
         Langonly             : 
         Uservisible          : yes
         Repositories         : @System
@@ -449,7 +449,7 @@ Scenario: Merge environment with missing names containg a group with missing nam
         Id                   : no-name-env
         Name                 : 
         Description          : 
-        Order                : 
+        Order                : 2
         Installed            : False
         Repositories         : comps-group, comps-group-merging
         Required groups      : no-name-group
@@ -471,7 +471,7 @@ Scenario: Group info with a group that has missing name
         Name                 : 
         Description          : 
         Installed            : no
-        Order                : 
+        Order                : 1
         Langonly             : 
         Uservisible          : yes
         Repositories         : comps-group
@@ -626,7 +626,7 @@ Scenario: dnf can list installed groups even without their xml definitions prese
         Name                 : Test Group
         Description          : Test Group description.
         Installed            : yes
-        Order                : 
+        Order                : 2
         Langonly             : 
         Uservisible          : yes
         Repositories         : @System

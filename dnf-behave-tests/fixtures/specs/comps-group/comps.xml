@@ -4,6 +4,7 @@
   <group>
    <id>test-group</id>
    <name>Test Group</name>
+   <display_order>2</display_order>
    <description>Test Group description.</description>
     <packagelist>
       <packagereq type="mandatory">test-package</packagereq>
@@ -14,6 +15,7 @@
    <id>no-name-group</id>
    <name></name>
    <description></description>
+   <display_order>1</display_order>
     <packagelist>
       <packagereq type="mandatory">test-package</packagereq>
     </packagelist>
@@ -23,6 +25,7 @@
     <id>no-name-env</id>
     <name></name>
     <description></description>
+    <display_order>2</display_order>
     <grouplist>
       <groupid>test-group</groupid>
     </grouplist>
@@ -34,6 +37,7 @@
     <id>env-with-a-nonexistent-group</id>
     <name>Env with a nonexistent group</name>
     <description></description>
+    <display_order>1</display_order>
     <grouplist>
       <groupid>test-group</groupid>
       <groupid>nonexistent-group</groupid>
