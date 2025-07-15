@@ -95,6 +95,7 @@ Scenario: Reject switch a module stream, when stream does not exist
         | nodejs    | enabled   | 8         |  minimal       |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         Error: Problems in request:
         missing groups or modules: nodejs:notexists
         """
