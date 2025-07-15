@@ -22,6 +22,7 @@ Scenario: Fail to enable a different stream of an already enabled module (dnf)
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
@@ -44,6 +45,7 @@ Scenario: Fail to enable a different stream of an already enabled module (yum)
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         It is recommended to rather remove all installed content from the module, and reset the module using 'yum module reset <module_name>' command. After you reset the module, you can install the other stream.
@@ -66,6 +68,7 @@ Scenario: Fail to install a different stream of an already enabled module
         | nodejs    | enabled   | 8         |           |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         The operation would result in switching of module 'nodejs' stream '8' to stream '10'
         Error: It is not possible to switch enabled streams of a module unless explicitly enabled via configuration option module_stream_switch.
         It is recommended to rather remove all installed content from the module, and reset the module using 'dnf module reset <module_name>' command. After you reset the module, you can install the other stream.
@@ -104,6 +107,7 @@ Scenario: Fail to enable a module stream when specifying only module
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         Argument 'nodejs' matches 4 streams ('8', '10', '11', '12') of module 'nodejs', but none of the streams are enabled or default
         Unable to resolve argument nodejs
         Error: Problems in request:
@@ -142,6 +146,7 @@ Scenario: Fail to enable a module stream when not specifying anything
         | Module    | State     | Stream    | Profiles  |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         Error: dnf module enable: too few arguments
         """
 

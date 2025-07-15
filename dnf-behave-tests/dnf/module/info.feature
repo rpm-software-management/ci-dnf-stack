@@ -755,6 +755,7 @@ Examples:
    Then the exit code is 1
     And stderr is
     """
+    WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
     Error: dnf module info: too few arguments
     """
 

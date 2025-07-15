@@ -83,7 +83,10 @@ Scenario: I can list installed modules
 Scenario: I can list disabled modules (when there are no disabled modules)
    When I execute dnf with args "module list --disabled"
    Then the exit code is 0
-    And stderr is empty
+    And stderr is
+      """
+      WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
+      """
     And module list is empty
 
 @bz1647382
