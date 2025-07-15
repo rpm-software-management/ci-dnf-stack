@@ -69,6 +69,7 @@ Scenario: Install module without any profiles
         | DnfCiModuleNoProfiles   |           |           |           |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         No profiles for module DnfCiModuleNoProfiles:master
         Error: Problems in request:
         broken groups or modules: DnfCiModuleNoProfiles:master
@@ -111,6 +112,7 @@ Scenario: Profile is not installed after its artifact failed to get installed
    Then the exit code is 1
     And stderr is
     """
+    WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
     Error: Transaction test error:
       file /usr/lib/FileConflict/a_dir from install of FileConflict-0:2.0.streamB-1.x86_64 conflicts with file from package FileConflict-0:1.0-1.x86_64
     """
