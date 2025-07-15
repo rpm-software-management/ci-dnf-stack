@@ -36,11 +36,13 @@ Examples:
       | Package-pretrans-fail | PRETRANS  |
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 # @dnf5
 # TODO(nsella) different stderr
 Scenario Outline: Install a pkg with a failing %post[in|trans] scriptlet
   When I execute dnf with args "install <package>"
-  Then the exit code is 0
+  Then the exit code is 1
    And Transaction is following
        | Action        | Package                  |
        | install       | <package>-0:1.0-1.x86_64 |
@@ -88,6 +90,8 @@ Scenario: Remove a pkg with a failing %preun scriptlet
        | remove        | Package-preun-fail-0:1.0-1.x86_64 |
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 # @dnf5
 # TODO(nsella) different stderr
 Scenario: Remove a pkg with a failing %postun scriptlet
@@ -97,7 +101,7 @@ Scenario: Remove a pkg with a failing %postun scriptlet
        | Action        | Package                            |
        | install       | Package-postun-fail-0:1.0-1.x86_64 |
   When I execute dnf with args "remove Package-postun-fail"
-  Then the exit code is 0
+  Then the exit code is 1
    And stderr contains "Error in POSTUN scriptlet in rpm package Package-postun-fail"
    And Transaction is following
        | Action        | Package                           |
@@ -120,12 +124,14 @@ Scenario: Output for triggered successful scriptlet of a package not present in 
    And stdout contains "Running scriptlet\s*:\s*Package-triggerin-ok-1.0-1.x86_64"
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @xfail
 @bz1724779
 Scenario: Correct output for triggered failed scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-triggerin-fail"
   When I execute dnf with args "install Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And stdout contains "failing on triggerin scriptlet"
    And stdout contains "Running scriptlet\s*:\s*Package-triggerin-fail-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
@@ -140,13 +146,15 @@ Scenario: Correct output for triggered failed scriptlet of package not present i
    """
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @xfail
 @bz1724779
 Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-transfiletriggerpostun-fail"
    And I successfully execute dnf with args "install Package-install-file"
   When I execute dnf with args "remove Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And Transaction is following
        | Action        | Package                            |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
@@ -177,12 +185,14 @@ Scenario: Correct output for triggered successful file scriptlet of package not 
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @bz1724779
 @xfail
 Scenario: Correct output for triggered failing file scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-filetriggerin-fail"
   When I execute dnf with args "install Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And stdout contains "filetriggerin scriptlet \(Package-filetriggerin-fail\) for Package-install-file install/update is failing"
    And stdout contains "Running scriptlet\s*:\s*Package-filetriggerin-fail-1.0-1.x86_64"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
