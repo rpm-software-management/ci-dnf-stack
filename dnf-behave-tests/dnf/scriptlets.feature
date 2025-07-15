@@ -38,9 +38,11 @@ Examples:
       | Package-pretrans-fail-0:1.0-1.x86_64 | %pretrans       |
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 Scenario Outline: Install a pkg with a failing %post[in|trans] scriptlet
   When I execute dnf with args "install <package>"
-  Then the exit code is 0
+  Then the exit code is 1
    And Transaction is following
        | Action        | Package   |
        | install       | <package> |
@@ -87,6 +89,8 @@ Scenario: Remove a pkg with a failing %preun scriptlet
        | remove        | Package-preun-fail-0:1.0-1.x86_64 |
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 Scenario: Remove a pkg with a failing %postun scriptlet
   When I execute dnf with args "install Package-postun-fail"
   Then the exit code is 0
@@ -94,10 +98,10 @@ Scenario: Remove a pkg with a failing %postun scriptlet
        | Action        | Package                            |
        | install       | Package-postun-fail-0:1.0-1.x86_64 |
   When I execute dnf with args "remove Package-postun-fail"
-  Then the exit code is 0
+  Then the exit code is 1
    And stderr contains ">>> Running %postun scriptlet: Package-postun-fail-0:1.0-1.x86_64"
    And stderr contains ">>> Non-critical error in %postun scriptlet: Package-postun-fail-0:1.0-1.x86_64"
-   And stderr contains "Complete!"
+   And stderr does not contain "Complete!"
    And Transaction is following
        | Action        | Package                           |
        | remove        | Package-postun-fail-0:1.0-1.x86_64 |
@@ -115,23 +119,27 @@ Scenario: Output for triggered successful scriptlet of a package not present in 
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @bz1724779
 Scenario: Correct output for triggered failed scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-triggerin-fail"
   When I execute dnf with args "install Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And stderr contains "failing on triggerin scriptlet"
    And stderr contains ">>> Running %triggerin scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
    And stderr contains ">>> Non-critical error in %triggerin scriptlet: Package-triggerin-fail-0:1.0-1.x86_64"
    And stderr does not contain "scriptlet: Package-install-file"
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @bz1724779
 Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-transfiletriggerpostun-fail"
    And I successfully execute dnf with args "install Package-install-file"
   When I execute dnf with args "remove Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And Transaction is following
        | Action       | Package                             |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
@@ -153,11 +161,13 @@ Scenario: Correct output for triggered successful file scriptlet of package not 
    And stdout does not contain "scriptlet: Package-install-file"
 
 
+# Disable on older fedoras because they don't contain new rpm-6.0.0
+@not.with_os=fedora__lt__43
 @bz1724779
 Scenario: Correct output for triggered failing file scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-filetriggerin-fail"
   When I execute dnf with args "install Package-install-file"
-  Then the exit code is 0
+  Then the exit code is 1
    And stderr contains "filetriggerin scriptlet \(Package-filetriggerin-fail\) for Package-install-file install/update is failing"
    And stderr contains ">>> Running %triggerin scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
    And stderr contains ">>> Non-critical error in %triggerin scriptlet: Package-filetriggerin-fail-0:1.0-1.x86_64"
