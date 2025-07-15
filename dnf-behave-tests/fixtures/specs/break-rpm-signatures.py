@@ -82,7 +82,8 @@ def main(argv):
         f_new.write(struct.pack('>ii', 2, SHA256_LENGTH + TRAILER_LENGTH))
 
         # write INDEX entries (info about tags): (rpmtag, rpmtag_type, data_offset, data_size)
-        f_new.write(struct.pack('>iiii', rpm.RPMTAG_HEADERSIGNATURES, RPM_BIN_TYPE, SHA256_LENGTH, TRAILER_LENGTH))
+        # TODO(amatej): 62 is temporarily hardcoded, see commit message for more details.
+        f_new.write(struct.pack('>iiii', 62, RPM_BIN_TYPE, SHA256_LENGTH, TRAILER_LENGTH))
         f_new.write(struct.pack('>iiii', rpm.RPMTAG_SHA256HEADER, RPM_STRING_TYPE, 0, 1))
 
         # write data to STORE
@@ -94,7 +95,8 @@ def main(argv):
 
         # THIS IS THE ESSENTIAL PART OF THE REPRODUCER, WRITING DOWN BROKEN DATA THAT IS INCORRECTLY HANDLED BY RPM
         # the following tag is stored in STORE data indexed by rpm.RPMTAG_HEADERSIGNATURES above
-        f_new.write(struct.pack('>iiii', rpm.RPMTAG_HEADERSIGNATURES, RPM_BIN_TYPE, -TRAILER_LENGTH * 2, TRAILER_LENGTH))
+        # TODO(amatej): 62 is temporarily hardcoded, see commit message for more details.
+        f_new.write(struct.pack('>iiii', 62, RPM_BIN_TYPE, -TRAILER_LENGTH * 2, TRAILER_LENGTH))
 
         # remember the current position, we'll write rpm header here in the next steps
         hdr_start = f_new.tell()
