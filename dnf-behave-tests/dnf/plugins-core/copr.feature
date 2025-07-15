@@ -80,11 +80,11 @@ Scenario: Test enabling a non-existent repo
   And stderr is
       """
       <REPOSYNC>
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexiste
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1)
       Failed to download files
        Librepo error: Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/nonexistent/Fedora-30/ (IP: 127.0.0.1)
       """
@@ -109,11 +109,11 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
   And stderr is
       """
       <REPOSYNC>
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpm
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server]
       Failed to download files
        Librepo error: Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server]
       """
@@ -135,11 +135,11 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
   And stderr is
       """
       <REPOSYNC>
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
-      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproje
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1) - http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/
+      >>> Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1)
       Failed to download files
        Librepo error: Status code: 404 for http://localhost:{context.dnf.ports[copr]}/api_3/rpmrepo/testuser/testproject/Fedora-31/ (IP: 127.0.0.1)
       """
