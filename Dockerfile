@@ -43,8 +43,9 @@ RUN set -x && \
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
 # install test suite dependencies
+# Temporarily exclude new libfaketime because it doesn't work: https://bugzilla.redhat.com/show_bug.cgi?id=2381595
 RUN set -x && \
-    dnf5 -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    dnf5 -y builddep /opt/ci/dnf-behave-tests/requirements.spec -x libfaketime-0.9.12-1.* && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
