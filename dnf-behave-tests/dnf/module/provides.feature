@@ -162,6 +162,7 @@ Given I set dnf command to "dnf"
  Then the exit code is 1
   And stderr is
       """
+      WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
       Error: dnf module provides: too few arguments
       """
 
@@ -171,5 +172,6 @@ Given I set dnf command to "yum"
  Then the exit code is 1
   And stderr is
       """
+      WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
       Error: yum module provides: too few arguments
       """

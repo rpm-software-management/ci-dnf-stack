@@ -216,6 +216,7 @@ Scenario: module removed with --all and not existing module argument - no traceb
     And Transaction is empty
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         Problems in request:
         missing groups or modules: noexists
         """

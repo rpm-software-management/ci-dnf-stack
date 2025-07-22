@@ -15,6 +15,7 @@ Scenario: Install module, no default profile defined, expecting no profile selec
         | DnfCiModuleNoDefaults |           |           |           |
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         No default profiles for module DnfCiModuleNoDefaults:stable. Available profiles: default
         Error: Problems in request:
         broken groups or modules: DnfCiModuleNoDefaults:stable
@@ -31,6 +32,7 @@ Scenario: Install module, no default stream or profile defined, expecting no pro
     And Transaction is empty
     And stderr is
         """
+        WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
         Argument 'DnfCiModuleNoDefaults' matches 2 streams ('development', 'stable') of module 'DnfCiModuleNoDefaults', but none of the streams are enabled or default
         Unable to resolve argument DnfCiModuleNoDefaults
         Error: Problems in request:

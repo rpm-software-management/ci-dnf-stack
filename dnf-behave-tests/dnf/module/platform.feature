@@ -46,6 +46,7 @@ Scenario: I can't list info for the pseudo-module
    """
   And stderr is
    """
+   WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
    Error: No matching Modules to list
    """
 
@@ -86,7 +87,8 @@ Scenario: I can't update pseudo-module
  Then the exit code is 1
   And stderr is
   """
-   Error: No such module: pseudoplatform:6.0
+  WARNING: modularity is deprecated, and functionality will be removed in a future release of DNF5.
+  Error: No such module: pseudoplatform:6.0
   """
 
 
