@@ -192,3 +192,32 @@ Given I use repository "download-sources" as http
   And Transaction is following
       | Action        | Package                          |
       | install       | special-c++-package-1.0-1.noarch |
+
+
+@bz2381859
+# We don't actually check which mirror is picked, only verify it runs
+Scenario: Verify we can run upgrade --refresh with fastest mirror enabled with multiple repositories and mirrors
+Given I use repository "dnf-ci-fedora" as http
+  And I successfully execute dnf with args "install flac"
+  And I use repository "dnf-ci-thirdparty" as http
+  And I use repository "dnf-ci-fedora-updates" as http
+  And I create directory "/mirror"
+  And I copy directory "{context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64" to "/mirror/x86_64"
+  And I execute "createrepo_c {context.dnf.installroot}/mirror"
+  And I start http server "mirror" at "{context.dnf.installroot}/mirror"
+  And I create and substitute file "/mirrorlist" with
+      """
+      http://localhost:{context.dnf.ports[dnf-ci-fedora-updates]}/
+      http://localhost:{context.dnf.ports[mirror]}/
+      """
+  And I configure a new repository "testrepo" with
+      | key        | value                                |
+      | mirrorlist | {context.dnf.installroot}/mirrorlist |
+  And I configure dnf with
+      | key           | value |
+      | fastestmirror | True  |
+ When I execute dnf with args "update --refresh"
+ Then the exit code is 0
+  And Transaction is following
+      | Action      | Package                    |
+      | upgrade     | flac-0:1.3.3-3.fc29.x86_64 |
