@@ -36,6 +36,25 @@ if [ "$TMT_REBOOT_COUNT" -eq 0 ]; then
     ls -al "$BOOTC_TEMPDIR"
 
     pushd "$TMT_TREE"
+        if [ -e /etc/yum.repos.d/tag-repository.repo ]; then
+            cp -v /etc/yum.repos.d/tag-repository.repo repos.d/
+        fi
+
+        if [ -e /etc/yum.repos.d/test-artifacts.repo ]; then
+            mkdir -p rpms
+            dnf repoquery --repo=test-artifacts --qf "%{SOURCERPM} %{NAME}" > T-A-pkgs.pkglist
+            cat T-A-pkgs.pkglist
+            set +e # following grep would fail whole script on first non-match
+            for P in dnf libdnf libsolv librepo librhsm libmodulemd1 libmodulemd microdnf createrepo_c; do
+                grep ^$P T-A-pkgs.pkglist | while read line ; do
+                    echo $line | awk '{print $2}' >> T-A-Packages
+                done
+            done
+            set -e
+            cat T-A-Packages
+            dnf download --destdir rpms/ --disablerepo=\* --enablerepo=test-artifacts `cat T-A-Packages | xargs echo -n`
+        fi
+
         ./container-test \
         --container localhost/dnf-bot/dnf-testing-bootc:latest \
         build \
