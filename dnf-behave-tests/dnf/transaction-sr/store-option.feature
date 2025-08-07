@@ -287,3 +287,27 @@ Given I execute dnf with args "install @test-group"
         """
         test-group.xml
         """
+
+
+# https://github.com/rpm-software-management/dnf5/issues/2160
+Scenario: stored packages are not removed by following transaction even with keepcache=false
+   When I execute dnf with args "install top-a-1.0 --store ./transaction"
+   Then file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
+   When I execute dnf with args "install top-a-1.0 --setopt=keepcache=false"
+   Then the exit code is 0
+    And Transaction contains
+        | Action        | Package              |
+        | install       | top-a-1:1.0-1.x86_64 |
+    And file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
+
+
+# https://github.com/rpm-software-management/dnf5/issues/2160
+Scenario: stored packages with keepcache=false are not removed by following transaction even with keepcache=false
+   When I execute dnf with args "install top-a-1.0 --store ./transaction --setopt=keepcache=false"
+   Then file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
+   When I execute dnf with args "install top-a-1.0 --setopt=keepcache=false"
+   Then the exit code is 0
+    And Transaction contains
+        | Action        | Package              |
+        | install       | top-a-1:1.0-1.x86_64 |
+    And file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
