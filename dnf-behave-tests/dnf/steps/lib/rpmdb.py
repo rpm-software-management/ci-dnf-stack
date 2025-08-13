@@ -5,8 +5,8 @@ from __future__ import print_function
 
 import rpm
 
-from .rpm import normalize_epoch
-from .rpm import RPM
+from lib.rpm import normalize_epoch
+from lib.rpm import RPM
 
 
 def _str(obj):
