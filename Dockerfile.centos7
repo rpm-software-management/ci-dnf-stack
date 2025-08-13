@@ -68,7 +68,7 @@ RUN set -x && \
     yum -y install \
         # behave and test requirements
         libfaketime \
-        # python2-behave - version >= 1.2.6 is not available as an RPM; install it from pip instead
+        # python2-behave - version == 1.2.6 is not available as an RPM; install it from pip instead
         python2-pip \
         pexpect \
         # if TYPE == local, install debugging tools
@@ -96,7 +96,7 @@ RUN set -x && \
         # dnf-utils \
         libdnf \
         microdnf && \
-    pip install 'behave >= 1.2.6'
+    pip install 'behave == 1.2.6'
 
 
 # if TYPE == local, install local RPMs
