@@ -32,7 +32,7 @@ BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite
 %if 0%{?fedora}
-BuildRequires:  python3-behave
+BuildRequires:  python3-behave < 1.2.7
 BuildRequires:  python3-pexpect
 BuildRequires:  zchunk
 %endif
