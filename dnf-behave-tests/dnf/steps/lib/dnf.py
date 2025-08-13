@@ -6,8 +6,8 @@ from __future__ import print_function
 import re
 
 
-from .rpm import normalize_epoch
-from .rpm import RPM
+from lib.rpm import normalize_epoch
+from lib.rpm import RPM
 
 
 ACTION_RE = re.compile(r"^([^ ].+):$")
