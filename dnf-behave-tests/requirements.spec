@@ -22,6 +22,7 @@ BuildRequires:  fakeuname
 BuildRequires:  findutils
 BuildRequires:  glibc-langpack-en
 BuildRequires:  glibc-langpack-de
+BuildRequires:  gnupg2
 BuildRequires:  libfaketime
 BuildRequires:  openssl
 BuildRequires:  python3
