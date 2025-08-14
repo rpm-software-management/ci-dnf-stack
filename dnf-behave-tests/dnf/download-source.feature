@@ -146,7 +146,6 @@ Given I make packages from repository "dnf-ci-fedora" accessible via http
 
 
 # https://github.com/rpm-software-management/dnf5/issues/1321
-@xfail
 @bz1817130
 Scenario: Download a package that contains special URL characters that need to be encoded (e.g. a +)
 Given I use repository "download-sources" as http
