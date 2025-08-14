@@ -1,5 +1,3 @@
-@xfail
-# The plugin is missing: https://github.com/rpm-software-management/dnf5/issues/943
 Feature: Tests for repomanage command
 
 
@@ -102,6 +100,8 @@ Given I copy repository "dnf-ci-thirdparty-updates" for modification
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: don't list packages as old if they are in different stream
 Given I copy repository "dnf-ci-fedora-modular-updates" for modification
@@ -110,6 +110,8 @@ Given I copy repository "dnf-ci-fedora-modular-updates" for modification
   And stdout is empty
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: list packages as new if they are in different stream or are non modular
 Given I copy repository "dnf-ci-fedora-modular-updates" for modification
@@ -160,6 +162,8 @@ Given I copy repository "dnf-ci-fedora-modular-updates" for modification
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: packages get listed as old if there are newer version within the same stream
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
@@ -182,6 +186,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: only the newest modular packages get listed as new
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
@@ -202,6 +208,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: all packages get listed as new if --keep is sufficiently big
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
@@ -234,6 +242,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 Scenario: multiple runs of repomanage don't use cached metadata
 Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for modification
   And I execute dnf with args "repomanage --new --keep 100 {context.dnf.repos[dnf-ci-multicontext-hybrid-multiversion-modular].path}"
@@ -252,6 +262,8 @@ Given I copy repository "dnf-ci-multicontext-hybrid-multiversion-modular" for mo
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz2034736
 @bz2058676
 Scenario: --oldonly doesn't print and rpm if it is contained in both new and old version of a stream
@@ -281,6 +293,8 @@ Given I copy repository "repomanage-modular" for modification
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 @bz1804720
 Scenario: Show rpms from a newest module stream version from repo even if even newer stream version is enabled from a differente repo
 Given I use repository "repomanage-8.5"
@@ -296,6 +310,8 @@ Given I use repository "repomanage-8.5"
       """
 
 
+@xfail
+# Missing modulariry support: https://github.com/rpm-software-management/dnf5/issues/2388
 Scenario: Show rpms from a newest module stream from repo even if there is enabled repo with even newer stream version
 Given I copy repository "repomanage-8.3" for modification
   And I use repository "repomanage-8.5"
