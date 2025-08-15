@@ -4,8 +4,7 @@
 #
 #   lib.sh of /CoreOS/openssl/Library/certgen
 #   Description: Library for creating X.509 certificates for any use
-#   Author: Hubert Kario <hkario@redhat.com>
-#   Project page: https://github.com/redhat-qe-security/certgen
+#   Author: Alicja Kario <hkario@redhat.com>
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
@@ -86,6 +85,15 @@ Name of the file with next available serial number. F<serial> by default.
 
 Name of file in which certificates will be placed. F<cert.pem> by default
 
+=item B<x509CRL>
+
+Name of file in which certificate revocation list will be placed. F<crl.pem> by
+default
+
+=item B<x509CRLNUMBER>
+
+Name of the file with next available CRL number. F<crlnumber> by default.
+
 =item B<x509CSR>
 
 Name of the file with certificate signing request. F<request.csr> by default.
@@ -101,6 +109,12 @@ B<x509Cert> function.
 Name of the file where private keys encoded in DER format will be placed.
 F<key.key> by default. Note that those file are generated on demand only by
 B<x509Key> function.
+
+=item B<x509FIRSTCRLNUMBER>
+
+The first CRL number that will be used when generating a CRL.
+Used when the CA generates a CRL. Must be a valid, nonegative hex number.
+C<01> by default.
 
 =item B<x509FIRSTSERIAL>
 
@@ -151,6 +165,8 @@ functions may cause the library to misbehave.
 x509PKEY=${x509PKEY:-key.pem}
 x509DERKEY=${x509DERKEY:-key.key}
 x509CERT=${x509CERT:-cert.pem}
+x509CRL=${x509CRL:-crl.pem}
+x509CRLNUMBER=${x509CRLNUMBER:-crlnumber}
 x509DERCERT=${x509DERCERT:-cert.crt}
 x509PKCS8KEY=${x509PKCS8KEY:-pkcs8.pem}
 x509PKCS8DERKEY=${x509PKCS8DERKEY:-pkcs8.key}
@@ -159,6 +175,7 @@ x509CSR=${x509CSR:-request.csr}
 x509CACNF=${x509CACNF:-ca.cnf}
 x509CAINDEX=${x509CAINDEX:-index.txt}
 x509CASERIAL=${x509CASERIAL:-serial}
+x509FIRSTCRLNUMBER=${x509FIRSTCRLNUMBER:-01}
 x509FIRSTSERIAL=${x509FIRSTSERIAL:-01}
 x509OPENSSL=${x509OPENSSL:-openssl}
 if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
@@ -182,7 +199,7 @@ __INTERNAL_x509GenConfig() {
         local md="sha256"
     fi
     # current time in seconds from UNIX epoch
-    local now=$(date '+%s')
+    local now=$(env date '+%s')
     # date before which the certificate is not valid
     local notBefore=""
     # date after which the certificate is not valid
@@ -191,6 +208,8 @@ __INTERNAL_x509GenConfig() {
     local basicKeyUsage=""
     # Basic Constraints to set
     local basicConstraints=""
+    # CRL distribution points URL
+    local crlDistributionPoints=""
     # value of the Subject Key Identifier extension
     local subjectKeyIdentifier=""
     # whatever to generate Authority Key Identifier extension
@@ -213,7 +232,8 @@ __INTERNAL_x509GenConfig() {
     local TEMP=$(getopt -o t: -l dn: -l md: -l notBefore: -l notAfter: \
         -l basicKeyUsage: \
         -l basicConstraints: \
-        -l subjectKeyIdentifier \
+        -l crlDistributionPoints: \
+        -l subjectKeyIdentifier:: \
         -l authorityKeyIdentifier: \
         -l subjectAltName: \
         -l subjectAltNameCritical \
@@ -242,7 +262,18 @@ __INTERNAL_x509GenConfig() {
                 ;;
             --basicConstraints) basicConstraints="$2"; shift 2
                 ;;
-            --subjectKeyIdentifier) subjectKeyIdentifier="true"; shift 1
+            --crlDistributionPoints) crlDistributionPoints="$2"; shift 2
+                ;;
+            --subjectKeyIdentifier)
+                case "$2" in
+                    '')
+                        subjectKeyIdentifier="hash"
+                    ;;
+                    *)
+                        subjectKeyIdentifier="$2"
+                    ;;
+                esac
+                shift 2
                 ;;
             --authorityKeyIdentifier) authorityKeyIdentifier="$2"; shift 2
                 ;;
@@ -287,7 +318,7 @@ __INTERNAL_x509GenConfig() {
     if [ -z "$notBefore" ]; then
         notBefore="now"
     fi
-    notBefore=$(date -d "$notBefore" -u $x509FORMAT)
+    notBefore=$(env date -d "$notBefore" -u $x509FORMAT)
     if [ $? -ne 0 ]; then
         echo "x509GenConfig: notBefore date value is invalid" >&2
         return 1
@@ -296,19 +327,37 @@ __INTERNAL_x509GenConfig() {
     if [ -z "$notAfter" ]; then
         notAfter="1 year"
     fi
-    notAfter=$(date -d "$notAfter" -u $x509FORMAT)
+    notAfter=$(env date -d "$notAfter" -u $x509FORMAT)
     if [ $? -ne 0 ]; then
         echo "x509GenConfig: notAfter date value is invalid" >&2
         return 1
     fi
 
     #
+    # for Ed25519 we can't specify a hash as it is built-in
+    #
+    if ${x509OPENSSL} pkey -in "$kAlias/$x509PKEY" -noout -text 2> /dev/null | grep -qE '^(ED25519|ED448)'; then
+        md="null"
+    fi
+
+    # in openssl 1.1.1 the oid was renamed to uppercase and the
+    # lower case stopped working, so fix it
+    if ! ${x509OPENSSL} version | grep -Eq '0[.]9[.]|1[.]0[.]'; then
+        extendedKeyUsage="${extendedKeyUsage/ocspSigning/OCSPSigning}"
+    fi
+
+    #
     # generate config
     #
 
-    touch $kAlias/$x509CAINDEX
+    touch "$kAlias/$x509CAINDEX"
+    echo "unique_subject = no" >> "$kAlias/$x509CAINDEX.attr"
     if [ ! -e $kAlias/$x509CASERIAL ]; then
         echo $x509FIRSTSERIAL > $kAlias/$x509CASERIAL
+    fi
+
+    if [ ! -e $kAlias/$x509CRLNUMBER ]; then
+        echo $x509FIRSTCRLNUMBER > $kAlias/$x509CRLNUMBER
     fi
 
     # OpenSSL 1.1.0 (? 1.1.1 definitely has) has the OID definition
@@ -329,6 +378,8 @@ EOF
 default_ca = ca_cnf
 
 [ ca_cnf ]
+crlnumber = $kAlias/$x509CRLNUMBER
+default_crl_days = 365
 default_md = $md
 default_startdate = $notBefore
 default_enddate   = $notAfter
@@ -356,6 +407,7 @@ distinguished_name = cert_req
 [ cert_req ]
 EOF
 
+    local item
     for item in "${dn[@]}"; do
         echo "$item" >> "$kAlias/$x509CACNF"
     done
@@ -369,6 +421,10 @@ EOF
         echo "basicConstraints =$basicConstraints" >> "$kAlias/$x509CACNF"
     fi
 
+    if [[ ! -z $crlDistributionPoints ]]; then
+        echo "crlDistributionPoints =URI:$crlDistributionPoints" >> "$kAlias/$x509CACNF"
+    fi
+
     if [[ ! -z $basicKeyUsage ]]; then
         echo "keyUsage =$basicKeyUsage" >> "$kAlias/$x509CACNF"
     fi
@@ -377,10 +433,20 @@ EOF
         echo "extendedKeyUsage =$extendedKeyUsage" >> "$kAlias/$x509CACNF"
     fi
 
+    # OpenSSL 3.0 and later requires an explicit "none" to not include SPKI
+    # but earlier versions (0.9.8, 1.0.x, 1.1.x) don't accept "none" as argument
+    if [[ -z $subjectKeyIdentifier ]] && ! $x509OPENSSL version | grep -qE '0[.]9[.]|1[.][01][.]'; then
+        echo "subjectKeyIdentifier=none" >> "$kAlias/$x509CACNF"
+    fi
     if [[ ! -z $subjectKeyIdentifier ]]; then
-        echo "subjectKeyIdentifier=hash" >> "$kAlias/$x509CACNF"
+        echo "subjectKeyIdentifier=$subjectKeyIdentifier" >> "$kAlias/$x509CACNF"
     fi
 
+    # OpenSSL 3.0 and later requires an explicit "none" to not include AKI
+    # but earlier versions (0.9.8, 1.0.x, 1.1.x) don't accept "none" as argument
+    if [[ -z $authorityKeyIdentifier ]] && ! $x509OPENSSL version | grep -qE '0[.]9[.]|1[.][01][.]'; then
+        echo "authorityKeyIdentifier=none" >> "$kAlias/$x509CACNF"
+    fi
     if [[ ! -z $authorityKeyIdentifier ]]; then
         echo "authorityKeyIdentifier=$authorityKeyIdentifier" >> "$kAlias/$x509CACNF"
     fi
@@ -393,6 +459,7 @@ EOF
     if [[ ${#authorityInfoAccess[@]} -ne 0 ]]; then
         local aia_val=""
         local separator=""
+        local aia
         for aia in "${authorityInfoAccess[@]}"; do
             aia_val="${aia_val}${separator}${aia}"
             separator=","
@@ -411,6 +478,7 @@ EOF
         echo "" >> "$kAlias/$x509CACNF"
         echo "[ alt_name ]" >> "$kAlias/$x509CACNF"
 
+        local name
         for name in "${subjectAltName[@]}"; do
             echo "$name" >> "$kAlias/$x509CACNF"
         done
@@ -423,7 +491,7 @@ EOF
 __INTERNAL_x509NameToConstraint() {
     local name="$1"
     local result=""
-    if echo "$name" | grep -q '[A-Z]+:.+'; then
+    if echo "$name" | grep -q '[A-Z]\+:.\+'; then
         result="$name"
     elif echo "$name" | grep -q '^([0-9]{1,3}\.){3}[0-9]{1,3}$'; then
         result="IP:$name/255.255.255.255"
@@ -440,6 +508,7 @@ __INTERNAL_x509NamesToNCs() {
     local keyword=$2
     local -a constraints
     local result=""
+    local name
     for name in "${names[@]}"; do
         local constraint=$(__INTERNAL_x509NameToConstraint "$name")
         constraints=("${constraints[@]}" "$keyword;$constraint")
@@ -623,7 +692,10 @@ x509KeyGen() {
         return 1
     fi
     if [[ $kType != "RSA" ]] && [[ $kType != "DSA" ]] \
-        && [[ $kType != "ECDSA" ]] && [[ $kType != "RSA-PSS" ]]; then
+        && [[ $kType != "ECDSA" ]] && [[ $kType != "RSA-PSS" ]] \
+        && [[ $kType != "ED25519" ]] && [[ $kType != "ED448" ]] \
+        && ! [[ $kType =~ MLDSA ]] && ! [[ $kType =~ SLHDSA ]] \
+        && ! [[ $kType =~ SLH-DSA ]] && ! [[ $kType =~ SPHINCS ]] ; then
 
         echo "x509KeyGen: Unknown key type: $kType" >&2
         return 1
@@ -719,6 +791,7 @@ x509KeyGen() {
         ${x509OPENSSL} genrsa -out "$kAlias/$x509PKEY" "$kSize"
         if [ $? -ne 0 ]; then
             echo "x509KeyGen: Key generation failed" >&2
+            return 1
         fi
     else # RSA-PSS, DH, GOST2001
         local options
@@ -734,6 +807,7 @@ x509KeyGen() {
         ${x509OPENSSL} genpkey "${options[@]}"
         if [ $? -ne 0 ]; then
             echo "x509KeyGen: Key generation failed" >&2
+            return 1
         fi
     fi
 
@@ -762,9 +836,11 @@ B<x509SelfSign>
 [B<--md> I<HASH>]
 [B<--padding> I<PADDING>]
 [B<--pssSaltLen> I<SALTLEN>]
+[B<--pssMgf1Md> I<MD>]
 [B<--noAuthKeyId>]
 [B<--noBasicConstraints>]
 [B<--noSubjKeyId>]
+[B<--subjectKeyIdentifier> I<[IDENTIFIER]>]
 [B<--notAfter> I<ENDDATE>]
 [B<--notBefore> I<STARTDATE>]
 [B<-t> I<type>]
@@ -878,7 +954,7 @@ Adds HOST to x509v3 nameConstraint as permitted (see RFC 5820).
 HOST can be a hostname (google.com), IP address (8.8.8.8),
 or something supported directly by openssl (IP:192.168.0.0/255.255.0.0,
 DNS:google.com - see man x509v3_config for details).
-    
+
 =item B<--ncExclude> I<HOST>
 
 Adds HOST to x509v3 nameConstraint as excluded (see RFC 5820).
@@ -928,6 +1004,14 @@ Constraints will I<not> be considered to be a CA.
 Do not set the Subject Key Identifier extension in the certificate.
 Implies B<--noAuthKeyId>.
 
+=item B<--subjectKeyIdentifier> I<[IDENTIFIER]>
+
+Set the Subject Key Identifier extension in the certificate to the given value,
+if passed. If no value is passed, default to using the SHA-1 hash of the BIT
+STRING subjectPublicKey, i.e., OpenSSL's default. If provided, the value must be
+a hex string (possibly with : separating bytes) to use as the
+subjectKeyIdentifier.
+
 =item B<--notAfter> I<ENDDATE>
 
 Sets the date after which the certificate won't be valid.
@@ -949,9 +1033,12 @@ By default C<5 years ago> for I<ca> role, C<now> for all others.
 
 =item B<-t> I<type>
 
-Sets the general type of certificate: C<CA>, C<webserver> or C<webclient>.
+Sets the general type of certificate: C<CA>, C<webserver>, C<webclient> or
+C<none>.
 In case there are no additional options, this also sets correct values
 for basic key usage and extended key usage for given role.
+The special value of C<none> removes use of basic key usage and extended key
+usage extensions.
 
 Note that while the names indicate "web", they actually apply for all servers
 and clients that use TLS or SSL and in case of C<webclient> also for S/MIME.
@@ -1020,6 +1107,8 @@ x509SelfSign() {
     # flag set when the Subject Key Identifier is not supposed to be added
     # to certificate
     local noSubjKeyId=""
+    # Explicit value to use as the Subject Key Identifier, if provided
+    local subjectKeyIdentifier=""
 
     #
     # parse options
@@ -1037,6 +1126,7 @@ x509SelfSign() {
         -l bcCritical \
         -l noAuthKeyId \
         -l noSubjKeyId \
+        -l subjectKeyIdentifier:: \
         -l md: \
         -l padding: \
         -l pssSaltLen: \
@@ -1090,6 +1180,8 @@ x509SelfSign() {
                 ;;
             --noSubjKeyId) noSubjKeyId="true"; shift 1
                 ;;
+            --subjectKeyIdentifier) subjectKeyIdentifier="$2"; shift 2
+                ;;
             --) shift 1
                 break
                 ;;
@@ -1119,7 +1211,7 @@ x509SelfSign() {
 
     certRole=$(tr '[:upper:]' '[:lower:]' <<< ${certRole})
     if [[ $certRole != "ca" ]] && [[ $certRole != "webserver" ]] \
-        && [[ $certRole != "webclient" ]]; then
+        && [[ $certRole != "webclient" ]] && [[ $certRole != "none" ]]; then
 
         echo "x509SelfSign: Unknown role: '$certRole'" >&2
         return 1
@@ -1149,6 +1241,8 @@ x509SelfSign() {
             webserver) certDN=("${certDN[@]}" "CN = localhost")
                 ;;
             webclient) certDN=("${certDN[@]}" "CN = John Smith")
+                ;;
+            none) certDN=("${certDN[@]}" "O = Unknown use cert")
                 ;;
             *) echo "x509SelfSign: Unknown cert role: $certRole" >&2
                 return 1
@@ -1211,6 +1305,8 @@ x509SelfSign() {
                 ;;
             webclient) basicKeyUsage="digitalSignature, keyEncipherment"
                 ;;
+            none)
+                ;;
             *) echo "x509SelfSign: Unknown cert role: $certRole" >&2
                 return 1
                 ;;
@@ -1221,11 +1317,17 @@ x509SelfSign() {
         noAuthKeyId="true"
     fi
 
+    if [[ $noSubjKeyId == "true" ]] && [ "$subjectKeyIdentifier" != "" ]; then
+        echo "x509SelfSign: --noSubjKeyId conflicts with --subjectKeyIdentifier" >&2
+        return 1
+    fi
+
     #
     # prepare configuration file for signing
     #
 
     declare -a parameters
+    local option
     for option in "${certDN[@]}"; do
         parameters=("${parameters[@]}" "--dn=$option")
     done
@@ -1256,12 +1358,16 @@ x509SelfSign() {
         parameters=("${parameters[@]}" "--x509v3Extension=nameConstraints=$ncCritical$nameConstraints")
     fi
 
-    if [[ ! -z $certMD ]]; then
+    if [[ -n $certMD ]]; then
         parameters=("${parameters[@]}" "--md=$certMD")
     fi
 
     if [[ $noSubjKeyId != "true" ]]; then
-        parameters=("${parameters[@]}" "--subjectKeyIdentifier")
+        if [ "$subjectKeyIdentifier" != "" ]; then
+            parameters=("${parameters[@]}" "--subjectKeyIdentifier=$subjectKeyIdentifier")
+        else
+            parameters=("${parameters[@]}" "--subjectKeyIdentifier")
+        fi
     fi
 
     __INTERNAL_x509GenConfig "${parameters[@]}" "$kAlias"
@@ -1312,6 +1418,10 @@ x509SelfSign() {
     if [[ ! -z "$pssSaltLen" ]]; then
         caOptions=("${caOptions[@]}" "-sigopt" "rsa_pss_saltlen:$pssSaltLen")
     fi
+    # the serial number must be the same, so reset index and serial number
+    rm -f "$kAlias/$x509CAINDEX" "$kAlias/$x509CASERIAL"
+    touch "$kAlias/$x509CAINDEX"
+    echo 01 > "$kAlias/$x509CASERIAL"
 
     # sign the certificate using the full CA functionality to get proper
     # key id and subject key identifier
@@ -1324,16 +1434,16 @@ x509SelfSign() {
         return 1
     fi
 
-    mv "$kAlias/$x509CERT" "$kAlias/temp-$x509CERT"
+    mv -f "$kAlias/$x509CERT" "$kAlias/temp-$x509CERT"
 
     # now we have a certificate with proper serial number, it's just missing
     # Authority Key Identifier that references it, so we sign itself for the
     # third time
     if [[ $noAuthKeyId != "true" ]]; then
-        parameters=("${parameters[@]}" "--authorityKeyIdentifier=keyid:always,issuer:always")
+        parameters=("${parameters[@]}" "--authorityKeyIdentifier=keyid,issuer")
     fi
     # the serial number must be the same, so reset index and serial number
-    rm "$kAlias/$x509CAINDEX" "$kAlias/$x509CASERIAL"
+    rm -f "$kAlias/$x509CAINDEX" "$kAlias/$x509CASERIAL"
     __INTERNAL_x509GenConfig "${parameters[@]}" "$kAlias"
     if [ $? -ne 0 ]; then
         return 1
@@ -1456,6 +1566,8 @@ B<x509CertSign>
 [B<--ocspResponderURI> I<URI>]
 [B<--subjectAltName> I<ALTNAME>]
 [B<--subjectAltNameCritical>]
+[B<--noAuthKeyId>]
+[B<--noSubjKeyId>]
 [B<-t> I<TYPE>]
 [B<-v> I<version>]
 B<--CA> I<CAAlias>
@@ -1508,6 +1620,15 @@ the default flag for criticality of Basic Constraints. To restore it, use
 B<--bcCritical>.
 
 This is the default for C<CA> role.
+
+=item B<--crlDistributionPoints> I<URI>
+
+Add the CRL Distributions Points extension that specifies the location of the
+Certificate Revocation List. The URI must be specified with protocol.
+
+For example:
+
+    http://crl.example.com/
 
 =item B<--DN> I<DNPART>
 
@@ -1645,6 +1766,11 @@ signature. Special values are: B<-1> for setting the salt size to the size
 of used message digest, B<-2> for automatically determining the size of
 the salt and B<-3> for using the maximum possible salt size.
 
+=item B<--pssMgf1Md> I<MD>
+
+Set the hash used for the MGF1 inside RSA-PSS signatures.
+By default it's the same value that is used for B<--md> option.
+
 =item B<--noAuthKeyId>
 
 Do not add the Authority Key Identifier extension to generated certificates.
@@ -1737,9 +1863,12 @@ Mark the Subject Alternative Name as critical.
 
 =item B<-t> I<TYPE>
 
-Sets the general type of certificate: C<CA>, C<webserver> or C<webclient>.
+Sets the general type of certificate: C<CA>, C<webserver>, C<webclient> or
+C<none>.
 In case there are no additional options, this also sets correct values
 for basic key usage and extended key usage for given role.
+For case of C<none> the default is to not add basic key usage or extended
+key usage extensions to the certificate.
 
 Note that while the names indicate "web", they actually apply for all servers
 and clients that use TLS or SSL and in case of C<webclient> also for S/MIME.
@@ -1775,6 +1904,8 @@ x509CertSign() {
     local certV="3"
     # role of certificate
     local certRole="webserver"
+    # CRL distribution URL
+    local crlDistributionPoints=""
     # date since which the cert is valid
     # default is in config generator (now)
     local notBefore=""
@@ -1800,6 +1931,8 @@ x509CertSign() {
     local sigPad=""
     # set the length of the salt used with RSA-PSS signatures
     local pssSaltLen=""
+    # set the mgf1 message digest for RSA-PSS signatures
+    local pssMgf1Md=""
     # sets the Basic Key Usage
     local basicKeyUsage=""
     # distinguished name of the signed certificate
@@ -1829,6 +1962,7 @@ x509CertSign() {
         -l notBefore: \
         -l caTrue \
         -l caFalse \
+        -l crlDistributionPoints: \
         -l noBasicConstraints \
         -l bcPathLen: \
         -l bcCritical \
@@ -1839,6 +1973,7 @@ x509CertSign() {
         -l md: \
         -l padding: \
         -l pssSaltLen: \
+        -l pssMgf1Md: \
         -l subjectAltName: \
         -l subjectAltNameCritical \
         -l ocspResponderURI: \
@@ -1872,6 +2007,8 @@ x509CertSign() {
                 ;;
             --caFalse) basicConstraints="CA:FALSE"; shift 1
                 ;;
+            --crlDistributionPoints) crlDistributionPoints="$2"; shift 2
+                ;;
             --noBasicConstraints) basicConstraints="undefined"; shift 1
                 ;;
             --bcPathLen) bcPathLen="$2"; shift 2
@@ -1891,6 +2028,8 @@ x509CertSign() {
             --padding) sigPad="$2"; shift 2
                 ;;
             --pssSaltLen) pssSaltLen="$2"; shift 2
+                ;;
+            --pssMgf1Md) pssMgf1Md="$2"; shift 2
                 ;;
             --subjectAltName) subjectAltName=("${subjectAltName[@]}" "$2"); shift 2
                 ;;
@@ -1948,9 +2087,9 @@ x509CertSign() {
 
     certRole=$(tr '[:upper:]' '[:lower:]' <<< ${certRole})
     if [[ $certRole != "ca" ]] && [[ $certRole != "webserver" ]] \
-        && [[ $certRole != "webclient" ]]; then
+        && [[ $certRole != "webclient" ]] && [[ $certRole != "none" ]]; then
 
-        echo "x509SelfSign: Unknown role: '$certRole'" >&2
+        echo "x509CertSign: Unknown role: '$certRole'" >&2
         return 1
     fi
 
@@ -1962,6 +2101,8 @@ x509CertSign() {
                 ;;
             webclient) certDN=("${certDN[@]}" "CN = John Smith")
                 ;;
+            none) certDN=("${certDN[@]}" "O = No role cert")
+                ;;
             *) echo "x509CertSign: Unknown cert role: $certRole" >&2
                 return 1
                 ;;
@@ -1971,7 +2112,13 @@ x509CertSign() {
     if [[ "$sigPad" && "$sigPad" != "pss" && "$pssSaltLen" ]] \
         || [[ -z "$sigPad" && "$pssSaltLen" ]]; then
 
-        echo "x509SelfSign: pssSaltLen is only applicable to pss padding" >&2
+        echo "x509CertSign: pssSaltLen is only applicable to pss padding" >&2
+        return 1
+    fi
+    if [[ "$sigPad" && "$sigPad" != "pss" && "$pssMgf1Md" ]] \
+        || [[ -z "$sigPad" && "$pssMgf1Md" ]]; then
+
+        echo "x509CertSign: pssMgf1Md is only applicable to pss padding" >&2
         return 1
     fi
 
@@ -2029,6 +2176,8 @@ x509CertSign() {
                 ;;
             webclient) basicKeyUsage="digitalSignature, keyEncipherment"
                 ;;
+            none)
+                ;;
             *) echo "x509SelfSign: Unknown cert role: $certRole" >&2
                 return 1
                 ;;
@@ -2049,6 +2198,7 @@ x509CertSign() {
     #
 
     declare -a parameters
+    local option
     for option in "${certDN[@]}"; do
         parameters=("${parameters[@]}" "--dn=$option")
     done
@@ -2079,10 +2229,15 @@ x509CertSign() {
         parameters=("${parameters[@]}" "--x509v3Extension=nameConstraints=$ncCritical$nameConstraints")
     fi
 
-    if [[ ! -z $certMD ]]; then
+    if [[ -n $certMD ]]; then
         parameters=("${parameters[@]}" "--md=$certMD")
     fi
 
+    if [[ ! -z $crlDistributionPoints ]]; then
+        parameters=("${parameters[@]}" "--crlDistributionPoints=${crlDistributionPoints}")
+    fi
+
+    local name
     for name in "${subjectAltName[@]}"; do
         parameters=("${parameters[@]}" "--subjectAltName=$name")
     done
@@ -2112,7 +2267,7 @@ x509CertSign() {
     fi
 
     if [[ $noAuthKeyId != "true" ]]; then
-        parameters=("${parameters[@]}" "--authorityKeyIdentifier=keyid:always,issuer:always")
+        parameters=("${parameters[@]}" "--authorityKeyIdentifier=keyid,issuer")
     fi
 
     __INTERNAL_x509GenConfig "${parameters[@]}" "$caAlias"
@@ -2142,6 +2297,9 @@ x509CertSign() {
     fi
     if [[ ! -z $pssSaltLen ]]; then
         caOptions=("${caOptions[@]}" "-sigopt" "rsa_pss_saltlen:$pssSaltLen")
+    fi
+    if [[ ! -z $pssMgf1Md ]]; then
+        caOptions=("${caOptions[@]}" "-sigopt" "rsa_mgf1_md:$pssMgf1Md")
     fi
 
     ${x509OPENSSL} ca -config "$caAlias/$x509CACNF" -batch \
@@ -2200,7 +2358,9 @@ DER encoded file (binary, not base64).
 
 Convert a copy of the private key to PKCS#12 format and output the location
 of PKCS#12 encoded file. The key will be encrypted with null password and
-PKCS#5 v2 PBE/PBKDF and DES-EDE3-CBC cipher (strongest supported by NSS).
+PKCS#5 v2 PBE/PBKDF and DES-EDE3-CBC cipher (strongest supported by NSS)
+when using OpenSSL before 3.0 and with AES when using 3.0 (in practice
+it uses the default parameters in OpenSSL 3.0).
 Its friendly name will be set to alias.
 
 Note that the export does cache the last exported file, so if you exported the
@@ -2323,8 +2483,10 @@ x509Key() {
             # old OpenSSL doesn't support setting MAC at all
             if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
                 options=(${options[@]} -keypbe PBE-SHA1-3DES)
-            else
+            elif ${x509OPENSSL} version | grep -q '1[.][01][.]'; then
                 options=(${options[@]} -keypbe DES-EDE3-CBC -macalg SHA1)
+            # else # OpenSSL 3.0+
+            # use default (should be AES)
             fi
 
             if [[ $withCert == "true" ]]; then
@@ -2490,7 +2652,7 @@ x509Cert() {
             # older version of openssl don't support setting MAC at all
             if ${x509OPENSSL} version | grep -q '0[.]9[.].'; then
                 :
-            else
+            elif ${x509OPENSSL} version | grep -q '1[.][01][.]'; then
                 options=(${options[@]} -macalg SHA1)
             fi
 
@@ -2580,6 +2742,302 @@ x509RmAlias() {
     fi
 }
 
+true <<'=cut'
+=pod
+
+=head2 x509Revoke()
+
+Revoke a certificate.
+
+=over 4
+
+B<x509Revoke>
+B<--CA> I<CAAlias>
+[B<--crlReason> I<REASON>]
+[B<--crlCompromiseTime> I<REASON>]
+[B<--crlCACompromiseTime> I<REASON>]
+I<alias>
+
+=back
+
+=over
+
+=item B<--CA> I<CAAlias>
+
+The CA alias which issued the certificate to be revoked.
+
+The specified CA must have issued the certificate to be revoked.
+
+=back
+
+=item B<--crlReason> I<REASON>
+
+The reason for the certificate to be revoked.
+
+Acceptable values are B<unspecified>, B<keyCompromise>, B<CACompromise>,
+B<affiliationChanged>, B<superseded>, B<cessationOfOperation>,
+B<certificateHold>, and <removeFromCRL>. The matching of reason is case
+insensitive. Setting any revocation reason will make the CRL v2.
+
+In practice removeFromCRL is not particularly useful because it is only used in
+delta CRLs which are not currently implemented.
+
+=back
+
+=item B<--crlCompromiseTime> I<TIME>
+
+This sets the revocation reason to B<keyCompromise> and the compromise time to
+I<TIME>.
+
+I<TIME> should be in GeneralizedTime format that is YYYYMMDDHHMMSSZ
+
+=back
+
+=item B<--crlCACompromiseTime> I<TIME>
+
+Same as B<--crlCompromiseTime> except the revocation reason is set to
+B<CACompromise>.
+
+=back
+
+=item I<alias>
+
+The alias for the certificate to be revoked.
+
+=back
+
+=cut
+
+x509Revoke() {
+    # alias of the certificate to be revoked
+    local kAlias
+    # alias of the certificate issuer CA key and cert to be used
+    local caAlias
+    # reason for certificate revocation
+    local crlReason
+    # set the compromise time and the reason for revocation
+    local crlCompromiseTime
+    # set the CA compromise time and the reason for revocation
+    local crlCACompromiseTime
+
+    local TEMP=$(getopt -o v:t: -l CA: \
+        -l crlReason: \
+        -l crlCompromiseTime: \
+        -l crlCACompromiseTime: \
+        -n x509Revoke -- "$@")
+
+    if [ $? -ne 0 ]; then
+        echo "x509Revoke: can't parse options" >&2
+        return 1
+    fi
+
+    eval set -- "$TEMP"
+
+    while true ; do
+        case "$1" in
+            --CA) caAlias="$2"; shift 2
+                ;;
+            --crlReason) crlReason="$2"; shift 2
+                ;;
+            --crlCompromiseTime) crlCompromiseTime="$2"; shift 2
+                ;;
+            --crlCACompromiseTime) crlCACompromiseTime="$2"; shift 2
+                ;;
+            --) shift 1
+                break
+                ;;
+            *) echo "x509Revoke: Unknown option: $1" >&2
+                return 1
+        esac
+    done
+
+    kAlias="$1"
+
+    #
+    # sanity check options
+    #
+
+    if [ ! -e "$caAlias/$x509PKEY" ]; then
+        echo "x509Revoke: CA private key does not exist" >&2
+        return 1
+    fi
+
+    if [ ! -e "$caAlias/$x509CERT" ]; then
+        echo "x509Revoke: CA certificate does not exist" >&2
+        return 1
+    fi
+
+    if [ ! -e "$caAlias/$x509CACNF" ]; then
+        echo "x509Revoke: CA configuration does not exist" >&2
+        return 1
+    fi
+
+    #
+    # set parameters
+    #
+
+    local isReasonSet=""
+    declare -a parameters
+
+    if [[ ! -z $crlReason ]]; then
+        parameters=("${parameters[@]}" "-crl_reason" "$crlReason")
+        isReasonSet="True"
+    fi
+
+    if [[ ! -z $crlCompromiseTime ]]; then
+        if [[ ! -z $isReasonSet ]]; then
+            echo "X509Revoke: crlReason, crlCompromiseTime, and "\
+                "crlCACompromiseTime are mutually exclusive; choose one" >&2
+            return 1
+        fi
+
+        parameters=("${parameters[@]}" "-crl_compromise" "$crlCompromiseTime")
+        isReasonSet="True"
+    fi
+
+    if [[ ! -z $crlCACompromiseTime ]]; then
+        if [[ ! -z $isReasonSet ]]; then
+            echo "X509Revoke: crlReason, crlCompromiseTime, and "\
+                "crlCACompromiseTime are mutually exclusive; choose one" >&2
+            return 1
+        fi
+        parameters=("${parameters[@]}" "-crl_CA_compromise" "$crlCACompromiseTime")
+        isReasonSet="True"
+    fi
+
+    ${x509OPENSSL} ca -config "$caAlias/$x509CACNF" -batch \
+        -keyfile "$caAlias/$x509PKEY" \
+        -cert "$caAlias/$x509CERT" \
+        -revoke "$kAlias/$x509CERT" \
+        "${parameters[@]}"
+    if [ $? -ne 0 ]; then
+        echo "x509Revoke: Failed to revoke certificate" >&2
+        return 1
+    fi
+}
+
+true <<'=cut'
+=pod
+
+=head2 x509GenerateCRL()
+
+Generate and sign a Certificate Revocation List.
+
+=over 4
+
+B<x509GenerateCRL>
+[B<--crlDays>]
+[B<--crlHours>]
+I<CAAlias>
+
+=back
+
+=over
+
+=item B<--crlDays> I<number>
+
+The number of days before the next CRL is due (default is 365). That is the
+number of days from now to place in the CRL nextUpdate field.
+
+If both B<--crlDays> and B<--crlHours> are used together, the values are added (e.g.
+B<--crlDays> I<1> B<--crlHours> I<1> will result in 1 day and 1 hour from now)
+
+=back
+
+=item I<--crlHours> I<number>
+
+The number of hours before the next CRL is due. That is the number of hours from
+now to place in the CRL nextUpdate field.
+
+If both B<--crlDays> and B<--crlHours> are used together, the values are added (e.g.
+B<--crlDays> I<1> B<--crlHours> I<1> will result in 1 day and 1 hour from now)
+
+=back
+
+=item I<CAAlias>
+
+The CA alias whose Certicate Revocation List will be generated.
+
+=back
+
+=cut
+
+x509GenerateCRL() {
+    # alias of the certificate issuer CA key and cert to be used
+    local caAlias
+    # number of days before the next CRL is due
+    local crlDays=""
+    # number of hours before the next CRL is due
+    local crlHours=""
+
+    local TEMP=$(getopt -o v:t: \
+        -l crlDays: \
+        -l crlHours: \
+        -n x509GenerateCRL -- "$@")
+
+    if [ $? -ne 0 ]; then
+        echo "x509GenerateCRL: can't parse options" >&2
+        return 1
+    fi
+
+    eval set -- "$TEMP"
+
+    while true ; do
+        case "$1" in
+            --crlDays) crlDays="$2"; shift 2
+                ;;
+            --crlHours) crlHours="$2"; shift 2
+                ;;
+            --) shift 1
+                break
+                ;;
+            *) echo "x509GenerateCRL: Unknown option: $1" >&2
+                return 1
+        esac
+    done
+
+    caAlias="$1"
+
+    #
+    # sanity check options
+    #
+
+    if [ ! -e "$caAlias/$x509PKEY" ]; then
+        echo "x509GenerateCRL: CA private key does not exist" >&2
+        return 1
+    fi
+
+    if [ ! -e "$caAlias/$x509CERT" ]; then
+        echo "x509GenerateCRL: CA certificate does not exist" >&2
+        return 1
+    fi
+
+    if [ ! -e "$caAlias/$x509CACNF" ]; then
+        echo "x509GenerateCRL: CA configuration does not exist" >&2
+        return 1
+    fi
+
+    declare -a caOptions
+
+    if [[ ! -z "$crlDays" ]]; then
+        caOptions=("${caOptions[@]}" "-crldays" "$crlDays")
+    fi
+
+    if [[ ! -z "$crlHours" ]]; then
+        caOptions=("${caOptions[@]}" "-crlhours" "$crlHours")
+    fi
+
+    ${x509OPENSSL} ca -config "$caAlias/$x509CACNF" -batch \
+        -gencrl -keyfile "$caAlias/$x509PKEY" \
+        -cert "$caAlias/$x509CERT" \
+        -out "$caAlias/$x509CRL" "${caOptions[@]}"
+    if [ $? -ne 0 ]; then
+        echo "x509GenerateCRL: Failed to generate CRL" >&2
+        return 1
+    fi
+}
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #   Execution
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2592,6 +3050,11 @@ true <<'=cut'
 This library works correctly only when sourced. I.e.:
 
     . ./lib.sh
+
+or imported using rlImport inside the beakerlib, i.e. after running
+
+    . /usr/share/beakerlib/beakerlib.sh
+    rlRun "rlImport openssl/certgen"
 
 =over
 
@@ -2616,6 +3079,15 @@ x509LibraryLoaded() {
         echo "certgen: error: "\
             "Non GNU enhanced version of getopt" 1>&2
         return 1
+    fi
+
+    # Only since OpenSSL 3.2.0 there's ability to run post-quantum algorithms
+    if ! ${x509OPENSSL} version | grep -qE '0[.]9[.]|1[.][01][.]|3[.][01][.]'; then
+        if ${x509OPENSSL} list -providers | grep -q 'oqsprovider'; then
+            rlLogInfo "OQS Provider loaded, PQC available"
+        else
+            rlLogInfo "OQS Provider not available, Post-Quantum Cryptography (PQC) UNavailable"
+        fi
     fi
 
     return 0
@@ -2714,7 +3186,7 @@ for deciphering data when performing key agreement.
 
 =item *
 
-Hubert Kario <hkario@redhat.com>
+Alicja Kario <hkario@redhat.com>
 
 =back
 
