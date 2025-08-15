@@ -56,6 +56,7 @@ BuildRequires:  dnf5daemon-server
 BuildRequires:  dnf5daemon-client
 BuildRequires:  libdnf5-plugin-actions
 BuildRequires:  libdnf5-plugin-expired-pgp-keys
+BuildRequires:  python3-libdnf5-python-plugins-loader
 # dnf5 python api tests need libdnf5 python bindings
 BuildRequires:  python3-libdnf5
 
