@@ -39,7 +39,7 @@ Given I use repository "simple-base"
       | install-dep   | labirinto-0:1.0-1.fc29.x86_64   |
   And RPMDB Transaction is empty
   And stderr contains "The operation will only download packages for the transaction."
- When I execute "find -type f -name '*.rpm'" in "{context.dnf.tempdir}/SomeDestination"
+ When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.tempdir}/SomeDestination"
  Then stdout is
  """
  ./labirinto-1.0-1.fc29.x86_64.rpm

@@ -9,7 +9,7 @@ Scenario: RPMs downloaded with `keepcache` and `destdir` options set are not rem
   And DNF Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
- When I execute "find -type f -name '*.rpm'" in "{context.dnf.tempdir}/SomeDestination"
+ When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.tempdir}/SomeDestination"
  Then stdout matches line by line
       """
       \./labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -23,7 +23,7 @@ Scenario: Install an RPM with `destdir` option set and `--downloadonly` switch w
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
   And RPMDB Transaction is empty
- When I execute "find -type f -name '*.rpm'" in "{context.dnf.tempdir}/SomeDestination"
+ When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.tempdir}/SomeDestination"
  Then stdout matches line by line
       """
       \./labirinto-1\.0-1\.fc29\.x86_64\.rpm
