@@ -53,3 +53,15 @@ Given I use repository "simple-base"
       | install       | labirinto-0:1.0-1.fc29.x86_64   |
   And RPMDB Transaction is empty
   And stderr contains "Need to download 0 B."
+
+
+Scenario: Packages downloaded in download-only transaction with --destdir option are not removed by following transaction
+  Given I use repository "simple-base"
+   When I execute dnf with args "install labirinto --destdir={context.dnf.tempdir}/SomeDestination --setopt=keepcache=false"
+   Then file "/{context.dnf.tempdir}/SomeDestination/labirinto-1.0-1.fc29.x86_64.rpm" exists
+   When I execute dnf with args "install labirinto --setopt=keepcache=false"
+   Then the exit code is 0
+    And Transaction contains
+        | Action        | Package                       |
+        | install       | labirinto-0:1.0-1.fc29.x86_64 |
+    And file "/{context.dnf.tempdir}/SomeDestination/labirinto-1.0-1.fc29.x86_64.rpm" exists
