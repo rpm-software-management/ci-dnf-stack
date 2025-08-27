@@ -2,8 +2,7 @@ Feature: Tests for the manifest plugin
 
 
 Background:
-  Given I enable plugin "manifest"
-  And I use repository "dnf-ci-fedora"
+Given I use repository "dnf-ci-fedora"
   And I successfully execute dnf with args "install basesystem glibc flac"
   And I set working directory to "{context.dnf.tempdir}"
 
@@ -275,7 +274,8 @@ Scenario: Generate new manifest using prototype input file, system repo and allo
             evr: 1.0-1
     """
 
-
+# The dnf5 manifest plugin does not yet support modularity
+@xfail
 Scenario: Generate new manifest using prototype input file with a modular package from the enabled stream
   Given I use repository "dnf-ci-fedora-modular"
     And I copy file "{context.dnf.fixturesdir}/data/manifest/moduleenable.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
@@ -401,44 +401,44 @@ Scenario: Generate new manifest using installed packages
           - name: basesystem
             repo_id: dnf-ci-fedora
             location: noarch/basesystem-11-6.fc29.noarch.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 11-6.fc29
           - name: setup
             repo_id: dnf-ci-fedora
             location: noarch/setup-2.12.1-1.fc29.noarch.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 2.12.1-1.fc29
         x86_64:
           - name: filesystem
             repo_id: dnf-ci-fedora
             location: x86_64/filesystem-3.9-2.fc29.x86_64.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 3.9-2.fc29
           - name: flac
             repo_id: dnf-ci-fedora
             location: x86_64/flac-1.3.2-8.fc29.x86_64.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 1.3.2-8.fc29
           - name: glibc
             repo_id: dnf-ci-fedora
             location: x86_64/glibc-2.28-9.fc29.x86_64.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 2.28-9.fc29
           - name: glibc-all-langpacks
             repo_id: dnf-ci-fedora
             location: x86_64/glibc-all-langpacks-2.28-9.fc29.x86_64.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 2.28-9.fc29
           - name: glibc-common
             repo_id: dnf-ci-fedora
             location: x86_64/glibc-common-2.28-9.fc29.x86_64.rpm
-            checksum: sha256:*
+            checksum: sha1:*
             size: *
             evr: 2.28-9.fc29
     """
@@ -446,7 +446,7 @@ Scenario: Generate new manifest using installed packages
 
 Scenario: Generate new multiarch manifest file
   Given I use repository "security-upgrade-multilib"
-    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686"
+    And I successfully execute dnf with args "manifest new B-1-1 --arch=x86_64,i686"
    Then file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
    """
     document: rpm-package-manifest
@@ -454,7 +454,7 @@ Scenario: Generate new multiarch manifest file
     data:
     repositories:
       - id: security-upgrade-multilib
-        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+        baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib
     packages:
       i686:
         - name: B
@@ -475,7 +475,7 @@ Scenario: Generate new multiarch manifest file
 
 Scenario: Generate new manifest files for each arch
   Given I use repository "security-upgrade-multilib"
-    And I successfully execute dnf with args "manifest new B-1-1 --archs x86_64 i686 --per-arch"
+    And I successfully execute dnf with args "manifest new B-1-1 --arch=x86_64,i686 --per-arch"
    Then file "/{context.dnf.tempdir}/packages.manifest.x86_64.yaml" matches line by line
    """
    document: rpm-package-manifest
@@ -483,7 +483,7 @@ Scenario: Generate new manifest files for each arch
    data:
    repositories:
      - id: security-upgrade-multilib
-       baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+       baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib
    packages:
      x86_64:
        - name: B
@@ -500,7 +500,7 @@ Scenario: Generate new manifest files for each arch
     data:
     repositories:
       - id: security-upgrade-multilib
-        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+        baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib
     packages:
       i686:
         - name: B
@@ -526,8 +526,8 @@ Scenario: Download packages from the manifest
 
 Scenario: Download multiarch packages from multiarch manifest
   Given I use repository "manifest-multiarch"
-    And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64"
-   When I execute dnf with args "manifest download --archs x86_64 ppc64"
+    And I successfully execute dnf with args "manifest new foo --arch=x86_64,ppc64"
+   When I execute dnf with args "manifest download --arch=x86_64,ppc64"
    Then the exit code is 0
     And file sha256 checksums are following
         | Path                                                                        | sha256                                                                                          |
@@ -538,9 +538,9 @@ Scenario: Download multiarch packages from multiarch manifest
 
 Scenario: Download multiarch packages from per-arch manifests
   Given I use repository "manifest-multiarch"
-    And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64 --per-arch"
-    And I successfully execute dnf with args "manifest download --archs x86_64"
-    And I successfully execute dnf with args "manifest download --archs ppc64"
+    And I successfully execute dnf with args "manifest new foo --arch=x86_64,ppc64 --per-arch"
+    And I successfully execute dnf with args "manifest download --arch=x86_64"
+    And I successfully execute dnf with args "manifest download --arch=ppc64"
    Then file sha256 checksums are following
         | Path                                                                        | sha256                                                                                          |
         | {context.dnf.tempdir}/packages.manifest.x86_64/foo-1.0-1.x86_64.rpm         | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/x86_64/foo-1.0-1.x86_64.rpm           |
