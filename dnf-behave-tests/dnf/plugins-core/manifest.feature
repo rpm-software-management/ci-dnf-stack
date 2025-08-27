@@ -454,7 +454,7 @@ Scenario: Generate new multiarch manifest file
     data:
     repositories:
       - id: security-upgrade-multilib
-        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+        baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
     packages:
       i686:
         - name: B
@@ -483,7 +483,7 @@ Scenario: Generate new manifest files for each arch
    data:
    repositories:
      - id: security-upgrade-multilib
-       baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+       baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
    packages:
      x86_64:
        - name: B
@@ -500,7 +500,7 @@ Scenario: Generate new manifest files for each arch
     data:
     repositories:
       - id: security-upgrade-multilib
-        baseurl: file:///root/dbox/ci-dnf-stack/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
+        baseurl: file:///opt/ci/dnf-behave-tests/fixtures/repos/security-upgrade-multilib/
     packages:
       i686:
         - name: B
