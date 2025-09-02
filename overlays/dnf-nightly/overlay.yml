@@ -54,7 +54,7 @@ components:
   - name: libdnf
     git:
       src: github:rpm-software-management/libdnf.git
-      branch: origin/dnf-4-master
+      branch: dnf-4-master
     requires:
       - libsolv
       - libmodulemd
