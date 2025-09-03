@@ -51,7 +51,7 @@ def execute_step(context, step):
 
 @behave.step("I set environment variable \"{var}\" to \"{value}\"")
 def set_environment_variable(context, var, value):
-    os.environ[var] = value
+    os.environ[var] = value.format(context=context)
 
 
 @behave.step("I move the clock {direction} to \"{when}\"")
