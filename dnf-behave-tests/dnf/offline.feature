@@ -270,3 +270,15 @@ Given I successfully execute dnf with args "install --offline flac"
       """
       flac-0:1.3.2-8.fc29.x86_64 dnf-ci-fedora
       """
+
+
+Scenario: Packages downloaded in offline transaction are not removed by following transaction
+  Given I use repository "simple-base"
+   When I execute dnf with args "install labirinto --offline"
+   Then file "/usr/lib/sysimage/libdnf5/offline/packages/labirinto-1.0-1.fc29.x86_64.rpm" exists
+   When I execute dnf with args "install labirinto --setopt=keepcache=false"
+   Then the exit code is 0
+    And Transaction contains
+        | Action        | Package                       |
+        | install       | labirinto-0:1.0-1.fc29.x86_64 |
+    And file "/usr/lib/sysimage/libdnf5/offline/packages/labirinto-1.0-1.fc29.x86_64.rpm" exists

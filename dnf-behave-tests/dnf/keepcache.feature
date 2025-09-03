@@ -11,7 +11,7 @@ Scenario: Keepcache set to false removes installed packages from cache
     And Transaction is following
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout is empty
 
 
@@ -21,7 +21,7 @@ Scenario: Keepcache set to true keeps installed packages in cache
     And Transaction is following
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -34,7 +34,7 @@ Scenario: Keepcache set to false does not remove command-line packages
     And Transaction is following
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./@commandline-[0-9a-f]{16}/packages/[0-9a-f]{16}-labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -61,7 +61,7 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
         | install       | vagare-0:1.0-1.fc29.x86_64                |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -72,7 +72,7 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
     And Transaction is following
         | Action        | Package                                   |
         | install       | dedalo-signed-0:1.0-1.fc29.x86_64         |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -88,10 +88,10 @@ Scenario: Cached packages are not removed after remove command with keepcache se
    Then Transaction is following
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout is empty
   Given I successfully execute dnf with args "install vagare --downloadonly"
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
@@ -100,7 +100,7 @@ Scenario: Cached packages are not removed after remove command with keepcache se
    Then Transaction is following
         | Action        | Package                                   |
         | remove        | labirinto-0:1.0-1.fc29.x86_64             |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
