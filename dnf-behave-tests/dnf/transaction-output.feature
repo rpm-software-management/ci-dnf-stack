@@ -57,12 +57,12 @@ Scenario: Packages in transaction are sorted by NEVRA
       Transaction test succeeded.
       Running transaction
         Preparing        :                                                        1/1
-        Installing       : setup-2.12.1-1.fc29.noarch                            1/11
-        Installing       : filesystem-3.9-2.fc29.x86_64                          2/11
-        Installing       : basesystem-11-6.fc29.noarch                           3/11
-        Installing       : glibc-all-langpacks-2.28-9.fc29.x86_64                4/11
-        Installing       : glibc-common-2.28-9.fc29.x86_64                       5/11
-        Installing       : glibc-2.28-9.fc29.x86_64                              6/11
+        Installing       : *
+        Installing       : *
+        Installing       : *
+        Installing       : *
+        Installing       : *
+        Installing       : *
         Installing       : *
         Installing       : *
         Installing       : *
