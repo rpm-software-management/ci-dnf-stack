@@ -36,7 +36,7 @@ def when_I_open_dnf_shell(context):
     context.cmd = cmd
     context.dnf["rpmdb_pre"] = get_rpmdb_rpms(context.dnf.installroot)
 
-    context.shell_session = pexpect.spawn(cmd, env = {"COLORTERM": "FALSE"})
+    context.shell_session = pexpect.spawn(cmd, env = {"COLORTERM": "FALSE", "NO_COLOR": "TRUE"})
     # pexpect adds a short delay before sending data, so that SSH has time
     # to turn off TTY echo; the echo is still there though, so removing the delay
     context.shell_session.delaybeforesend = None
