@@ -25,57 +25,57 @@ Scenario: Packages in transaction are sorted by NEVRA
     And stdout matches line by line
       """
       <REPOSYNC>
-      Dependencies resolved.
+      Dependencies resolved\.
       ================================================================================
        Package                Arch      Version            Repository            Size
       ================================================================================
       Installing:
-       SuperRipper            x86_64    1.0-1              dnf-ci-thirdparty    *
-       flac                   x86_64    1.3.2-8.fc29       dnf-ci-fedora        *
-       glibc                  x86_64    2.28-9.fc29        dnf-ci-fedora        *
-       wget                   x86_64    1.19.5-5.fc29      dnf-ci-fedora        *
+       SuperRipper            x86_64    1\.0-1              dnf-ci-thirdparty    .*
+       flac                   x86_64    1\.3\.2-8\.fc29       dnf-ci-fedora        .*
+       glibc                  x86_64    2\.28-9\.fc29        dnf-ci-fedora        .*
+       wget                   x86_64    1\.19\.5-5\.fc29      dnf-ci-fedora        .*
       Installing dependencies:
-       abcde                  noarch    2.9.2-1.fc29       dnf-ci-fedora        *
-       basesystem             noarch    11-6.fc29          dnf-ci-fedora        *
-       filesystem             x86_64    3.9-2.fc29         dnf-ci-fedora        *
-       glibc-all-langpacks    x86_64    2.28-9.fc29        dnf-ci-fedora        *
-       glibc-common           x86_64    2.28-9.fc29        dnf-ci-fedora        *
-       setup                  noarch    2.12.1-1.fc29      dnf-ci-fedora        *
+       abcde                  noarch    2\.9\.2-1\.fc29       dnf-ci-fedora        .*
+       basesystem             noarch    11-6\.fc29          dnf-ci-fedora        .*
+       filesystem             x86_64    3\.9-2\.fc29         dnf-ci-fedora        .*
+       glibc-all-langpacks    x86_64    2\.28-9\.fc29        dnf-ci-fedora        .*
+       glibc-common           x86_64    2\.28-9\.fc29        dnf-ci-fedora        .*
+       setup                  noarch    2\.12\.1-1\.fc29      dnf-ci-fedora        .*
       Installing weak dependencies:
-       FlacBetterEncoder      x86_64    1.0-1              dnf-ci-thirdparty    *
+       FlacBetterEncoder      x86_64    1\.0-1              dnf-ci-thirdparty    .*
 
       Transaction Summary
       ================================================================================
       Install  11 Packages
 
-      Total size: *
+      Total size: .*
       Installed size: 0
       Downloading Packages:
       Running transaction check
-      Transaction check succeeded.
+      Transaction check succeeded\.
       Running transaction test
-      Transaction test succeeded.
+      Transaction test succeeded\.
       Running transaction
         Preparing        :                                                        1/1
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
-        Installing       : *
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
+        Installing       : .*
 
       Installed:
-        FlacBetterEncoder-1.0-1.x86_64      SuperRipper-1.0-1.x86_64
-        abcde-2.9.2-1.fc29.noarch           basesystem-11-6.fc29.noarch
-        filesystem-3.9-2.fc29.x86_64        flac-1.3.2-8.fc29.x86_64
-        glibc-2.28-9.fc29.x86_64            glibc-all-langpacks-2.28-9.fc29.x86_64
-        glibc-common-2.28-9.fc29.x86_64     setup-2.12.1-1.fc29.noarch
-        wget-1.19.5-5.fc29.x86_64
+        FlacBetterEncoder-1\.0-1\.x86_64      SuperRipper-1\.0-1\.x86_64
+        abcde-2\.9\.2-1\.fc29\.noarch           basesystem-11-6\.fc29\.noarch
+        filesystem-3\.9-2\.fc29\.x86_64        flac-1\.3\.2-8\.fc29\.x86_64
+        glibc-2\.28-9\.fc29\.x86_64            glibc-all-langpacks-2\.28-9\.fc29\.x86_64
+        glibc-common-2\.28-9\.fc29\.x86_64     setup-2\.12\.1-1\.fc29\.noarch
+        wget-1\.19\.5-5\.fc29\.x86_64
 
       Complete!
       """
