@@ -236,7 +236,7 @@ check_reply(
      "return": {
          "keys_val": [{"key": "repo_id", "value": "test-repo"},
                       {"key": "name", "value": "Test repository"},
-                      {"key": "enabled", "value": "false"},
+                      {"key": "enabled", "value": "0"},
                       {"key": "baseurl", "value": "https://xyz.com/rpm"}]}})
 
 send_request({"op": "get", "domain": "conf", "args": {"key": "*.enabled"}})
