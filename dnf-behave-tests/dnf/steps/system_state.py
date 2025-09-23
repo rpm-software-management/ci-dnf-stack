@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import behave
 import os
-import toml
+import tomllib
 
 from common.lib.behave_ext import check_context_table
 from common.lib.diff import print_lines_diff
@@ -29,14 +29,14 @@ def package_state_is(context):
     check_context_table(context, ["package", "reason", "from_repo"])
 
     found_pkgs = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/packages.toml")) as f:
-        for k, v in toml.load(f)["packages"].items():
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/packages.toml"), "rb") as f:
+        for k, v in tomllib.load(f)["packages"].items():
             found_pkgs.append((k, v["reason"]))
     found_pkgs.sort()
 
     found_nevras = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/nevras.toml")) as f:
-        for k, v in toml.load(f)["nevras"].items():
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/nevras.toml"), "rb") as f:
+        for k, v in tomllib.load(f)["nevras"].items():
             found_nevras.append((k, v["from_repo"]))
     found_nevras.sort()
 
@@ -78,8 +78,8 @@ def group_state_is(context):
     check_context_table(context, ["id", "package_types", "packages", "userinstalled"])
 
     found_groups = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/groups.toml")) as f:
-        for k, v in toml.load(f)["groups"].items():
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/groups.toml"), "rb") as f:
+        for k, v in tomllib.load(f)["groups"].items():
             pkg_types = v["package_types"]
             pkg_types.sort()
             pkgs = v["packages"]
@@ -118,8 +118,8 @@ def environment_state_is(context):
     check_context_table(context, ["id", "groups"])
 
     found_environments = []
-    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/environments.toml")) as f:
-        for k, v in toml.load(f)["environments"].items():
+    with open(os.path.join(context.dnf.installroot, "usr/lib/sysimage/libdnf5/environments.toml"), "rb") as f:
+        for k, v in tomllib.load(f)["environments"].items():
             groups = v["groups"]
             groups.sort()
             found_environments.append((k, ', '.join(groups)))

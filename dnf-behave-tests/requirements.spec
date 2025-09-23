@@ -24,13 +24,12 @@ BuildRequires:  glibc-langpack-en
 BuildRequires:  glibc-langpack-de
 BuildRequires:  libfaketime
 BuildRequires:  openssl
-BuildRequires:  python3
+BuildRequires:  python3 >= 3.11
 BuildRequires:  python3-distro
 BuildRequires:  python3-pip
 BuildRequires:  python3-rpm
 # a missing dep of python3-pip on f35 beta, remove when unneeded
 BuildRequires:  python3-setuptools
-BuildRequires:  python3-toml
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
 BuildRequires:  sqlite

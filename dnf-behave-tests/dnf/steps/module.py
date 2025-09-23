@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import behave
 import os
-import toml
+import tomllib
 
 from common.lib.behave_ext import check_context_table
 from lib.dnf import parse_module_list
@@ -41,8 +41,8 @@ def get_modules_state(installroot):
     states_filepath = os.path.join(installroot, "usr/lib/sysimage/libdnf5/modules.toml")
     if not os.path.exists(states_filepath):
         return found_modules
-    with open(states_filepath) as f:
-        for section_name, section_dict in toml.load(f)["modules"].items():
+    with open(states_filepath, "rb") as f:
+        for section_name, section_dict in tomllib.load(f)["modules"].items():
             module_dict = dict()
             if section_dict.get("state"):
                 module_dict["state"] = section_dict["state"].lower()
