@@ -104,3 +104,27 @@ Scenario: Releasever gets split into releasever_major and releasever_minor
     And Transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
+Scenario: releasever_major, releasever_minor can be overridden by command-line options
+  Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-epel-9.9-12-34"
+    And I use repository "dnf-ci-fedora" with configuration
+        | key         | value |
+        | baseurl     | file://{context.dnf.installroot}/temp-repos/base-epel-$releasever-$releasever_major-$releasever_minor |
+    And I execute dnf with args "install setup --releasever=9.9 --releasever-major=12 --releasever-minor=34"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
+Scenario: Overriden only releasever_major
+  Given I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-epel-12-9"
+    And I use repository "dnf-ci-fedora" with configuration
+        | key         | value |
+        | baseurl     | file://{context.dnf.installroot}/temp-repos/base-epel-$releasever_major-$releasever_minor |
+    And I execute dnf with args "install setup --releasever=9.9 --releasever-major=12"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                       |
+        | install       | setup-0:2.12.1-1.fc29.noarch  |
