@@ -39,6 +39,14 @@ RUN set -x && \
        dnf5 -y install $COPR_RPMS; \
     fi
 
+# install local RPMs if available
+COPY ./rpms/ /opt/ci/rpms/
+RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+    if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
+        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
+        dnf5 -y versionlock add $(rpm -qp --queryformat '%{NAME}\n' /opt/ci/rpms/*.rpm | sort | uniq); \
+    fi
+
 # copy test suite
 COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
@@ -47,13 +55,6 @@ COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 RUN set -x && \
     dnf5 -y builddep /opt/ci/dnf-behave-tests/requirements.spec -x libfaketime-0.9.12-1.* && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
-
-# install local RPMs if available
-COPY ./rpms/ /opt/ci/rpms/
-RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
-    if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
-    fi
 
 # create directory for dbus daemon socket
 RUN set -x && \
