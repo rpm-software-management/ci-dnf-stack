@@ -149,6 +149,9 @@ class DNFContext(object):
         if module_platform_id:
             result.append("--setopt=module_platform_id={0}".format(module_platform_id))
 
+        disable_plugins = self._get("disable_plugins")
+        if disable_plugins and self.dnf_command != "dnf5daemon-client":
+            result.append("--disable-plugin='*'")
         plugins = self._get("plugins") or []
         for plugin in plugins:
             result.append("--enableplugin='{0}'".format(plugin))
