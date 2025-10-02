@@ -96,7 +96,7 @@ Scenario: Generate new manifest using specs and system repo
 Scenario: Generate new manifest using prototype input file
   Given I copy file "{context.dnf.fixturesdir}/data/manifest/simple.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
     And I execute "sed -i 's|$FIXTURES_DIR|{context.dnf.fixturesdir}|' rpms.in.yaml"
-   When I execute dnf with args "manifest new"
+   When I execute dnf with args "manifest resolve"
    Then the exit code is 0
     And file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
     """
@@ -175,7 +175,7 @@ Scenario: Generate new manifest using prototype input file
 Scenario: Generate new manifest using prototype input file and system repo
   Given I copy file "{context.dnf.fixturesdir}/data/manifest/simple.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
     And I execute "sed -i 's|$FIXTURES_DIR|{context.dnf.fixturesdir}|' rpms.in.yaml"
-   When I execute dnf with args "manifest new --use-system"
+   When I execute dnf with args "manifest resolve --use-system"
    Then the exit code is 0
     And file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
     """
@@ -219,7 +219,7 @@ Scenario: Generate new manifest using prototype input file and system repo
 Scenario: Generate new manifest with packages for reinstallation using prototype input file and system repo
   Given I copy file "{context.dnf.fixturesdir}/data/manifest/reinstall.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
     And I execute "sed -i 's|$FIXTURES_DIR|{context.dnf.fixturesdir}|' rpms.in.yaml"
-   When I execute dnf with args "manifest new --use-system"
+   When I execute dnf with args "manifest resolve --use-system"
    Then the exit code is 0
     And file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
     """
@@ -254,7 +254,7 @@ Scenario: Generate new manifest using prototype input file, system repo and allo
     And I successfully execute dnf with args "install dnf-ci-kernel-1.0"
     And I copy file "{context.dnf.fixturesdir}/data/manifest/allowerasing.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
     And I execute "sed -i 's|$FIXTURES_DIR|{context.dnf.fixturesdir}|' rpms.in.yaml"
-   When I execute dnf with args "manifest new --use-system --exclude dnf-ci-obsolete"
+   When I execute dnf with args "manifest resolve --use-system --exclude dnf-ci-obsolete"
    Then the exit code is 0
     And file "/{context.dnf.tempdir}/packages.manifest.yaml" matches line by line
     """
@@ -280,7 +280,7 @@ Scenario: Generate new manifest using prototype input file with a modular packag
   Given I use repository "dnf-ci-fedora-modular"
     And I copy file "{context.dnf.fixturesdir}/data/manifest/moduleenable.in.yaml" to "/{context.dnf.tempdir}/rpms.in.yaml"
     And I execute "sed -i 's|$FIXTURES_DIR|{context.dnf.fixturesdir}|' rpms.in.yaml"
-   When I execute dnf with args "manifest new --use-system"
+   When I execute dnf with args "manifest resolve --use-system"
    Then the exit code is 0
     And file "/{context.dnf.tempdir}/packages.manifest.yaml" contains lines
     """
