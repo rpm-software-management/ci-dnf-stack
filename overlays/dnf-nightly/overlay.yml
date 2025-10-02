@@ -33,6 +33,11 @@ components:
     git:
       src: github:rpm-software-management/drpm.git
 
+  - name: libpkgmanifest
+    version-from: git
+    git:
+      src: github:rpm-software-management/libpkgmanifest.git
+
   - name: librepo
     git:
       src: github:rpm-software-management/librepo.git
@@ -74,6 +79,7 @@ components:
     requires:
       - libdnf
       - dnf
+      - libpkgmanifest
 
   - name: dnf-plugins-extras
     git:
