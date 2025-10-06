@@ -88,91 +88,11 @@ For documentation of the rest of the options of the script, use `--help`:
 ```
 
 
-rpm-gitoverlay Overlays
------------------------
-
-The [rpm-gitoverlay](https://github.com/rpm-software-management/rpm-gitoverlay)
-tool is used to build the DNF stack RPMs in Copr. You can find rpm-gitoverlay
-RPM packages in [its own Copr repository](https://copr.fedorainfracloud.org/coprs/rpmsoftwaremanagement/rpm-gitoverlay/).
-Use `dnf copr enable rpmsoftwaremanagement/rpm-gitoverlay` to add the
-repository on your system.
-
-The configurations for groups of packages to build can be found in the
-[`overlays`](overlays) directory.  As an example, assuming you have your [Copr
-API token configured](https://copr.fedorainfracloud.org/api/), you can build
-the `dnf-ci` overlay (the stack of packages that is tested by the `dnf` test
-suite) with this command:
-```
-rpm-gitoverlay -o rpmlist --gitdir=gits build-overlay -s overlays/dnf-ci rpm copr --owner YOUR_COPR_USERNAME --project my-test-build --chroot fedora-33-x86_64 --delete-project-after-days=2
-```
-
-Where:
-- `-o rpmlist` will output the full list of built RPMs into the `rpmlist` file
-- `--gitdir=gits` specifies the directory to which rpm-gitoverlay will clone
-  the components' git repositories
-- `-s overlays/dnf-ci` specifies the path to the overlay to build
-- `--delete-project-after-days=2` will tell Copr to delete the project in two
-  days, meaning you don't have to clean up manually later
-
-You can then download the built RPMs into the `rpms/` directory:
-```
-for RPM in $(cat rpmlist); do wget -P rpms $RPM; done
-```
-
-And you're set to run the test suite on the RPMs.
-
-In case you want to build some components of the stack with your changes,
-simply set up your clone in `gits/COMPONENT` and run the above command. If
-`rpm-gitoverlay` finds an existing git repository for a component in the
-`--gitdir`, it will use it as-is.
-
-
-CI in Github Actions
---------------------
-
-The DNF stack CI is implemented in Github Actions. The code that makes up the
-CI is located in [`.github/workflows/`](.github/workflows/) in this repository
-as well as in all the stack component repositories. The CI workflow files are
-mostly the same across the repositories, and some of the code is shared between
-them in form of actions, located in [`.github/actions/`](.github/actions/).
-
-The bootstrap of the CI (on a Pull Request) in Github Actions for a repository
-in the stack is done in a bit unconventional way:
-
-1. The first git repository that is cloned is this, `ci-dnf-stack`. This then
-makes the shared actions available to be called.
-
-2. Then, the Pull Request target repository is cloned into `gits/REPO` (the PR
-HEAD is checked out and subsequently rebased on the target branch to bring it
-up to date). This is then used directly by `rpm-gitoverlay`,
-[see above](#rpm-gitoverlay-overlays).
-
-### Workflow Host Image
-
-All DNF stack CI workflows run on a base Fedora container image. Since we need
-some additional tools installed, to save on installing these on a vanilla
-Fedora image on every CI run, we create a daily host image and store it in
-Github Container Registry. This is done in `.github/workflows/ci-host.yml`.
-
-### Setting Up the Workflows on a Fork
-
-For the Github Actions workflows to work on a fork, you need two secrets
-configured on your Github repository:
-- `COPR_USER`: Your Copr username; Since Github Actions automatically scrub any
-  secret value from the workflow outputs (e.g. in Copr URLs in the log), there
-  is a workaround to avoid this on the username: append a `#` (bash comment
-  sign) to the end of the secret. It is dropped in a bash variable assignment
-  in the workflow and the username is no longer masked in the output.
-- `COPR_API_TOKEN`: The full contents of [Copr API
-  token](https://copr.fedorainfracloud.org/api/) meant to go into
-  `~/.config/copr`.
-
-
 Nightly Builds
 --------------
 
-The DNF stack nightlies are built via a Github Actions workflow:
-`.github/workflows/nightly.yml`.
+The DNF stack nightlies are built via a Github Actions workflow
+`.github/workflows/nightly.yml` in the `main` branch.
 
 The built nightlies can be found in the [rpmsoftwaremanagement
 Copr](https://copr.fedorainfracloud.org/coprs/rpmsoftwaremanagement/dnf-nightly/).
@@ -184,5 +104,3 @@ Integration Tests of Users of the DNF Stack
 The aim is to run integration tests of projects that depend on the DNF stack,
 so that regressions can be caught early and close to the source.
 
-So far there's only the Ansible integration test suite (specifically its part
-that concerns DNF) integrated into our CI.
