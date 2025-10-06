@@ -37,6 +37,14 @@ components:
     version-from: git
     git:
       src: github:rpm-software-management/libpkgmanifest.git
+    distgit-overrides:
+      - chroots:
+          - epel-10-x86_64
+          - fedora-eln-x86_64
+          - fedora-rawhide-x86_64
+          - fedora-41-x86_64
+          - fedora-42-x86_64
+          - fedora-43-x86_64
 
   - name: librepo
     git:
