@@ -8,7 +8,7 @@ Scenario: command specific long option used with root dnf command
     And stderr is
         """
         Unknown argument "--skip-broken" for command "dnf5". Add "--help" for more information about the arguments.
-        The argument is available for commands: module enable, group install, replay, reinstall, downgrade, debuginfo-install, distro-sync, install, do. (It has to be placed after the command.)
+        The argument is available for commands: module enable, environment install, group install, replay, reinstall, downgrade, debuginfo-install, distro-sync, install, do. (It has to be placed after the command.)
         """
 
 
@@ -42,7 +42,7 @@ Scenario: multiple command specific long options used with root dnf command
     And stderr is
         """
         Unknown argument "--downloadonly" for command "dnf5". Add "--help" for more information about the arguments.
-        The argument is available for commands: group upgrade, group install, reinstall, downgrade, distro-sync, upgrade, install, do. (It has to be placed after the command.)
+        The argument is available for commands: environment install, group upgrade, environment upgrade, group install, reinstall, downgrade, distro-sync, upgrade, install, do. (It has to be placed after the command.)
         """
 
 
