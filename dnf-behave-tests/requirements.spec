@@ -52,6 +52,7 @@ BuildRequires:  polkit
 BuildRequires:  dnf5
 BuildRequires:  dnf5-plugins
 BuildRequires:  dnf5-plugin-automatic
+BuildRequires:  dnf5-plugin-manifest
 BuildRequires:  dnf5daemon-server
 BuildRequires:  dnf5daemon-client
 BuildRequires:  libdnf5-plugin-actions
