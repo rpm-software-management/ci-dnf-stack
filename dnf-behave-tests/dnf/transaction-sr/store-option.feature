@@ -16,35 +16,35 @@ Scenario: Store an install transaction
             "nevra":"top-a-1:1.0-1.x86_64",
             "action":"Install",
             "reason":"User",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/top-a-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"mid-a1-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/mid-a1-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"bottom-a2-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/bottom-a2-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"mid-a2-1.0-1.x86_64",
             "action":"Install",
             "reason":"Weak Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/mid-a2-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"bottom-a3-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/bottom-a3-1.0-1.x86_64.rpm"
           }
         ],
@@ -128,49 +128,49 @@ Scenario: Store a group install transaction
             "nevra":"top-b-1.0-1.x86_64",
             "action":"Install",
             "reason":"Group",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/top-b-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"top-a-1:2.0-1.x86_64",
             "action":"Install",
             "reason":"Group",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/top-a-2.0-1.x86_64.rpm"
           },
           {
             "nevra":"mid-a1-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/mid-a1-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"bottom-a1-2.0-1.noarch",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/bottom-a1-2.0-1.noarch.rpm"
           },
           {
             "nevra":"bottom-a2-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/bottom-a2-1.0-1.x86_64.rpm"
           },
           {
             "nevra":"mid-a2-2.0-1.x86_64",
             "action":"Install",
             "reason":"Weak Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/mid-a2-2.0-1.x86_64.rpm"
           },
           {
             "nevra":"bottom-a3-1.0-1.x86_64",
             "action":"Install",
             "reason":"Dependency",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_path":".\/packages\/bottom-a3-1.0-1.x86_64.rpm"
           }
         ],
@@ -180,7 +180,7 @@ Scenario: Store a group install transaction
             "action":"Install",
             "reason":"User",
             "group_path":".\/comps\/test-group.xml",
-            "repo_id":"transaction-sr",
+            "repo_id":"@stored_transaction(transaction-sr)",
             "package_types":"mandatory, default, conditional"
           }
         ],
