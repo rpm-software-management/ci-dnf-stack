@@ -613,7 +613,7 @@ Scenario: dnf5 group list: empty output when run for the second time
 Scenario: dnf can list installed groups even without their xml definitions present, group available
   Given I use repository "comps-group"
     And I successfully execute dnf with args "group install test-group"
-    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/test-group.xml"
+    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/groups/test-group.xml"
    When I execute dnf with args "group info --installed"
    Then the exit code is 0
     And stderr is
@@ -639,7 +639,7 @@ Scenario: dnf can list installed groups even without their xml definitions prese
 Scenario: dnf can list installed groups even without their xml definitions present, group not available
   Given I use repository "comps-group"
     And I successfully execute dnf with args "group install test-group"
-    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/test-group.xml"
+    And I delete file "/usr/lib/sysimage/libdnf5/comps_groups/groups/test-group.xml"
     And I drop repository "comps-group"
    When I execute dnf with args "group info --installed"
    Then the exit code is 0
