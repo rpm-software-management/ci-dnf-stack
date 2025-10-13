@@ -1,9 +1,0 @@
----
-aliases:
-  - name: github
-    url: https://github.com/
-
-components:
-  - name: dnf5
-    git:
-      src: github:rpm-software-management/dnf5.git
