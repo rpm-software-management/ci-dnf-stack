@@ -179,7 +179,7 @@ Scenario: Store a group install transaction
             "id":"test-group",
             "action":"Install",
             "reason":"User",
-            "group_path":".\/comps\/test-group.xml",
+            "group_path":".\/comps\/groups\/test-group.xml",
             "repo_id":"@stored_transaction(transaction-sr)",
             "package_types":"mandatory, default, conditional"
           }
@@ -205,7 +205,7 @@ Scenario: Store a group install transaction
         top-a-2.0-1.x86_64.rpm
         top-b-1.0-1.x86_64.rpm
         """
-   When I execute "ls {context.dnf.tempdir}/transaction/comps"
+   When I execute "ls {context.dnf.tempdir}/transaction/comps/groups"
    Then stdout is
         """
         test-group.xml
@@ -268,7 +268,7 @@ Given I execute dnf with args "install @test-group"
             "id":"test-group",
             "action":"Remove",
             "reason":"User",
-            "group_path":".\/comps\/test-group.xml",
+            "group_path":".\/comps\/groups\/test-group.xml",
             "repo_id":"@System",
             "package_types":""
           }
@@ -282,7 +282,7 @@ Given I execute dnf with args "install @test-group"
         comps
         transaction.json
         """
-   When I execute "ls {context.dnf.tempdir}/transaction/comps"
+   When I execute "ls {context.dnf.tempdir}/transaction/comps/groups"
    Then stdout is
         """
         test-group.xml
