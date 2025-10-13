@@ -13,7 +13,7 @@ RUN dnf -y update \
     fi \
 
     # enable testing repositories
-    && if [ "$NAME" == "dnf5-testing" ] || [ "$NAME" == "dnf5-testing-nightly" ]; then \
+    && if [ "$NAME" == "dnf5-testing" ]; then \
         dnf copr -y enable rpmsoftwaremanagement/"$NAME" ; \
     fi \
 
