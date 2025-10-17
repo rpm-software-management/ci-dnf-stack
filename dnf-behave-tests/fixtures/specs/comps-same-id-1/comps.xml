@@ -56,4 +56,26 @@
     <optionlist>
     </optionlist>
   </environment>
+  
+  <group>
+    <id>same-prefix-group</id>
+    <name>Same prefix group</name>
+    <display_order>1</display_order>
+    <description></description>
+    <packagelist>
+      <packagereq type="mandatory">C-mandatory</packagereq>
+    </packagelist>
+  </group>
+  
+  <environment>
+    <id>same-prefix-env</id>
+    <name>Same prefix env</name>
+    <description></description>
+    <display_order>1</display_order>
+    <grouplist>
+      <groupid>AB-group</groupid>
+    </grouplist>
+    <optionlist>
+    </optionlist>
+  </environment>
 </comps>
