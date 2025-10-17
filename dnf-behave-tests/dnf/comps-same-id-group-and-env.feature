@@ -164,3 +164,43 @@ Scenario: Install an environment with the same id and name as a group
     And file "/usr/lib/sysimage/libdnf5/comps_groups/groups/same-id-and-name.xml" does not exist
     And file "/usr/lib/sysimage/libdnf5/comps_groups/environments/same-id-and-name.xml" exists
     And file "/usr/lib/sysimage/libdnf5/comps_groups/same-id-and-name.xml" does not exist
+
+
+Scenario: Install a group using globs that also match an environment
+ Given I use repository "comps-same-id-1"
+  When I execute dnf with args "group install same-prefix-*"
+  Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | group-install | Same prefix group               |
+        | install-group | C-mandatory-1.0-1.x86_64        |
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/groups/same-prefix-group.xml" exists
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/environments/same-prefix-env.xml" does not exist
+
+
+Scenario: Install an environment using globs that also match a group
+ Given I use repository "comps-same-id-1"
+  When I execute dnf with args "environment install same-prefix-*"
+  Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | env-install   | Same prefix env                 |
+        | group-install | AB-group                        |
+        | install-group | A-mandatory-1.0-1.x86_64        |
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/groups/same-prefix-group.xml" does not exist
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/environments/same-prefix-env.xml" exists
+
+
+Scenario: Install both group and environment using globs
+ Given I use repository "comps-same-id-1"
+  When I execute dnf with args "install @same-prefix-*"
+  Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                         |
+        | env-install   | Same prefix env                 |
+        | group-install | AB-group                        |
+        | install-group | A-mandatory-1.0-1.x86_64        |
+        | group-install | Same prefix group               |
+        | install-group | C-mandatory-1.0-1.x86_64        |
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/groups/same-prefix-group.xml" exists
+    And file "/usr/lib/sysimage/libdnf5/comps_groups/environments/same-prefix-env.xml" exists
