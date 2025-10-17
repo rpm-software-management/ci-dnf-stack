@@ -15,13 +15,21 @@ jobs:
     strategy:
       fail-fast: false  # don't fail all matrix jobs if one of them fails
       matrix:
-        project: [dnf-nightly]
-        variant: ['', -sanitizers]
+        project: [dnf-nightly, dnf-nightly-sanitizers]
+        component: [drpm, createrepo_c, libsolv, libmodulemd, libpkgmanifest, librepo, libcomps, libdnf, dnf, dnf-plugins-core, dnf-plugins-extras, microdnf, dnf5]
+        include:
+          # Default url
+          - url: https://github.com/rpm-software-management/
+          # Override url for specific components
+          - component: libmodulemd
+            url: https://github.com/fedora-modularity/
+          - component: libsolv
+            url: https://github.com/openSUSE/
     steps:
       - name: Check out sources
         uses: actions/checkout@v4
 
-      - name: Setup CI
+      - name: Setup Copr token
         id: setup-ci
         uses: ./.github/actions/setup-ci
         with:
@@ -32,4 +40,16 @@ jobs:
 
       - name: Build in Copr
         if: steps.setup-ci.outputs.copr-user
-        run: rpm-gitoverlay build-overlay -s overlays/${{matrix.project}} rpm copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}}${{matrix.variant}}
+        run: |
+          # Since we don't control libsolv upstream work around missing packit initialization and specfile.
+          if [[ "${{matrix.component}}" == "libsolv" ]]; then
+            cat > packit_libsolv.yaml << EOL
+            specfile_path: libsolv.spec
+            actions:
+              post-upstream-clone:
+                - "wget https://src.fedoraproject.org/rpms/libsolv/raw/main/f/libsolv.spec -O libsolv.spec"
+          EOL
+            packit -c ./packit_libsolv.yaml build in-copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}} ${{matrix.url}}${{matrix.component}}
+          else
+            packit build in-copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}} ${{matrix.url}}${{matrix.component}}
+          fi
