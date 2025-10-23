@@ -319,8 +319,6 @@ Given I successfully execute dnf with args "install @test-group"
 Scenario: Store a transaction with a group upgrade
 Given I successfully execute dnf with args "install @test-group"
 Given I successfully execute dnf with args "install top-a-1.0"
-# This mark group is a workaround for https://github.com/rpm-software-management/dnf5/issues/1581
-Given I successfully execute dnf with args "mark group test-group top-a-1.0"
 Given I successfully execute dnf with args "upgrade @test-group"
  When I execute dnf with args "history store last"
  Then the exit code is 0
