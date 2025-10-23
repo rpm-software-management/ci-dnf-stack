@@ -11,7 +11,7 @@ Given I use repository "dnf-ci-thirdparty"
   And Transaction is following
       | Action        | Package                                                                                    |
       | install       | forTestingPurposesWeEvenHaveReallyLongVersions-0:1435347658326856238756823658aaaa-1.x86_64 |
-  And stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions\s+x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty\s+.*"
+  And stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions\s+x86_64\s+0:1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty\s+.*"
 
 
 @bz1773436
@@ -57,21 +57,21 @@ Scenario: Packages in transaction are sorted by NEVRA
       """
     And stdout matches line by line
       """
-      Package              Arch   Version       Repository             Size
+      Package              Arch   Version         Repository             Size
       Installing:
-       SuperRipper         x86_64 1.0-1         dnf-ci-thirdparty   \d\.\d   B
-       flac                x86_64 1.3.2-8.fc29  dnf-ci-fedora       \d\.\d   B
-       glibc               x86_64 2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
-       wget                x86_64 1.19.5-5.fc29 dnf-ci-fedora       \d\.\d   B
+       SuperRipper         x86_64 0:1.0-1         dnf-ci-thirdparty   \d\.\d   B
+       flac                x86_64 0:1.3.2-8.fc29  dnf-ci-fedora       \d\.\d   B
+       glibc               x86_64 0:2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
+       wget                x86_64 0:1.19.5-5.fc29 dnf-ci-fedora       \d\.\d   B
       Installing dependencies:
-       abcde               noarch 2.9.2-1.fc29  dnf-ci-fedora       \d\.\d   B
-       basesystem          noarch 11-6.fc29     dnf-ci-fedora       \d\.\d   B
-       filesystem          x86_64 3.9-2.fc29    dnf-ci-fedora       \d\.\d   B
-       glibc-all-langpacks x86_64 2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
-       glibc-common        x86_64 2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
-       setup               noarch 2.12.1-1.fc29 dnf-ci-fedora       \d\.\d   B
+       abcde               noarch 0:2.9.2-1.fc29  dnf-ci-fedora       \d\.\d   B
+       basesystem          noarch 0:11-6.fc29     dnf-ci-fedora       \d\.\d   B
+       filesystem          x86_64 0:3.9-2.fc29    dnf-ci-fedora       \d\.\d   B
+       glibc-all-langpacks x86_64 0:2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
+       glibc-common        x86_64 0:2.28-9.fc29   dnf-ci-fedora       \d\.\d   B
+       setup               noarch 0:2.12.1-1.fc29 dnf-ci-fedora       \d\.\d   B
       Installing weak dependencies:
-       FlacBetterEncoder   x86_64 1.0-1         dnf-ci-thirdparty   \d\.\d   B
+       FlacBetterEncoder   x86_64 0:1.0-1         dnf-ci-thirdparty   \d\.\d   B
 
       Transaction Summary:
        Installing:        11 packages

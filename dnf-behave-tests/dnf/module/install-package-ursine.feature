@@ -31,7 +31,7 @@ Scenario: I can't reinstall installed non-modular content which is masked by act
     And I successfully execute dnf with args "module enable DnfCiModuleNoDefaults:stable"
    When I execute dnf with args "reinstall wget"
    Then the exit code is 1
-    And stderr contains "Installed packages for argument 'wget' are not available in repositories in the same version, available versions: wget-1.18.5-5.module.x86_64, cannot reinstall."
+    And stderr contains "Installed packages for argument 'wget' are not available in repositories in the same version, available versions: wget-0:1.18.5-5.module.x86_64, cannot reinstall."
 
 
 Scenario: I can remove installed non-modular content
