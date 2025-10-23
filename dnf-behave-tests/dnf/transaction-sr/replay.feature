@@ -30,9 +30,9 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
-      | Action      | Package                  |
-      | install-dep | bottom-a1-2.0-1.noarch   |
-      | install     | top-d-1.0-1.x86_64       |
+      | Action      | Package                    |
+      | install-dep | bottom-a1-0:2.0-1.noarch   |
+      | install     | top-d-0:1.0-1.x86_64       |
   And dnf5 transaction items for transaction "last" are
       | action      | package                           | reason        | repository     |
       | Install     | bottom-a1-0:2.0-1.noarch          | Dependency    | transaction-sr |
@@ -838,9 +838,9 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  When I execute dnf with args "replay ./transaction"
  Then the exit code is 0
   And Transaction is following
-      | Action      | Package                  |
-      | install     | installonly-1.0-1.x86_64 |
-      | install     | installonly-2.0-1.x86_64 |
+      | Action      | Package                    |
+      | install     | installonly-0:1.0-1.x86_64 |
+      | install     | installonly-0:2.0-1.x86_64 |
   And dnf5 transaction items for transaction "last" are
       | action        | package                    | reason  | repository     |
       | Install       | installonly-0:1.0-1.x86_64 | User    | transaction-sr |
@@ -1220,13 +1220,13 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
  Then the exit code is 0
   And stderr contains lines
       """
-      Cannot perform Install action because 'bottom-a1-2.0-1.noarch' is installed in a different version: 'bottom-a1-1.0-1.noarch'.
+      Cannot perform Install action because 'bottom-a1-2.0-1.noarch' is installed in a different version: 'bottom-a1-0:1.0-1.noarch'.
 
       Warning: skipped OpenPGP checks for 2 packages from repository: transaction-sr
       """
   And Transaction is following
       | Action      | Package                  |
-      | upgrade     | bottom-a1-2.0-1.noarch   |
+      | upgrade     | bottom-a1-0:2.0-1.noarch |
       | upgrade     | top-a-1:2.0-1.x86_64     |
   And dnf5 transaction items for transaction "last" are
       | action        | package                  | reason     | repository     |
@@ -1235,13 +1235,13 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
       | Replaced      | bottom-a1-0:1.0-1.noarch | User       | @System        |
       | Replaced      | top-a-1:1.0-1.x86_64     | User       | @System        |
   And package reasons are
-      | Package                | Reason          |
-      | bottom-a1-2.0-1.noarch | User            |
-      | bottom-a2-1.0-1.x86_64 | Dependency      |
-      | bottom-a3-1.0-1.x86_64 | Dependency      |
-      | mid-a1-1.0-1.x86_64    | Dependency      |
-      | mid-a2-1.0-1.x86_64    | Weak Dependency |
-      | top-a-1:2.0-1.x86_64   | User            |
+      | Package                  | Reason          |
+      | bottom-a1-2.0-1.noarch   | User            |
+      | bottom-a2-1.0-1.x86_64   | Dependency      |
+      | bottom-a3-1.0-1.x86_64   | Dependency      |
+      | mid-a1-1.0-1.x86_64      | Dependency      |
+      | mid-a2-1.0-1.x86_64      | Weak Dependency |
+      | top-a-1:2.0-1.x86_64     | User            |
 
 
 Scenario: ignore-installed: Replaying an already installed transaction results in noop
@@ -1288,10 +1288,10 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
   And stderr is
       """
       <REPOSYNC>
-      Package "bottom-a2-1.0-1.x86_64" is already installed.
-      Package "bottom-a3-1.0-1.x86_64" is already installed.
-      Package "mid-a1-1.0-1.x86_64" is already installed.
-      Package "mid-a2-1.0-1.x86_64" is already installed.
+      Package "bottom-a2-0:1.0-1.x86_64" is already installed.
+      Package "bottom-a3-0:1.0-1.x86_64" is already installed.
+      Package "mid-a1-0:1.0-1.x86_64" is already installed.
+      Package "mid-a2-0:1.0-1.x86_64" is already installed.
       Package "top-a-1:1.0-1.x86_64" is already installed.
      """
   And Transaction is empty
@@ -1310,7 +1310,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
               },
               {
                   "action": "Replaced",
-                  "nevra": "bottom-a1-1.0-1.noarch",
+                  "nevra": "bottom-a1-0:1.0-1.noarch",
                   "reason": "Dependency",
                   "repo_id": "@System"
               },
@@ -1334,7 +1334,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  Then the exit code is 0
  And stderr contains lines
      """
-     Cannot perform Remove action for Package 'bottom-a1-1.0-1.noarch' because it is not installed.
+     Cannot perform Remove action for Package 'bottom-a1-0:1.0-1.noarch' because it is not installed.
 
      Warning: skipped OpenPGP checks for 2 packages from repository: transaction-sr
      """

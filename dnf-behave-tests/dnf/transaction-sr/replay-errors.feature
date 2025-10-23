@@ -67,7 +67,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
           "rpms": [
               {
                   "action": "Install",
-                  "nevra": "bottom-a2-1.0-1.x86_64",
+                  "nevra": "bottom-a2-0:1.0-1.x86_64",
                   "reason": "Dependency",
                   "repo_id": "transaction-sr"
               }
@@ -81,7 +81,7 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
       """
       <REPOSYNC>
       Failed to resolve the transaction:
-      Package "bottom-a2-1.0-1.x86_64" is already installed.
+      Package "bottom-a2-0:1.0-1.x86_64" is already installed.
       """
 
 
