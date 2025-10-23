@@ -11,7 +11,7 @@ Given I use repository "dnf-ci-thirdparty"
   And Transaction is following
       | Action        | Package                                                                                    |
       | install       | forTestingPurposesWeEvenHaveReallyLongVersions-0:1435347658326856238756823658aaaa-1.x86_64 |
-  And stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions\s+x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty\s+.*"
+  And stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions\s+x86_64\s+(0:):1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty\s+.*"
 
 
 @bz1773436
