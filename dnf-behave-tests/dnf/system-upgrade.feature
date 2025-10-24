@@ -83,7 +83,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
   And I stop http server for repository "system-upgrade-2-f$releasever"
  When I execute dnf with args "offline _execute"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package               |
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
@@ -107,7 +107,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
   And I stop http server for repository "system-upgrade-2-f$releasever"
  When I execute dnf with args "offline _execute"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package               |
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
@@ -161,7 +161,7 @@ Given I successfully execute dnf with args "system-upgrade reboot"
   And I stop http server for repository "system-upgrade-2-f$releasever"
  When I execute dnf with args "offline _execute"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package               |
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |
@@ -205,7 +205,7 @@ Given I create directory "/downloaddir"
   And I stop http server for repository "system-upgrade-2-f$releasever"
  When I execute dnf with args "offline _execute"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package               |
       | upgrade       | pkg-a-2.0-1.noarch    |
       | upgrade       | pkg-both-2.0-1.noarch |

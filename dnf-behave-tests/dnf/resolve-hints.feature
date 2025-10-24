@@ -40,7 +40,7 @@ Scenario: --skip-unavailable is hinted on non-existent package installation atte
 Scenario: --skip-unavailable is not printed if the option is already present
    When I execute dnf with args "install DoesNotExist --skip-unavailable"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
         """
         <REPOSYNC>

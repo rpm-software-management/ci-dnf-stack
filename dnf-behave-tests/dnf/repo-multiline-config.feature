@@ -15,7 +15,7 @@ Given I use repository "simple-base"
       """
  When I execute dnf with args "install dedalo-signed"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -35,7 +35,7 @@ Given I use repository "simple-base" as http
       """
  When I execute dnf with args "install dedalo-signed"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -55,7 +55,7 @@ Given I use repository "simple-base" as http
       """
  When I execute dnf with args "install dedalo-signed"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package                           |
       | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
 
@@ -73,6 +73,6 @@ Given I use repository "simple-base" as http
       """
  When I execute dnf with args "install labirinto"
  Then the exit code is 0
-  And transaction is following
+  And Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |

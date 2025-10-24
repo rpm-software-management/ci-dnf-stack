@@ -24,7 +24,7 @@ Scenario: Upgrade group when there are new package versions - upgrade packages
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
@@ -50,7 +50,7 @@ Scenario: Upgrade group when there are new packages - install new packages
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
@@ -74,7 +74,7 @@ Scenario: Upgrade group when there were excluded packages during installation - 
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | group-upgrade | A-group                            |
 
@@ -95,7 +95,7 @@ Scenario: Upgrade group when there were removed packages since installation - do
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | group-upgrade | A-group                            |
 
@@ -121,7 +121,7 @@ Scenario: Upgrade environment when there are new groups/packages - install new g
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
@@ -148,7 +148,7 @@ Scenario: Upgrade environment when there were excluded packages during installat
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | group-upgrade | A-group                            |
         | env-upgrade   | A-environment                      |
@@ -171,7 +171,7 @@ Scenario: Upgrade environment when there were removed packages since installatio
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | group-upgrade | A-group                            |
         | env-upgrade   | A-environment                      |
@@ -192,7 +192,7 @@ Scenario: Upgrade empty group
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | group-upgrade | empty-group                        |
 
@@ -212,7 +212,7 @@ Scenario: Upgrade empty environment
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | env-upgrade   | empty-environment                  |
 
@@ -233,7 +233,7 @@ Scenario: Upgrade environment when all groups are removed
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | env-upgrade   | A-environment                      |
 
@@ -255,7 +255,7 @@ Scenario: Upgrade groups with conflicting requests (packages are not removed)
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                            |
         | upgrade       | A-mandatory-0:2.0-1.x86_64         |
         | upgrade       | A-default-0:2.0-1.x86_64           |
@@ -281,7 +281,7 @@ Scenario: Upgrade environments with conflicting requests (groups are not removed
     And I stop http server for repository "system-upgrade-comps-f$releasever"
    When I execute dnf with args "offline _execute"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                    |
         | upgrade       | A-mandatory-0:2.0-1.x86_64 |
         | upgrade       | A-default-0:2.0-1.x86_64   |

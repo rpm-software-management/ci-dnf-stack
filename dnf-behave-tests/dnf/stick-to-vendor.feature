@@ -8,7 +8,7 @@ Background:
    """
    And I successfully execute dnf with args "install vendor"
    Then the exit code is 0
-   And transaction is following
+   And Transaction is following
        | Action  | Package             |
        | install | vendor-1.0-1.x86_64 |
 
@@ -22,7 +22,7 @@ Scenario: Upgrade sticks to vendor
   Given I use repository "dnf-ci-vendor-2-updates"
    When I execute dnf with args "upgrade vendor"
    Then the exit code is 0
-   And transaction is following
+   And Transaction is following
        | Action  | Package             |
        | upgrade | vendor-1.1-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
@@ -34,7 +34,7 @@ Scenario: No upgrade if same vendor not found
   Given I use repository "dnf-ci-vendor-2-updates"
    When I execute dnf with args "upgrade vendor"
    Then the exit code is 0
-   And transaction is empty
+   And Transaction is empty
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
@@ -48,7 +48,7 @@ Scenario: Downgrade is unable to resolve transaction
   Given I use repository "dnf-ci-vendor-2"
    When I execute dnf with args "downgrade vendor"
    Then the exit code is 1
-   And transaction is empty
+   And Transaction is empty
    And stdout is empty
    And stderr is
        """
