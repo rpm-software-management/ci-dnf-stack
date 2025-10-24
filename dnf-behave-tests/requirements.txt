@@ -1,3 +1,2 @@
-behave == 1.2.6
 pexpect
 pyftpdlib

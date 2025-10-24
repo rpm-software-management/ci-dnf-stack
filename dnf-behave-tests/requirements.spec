@@ -36,9 +36,7 @@ BuildRequires:  sqlite
 BuildRequires:  yq
 BuildRequires:  zstd
 %if 0%{?fedora}
-%if 0%{?fedora} < 44
-BuildRequires:  python3-behave < 1.2.7
-%endif
+BuildRequires:  python3-behave
 BuildRequires:  python3-pexpect
 BuildRequires:  zchunk
 %endif
