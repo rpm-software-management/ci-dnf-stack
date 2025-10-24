@@ -8,7 +8,7 @@ Feature: Better user counting
           And I use repository "dnf-ci-fedora" as http
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache --refresh"
-         Then every HTTP GET request should match:
+         Then every HTTP GET request should match
             | header     | value   |
             | User-Agent | <agent> |
 
@@ -27,7 +27,7 @@ Feature: Better user counting
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache --refresh"
          Then the exit code is 0
-          And every HTTP GET request should match:
+          And every HTTP GET request should match
             | header     | value  |
             | User-Agent | libdnf |
 
@@ -36,7 +36,7 @@ Feature: Better user counting
           And I set config option "user_agent" to "'Agent 007'"
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache --refresh"
-         Then every HTTP GET request should match:
+         Then every HTTP GET request should match
             | header     | value     |
             | User-Agent | Agent 007 |
 
@@ -55,7 +55,7 @@ Feature: Better user counting
          # flag (see COUNTME_BUDGET=4 in libdnf/repo/Repo.cpp for details)
          When today is <date>
          When I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#1>   |
 
@@ -63,7 +63,7 @@ Feature: Better user counting
          When today is <date> + 3 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then no HTTP GET request should match:
+         Then no HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=*         |
 
@@ -71,7 +71,7 @@ Feature: Better user counting
          When today is <date> + 8 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#2>   |
 
@@ -79,7 +79,7 @@ Feature: Better user counting
          When today is <date> + 15 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#3>   |
 
@@ -87,7 +87,7 @@ Feature: Better user counting
          When today is <date> + 40 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#4>   |
 
@@ -95,7 +95,7 @@ Feature: Better user counting
          When today is <date> + 182 days
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#5>   |
 
@@ -104,7 +104,7 @@ Feature: Better user counting
           And I set releasever to "40"
           And I forget any HTTP requests captured so far
           And I execute dnf with args "makecache --refresh" 4 times
-         Then exactly one HTTP GET request should match:
+         Then exactly one HTTP GET request should match
             | path                              |
             | */metalink.xml*&countme=<age#6>   |
 
@@ -133,10 +133,10 @@ Feature: Better user counting
          When I execute dnf with args "makecache --refresh" 4 times
          # 48 = 4 * makecache --refresh = 4 * (3 metalink attempts * 4 low-level retries)
          # See librepo commits 15adfb31 and 12d0b4ad for details
-         Then exactly 48 HTTP GET requests should match:
+         Then exactly 48 HTTP GET requests should match
             | path            |
             | */metalink.xml* |
-          And exactly one HTTP GET request should match:
+          And exactly one HTTP GET request should match
             | path                      |
             | */metalink.xml*&countme=1 |
 
@@ -149,6 +149,6 @@ Feature: Better user counting
           And I set up metalink for repository "dnf-ci-fedora"
           And I start capturing outbound HTTP requests
          When I execute dnf with args "makecache --refresh" 4 times
-         Then no HTTP GET request should match:
+         Then no HTTP GET request should match
             | path                      |
             | */metalink.xml*&countme=* |

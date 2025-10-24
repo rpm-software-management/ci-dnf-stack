@@ -22,7 +22,7 @@ Scenario: dnf-automatic does not reboot when reboot = never
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | labirinto-0:2.0-1.fc29.x86_64         |
-    And stdout does not contain lines:
+    And stdout does not contain lines
       """
       I LOVE REBOOTING
       """
@@ -43,7 +43,7 @@ Scenario: dnf-automatic reboots when packages changed and reboot = when-changed
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | labirinto-0:2.0-1.fc29.x86_64         |
-    And stdout contains lines:
+    And stdout contains lines
       """
       I LOVE REBOOTING
       """
@@ -64,7 +64,7 @@ Scenario: dnf-automatic reboots when reboot = when-needed and important package 
     And I use repository "dnf-ci-fedora-updates"
    When I execute dnf with args "automatic --installupdates"
    Then the exit code is 0
-    And stdout contains lines:
+    And stdout contains lines
       """
       I LOVE REBOOTING
       """
@@ -85,7 +85,7 @@ Scenario: dnf-automatic does not reboot when reboot = when-needed and nothing im
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | labirinto-0:2.0-1.fc29.x86_64         |
-    And stdout does not contain lines:
+    And stdout does not contain lines
       """
       I LOVE REBOOTING
       """
@@ -106,7 +106,7 @@ Scenario: dnf-automatic shows error message when reboot command failed
     And Transaction is following
         | Action        | Package                               |
         | upgrade       | labirinto-0:2.0-1.fc29.x86_64         |
-    And stderr contains lines:
+    And stderr contains lines
       """
       Error: reboot command returned nonzero exit code: 1
       """

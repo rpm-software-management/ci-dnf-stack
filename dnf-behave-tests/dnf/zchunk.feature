@@ -22,7 +22,7 @@ Given I copy repository "simple-base" for modification
   And I start capturing outbound HTTP requests
  When I execute dnf with args "install labirinto"
  Then the exit code is 0
-  And exactly 2 HTTP GET requests should match:
+  And exactly 2 HTTP GET requests should match
       | path                      |
       | /repodata/primary.xml.zck |
 
@@ -39,7 +39,7 @@ Given I copy repository "simple-base" for modification
       | zchunk | False |
  When I execute dnf with args "install labirinto"
  Then the exit code is 0
-  And exactly 1 HTTP GET requests should match:
+  And exactly 1 HTTP GET requests should match
       | path                      |
       | /repodata/primary.xml.zst |
 
@@ -95,7 +95,7 @@ Given I copy repository "simple-base" for modification
   And Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
-  And exactly 2 HTTP GET requests should match:
+  And exactly 2 HTTP GET requests should match
       | path                      |
       | /repodata/primary.xml.zck |
 
@@ -122,7 +122,7 @@ Given I copy repository "simple-base" for modification
   And Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
-  And exactly 2 HTTP GET requests should match:
+  And exactly 2 HTTP GET requests should match
       | path                      |
       | /repodata/primary.xml.zck |
 
@@ -140,6 +140,6 @@ Given I copy repository "simple-base" for modification
   And Transaction is following
       | Action        | Package                       |
       | install       | labirinto-0:1.0-1.fc29.x86_64 |
-  And exactly 2 HTTP GET requests should match:
+  And exactly 2 HTTP GET requests should match
       | path                      |
       | /repodata/primary.xml.zck |
