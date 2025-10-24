@@ -144,7 +144,7 @@ Scenario: Variables are substituted in baseurl via vars in config files in custo
     Then the exit code is 1
   When I execute dnf with args "install setup --setopt=varsdir={context.dnf.installroot}/tmp/vars"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
 
@@ -159,6 +159,6 @@ Scenario: Variables are substituted in baseurl via environment variables
     And I set environment variable "DNF_VAR_var2" to "dnf-ci-fedora"
     And I execute dnf with args "install setup"
    Then the exit code is 0
-    And transaction is following
+    And Transaction is following
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |

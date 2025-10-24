@@ -12,7 +12,7 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
@@ -20,7 +20,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --advisory FEDORA-2018-318f184000"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
       | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
@@ -36,7 +36,7 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                                    |
       | install     | kernel-0:4.19.15-300.fc29.x86_64           |
       | upgrade     | flac-0:1.3.3-3.fc29.x86_64                 |
@@ -44,7 +44,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | install-dep | kernel-modules-0:4.19.15-300.fc29.x86_64   |
  When I execute dnf with args "offline-upgrade download --bugfix"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                                    |
       | install     | kernel-0:4.19.15-300.fc29.x86_64           |
       | install-dep | kernel-core-0:4.19.15-300.fc29.x86_64      |
@@ -58,7 +58,7 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
@@ -66,7 +66,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --bz=222"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
       | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
@@ -80,7 +80,7 @@ Given I execute dnf with args "install glibc flac"
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | flac-0:1.3.3-3.fc29.x86_64                 |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
@@ -88,7 +88,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | upgrade  | glibc-common-0:2.28-26.fc29.x86_64         |
  When I execute dnf with args "offline-upgrade download --cve=CVE-2999"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action   | Package                                    |
       | upgrade  | glibc-0:2.28-26.fc29.x86_64                |
       | upgrade  | glibc-all-langpacks-0:2.28-26.fc29.x86_64  |
@@ -105,7 +105,7 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                                    |
       | install     | kernel-0:4.19.15-300.fc29.x86_64           |
       | upgrade     | flac-0:1.3.9-1.fc29.x86_64                 |
@@ -113,7 +113,7 @@ Given I use repository "dnf-ci-fedora-updates"
       | install-dep | kernel-modules-0:4.19.15-300.fc29.x86_64   |
  When I execute dnf with args "offline-upgrade download --enhancement"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                                    |
       | upgrade     | flac-0:1.3.9-1.fc29.x86_64                 |
 
@@ -126,13 +126,13 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                               |
       | upgrade     | flac-0:1.3.3-3.fc29.x86_64            |
       | upgrade     | somepackage-0:1.1-1.x86_64            |
  When I execute dnf with args "offline-upgrade download --newpackage"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                               |
       | upgrade     | somepackage-0:1.1-1.x86_64            |
 
@@ -144,13 +144,13 @@ Given I use repository "security-upgrade"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | B-0:2-2.x86_64                 |
       | upgrade     | dracut-0:2-2.x86_64            |
  When I execute dnf with args "offline-upgrade download --security"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | B-0:2-2.x86_64                 |
 
@@ -162,14 +162,14 @@ Given I use repository "dnf-ci-security"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
       | upgrade     | bugfix_B-0:1.0-2.x86_64        |
       | upgrade     | security_A-0:1.0-4.x86_64      |
  When I execute dnf with args "offline-upgrade download --advisory-severities=Critical"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
 
@@ -181,14 +181,14 @@ Given I use repository "dnf-ci-security"
  Then the exit code is 0
  When I execute dnf with args "offline-upgrade download"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | advisory_B-0:1.0-4.x86_64      |
       | upgrade     | bugfix_B-0:1.0-2.x86_64        |
       | upgrade     | security_A-0:1.0-4.x86_64      |
  When I execute dnf with args "offline-upgrade download --minimal --advisory-severities=Moderate"
  Then the exit code is 0
-  And DNF transaction is following
+  And DNF Transaction is following
       | Action      | Package                        |
       | upgrade     | security_A-0:1.0-3.x86_64      |
 

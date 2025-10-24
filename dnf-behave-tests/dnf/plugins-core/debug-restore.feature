@@ -14,7 +14,7 @@ Background: install some packages and create dump file
 Scenario: debug-restore does not do anything if there is no package set change
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
@@ -49,7 +49,7 @@ Scenario: debug-restore does not install missing packages if 'install' not in fi
   Given I successfully execute dnf with args "remove test-replace"
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=remove,replace"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
@@ -75,7 +75,7 @@ Scenario: debug-restore does not remove packages if 'remove' not in filter-types
   Given I successfully execute dnf with args "install test-remove"
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=install,replace"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
@@ -110,7 +110,7 @@ Scenario: debug-restore does not replace packages if 'replace' not in filter-typ
   Given I successfully execute dnf with args "downgrade test-replace"
    When I execute dnf with args "debug-restore {context.dnf.tempdir}/dump.txt --filter-types=install,remove"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
@@ -167,7 +167,7 @@ Scenario: debug-restore --output only prints what would be changed
     And I successfully execute dnf with args "remove kernel-4.20.1"
    When I execute dnf with args "debug-restore --output {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
@@ -185,7 +185,7 @@ Scenario: debug-restore --output only prints what would be changed (with --remov
     And I successfully execute dnf with args "remove kernel-4.20.1"
    When I execute dnf with args "debug-restore --remove-installonly --output {context.dnf.tempdir}/dump.txt"
    Then the exit code is 0
-    And transaction is empty
+    And Transaction is empty
     And stderr is
     """
     <REPOSYNC>
