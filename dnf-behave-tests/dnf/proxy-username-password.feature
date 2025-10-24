@@ -22,7 +22,7 @@ Scenario: I can store proxy credentials in a repo config
     And I start capturing outbound HTTP requests
    When I execute dnf with args "repoquery abcde"
    Then the exit code is 1
-    And every HTTP GET request should match:
+    And every HTTP GET request should match
         | header              | value                  |
         | Proxy-Authorization | Basic dXNlcjoxMjM0NTY= |
 
@@ -46,6 +46,6 @@ Scenario: I can store proxy credentials in dnf.conf
         | proxy_password    | 123456                                            |
    When I execute dnf with args "repoquery abcde"
    Then the exit code is 1
-    And every HTTP GET request should match:
+    And every HTTP GET request should match
         | header              | value                  |
         | Proxy-Authorization | Basic dXNlcjoxMjM0NTY= |

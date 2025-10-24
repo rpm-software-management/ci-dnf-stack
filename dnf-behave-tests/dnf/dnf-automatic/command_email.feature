@@ -21,7 +21,7 @@ Scenario: dnf-automatic pass multiple recipients as separate arguments
     """
    When I execute dnf with args "automatic"
    Then the exit code is 0
-    And stdout contains lines:
+    And stdout contains lines
     """
     recipient1
     recipient2

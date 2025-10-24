@@ -54,6 +54,6 @@ Given I create file "/plugins/test.py" with
   And I use repository "dnf-ci-fedora" as http
   And I start capturing outbound HTTP requests
  When I execute dnf with args "makecache"
- Then every HTTP GET request should match:
+ Then every HTTP GET request should match
     | header                  | value             |
     | custom_user_key20190218 | custom_user_value |
