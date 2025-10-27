@@ -64,7 +64,11 @@ def then_stdout_is(context):
     well as the individual repo download lines) in the test's output.
     """
     expected = context.text.format(context=context).rstrip().split('\n')
+    # behave >= 3.0.0 does this rstrip automatically, do it also manually
+    # to have the same behavior also with lower versions
+    expected = [line.rstrip() for line in expected]
     found = context.cmd_stdout.rstrip().split('\n')
+    found = [line.rstrip() for line in found]
 
     if found == [""]:
         found = []
