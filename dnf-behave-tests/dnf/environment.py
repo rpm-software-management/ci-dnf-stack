@@ -179,10 +179,12 @@ def string_to_bool(value):
 def before_scenario(context, scenario):
     if "xfail" in scenario.effective_tags:
         skip = True
-        for ors in context.config.tags.ands:
-            if "xfail" in ors:
-                skip = False
-                break
+        tags = context.config.tags
+        if not isinstance(tags, list):
+            # Support behave tags v1 (behave < 3.0.0)
+            tags = str(context.config.tags).split()
+        if "xfail" in tags:
+            skip = False
 
         if skip:
             scenario.skip(reason="Disabled by default by @xfail.")
@@ -236,22 +238,21 @@ def after_tag(context, tag):
 
 def before_all(context):
     # if "dnf5daemon" turn on dnf5daemon mode
-    context.dnf5daemon_mode = False
-    for ors in context.config.tags.ands:
-        if "dnf5daemon" in ors:
-            context.dnf5daemon_mode = True
-            break
+    mode = "dnf5"
+    tags = context.config.tags
+    if not isinstance(tags, list):
+        # Support behave tags v1 (behave < 3.0.0)
+        tags = str(context.config.tags).split()
+    if "dnf5daemon" in tags:
+        context.p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
+        context.p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
+        context.dnf5daemon_mode = True
+        mode = "dnf5daemon"
 
     context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
-    context.dnf_tag_matcher = ActiveTagMatcher({"mode": "dnf5daemon" if context.dnf5daemon_mode else "dnf5"})
+    context.dnf_tag_matcher = ActiveTagMatcher({"mode": mode})
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
-
-    for ors in context.config.tags.ands:
-        if "dnf5daemon" in ors and context.dnf5daemon_mode:
-            context.p_dbus_daemon = subprocess.Popen(['/usr/bin/dbus-daemon', '--system'])
-            context.p_polkitd = subprocess.Popen(['/usr/lib/polkit-1/polkitd', '&'])
-
 
 def after_all(context):
     pass
