@@ -41,9 +41,10 @@ RUN set -x && \
 
 # install local RPMs if available
 COPY ./rpms/ /opt/ci/rpms/
-RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+RUN set -x && \
+    rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
+        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local && \
         dnf5 -y versionlock add $(rpm -qp --queryformat '%{NAME}\n' /opt/ci/rpms/*.rpm | sort | uniq); \
     fi
 
