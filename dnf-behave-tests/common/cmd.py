@@ -7,7 +7,7 @@ import behave
 import glob
 import os
 
-from common.lib.cmd import assert_exitcode, run_in_context
+from common.lib.cmd import assert_exitcode, run, run_in_context
 from common.lib.file import prepend_installroot
 
 
@@ -59,3 +59,17 @@ def file_has_mode(context, filepath, octal_mode_str):
     octal_file_mode = os.stat(matched_files[0]).st_mode & 0o777
     assert oct(octal_mode) == oct(octal_file_mode), \
         "File \"{}\" has mode \"{}\"".format(matched_files[0], oct(octal_file_mode))
+
+
+@behave.step("file \"{filepath}\" has ACL entry \"{entry}\"")
+def file_has_acl_entry(context, filepath, entry):
+    filepath = prepend_installroot(context, filepath)
+    command = ["/usr/bin/getfacl", "-c", filepath]
+    ret, out, err = run(command, shell=False)
+    if ret != 0:
+        raise AssertionError("Could not retrieve ACL: Command \"{}\" failed: "
+            "{}".format(command.join(" "), err))
+    for line in out.split("\n"):
+        if line == entry:
+            return
+    raise AssertionError("File \"{}\" has ACL:\n{}".format(filepath, out))

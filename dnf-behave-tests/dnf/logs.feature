@@ -46,18 +46,3 @@ Given I use repository "dnf-ci-fedora-updates"
  Then the exit code is 0
   And file "/var/log/dnf5.log" has mode "600"
 Given I set umask to "0022"
-
-
-@xfail
-# https://github.com/rpm-software-management/dnf5/issues/1820
-@bz1910084
-Scenario: Log rotation keeps file permissions
-Given I use repository "dnf-ci-fedora-updates"
-  And I successfully execute dnf with args "install flac"
-    # Set permissions to 600
-  And I successfully execute "chmod 600 {context.dnf.installroot}/var/log/dnf5.log"
-    # Run dnf again, so that files are rotated
- When I execute dnf with args "--setopt=log_size=100 --setopt=log_rotate=2 remove flac"
- Then the exit code is 0
-  And file "/var/log/dnf5.log" has mode "600"
-  And file "/var/log/dnf5.log.1" has mode "600"

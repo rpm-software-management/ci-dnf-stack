@@ -16,6 +16,7 @@ License:        GPLv3
 
 
 # test suite dependencies
+BuildRequires:  acl
 BuildRequires:  attr
 BuildRequires:  createrepo_c
 BuildRequires:  fakeuname
