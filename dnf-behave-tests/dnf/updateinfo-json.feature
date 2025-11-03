@@ -18,14 +18,14 @@ Scenario: Listing available updates in json format
         "type":"enhancement",
         "severity":"Moderate",
         "nevra":"flac-1.3.3-8.fc29.x86_64",
-        "buildtime":"2019-01-17 00:00:00"
+        "buildtime":1547683200
       },
       {
         "name":"FEDORA-2018-318f184000",
         "type":"bugfix",
         "severity":"none",
         "nevra":"glibc-2.28-26.fc29.x86_64",
-        "buildtime":"2019-01-17 00:00:00"
+        "buildtime":1547683200
       }
     ]
     """
@@ -42,7 +42,7 @@ Scenario: Listing available updates referencing bugizilla in json format
         "advisory_name":"FEDORA-2018-318f184000",
         "advisory_type":"bugfix",
         "advisory_severity":"bugfix",
-        "advisory_buildtime":"2019-01-17 00:00:00",
+        "advisory_buildtime":1547683200,
         "nevra":"glibc-2.28-26.fc29.x86_64",
         "references":[
           {
@@ -78,35 +78,35 @@ Scenario: Listing updates in json format with custom type and severity
         "type":"security",
         "severity":"Critical",
         "nevra":"labirinto-1.56.2-6.fc30.x86_64",
-        "buildtime":"2019-09-15 01:34:29"
+        "buildtime":1568511269
       },
       {
         "name":"FEDORA-2022-2222222222",
         "type":"custom_type",
         "severity":"custom_severity",
         "nevra":"labirinto-1.56.2-6.fc30.x86_64",
-        "buildtime":"2019-09-15 01:34:29"
+        "buildtime":1568511269
       },
       {
         "name":"FEDORA-2022-2222222223",
         "type":"security",
         "severity":"custom_severity",
         "nevra":"labirinto-1.56.2-6.fc30.x86_64",
-        "buildtime":"2019-09-15 01:34:29"
+        "buildtime":1568511269
       },
       {
         "name":"FEDORA-2022-2222222224",
         "type":"custom_type",
         "severity":"Critical",
         "nevra":"labirinto-1.56.2-6.fc30.x86_64",
-        "buildtime":"2019-09-15 01:34:29"
+        "buildtime":1568511269
       },
       {
         "name":"FEDORA-2019-f4eb34cf4c",
         "type":"security",
         "severity":"Moderate",
         "nevra":"labirinto-1.56.2-1.fc30.x86_64",
-        "buildtime":"2019-05-12 01:21:43"
+        "buildtime":1557624103
       }
     ]
     """
@@ -118,15 +118,15 @@ Scenario: Info about available updates in json format
    Then the exit code is 0
     And stdout json matches
     """
-    {
-        "FEDORA-2018-318f184000":{
+    [
+        {
           "Name":"FEDORA-2018-318f184000",
           "Title":"glibc bug fix",
           "Severity":"none",
           "Type":"bugfix",
           "Status":"final",
           "Vendor":"secresponseteam@foo.bar",
-          "Issued":"2019-01-17 00:00:00",
+          "Issued":1547683200,
           "Description":"Fix some stuff",
           "Message":"",
           "Rights":"",
@@ -156,14 +156,14 @@ Scenario: Info about available updates in json format
             ]
           }
         },
-        "FEDORA-2999:002-02":{
+        {
           "Name":"FEDORA-2999:002-02",
           "Title":"flac enhacements",
           "Severity":"Moderate",
           "Type":"enhancement",
           "Status":"final",
           "Vendor":"secresponseteam@foo.bar",
-          "Issued":"2019-01-17 00:00:00",
+          "Issued":1547683200,
           "Description":"Enhance some stuff",
           "Message":"",
           "Rights":"",
@@ -181,7 +181,7 @@ Scenario: Info about available updates in json format
             ]
           }
         }
-      }
+      ]
     """
 
 
@@ -191,15 +191,15 @@ Scenario: Info about available updates referencing bugizilla in json format
    Then the exit code is 0
     And stdout json matches
     """
-    {
-        "FEDORA-2018-318f184000":{
+    [
+        {
           "Name":"FEDORA-2018-318f184000",
           "Title":"glibc bug fix",
           "Severity":"none",
           "Type":"bugfix",
           "Status":"final",
           "Vendor":"secresponseteam@foo.bar",
-          "Issued":"2019-01-17 00:00:00",
+          "Issued":1547683200,
           "Description":"Fix some stuff",
           "Message":"",
           "Rights":"",
@@ -229,7 +229,7 @@ Scenario: Info about available updates referencing bugizilla in json format
             ]
           }
         }
-      }
+      ]
     """
 
 
@@ -238,7 +238,7 @@ Scenario: Info about updates in json format (when there's nothing to report)
    Then the exit code is 0
     And stdout is
     """
-    {{}}
+    []
     """
 
 
@@ -250,15 +250,15 @@ Scenario: Info about updates in json format with custom type and severity
    Then the exit code is 0
     And stdout json matches
     """
-    {
-        "FEDORA-2019-f4eb34cf4c":{
+    [
+        {
           "Name":"FEDORA-2019-f4eb34cf4c",
           "Title":"labirinto-1.56.2-1.fc30",
           "Severity":"Moderate",
           "Type":"security",
           "Status":"stable",
           "Vendor":"updates@fedoraproject.org",
-          "Issued":"2019-05-12 01:21:43",
+          "Issued":1557624103,
           "Description":"GNOME 3.32.2",
           "Message":"",
           "Rights":"Copyright (C) 2020 Red Hat, Inc. and others.",
@@ -278,14 +278,14 @@ Scenario: Info about updates in json format with custom type and severity
             ]
           }
         },
-        "FEDORA-2019-57b5902ed1":{
+        {
           "Name":"FEDORA-2019-57b5902ed1",
           "Title":"labirinto-1.56.2-6.fc30 mozjs60-60.9.0-2.fc30 polkit-0.116-2.fc30",
           "Severity":"Critical",
           "Type":"security",
           "Status":"stable",
           "Vendor":"updates@fedoraproject.org",
-          "Issued":"2019-09-15 01:34:29",
+          "Issued":1568511269,
           "Description":"mozjs60 60.9.0, including various security, stability and regression fixes from Firefox 60.9.0 ESR. For details, see https:\/\/www.mozilla.org\/en-US\/firefox\/60.9.0\/releasenotes\/",
           "Message":"",
           "Rights":"Copyright (C) 2020 Red Hat, Inc. and others.",
@@ -298,14 +298,14 @@ Scenario: Info about updates in json format with custom type and severity
             ]
           }
         },
-        "FEDORA-2022-2222222222":{
+        {
           "Name":"FEDORA-2022-2222222222",
           "Title":"labirinto-1.56.2-6.fc30 mozjs60-60.9.0-2.fc30 polkit-0.116-2.fc30",
           "Severity":"custom_severity",
           "Type":"custom_type",
           "Status":"stable",
           "Vendor":"updates@fedoraproject.org",
-          "Issued":"2019-09-15 01:34:29",
+          "Issued":1568511269,
           "Description":"advisory with custom type and seveirity",
           "Message":"",
           "Rights":"Copyright (C) 2020 Red Hat, Inc. and others.",
@@ -318,14 +318,14 @@ Scenario: Info about updates in json format with custom type and severity
             ]
           }
         },
-        "FEDORA-2022-2222222223":{
+        {
           "Name":"FEDORA-2022-2222222223",
           "Title":"labirinto-1.56.2-6.fc30 mozjs60-60.9.0-2.fc30 polkit-0.116-2.fc30",
           "Severity":"custom_severity",
           "Type":"security",
           "Status":"stable",
           "Vendor":"updates@fedoraproject.org",
-          "Issued":"2019-09-15 01:34:29",
+          "Issued":1568511269,
           "Description":"advisory with custom seveirity",
           "Message":"",
           "Rights":"Copyright (C) 2020 Red Hat, Inc. and others.",
@@ -338,14 +338,14 @@ Scenario: Info about updates in json format with custom type and severity
             ]
           }
         },
-        "FEDORA-2022-2222222224":{
+        {
           "Name":"FEDORA-2022-2222222224",
           "Title":"labirinto-1.56.2-6.fc30 mozjs60-60.9.0-2.fc30 polkit-0.116-2.fc30",
           "Severity":"Critical",
           "Type":"custom_type",
           "Status":"stable",
           "Vendor":"updates@fedoraproject.org",
-          "Issued":"2019-09-15 01:34:29",
+          "Issued":1568511269,
           "Description":"advisory with custom type",
           "Message":"",
           "Rights":"Copyright (C) 2020 Red Hat, Inc. and others.",
@@ -358,5 +358,5 @@ Scenario: Info about updates in json format with custom type and severity
             ]
           }
         }
-      }
+      ]
     """
