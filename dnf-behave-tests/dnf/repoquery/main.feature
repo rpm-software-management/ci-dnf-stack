@@ -609,6 +609,7 @@ Scenario: repoquery --srpm
       broken-deps-1:1.0-1.src
       mid-a1-1:1.0-1.src
       mid-a2-1:1.0-1.src
+      multipackage-1:1.0-1.src
       top-a-1:1.0-1.src
       top-a-1:2.0-1.src
       top-a-2:2.0-2.src
@@ -625,6 +626,19 @@ Scenario: repoquery --srpm NAME
       """
       bottom-a1-1:1.0-1.src
       bottom-a1-1:2.0-1.src
+      """
+
+Scenario: repoquery --srpm NAME of subpackage
+ When I execute dnf with args "repoquery --srpm multipackage-docs"
+ Then the exit code is 0
+  And stderr is
+      """
+      <REPOSYNC>
+      """
+
+  And stdout is
+      """
+      multipackage-1:1.0-1.src
       """
 
 
