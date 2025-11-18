@@ -2,16 +2,16 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
+  rev: v6.0.0
   hooks:
   - id: check-added-large-files
   - id: check-merge-conflict
   # Passes if packit not installed. Needed for validation locally
 - repo: https://github.com/packit/pre-commit-hooks
-  rev: v1.2.0
+  rev: v1.3.0
   hooks:
   - id: validate-config
 - repo: https://github.com/teemtee/tmt.git
-  rev: 1.26.0
+  rev: 1.61.0
   hooks:
   - id: tmt-lint
