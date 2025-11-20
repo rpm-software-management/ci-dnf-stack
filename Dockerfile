@@ -29,9 +29,7 @@ RUN set -x && \
     dnf -y install dnf5 dnf5-plugins; \
     dnf5 -y copr enable rpmsoftwaremanagement/test-utils; \
     dnf5 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-    # run upgrade before distro-sync in case there is a new version in dnf-nightly that has a new dependency
-    dnf5 -y upgrade; \
-    dnf5 -y distro-sync --repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly;
+    dnf5 -y distro-sync --from-repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly '*'
 
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
