@@ -32,6 +32,7 @@ Scenario: repoquery (no arguments, i.e. list all packages)
       mid-a2-1:1.0-1.x86_64
       multipackage-1:1.0-1.src
       multipackage-1:1.0-1.x86_64
+      multipackage-docs-1:1.0-1.x86_64
       top-a-1:1.0-1.src
       top-a-1:1.0-1.x86_64
       top-a-1:2.0-1.src
