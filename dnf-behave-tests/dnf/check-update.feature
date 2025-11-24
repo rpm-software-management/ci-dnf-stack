@@ -29,6 +29,41 @@ Given I use repository "dnf-ci-fedora-updates" with configuration
   And Transaction is empty
 
 
+Scenario: check for updates according to priority and utilize `--json` output
+Given I use repository "dnf-ci-fedora"
+  And I successfully execute dnf with args "install glibc"
+  And I use repository "dnf-ci-fedora-updates"
+ When I execute dnf with args "check-upgrade --json"
+ Then stdout json matches
+  """
+  {
+    "upgrades": [
+      { "name": "glibc", "arch": "x86_64", "evr": "2.28-26.fc29", "repository": "dnf-ci-fedora-updates" },
+      { "name": "glibc-common", "arch": "x86_64", "evr": "2.28-26.fc29", "repository": "dnf-ci-fedora-updates" },
+      { "name": "glibc-all-langpacks", "arch": "x86_64", "evr": "2.28-26.fc29", "repository": "dnf-ci-fedora-updates" }
+    ],
+    "obsoleting_packages": [
+      {
+        "name": "glibc", "arch": "x86_64", "evr": "2.28-26.fc29", "repository": "dnf-ci-fedora-updates",
+        "obsoletes": [
+          { "name": "glibc", "arch": "x86_64", "evr": "2.28-9.fc29", "repository": "dnf-ci-fedora" }
+        ]
+      }
+    ]
+  }
+  """
+Given I use repository "dnf-ci-fedora-updates" with configuration
+      | key           | value   |
+      | priority      | 100     |
+ When I execute dnf with args "check-upgrade --json"
+ Then stdout json matches
+  """
+  {}
+  """
+ When I execute dnf with args "upgrade"
+ Then the exit code is 0
+  And Transaction is empty
+
 @bz2101421
 Scenario: --security check-upgrade doesn't show pkgs from resolved advisories (when obsoletes are involved)
 Given I use repository "check-update"
