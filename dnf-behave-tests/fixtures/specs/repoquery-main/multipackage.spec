@@ -19,4 +19,6 @@ Dummy docs as a subpackage.
 
 %files
 
+%files docs
+
 %changelog
