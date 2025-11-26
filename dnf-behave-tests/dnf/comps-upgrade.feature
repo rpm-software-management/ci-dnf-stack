@@ -216,18 +216,17 @@ Scenario: Upgrade environment to new metadata and back - always install new grou
         | install-group | A-mandatory-0:1.0-1.x86_64         |
         | install-group | A-default-0:1.0-1.x86_64           |
         | install-group | A-conditional-true-0:1.0-1.x86_64  |
-        | group-install | A-group - repo#1                   |
         | env-upgrade   | AB-environment                     |
+    And stderr contains "Group \"a-group\" is already installed."
 
 
 Scenario: Upgrade environment when there were excluded packages during installation - don't install these packages
   Given I successfully execute dnf with args "group install --no-packages AB-environment"
    When I execute dnf with args "group install AB-environment --exclude=A-mandatory,A-default,A-optional,A-conditional-true"
    Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                            |
-        | group-install | A-group - repo#1                   |
-        | env-install   | AB-environment                     |
+    And Transaction is empty
+    And stderr contains "Group \"a-group\" is already installed."
+    And stderr contains "Environmental group \"AB-environment\" is already installed."
    When I execute dnf with args "group upgrade AB-environment"
    Then the exit code is 0
     And Transaction is following
