@@ -59,6 +59,7 @@ ACTIONS_EN = {
     "Disabling modules": "module-disable",
     "Resetting modules": "module-reset",
     "Changing reason": "changing-reason",
+    "Changing reason of installed groups": "group-changing-reason",
 }
 
 
@@ -137,6 +138,11 @@ def parse_transaction_table_dnf5(context, lines):
                 else:
                     group = line.strip()
                     result[action].add(group)
+                if action == "group-changing-reason":
+                    # Drop line that describes how the reason was changed, eg: User -> Dependency.
+                    # Currently we do not record how the reason was changed, it can be checked by
+                    # step: "dnf5 transaction items for transaction "last" are"
+                    lines.pop(0)
                 continue
 
             result_action = action
