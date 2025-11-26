@@ -72,9 +72,7 @@ Scenario: Install a group that is already installed
         | group-install | DNF-CI-Testgroup                  |
    When I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
-    And Transaction is following
-        | Action        | Package                           |
-        | group-install | DNF-CI-Testgroup                  |
+    And Transaction is empty
 
 
 Scenario: Install and remove group with excluded package

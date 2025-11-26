@@ -23,12 +23,12 @@ Scenario: Redo a transaction that installed a group
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
-        | group-install | DNF-CI-Testgroup                  |
         | install-group | lame-0:3.100-4.fc29.x86_64        |
         | install-dep   | lame-libs-0:3.100-4.fc29.x86_64   |
+    And stderr contains "Group \"dnf-ci-testgroup\" is already installed."
     And History is following
         | Id     | Command                               | Action | Altered   |
-        | 3      | history redo 1                        |        | 3         |
+        | 3      | history redo 1                        |        | 2         |
         | 2      | remove lame                           |        | 2         |
         | 1      | group install dnf-ci-testgroup        |        | 5         |
 
@@ -72,15 +72,25 @@ Scenario: Redo a transaction that removed a group and the group is was removed f
     And Transaction is empty
 
 
-# TODO(dmach): group operations should be closer to rpm operations; install should be no-op in this case, upgrade would install the latest group from repo
 Scenario: Redo a transaction that installed a group and the group is still on the system
+   When I execute dnf with args "history redo last"
+   Then the exit code is 0
+    And Transaction is empty
+    And stderr contains "Group \"dnf-ci-testgroup\" is already installed."
+    And History is following
+        | Id     | Command                               | Action | Altered   |
+        | 1      | group install dnf-ci-testgroup        |        | 5         |
+
+
+Scenario: Redo a transaction that upgraded a group and the group is still on the system
+  Given I successfully execute dnf with args "group upgrade dnf-ci-testgroup"
    When I execute dnf with args "history redo last"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                           |
-        | group-install | DNF-CI-Testgroup                  |
+        | group-upgrade | DNF-CI-Testgroup                  |
     And History is following
         | Id     | Command                               | Action | Altered   |
-        | 2      | history redo last                     |        | 1         |
+        | 3      | history redo last                     |        | 1         |
+        | 2      | group upgrade dnf-ci-testgroup        |        | 1         |
         | 1      | group install dnf-ci-testgroup        |        | 5         |
-    And Transaction is empty
