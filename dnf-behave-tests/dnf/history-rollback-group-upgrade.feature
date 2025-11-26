@@ -208,11 +208,11 @@ Scenario: Excluded package is remembered until next group install when rolling b
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                       |
-        | group-install | DNF-CI-RollbackTestGroup1                     |
         | install-group | TestGroup1PackageC-0:1.0-1.x86_64             |
+    And stderr contains "Group \"dnf-ci-group-rollback-testgroup1\" is already installed."
     And History is following
         | Id     | Command                                              | Action | Altered   |
-        | 6      | group install dnf-ci-group-rollback-testgroup1       |        | 2         |
+        | 6      | group install dnf-ci-group-rollback-testgroup1       |        | 1         |
         | 5      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
         | 4      | history rollback 2                                   |        | 4         |
         | 3      | group upgrade dnf-ci-group-rollback-testgroup1       |        | 5         |
