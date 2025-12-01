@@ -18,11 +18,11 @@ Scenario: dnf list nonexistentpkg
 Scenario: List all packages available
  When I execute dnf with args "list"
  Then the exit code is 0
- Then stdout section "Available packages" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "glibc-all-langpacks.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "setup.noarch\s+2.12.1-1.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "basesystem.noarch\s+11-6.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "glibc-all-langpacks.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
 
 
 Scenario: dnf list --extras (installed pkgs, not from known repos)
@@ -244,10 +244,10 @@ Scenario: dnf list glibc\*
  Then the exit code is 0
 Given I use repository "dnf-ci-fedora-updates"
  When I execute dnf with args "list glibc\*"
- Then stdout section "Installed packages" contains "glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Installed packages" contains "glibc-all-langpacks.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
- Then stdout section "Available packages" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora"
+ Then stdout section "Installed packages ( reinstall upgrade )" contains "glibc.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Installed packages ( reinstall upgrade )" contains "glibc-common.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Installed packages ( reinstall upgrade )" contains "glibc-all-langpacks.x86_64\s+2.28-9.fc29\s+dnf-ci-fedora"
+ Then stdout section "Available packages ( reinstall upgrade )" contains "glibc.x86_64\s+2.28-26.fc29\s+dnf-ci-fedora"
  Then stdout does not contain "setup"
 
 

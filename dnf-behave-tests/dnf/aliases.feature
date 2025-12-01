@@ -106,7 +106,7 @@ attached_named_args = [
  Then the exit code is 0
   And stdout is
   """
-  Available packages
+  Available packages ( reinstall upgrade )
   labirinto.src    1.0-1.fc29 simple-base
   labirinto.x86_64 1.0-1.fc29 simple-base
   labirinto.src    2.0-1.fc29 simple-updates
