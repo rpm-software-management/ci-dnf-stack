@@ -1,3 +1,5 @@
+# Local plugin is not built on RHEL >= 10.
+@not.with_os=rhel__ge__10
 Feature: Tests for local plugin
 
 
