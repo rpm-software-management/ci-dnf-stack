@@ -2,7 +2,7 @@
 # $ podman build --build-arg TYPE=distro -t ci-dnf-stack -f Dockerfile
 # $ podman run --net none -it ci-dnf-stack behave dnf
 
-ARG BASE=fedora:41
+ARG BASE=fedora:42
 FROM $BASE
 
 ENV LANG C.UTF-8
