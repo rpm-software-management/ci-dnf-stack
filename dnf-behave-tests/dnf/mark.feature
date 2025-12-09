@@ -138,8 +138,6 @@ Scenario: Mark package as the same reason it currently has
         """
 
 
-@xfail
-# https://github.com/rpm-software-management/dnf5/issues/935
 Scenario: Mark user installed package as group
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
@@ -154,8 +152,6 @@ Scenario: Mark user installed package as group
         | setup-2.12.1-1.fc29.noarch    | Dependency |
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
-   When I execute dnf with args "mark group dnf-ci-testgroup lame"
-   Then the exit code is 0
     And package reasons are
         | Package                       | Reason     |
         | filesystem-3.9-2.fc29.x86_64  | Group      |
@@ -164,27 +160,33 @@ Scenario: Mark user installed package as group
         | setup-2.12.1-1.fc29.noarch    | Dependency |
 
 
-@xfail
-# https://github.com/rpm-software-management/dnf5/issues/935
-# TODO (emrakova): update the scenario when the issue is fixed
 Scenario: Mark group installed package as user and back again
   Given I use repository "dnf-ci-thirdparty"
     And I use repository "dnf-ci-fedora"
     And I execute dnf with args "group install dnf-ci-testgroup"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | Group  |
+        | Package                        | Reason     |
+        | filesystem-3.9-2.fc29.x86_64   | Group      |
+        | lame-3.100-4.fc29.x86_64       | Group      |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+        | setup-2.12.1-1.fc29.noarch     | Dependency |
    When I execute dnf with args "mark user lame"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | User   |
+        | Package                        | Reason     |
+        | filesystem-3.9-2.fc29.x86_64   | Group      |
+        | lame-3.100-4.fc29.x86_64       | User       |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+        | setup-2.12.1-1.fc29.noarch     | Dependency |
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
     And package reasons are
-        | Package                        | Reason |
-        | lame-3.100-4.fc29.x86_64       | Group  |
+        | Package                        | Reason     |
+        | filesystem-3.9-2.fc29.x86_64   | Group      |
+        | lame-3.100-4.fc29.x86_64       | Group      |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+        | setup-2.12.1-1.fc29.noarch     | Dependency |
    When I execute dnf with args "mark group dnf-ci-testgroup lame"
    Then the exit code is 0
     And stdout does not contain "User -> Group"
