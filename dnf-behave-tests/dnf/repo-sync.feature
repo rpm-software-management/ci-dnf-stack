@@ -23,7 +23,7 @@ Scenario: The default value of skip_if_unavailable is False
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo": Usable URL not found
     """
@@ -47,7 +47,7 @@ Scenario: There is global skip_if_unavailable option
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Repositories loaded.
     """
@@ -70,7 +70,7 @@ Scenario: Per repo skip_if_unavailable configuration
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Repositories loaded.
     """
@@ -91,7 +91,7 @@ Scenario: The repo configuration takes precedence over the global one
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "testrepo": Usable URL not found
     """
@@ -233,7 +233,7 @@ Scenario: working and unavailable repos together with skip_if_unavailable enable
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
      dnf-ci-fedora test repository .*
     Repositories loaded.
@@ -251,7 +251,7 @@ Scenario: working and unavailable repos together with skip_if_unavailable disabl
     And stderr matches line by line
     """
     <REPOSYNC>
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
      dnf-ci-fedora test repository .*
     Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "dnf-ci-fedora-updates": Usable URL not found
@@ -272,10 +272,10 @@ Scenario: two unavailable repos with skip_if_unavailable enabled
     """
     Updating and loading repositories:
        dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
        dnf-ci-fedora test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Repositories loaded.
     """
@@ -295,10 +295,10 @@ Scenario: two unavailable repos with skip_if_unavailable disabled, it attempts t
     """
     Updating and loading repositories:
        dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
        dnf-ci-fedora test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[Couldn't open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///non/existent/repo/repodata/repomd.xml \[(Couldn't|Could not) open file /non/existent/repo/repodata/repomd.xml\] - file:///non/existent/repo/repodata/repomd.xml
     >>> Usable URL not found
     Failed to download metadata \(baseurl: "/non/existent/repo"\) for repository "dnf-ci-fedora.*": Usable URL not found
     """
@@ -320,7 +320,7 @@ Scenario: working and broken repo together with skip_if_unavailable enabled
     Updating and loading repositories:
      dnf-ci-fedora test repository .*
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
     Repositories loaded.
     """
@@ -339,7 +339,7 @@ Scenario: working and broken repo together with skip_if_unavailable disabled
     Updating and loading repositories:
      dnf-ci-fedora test repository .*
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
     Failed to download metadata \(baseurl: "file:///.*/dnf-ci-fedora.*"\) for repository "dnf-ci-fedora.*": Cannot download, all mirrors were already tried without success
     """
@@ -359,10 +359,10 @@ Scenario: two broken repos together with skip_if_unavailable enabled
     """
     Updating and loading repositories:
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
      dnf-ci-fedora test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
     Repositories loaded.
     """
@@ -382,10 +382,10 @@ Scenario: two broken repos together with skip_if_unavailable enabled
     """
     Updating and loading repositories:
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
      dnf-ci-fedora test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[Couldn't open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/primary.xml.zst \[(Couldn't|Could not) open file .*/repodata/primary.xml.zst\] - file:///.*/repodata/primary.xml.zst
     >>> No more mirrors to try - All mirrors were already tried without success
     Failed to download metadata \(baseurl: "file:///.*/dnf-ci-fedora.*"\) for repository "dnf-ci-fedora.*": Cannot download, all mirrors were already tried without success
     """
@@ -406,7 +406,7 @@ Scenario: working repo and repo with missing repomd.xml.asc with skip_if_unavail
     """
     Updating and loading repositories:
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml.asc \[Couldn't open file .*/repodata/repomd.xml.asc\] - file:///.*/repodata/repomd.xml.asc
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml.asc \[(Couldn't|Could not) open file .*/repodata/repomd.xml.asc\] - file:///.*/repodata/repomd.xml.asc
     >>> GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: .*
      dnf-ci-fedora test repository .*
     Repositories loaded.
@@ -425,10 +425,10 @@ Scenario: working repo and repo with missing repomd.xml.asc with skip_if_unavail
     """
     Updating and loading repositories:
      dnf-ci-fedora-updates test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml.asc \[Couldn't open file .*/repodata/repomd.xml.asc\] - file:///.*/repodata/repomd.xml.asc
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml.asc \[(Couldn't|Could not) open file .*/repodata/repomd.xml.asc\] - file:///.*/repodata/repomd.xml.asc
     >>> GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: .*
      dnf-ci-fedora test repository .*
-    Failed to download metadata \(baseurl: "file:///.*/repos/dnf-ci-fedora-updates"\) for repository "dnf-ci-fedora-updates": GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora-updates/repodata/repomd.xml.asc \[Couldn't open file /.*/repos/dnf-ci-fedora-updates/repodata/repomd.xml.asc\]
+    Failed to download metadata \(baseurl: "file:///.*/repos/dnf-ci-fedora-updates"\) for repository "dnf-ci-fedora-updates": GPG verification is enabled, but GPG signature is not available. This may be an error or the repository does not support GPG verification: Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repos/dnf-ci-fedora-updates/repodata/repomd.xml.asc \[(Couldn't|Could not) open file /.*/repos/dnf-ci-fedora-updates/repodata/repomd.xml.asc\]
     """
 
 
@@ -491,7 +491,7 @@ Scenario: working repo and repo with absolute path baseurl to a missing file whe
     """
     Updating and loading repositories:
      testrepo test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[Couldn't open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[(Couldn't|Could not) open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
     >>> Usable URL not found
      dnf-ci-fedora test repository .*
     Repositories loaded.
@@ -511,7 +511,7 @@ Scenario: working repo and repo with absolute path baseurl to a missing file whe
     """
     Updating and loading repositories:
      testrepo test repository .*
-    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[Couldn't open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
+    >>> Curl error \(37\): (Couldn't|Could not) read a file:// file for file:///.*/repodata/repomd.xml \[(Couldn't|Could not) open file .*/repodata/repomd.xml\] - file:///.*/repodata/repomd.xml
     >>> Usable URL not found
      dnf-ci-fedora test repository .*
     Failed to download metadata \(baseurl: "file:///nfsmount/repo"\) for repository "testrepo": Usable URL not found
