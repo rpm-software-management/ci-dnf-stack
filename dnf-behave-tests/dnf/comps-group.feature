@@ -558,7 +558,7 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
    And I create directory "/{context.dnf.installroot}/var/tmp"
    And I successfully execute "chmod 777 {context.dnf.installroot}/var/tmp"
    And I successfully execute dnf with args "makecache"
-  When I execute dnf with args "group list -C" as an unprivileged user
+  When I execute dnf with args "group list -C --skip-file-locks" as an unprivileged user
   Then the exit code is 0
   Then stderr does not contain "Permission denied: '{context.dnf.installroot}/var/cache/dnf/dnf-ci-thirdparty-[a-z0-9]{{16}}/repodata/gen'"
    And stderr is
