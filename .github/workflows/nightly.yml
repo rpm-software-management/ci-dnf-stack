@@ -41,6 +41,8 @@ jobs:
       - name: Build in Copr
         if: steps.setup-ci.outputs.copr-user
         run: |
+          COMMAND_STRING="packit"
+
           # Since we don't control libsolv upstream work around missing packit initialization and specfile.
           if [[ "${{matrix.component}}" == "libsolv" ]]; then
             cat > packit_libsolv.yaml << EOL
@@ -49,7 +51,18 @@ jobs:
               post-upstream-clone:
                 - "wget https://src.fedoraproject.org/rpms/libsolv/raw/main/f/libsolv.spec -O libsolv.spec"
           EOL
-            packit -c ./packit_libsolv.yaml build in-copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}} ${{matrix.url}}${{matrix.component}}
-          else
-            packit build in-copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}} ${{matrix.url}}${{matrix.component}}
+            COMMAND_STRING+=" -c ./packit_libsolv.yaml"
           fi
+
+          COMMAND_STRING+=" build in-copr --owner ${{steps.setup-ci.outputs.copr-user}} --project ${{matrix.project}} ${{matrix.url}}${{matrix.component}}"
+
+          # To test different build configurations when a PR is created
+          # dnf5 upstream defines multiple packages in .packit.yaml:
+          # `dnf5` and `dnf5-without-modules`.
+          # In nightly we want to build dnf5 only once (with modularity enabled).
+          if [[ "${{matrix.component}}" == "dnf5" ]]; then
+            COMMAND_STRING+=" --package dnf5"
+          fi
+
+          echo "Executing: $COMMAND_STRING"
+          $COMMAND_STRING
