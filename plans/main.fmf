@@ -12,7 +12,7 @@ prepare:
       script:
         - git clone https://github.com/rpm-software-management/ci-dnf-stack /var/tmp/ci-dnf-stack
 
-    - name: Checkout PR branch if packit call is from ci-dnf-stack
+    - name: Checkout correct branch, or PR branch if packit call is from ci-dnf-stack
       how: shell
       script: |
         if [ "$PACKIT_UPSTREAM_NAME" == "ci-dnf-stack" ]; then
@@ -20,6 +20,8 @@ prepare:
           git -C /var/tmp/ci-dnf-stack fetch pull-request
           git -C /var/tmp/ci-dnf-stack checkout --track pull-request/$PACKIT_SOURCE_BRANCH
           git -C /var/tmp/ci-dnf-stack rebase $PACKIT_TARGET_BRANCH
+        else
+          git -C /var/tmp/ci-dnf-stack checkout release-5.2.x.x
         fi
 
     - name: Build testing container
