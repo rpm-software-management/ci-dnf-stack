@@ -8,13 +8,16 @@ Scenario: Install "vendorpkg" from vendor "First Vendor", dependencies from any 
     And I use repository "dnf-ci-vendor-2-updates"
     And I use repository "dnf-ci-vendor-3"
     And I use repository "dnf-ci-vendor-3-updates"
-   When I execute dnf with args "install --from-vendor='First\ Vendor' vendorpkg"
+    And I set working directory to "{context.dnf.tempdir}"
+   When I execute dnf with args "install --from-vendor='First\ Vendor' vendorpkg --debugsolver"
    Then the exit code is 0
     And Transaction is following
         | Action      | Package                  |
         | install     | vendorpkg-0:1.6-1.x86_64 |
         | install-dep | vendordep-0:1.8-1.x86_64 |
         | install-dep | vendordep2-0:1.2-1.x86_64 |
+   When I execute "cat {context.dnf.tempdir}/debugdata/packages/testcase.t"
+   Then stdout is empty
     And dnf5 transaction items for transaction "last" are
         | action  | package                    | reason          | repository                |
         | Install | vendorpkg-0:1.6-1.x86_64   | User            | dnf-ci-vendor-1-updates   |
