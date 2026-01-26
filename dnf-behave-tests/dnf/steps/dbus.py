@@ -20,6 +20,7 @@ IFACE_RPM = '{{}}.rpm.Rpm'.format(DNFDAEMON_BUS_NAME)
 IFACE_GOAL = '{{}}.Goal'.format(DNFDAEMON_BUS_NAME)
 IFACE_HISTORY = '{{}}.History'.format(DNFDAEMON_BUS_NAME)
 IFACE_ADVISORY = '{{}}.Advisory'.format(DNFDAEMON_BUS_NAME)
+IFACE_GROUP = '{{}}.comps.Group'.format(DNFDAEMON_BUS_NAME)
 
 
 bus = dbus.SystemBus()
@@ -73,3 +74,18 @@ iface_history = dbus.Interface(
     dbus_interface=IFACE_HISTORY)
 """
     execute_python_script(context, DBUS_SESSION_SETUP + history_helpers + context.text)
+
+
+@behave.step("I execute python libdnf5 dbus api script with group interface")
+def execute_python_libdnf5_dbus_api_script_with_group_interface(context):
+    """
+    Execute snippet of python script using libdnf5 dbus api that is
+    appended to prepared D-Bus session.
+    Helper functions to work with Group interface are included.
+    """
+    group_helpers = """
+iface_group = dbus.Interface(
+    bus.get_object(DNFDAEMON_BUS_NAME, session),
+    dbus_interface=IFACE_GROUP)
+"""
+    execute_python_script(context, DBUS_SESSION_SETUP + group_helpers + context.text)
