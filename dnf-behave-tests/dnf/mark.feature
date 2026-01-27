@@ -291,3 +291,44 @@ Scenario: Marking toplevel package as dependency should not remove shared depend
     And Transaction is following
         | Action        | Package                                   |
         | remove        | libnsl-0:2.28-9.fc29.x86_64               |
+
+
+Scenario: Mark package as group installed for multiple groups
+  Given I use repository "dnf-ci-thirdparty"
+    And I use repository "dnf-ci-fedora"
+    And I execute dnf with args "group install dnf-ci-testgroup"
+   Then the exit code is 0
+    And package reasons are
+        | Package                        | Reason     |
+        | filesystem-3.9-2.fc29.x86_64   | Group      |
+        | lame-3.100-4.fc29.x86_64       | Group      |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+        | setup-2.12.1-1.fc29.noarch     | Dependency |
+  Given I execute dnf with args "group install --no-packages cqrlib-non-devel"
+   Then the exit code is 0
+   When I execute dnf with args "mark group cqrlib-non-devel lame"
+   Then the exit code is 0
+    And package reasons are
+        | Package                        | Reason     |
+        | filesystem-3.9-2.fc29.x86_64   | Group      |
+        | lame-3.100-4.fc29.x86_64       | Group      |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+        | setup-2.12.1-1.fc29.noarch     | Dependency |
+   When I execute dnf with args "group remove dnf-ci-testgroup"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | remove        | filesystem-0:3.9-2.fc29.x86_64            |
+        | remove-unused | setup-0:2.12.1-1.fc29.noarch              |
+        | group-remove  | DNF-CI-Testgroup                          |
+    And package reasons are
+        | Package                        | Reason     |
+        | lame-3.100-4.fc29.x86_64       | Group      |
+        | lame-libs-3.100-4.fc29.x86_64  | Dependency |
+   When I execute dnf with args "group remove cqrlib-non-devel"
+   Then the exit code is 0
+    And Transaction is following
+        | Action        | Package                                   |
+        | remove        | lame-3.100-4.fc29.x86_64                  |
+        | remove-unused | lame-libs-3.100-4.fc29.x86_64             |
+        | group-remove  | CQRlib-non-devel                          |
