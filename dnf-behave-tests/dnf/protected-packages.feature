@@ -75,10 +75,12 @@ Scenario: Left over protected package installed as a dependency is not autoremov
     And I successfully execute dnf with args "remove top --setopt=protected_packages=mid"
    When I execute dnf with args "autoremove --setopt=protected_packages=mid"
    Then the exit code is 0
-    And stderr is empty
-    And stdout is
+    And stderr is
         """
         Unneeded protected package: mid-0:2-1.fc29.x86_64 (and its dependencies) cannot be removed, either mark it as user-installed or change protected_packages configuration option.
+        """
+    And stdout is
+        """
         Nothing to do.
         """
     And Transaction is empty
@@ -96,7 +98,7 @@ Scenario: Left over chain of dependencies with protected package is not autoremo
     And I successfully execute dnf with args "mark dependency top"
    When I execute dnf with args "autoremove --setopt=protected_packages=mid"
    Then the exit code is 0
-    And stdout contains "Unneeded protected package: mid-0:2-1.fc29.x86_64 \(and its dependencies\) cannot be removed, either mark it as user-installed or change protected_packages configuration option."
+    And stderr contains "Unneeded protected package: mid-0:2-1.fc29.x86_64 \(and its dependencies\) cannot be removed, either mark it as user-installed or change protected_packages configuration option."
     And Transaction is following
         | Action | Package               |
         | remove | top-0:1-1.fc29.x86_64 |
