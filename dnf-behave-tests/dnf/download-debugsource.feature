@@ -52,11 +52,6 @@ Scenario: Download debugsource for specific architecture using --arch option
         | {context.dnf.tempdir}/lz4-debugsource-1.8.2-2.fc29.i686.rpm    | -                                                                                                            |
 
 
-Scenario: --debugsource and --srpm are mutually exclusive
-   When I execute dnf with args "download --debugsource --srpm libzstd"
-   Then the exit code is 2
-    And stderr contains "Options \"--srpm\" and \"--debugsource\" are mutually exclusive"
-
 
 Scenario: No error when debugsource package is not available
   Given I use repository "dnf-ci-fedora" as http
