@@ -51,3 +51,17 @@ Scenario: history info for installing a group when there are upgrades
         | Upgrade       | lame-libs-3.100-5.fc29.x86_64 |
         | Upgraded      | lame-libs-3.100-4.fc29.x86_64 |
         | Install       | @dnf-ci-testgroup             |
+
+
+@RHEL-81778
+@RHEL-81779
+Scenario: history info range - two upgrade actions should be reported as upgrade
+  Given I use repository "history-info"
+    And I successfully execute dnf with args "install rsyslog-8.2102.0-1.el9"
+    And I successfully execute dnf with args "update rsyslog-8.2102.0-2.el9"
+   When I execute dnf with args "update rsyslog-8.2102.0-3.el9"
+   Then the exit code is 0
+    And History info "last-1..last" should match
+        | Key           | Value                              |
+        | Upgraded      | rsyslog-8.2102.0-1.el9.x86_64      |
+        | Upgrade       | rsyslog-8.2102.0-3.el9.x86_64      |
