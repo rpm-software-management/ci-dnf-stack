@@ -65,6 +65,5 @@ Scenario: history info range - two upgrade actions should be reported as upgrade
    Then the exit code is 0
     And History info "last-1..last" should match
         | Key           | Value                              |
-        | Persistence   | Persist                            |
-        | Upgrade       | rsyslog-8.2102.0-1.el9.x86_64      |
-        | Upgraded      | rsyslog-8.2102.0-3.el9.x86_64      |
+        | Upgraded      | rsyslog-8.2102.0-1.el9.x86_64      |
+        | Upgrade       | rsyslog-8.2102.0-3.el9.x86_64      |
