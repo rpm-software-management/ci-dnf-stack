@@ -64,7 +64,10 @@ Scenario: Dependency of a protected package cannot be removed
     And stderr is
         """
         Error: 
-         Problem: The operation would result in removing the following protected packages: mid
+         Problem: The operation would result in broken dependencies for the following protected packages: mid
+          - package mid-2-1.fc29.x86_64 from @System requires bot, but none of the providers can be installed
+          - conflicting requests
+          - problem with installed package mid-2-1.fc29.x86_64
         """
 
 
