@@ -27,6 +27,19 @@ Scenario: dnf list --recent
         """
 
 
+Scenario: dnf list --recent --json
+   When I execute dnf with args "list --recent --json"
+   Then the exit code is 0
+    And stdout json matches
+        """
+        {
+        "recently_added_packages": [
+          { "name": "labirinto", "arch": "x86_64", "evr": "1.0-1.fc29", "repository": "simple-base" }
+        ]
+        }
+        """
+
+
 Scenario: dnf list package that is not recently added
    # make sure that vagare package is present
    When I execute dnf with args "list vagare"
