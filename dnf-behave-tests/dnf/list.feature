@@ -15,6 +15,15 @@ Scenario: dnf list nonexistentpkg
       """
 
 
+Scenario: dnf list nonexistentpkg (JSON output)
+ When I execute dnf with args "list --json non-existent-pkg"
+ Then the exit code is 0
+  And stdout json matches
+      """
+      {}
+      """
+
+
 Scenario: List all packages available
  When I execute dnf with args "list"
  Then the exit code is 0
@@ -42,6 +51,22 @@ Given I drop repository "dnf-ci-fedora"
       """
 
 
+Scenario: dnf list --extras (installed pkgs, not from known repos; JSON output)
+ When I execute dnf with args "install setup"
+ Then the exit code is 0
+Given I drop repository "dnf-ci-fedora"
+  And I execute dnf with args "list --extras --json"
+ Then the exit code is 0
+  And stdout json matches
+      """
+      {
+      "extra_packages": [
+        { "name": "setup", "arch": "noarch", "evr": "2.12.1-1.fc29", "repository": "dnf-ci-fedora" }
+      ]
+      }
+      """
+
+
 Scenario: dnf list setup (when setup is installed)
  When I execute dnf with args "install setup"
  Then the exit code is 0
@@ -55,6 +80,21 @@ Given I drop repository "dnf-ci-fedora"
       """
       Installed packages
       setup.noarch +2.12.1-1.fc29 +dnf-ci-fedora
+      """
+
+
+Scenario: dnf list setup (when setup is installed; JSON output)
+ When I execute dnf with args "install setup"
+ Then the exit code is 0
+Given I drop repository "dnf-ci-fedora"
+ When I execute dnf with args "list --json setup"
+  Then stdout json matches
+      """
+      {
+      "installed_packages": [
+        { "name": "setup", "arch": "noarch", "evr": "2.12.1-1.fc29", "repository": "dnf-ci-fedora" }
+      ]
+      }
       """
 
 
@@ -156,6 +196,25 @@ Scenario: dnf list setup basesystem (when basesystem is not installed)
       basesystem.noarch +11-6.fc29 +dnf-ci-fedora
       basesystem.src +11-6.fc29 +dnf-ci-fedora
       setup.src +2.12.1-1.fc29 +dnf-ci-fedora
+      """
+
+
+Scenario: dnf list setup basesystem (when basesystem is not installed; JSON output)
+ When I execute dnf with args "install setup"
+ Then the exit code is 0
+ When I execute dnf with args "list --json setup basesystem"
+ Then stdout json matches
+      """
+      {
+      "installed_packages": [
+        { "name": "setup", "arch": "noarch", "evr": "2.12.1-1.fc29", "repository": "dnf-ci-fedora" }
+      ],
+      "available_packages": [
+        { "name": "basesystem", "arch": "noarch", "evr": "11-6.fc29", "repository": "dnf-ci-fedora" },
+        { "name": "basesystem", "arch": "src", "evr": "11-6.fc29", "repository": "dnf-ci-fedora" },
+        { "name": "setup", "arch": "src", "evr": "2.12.1-1.fc29", "repository": "dnf-ci-fedora" }
+      ]
+      }
       """
 
 
