@@ -47,12 +47,29 @@ class VersionedActiveTagMatcher(ActiveTagMatcher):
             # -- CASE: Unknown category, ignore it.
             return True
 
-        tags_enabled = []
+        enabled_positive_tags = []
+        # Negative tags are those with the `not.` prefix.
+        enabled_negative_tags = []
         for category_tag, tag_match in group_tag_pairs:
             tag_prefix = tag_match.group("prefix")
             category = tag_match.group("category")
             tag_value = tag_match.group("value")
             assert category == group_category
-            tag_enabled = self.version_compare_operator(tag_value, current_value, self.is_tag_negated(tag_prefix))
-            tags_enabled.append(tag_enabled)
-        return any(tags_enabled)    # -- PROVIDES: LOGICAL-OR expression
+            is_tag_negated = self.is_tag_negated(tag_prefix)
+            tag_enabled = self.version_compare_operator(tag_value, current_value, is_tag_negated)
+            if is_tag_negated:
+                enabled_negative_tags.append(tag_enabled)
+            else:
+                enabled_positive_tags.append(tag_enabled)
+
+        # LOGICAL OR: There must be either no positive tags, or at least one of them must match.
+        positive_tags_satisfied = (not enabled_positive_tags) or any(enabled_positive_tags)
+
+        # LOGICAL AND: There must be either no negative tags, or all of them must match.
+        # For example, to safisfy:
+        #   @not.with_os=rhel__ge__9
+        #   @not.with_os=fedora__ge__39
+        # rhel must not be >= 9 AND fedora must not be >= 39.
+        negative_tags_satisfied = (not enabled_negative_tags) or all(enabled_negative_tags)
+
+        return positive_tags_satisfied and negative_tags_satisfied
