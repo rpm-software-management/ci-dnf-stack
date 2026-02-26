@@ -52,7 +52,7 @@ jobs:
                 # Download spec
                 - "wget https://src.fedoraproject.org/rpms/libsolv/raw/main/f/libsolv.spec -O libsolv.spec"
                 # Download patches used in the spec
-                - bash -c "spectool -P libsolv.spec | awk '{print $2}' | xargs -I {} curl --retry 3 -O https://src.fedoraproject.org/rpms/libsolv/raw/rawhide/f/{}"
+                - bash -c "spectool -P libsolv.spec | awk '{print \$2}' | xargs -I {} curl --retry 3 -O https://src.fedoraproject.org/rpms/libsolv/raw/rawhide/f/{}"
           EOL
             COMMAND_STRING+=" -c ./packit_libsolv.yaml"
           fi
