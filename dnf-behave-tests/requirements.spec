@@ -57,7 +57,9 @@ BuildRequires:  dnf5-plugin-manifest
 BuildRequires:  dnf5daemon-server
 BuildRequires:  dnf5daemon-client
 BuildRequires:  libdnf5-plugin-actions
+%if ! ( 0%{?rhel} >= 10 )
 BuildRequires:  libdnf5-plugin-local
+%endif
 BuildRequires:  libdnf5-plugin-expired-pgp-keys
 BuildRequires:  python3-libdnf5-python-plugins-loader
 # dnf5 python api tests need libdnf5 python bindings
