@@ -43,7 +43,8 @@ class DNFContext(object):
                 "gpgcheck": "1",
                 "installonly_limit": "3",
                 "clean_requirements_on_remove": "True",
-                "best": "True"
+                "best": "True",
+                "allow_vendor_change": "True"
             }
         }
 
