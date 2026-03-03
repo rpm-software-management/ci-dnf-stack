@@ -311,3 +311,13 @@ Scenario: stored packages with keepcache=false are not removed by following tran
         | Action        | Package              |
         | install       | top-a-1:1.0-1.x86_64 |
     And file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
+
+
+Scenario: storing transaction uses already cached packages
+  Given I use repository "transaction-sr" as http
+    And I execute dnf with args "install top-a-1.0 --downloadonly"
+    And I start capturing outbound HTTP requests
+   When I execute dnf with args "install top-a-1.0 --store ./transaction"
+   Then file "/{context.dnf.tempdir}/transaction/packages/top-a-1.0-1.x86_64.rpm" exists
+    # Both needed metadata and packages are already cached, nothing should be redownloaded
+    And HTTP log is empty

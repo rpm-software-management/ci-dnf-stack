@@ -139,3 +139,19 @@ def step_http_log_is(context):
     print_lines_diff(expected, found)
 
     raise AssertionError("HTTP log is not: %s" % context.text)
+
+
+@behave.step("HTTP log is empty")
+def step_http_log_is(context):
+    found = []
+    server_ids = list(context.dnf.ports.keys())
+    server_ports = list(context.dnf.ports.values())
+    for r in context.scenario.httpd.log:
+        port = r.headers['Host'].split(':')[1]
+        server_id = server_ids[server_ports.index(int(port))]
+        found.append("%s %s %s" % (r.command, server_id, r.path))
+
+    if len(found) == 0:
+        return
+
+    raise AssertionError("HTTP log is not empty: %s" % found)
