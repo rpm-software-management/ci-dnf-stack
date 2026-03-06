@@ -1,3 +1,5 @@
+# Modularity support disabled from RHEL 11.
+@not.with_os=rhel__ge__11
 Feature: Tests mergerepo_c with modular repositories
 
 
