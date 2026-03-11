@@ -26,6 +26,7 @@ prepare:
       how: shell
       script: |
         /var/tmp/ci-dnf-stack/container-test build \
-        --base $( echo "$@distro" | tr '-' ':') \
+        --base $( if test "$@distro" == "fedora-eln"; then echo "eln:latest"; \
+                  else echo "$@distro" | tr '-' ':'; fi ) \
         --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
         --container-arg="--env=COPR_RPMS=$PACKIT_COPR_RPMS"
