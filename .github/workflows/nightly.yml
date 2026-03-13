@@ -47,6 +47,8 @@ jobs:
           if [[ "${{matrix.component}}" == "libsolv" ]]; then
             cat > packit_libsolv.yaml << EOL
             specfile_path: libsolv.spec
+            version_suffix: "^{PACKIT_PROJECT_SNAPSHOTID}"
+            update_release: false
             actions:
               post-upstream-clone:
                 # Download spec
