@@ -34,6 +34,26 @@ Scenario: Update core packages
           More information: https://access.redhat.com/solutions/27943
           """
 
+Scenario: Update core packages and check with --json
+    Given I execute dnf with args "upgrade kernel basesystem"
+      And I execute dnf with args "upgrade glibc"
+      And I execute dnf with args "upgrade lame wget"
+     When I execute dnf with args "needs-restarting --json"
+     Then the exit code is 1
+      And stderr is
+          """
+          <REPOSYNC>
+          """
+      And stdout json matches
+          """
+          [{
+            "type": "reboot",
+            "reboot_required": true,
+            "packages": [ "glibc", "kernel", "kernel-core" ],
+            "documentation": "https://access.redhat.com/solutions/27943"
+          }]
+          """
+
 @bz1913962
 Scenario: Install a package with an associated reboot_suggested advisory
     Given I execute dnf with args "upgrade --advisory=FEDORA-2999:003-03 \*"
