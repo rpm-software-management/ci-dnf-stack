@@ -182,7 +182,7 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --best
-   When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/kernel-core-4.18.16-300.fc29.x86_64.rpm"
+  Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/kernel-core-4.18.16-300.fc29.x86_64.rpm"
    Then package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | External User   |
@@ -211,7 +211,7 @@ Scenario: Do not autoremove kernel after upgrade with --best
 @bz1934499
 @bz1921063
 Scenario: Do not autoremove kernel after upgrade with --no-best
-   When I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/kernel-core-4.18.16-300.fc29.x86_64.rpm"
+  Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/x86_64/kernel-core-4.18.16-300.fc29.x86_64.rpm"
    Then package reasons are
         | Package                                | Reason          |
         | kernel-core-4.18.16-300.fc29.x86_64    | External User   |
@@ -414,7 +414,7 @@ Scenario: Handle over-limit custom kernel without installonlypkg(kernel) provide
     And I successfully execute dnf with args "install kernel-6.5.10"
     And I successfully execute dnf with args "install kernel-6.5.12"
     And I successfully execute dnf with args "install kernel-6.6.3"
-    And I execute rpm with args "-i {context.dnf.fixturesdir}/repos/kernel-custom/x86_64/kernel-6.7.0+-7.x86_64.rpm"
+    And I successfully execute rpm with args "-i {context.dnf.fixturesdir}/repos/kernel-custom/x86_64/kernel-6.7.0+-7.x86_64.rpm"
    When I execute dnf with args "upgrade 'kernel*'"
    Then the exit code is 0
     And Transaction is following

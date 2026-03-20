@@ -30,7 +30,7 @@ Scenario: Releasever is substituted in baseurl via a config file
 
 
 Scenario: Releasever is substituted in baseurl via a value detected from a fedora-release package
-  Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/fedora-release-29-1.noarch.rpm"
+  Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora/noarch/fedora-release-29-1.noarch.rpm"
     And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f29"
     And I execute dnf with args "install setup"
    Then the exit code is 0
@@ -41,7 +41,7 @@ Scenario: Releasever is substituted in baseurl via a value detected from a fedor
 
 @bz1710761
 Scenario: Releasever is substituted in baseurl via a value detected from 'system-release(releasever)' provide
-  Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
+  Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
     And I copy directory "{context.scenario.repos_location}/dnf-ci-fedora" to "/temp-repos/base-f123"
     And I execute dnf with args "install setup"
    Then the exit code is 0
@@ -51,7 +51,7 @@ Scenario: Releasever is substituted in baseurl via a value detected from 'system
 
 
 Scenario: releasever_{major,minor} are substituted via values detected from 'system-release(releasever_{major,minor})' provides
-  Given I execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
+  Given I successfully execute rpm with args "-i --nodeps {context.dnf.fixturesdir}/repos/dnf-ci-fedora-release/noarch/fedora-release-29-1.noarch.rpm"
     And I use repository "dnf-ci-fedora" with configuration
         | key     | value                                                                                             |
         | baseurl | file://{context.dnf.installroot}/temp-repos/base-f$releasever-$releasever_major-$releasever_minor |
