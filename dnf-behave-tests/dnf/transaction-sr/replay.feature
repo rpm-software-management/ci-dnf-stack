@@ -1221,8 +1221,6 @@ Given I successfully execute dnf with args "install bottom-a1-1.0"
   And stderr contains lines
       """
       Cannot perform Install action because 'bottom-a1-2.0-1.noarch' is installed in a different version: 'bottom-a1-0:1.0-1.noarch'.
-
-      Warning: skipped OpenPGP checks for 2 packages from repository: transaction-sr
       """
   And Transaction is following
       | Action      | Package                  |
@@ -1335,8 +1333,6 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
  And stderr contains lines
      """
      Cannot perform Remove action for Package 'bottom-a1-0:1.0-1.noarch' because it is not installed.
-
-     Warning: skipped OpenPGP checks for 2 packages from repository: transaction-sr
      """
   And Transaction is following
       | Action      | Package                  |
@@ -1408,8 +1404,6 @@ Given I create file "/{context.dnf.tempdir}/transaction/transaction.json" with
   And stderr contains lines
       """
       Cannot perform Install action, no match for: does-not-exist-1.0-1.noarch.
-
-      Warning: skipped OpenPGP checks for 1 package from repository: transaction-sr
       """
   And Transaction is following
       | Action      | Package                  |

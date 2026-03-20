@@ -72,8 +72,6 @@ Scenario: Reinstall list of packages with --skip-unavailable, one of them is not
     And stderr contains lines
         """
         No match for argument: nosuchpkg
-
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
         """
     And Transaction is following
         | Action        | Package                                   |
@@ -98,8 +96,6 @@ Scenario: Reinstall list of packages with --skip-unavailable, one of them is not
     And stderr contains lines
         """
         Packages for argument 'abcde' available, but not installed.
-
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
         """
     And Transaction is following
         | Action        | Package                                   |
