@@ -292,10 +292,6 @@ Scenario: Obsoleted package is not installed when group contains both obsoleter 
         | Action        | Package                               |
         | install-group | PackageD-0:2.0-1.x86_64               |
         | group-install | Obsoleter and obsoleted               |
-    And stderr contains lines
-        """
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-obsoletes
-        """
 
 
 @bz1761137

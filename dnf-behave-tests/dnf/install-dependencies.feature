@@ -20,6 +20,4 @@ Scenario: Best candidates have conflicting dependencies
       - package bar-1.0-1.fc29.x86_64 from install-dependencies requires lib-1.0, but none of the providers can be installed
       - cannot install the best candidate for the job
       - conflicting requests
-
-    Warning: skipped OpenPGP checks for 3 packages from repository: install-dependencies
     """

@@ -78,8 +78,6 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not a
     And stderr contains lines
         """
         No match for argument: nosuchpkg
-
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
         """
     And Transaction is following
         | Action        | Package                                   |
@@ -106,8 +104,6 @@ Scenario: Upgrade list of packages with --skip-unavailable, one of them is not i
     And stderr contains lines
         """
         Packages for argument 'dwm' available, but not installed.
-
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora-updates
         """
     And Transaction is following
         | Action        | Package                                   |
@@ -129,8 +125,6 @@ Scenario: Upgrade all RPMs from multiple repositories with best=False
     """
     Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
       - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
-
-    Warning: skipped OpenPGP checks for 7 packages from repositories: dnf-ci-fedora-updates, dnf-ci-fedora-updates-testing, dnf-ci-thirdparty-updates
     """
     And Transaction is following
         | Action        | Package                                   |
@@ -180,8 +174,6 @@ Scenario: Upgrade all RPMs from multiple repositories with best=True
         """
         Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
           - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
- 
-        Warning: skipped OpenPGP checks for 7 packages from repositories: dnf-ci-fedora-updates, dnf-ci-fedora-updates-testing, dnf-ci-thirdparty-updates
         """
 
 
@@ -198,8 +190,6 @@ Scenario: Print information about skipped packages
         """
         Problem: cannot install the best update candidate for package SuperRipper-1.0-1.x86_64
           - nothing provides unsatisfiable needed by SuperRipper-1.3-1.x86_64 from dnf-ci-thirdparty-updates
-
-        Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-thirdparty-updates
         """
 
 

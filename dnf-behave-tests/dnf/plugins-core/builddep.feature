@@ -166,7 +166,6 @@ Scenario: Builddep using macros with source rpm
       And stderr contains lines
       """
       Warning: -D/--define/--with/--without arguments have no effect on source rpm packages.
-      Warning: skipped OpenPGP checks for 1 package from repository: dnf-ci-fedora
       """
 
 

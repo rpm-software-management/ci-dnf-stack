@@ -52,7 +52,6 @@ Scenario: Packages in transaction are sorted by NEVRA
       [11/13] Installing SuperRipper-0:1.0-1. 100% |  .\d\.\d   B/s | ..\d\.\d   B |  \d\dm\d\ds
       [12/13] Installing FlacBetterEncoder-0: 100% |  .\d\.\d   B/s | ..\d\.\d   B |  \d\dm\d\ds
       [13/13] Installing flac-0:1.3.2-8.fc29. 100% |  .\d\.\d KiB/s | ..\d\.\d   B |  \d\dm\d\ds
-      Warning: skipped OpenPGP checks for 11 packages from repositories: dnf-ci-fedora, dnf-ci-thirdparty
       Complete!
       """
     And stdout matches line by line

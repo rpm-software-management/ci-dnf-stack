@@ -501,8 +501,6 @@ Scenario: Install an environment with a nonexistent group
     And stderr contains lines
        """
        No match for group from environment: nonexistent-group
-
-       Warning: skipped OpenPGP checks for 1 package from repository: comps-group
        """
 
 
@@ -519,8 +517,6 @@ Scenario: Install an environment using @^environment syntax
     And stderr contains lines
        """
        No match for group from environment: nonexistent-group
-
-       Warning: skipped OpenPGP checks for 1 package from repository: comps-group
        """
 
 
