@@ -80,7 +80,7 @@ Given I use repository "dnf-ci-gpg"
       | key      | value      |
       | gpgcheck | 1          |
       | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public |
-  And I execute rpm with args "--import {context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public"
+  And I successfully execute rpm with args "--import {context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public"
  When I execute dnf with args "distro-sync wget"
  Then the exit code is 1
   And stderr contains lines matching
