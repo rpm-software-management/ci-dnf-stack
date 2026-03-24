@@ -13,9 +13,13 @@ Background: Add repository with gpgcheck=1
    When I execute dnf with args "repolist"
    Then the exit code is 0
     And stdout contains "dnf-ci-gpg-noeol\s+dnf-ci-gpg-noeol"
-      # At the start of each test, there are no imported gpg keys in RPM DB
+      # At the start of each test, there is only one (default) key
    When I execute rpm with args "-q gpg-pubkey"
-   Then the exit code is 1
+   Then the exit code is 0
+    And stdout matches line by line
+        """
+        gpg-pubkey-*
+        """
 
 
 # used to be disabled for Fedora due to a rpm failure, 
