@@ -19,8 +19,8 @@ Scenario: The packages from --repofrompath repository are available
        """
    And stdout is
        """
-       dedalo-signed-0:1.0-1.fc29.src
-       dedalo-signed-0:1.0-1.fc29.x86_64
+       dedalo-0:1.0-1.fc29.src
+       dedalo-0:1.0-1.fc29.x86_64
        labirinto-0:1.0-1.fc29.src
        labirinto-0:1.0-1.fc29.x86_64
        vagare-0:1.0-1.fc29.src
@@ -57,8 +57,8 @@ Scenario: Variables in the path are substituted
        """
    And stdout is
        """
-       dedalo-signed-0:1.0-1.fc29.src
-       dedalo-signed-0:1.0-1.fc29.x86_64
+       dedalo-0:1.0-1.fc29.src
+       dedalo-0:1.0-1.fc29.x86_64
        labirinto-0:1.0-1.fc29.src
        labirinto-0:1.0-1.fc29.x86_64
        vagare-0:1.0-1.fc29.src

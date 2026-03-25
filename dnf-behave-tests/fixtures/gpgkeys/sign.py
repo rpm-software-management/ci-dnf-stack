@@ -119,8 +119,6 @@ key_specs = [
             "dnf-ci-gpg/x86_64/glibc-common-2.28-9.fc29.x86_64.rpm",
             "dnf-ci-gpg/x86_64/glibc-all-langpacks-2.28-9.fc29.x86_64.rpm",
             "dnf-ci-gpg-updates/noarch/basesystem-11-6.fc29.noarch.rpm",
-            "simple-base/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm",
-            "simple-updates/x86_64/dedalo-signed-2.0-1.fc29.x86_64.rpm"
         ]
     ),
     KeySpec(

@@ -67,11 +67,11 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
    \./simple-base-[0-9a-f]{16}/packages/vagare-1\.0-1\.fc29\.x86_64\.rpm
    """
-   When I execute dnf with args "--setopt=keepcache=false install dedalo-signed"
+   When I execute dnf with args "--setopt=keepcache=false install dedalo"
    Then the exit code is 0
     And Transaction is following
-        | Action        | Package                                   |
-        | install       | dedalo-signed-0:1.0-1.fc29.x86_64         |
+        | Action        | Package                            |
+        | install       | dedalo-0:1.0-1.fc29.x86_64         |
    When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
