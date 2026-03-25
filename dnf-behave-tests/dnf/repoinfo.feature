@@ -34,7 +34,7 @@ Scenario: Repo info without arguments
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
         OpenPGP              :
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        :
           Available packages : 289
           Total packages     : 289
@@ -55,7 +55,7 @@ Scenario: Repo info without arguments
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
         OpenPGP              :
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        :
           Available packages : 6
           Total packages     : 6
@@ -87,7 +87,7 @@ Scenario: Repo info without arguments and option --all
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
         OpenPGP              : 
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        : 
           Available packages : 289
           Total packages     : 289
@@ -108,7 +108,7 @@ Scenario: Repo info without arguments and option --all
           Base URL          : .*/fixtures/repos/dnf-ci-fedora-updates
         OpenPGP             : 
           Verify repodata   : false
-          Verify packages   : false
+          Verify packages   : true
          
         Repo ID             : dnf-ci-thirdparty
         Name                : dnf-ci-thirdparty test repository
@@ -123,7 +123,7 @@ Scenario: Repo info without arguments and option --all
           Base URL          : .*/fixtures/repos/dnf-ci-thirdparty
         OpenPGP             : 
           Verify repodata   : false
-          Verify packages   : false
+          Verify packages   : true
         
         Repo ID              : dnf-ci-thirdparty-updates
         Name                 : dnf-ci-thirdparty-updates test repository
@@ -138,7 +138,7 @@ Scenario: Repo info without arguments and option --all
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
         OpenPGP              : 
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        : 
           Available packages : 6
           Total packages     : 6
@@ -171,7 +171,7 @@ Scenario: Repoinfo without arguments but with excludes
           Base URL           : .*/fixtures/repos/dnf-ci-fedora
         OpenPGP              :
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        :
           Available packages : 0
           Total packages     : 289
@@ -192,7 +192,7 @@ Scenario: Repoinfo without arguments but with excludes
           Base URL           : .*/fixtures/repos/dnf-ci-thirdparty-updates
         OpenPGP              :
           Verify repodata    : false
-          Verify packages    : false
+          Verify packages    : true
         Repodata info        :
           Available packages : 0
           Total packages     : 6
