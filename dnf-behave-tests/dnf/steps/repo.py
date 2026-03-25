@@ -30,7 +30,8 @@ def repo_config(repo, new={}):
     config = {
         "name": repo + " test repository",
         "enabled": "1",
-        "gpgcheck": "0",
+        "gpgcheck": "1",
+        "localpkg_gpgcheck": "1",
     }
     config.update(new)
     return config
