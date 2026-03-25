@@ -11,7 +11,8 @@ Background: prepare repository with recent package labirinto
     And I execute "rm -rf src" in "{context.dnf.repos[simple-base].path}"
     And I generate repodata for repository "simple-base"
     And I use repository "simple-base"
-    And I successfully execute dnf with args "install labirinto vagare"
+    # Rebuild packages are not signed, we have to use --no-gpgchecks
+    And I successfully execute dnf with args "install --no-gpgchecks labirinto vagare"
 
 
 Scenario: dnf repoquery --recent vagare (when there's no such recent pkg)
