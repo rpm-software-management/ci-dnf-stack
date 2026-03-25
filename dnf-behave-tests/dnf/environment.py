@@ -20,7 +20,7 @@ from behave.formatter.ansi_escapes import escapes
 from behave.tag_matcher import ActiveTagMatcher
 
 from steps.lib.config import write_config
-from common.lib.cmd import print_last_command
+from common.lib.cmd import print_last_command, run_in_context
 from common.lib.file import ensure_directory_exists
 from common.lib.os_version import detect_os_version
 from common.lib.tag_matcher import VersionedActiveTagMatcher
@@ -216,6 +216,10 @@ def before_scenario(context, scenario):
     context.scenario.default_tmp_dir = context.dnf.installroot
     context.scenario.repos_location = context.config.userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
 
+    # Import default key upfront for all tests
+    cmd = "rpm --root=" + context.dnf.installroot
+    cmd += " --import "+ context.dnf.fixturesdir + "/gpgkeys/keys/default-key/default-key-public"
+    run_in_context(context, cmd, can_fail=False)
 
 def after_scenario(context, scenario):
     if scenario.status == model.Status.failed:
