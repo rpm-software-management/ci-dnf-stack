@@ -211,7 +211,7 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
     And I create file "/test/dnf.conf" with
     """
     [main]
-    exclude=dedalo-signed
+    exclude=dedalo
     """
    When I execute dnf with args "--config /test/dnf.conf install vagare"
    Then the exit code is 0
@@ -219,12 +219,12 @@ Scenario: Create dnf.conf file and test if host is taking option --config /test/
         | Action        | Package                               |
         | install       | vagare-1.0-1.fc29.x86_64              |
         | install-dep   | labirinto-1.0-1.fc29.x86_64           |
-   When I execute dnf with args "--config /test/dnf.conf install dedalo-signed"
+   When I execute dnf with args "--config /test/dnf.conf install dedalo"
    Then the exit code is 1
     # rhsm plugin is polluting stderr with messages, we cannot use "stderr is" step
     # librhsm-WARNING **: 12:59:28.478: Found 0 entitlement certificates
     # librhsm-WARNING **: 12:59:28.478: Found 0 product certificates
-    And stderr contains "Argument 'dedalo-signed' matches only excluded packages."
+    And stderr contains "Argument 'dedalo' matches only excluded packages."
 
 
 @destructive

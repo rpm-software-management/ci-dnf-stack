@@ -13,11 +13,11 @@ Given I use repository "simple-base"
       gpgkey=file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public
              file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public
       """
- When I execute dnf with args "install dedalo-signed"
+ When I execute dnf with args "install dedalo"
  Then the exit code is 0
   And Transaction is following
-      | Action        | Package                           |
-      | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
+      | Action        | Package                    |
+      | install       | dedalo-0:1.0-1.fc29.x86_64 |
 
 
 @bz1807864
@@ -33,11 +33,11 @@ Given I use repository "simple-base" as http
       gpgkey=file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public
              file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public
       """
- When I execute dnf with args "install dedalo-signed"
+ When I execute dnf with args "install dedalo"
  Then the exit code is 0
   And Transaction is following
-      | Action        | Package                           |
-      | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
+      | Action        | Package                    |
+      | install       | dedalo-0:1.0-1.fc29.x86_64 |
 
 
 @bz1807864
@@ -53,11 +53,11 @@ Given I use repository "simple-base" as http
       gpgkey=file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-noeol/dnf-ci-gpg-noeol-public
              file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-subkey/dnf-ci-gpg-subkey-public, file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg-updates/dnf-ci-gpg-updates-public
       """
- When I execute dnf with args "install dedalo-signed"
+ When I execute dnf with args "install dedalo"
  Then the exit code is 0
   And Transaction is following
-      | Action        | Package                           |
-      | install       | dedalo-signed-0:1.0-1.fc29.x86_64 |
+      | Action        | Package                    |
+      | install       | dedalo-0:1.0-1.fc29.x86_64 |
 
 
 Scenario: multiline config for baseurl

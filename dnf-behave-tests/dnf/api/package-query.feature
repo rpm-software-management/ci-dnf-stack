@@ -12,7 +12,7 @@ Given I use repository "simple-base"
       for pkg in query:
           print(pkg.get_nevra())
       query = libdnf5.rpm.PackageQuery(base)
-      query.filter_name(["*dal?-*"], QueryCmp_GLOB)
+      query.filter_name(["*da?*"], QueryCmp_GLOB)
       for pkg in query:
           print(pkg.get_nevra())
       query = libdnf5.rpm.PackageQuery(base)
@@ -25,8 +25,8 @@ Given I use repository "simple-base"
       """
       labirinto-1.0-1.fc29.src
       labirinto-1.0-1.fc29.x86_64
-      dedalo-signed-1.0-1.fc29.src
-      dedalo-signed-1.0-1.fc29.x86_64
+      dedalo-1.0-1.fc29.src
+      dedalo-1.0-1.fc29.x86_64
       vagare-1.0-1.fc29.src
       vagare-1.0-1.fc29.x86_64
       """
@@ -136,7 +136,7 @@ Given I use repository "simple-base"
  Then the exit code is 0
   And stdout is
       """
-      dedalo-signed
+      dedalo
       labirinto
       vagare
       vagare-1.0-1.fc29.x86_64
@@ -221,11 +221,11 @@ Given I use repository "simple-base"
  Then the exit code is 0
   And stdout is
       """
-      dedalo-signed
+      dedalo
       labirinto
       vagare
-      dedalo-signed-1.0-1.fc29.src
-      dedalo-signed-1.0-1.fc29.x86_64
+      dedalo-1.0-1.fc29.src
+      dedalo-1.0-1.fc29.x86_64
       labirinto-1.0-1.fc29.src
       labirinto-1.0-1.fc29.x86_64
       vagare-1.0-1.fc29.src

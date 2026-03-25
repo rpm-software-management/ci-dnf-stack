@@ -36,15 +36,13 @@ Scenario: local repo is preferred because it has lower than default cost
 Given I use repository "simple-base" with configuration
       | key          | value                                                                      |
       | enabled      | 1                                                                          |
-      | pkg_gpgcheck | 1                                                                          |
-      | gpgkey       | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public |
-  And I successfully execute dnf with args "install dedalo-signed"
-  And I successfully execute dnf with args "remove dedalo-signed"
- When I execute dnf with args "install dedalo-signed"
+  And I successfully execute dnf with args "install dedalo"
+  And I successfully execute dnf with args "remove dedalo"
+ When I execute dnf with args "install dedalo"
  Then the exit code is 0
   And dnf5 transaction items for transaction "last" are
-      | action         | package                           | reason | repository |
-      | Install        | dedalo-signed-0:1.0-1.fc29.x86_64 | User   | _dnf_local |
+      | action         | package                    | reason | repository |
+      | Install        | dedalo-0:1.0-1.fc29.x86_64 | User   | _dnf_local |
 
 
 Scenario: local repo is not cached
