@@ -2,21 +2,23 @@
 Feature: Reboot hint
 
 Background:
-    Given I use repository "dnf-ci-fedora"
+    # We cannot use signed packages because we are moving the clock around,
+    # rpm fails to read packages signed in the future.
+    Given I use repository "unsigned" with configuration
+        | key      | value |
+        | gpgcheck | 0     |
       And I move the clock backward to "before boot-up"
-      And I execute dnf with args "install lame kernel basesystem glibc wget lz4"
+      And I successfully execute dnf with args "install sarcina-1.0 kernel-1.0 glibc-1.0"
       And I move the clock forward to "the present"
       # Boot time is measured down to the second, so sleep for one second so
       # the time packages are installed is at least one second after container
       # boot
       And I sleep for "1" seconds
-      And I use repository "dnf-ci-fedora-updates"
 
 @bz1913962
 Scenario: Update core packages
-    Given I execute dnf with args "upgrade kernel basesystem"
-      And I execute dnf with args "upgrade glibc"
-      And I execute dnf with args "upgrade lame wget"
+    Given I successfully execute dnf with args "upgrade kernel"
+      And I successfully execute dnf with args "upgrade glibc"
      When I execute dnf with args "needs-restarting"
      Then the exit code is 1
       And stderr is
@@ -28,16 +30,14 @@ Scenario: Update core packages
           Core libraries or services have been updated since boot-up:
             * glibc
             * kernel
-            * kernel-core
 
           Reboot is required to fully utilize these updates.
           More information: https://access.redhat.com/solutions/27943
           """
 
 Scenario: Update core packages and check with --json
-    Given I execute dnf with args "upgrade kernel basesystem"
+    Given I execute dnf with args "upgrade kernel"
       And I execute dnf with args "upgrade glibc"
-      And I execute dnf with args "upgrade lame wget"
      When I execute dnf with args "needs-restarting --json"
      Then the exit code is 1
       And stderr is
@@ -49,14 +49,14 @@ Scenario: Update core packages and check with --json
           [{
             "type": "reboot",
             "reboot_required": true,
-            "packages": [ "glibc", "kernel", "kernel-core" ],
+            "packages": [ "glibc", "kernel" ],
             "documentation": "https://access.redhat.com/solutions/27943"
           }]
           """
 
 @bz1913962
 Scenario: Install a package with an associated reboot_suggested advisory
-    Given I execute dnf with args "upgrade --advisory=FEDORA-2999:003-03 \*"
+    Given I execute dnf with args "upgrade --advisory=FEDORA-7777:003-03 \*"
      When I execute dnf with args "needs-restarting"
      Then the exit code is 1
       And stderr is
@@ -66,7 +66,7 @@ Scenario: Install a package with an associated reboot_suggested advisory
       And stdout is
           """
           Core libraries or services have been updated since boot-up:
-            * lz4
+            * sarcina
 
           Reboot is required to fully utilize these updates.
           More information: https://access.redhat.com/solutions/27943
