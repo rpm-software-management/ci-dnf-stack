@@ -96,7 +96,7 @@ for path in "$DIR"/*/*.spec; do
 done
 
 
-"${GPGDIR}/sign.sh"
+python3 "${GPGDIR}/sign.py"
 "${DIR}/break-packages.sh"
 "${CERTSDIR}/generate_certificates.sh"
 
