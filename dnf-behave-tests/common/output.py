@@ -22,6 +22,11 @@ def strip_reposync_dnf5(found_lines, line_number):
     while line_number < len(found_lines) and sync_line_dnf5.fullmatch(found_lines[line_number].strip()):
         found_lines.pop(line_number)
 
+    metadata_expiration_re = re.compile(
+        r"Last metadata expiration check: [0-9]+:[0-9]{2}:[0-9]{2} ago on .*\.")
+    if line_number < len(found_lines) and metadata_expiration_re.fullmatch(found_lines[line_number].strip()):
+        found_lines.pop(line_number)
+
     if line_number < len(found_lines) and found_lines[line_number].strip() == "Repositories loaded.":
         found_lines.pop(line_number)
 
@@ -63,11 +68,13 @@ def then_stdout_is(context):
     synchronization lines (i.e. the "Last metadata expiration check:" line as
     well as the individual repo download lines) in the test's output.
     """
-    expected = context.text.format(context=context).rstrip().split('\n')
+    expected = context.text.format(context=context).rstrip().split('
+')
     # behave >= 3.0.0 does this rstrip automatically, do it also manually
     # to have the same behavior also with lower versions
     expected = [line.rstrip() for line in expected]
-    found = context.cmd_stdout.rstrip().split('\n')
+    found = context.cmd_stdout.rstrip().split('
+')
     found = [line.rstrip() for line in found]
 
     if found == [""]:
@@ -108,8 +115,10 @@ def then_stdout_matches_line_by_line(context):
     Checks that each line of stdout matches respective line in regular expressions.
     Supports the <REPOSYNC> in the same way as the step "stdout is"
     """
-    found = context.cmd_stdout.split('\n')
-    expected = context.text.split('\n')
+    found = context.cmd_stdout.split('
+')
+    expected = context.text.split('
+')
 
     clean_expected, clean_found = handle_reposync(expected, found)
 
@@ -131,8 +140,10 @@ def then_stderr_is(context):
     synchronization lines (i.e. the "Last metadata expiration check:" line as
     well as the individual repo download lines) in the test's output.
     """
-    expected = context.text.format(context=context).strip().split('\n')
-    found = context.cmd_stderr.strip().split('\n')
+    expected = context.text.format(context=context).strip().split('
+')
+    found = context.cmd_stderr.strip().split('
+')
 
     if found == [""]:
         found = []
@@ -166,8 +177,10 @@ def then_stderr_matches_line_by_line(context):
     Checks that each line of stderr matches respective line in regular expressions.
     Supports the <REPOSYNC> in the same way as the step "stderr is"
     """
-    found = context.cmd_stderr.split('\n')
-    expected = context.text.format(context=context).split('\n')
+    found = context.cmd_stderr.split('
+')
+    expected = context.text.format(context=context).split('
+')
 
     clean_expected, clean_found = handle_reposync(expected, found)
 
