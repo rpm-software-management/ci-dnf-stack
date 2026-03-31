@@ -384,14 +384,14 @@ Scenario: Reposync does not stop downloading packages on the first error
   Given I copy repository "simple-base" for modification
     And I use repository "simple-base"
     # remove one of reposynced packages to cause download error
-    And I delete file "//{context.dnf.tempdir}/repos/simple-base/src/dedalo-signed-1.0-1.fc29.src.rpm"
+    And I delete file "//{context.dnf.tempdir}/repos/simple-base/src/dedalo-1.0-1.fc29.src.rpm"
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir}"
    Then the exit code is 1
-    And stdout contains "\[FAILED\] dedalo-signed-1.0-1.fc29.src.rpm: No more mirrors to try - All mirrors were already tried without success"
+    And stdout contains "\[FAILED\] dedalo-1.0-1.fc29.src.rpm: No more mirrors to try - All mirrors were already tried without success"
     # check that all other packages were downloaded
     And file "//{context.dnf.tempdir}/simple-base/src/labirinto-1.0-1.fc29.src.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/src/vagare-1.0-1.fc29.src.rpm" exists
-    And file "//{context.dnf.tempdir}/simple-base/x86_64/dedalo-signed-1.0-1.fc29.x86_64.rpm" exists
+    And file "//{context.dnf.tempdir}/simple-base/x86_64/dedalo-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" exists
     And file "//{context.dnf.tempdir}/simple-base/x86_64/vagare-1.0-1.fc29.x86_64.rpm" exists
 

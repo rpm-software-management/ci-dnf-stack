@@ -241,7 +241,7 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
     And I create file "/test/dnf.conf" with
     """
     [main]
-    exclude=dedalo-signed
+    exclude=dedalo
     """
    When I execute dnf with args "-c /test/dnf.conf install vagare"
    Then the exit code is 0
@@ -249,16 +249,16 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
         | Action        | Package                               |
         | install       | vagare-1.0-1.fc29.x86_64              |
         | install-dep   | labirinto-1.0-1.fc29.x86_64           |
-   When I execute dnf with args "-c /test/dnf.conf install dedalo-signed"
+   When I execute dnf with args "-c /test/dnf.conf install dedalo"
    Then the exit code is 1
     And stdout is
     """
     <REPOSYNC>
-    All matches were filtered out by exclude filtering for argument: dedalo-signed
+    All matches were filtered out by exclude filtering for argument: dedalo
     """
     And stderr is
     """
-    Error: Unable to find a match: dedalo-signed
+    Error: Unable to find a match: dedalo
     """
 
 
