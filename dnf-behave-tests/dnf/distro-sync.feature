@@ -12,7 +12,7 @@ Given I use repository "simple-base"
 @dnf5
 Scenario: updating a pkg
 Given I use repository "simple-base"
-  And I execute dnf with args "install labirinto"
+  And I successfully execute dnf with args "install labirinto"
   And I use repository "simple-updates"
  When I execute dnf with args "distro-sync"
  Then the exit code is 0
@@ -49,7 +49,7 @@ Given I use repository "simple-base"
 @dnf5
 Scenario: updating a broken signed pkg whose key is not imported
 Given I use repository "dnf-ci-gpg"
-  And I execute dnf with args "install wget"
+  And I successfully execute dnf with args "install wget"
   And I use repository "dnf-ci-gpg-updates" with configuration
       | key      | value      |
       | gpgcheck | 1          |
@@ -69,7 +69,7 @@ Given I use repository "dnf-ci-gpg"
 @not.with_os=rhel__ge__8
 Scenario: updating a broken signed pkg whose key is imported
 Given I use repository "dnf-ci-gpg"
-  And I execute dnf with args "install wget"
+  And I successfully execute dnf with args "install wget"
   And I use repository "dnf-ci-gpg-updates" with configuration
       | key      | value      |
       | gpgcheck | 1          |
