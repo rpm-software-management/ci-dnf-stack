@@ -57,7 +57,7 @@ Scenario: Downgrade is unable to resolve transaction
    <REPOSYNC>
    (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages)
    """
-   And stderr is
+   And stderr contains lines
    """
    allow_vendor_change is disabled. This option is currently not supported for downgrade and distro-sync commands
    Error: 

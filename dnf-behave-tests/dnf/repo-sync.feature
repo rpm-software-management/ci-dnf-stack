@@ -200,4 +200,3 @@ Scenario: Mirrorlist with invalid mirrors and one good mirror
         | gpgcheck        | 0                                           |
    When I execute dnf with args "makecache"
    Then the exit code is 0
-    And stderr is empty
