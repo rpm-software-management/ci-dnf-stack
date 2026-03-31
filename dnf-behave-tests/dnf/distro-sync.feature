@@ -24,16 +24,15 @@ Given I use repository "simple-base"
 @dnf5
 Scenario: updating a signed pkg
 Given I use repository "simple-base"
-  And I execute dnf with args "install dedalo-signed"
+  And I successfully execute dnf with args "install dedalo"
   And I use repository "simple-updates" with configuration
       | key      | value      |
       | gpgcheck | 1          |
-      | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public |
  When I execute dnf with args "distro-sync"
  Then the exit code is 0
   And Transaction is following
-      | Action        | Package                               |
-      | upgrade       | dedalo-signed-2.0-1.fc29.x86_64       |
+      | Action        | Package                  |
+      | upgrade       | dedalo-2.0-1.fc29.x86_64 |
 
 
 @dnf5

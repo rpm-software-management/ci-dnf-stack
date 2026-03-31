@@ -18,8 +18,8 @@ Scenario: Do not error out when fail to load/store expired_repos cache
    Then the exit code is 0
     And stdout is
         """
-        dedalo-signed-0:1.0-1.fc29.src
-        dedalo-signed-0:1.0-1.fc29.x86_64
+        dedalo-0:1.0-1.fc29.src
+        dedalo-0:1.0-1.fc29.x86_64
         labirinto-0:1.0-1.fc29.src
         labirinto-0:1.0-1.fc29.x86_64
         vagare-0:1.0-1.fc29.src
