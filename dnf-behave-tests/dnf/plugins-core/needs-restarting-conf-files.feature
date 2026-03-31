@@ -1,12 +1,20 @@
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 Feature: Add package to needs-restarting using config files
 
 Background:
 Given I enable plugin "needs_restarting"
   And I use repository "needs-restarting"
   And I move the clock backward to "before boot-up"
-  And I execute dnf with args "install wget abcde"
+  And I create and substitute file "//etc/rpm/macros.verify" with
+      """
+      %_pkgverify_level digest
+      """
+  And I successfully execute dnf with args "install --nogpgcheck wget abcde"
   And I move the clock forward to "2 hours"
-  And I use repository "needs-restarting-updates"
+  And I use repository "needs-restarting-updates" with configuration
+      | key      | value      |
+      | gpgcheck | 0          |
   And I create directory "/etc/dnf/plugins/needs-restarting.d"
   And I create and substitute file "/etc/dnf/plugins/needs-restarting.d/wget.conf" with
   """
@@ -120,7 +128,7 @@ Given I create and substitute file "/etc/dnf/plugins/needs-restarting.d/abcde.co
 
 @bz1810123
 Scenario: package self adds to needs-restarting
-Given I successfully execute dnf with args "install dwm"
+Given I successfully execute dnf with args "install --nogpgcheck dwm"
  When I execute dnf with args "needs-restarting -r"
  Then the exit code is 1
   And stdout is
