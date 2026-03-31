@@ -39,7 +39,8 @@ Scenario Outline: <option> enables given repository
         [repo2]
         name=repo2 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 Examples:
@@ -56,7 +57,8 @@ Scenario Outline: <option> disables given repository
         [repo1]
         name=repo1 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 Examples:
@@ -74,14 +76,16 @@ Scenario Outline: enable more than one repository
         [repo1]
         name=repo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/repo2.repo" contents is
         """
         [repo2]
         name=repo2 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 Examples:
@@ -102,14 +106,16 @@ Scenario Outline: disable more than one repository
         [repo1]
         name=repo1 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/repo2.repo" contents is
         """
         [repo2]
         name=repo2 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 Examples:
@@ -134,21 +140,24 @@ Scenario: enable repo using wildcards and commas
         [repo1]
         name=repo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/repo2.repo" contents is
         """
         [repo2]
         name=repo2 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/sepo1.repo" contents is
         """
         [sepo1]
         name=sepo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 
@@ -165,21 +174,24 @@ Scenario: disable repo using wildcards and commas
         [repo1]
         name=repo1 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/repo2.repo" contents is
         """
         [repo2]
         name=repo2 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/sepo1.repo" contents is
         """
         [sepo1]
         name=sepo1 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 
@@ -193,6 +205,7 @@ Scenario: --enable enables repository specified in --setopt option
         name=repo2 test repository
         enabled=1
         gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 
@@ -206,6 +219,7 @@ Scenario: --disable disables repository specified in --setopt option
         name=repo1 test repository
         enabled=0
         gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 
@@ -220,14 +234,16 @@ Scenario Outline: <option> witout arguments has no effect
         [repo1]
         name=repo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And file "/etc/yum.repos.d/repo2.repo" contents is
         """
         [repo2]
         name=repo2 test repository
         enabled=0
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 Examples:
@@ -245,6 +261,7 @@ Scenario: --setopt modifies repo when used with --save
         name=repo1 test repository
         enabled=1
         gpgcheck=1
+        localpkg_gpgcheck=1
         """
 
 
@@ -257,7 +274,8 @@ Scenario: --setopt does not modify repo when used without --save
         [repo1]
         name=repo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And stderr is
     """
@@ -275,7 +293,8 @@ Scenario: --setopt does not modify repo when used without --save and one argumen
         [repo1]
         name=repo1 test repository
         enabled=1
-        gpgcheck=0
+        gpgcheck=1
+        localpkg_gpgcheck=1
         """
     And stderr is
     """
