@@ -86,12 +86,17 @@ Scenario: Fail to install signed package with incorrect checksum
     And RPMDB Transaction is empty
 
 
-@dnf5
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 Scenario: Install masterkey signed, unsigned and masterkey signed with unknown key packages from repo with gpgcheck=0 in repofile
   Given I configure repository "dnf-ci-gpg" with
         | key      | value                                                                      |
         | gpgcheck | 0                                                                          |
         | gpgkey   | file://{context.dnf.fixturesdir}/gpgkeys/keys/dnf-ci-gpg/dnf-ci-gpg-public |
+    And I create and substitute file "//etc/rpm/macros.verify" with
+        """
+        %_pkgverify_level digest
+        """
    # install masterkey signed package
    When I execute dnf with args "install setup"
    Then the exit code is 0
@@ -103,13 +108,17 @@ Scenario: Install masterkey signed, unsigned and masterkey signed with unknown k
    Then the exit code is 0
 
 
-# @dnf5
-# TODO(nsella) Unknown argument "--nogpgcheck" for command "install"
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 Scenario: Install unsigned package from repository without gpgcheck set using option --nogpgcheck
   Given I configure repository "dnf-ci-gpg" with
         | key      | value |
         | gpgcheck |       |
         | gpgkey   |       |
+    And I create and substitute file "//etc/rpm/macros.verify" with
+        """
+        %_pkgverify_level digest
+        """
    When I execute dnf with args "install flac --nogpgcheck"
    Then the exit code is 0
     And Transaction is following
