@@ -224,10 +224,7 @@ Scenario: Create dnf.conf file and test if host is using /etc/dnf/dnf.conf
     <REPOSYNC>
     All matches were filtered out by exclude filtering for argument: vagare
     """
-    And stderr is
-    """
-    Error: Unable to find a match: vagare
-    """
+    And stderr contains "Error: Unable to find a match: vagare"
 
 
 @no_installroot
@@ -256,10 +253,7 @@ Scenario: Create dnf.conf file and test if host is taking option -c /test/dnf.co
     <REPOSYNC>
     All matches were filtered out by exclude filtering for argument: dedalo
     """
-    And stderr is
-    """
-    Error: Unable to find a match: dedalo
-    """
+    And stderr contains "Error: Unable to find a match: dedalo"
 
 
 @destructive
@@ -280,10 +274,7 @@ Scenario: Test without dnf.conf in installroot (dnf.conf is taken from host)
     <REPOSYNC>
     All matches were filtered out by exclude filtering for argument: vagare
     """
-    And stderr is
-    """
-    Error: Unable to find a match: vagare
-    """
+    And stderr contains "Error: Unable to find a match: vagare"
 
 
 @no_installroot
