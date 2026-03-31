@@ -157,7 +157,16 @@ key_specs = [
         packages = [
             "reposync-gpg/x86_64/dedalo-unsigned-1.0-1.fc29.x86_64.rpm",
             "reposync-gpg/src/dedalo-unsigned-1.0-1.fc29.src.rpm",
-            "dnf-ci-gpg/x86_64/flac-1.3.2-8.fc29.x86_64.rpm"
+            "dnf-ci-gpg/x86_64/flac-1.3.2-8.fc29.x86_64.rpm",
+            "unsigned/x86_64/kernel-1.0-1.fc29.x86_64.rpm",
+            "unsigned/x86_64/kernel-2.0-1.fc29.x86_64.rpm",
+            "unsigned/x86_64/glibc-1.0-1.fc29.x86_64.rpm",
+            "unsigned/x86_64/glibc-2.0-1.fc29.x86_64.rpm",
+            "needs-restarting/x86_64/wget-1.0-1.fc29.x86_64.rpm",
+            "needs-restarting/x86_64/dwm-1.0-1.x86_64.rpm",
+            "needs-restarting/noarch/abcde-1.0-1.fc29.noarch.rpm",
+            "needs-restarting-updates/noarch/abcde-1.1-1.fc29.noarch.rpm",
+            "needs-restarting-updates/x86_64/wget-1.1-1.fc29.x86_64.rpm"
         ]
     ),
 ]

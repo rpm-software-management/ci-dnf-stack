@@ -1,19 +1,27 @@
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 @bz1639468
 Feature: Reboot hint
 
 Background:
     Given I enable plugin "needs_restarting"
-      And I use repository "dnf-ci-fedora"
+    # We cannot use signed packages because we are moving the clock around,
+    # rpm fails to read packages signed in the future.
+    Given I use repository "unsigned" with configuration
+        | key      | value |
+        | gpgcheck | 0     |
+    And I create and substitute file "//etc/rpm/macros.verify" with
+        """
+        %_pkgverify_level digest
+        """
       And I move the clock backward to "before boot-up"
-      And I execute dnf with args "install lame kernel basesystem glibc wget"
+      And I successfully execute dnf with args "install kernel-1.0 glibc-1.0"
       And I move the clock forward to "2 hours"
-      And I use repository "dnf-ci-fedora-updates"
 
 @bz1913962
 Scenario: Update core packages
-    Given I execute dnf with args "upgrade kernel basesystem"
-      And I execute dnf with args "upgrade glibc"
-      And I execute dnf with args "upgrade lame wget"
+    Given I successfully execute dnf with args "upgrade kernel"
+      And I successfully execute dnf with args "upgrade glibc"
      When I execute dnf with args "needs-restarting -r"
      Then the exit code is 1
       And stdout is
@@ -21,7 +29,6 @@ Scenario: Update core packages
           Core libraries or services have been updated since boot-up:
             * glibc
             * kernel
-            * kernel-core
 
           Reboot is required to fully utilize these updates.
           More information: https://access.redhat.com/solutions/27943
