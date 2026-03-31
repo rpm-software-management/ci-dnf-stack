@@ -15,6 +15,7 @@ Background: Fill the cache
    Then stdout matches line by line
    """
    \.
+   \./.gpgkeyschecked.yum
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -32,6 +33,7 @@ Scenario: Cleanup of the whole cache (dnf clean all)
    Then stdout matches line by line
    """
    \.
+   \./.gpgkeyschecked.yum
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -45,6 +47,7 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
    Then stdout matches line by line
    """
    \.
+   \./.gpgkeyschecked.yum
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -59,6 +62,7 @@ Scenario: Cached packages cleanup (dnf clean packages)
    Then stdout matches line by line
    """
    \.
+   \./.gpgkeyschecked.yum
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -75,6 +79,7 @@ Scenario: Database cached cleanup (dnf clean dbcache)
    Then stdout matches line by line
    """
    \.
+   \./.gpgkeyschecked.yum
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
