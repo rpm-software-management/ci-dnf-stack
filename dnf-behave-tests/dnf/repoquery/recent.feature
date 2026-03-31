@@ -1,3 +1,5 @@
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 Feature: Tests for dnf repoquery --recent option
 
 
@@ -11,7 +13,12 @@ Background: prepare repository with recent package labirinto
     And I execute "rm -rf src" in "{context.dnf.repos[simple-base].path}"
     And I generate repodata for repository "simple-base"
     And I use repository "simple-base"
-    And I successfully execute dnf with args "install labirinto vagare"
+    # Rebuild packages are not signed, we have to turn off gpg default checks
+    And I create and substitute file "//etc/rpm/macros.verify" with
+    """
+    %_pkgverify_level digest
+    """
+    And I successfully execute dnf with args "install --nogpgcheck labirinto vagare"
 
 
 Scenario: dnf repoquery --recent vagare (when there's no such recent pkg)
