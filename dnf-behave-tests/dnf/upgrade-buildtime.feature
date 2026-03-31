@@ -1,4 +1,5 @@
-@dnf5
+# We modify /etc/rpm/macros.verify on the host
+@destructive
 Feature: Upgrade packages with the same NEVRA but different build times
 
 @bz1728252
@@ -10,8 +11,13 @@ Scenario Outline: Upgrade does not reinstall package with the same NEVRA and dif
    # make sure that build times of local and repository packages are really different
    When I execute "[[ $(rpm -q --queryformat "%{{BUILDTIME}}" {context.scenario.repos_location}/dnf-ci-fedora/noarch/setup-2.12.1-1.fc29.noarch.rpm) -ne $(rpm -q --queryformat "%{{BUILDTIME}}" noarch/setup-2.12.1-1.fc29.noarch.rpm) ]]" in "{context.dnf.tempdir}"
    Then the exit code is 0
+   # Since we are rebuilding the setup package turn off gpg checks since its not signed
+   Given I create and substitute file "//etc/rpm/macros.verify" with
+   """
+   %_pkgverify_level digest
+   """
    # install local package
-   When I execute dnf with args "install {context.dnf.tempdir}/noarch/setup-2.12.1-1.fc29.noarch.rpm"
+   When I execute dnf with args "install --nogpgcheck {context.dnf.tempdir}/noarch/setup-2.12.1-1.fc29.noarch.rpm"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                   |
