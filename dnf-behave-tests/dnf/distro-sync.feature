@@ -37,13 +37,14 @@ Given I use repository "simple-base"
 
 @dnf5
 Scenario: updating a signed pkg without key specified
-Given I use repository "simple-base"
-  And I execute dnf with args "install dedalo-signed"
-  And I use repository "simple-updates" with configuration
+Given I use repository "dnf-ci-fedora"
+  And I successfully execute dnf with args "install wget"
+  And I use repository "dnf-ci-gpg-updates" with configuration
       | key      | value      |
       | gpgcheck | 1          |
  When I execute dnf with args "distro-sync"
  Then the exit code is 1
+  And stderr contains "Error: GPG check FAILED"
 
 
 @dnf5
