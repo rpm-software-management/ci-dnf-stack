@@ -1,3 +1,4 @@
+@not.with_os=rhel__ge__8
 Feature: Tests for the manifest plugin
 
 
