@@ -7,26 +7,10 @@ prepare:
       how: install
       package: [git, podman]
 
-    - name: Download latest ci-dnf-stack from PR
-      how: shell
-      script:
-        - git clone https://github.com/rpm-software-management/ci-dnf-stack /var/tmp/ci-dnf-stack
-        - git -C /var/tmp/ci-dnf-stack checkout dnf-4-stack
-
-    - name: Checkout PR branch if packit call is from ci-dnf-stack
-      how: shell
-      script: |
-        if [ "$PACKIT_UPSTREAM_NAME" == "ci-dnf-stack" ]; then
-          git -C /var/tmp/ci-dnf-stack remote add pull-request $PACKIT_SOURCE_URL
-          git -C /var/tmp/ci-dnf-stack fetch pull-request
-          git -C /var/tmp/ci-dnf-stack checkout --track pull-request/$PACKIT_SOURCE_BRANCH
-          git -C /var/tmp/ci-dnf-stack rebase $PACKIT_TARGET_BRANCH
-        fi
-
     - name: Build testing container
       how: shell
       script: |
-        /var/tmp/ci-dnf-stack/container-test build \
+        $TMT_TREE/container-test build \
         --base $( if test "$@distro" == "fedora-eln"; then echo "quay.io/fedora/eln:latest"; \
                   else echo "$@distro" | tr '-' ':'; fi ) \
         --container-arg="--env=COPR=$PACKIT_COPR_PROJECT" \
