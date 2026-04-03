@@ -3,7 +3,6 @@ tag: dnf
 
 provision:
   how: virtual
-  image: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2
 
 prepare:
 - how: install
@@ -15,10 +14,10 @@ prepare:
 execute:
   how: tmt
 
-/test-01-transient:
+/test-transient:
   summary: Test DNF transient mode (--transient, persistence=transient)
   discover:
     how: fmf
     test:
-    - /tmt/tests/test-00-bootc-install
-    - /tmt/tests/test-01-transient
+    - /tmt/tests/00-bootc-install
+    - /tmt/tests/01-test-transient
