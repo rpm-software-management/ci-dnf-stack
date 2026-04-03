@@ -22,21 +22,21 @@ COPY ./repos.d/ /etc/yum.repos.d/
 
 # enable the test-utils repo
 RUN set -x && \
-    dnf -y --refresh upgrade; \
-    dnf -y install dnf-plugins-core; \
-    dnf -y copr enable rpmsoftwaremanagement/test-utils;
+    dnf4 -y --refresh upgrade; \
+    dnf4 -y install dnf-plugins-core; \
+    dnf4 -y copr enable rpmsoftwaremanagement/test-utils;
 
 # enable nightlies if requested
 RUN set -x && \
     if [ "$TYPE" == "nightly" ]; then \
-        dnf -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-        dnf5 -y distro-sync --from-repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly '*' ; \
+        dnf4 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
+        dnf4 -y repository-packages copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly upgrade; \
     fi
 
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
-       dnf -y copr enable $COPR; \
-       dnf -y install $COPR_RPMS; \
+       dnf4 -y copr enable $COPR; \
+       dnf4 -y install $COPR_RPMS; \
     fi
 
 # copy test suite
@@ -44,7 +44,7 @@ COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 
 # remove dnf5 and exclude it to ensure we test old dnf
 RUN set -x && \
-    dnf -y remove dnf5 --setopt=protected_packages=,; \
+    dnf4 -y remove dnf5 --setopt=protected_packages=,; \
     echo "excludepkgs=dnf5*" >> /etc/dnf/dnf.conf
 
 # On Fedora > 40 the symlinks to dnf-3 and yum are missing (because dnf5 provides dnf), add them manually
@@ -54,14 +54,14 @@ RUN set -x && \
 
 # install test suite dependencies
 RUN set -x && \
-    dnf -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
+    dnf4 -y builddep /opt/ci/dnf-behave-tests/requirements.spec && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # install local RPMs if available
 COPY ./rpms/ /opt/ci/rpms/
 RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
+        dnf4 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
 
 # create directory for dbus daemon socket
