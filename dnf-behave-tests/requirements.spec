@@ -59,6 +59,7 @@ BuildRequires:  python3-dnf
 
 BuildRequires:  dnf-plugins-core
 BuildRequires:  dnf-utils
+BuildRequires:  dnf-bootc
 BuildRequires:  python3-dnf-plugin-modulesync
 BuildRequires:  python3-dnf-plugin-post-transaction-actions
 BuildRequires:  python3-dnf-plugin-pre-transaction-actions
