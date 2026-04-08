@@ -20,12 +20,15 @@ RUN update-ca-trust
 # Copy extra repo files
 COPY ./repos.d/ /etc/yum.repos.d/
 
+# Install DNF4 if not present
 RUN set -x && \
     if ! command -v dnf4 2>/dev/null; then \
         dnf5 -y install dnf4; \
     fi
 
+# enable the test-utils repo
 RUN set -x && \
+    dnf4 -y --refresh upgrade; \
     dnf4 -y install dnf-plugins-core; \
     dnf4 -y copr enable rpmsoftwaremanagement/test-utils;
 
@@ -34,7 +37,7 @@ RUN set -x && \
     if [ "$TYPE" == "nightly" ]; then \
         dnf4 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
         dnf4 -y repository-packages copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly upgrade; \
-    fi;
+    fi
 
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \

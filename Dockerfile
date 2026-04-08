@@ -20,6 +20,12 @@ RUN update-ca-trust
 # Copy extra repo files
 COPY ./repos.d/ /etc/yum.repos.d/
 
+# Install DNF4 if not present
+RUN set -x && \
+    if ! command -v dnf4 2>/dev/null; then \
+        dnf5 -y install dnf4; \
+    fi
+
 # enable the test-utils repo
 RUN set -x && \
     dnf4 -y --refresh upgrade; \
@@ -59,7 +65,8 @@ RUN set -x && \
 
 # install local RPMs if available
 COPY ./rpms/ /opt/ci/rpms/
-RUN rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
+RUN set -x && \
+    rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
         dnf4 -y install /opt/ci/rpms/*.rpm --disableplugin=local; \
     fi
