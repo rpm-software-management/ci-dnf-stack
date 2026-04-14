@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 # add the behave tests root to python path so that the `common` module can be found
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 # make sure behave loads the common steps
 import consts
 
@@ -25,8 +25,8 @@ from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 DEFAULT_DNF_COMMAND = "dnf"
 DEFAULT_REPOS_LOCATION = os.path.join(consts.FIXTURES_DIR, "repos")
-DEFAULT_RELEASEVER="29"
-DEFAULT_PLATFORM_ID="platform:f29"
+DEFAULT_RELEASEVER = "29"
+DEFAULT_PLATFORM_ID = "platform:f29"
 
 
 class DNFContext(object):
@@ -38,9 +38,10 @@ class DNFContext(object):
         self.config = {
             "[main]": {
                 "gpgcheck": "1",
+                "localpkg_gpgcheck": "1",
                 "installonly_limit": "3",
                 "clean_requirements_on_remove": "True",
-                "best": "True"
+                "best": "True",
             }
         }
 
@@ -61,7 +62,9 @@ class DNFContext(object):
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
-        self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
+        self.module_platform_id = userdata.get(
+            "module_platform_id", DEFAULT_PLATFORM_ID
+        )
         self.fixturesdir = consts.FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"
@@ -79,14 +82,18 @@ class DNFContext(object):
     def __del__(self):
         preserved_dirs = []
         if os.path.realpath(self.tempdir) not in ["/", "/tmp"]:
-            if (self.preserve_temporary_dirs == "all"
-                    or (self.preserve_temporary_dirs == "failed" and self.scenario_failed)):
+            if self.preserve_temporary_dirs == "all" or (
+                self.preserve_temporary_dirs == "failed" and self.scenario_failed
+            ):
                 preserved_dirs.append(self.tempdir)
             else:
                 shutil.rmtree(self.tempdir)
 
         if preserved_dirs:
-            print(escapes["undefined"] + "Temporary directories have been preserved for your browsing pleasure:")
+            print(
+                escapes["undefined"]
+                + "Temporary directories have been preserved for your browsing pleasure:"
+            )
             for d in preserved_dirs:
                 print("   " + d)
             print(escapes["reset"])
@@ -128,7 +135,7 @@ class DNFContext(object):
             result.append("--enableplugin='{0}'".format(plugin))
 
         setopts = self._get("setopts") or {}
-        for key,value in setopts.items():
+        for key, value in setopts.items():
             result.append("--setopt={0}={1}".format(key, value))
 
         return result
@@ -172,7 +179,9 @@ def before_scenario(context, scenario):
     write_config(context)
 
     context.scenario.default_tmp_dir = context.dnf.installroot
-    context.scenario.repos_location = context.config.userdata.get("repos_location", DEFAULT_REPOS_LOCATION)
+    context.scenario.repos_location = context.config.userdata.get(
+        "repos_location", DEFAULT_REPOS_LOCATION
+    )
 
 
 def after_scenario(context, scenario):
@@ -195,7 +204,9 @@ def after_tag(context, tag):
 
 
 def before_all(context):
-    context.os_tag_matcher = VersionedActiveTagMatcher({"os": context.config.userdata.get("os", detect_os_version())})
+    context.os_tag_matcher = VersionedActiveTagMatcher(
+        {"os": context.config.userdata.get("os", detect_os_version())}
+    )
     context.repos = {}
     context.invalid_utf8_char = consts.INVALID_UTF8_CHAR
 

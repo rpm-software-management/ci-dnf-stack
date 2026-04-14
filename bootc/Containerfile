@@ -88,4 +88,8 @@ RUN set -x && \
     cd /opt/ci/dnf-behave-tests/fixtures/specs/ && \
     ./build.sh --force-rebuild
 
+# Import the default GPG key into the RPM database at build time.
+# After bootc install, /usr is read-only and keys can't be imported at runtime.
+RUN rpm --import /opt/ci/dnf-behave-tests/fixtures/gpgkeys/keys/default-key/default-key-public
+
 WORKDIR /opt/ci/dnf-behave-tests
