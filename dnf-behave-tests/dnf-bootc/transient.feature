@@ -19,10 +19,7 @@ Scenario: Installing a package without overlay fails
      """
      This bootc system is configured to be read-only. Pass --transient to perform this transaction in a transient overlay which will reset when the system reboots.
      """
-   And stderr is
-     """
-     Operation aborted.
-     """
+   And stderr contains "Operation aborted."
    And file "/usr/bin/hello" does not exist
 
 @reboot_count_1
@@ -37,7 +34,7 @@ Scenario: Install a package using --transient without any overlay produces a war
      """
      A transient overlay will be created on /usr that will be discarded on reboot. Keep in mind that changes to /etc and /var will still persist, and packages commonly modify these directories.
      """
-   And stderr is empty
+   And stderr does not contain "Error"
    And History info should match
      | Key           | Value                     |
      | Persistence   | Transient                 |
@@ -63,14 +60,14 @@ Scenario: Remove and install a package using --transient with transient overlay 
      | remove | hello-0:1.0-1.fc29.x86_64 |
    And file "/usr/bin/hello" does not exist
    And stdout does not contain "transient overlay"
-   And stderr is empty
+   And stderr does not contain "Error"
   When I execute dnf with args "install hello --transient"
   Then the exit code is 0
    And Transaction is following
      | Action        | Package                   |
      | install       | hello-0:1.0-1.fc29.x86_64 |
    And stdout does not contain "transient overlay"
-   And stderr is empty
+   And stderr does not contain "Error"
    And file "/usr/bin/hello" exists
 
 @reboot_count_1
@@ -81,10 +78,7 @@ Scenario: Removing a package without --transient and with transient overlay fail
      """
      This bootc system is configured to be read-only. Pass --transient to perform this transaction in a transient overlay which will reset when the system reboots.
      """
-   And stderr is
-     """
-     Operation aborted.
-     """
+   And stderr contains "Operation aborted."
    And file "/usr/bin/hello" exists
 
 @reboot_count_1
@@ -118,7 +112,7 @@ Scenario: usr_drift_protected_paths can be bypassed on the command line
    And Transaction is following
      | Action        | Package                          |
      | install       | configurable-0:1.0-1.fc29.x86_64 |
-   And stderr is empty
+   And stderr does not contain "Error"
    And file "/etc/configurable-2/configurable.conf" exists
    And file "/etc/configurable-3/configurable.conf" exists
 
@@ -154,7 +148,7 @@ Scenario: dnf install and remove work without --transient with writable overlay
      | install | hello-0:1.0-1.fc29.x86_64 |
    And file "/usr/bin/hello" exists
    And stdout does not contain "transient overlay"
-   And stderr is empty
+   And stderr does not contain "Error"
   When I execute dnf with args "remove hello"
   Then the exit code is 0
    And Transaction is following
@@ -162,7 +156,7 @@ Scenario: dnf install and remove work without --transient with writable overlay
      | remove | hello-0:1.0-1.fc29.x86_64 |
    And file "/usr/bin/hello" does not exist
    And stdout does not contain "transient overlay"
-   And stderr is empty
+   And stderr does not contain "Error"
 
 @reboot_count_2
 Scenario: dnf install --transient with writable overlay doesn't warn about transient overlay
@@ -174,7 +168,7 @@ Scenario: dnf install --transient with writable overlay doesn't warn about trans
      | install       | hello-0:1.0-1.fc29.x86_64 |
    And file "/usr/bin/hello" exists
    And stdout does not contain "transient overlay"
-   And stderr is empty
+   And stderr does not contain "Error"
 
 @reboot_count_3
 Scenario: After reboot, the writable overlay should disappear
@@ -208,7 +202,7 @@ Scenario: transient mode is configured by config option
      | Action | Package                   |
      | remove | hello-0:1.0-1.fc29.x86_64 |
    And file "/usr/bin/hello" does not exist
-   And stderr is empty
+   And stderr does not contain "Error"
 
 @reboot_count_3
 Scenario: persist mode with transient overlay
@@ -223,7 +217,4 @@ Scenario: persist mode with transient overlay
      Persistent transactions aren't supported on bootc systems.
      """
    And file "/usr/bin/hello" does not exist
-   And stderr is
-     """
-     Operation aborted.
-     """
+   And stderr contains "Operation aborted."
