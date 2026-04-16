@@ -1,6 +1,0 @@
-summary: Run Behave Test Suite - CREATEREPO_C
-tag: createrepo_c
-execute:
-    how: tmt
-    script: |
-        $TMT_TREE/container-test --suite createrepo_c run
