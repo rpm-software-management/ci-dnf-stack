@@ -69,6 +69,25 @@ def print_recent_history(dbus_output):
         print("{{}}: {{}}".format(key, len(pkgs)))
         print_recent_history_pkgs(pkgs)
 
+def dbus_to_python(data):
+    # Covers types from https://dbus.freedesktop.org/doc/dbus-python/dbus.types.html (not all)
+    if isinstance(data, dbus.Dictionary):
+        return {{dbus_to_python(k): dbus_to_python(v) for k, v in data.items()}}
+    elif isinstance(data, dbus.Array):
+        return [dbus_to_python(i) for i in data]
+    elif isinstance(data, (dbus.String, dbus.ObjectPath, dbus.Signature)):
+        return str(data)
+    elif isinstance(data, (dbus.Int16, dbus.Int32, dbus.Int64, dbus.UInt16, dbus.UInt32, dbus.UInt64)):
+        return int(data)
+    elif isinstance(data, dbus.Byte):
+        return int(data)
+    elif isinstance(data, dbus.Boolean):
+        return bool(data)
+    elif isinstance(data, dbus.Double):
+        return float(data)
+
+    return data
+
 iface_history = dbus.Interface(
     bus.get_object(DNFDAEMON_BUS_NAME, session),
     dbus_interface=IFACE_HISTORY)
