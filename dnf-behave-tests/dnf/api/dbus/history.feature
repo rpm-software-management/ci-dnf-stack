@@ -243,3 +243,134 @@ Scenario: History::recent_changes() accepts "all_advisories" option
     downgraded: 0
     removed: 0
     """
+
+
+Scenario: History::list() all transactions by default
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+ And stdout is
+    """
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 60, 'id': 6, 'installed': [], 'reinstalled': [], 'removed': [{{'arch': 'x86_64', 'evr': '1.0-1.fc29', 'name': 'labirinto'}}], 'start': 60, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [{{'arch': 'noarch', 'evr': '3-1', 'name': 'fragola', 'original_evr': '4-1'}}], 'end': 50, 'id': 5, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 50, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 40, 'id': 4, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 40, 'status': 'Ok', 'upgraded': [{{'arch': 'noarch', 'evr': '4-1', 'name': 'fragola', 'original_evr': '2-1'}}], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 30, 'id': 3, 'installed': [{{'arch': 'x86_64', 'evr': '1.0-1.fc29', 'name': 'labirinto'}}], 'reinstalled': [], 'removed': [], 'start': 30, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 20, 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 20, 'status': 'Ok', 'upgraded': [{{'arch': 'noarch', 'evr': '2-1', 'name': 'fragola', 'original_evr': '1-1'}}], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 10, 'id': 1, 'installed': [{{'arch': 'noarch', 'evr': '1-1', 'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'start': 10, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    """
+
+
+Scenario: History::list() reversed with a limit
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+        "reverse": True,
+        "limit": dbus.Int64(3)
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 10, 'id': 1, 'installed': [{{'arch': 'noarch', 'evr': '1-1', 'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'start': 10, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 20, 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 20, 'status': 'Ok', 'upgraded': [{{'arch': 'noarch', 'evr': '2-1', 'name': 'fragola', 'original_evr': '1-1'}}], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 30, 'id': 3, 'installed': [{{'arch': 'x86_64', 'evr': '1.0-1.fc29', 'name': 'labirinto'}}], 'reinstalled': [], 'removed': [], 'start': 30, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    """
+
+
+Scenario: History::list() with specified package
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+        "contains_pkgs": ["fragola"],
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    {{'description': 'dnf5daemon-server', 'downgraded': [{{'arch': 'noarch', 'evr': '3-1', 'name': 'fragola', 'original_evr': '4-1'}}], 'end': 50, 'id': 5, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 50, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 40, 'id': 4, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 40, 'status': 'Ok', 'upgraded': [{{'arch': 'noarch', 'evr': '4-1', 'name': 'fragola', 'original_evr': '2-1'}}], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 20, 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 20, 'status': 'Ok', 'upgraded': [{{'arch': 'noarch', 'evr': '2-1', 'name': 'fragola', 'original_evr': '1-1'}}], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 10, 'id': 1, 'installed': [{{'arch': 'noarch', 'evr': '1-1', 'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'start': 10, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    """
+
+
+Scenario: History::list() since timestamp
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+        "since": dbus.Int64(40)
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    {{'description': 'dnf5daemon-server', 'downgraded': [], 'end': 60, 'id': 6, 'installed': [], 'reinstalled': [], 'removed': [{{'arch': 'x86_64', 'evr': '1.0-1.fc29', 'name': 'labirinto'}}], 'start': 60, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    {{'description': 'dnf5daemon-server', 'downgraded': [{{'arch': 'noarch', 'evr': '3-1', 'name': 'fragola', 'original_evr': '4-1'}}], 'end': 50, 'id': 5, 'installed': [], 'reinstalled': [], 'removed': [], 'start': 50, 'status': 'Ok', 'upgraded': [], 'user_id': 0}}
+    """
+
+
+Scenario: History::list() without packages and limited transaction attributes
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+        "transaction_attrs": ["id"],
+        "include_packages": False
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    {{'id': 6}}
+    {{'id': 5}}
+    {{'id': 4}}
+    {{'id': 3}}
+    {{'id': 2}}
+    {{'id': 1}}
+    """
+
+
+Scenario: History::list() with limited package attributes and limited transaction attributes
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    options = {{
+        "transaction_attrs": ["id"],
+        "package_attrs": ["name"]
+    }}
+
+    transactions = dbus_to_python(iface_history.list(options))
+    for k in transactions:
+        print(k)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    {{'downgraded': [], 'id': 6, 'installed': [], 'reinstalled': [], 'removed': [{{'name': 'labirinto'}}], 'upgraded': []}}
+    {{'downgraded': [{{'name': 'fragola', 'original_evr': '4-1'}}], 'id': 5, 'installed': [], 'reinstalled': [], 'removed': [], 'upgraded': []}}
+    {{'downgraded': [], 'id': 4, 'installed': [], 'reinstalled': [], 'removed': [], 'upgraded': [{{'name': 'fragola', 'original_evr': '2-1'}}]}}
+    {{'downgraded': [], 'id': 3, 'installed': [{{'name': 'labirinto'}}], 'reinstalled': [], 'removed': [], 'upgraded': []}}
+    {{'downgraded': [], 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'upgraded': [{{'name': 'fragola', 'original_evr': '1-1'}}]}}
+    {{'downgraded': [], 'id': 1, 'installed': [{{'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'upgraded': []}}
+    """
