@@ -65,7 +65,7 @@ def print_recent_history_pkgs(pkglist):
 
 def print_recent_history(dbus_output):
     for key in ["installed", "upgraded", "downgraded", "removed"]:
-        pkgs = changeset.get(key, [])
+        pkgs = dbus_output.get(key, [])
         print("{{}}: {{}}".format(key, len(pkgs)))
         print_recent_history_pkgs(pkgs)
 
