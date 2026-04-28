@@ -1,11 +1,9 @@
-Feature: DNF allow_vendor_change option in dnf.conf
+Feature: DNF allow_vendor_change defaults to false
 Background:
   Given I use repository "dnf-ci-vendor-1"
-   And I create and substitute file "/etc/dnf/dnf.conf" with
-   """
-   [main]
-   allow_vendor_change=False
-   """
+   And I configure dnf with
+       | key                 | value |
+       | allow_vendor_change | False |
    And I successfully execute dnf with args "install vendor"
    Then the exit code is 0
    And Transaction is following
@@ -16,8 +14,8 @@ Background:
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
-@bz1788371
-Scenario: Upgrade sticks to vendor
+
+Scenario: Upgrade sticks to vendor by default
   Given I use repository "dnf-ci-vendor-1-updates"
   Given I use repository "dnf-ci-vendor-2-updates"
    When I execute dnf with args "upgrade vendor"
@@ -29,8 +27,8 @@ Scenario: Upgrade sticks to vendor
    Then the exit code is 0
    And stdout contains "Vendor      : First Vendor"
 
-@bz1788371
-Scenario: No upgrade if same vendor not found
+
+Scenario: No upgrade if same vendor not found by default
   Given I use repository "dnf-ci-vendor-2-updates"
    When I execute dnf with args "upgrade vendor"
    Then the exit code is 0
@@ -40,8 +38,7 @@ Scenario: No upgrade if same vendor not found
    And stdout contains "Vendor      : First Vendor"
 
 
-@bz1788371
-Scenario: Downgrade is unable to resolve transaction
+Scenario: Hint shown when vendor change blocked by default
   Given I use repository "dnf-ci-vendor-1-updates"
    When I execute dnf with args "upgrade vendor"
   Given I drop repository "dnf-ci-vendor-1"
@@ -50,15 +47,17 @@ Scenario: Downgrade is unable to resolve transaction
    Then the exit code is 1
    And Transaction is empty
    And stdout is empty
-   And stderr is
-       """
-       <REPOSYNC>
-       Failed to resolve the transaction:
-       Problem: problem with installed package
-         - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from @System
-         - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from dnf-ci-vendor-1-updates
-         - conflicting requests
-       You can try to add to command line:
-         --setopt=allow_vendor_change=true to allow changing package vendors
-         --skip-broken to skip uninstallable packages
-       """
+   And stderr contains "--setopt=allow_vendor_change=true to allow changing package vendors"
+
+
+Scenario: Override default with --setopt=allow_vendor_change=true
+  Given I use repository "dnf-ci-vendor-1-updates"
+  Given I use repository "dnf-ci-vendor-2-updates"
+   When I execute dnf with args "upgrade --setopt=allow_vendor_change=true vendor"
+   Then the exit code is 0
+   And Transaction is following
+       | Action  | Package             |
+       | upgrade | vendor-1.2-1.x86_64 |
+  Given I successfully execute rpm with args "-qi vendor"
+   Then the exit code is 0
+   And stdout contains "Vendor      : Second Vendor"
