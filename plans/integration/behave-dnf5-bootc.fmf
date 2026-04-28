@@ -1,0 +1,23 @@
+summary: Build and run a bootc VM for testing
+tag: dnf
+
+provision:
+  how: virtual
+
+prepare:
+- how: install
+  package:
+  - podman
+  - skopeo
+  - jq
+
+execute:
+  how: tmt
+
+/test-transient:
+  summary: Test DNF transient mode (--transient, persistence=transient)
+  discover:
+    how: fmf
+    test:
+    - /tmt/tests/00-bootc-install
+    - /tmt/tests/01-test-transient
