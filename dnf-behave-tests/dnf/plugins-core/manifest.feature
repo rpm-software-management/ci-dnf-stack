@@ -537,6 +537,41 @@ Scenario: Download multiarch packages from multiarch manifest
         | {context.dnf.tempdir}/packages.manifest/waldo-1.0-1.noarch.rpm              | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/noarch/waldo-1.0-1.noarch.rpm         |
 
 
+Scenario: Download multiarch packages from multiarch manifest per arch
+  Given I use repository "manifest-multiarch"
+    And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64"
+   When I execute dnf with args "manifest download --archs x86_64 ppc64 --per-arch"
+   Then the exit code is 0
+    And file sha256 checksums are following
+        | Path                                                                        | sha256                                                                                          |
+        | {context.dnf.tempdir}/packages.manifest/x86_64/foo-1.0-1.x86_64.rpm         | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/x86_64/foo-1.0-1.x86_64.rpm           |
+        | {context.dnf.tempdir}/packages.manifest/ppc64/foo-1.0-1.ppc64.rpm           | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/ppc64/foo-1.0-1.ppc64.rpm             |
+        | {context.dnf.tempdir}/packages.manifest/noarch/waldo-1.0-1.noarch.rpm       | file://{context.dnf.fixturesdir}/repos/manifest-multiarch/noarch/waldo-1.0-1.noarch.rpm         |
+      # Make sure there are no additional files
+   When I execute "ls {context.dnf.tempdir}/packages.manifest/"
+   Then stdout is
+        """
+        noarch
+        ppc64
+        x86_64
+        """
+   When I execute "ls {context.dnf.tempdir}/packages.manifest/noarch/"
+   Then stdout is
+        """
+        waldo-1.0-1.noarch.rpm
+        """
+   When I execute "ls {context.dnf.tempdir}/packages.manifest/ppc64/"
+   Then stdout is
+        """
+        foo-1.0-1.ppc64.rpm
+        """
+   When I execute "ls {context.dnf.tempdir}/packages.manifest/x86_64/"
+   Then stdout is
+        """
+        foo-1.0-1.x86_64.rpm
+        """
+
+
 Scenario: Download multiarch packages from per-arch manifests
   Given I use repository "manifest-multiarch"
     And I successfully execute dnf with args "manifest new foo --archs x86_64 ppc64 --per-arch"
