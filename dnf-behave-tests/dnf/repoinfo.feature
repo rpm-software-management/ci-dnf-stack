@@ -1,5 +1,3 @@
-# @dnf5
-# TODO(nsella) different stdout
 Feature: Repoinfo
 
 
@@ -14,7 +12,7 @@ Background: Using repositories dnf-ci-fedora and dnf-ci-thirdparty-updates
         | enabled | 0     |
 
 @bz1793950
-Scenario: Repolist without arguments
+Scenario: Repoinfo without arguments
    When I execute dnf with args "repoinfo"
    Then the exit code is 0
     And stdout matches line by line
@@ -25,6 +23,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
+Repo-unique-pkgs   : 289
 Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
@@ -36,6 +35,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
+Repo-unique-pkgs   : 6
 Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
@@ -56,6 +56,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
+Repo-unique-pkgs   : 289
 Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
@@ -82,6 +83,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
+Repo-unique-pkgs   : 6
 Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
@@ -101,6 +103,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 0
+Repo-unique-pkgs   : 289
 Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
@@ -112,9 +115,39 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 0
+Repo-unique-pkgs   : 6
 Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
 Repo-filename      : .*/etc/yum.repos.d/dnf-ci-thirdparty-updates.repo
 Total packages: 295
+"""
+
+Scenario: Repoinfo with repo with duplicate packages
+Given I create directory "/duplicates"
+  And I create directory "/duplicates/a"
+  And I create directory "/duplicates/b"
+  And I copy file "{context.dnf.fixturesdir}/repos/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" to "/duplicates/a/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I copy file "{context.dnf.fixturesdir}/repos/simple-base/x86_64/labirinto-1.0-1.fc29.x86_64.rpm" to "/duplicates/b/labirinto-1.0-1.fc29.x86_64.rpm"
+  And I execute "createrepo_c {context.dnf.installroot}/duplicates"
+  And I configure a new repository "testrepo" with
+      | key        | value                                |
+      | baseurl    | {context.dnf.installroot}/duplicates |
+ When I execute dnf with args "repoinfo testrepo"
+ Then the exit code is 0
+  And stdout matches line by line
+"""
+Repo-id            : testrepo
+Repo-name          : testrepo test repository
+Repo-status        : enabled
+Repo-revision      : .*
+Repo-updated       : .*
+Repo-pkgs          : 2
+Repo-available-pkgs: 2
+Repo-unique-pkgs   : 1
+Repo-size          : .*
+Repo-baseurl       : .*/duplicates
+Repo-expire        : .*
+Repo-filename      : .*/etc/yum.repos.d/testrepo.repo
+Total packages: 2
 """
