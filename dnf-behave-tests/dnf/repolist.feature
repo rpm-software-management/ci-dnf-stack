@@ -12,7 +12,6 @@ Background: Using repositories dnf-ci-fedora and dnf-ci-thirdparty-updates
         | enabled | 0     |
 
 
-@dnf5daemon
 Scenario: Repolist without arguments
    When I execute dnf with args "repolist"
    Then the exit code is 0
@@ -31,7 +30,6 @@ Scenario: Repolist with "enabled"
     And stdout does not contain "dnf-ci-thirdparty\s+dnf-ci-thirdparty"
 
 
-@dnf5daemon
 Scenario: Repolist with "--enabled"
    When I execute dnf with args "repolist --enabled"
    Then the exit code is 0
@@ -73,6 +71,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
+Repo-unique-pkgs   : 289
 Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
@@ -84,6 +83,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
+Repo-unique-pkgs   : 6
 Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
@@ -107,6 +107,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 289
 Repo-available-pkgs: 289
+Repo-unique-pkgs   : 289
 Repo-size          : 2\.[0-9] M
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-fedora
 Repo-expire        : .*
@@ -118,6 +119,7 @@ Repo-revision      : 1550000000
 Repo-updated       : .*
 Repo-pkgs          : 6
 Repo-available-pkgs: 6
+Repo-unique-pkgs   : 6
 Repo-size          : 3[0-9] k
 Repo-baseurl       : .*/fixtures/repos/dnf-ci-thirdparty-updates
 Repo-expire        : .*
