@@ -24,7 +24,7 @@ Background: Installing packages from multiple repositories
 
 
 Scenario: List all packages installed from repo "from-repo"
-   When I execute dnf with args "list --installed --installed-from-repo=from-repo"
+   When I execute dnf with args "list --installed-from-repo=from-repo"
    Then the exit code is 0
     And stderr is
       """
@@ -39,7 +39,7 @@ Scenario: List all packages installed from repo "from-repo"
 
 
 Scenario: List all packages installed from repo "from-repo-updates1"
-   When I execute dnf with args "list --installed --installed-from-repo=from-repo-updates1"
+   When I execute dnf with args "list --installed-from-repo=from-repo-updates1"
    Then the exit code is 0
     And stderr is
       """
@@ -54,7 +54,7 @@ Scenario: List all packages installed from repo "from-repo-updates1"
 
 
 Scenario: List all packages installed from repo "from-repo-updates2" using '*' package specification
-   When I execute dnf with args "list --installed --installed-from-repo=from-repo-updates2 '*'"
+   When I execute dnf with args "list --installed-from-repo=from-repo-updates2 '*'"
    Then the exit code is 0
     And stderr is
       """
@@ -75,7 +75,7 @@ Scenario: List all packages installed from repo "from-repo-updates2" using '*' p
 
 
 Scenario: List packages installed from repo "from-repo-updates2" using 'l*' package specification
-   When I execute dnf with args "list --installed --installed-from-repo=from-repo-updates2 'l*'"
+   When I execute dnf with args "list --installed-from-repo=from-repo-updates2 'l*'"
    Then the exit code is 0
     And stderr is
       """
@@ -90,7 +90,7 @@ Scenario: List packages installed from repo "from-repo-updates2" using 'l*' pack
 
 
 Scenario: Test case with 2 repositories defined in installed from repo
-   When I execute dnf with args "list --installed --installed-from-repo=from-repo,from-repo-updates1"
+   When I execute dnf with args "list --installed-from-repo=from-repo,from-repo-updates1"
    Then the exit code is 0
     And stderr is
       """
@@ -107,7 +107,7 @@ Scenario: Test case with 2 repositories defined in installed from repo
 
 
 Scenario: Test case with wildcards in installed from repo definition
-   When I execute dnf with args "list --installed --installed-from-repo=from-*-updates?"
+   When I execute dnf with args "list --installed-from-repo=from-*-updates?"
    Then the exit code is 0
     And stderr is
       """
@@ -129,7 +129,8 @@ Scenario: Test case with wildcards in installed from repo definition
       """
 
 
-Scenario: List "l*" packages installed "from-repo-ipdates2" and available in "from-repo-ipdates2"
+# https://github.com/rpm-software-management/dnf5/issues/2712
+Scenario: --installed-from-repo without --installed implies --installed
    When I execute dnf with args "--repo=from-repo-updates? list --installed-from-repo=from-repo-updates2 'l*'"
    Then the exit code is 0
     And stderr is
@@ -141,10 +142,4 @@ Scenario: List "l*" packages installed "from-repo-ipdates2" and available in "fr
       Installed packages
       lame.x86_64 +3.100-5.fc29 +from-repo-updates2
       lame-libs.x86_64 +3.100-5.fc29 +from-repo-updates2
-
-      Available packages
-      lame.src +3.100-5.fc29 +from-repo-updates2
-      libzstd.x86_64 +1.3.6-1.fc29 +from-repo-updates1
-      libzstd-debuginfo.x86_64 +1.3.6-1.fc29 +from-repo-updates1
-      libzstd-devel.x86_64 +1.3.6-1.fc29 +from-repo-updates1
       """
