@@ -41,6 +41,7 @@ class DNFContext(object):
         self.config = {
             "[main]": {
                 "gpgcheck": "1",
+                "gpgcheck_policy": "legacy",
                 "installonly_limit": "3",
                 "clean_requirements_on_remove": "True",
                 "best": "True"
