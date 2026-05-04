@@ -174,19 +174,20 @@ Scenario: Install remove *.rpm from local path
         | remove        | water_carbonated-0:1.0-1.x86_64   |
 
 
-@xfail
 # https://github.com/rpm-software-management/dnf5/issues/1787
 Scenario: Install a package that was already installed via rpm
    When I execute rpm with args "-i {context.scenario.repos_location}/dnf-ci-install-remove/x86_64/water-1.0-1.x86_64.rpm"
    Then the exit code is 0
    When I execute dnf with args "install water"
    Then the exit code is 0
-    And package state is
-        | package             | reason | from_repo             |
-        | water-1.0-1.x86_64  | User   | dnf-ci-install-remove |
+   When I execute dnf with args "repoquery --installed --queryformat=%{{reason}} water"
+   Then stdout is
+        """
+        User
+        """
     And dnf5 transaction items for transaction "last" are
-        | action  | package              | reason     | repository    |
-        | Install | water-0:1.0-1.x86_64 | User       | dnf-ci-fedora |
+        | action        | package              | reason | repository |
+        | Reason Change | water-0:1.0-1.x86_64 | User   | @System    |
 
 
 Scenario: Install remove group
