@@ -7,6 +7,7 @@ import behave
 from fnmatch import fnmatch
 import os
 import parse
+import re
 
 from fixtures import start_server_based_on_type
 from common.lib.diff import print_lines_diff
@@ -103,10 +104,11 @@ def step_check_http_log(context, quantifier, command):
 @behave.step("HTTP log contains")
 def step_http_log_contains(context):
     expected = context.text.format(context=context).rstrip().split('\n')
-    found = ["%s %s" % (r.command, r.path) for r in context.scenario.httpd.log]
-
+    # curl 8.20.0+ normalizes percent-encoding to uppercase
+    normalize = lambda s: re.sub(r'%[0-9a-fA-F]{2}', lambda m: m.group().upper(), s)
+    found = ["%s %s" % (r.command, normalize(r.path)) for r in context.scenario.httpd.log]
     for e in expected:
-        if e not in found:
+        if normalize(e) not in found:
             raise AssertionError('HTTP log does not contain "%s": %s' % (e, "\n" + "\n".join(found) + "\n"))
 
 
