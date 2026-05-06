@@ -411,3 +411,24 @@ Scenario: Reposync doesn't download duplicit nevra multiple times
     # across multiple lines. To bypass this limitation and check that the package
     # name is not present on multiple lines, use "(.|\n)*" pattern instead of ".*".
     And stdout does not contain "labirinto-1\.0-1\.fc29\.x86_64\.rpm(.|\n)*labirinto-1\.0-1\.fc29\.x86_64\.rpm"
+
+
+# https://redhat.atlassian.net/browse/RHEL-119475
+Scenario: --min-buildtime option
+  Given I copy repository "simple-base" for modification
+    # rebuild all packages in simple-base repo with buildtime ~ 2005-3-16 19:06
+    And I execute "SOURCE_DATE_EPOCH=1111000000 rpmbuild -rb --define "_rpmdir ." --define "use_source_date_epoch_as_buildtime 1" /{context.dnf.repos[simple-base].path}/src/*.src.rpm" in "{context.dnf.repos[simple-base].path}"
+    # rebuild labirinto package with newer buildtime ~ 2011-3-13 07:06
+    And I execute "SOURCE_DATE_EPOCH=1300000000 rpmbuild -rb --define "_rpmdir ." --define "use_source_date_epoch_as_buildtime 1" /{context.dnf.repos[simple-base].path}/src/labirinto*.src.rpm" in "{context.dnf.repos[simple-base].path}"
+    # remove source rpms not to interfere with list outputs
+    And I execute "rm -rf src" in "{context.dnf.repos[simple-base].path}"
+    And I generate repodata for repository "simple-base"
+    And I use repository "simple-base"
+   When I execute dnf with args "reposync --urls --min-buildtime 2008-1-1"
+   Then the exit code is 0
+    And stdout matches line by line
+    """
+    <REPOSYNC>
+    .*/repos/simple-base/x86_64/labirinto-1\.0-1\.fc29\.x86_64\.rpm
+    """
+    And stderr is empty
