@@ -59,6 +59,7 @@ Given I create file "/usr/lib/sysimage/libdnf5/offline/offline-transaction-state
     cachedir = ""
     status = "download-complete"
     cmd_line = ""
+    rpmdb_cookie = "cookie"
     state_version = -1
     """
  When I execute dnf with args "offline reboot"
@@ -352,3 +353,43 @@ Given I successfully execute dnf with args "offline reboot"
   And file "/var/cache/dnf/dnf-ci-fedora-updates-*/packages/glibc-2.28-26.fc29.x86_64.rpm" exists
   # Both needed metadata and packages are already cached, nothing should be redownloaded
   And HTTP log is empty
+
+
+@bz2467655
+Scenario: Online transaction invalidates pending offline transaction
+Given I use repository "dnf-ci-fedora-updates"
+  And I successfully execute dnf with args "upgrade --offline"
+  And file "/usr/lib/sysimage/libdnf5/offline/offline-transaction-state.toml" exists
+  And file "/usr/lib/sysimage/libdnf5/offline/transaction.json" exists
+ When I execute dnf with args "install flac"
+ Then the exit code is 0
+  And stderr contains lines matching
+  """
+  Warning: Pending offline transaction has been invalidated.
+  To reschedule, run:.* upgrade --offline
+  """
+ When I execute dnf with args "offline status"
+ Then the exit code is 0
+  And stdout matches line by line
+  """
+  The system has been modified since the offline transaction was prepared. The offline transaction initiated by the following command is no longer valid:
+    .*/dnf upgrade --offline
+  To reschedule, run the command above. To clean up, run `dnf5 offline clean`.
+  """
+
+
+@bz2467655
+Scenario: Out of dnf transaction invalidates pending offline transaction
+Given I use repository "dnf-ci-fedora-updates"
+  And I successfully execute dnf with args "upgrade --offline"
+  And file "/usr/lib/sysimage/libdnf5/offline/offline-transaction-state.toml" exists
+  And file "/usr/lib/sysimage/libdnf5/offline/transaction.json" exists
+  And I successfully execute rpm with args "-i {context.dnf.fixturesdir}/repos/dnf-ci-fedora-updates/x86_64/flac-1.3.3-1.fc29.x86_64.rpm"
+ When I execute dnf with args "offline status"
+ Then the exit code is 0
+  And stdout matches line by line
+  """
+  The system has been modified since the offline transaction was prepared. The offline transaction initiated by the following command is no longer valid:
+    .*/dnf upgrade --offline
+  To reschedule, run the command above. To clean up, run `dnf5 offline clean`.
+  """
