@@ -61,6 +61,7 @@ Scenario: History::recent_changes() uses the latest transaction if "since" optio
     downgraded: 0
     removed: 1
     NEVRA: labirinto-1.0-1.fc29.x86_64
+    Transaction time: 60
     """
 
 Scenario: History::recent_changes() returns changes since a point in time
@@ -76,6 +77,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     installed: 1
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
+    Transaction time: 50
     upgraded: 0
     downgraded: 0
     removed: 0
@@ -93,6 +95,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
     removed: 0
@@ -110,6 +113,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 2-1
+    Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
     removed: 0
@@ -127,10 +131,12 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 2-1
+    Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
     removed: 1
     NEVRA: labirinto-1.0-1.fc29.x86_64
+    Transaction time: 60
     """
  When I execute python libdnf5 dbus api script with history interface
     """
@@ -146,8 +152,10 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 4-1
+    Transaction time: 50
     removed: 1
     NEVRA: labirinto-1.0-1.fc29.x86_64
+    Transaction time: 60
     """
  When I execute python libdnf5 dbus api script with history interface
     """
@@ -162,6 +170,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     downgraded: 0
     removed: 1
     NEVRA: labirinto-1.0-1.fc29.x86_64
+    Transaction time: 60
     """
  When I execute python libdnf5 dbus api script with history interface
     """
@@ -195,6 +204,7 @@ Scenario: History::recent_changes() accepts "include_advisory" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
     removed: 0
@@ -216,6 +226,7 @@ Scenario: History::recent_changes() accepts "include_advisory" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Transaction time: 50
     downgraded: 0
     removed: 0
     """
@@ -239,6 +250,7 @@ Scenario: History::recent_changes() accepts "all_advisories" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Transaction time: 50
     Advisories: DUMMY-3, DUMMY-2
     downgraded: 0
     removed: 0

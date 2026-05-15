@@ -60,6 +60,8 @@ def print_recent_history_pkgs(pkglist):
             print('Summary: {{pkg[summary]}}'.format(pkg=pkg))
         if "original_evr" in pkg:
             print("Original EVR: {{pkg[original_evr]}}".format(pkg=pkg))
+        if "transaction_time" in pkg:
+            print("Transaction time: {{}}".format(int(pkg["transaction_time"])))
         if "advisories" in pkg:
             print("Advisories: {{}}".format(", ".join(pkg["advisories"])))
 
