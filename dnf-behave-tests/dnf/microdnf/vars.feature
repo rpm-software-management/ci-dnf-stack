@@ -51,3 +51,22 @@ Scenario: Variables are substituted in baseurl via environment variables
     And microdnf transaction is
         | Action        | Package                       |
         | install       | setup-0:2.12.1-1.fc29.noarch  |
+
+
+@RHEL-80370
+Scenario: Variable $arch is automatically set and substituted
+ Given I create file "/etc/yum.repos.d/dnf-ci-test.repo" with
+      """
+      [test]
+      name=test-$arch test repository
+      enabled=0
+      """
+   When I execute microdnf with args "repolist --disabled"
+   Then the exit code is 0
+    And stdout is
+      """
+      repo id repo name
+      test    test-x86_64 test repository
+      """
+    And stderr is empty
+
