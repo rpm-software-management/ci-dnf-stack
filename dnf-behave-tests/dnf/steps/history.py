@@ -141,3 +141,16 @@ def step_impl(context):
     cmd_string = " ".join(shlex.quote(s) for s in cmd_list)
     run_in_context(context, cmd_string)
     assert_exitcode(context, 0)
+
+@behave.then('transaction "{id}" has persistence "{persistence}"')
+def step_impl(context, id, persistence):
+    cmd = context.dnf.get_cmd(context) + ["history", "info", id]
+    run_in_context(context, " ".join(cmd))
+
+    for line in context.cmd_stdout.strip().split("\n"):
+        if match := re.search(r"^Persistence\s*:\s*(.*)$", line):
+            if match.group(1) == persistence:
+                return
+            raise AssertionError(f'Expected "{persistence}", found "{match.group(1)}"')
+
+    raise AssertionError(f'Key "Persistence" not found in output of {cmd}')

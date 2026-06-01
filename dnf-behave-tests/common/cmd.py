@@ -73,3 +73,11 @@ def file_has_acl_entry(context, filepath, entry):
         if line == entry:
             return
     raise AssertionError("File \"{}\" has ACL:\n{}".format(filepath, out))
+
+@behave.step("path \"{path}\" is writable")
+def path_is_writable(context, path):
+    assert os.access(path, os.W_OK), f"Path '{path}' is not writable"
+
+@behave.step("path \"{path}\" is not writable")
+def path_is_not_writable(context, path):
+    assert not os.access(path, os.W_OK), f"Path '{path}' is unexpectedly writable"
