@@ -34,10 +34,10 @@ Scenario: attempt to write to non-existent directory
   Given file "nonexistent/path" does not exist
    When I execute dnf with args "groups-manager --save=nonexistent/path/out.xml"
    Then the exit code is 1
-    And stderr is
+    And stderr matches line by line
     """
-    I/O error : No such file or directory
-    I/O error : No such file or directory
+    ?I/O error : No such file or directory
+    ?I/O error : No such file or directory
     Error: Can't save file "nonexistent/path/out.xml": Can't write file nonexistent/path/out.xml
     """
 
