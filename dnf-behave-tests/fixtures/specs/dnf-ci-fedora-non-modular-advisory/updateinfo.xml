@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+  <update from="secresponseteam@foo.bar" status="final" type="bugfix" version="3">
+    <id>NONMOD-2024-9291</id>
+    <title>nodejs non-modular bug fix</title>
+    <issued date="2024-09-29 00:00:00"/>
+    <updated date="2024-09-29 00:00:00"/>
+    <severity>none</severity>
+    <summary>Non-modular nodejs advisory</summary>
+    <description>Bug fix for non-modular nodejs</description>
+    <pkglist>
+      <collection short="named collection">
+        <name>Non-modular component</name>
+        <package name="nodejs" version="5.12.1" release="20.fc29" epoch="2" arch="x86_64">
+          <filename>nodejs-2:5.12.1-20.fc29.x86_64.rpm</filename>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
+</updates>
