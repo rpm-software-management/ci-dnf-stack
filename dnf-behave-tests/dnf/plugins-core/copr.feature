@@ -106,16 +106,16 @@ Given I create and substitute file "//etc/dnf/plugins/copr.conf" with
       """
  When I execute dnf with args "copr enable testhub/testuser/testproject"
  Then the exit code is 1
-  And stderr is
+  And stderr matches line by line
       """
       <REPOSYNC>
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
-      >>> Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server]
+      >>> Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\] - http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/
+      >>> Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\]
       Failed to download files
-       Librepo error: Curl error (7): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ [Failed to connect to localhost port 2 after 0 ms: Could not connect to server]
+       Librepo error: Curl error \(7\): Could not connect to server for http://localhost:2/api_3/rpmrepo/testuser/testproject/Fedora-30/ \[Failed to connect to localhost(:| port )2 after 0 ms: Could not connect to server\]
       """
 
 
