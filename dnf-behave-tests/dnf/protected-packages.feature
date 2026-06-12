@@ -63,7 +63,8 @@ Scenario: Dependency of a protected package cannot be removed
     And stderr is
         """
         Failed to resolve the transaction:
-        Problem: installed package mid-2-1.fc29.x86_64 requires bot, but none of the providers can be installed
+        Problem 1: The operation would result in broken dependencies for the following protected packages: mid
+        Problem 2: installed package mid-2-1.fc29.x86_64 requires bot, but none of the providers can be installed
           - conflicting requests
           - problem with installed package
         """

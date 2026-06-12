@@ -8,7 +8,8 @@ Scenario: Conflicts are reported even if the transaction would involve removal o
        """
        <REPOSYNC>
        Failed to resolve the transaction:
-       Problem: installed package diamond-1-1.x86_64 requires spade = 1-1, but none of the providers can be installed
+       Problem 1: The operation would result in broken dependencies for the following protected packages: diamond
+       Problem 2: installed package diamond-1-1.x86_64 requires spade = 1-1, but none of the providers can be installed
          - cannot install both spade-2-1.x86_64 from upgrade-conflicts and spade-1-1.x86_64 from @System
          - cannot install both spade-2-1.x86_64 from upgrade-conflicts and spade-1-1.x86_64 from upgrade-conflicts
          - cannot install the best update candidate for package spade-1-1.x86_64
