@@ -18,7 +18,6 @@ jobs:
           - dnf5-nightly
           - dnf5-testing
         tag:
-          - 42
           - 43
           - latest
           - rawhide
