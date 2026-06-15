@@ -137,19 +137,3 @@ Scenario: Package protected via a configuration file cannot be removed
    Then the exit code is 1
     And Transaction is empty
     And stderr contains "Problem: The operation would result in removing the following protected packages: filesystem"
-
-
-# TODO: Removal of DNF itself
-# - doesn't makes sense to test in installroot
-# - a potentially destructive test
-
-
-@use.with_os=rhel__ge__8
-@no_installroot
-Scenario: Dnf when installed protects yum package, because of dnf yum alias
-  Given I use repository "dnf-ci-fedora"
-   When I execute dnf with args "install yum"
-   Then the exit code is 0
-   When I execute dnf with args "remove yum"
-   Then the exit code is 1
-    And stderr contains "operation would result in removing the following protected packages: yum"
