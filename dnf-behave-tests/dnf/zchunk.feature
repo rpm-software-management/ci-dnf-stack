@@ -1,3 +1,5 @@
+# librepo is built without zchunk support on RHEL.
+@not.with_os=rhel__ge__11
 Feature: zchunk tests
 
 
