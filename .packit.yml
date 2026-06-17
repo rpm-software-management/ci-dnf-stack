@@ -7,6 +7,7 @@ jobs:
     identifier: "dnf5-tests"
     targets:
       - fedora-all
+      - fedora-eln
     skip_build: true
     tmt_plan: "^/plans/integration/behave-dnf5$"
 
@@ -15,6 +16,7 @@ jobs:
     identifier: "createrepo_c-tests"
     targets:
       - fedora-all
+      - fedora-eln
     skip_build: true
     tmt_plan: "^/plans/integration/behave-createrepo_c$"
 
@@ -23,5 +25,6 @@ jobs:
     identifier: "dnf5daemon-tests"
     targets:
       - fedora-all
+      - fedora-eln
     skip_build: true
     tmt_plan: "^/plans/integration/behave-dnf5daemon$"
