@@ -17,23 +17,39 @@ License:        GPLv3
 
 # test suite dependencies
 BuildRequires:  acl
+# attr for "getfattr" command
 BuildRequires:  attr
+# coreutils for "chmod", "head', "id", "ln", "ls", "mv", "sha256sum", "sleep",
+# "sort", "stat", "touch" commands
+BuildRequires:  coreutils
 BuildRequires:  createrepo_c
+# diffutils for "diff" command
+BuildRequires:  diffutils
 BuildRequires:  fakeuname
 BuildRequires:  findutils
 BuildRequires:  glibc-langpack-en
 BuildRequires:  glibc-langpack-de
+BuildRequires:  grep
+BuildRequires:  gzip
 BuildRequires:  libfaketime
 BuildRequires:  openssl
+# psmisc for "killall" command
+BuildRequires:  psmisc
 BuildRequires:  python3 >= 3.11
 BuildRequires:  python3-distro
 BuildRequires:  python3-pip
 BuildRequires:  python3-rpm
 # a missing dep of python3-pip on f35 beta, remove when unneeded
 BuildRequires:  python3-setuptools
+BuildRequires:  rpm
 BuildRequires:  rpm-build
 BuildRequires:  rpm-sign
+BuildRequires:  sed
+# shadow-utils for "useradd" command
+BuildRequires:  shadow-utils
 BuildRequires:  sqlite
+# util-linux for "su" command
+BuildRequires:  util-linux
 BuildRequires:  yq
 BuildRequires:  zstd
 %if 0%{?fedora}
