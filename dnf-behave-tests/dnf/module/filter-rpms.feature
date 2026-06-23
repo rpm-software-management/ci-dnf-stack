@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @jiraRHELPLAN-6073
 Feature: Filter RPMs by enabled and default module streams
 

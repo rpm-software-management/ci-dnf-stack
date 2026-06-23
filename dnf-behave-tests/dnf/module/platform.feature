@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @jiraRHELPLAN-6083
 Feature: platform pseudo-module based on /etc/os-release
 

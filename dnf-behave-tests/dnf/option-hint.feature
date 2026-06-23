@@ -1,6 +1,21 @@
 Feature: Hints for misplaced options
 
 
+# Modularity is disabled since RHEL 11
+@use.with_os=rhel__ge__11
+Scenario: command specific long option used with root dnf command
+   When I execute dnf with args "--skip-broken update"
+   Then the exit code is 2
+    And stdout is empty
+    And stderr is
+        """
+        Unknown argument "--skip-broken" for command "dnf5". Add "--help" for more information about the arguments.
+        The argument is available for commands: environment install, group install, replay, reinstall, downgrade, debuginfo-install, distro-sync, install, do. (It has to be placed after the command.)
+        """
+
+
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 Scenario: command specific long option used with root dnf command
    When I execute dnf with args "--skip-broken update"
    Then the exit code is 2

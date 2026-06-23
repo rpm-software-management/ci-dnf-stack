@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 Feature: Dependency resolution must occur to determine the appropriate dependent stream+context to use
 
 Background:

@@ -43,7 +43,6 @@ Examples:
         | list                | ls                           |
         | makecache           | mc                           |
         | mark                | mark                         |
-        | module              | module                       |
         | reinstall           | rei                          |
         | reinstall           | reinstall                    |
         | remove              | remove                       |
@@ -58,3 +57,9 @@ Examples:
         | upgrade             | update                       |
         | upgrade             | upgrade                      |
         | upgrade             | upgrade-minimal              |
+
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
+Examples:
+        | command             | alias                        |
+        | module              | module                       |
