@@ -96,6 +96,8 @@ Scenario: Reposync with --download-metadata option
    """
 
 
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @bz1714788
 Scenario: Reposync downloads packages from all streams of modular repository
   Given I use repository "dnf-ci-fedora-modular" as http
@@ -106,6 +108,8 @@ Scenario: Reposync downloads packages from all streams of modular repository
     And file "//{context.dnf.tempdir}/dnf-ci-fedora-modular/x86_64/nodejs-11.0.0-1.module_2311+8d497411.x86_64.rpm" exists
 
 
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @bz1714788
 Scenario: Reposync downloads packages from all streams of modular repository even if the module is disabled
   Given I use repository "dnf-ci-fedora-modular" as http
@@ -154,6 +158,8 @@ Scenario: Reposync respects includes
     """
 
 
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 Scenario: Reposync respects excludes, but not modular excludes
   Given I use repository "dnf-ci-fedora-modular" as http
    When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --setopt=includepkgs=postgresql"

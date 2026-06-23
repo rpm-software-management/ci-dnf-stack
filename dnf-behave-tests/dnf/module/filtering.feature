@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 Feature: Modular filtering must provide onlu relevant source packages
 
 Background:

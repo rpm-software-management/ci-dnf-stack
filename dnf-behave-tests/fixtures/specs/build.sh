@@ -13,6 +13,7 @@ GPGDIR="$DIR/../gpgkeys"
 CERTSDIR="$DIR/../certificates"
 GROUPS_FILENAME="comps.xml"
 UPDATEINFO_FILENAME="updateinfo.xml"
+MODULARITY="true"
 MODULES_FILENAME="modules.yaml"
 FORCE_REBUILD=
 
@@ -21,6 +22,20 @@ fatal()
     printf >&2 "Error: %s\n" "$*"
     exit 1
 }
+
+# Modularity is disabled since RHEL 11.
+# Detect OS with behave code because it implements workarounds.
+want_modularity()
+{
+    PYTHONPATH="$DIR/../.." python3 - <<'EOF'
+from common.lib.os_version import want_modularity
+if want_modularity():
+   print('true')
+else:
+   print('false')
+EOF
+}
+MODULARITY=$(want_modularity)
 
 while [ "$1" != "" ]; do
     case "$1" in
@@ -44,6 +59,11 @@ for path in "$DIR"/*/*.spec; do
     CSUM_FILE="$SPEC_NAME.sha256"
     CSUM_CHANGED=0
     RPMBUILD_OPTS_FILE="$SPEC_NAME.rpmbuild_opts"
+
+    if [[ "$MODULARITY" != "true" && "$SPEC_NAME" =~ '.module' ]]; then
+        echo "Not building modular $path."
+        continue
+    fi
 
     # detect spec change -> force rebuild
     pushd "$SPEC_DIR" > /dev/null

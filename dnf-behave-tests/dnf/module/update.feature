@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 # Missing module update command
 # https://github.com/rpm-software-management/dnf5/issues/146
 @xfail

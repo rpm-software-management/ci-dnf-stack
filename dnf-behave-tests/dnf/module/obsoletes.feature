@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @xfail
 # Obsoletes are not implemented in dnf5
 # Mentioned in https://github.com/rpm-software-management/dnf5/issues/146

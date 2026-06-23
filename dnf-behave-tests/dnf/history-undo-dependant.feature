@@ -1,5 +1,7 @@
 Feature: Transaction history undo
 
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @bz1700529
 Scenario: Undo module install with dependent userinstalled package
   Given I use repository "dnf-ci-fedora"

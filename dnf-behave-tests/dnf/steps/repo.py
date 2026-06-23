@@ -23,6 +23,7 @@ from common.lib.file import (
     ensure_file_exists,
     find_file_by_glob,
 )
+from common.lib.os_version import want_modularity
 from fixtures import start_server_based_on_type, stop_server_type
 from fixtures.osrelease import osrelease_fixture
 from fixtures.machineid import machineid_fixture
@@ -72,7 +73,6 @@ def create_repo_conf(context, repo):
 
     write_repo_config(context, repo, repo_info.config)
 
-
 def generate_repodata(context, repo, extra_args=None, explicit=False, can_fail=False, expected_exit_code=None):
     repo_subst = repo.replace("$releasever", context.dnf.releasever)
     repo_info = get_repo_info(context, repo)
@@ -101,9 +101,10 @@ def generate_repodata(context, repo, extra_args=None, explicit=False, can_fail=F
     if os.path.isfile(updateinfo_filename):
         run_in_context(context, "modifyrepo_c %s '%s'" % (updateinfo_filename, repodata_path))
 
-    modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_subst, "modules.yaml")
-    if os.path.isfile(modules_filename):
-        run_in_context(context, "modifyrepo_c --mdtype=modules %s '%s'" % (modules_filename, repodata_path))
+    if want_modularity():
+        modules_filename = os.path.join(context.dnf.fixturesdir, "specs", repo_subst, "modules.yaml")
+        if os.path.isfile(modules_filename):
+            run_in_context(context, "modifyrepo_c --mdtype=modules %s '%s'" % (modules_filename, repodata_path))
 
     if not repo_info.copied:
         context.repos[repo_subst] = True

@@ -20,3 +20,10 @@ def detect_os_version():
         major_version = str(rhel_macro_version)
 
     return os_id + "__" + major_version
+
+# Whether the current operating systems is supposed to support modularity.
+def want_modularity():
+    os, version = detect_os_version().split('__')
+    if os == 'rhel' and int(version) >= 11:
+        return False;
+    return True;

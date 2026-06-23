@@ -1,3 +1,5 @@
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 Feature: Installing package from ursine repo
 
 Background: Enable repositories
