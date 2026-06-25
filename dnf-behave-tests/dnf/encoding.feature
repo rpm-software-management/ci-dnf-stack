@@ -88,6 +88,7 @@ Scenario: non-UTF-8 character in an option when using corresponding locale
         """
         """
     And I set LC_ALL to "en_US.ISO-8859-1"
+    And I set environment variable "PYTHONUTF8" to "0"
    When I execute dnf with args "install dummy --config={context.dnf.installroot}/{context.invalid_utf8_char}"
    Then the exit code is 0
     And Transaction is following
