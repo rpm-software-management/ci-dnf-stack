@@ -148,7 +148,8 @@ Scenario: Reposync respects includes
   When I execute dnf with args "reposync --download-path={context.dnf.tempdir} --arch=noarch --setopt=includepkgs=abcde"
    Then the exit code is 0
     And stderr contains "abcde-0:2.9.2-1.fc29.noarch"
-   When I execute "find" in "{context.dnf.tempdir}"
+   When I set LC_ALL to "C.UTF-8"
+    And I execute "find | sort" in "{context.dnf.tempdir}"
    Then stdout is
     """
     .

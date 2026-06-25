@@ -61,7 +61,8 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
         | Action        | Package                                   |
         | install       | labirinto-0:1.0-1.fc29.x86_64             |
         | install       | vagare-0:1.0-1.fc29.x86_64                |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I set LC_ALL to "C.UTF-8"
+    And I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -72,7 +73,8 @@ Scenario: Reseting keepcache does not remove previously kept packages from cache
     And Transaction is following
         | Action        | Package                            |
         | install       | dedalo-0:1.0-1.fc29.x86_64         |
-   When I execute "find -type f -name '*.rpm'" in "{context.dnf.installroot}/var/cache/dnf"
+   When I set LC_ALL to "C.UTF-8"
+    And I execute "find -type f -name '*.rpm' | sort" in "{context.dnf.installroot}/var/cache/dnf"
    Then stdout matches line by line
    """
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
