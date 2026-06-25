@@ -22,7 +22,10 @@ COPY ./repos.d/ /etc/yum.repos.d/
 
 # enable dnf5
 RUN set -x && \
-    dnf -y --refresh upgrade; \
+    # If BASE image is released before the repositories are mirrored,
+    # old packages from repositories can be incompatible with already
+    # installed packages. Therefore do distro-sync instead of an upgrade.
+    dnf -y --refresh distro-sync; \
     # Since Fedora 42, `systemd-standalone-sysuser` comes pre-installed.  This package 
     # conflicts with `systemd`, preventing `dnf5daemon-server` from being installed.
     dnf -y install systemd --allowerasing; \
