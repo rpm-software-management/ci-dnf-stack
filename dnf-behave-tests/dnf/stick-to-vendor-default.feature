@@ -12,7 +12,7 @@ Background:
 
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 Scenario: Upgrade sticks to vendor by default
@@ -25,7 +25,7 @@ Scenario: Upgrade sticks to vendor by default
        | upgrade | vendor-1.1-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 Scenario: No upgrade if same vendor not found by default
@@ -35,7 +35,7 @@ Scenario: No upgrade if same vendor not found by default
    And Transaction is empty
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 Scenario: Hint shown when vendor change blocked by default
@@ -60,4 +60,4 @@ Scenario: Override default with --setopt=allow_vendor_change=true
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"

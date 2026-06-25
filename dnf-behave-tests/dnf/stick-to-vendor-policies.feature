@@ -16,7 +16,7 @@ Background:
 
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 Scenario: Upgrade with vendor policy - allow change from First Vendor to Second Vendor
@@ -40,7 +40,7 @@ Scenario: Upgrade with vendor policy - allow change from First Vendor to Second 
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"
 
 
 Scenario: Upgrade with vendor policy - allow change from First Vendor to Second Vendor (conf file in /usr)
@@ -64,7 +64,7 @@ Scenario: Upgrade with vendor policy - allow change from First Vendor to Second 
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"
 
 
 Scenario: Upgrade with vendor policy - allow change from First Vendor to Second Vendor (conf in /etc overrides /usr)
@@ -98,7 +98,7 @@ Scenario: Upgrade with vendor policy - allow change from First Vendor to Second 
        | upgrade | vendor-1.3-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Third Vendor"
+   And stdout contains "Vendor *: Third Vendor"
 
 
 Scenario: Upgrade with vendor policy - equivalent vendors (mutual change allowed)
@@ -122,7 +122,7 @@ Scenario: Upgrade with vendor policy - equivalent vendors (mutual change allowed
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"
 
 
 Scenario: Upgrade with vendor policy - change for "First vendor" is not allowed
@@ -146,7 +146,7 @@ Scenario: Upgrade with vendor policy - change for "First vendor" is not allowed
        | upgrade | vendor-1.1-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 Scenario: Upgrade with vendor policy - glob pattern matching
@@ -171,7 +171,7 @@ Scenario: Upgrade with vendor policy - glob pattern matching
        | upgrade | vendor-1.3-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Third Vendor"
+   And stdout contains "Vendor *: Third Vendor"
 
 
 Scenario: Upgrade with vendor policy - case insensitive matching and starts with
@@ -197,7 +197,7 @@ Scenario: Upgrade with vendor policy - case insensitive matching and starts with
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"
 
 
 Scenario: Upgrade with vendor policy - using exclude to prevent specific vendor
@@ -225,4 +225,4 @@ Scenario: Upgrade with vendor policy - using exclude to prevent specific vendor
        | upgrade | vendor-1.2-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : Second Vendor"
+   And stdout contains "Vendor *: Second Vendor"
