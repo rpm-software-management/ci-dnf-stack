@@ -14,7 +14,7 @@ Background:
 
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 @bz1788371
 Scenario: Upgrade sticks to vendor
@@ -27,7 +27,7 @@ Scenario: Upgrade sticks to vendor
        | upgrade | vendor-1.1-1.x86_64 |
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 @bz1788371
 Scenario: No upgrade if same vendor not found
@@ -37,7 +37,7 @@ Scenario: No upgrade if same vendor not found
    And Transaction is empty
   Given I successfully execute rpm with args "-qi vendor"
    Then the exit code is 0
-   And stdout contains "Vendor      : First Vendor"
+   And stdout contains "Vendor *: First Vendor"
 
 
 @bz1788371
