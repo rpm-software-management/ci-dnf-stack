@@ -17,6 +17,7 @@ Background: Fill the cache
    \.
    \./.gpgkeyschecked.yum
    \./expired_repos\.json
+   \./packages_in_use\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -35,6 +36,7 @@ Scenario: Cleanup of the whole cache (dnf clean all)
    \.
    \./.gpgkeyschecked.yum
    \./expired_repos\.json
+   \./packages_in_use\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/repodata
@@ -49,6 +51,7 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
    \.
    \./.gpgkeyschecked.yum
    \./expired_repos\.json
+   \./packages_in_use\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm
@@ -64,6 +67,7 @@ Scenario: Cached packages cleanup (dnf clean packages)
    \.
    \./.gpgkeyschecked.yum
    \./expired_repos\.json
+   \./packages_in_use\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/repodata
@@ -81,6 +85,7 @@ Scenario: Database cached cleanup (dnf clean dbcache)
    \.
    \./.gpgkeyschecked.yum
    \./expired_repos\.json
+   \./packages_in_use\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
    \./simple-base-[0-9a-f]{16}/packages/labirinto-1\.0-1\.fc29\.x86_64\.rpm

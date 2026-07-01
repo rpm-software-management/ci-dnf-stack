@@ -14,6 +14,7 @@ Background:
     \./dnf-ci-fedora-[0-9a-f]{16}/repodata/repomd\.xml
     \./dnf-ci-fedora\.solv
     \./expired_repos\.json
+    \./packages_in_use\.json
     """
 
 
@@ -31,6 +32,7 @@ Scenario: Optional metadata are loaded when explicitly requested by the option
     \./dnf-ci-fedora-filenames\.solvx
     \./dnf-ci-fedora\.solv
     \./expired_repos\.json
+    \./packages_in_use\.json
     """
 
 
@@ -46,6 +48,7 @@ Scenario: Invalid metadata type is ignored when processing the option
     \./dnf-ci-fedora-[0-9a-f]{16}/repodata/repomd\.xml
     \./dnf-ci-fedora\.solv
     \./expired_repos\.json
+    \./packages_in_use\.json
     """
 
 
@@ -63,6 +66,7 @@ Scenario: Optional metadata are loaded when requested by command
     \./dnf-ci-fedora-filenames\.solvx
     \./dnf-ci-fedora\.solv
     \./expired_repos\.json
+    \./packages_in_use\.json
     """
 
 
@@ -86,4 +90,5 @@ Scenario: Filelists metadata are loaded when filepath spec is provided
     \./dnf-ci-fedora-filenames\.solvx
     \./dnf-ci-fedora\.solv
     \./expired_repos\.json
+    \./packages_in_use\.json
     """
