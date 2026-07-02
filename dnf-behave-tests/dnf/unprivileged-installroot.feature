@@ -22,4 +22,5 @@ Scenario: Fail when missing permissions for installroot directory
     And stderr is
         """
         Config error: [Errno 13] Permission denied: '/var/lib/f32': '/var/lib/f32'
+        Failed to load packages in use persistor: [Errno 13] Permission denied: '/var/lib/f32'
         """
