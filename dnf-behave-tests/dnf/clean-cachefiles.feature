@@ -16,6 +16,7 @@ Background: Fill the cache
    """
    \.
    \./.gpgkeyschecked.yum
+   \./clean_command.lock
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -34,6 +35,7 @@ Scenario: Cleanup of the whole cache (dnf clean all)
    """
    \.
    \./.gpgkeyschecked.yum
+   \./clean_command.lock
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -48,6 +50,7 @@ Scenario: Cached metadata cleanup (dnf clean metadata)
    """
    \.
    \./.gpgkeyschecked.yum
+   \./clean_command.lock
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -63,6 +66,7 @@ Scenario: Cached packages cleanup (dnf clean packages)
    """
    \.
    \./.gpgkeyschecked.yum
+   \./clean_command.lock
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
@@ -80,6 +84,7 @@ Scenario: Database cached cleanup (dnf clean dbcache)
    """
    \.
    \./.gpgkeyschecked.yum
+   \./clean_command.lock
    \./expired_repos\.json
    \./simple-base-[0-9a-f]{16}
    \./simple-base-[0-9a-f]{16}/packages
