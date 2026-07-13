@@ -133,3 +133,28 @@ Given I use repository "dnf-ci-multicontext-modular-advisory"
       <REPOSYNC>
 
       """
+
+
+# https://redhat.atlassian.net/browse/RHEL-80156
+@RHEL-80156
+Scenario: non-modular advisory is not shown when modular stream is enabled
+Given I use repository "dnf-ci-fedora"
+  And I use repository "dnf-ci-fedora-non-modular-advisory"
+  And I successfully execute dnf with args "install nodejs"
+  # Non-modular advisory is visible before enabling the module
+ When I execute dnf with args "updateinfo --list"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      NONMOD-2024-9291 bugfix nodejs-2:5.12.1-20.fc29.x86_64
+      """
+  # After enabling the module, the non-modular advisory is filtered out
+Given I use repository "dnf-ci-fedora-modular"
+  And I successfully execute dnf with args "module enable nodejs:8"
+ When I execute dnf with args "updateinfo --list"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      """
