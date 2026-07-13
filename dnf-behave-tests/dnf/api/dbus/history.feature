@@ -386,3 +386,31 @@ Scenario: History::list() with limited package attributes and limited transactio
     {{'downgraded': [], 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'upgraded': [{{'name': 'fragola', 'original_evr': '1-1'}}]}}
     {{'downgraded': [], 'id': 1, 'installed': [{{'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'upgraded': []}}
     """
+
+
+# https://github.com/rpm-software-management/dnf5/issues/2595
+Scenario: History::recent_changes() reports arch-changing upgrade as upgrade not removal
+Given I successfully execute dnf with args "install cambio-1"
+  And I successfully execute dnf with args "upgrade cambio"
+  And I adjust history database with query
+  """
+  UPDATE trans SET dt_begin=id*10, dt_end=id*10
+  """
+ Then the exit code is 0
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    changeset = iface_history.recent_changes({{}})
+    print_recent_history(changeset)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    installed: 0
+    upgraded: 1
+    NEVRA: cambio-2-1.x86_64
+    Summary: Made up package for arch changing upgrade
+    Original EVR: 1-1
+    Transaction time: 80
+    downgraded: 0
+    removed: 0
+    """
