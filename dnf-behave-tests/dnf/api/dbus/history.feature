@@ -95,6 +95,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Original arch: noarch
     Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
@@ -113,6 +114,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 2-1
+    Original arch: noarch
     Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
@@ -131,6 +133,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 2-1
+    Original arch: noarch
     Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
@@ -152,6 +155,7 @@ Scenario: History::recent_changes() returns changes since a point in time
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 4-1
+    Original arch: noarch
     Transaction time: 50
     removed: 1
     NEVRA: labirinto-1.0-1.fc29.x86_64
@@ -204,6 +208,7 @@ Scenario: History::recent_changes() accepts "include_advisory" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Original arch: noarch
     Transaction time: 50
     Advisories: DUMMY-3
     downgraded: 0
@@ -226,6 +231,7 @@ Scenario: History::recent_changes() accepts "include_advisory" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Original arch: noarch
     Transaction time: 50
     downgraded: 0
     removed: 0
@@ -250,6 +256,7 @@ Scenario: History::recent_changes() accepts "all_advisories" option
     NEVRA: fragola-3-1.noarch
     Summary: Made up package
     Original EVR: 1-1
+    Original arch: noarch
     Transaction time: 50
     Advisories: DUMMY-3, DUMMY-2
     downgraded: 0
@@ -385,4 +392,33 @@ Scenario: History::list() with limited package attributes and limited transactio
     {{'downgraded': [], 'id': 3, 'installed': [{{'name': 'labirinto'}}], 'reinstalled': [], 'removed': [], 'upgraded': []}}
     {{'downgraded': [], 'id': 2, 'installed': [], 'reinstalled': [], 'removed': [], 'upgraded': [{{'name': 'fragola', 'original_evr': '1-1'}}]}}
     {{'downgraded': [], 'id': 1, 'installed': [{{'name': 'fragola'}}], 'reinstalled': [], 'removed': [], 'upgraded': []}}
+    """
+
+
+# https://github.com/rpm-software-management/dnf5/issues/2595
+Scenario: History::recent_changes() reports arch-changing upgrade as upgrade not removal
+Given I successfully execute dnf with args "install cambio-1"
+  And I successfully execute dnf with args "upgrade cambio"
+  And I adjust history database with query
+  """
+  UPDATE trans SET dt_begin=id*10, dt_end=id*10
+  """
+ Then the exit code is 0
+ When I execute python libdnf5 dbus api script with history interface
+    """
+    changeset = iface_history.recent_changes({{}})
+    print_recent_history(changeset)
+    """
+ Then the exit code is 0
+  And stdout is
+    """
+    installed: 0
+    upgraded: 1
+    NEVRA: cambio-2-1.x86_64
+    Summary: Made up package for arch changing upgrade
+    Original EVR: 1-1
+    Original arch: noarch
+    Transaction time: 80
+    downgraded: 0
+    removed: 0
     """
