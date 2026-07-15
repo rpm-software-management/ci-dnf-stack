@@ -9,13 +9,16 @@ Background: Enable repository
     And I set environment variable "FORCE_COLUMNS" to "400"
 
 
+# Disable on older fedoras and rhels because they don't contain rpm-6.0.91
+@not.with_os=fedora__lt__45
+@not.with_os=rhel__lt__11
 Scenario Outline: Install a pkg with a successful scriptlet
    When I execute dnf with args "install <package>"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                  |
         | install       | <package>-0:1.0-1.x86_64 |
-    And stdout contains "<output>"
+    And stderr contains "<output>"
 
 Examples:
       | package              | output                                |
@@ -55,6 +58,9 @@ Examples:
       | Package-posttrans-fail-0:1.0-1.x86_64 | %posttrans       |
 
 
+# Disable on older fedoras and rhels because they don't contain rpm-6.0.91
+@not.with_os=fedora__lt__45
+@not.with_os=rhel__lt__11
 Scenario Outline: Remove a pkg with a successful %[pre|post]un scriptlet
   When I execute dnf with args "install <package>"
   Then the exit code is 0
@@ -63,7 +69,7 @@ Scenario Outline: Remove a pkg with a successful %[pre|post]un scriptlet
        | install       | <package>-0:1.0-1.x86_64 |
   When I execute dnf with args "remove <package>"
   Then the exit code is 0
-   And stdout contains "<output>"
+   And stderr contains "<output>"
 
 Examples:
       | package           | output    |
@@ -108,6 +114,9 @@ Scenario: Remove a pkg with a failing %postun scriptlet
 
 
 @bz1724779
+# Disable on older fedoras and rhels because they don't contain rpm-6.0.91
+@not.with_os=fedora__lt__45
+@not.with_os=rhel__lt__11
 Scenario: Output for triggered successful scriptlet of a package not present in transaction has temporarily just pkg name
  Given I successfully execute dnf with args "install Package-triggerin-ok"
   When I execute dnf with args "install Package-install-file"
@@ -115,7 +124,7 @@ Scenario: Output for triggered successful scriptlet of a package not present in 
    And Transaction is following
        | Action        | Package                             |
        | install       | Package-install-file-0:1.0-1.x86_64 |
-   And stdout contains "triggerin scriptlet \(Package-triggerin-ok\) for Package-install-file install/update successfully done"
+   And stderr contains "triggerin scriptlet \(Package-triggerin-ok\) for Package-install-file install/update successfully done"
    And stdout does not contain "Running scriptlet\s*:\s*Package-install-file"
 
 
@@ -149,6 +158,9 @@ Scenario: Correct output for triggered failing transfiletriggerpostun scriptlet 
    And stderr does not contain "scriptlet: Package-install-file"
 
 
+# Disable on older fedoras and rhels because they don't contain rpm-6.0.91
+@not.with_os=fedora__lt__45
+@not.with_os=rhel__lt__11
 @bz1724779
 Scenario: Correct output for triggered successful file scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-filetriggerin-ok"
@@ -157,7 +169,7 @@ Scenario: Correct output for triggered successful file scriptlet of package not 
    And Transaction is following
        | Action        | Package                             |
        | install       | Package-install-file-0:1.0-1.x86_64 |
-   And stdout contains "filetriggerin scriptlet \(Package-filetriggerin-ok\) for Package-install-file install/update successfully done"
+   And stderr contains "filetriggerin scriptlet \(Package-filetriggerin-ok\) for Package-install-file install/update successfully done"
    And stdout does not contain "scriptlet: Package-install-file"
 
 
@@ -174,6 +186,9 @@ Scenario: Correct output for triggered failing file scriptlet of package not pre
    And stderr does not contain "scriptlet: Package-install-file"
 
 
+# Disable on older fedoras and rhels because they don't contain rpm-6.0.91
+@not.with_os=fedora__lt__45
+@not.with_os=rhel__lt__11
 @bz1724779
 Scenario: Correct output for triggered successful transfiletriggerpostun scriptlet of package not present in transaction
  Given I successfully execute dnf with args "install Package-transfiletriggerpostun-ok"
@@ -183,5 +198,5 @@ Scenario: Correct output for triggered successful transfiletriggerpostun scriptl
    And Transaction is following
        | Action       | Package                             |
        | remove       | Package-install-file-0:1.0-1.x86_64 |
-   And stdout contains "transfiletriggerpostun scriptlet \(Package-transfiletriggerpostun-ok\) for Package-install-file transaction uninstall successfully done"
+   And stderr contains "transfiletriggerpostun scriptlet \(Package-transfiletriggerpostun-ok\) for Package-install-file transaction uninstall successfully done"
    And stderr does not contain "scriptlet: Package-install-file"
