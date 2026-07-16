@@ -46,7 +46,10 @@ Scenario: Hint shown when vendor change blocked by default
    When I execute dnf with args "downgrade vendor"
    Then the exit code is 1
    And Transaction is empty
-   And stdout is empty
+   And stdout contains lines
+       """
+       Skipping 1 package due to vendor change restriction: "First Vendor" -> "Second Vendor".
+       """
    And stderr contains "--allow-vendor-change to allow changing package vendors"
 
 

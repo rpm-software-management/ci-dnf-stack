@@ -49,7 +49,10 @@ Scenario: Downgrade is unable to resolve transaction
    When I execute dnf with args "downgrade vendor"
    Then the exit code is 1
    And Transaction is empty
-   And stdout is empty
+   And stdout contains lines
+       """
+       Skipping 1 package due to vendor change restriction: "First Vendor" -> "Second Vendor".
+       """
    And stderr is
        """
        <REPOSYNC>
@@ -59,6 +62,6 @@ Scenario: Downgrade is unable to resolve transaction
          - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from dnf-ci-vendor-1-updates
          - conflicting requests
        You can try to add to command line:
-         --allow-vendor-change to allow changing package vendors
          --skip-broken to skip uninstallable packages
+         --allow-vendor-change to allow changing package vendors
        """
