@@ -47,7 +47,7 @@ Scenario: Hint shown when vendor change blocked by default
    Then the exit code is 1
    And Transaction is empty
    And stdout is empty
-   And stderr contains "--setopt=allow_vendor_change=true to allow changing package vendors"
+   And stderr contains "--allow-vendor-change to allow changing package vendors"
 
 
 Scenario: Override default with --setopt=allow_vendor_change=true
