@@ -59,6 +59,6 @@ Scenario: Downgrade is unable to resolve transaction
          - cannot install both vendor-1.0-1.x86_64 from dnf-ci-vendor-2 and vendor-1.1-1.x86_64 from dnf-ci-vendor-1-updates
          - conflicting requests
        You can try to add to command line:
-         --setopt=allow_vendor_change=true to allow changing package vendors
+         --allow-vendor-change to allow changing package vendors
          --skip-broken to skip uninstallable packages
        """
