@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+  <update from="secresponseteam@redhat.com" status="final" type="bugfix" version="1">
+    <id>RHBA-2024:9291</id>
+    <title>nginx bugfix update</title>
+    <issued date="2024-12-10 00:00:00"/>
+    <updated date="2024-12-10 00:00:00"/>
+    <severity>Moderate</severity>
+    <summary>Bug fix update for nginx</summary>
+    <description>This update fixes several bugs in the nginx package.</description>
+    <references>
+      <reference href="https://bugzilla.redhat.com/show_bug.cgi?id=123456" id="123456" type="bugzilla" title="Bug 123456"/>
+    </references>
+    <pkglist>
+      <collection short="nginx non-modular collection">
+        <name>nginx non-modular component</name>
+        <package name="nginx" version="1.20.1" release="20.el9" epoch="2" arch="x86_64">
+          <filename>nginx-1.20.1-20.el9.x86_64.rpm</filename>
+        </package>
+        <package name="nginx-core" version="1.20.1" release="20.el9" epoch="2" arch="x86_64">
+          <filename>nginx-core-1.20.1-20.el9.x86_64.rpm</filename>
+        </package>
+        <package name="nginx-filesystem" version="1.20.1" release="20.el9" epoch="2" arch="noarch">
+          <filename>nginx-filesystem-1.20.1-20.el9.noarch.rpm</filename>
+        </package>
+      </collection>
+    </pkglist>
+  </update>
+</updates>
