@@ -1,0 +1,50 @@
+---
+document: modulemd
+version: 2
+data:
+  name: nginx
+  stream: "1.22"
+  version: 20230101000000
+  context: aa9aadc5
+  arch: x86_64
+  summary: Nginx webserver
+  description: >-
+    Nginx is a web server and a reverse proxy server for HTTP, SMTP, POP3 and
+    IMAP protocols, with a strong focus on high concurrency, performance and low
+    memory usage.
+  license:
+    module:
+    - MIT
+    content:
+    - BSD
+  dependencies:
+  - buildrequires:
+      platform: [f29]
+    requires:
+      platform: [f29]
+  profiles:
+    default:
+      rpms:
+      - nginx
+      - nginx-core
+      - nginx-filesystem
+    minimal:
+      rpms:
+      - nginx-core
+  api:
+    rpms:
+    - nginx
+    - nginx-core
+    - nginx-filesystem
+  components:
+    rpms:
+      nginx:
+        rationale: Main nginx package
+        ref: 1.22
+  artifacts:
+    rpms:
+    - nginx-1:1.22.1-1.module_el9+5000+aa9aadc5.x86_64
+    - nginx-1:1.22.1-1.module_el9+5000+aa9aadc5.src
+    - nginx-core-1:1.22.1-1.module_el9+5000+aa9aadc5.x86_64
+    - nginx-filesystem-1:1.22.1-1.module_el9+5000+aa9aadc5.noarch
+...
