@@ -133,3 +133,40 @@ Given I use repository "dnf-ci-multicontext-modular-advisory"
       <REPOSYNC>
 
       """
+
+
+@RHEL-80156
+Scenario: updateinfo list should not show advisories for non-modular packages when modular version is installed
+Given I use repository "nginx-modular-base"
+ When I execute dnf with args "module enable nginx:1.22"
+ Then the exit code is 0
+  And modules state is following
+      | Module     | State     | Stream    | Profiles  |
+      | nginx      | enabled   | 1.22      |           |
+ When I execute dnf with args "module install nginx/default"
+ Then the exit code is 0
+  And Transaction contains
+      | Action                    | Package                                                  |
+      | install-group             | nginx-1:1.22.1-1.module_el9+5000+aa9aadc5.x86_64         |
+      | install-group             | nginx-core-1:1.22.1-1.module_el9+5000+aa9aadc5.x86_64    |
+      | install-group             | nginx-filesystem-1:1.22.1-1.module_el9+5000+aa9aadc5.noarch |
+      | module-profile-install    | nginx/default                                            |
+Given I use repository "nginx-nonmodular"
+ When I execute dnf with args "updateinfo list"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      """
+ When I execute dnf with args "updateinfo list available"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      """
+ When I execute dnf with args "updateinfo list updates"
+ Then the exit code is 0
+  And stdout is
+      """
+      <REPOSYNC>
+      """
