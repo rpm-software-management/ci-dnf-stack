@@ -22,7 +22,7 @@ from behave.tag_matcher import ActiveTagMatcher
 from steps.lib.config import write_config
 from common.lib.cmd import print_last_command, run_in_context
 from common.lib.file import ensure_directory_exists
-from common.lib.os_version import detect_os_version
+from common.lib.os_version import detect_os_version, want_modularity
 from common.lib.tag_matcher import VersionedActiveTagMatcher
 
 
@@ -80,7 +80,8 @@ class DNFContext(object):
 
         self.dnf_command = userdata.get("dnf_command", DEFAULT_DNF_COMMAND)
         self.releasever = userdata.get("releasever", DEFAULT_RELEASEVER)
-        self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
+        if want_modularity():
+            self.module_platform_id = userdata.get("module_platform_id", DEFAULT_PLATFORM_ID)
         self.fixturesdir = consts.FIXTURES_DIR
         self.disable_plugins = True
         self.disable_repos_option = "--disablerepo='*'"

@@ -6,7 +6,13 @@ repos=$(echo $repos | sed "s/\ /\ --repo\ /g")
 # prepend --repo for the first repo, which does not have a space to substitute
 repos=$(echo "--repo $repos")
 
-options=" -y --setopt=reposdir=./fixtures/repos.d --releasever=29 --setopt=module_platform_id=platform:f29"
+module_plaform_options="--setopt=module_platform_id=platform:f29"
+if ! dnf ${module_plaform_options} --version >/dev/null 2>/dev/null; then
+    # Modularity not supported
+    module_plaform_options=""
+fi
+
+options=" -y --setopt=reposdir=./fixtures/repos.d --releasever=29 ${module_plaform_options}"
 
 DNF0=$(pwd)/fixtures dnf $options repograph $repos > out.dot
 

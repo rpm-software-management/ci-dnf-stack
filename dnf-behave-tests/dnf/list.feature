@@ -376,6 +376,19 @@ Scenario: dnf list obsoletes setup (when setup is not obsoleted)
       """
 
 
+# Modularity is disabled since RHEL 11
+@use.with_os=rhel__ge__11
+@1550560
+Scenario: dnf list available pkgs with long names piped to grep
+Given I use repository "dnf-ci-thirdparty"
+ When I execute dnf with args "clean all"
+ When I execute "eval {context.dnf.dnf_command} -y --releasever={context.dnf.releasever} --installroot={context.dnf.installroot} --disableplugin='*' list --available | grep 1" in "{context.dnf.installroot}"
+ Then the exit code is 0
+ Then stdout contains "forTestingPurposesWeEvenHaveReallyLongVersions.x86_64\s+1435347658326856238756823658aaaa-1\s+dnf-ci-thirdparty"
+
+
+# Modularity is disabled since RHEL 11
+@not.with_os=rhel__ge__11
 @1550560
 Scenario: dnf list available pkgs with long names piped to grep
 Given I use repository "dnf-ci-thirdparty"
