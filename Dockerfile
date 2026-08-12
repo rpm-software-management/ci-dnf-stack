@@ -32,7 +32,7 @@ RUN set -x && \
     dnf -y install dnf5 dnf5-plugins; \
     dnf5 -y copr enable rpmsoftwaremanagement/test-utils; \
     dnf5 -y copr enable rpmsoftwaremanagement/dnf-nightly; \
-    dnf5 -y distro-sync --from-repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly '*'
+    dnf5 --setopt=allow_vendor_change=true -y distro-sync --from-repo copr:copr.fedorainfracloud.org:rpmsoftwaremanagement:dnf-nightly '*'
 
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
@@ -45,7 +45,7 @@ COPY ./rpms/ /opt/ci/rpms/
 RUN set -x && \
     rm /opt/ci/rpms/*-{devel,debuginfo,debugsource}*.rpm; \
     if [ -n "$(find /opt/ci/rpms/ -maxdepth 1 -name '*.rpm' -print -quit)" ]; then \
-        dnf5 -y install /opt/ci/rpms/*.rpm --disableplugin=local && \
+        dnf5 --setopt=allow_vendor_change=true -y install /opt/ci/rpms/*.rpm --disableplugin=local && \
         dnf5 -y versionlock add $(rpm -qp --queryformat '%{NAME}\n' /opt/ci/rpms/*.rpm | sort | uniq); \
     fi
 
@@ -55,7 +55,8 @@ COPY ./dnf-behave-tests/ /opt/ci/dnf-behave-tests
 # install test suite dependencies
 # Temporarily exclude new libfaketime because it doesn't work: https://bugzilla.redhat.com/show_bug.cgi?id=2381595
 RUN set -x && \
-    dnf5 -y builddep /opt/ci/dnf-behave-tests/requirements.spec -x libfaketime-0.9.12-1.* && \
+    dnf5 --setopt=allow_vendor_change=true -y \
+        builddep /opt/ci/dnf-behave-tests/requirements.spec -x libfaketime-0.9.12-1.* && \
     pip3 install -r /opt/ci/dnf-behave-tests/requirements.txt
 
 # create directory for dbus daemon socket
