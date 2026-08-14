@@ -37,7 +37,7 @@ RUN set -x && \
 RUN set -x && \
     if [ -n "$COPR" ] && [ -n "$COPR_RPMS" ]; then \
        dnf5 -y copr enable $COPR; \
-       dnf5 -y install $COPR_RPMS; \
+       dnf5 --setopt=allow_vendor_change=true -y install $COPR_RPMS; \
     fi
 
 # install local RPMs if available
