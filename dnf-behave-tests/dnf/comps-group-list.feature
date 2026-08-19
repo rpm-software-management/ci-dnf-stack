@@ -29,6 +29,7 @@ Scenario: All user visible groups are listed by default (installed group is not 
        test-group           Test Group        yes
        empty-group          Empty group        no
        no-name-group                           no
+       Groups: 3 (installed 1, available 2)
        """
 
 Scenario: I can list also hidden groups
@@ -45,6 +46,7 @@ Scenario: I can list also hidden groups
        test-group           Test Group         yes
        empty-group          Empty group         no
        no-name-group                            no
+       Groups: 4 (installed 1, available 3)
        """
 
 Scenario: I can filter listed groups by their ids (hidden groups are included)
@@ -58,6 +60,7 @@ Scenario: I can filter listed groups by their ids (hidden groups are included)
        """
        ID                   Name         Installed
        hidden-group         Hidden group        no
+       Groups: 1 (installed 0, available 1)
        """
 
 Scenario: I can filter listed groups by their names (hidden groups are included)
@@ -73,6 +76,7 @@ Scenario: I can filter listed groups by their names (hidden groups are included)
        hidden-group         Hidden group        no
        test-group           Test Group         yes
        empty-group          Empty group         no
+       Groups: 3 (installed 1, available 2)
        """
 
 Scenario: I can list only installed groups
@@ -85,7 +89,8 @@ Scenario: I can list only installed groups
    And stdout is
        """
        ID                   Name       Installed
-       test-group           Test Group       yes 
+       test-group           Test Group       yes
+       Groups: 1 (installed 1, available 0)
        """
 
 Scenario: I can list only available groups
@@ -101,6 +106,7 @@ Scenario: I can list only available groups
        test-group           Test Group         no
        empty-group          Empty group        no
        no-name-group                           no
+       Groups: 3 (installed 0, available 3)
        """
 
 Scenario: I can list only groups containing a package
@@ -115,6 +121,7 @@ Scenario: I can list only groups containing a package
        ID                   Name       Installed
        test-group           Test Group       yes
        no-name-group                          no
+       Groups: 2 (installed 1, available 1)
        """
 
 Scenario: I can get info about all groups (installed group is not duplicated)

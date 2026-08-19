@@ -300,6 +300,7 @@ Scenario: Group list
        cqrlib-non-devel     CQRlib-non-devel            no
        dnf-ci-testgroup     DNF-CI-Testgroup            no
        superripper-and-deps SuperRipper-and-deps        no
+       Groups: 3 (installed 0, available 3)
        """
 
 
@@ -317,6 +318,7 @@ Scenario: Group list with arg
        """
        ID                   Name             Installed
        dnf-ci-testgroup     DNF-CI-Testgroup        no
+       Groups: 1 (installed 0, available 1)
        """
 
 
@@ -334,6 +336,7 @@ Scenario: List an environment with empty name
        ID                   Name       Installed
        no-name-group                          no
        test-group           Test Group        no
+       Groups: 2 (installed 0, available 2)
        """
 
 
@@ -375,6 +378,7 @@ Scenario: List and info a group with missing packagelist
         """
         ID                   Name       Installed
         test-group           Test Group        no
+        Groups: 1 (installed 0, available 1)
         """
    When I execute dnf with args "group info test-group"
    Then stderr is
@@ -567,6 +571,7 @@ Scenario: 'dnf group list -C' works for unprivileged user even when decompressed
        cqrlib-non-devel     CQRlib-non-devel            no
        dnf-ci-testgroup     DNF-CI-Testgroup            no
        superripper-and-deps SuperRipper-and-deps        no
+       Groups: 3 (installed 0, available 3)
        """
 
 
@@ -586,6 +591,7 @@ Scenario: dnf5 group list: empty output when run for the second time
        ID                   Name         Installed
        test-group-1         Test Group 1        no
        test-group-2         Test Group 2        no
+       Groups: 2 (installed 0, available 2)
        """
   When I execute dnf with args "group list"
   Then the exit code is 0
@@ -598,6 +604,7 @@ Scenario: dnf5 group list: empty output when run for the second time
        ID                   Name         Installed
        test-group-1         Test Group 1        no
        test-group-2         Test Group 2        no
+       Groups: 2 (installed 0, available 2)
        """
 
 
