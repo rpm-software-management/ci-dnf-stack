@@ -104,6 +104,7 @@ Scenario: Test for list without --showduplicates when the package is not install
 
 @bz1655605
 Scenario: Test for list --available --showduplicates when package is installed and repository is disabled
+Given I use repository "simple-base"
  When I drop repository "dnf-ci-fedora"
   And I drop repository "dnf-ci-fedora-updates-testing"
   And I execute dnf with args "install flac-1.3.3-1.fc29.x86_64"
@@ -132,5 +133,5 @@ Scenario: Test for list --available --showduplicates when package is installed a
   And stderr is
       """
       <REPOSYNC>
-      No matching packages to list
+      No matches found.
       """
