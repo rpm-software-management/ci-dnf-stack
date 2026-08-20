@@ -26,6 +26,13 @@ RUN set -x && \
         dnf5 -y install dnf4; \
     fi
 
+# Make dnf5 repo configs available to dnf4 on systems where repos
+# have moved to /usr/share/dnf5/repos.d (Fedora 45+)
+RUN set -x && \
+    if [ -d /usr/share/dnf5/repos.d ]; then \
+        cp -n /usr/share/dnf5/repos.d/*.repo /etc/yum.repos.d/ 2>/dev/null || true; \
+    fi
+
 # enable the test-utils repo
 RUN set -x && \
     dnf4 -y --refresh upgrade; \
