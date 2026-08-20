@@ -55,7 +55,7 @@ class DNFContext(object):
 
             # move the following original system setup files to a backup location,
             # so that they don't interfere and the tests start with a clean state
-            for path in ("/etc/dnf/dnf.conf", "/etc/yum.repos.d", "/var/lib/dnf/modulefailsafe"):
+            for path in ("/etc/dnf/dnf.conf", "/etc/yum.repos.d", "/var/lib/dnf/modulefailsafe", "/usr/share/dnf5/repos.d"):
                 backup_path = path + ".backup"
                 if os.path.exists(backup_path):
                     raise AssertionError(
