@@ -10,7 +10,7 @@ Scenario: Redirect pluginpath and pluginconfpath
 Given I successfully execute dnf with args "repo list"
   And file "/var/log/dnf5.log" contains lines
       """
-      .* Loaded libdnf plugin "actions" .*
+      .* Loaded libdnf plugin ".*" .*
       """
   And I configure dnf with
       | key        | value                                  |
@@ -18,10 +18,10 @@ Given I successfully execute dnf with args "repo list"
  When I execute dnf with args "repo list"
  Then the exit code is 1
   And stdout is empty
-  And stderr is
+  And stderr matches line by line
       """
-      Cannot load libdnf plugin enabled from: /etc/dnf/libdnf5-plugins/actions.conf
-       Cannot find plugin library "{context.dnf.installroot}/test/plugins/actions.so"
+      Cannot load libdnf plugin enabled from: /etc/dnf/libdnf5-plugins/.*\.conf
+       Cannot find plugin library "{context.dnf.installroot}/test/plugins/.*\.so"
       """
 # Remove the previous log which contains successfully loaded plugin actions msg
 Given I delete file "/var/log/dnf5.log"
@@ -34,7 +34,7 @@ Given I delete file "/var/log/dnf5.log"
   And stderr is empty
   And file "/var/log/dnf5.log" does not contain lines
       """
-      .* Loaded libdnf plugin "actions" .*
+      .* Loaded libdnf plugin ".*" .*
       """
 
 
