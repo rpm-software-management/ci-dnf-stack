@@ -109,10 +109,8 @@ Scenario: Install multiple versions of an installonly package and keep reason
     And Transaction is empty
 
 
-@xfail
-# Depends on issue: https://github.com/rpm-software-management/dnf5/issues/762
 @bz1774670
-Scenario: Remove all installonly packages but keep the latest
+Scenario: Remove all installonly packages but keep the latest 2
    When I execute dnf with args "install kernel-core"
    Then the exit code is 0
     And Transaction is following
@@ -133,21 +131,19 @@ Scenario: Remove all installonly packages but keep the latest
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64     |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | unchanged        | kernel-core-0:4.18.16-300.fc29.x86_64 |
-   When I execute dnf with args "remove --oldinstallonly"
+   When I execute dnf with args "remove --oldinstallonly --limit=2"
    Then the exit code is 0
     And Transaction is following
         | Action        | Package                                  |
         | unchanged       | kernel-core-0:4.20.6-300.fc29.x86_64   |
-        | remove        | kernel-core-0:4.19.15-300.fc29.x86_64    |
+        | unchanged        | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | remove        | kernel-core-0:4.18.16-300.fc29.x86_64    |
 
 
-@xfail
-# Depends on issue: https://github.com/rpm-software-management/dnf5/issues/762
 @bz1774670
 @no_installroot
 @destructive
-Scenario: Remove all installonly packages but keep the latest and running kernel-core-0:4.18.16-300.fc29.x86_64
+Scenario: Remove all installonly packages but running kernel protection prevents it
   Given I use repository "dnf-ci-fedora"
     And I fake kernel release to "4.18.16-300.fc29.x86_64"
    When I execute dnf with args "install kernel-core --repofrompath=r,{context.dnf.repos[dnf-ci-fedora].path} --repo=r --nogpgcheck"
@@ -170,13 +166,9 @@ Scenario: Remove all installonly packages but keep the latest and running kernel
         | install       | kernel-core-0:4.20.6-300.fc29.x86_64     |
         | unchanged     | kernel-core-0:4.19.15-300.fc29.x86_64    |
         | unchanged     | kernel-core-0:4.18.16-300.fc29.x86_64    |
-   When I execute dnf with args "remove --oldinstallonly"
-   Then the exit code is 0
-    And Transaction is following
-        | Action          | Package                                  |
-        | unchanged       | kernel-core-0:4.20.6-300.fc29.x86_64     |
-        | remove          | kernel-core-0:4.19.15-300.fc29.x86_64    |
-        | unchanged       | kernel-core-0:4.18.16-300.fc29.x86_64   |
+   When I execute dnf with args "remove --oldinstallonly --limit=2"
+   Then the exit code is 1
+    And stderr contains "The operation would result in removing of running kernel"
 
 
 @bz1934499

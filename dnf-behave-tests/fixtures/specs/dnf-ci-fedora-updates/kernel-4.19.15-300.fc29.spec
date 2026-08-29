@@ -7516,6 +7516,7 @@ This package provides less commonly used kernel modules for the kernel package.
 %files
 
 %files core
+%ghost /boot/vmlinuz-4.19.15-300.fc29.x86_64
 
 %files debug
 
