@@ -24,7 +24,7 @@ Scenario: with keyword
 
 
 @bz1742926
-Scenario: with installed and available newest package doesn't duplicate results
+Scenario: with installed and available newest package doesn't duplicate results and shows which is installed
    When I execute dnf with args "install setup"
    Then the exit code is 0
     And Transaction is following
@@ -39,7 +39,7 @@ Scenario: with installed and available newest package doesn't duplicate results
     And stdout is
         """
         Matched fields: name (exact), summary
-         setup.noarch	A set of system configuration and setup files
+         setup.noarch [installed]	A set of system configuration and setup files
          setup.src	A set of system configuration and setup files
         """
 
@@ -75,6 +75,73 @@ Scenario: All versions of a package are in the output when using the --showdupli
         Matched fields: name (exact)
          flac-0:1.3.2-8.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
          flac-0:1.3.2-8.fc29.x86_64	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-1.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-1.fc29.x86_64	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-2.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-2.fc29.x86_64	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-3.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.3-3.fc29.x86_64	An encoder/decoder for the Free Lossless Audio Codec
+        Matched fields: name
+         flac-libs-0:1.3.2-8.fc29.x86_64	Libraries for the Free Lossless Audio Codec
+         flac-libs-0:1.3.3-1.fc29.x86_64	Libraries for the Free Lossless Audio Codec
+         flac-libs-0:1.3.3-2.fc29.x86_64	Libraries for the Free Lossless Audio Codec
+         flac-libs-0:1.3.3-3.fc29.x86_64	Libraries for the Free Lossless Audio Codec
+        """
+
+Scenario: Shows when a package is installed
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "install flac"
+   Then the exit code is 0
+   When I execute dnf with args "search flac"
+   Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Matched fields: name (exact)
+         flac.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac.x86_64 [installed]	An encoder/decoder for the Free Lossless Audio Codec
+        Matched fields: name
+         flac-libs.x86_64	Libraries for the Free Lossless Audio Codec
+        """
+
+Scenario: Shows when a package is installed, but not up-to-date
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "install flac-0:1.3.2"
+   Then the exit code is 0
+   When I execute dnf with args "search flac"
+   Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Matched fields: name (exact)
+         flac.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac.x86_64 [outdated]	An encoder/decoder for the Free Lossless Audio Codec
+        Matched fields: name
+         flac-libs.x86_64	Libraries for the Free Lossless Audio Codec
+        """
+
+
+Scenario: All versions of a package are in the output when using the --showduplicates option
+  Given I use repository "dnf-ci-fedora-updates"
+   When I execute dnf with args "install flac-0:1.3.2"
+   Then the exit code is 0
+   When I execute dnf with args "search flac --showduplicates"
+   Then the exit code is 0
+    And stderr is
+        """
+        <REPOSYNC>
+        """
+    And stdout is
+        """
+        Matched fields: name (exact)
+         flac-0:1.3.2-8.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
+         flac-0:1.3.2-8.fc29.x86_64 [installed]	An encoder/decoder for the Free Lossless Audio Codec
          flac-0:1.3.3-1.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
          flac-0:1.3.3-1.fc29.x86_64	An encoder/decoder for the Free Lossless Audio Codec
          flac-0:1.3.3-2.fc29.src	An encoder/decoder for the Free Lossless Audio Codec
