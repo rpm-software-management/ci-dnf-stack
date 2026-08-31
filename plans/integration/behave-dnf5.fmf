@@ -1,8 +1,0 @@
-summary: Run Behave Test Suite - DNF5
-tag: dnf5
-execute:
-    how: tmt
-    script: |
-        /var/tmp/ci-dnf-stack/container-test run \
-        --tags dnf5 \
-        --command dnf5

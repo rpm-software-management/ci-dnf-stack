@@ -2,9 +2,12 @@ ci-dnf-stack
 ============
 
 This repository contains the integration test suite (a.k.a. the behave tests)
-of the DNF stack, along with tooling to run the suite in containers (which are
-used for sandboxing, some of the DNF tests are destructive to the system), and
-the shared CI setup for DNF stack components.
+for createrepo_c and DNF (legacy), along with tooling to run the suite in
+containers (which are used for sandboxing, some of the DNF tests are destructive
+to the system), and the shared CI setup for DNF stack components.
+
+**Note:** The DNF5 integration tests have been moved to the
+[dnf5 repository](https://github.com/rpm-software-management/dnf5).
 
 For documentation of the integration test suite based on behave, see
 [`dnf-behave-tests/README.md`](dnf-behave-tests/README.md).
