@@ -4,27 +4,9 @@
 jobs:
   - job: tests
     trigger: pull_request
-    identifier: "dnf5-tests"
-    targets:
-      - fedora-all
-      - fedora-eln
-    skip_build: true
-    tmt_plan: "^/plans/integration/behave-dnf5$"
-
-  - job: tests
-    trigger: pull_request
     identifier: "createrepo_c-tests"
     targets:
       - fedora-all
       - fedora-eln
     skip_build: true
     tmt_plan: "^/plans/integration/behave-createrepo_c$"
-
-  - job: tests
-    trigger: pull_request
-    identifier: "dnf5daemon-tests"
-    targets:
-      - fedora-all
-      - fedora-eln
-    skip_build: true
-    tmt_plan: "^/plans/integration/behave-dnf5daemon$"
