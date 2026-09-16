@@ -23,7 +23,7 @@ Scenario: Using dnf shell, fail to install an RPM when no repositories are enabl
    When I open dnf shell session
     And I execute in dnf shell "install setup"
    Then Transaction is empty
-    And stdout contains "Error: There are no enabled repositories in ".*/etc/yum.repos.d", ".*/etc/yum/repos.d", ".*/etc/distro.repos.d"\."
+    And stdout contains "Error: There are no enabled repositories in ".*/etc/yum.repos.d", ".*/etc/yum/repos.d", ".*/etc/distro.repos.d", ".*/usr/share/dnf5/repos.d"\."
    When I execute in dnf shell "run"
    Then Transaction is empty
    When I execute in dnf shell "exit"
