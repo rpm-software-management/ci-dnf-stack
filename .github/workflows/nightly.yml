@@ -68,6 +68,10 @@ jobs:
           if [[ "${{matrix.component}}" == "dnf5" ]]; then
             COMMAND_STRING+=" --package dnf5"
           fi
+          # libmodulemd upstream also defines two packit packages, build just one
+          if [[ "${{matrix.component}}" == "libmodulemd" ]]; then
+            COMMAND_STRING+=" --package libmodulemd"
+          fi
 
           echo "Executing: $COMMAND_STRING"
           $COMMAND_STRING
